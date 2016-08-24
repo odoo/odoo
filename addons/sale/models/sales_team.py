@@ -54,3 +54,8 @@ class CrmTeam(models.Model):
     @api.multi
     def update_invoiced_target(self, value):
         return self.write({'invoiced_target': round(float(value or 0))})
+
+    @api.onchange('use_quotations')
+    def _onchange_use_quotation(self):
+        if self.use_quotations:
+            self.use_invoices = True

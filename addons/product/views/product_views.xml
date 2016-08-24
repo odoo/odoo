@@ -74,12 +74,6 @@
                                 </field>
                             </div>
                             <group name="sale">
-                                <group name="sale_condition" string="Sale Conditions">
-                                    <label for="warranty"/>
-                                    <div>
-                                        <field name="warranty" class="oe_inline"/> months
-                                    </div>
-                                </group>
                                 <group name="email_template_and_project"
                                     attrs="{'invisible':[('type', '!=', 'service')]}"/>
                             </group>
@@ -89,9 +83,6 @@
                                 <separator string="Description for Quotations" colspan="4"/>
                                 <field name="description_sale" colspan="4" nolabel="1"
                                     placeholder="This note will be displayed on the quotations."/>
-                                <separator string="Description for Vendors" colspan="4"/>
-                                <field name="description_purchase" nolabel="1"
-                                    placeholder="This note will be displayed on requests for quotation." colspan="4"/>
                             </group>
                          </page>
                     </notebook>

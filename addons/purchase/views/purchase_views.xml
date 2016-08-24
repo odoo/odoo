@@ -561,6 +561,11 @@
                                 attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
                     </group>
                 </group>
+                <field name="description_sale" position="after">
+                    <separator string="Description for Vendors" colspan="4"/>
+                    <field name="description_purchase" nolabel="1"
+                        placeholder="This note will be displayed on requests for quotation." colspan="4"/>
+                </field>
             </field>
         </record>
 

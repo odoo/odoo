@@ -79,11 +79,11 @@
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
-                <div t-if="record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
+                <div t-if="record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom" groups="sales_team.group_sale_manager">
                     <field name="invoiced" widget="progress" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
                 </div>
-                <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom text-center">
-                    <a href="#" class="sales_team_target_definition o_inline_link">Click to define a team target</a>
+                <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom text-center" groups="sales_team.group_sale_manager">
+                    <a href="#" class="sales_team_target_definition o_inline_link">Click to define a team target</a> 
                 </div>
             </xpath>
 
@@ -122,7 +122,7 @@
                         </a>
                     </div>
                 </t>
-                <div t-if="record.use_invoices.raw_value">
+                <div t-if="record.use_invoices.raw_value" groups="account.group_account_invoice">
                     <a name="%(action_account_invoice_report_salesteam)d" type="action">
                         Invoices
                     </a>
