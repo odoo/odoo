@@ -143,9 +143,8 @@ return core.Class.extend({
     },
     run: function (tour_name, step_delay) {
         if (this.running_tour) {
-            console.warn(_.str.sprintf("Killing tour %s", tour_name));
-            this._deactivate_tip(this.active_tooltips[tour_name]);
-            this._consume_tour(tour_name);
+            this._deactivate_tip(this.active_tooltips[this.running_tour]);
+            this._consume_tour(this.running_tour, _.str.sprintf("Killing tour %s", this.running_tour));
             return;
         }
         var tour = this.tours[tour_name];
