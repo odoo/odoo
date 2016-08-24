@@ -69,7 +69,7 @@ class WebsiteHrRecruitment(http.Controller):
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
         job = request.env['hr.job'].create({
-            'name': _('New Job Offer'),
+            'name': _('Job Title'),
         })
         return request.redirect("/jobs/detail/%s?enable_editor=1" % slug(job))
 
