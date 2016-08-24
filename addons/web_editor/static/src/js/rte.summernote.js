@@ -182,7 +182,7 @@ renderer.tplPopovers = function (lang, options) {
     //////////////// text/air popover
 
     //// highlight the text format
-    $airPopover.find('.note-style').on('mousedown', function () {
+    $airPopover.find('.note-style .dropdown-toggle').on('mousedown', function () {
         var $format = $airPopover.find('[data-event="formatBlock"]');
         var node = range.create().sc;
         var formats = $format.map(function () { return $(this).data("value"); }).get();
