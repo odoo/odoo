@@ -200,7 +200,7 @@ class MarketingCampaignSegment(models.Model):
         if model:
             res['domain']['ir_filter_id'] = [('model_id', '=', model)]
         else:
-            res.ir_filter_id = False
+            self.ir_filter_id = False
         return res
 
     @api.multi
