@@ -8204,6 +8204,41 @@
                 s *= this.session.$getStringScreenWidth(o)[0] + 2, i += 2
             }
             n -= this.scrollLeft, n > this.$size.scrollerWidth - s && (n = this.$size.scrollerWidth - s), n += this.gutterWidth, r.height = i + "px", r.width = s + "px", r.left = Math.min(n, this.$size.scrollerWidth - s) + "px", r.top = Math.min(t, this.$size.height - i) + "px"
+        // ODOO monkeypatch: When we use firefox top or bottom arrow the ace container does not scroll automatically if the cursor is not visible.
+            this.$scrollViewToTextArea();
+        }, this.$scrollViewToTextArea = function() {
+            // scroll the page/container to the cursor
+            var node = this.$cursorLayer.cursor;
+            setTimeout(function () {
+                if (node.scrollIntoViewIfNeeded) {
+                    node.scrollIntoViewIfNeeded(false);
+                } else if (node.scrollIntoView) {
+                    var rect = node.getBoundingClientRect();
+                    var parent = node.parentNode;
+
+                    while (parent && parent.getBoundingClientRect) {
+                        var parentRect = parent.getBoundingClientRect();
+                        if (parentRect.bottom < rect.top) {
+                            node.scrollIntoView(false);
+                            return;
+                        }
+                        if (parentRect.top > rect.bottom-rect.height) {
+                            node.scrollIntoView(true);
+                            return;
+                        }
+                        if (parentRect.left > rect.right) {
+                            node.scrollIntoView();
+                            return;
+                        }
+                        if (parentRect.right < rect.left) {
+                            node.scrollIntoView();
+                            return;
+                        }
+                        parent = parent.parentNode;
+                    }
+                }
+            });
+        // ODOO end monkeypatch
         }, this.getFirstVisibleRow = function() {
             return this.layerConfig.firstRow
         }, this.getFirstFullyVisibleRow = function() {
