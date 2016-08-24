@@ -4,7 +4,7 @@
 {
     'name': 'Default Theme',
     'description': 'Default website theme to showcase customization possibilities.',
-    'category': 'Hidden',
+    'category': 'Theme/Hidden',
     'sequence': 1000,
     'version': '1.0',
     'depends': ['website'],
