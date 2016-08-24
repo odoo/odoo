@@ -352,12 +352,12 @@
                     <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
                     <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
-                    <button name="invoice_open" states="draft" string="Validate" class="oe_highlight" groups="base.group_user"/>
-                    <button name="invoice_open" states="proforma2" string="Validate" groups="base.group_user"/>
+                    <button name="invoice_open" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_user"/>
+                    <button name="invoice_open" states="proforma2" string="Validate" groups="account.group_account_user"/>
                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
-                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' groups="base.group_user" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','proforma2','paid'))]}"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' groups="account.group_account_user" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','proforma2','paid'))]}"/>
                     <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel Invoice" groups="base.group_no_one"/>
-                    <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" groups="base.group_user"/>
+                    <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" groups="account.group_account_user"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid"/>
                 </header>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
