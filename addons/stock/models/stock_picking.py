@@ -148,7 +148,7 @@ class PickingType(models.Model):
 
 class Picking(models.Model):
     _name = "stock.picking"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'barcodes.barcode_events_mixin']
     _description = "Transfer"
     _order = "priority desc, date asc, id desc"
 
@@ -1007,6 +1007,25 @@ class Picking(models.Model):
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
+
+    def on_barcode_scanned(self, barcode):
+        product = self.env['product.product'].search([('barcode', '=', barcode)], limit=1)
+        if self.state == 'draft' and product:
+            move_lines = self.move_lines.filtered(lambda line: line.product_id == product)
+            if move_lines:
+                move_lines[0].product_uom_qty += 1
+                move_lines[0]._compute_product_qty()
+            else:
+                default_values = self.move_lines.default_get(self.move_lines._fields)
+                default_values.update({
+                    'product_id': product.id,
+                    'product_qty': 1.0,
+                    'location_dest_id': self.location_dest_id.id,
+                    'location_id': self.location_id.id,
+                })
+                move_line = self.move_lines.new(default_values)
+                move_line.onchange_product_id()
+                self.move_lines += move_line
 
     @api.multi
     def button_scrap(self):

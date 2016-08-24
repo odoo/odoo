@@ -216,6 +216,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
                 </header>
                 <sheet>
+                    <field name="_barcode_scanned" widget="barcode_handler"/>
                     <div class="oe_button_box" name="button_box">
                         <field name="has_scrap_move" invisible="True"/>
                         <button name="action_see_move_scrap" string="Scraps" type="object"
@@ -329,7 +330,22 @@
                             <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Initial Demand">
-                            <field name="move_lines" attrs="{'readonly': [('state', 'in', ('cancel', 'partially_available', 'assigned', 'done'))]}" options="{'reload_on_button': True}" mode="tree,kanban" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_lines" attrs="{'readonly': [('state', 'in', ('cancel', 'partially_available', 'assigned', 'done'))]}" options="{'reload_on_button': True}" mode="tree,kanban" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                                    <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                                        <field name="location_id" invisible="1"/>
+                                        <field name="create_date" invisible="1" />
+                                        <field name="date_expected" invisible="1" />
+                                        <field name="scrapped" invisible="1"/>
+                                        <field name="availability" invisible="1"/>
+                                        <field name="reserved_availability" invisible="1"/>
+                                        <field name="location_dest_id" invisible="1"/>
+                                        <field name="remaining_qty" invisible="1"/>
+                                        <field name="state"/>
+                                    </tree>
                                     <kanban class="o_kanban_mobile">
                                     <field name="product_id"/>
                                     <field name="availability"/>
