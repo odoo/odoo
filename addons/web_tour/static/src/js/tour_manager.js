@@ -63,7 +63,7 @@ var RunningTourActionHelper = core.Class.extend({
 
         text = text || "Test";
         if (values.consume_event === "input") {
-            values.$element.val(text).trigger("input");
+            values.$element.trigger("keydown").val(text).trigger("keyup").trigger("input");
         } else if (values.$element.is("select")) {
             values.$element.children("option")
                 .prop("selected", false).removeProp("selected")
@@ -73,6 +73,7 @@ var RunningTourActionHelper = core.Class.extend({
         } else {
             values.$element.text(text);
         }
+        values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
         var $to = $(to || document.body);
