@@ -97,6 +97,9 @@
                     <field name="product_tmpl_id" string="Product"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
+                    <filter string="Normal" name="normal" domain="[('type', '=', 'normal')]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
                         <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
