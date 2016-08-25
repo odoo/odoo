@@ -33,13 +33,14 @@ class HrExpense(models.Model):
     description = fields.Text()
     payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, string="Payment By")
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
-    state = fields.Selection([('draft', 'To Report'),
-                              ('reported', 'Reported'),
-                              ('done', 'Posted'),
-                              ('refused', 'Refused')
-        ], compute='_compute_state', default="draft", string='Status', index=True, readonly=True, copy=False, required=True, store=True,
+    state = fields.Selection([
+        ('draft', 'To Report'),
+        ('reported', 'Reported'),
+        ('done', 'Posted'),
+        ('refused', 'Refused')
+        ], compute='_compute_state', string='Status', copy=False, default="draft", index=True, readonly=True, required=True, store=True,
         help="Status of the expense.")
-    sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", readonly=True)
+    sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", readonly=True, copy=False)
     reference = fields.Char(string="Bill Reference")
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
@@ -100,6 +101,8 @@ class HrExpense(models.Model):
     def submit_expenses(self):
         if any(expense.state != 'draft' for expense in self):
             raise UserError(_("You cannot report twice the same line!"))
+        if len(self.mapped('employee_id')) != 1:
+            raise UserError(_("You cannot report expenses for different employees in the same report!"))
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -290,26 +293,13 @@ class HrExpense(models.Model):
         if custom_values is None:
             custom_values = {}
 
-        # Retrieve the email address from the email field. The string is constructed like
-        # 'foo <bar>'. We will extract 'bar' from this
         email_address = email_split(msg_dict.get('email_from', False))[0]
 
-        # Look after an employee who has this email address or an employee for whom the related
-        # user has this email address. In the case not employee is found, we send back an email
-        # to explain that the expense will not be created.
-        employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)
-        if not employee:
-            employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
-        if not employee:
-            access = self.env['ir.config_parameter'].get_param("hr_expense.email.gateway") or 'open'
-            if access == 'open':
-                # Open access is mostly used during the on boarding flow, should not be used in production
-                employee = self.env['hr.employee'].search([('user_id','<>',False)], limit=1)
-        if not employee:
-            # Send back an email to explain why the expense has not been created
-            mail_template = self.env.ref('hr_expense.mail_template_data_expense_unknown_email_address')
-            mail_template.with_context(email_to=email_address).send_mail(self.env.ref('base.module_hr_expense').id)
-            return False
+        employee = self.env['hr.employee'].search([
+            '|',
+            ('work_email', 'ilike', email_address),
+            ('user_id.email', 'ilike', email_address)
+        ], limit=1)
 
         expense_description = msg_dict.get('subject', '')
 
@@ -381,7 +371,7 @@ class HrExpenseSheet(models.Model):
         help="The journal used when the expense is done.")
     bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
     accounting_date = fields.Date(string="Accounting Date")
-    account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False, track_visibility="onchange")
+    account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False)
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
 
     @api.multi
@@ -422,6 +412,8 @@ class HrExpenseSheet(models.Model):
             return 'hr_expense.mt_expense_confirmed'
         elif 'state' in init_values and self.state == 'cancel':
             return 'hr_expense.mt_expense_refused'
+        elif 'state' in init_values and self.state == 'done':
+            return 'hr_expense.mt_expense_paid'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
     def _add_followers(self):
@@ -474,15 +466,7 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def approve_expense_sheets(self):
-        self.message_post(body=_("The expense has been validated by %s") % (self.env.user.name))
         self.write({'state': 'approve', 'responsible_id': self.env.user.id})
-
-    @api.multi
-    def refuse_expense_sheets(self, reason):
-        self.write({'state': 'cancel'})
-        for sheet in self:
-            body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (sheet.name, reason))
-            sheet.message_post(body=body)
 
     @api.multi
     def paid_expense_sheets(self):
