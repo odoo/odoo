@@ -166,7 +166,7 @@ class wizard_user(osv.osv_memory):
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             portal = wizard_user.wizard_id.portal_id
             if not portal.is_portal:
-               raise osv.except_osv("Error", "Not a portal: " + portal.name)
+                raise osv.except_osv("Error", "Not a portal: " + portal.name)
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
             if wizard_user.partner_id.email != wizard_user.email:
                 wizard_user.partner_id.write({'email': wizard_user.email})
