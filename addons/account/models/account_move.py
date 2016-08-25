@@ -413,6 +413,8 @@ class AccountMoveLine(models.Model):
     invoice_id = fields.Many2one('account.invoice', oldname="invoice")
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
     user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type")
+    tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
+        help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the module account_tax_cash_basis, some will become exigible only when the payment is recorded.")
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
