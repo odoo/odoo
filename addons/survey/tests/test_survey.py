@@ -43,7 +43,7 @@ class TestSurvey(TransactionCase):
         self.assertEqual(question.question, "Q0", msg="Title of the Question is somehow modified.")
 
     def test_01_question_type_validation_save_line_function(self):
-        for (question_type, text) in self.env['survey.question']._columns['type'].selection:
+        for (question_type, text) in self.env['survey.question']._fields['type'].selection:
             # Each question ype must have validation function.
             self.assertTrue(hasattr(self.env['survey.question'], 'validate_' + question_type), msg="Question must have a validation method in\
                 the form of 'validate_' followed by the name of the type.")
@@ -53,7 +53,7 @@ class TestSurvey(TransactionCase):
                 the form of 'save_line_' followed by the name of the type.")
 
     def test_02_question_answer_required(self):
-        for (question_type, text) in self.env['survey.question']._columns['type'].selection:
+        for (question_type, text) in self.env['survey.question']._fields['type'].selection:
             # Blank value of field is not accepted for mandatory questions.
             if question_type == 'multiple_choice':
                 question = self.env['survey.question'].sudo(self.survey_manager).create({

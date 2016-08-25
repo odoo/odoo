@@ -104,13 +104,10 @@ class MetaField(type):
             MetaField.by_type[cls.type] = cls
 
         # compute class attributes to avoid calling dir() on fields
-        cls.column_attrs = []
         cls.related_attrs = []
         cls.description_attrs = []
         for attr in dir(cls):
-            if attr.startswith('_column_'):
-                cls.column_attrs.append((attr[8:], attr))
-            elif attr.startswith('_related_'):
+            if attr.startswith('_related_'):
                 cls.related_attrs.append((attr[9:], attr))
             elif attr.startswith('_description_'):
                 cls.description_attrs.append((attr[13:], attr))
@@ -306,8 +303,6 @@ class Field(object):
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
-        'origin': None,                 # the column from which the field was created
-        'column': None,                 # the column corresponding to the field
 
         'name': None,                   # name of the field
         'model_name': None,             # name of the model of this field
@@ -733,7 +728,7 @@ class Field(object):
 
     @property
     def _description_searchable(self):
-        return bool(self.store or self.search or (self.column and self.column._fnct_search))
+        return bool(self.store or self.search)
 
     @property
     def _description_sortable(self):
@@ -752,52 +747,6 @@ class Field(object):
             field_help = env['ir.translation'].get_field_help(model_name)
             return field_help.get(self.name) or self.help
         return self.help
-
-    ############################################################################
-    #
-    # Conversion to column instance
-    #
-
-    def to_column(self):
-        """ Return a column object corresponding to ``self``, or ``None``. """
-        if self.column:
-            return self.column
-
-        if not self.store and (self.compute or not self.origin):
-            # non-stored computed fields do not have a corresponding column
-            return None
-
-        # determine column parameters
-        #_logger.debug("Create fields._column for Field %s", self)
-        args = {}
-        for attr, prop in self.column_attrs:
-            args[attr] = getattr(self, prop)
-        for attr, value in self._attrs.iteritems():
-            args[attr] = value
-
-        if self.origin:
-            # let the origin provide a valid column for the given parameters
-            self.column = self.origin.new(_computed_field=bool(self.compute), **args)
-        else:
-            # create a fresh new column of the right type
-            self.column = getattr(fields, self.type)(**args)
-
-        return self.column
-
-    # properties used by to_column() to create a column instance
-    _column__module = property(attrgetter('_module'))
-    _column_copy = property(attrgetter('copy'))
-    _column_select = property(attrgetter('index'))
-    _column_manual = property(attrgetter('manual'))
-    _column_string = property(attrgetter('string'))
-    _column_help = property(attrgetter('help'))
-    _column_readonly = property(attrgetter('readonly'))
-    _column_required = property(attrgetter('required'))
-    _column_states = property(attrgetter('states'))
-    _column_groups = property(attrgetter('groups'))
-    _column_change_default = property(attrgetter('change_default'))
-    _column_deprecated = property(attrgetter('deprecated'))
-    _column_group_operator = property(attrgetter('group_operator'))
 
     ############################################################################
     #
@@ -984,7 +933,7 @@ class Field(object):
         """ Determine the value of ``self`` for ``record``. """
         env = record.env
 
-        if self.column and not (self.compute and env.in_onchange):
+        if self.store and not (self.compute and env.in_onchange):
             # this is a stored field or an old-style function field
             if self.compute:
                 # this is a stored computed field, check for recomputation
@@ -1209,11 +1158,7 @@ class Float(Field):
             return self._digits
 
     _related__digits = property(attrgetter('_digits'))
-
     _description_digits = property(attrgetter('digits'))
-
-    _column_digits = property(lambda self: not callable(self._digits) and self._digits)
-    _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
 
     def convert_to_column(self, value, record):
         result = float(value or 0.0)
@@ -1254,10 +1199,7 @@ class Monetary(Field):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
     _related_currency_field = property(attrgetter('currency_field'))
-
     _description_currency_field = property(attrgetter('currency_field'))
-
-    _column_currency_field = property(attrgetter('currency_field'))
 
     def _setup_regular_base(self, model):
         super(Monetary, self)._setup_regular_base(model)
@@ -1298,7 +1240,6 @@ class _String(Field):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
 
-    _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
 
     def _description_translate(self, env):
@@ -1364,7 +1305,6 @@ class Char(_String):
     def column_type(self):
         return ('varchar', pg_varchar(self.size))
 
-    _column_size = property(attrgetter('size'))
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
@@ -1427,28 +1367,18 @@ class Html(_String):
         if self.translate is True and self.sanitize:
             self.translate = html_translate
 
-    _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
-    _description_sanitize = property(attrgetter('sanitize'))
-
-    _column_sanitize_tags = property(attrgetter('sanitize_tags'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
-    _description_sanitize_tags = property(attrgetter('sanitize_tags'))
-
-    _column_sanitize_attributes = property(attrgetter('sanitize_attributes'))
     _related_sanitize_attributes = property(attrgetter('sanitize_attributes'))
-    _description_sanitize_attributes = property(attrgetter('sanitize_attributes'))
-
-    _column_sanitize_style = property(attrgetter('sanitize_style'))
     _related_sanitize_style = property(attrgetter('sanitize_style'))
-    _description_sanitize_style = property(attrgetter('sanitize_style'))
-
-    _column_strip_style = property(attrgetter('strip_style'))
     _related_strip_style = property(attrgetter('strip_style'))
-    _description_strip_style = property(attrgetter('strip_style'))
-
-    _column_strip_classes = property(attrgetter('strip_classes'))
     _related_strip_classes = property(attrgetter('strip_classes'))
+
+    _description_sanitize = property(attrgetter('sanitize'))
+    _description_sanitize_tags = property(attrgetter('sanitize_tags'))
+    _description_sanitize_attributes = property(attrgetter('sanitize_attributes'))
+    _description_sanitize_style = property(attrgetter('sanitize_style'))
+    _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record):
@@ -1627,7 +1557,6 @@ class Binary(Field):
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
 
-    _column_attachment = property(attrgetter('attachment'))
     _description_attachment = property(attrgetter('attachment'))
 
     def convert_to_column(self, value, record):
@@ -1766,14 +1695,6 @@ class Selection(Field):
         else:
             return selection
 
-    @property
-    def _column_selection(self):
-        if isinstance(self.selection, basestring):
-            method = self.selection
-            return lambda self, *a, **kw: getattr(self, method)(*a, **kw)
-        else:
-            return self.selection
-
     def get_values(self, env):
         """ return a list of the possible values """
         selection = self.selection
@@ -1872,10 +1793,6 @@ class _Relational(Field):
     def _description_domain(self, env):
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
 
-    _column_obj = property(attrgetter('comodel_name'))
-    _column_domain = property(attrgetter('domain'))
-    _column_context = property(attrgetter('context'))
-
     def null(self, record):
         return record.env[self.comodel_name]
 
@@ -1929,9 +1846,6 @@ class Many2one(_Relational):
         # determine self.delegate
         if not self.delegate:
             self.delegate = name in model._inherits.values()
-
-    _column_ondelete = property(attrgetter('ondelete'))
-    _column_auto_join = property(attrgetter('auto_join'))
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``.
@@ -2181,10 +2095,6 @@ class One2many(_RelationalMulti):
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
-    _column_fields_id = property(attrgetter('inverse_name'))
-    _column_auto_join = property(attrgetter('auto_join'))
-    _column_limit = property(attrgetter('limit'))
-
     def convert_to_onchange(self, value, record, fnames=()):
         if fnames:
             # do not serialize self's inverse field
@@ -2342,12 +2252,6 @@ class Many2many(_RelationalMulti):
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self
 
-    _column_rel = property(attrgetter('relation'))
-    _column_id1 = property(attrgetter('column1'))
-    _column_id2 = property(attrgetter('column2'))
-    _column_auto_join = property(attrgetter('auto_join'))
-    _column_limit = property(attrgetter('limit'))
-
     def check_schema(self, model):
         cr = model._cr
         rel, id1, id2 = self.relation, self.column1, self.column2
@@ -2481,10 +2385,6 @@ class Id(Field):
         'readonly': True,
     }
 
-    def to_column(self):
-        self.column = fields.integer(self.string)
-        return self.column
-
     def __get__(self, record, owner):
         if record is None:
             return self         # the field is accessed through the class owner
@@ -2499,4 +2399,3 @@ class Id(Field):
 from openerp import SUPERUSER_ID
 from .exceptions import AccessError, MissingError, UserError
 from .models import check_pg_name, BaseModel, IdType
-from .osv import fields

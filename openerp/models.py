@@ -46,7 +46,6 @@ from . import api
 from . import tools
 from .api import Environment
 from .exceptions import AccessError, MissingError, ValidationError, UserError
-from .osv import fields
 from .osv.query import Query
 from .tools import frozendict, lazy_property, ormcache, Collector, LastOrderedSet, OrderedSet
 from .tools.config import config
@@ -170,13 +169,6 @@ class MetaModel(api.Meta):
             if isinstance(val, Field):
                 val.args = dict(val.args, _module=self._module)
 
-        # transform columns into new-style fields (enables field inheritance)
-        for name, column in self._columns.iteritems():
-            if name in self.__dict__:
-                _logger.warning("In class %s, field %r overriding an existing value", self, name)
-            column._module = self._module
-            setattr(self, name, column.to_field())
-
     def _get_addon_name(self, full_name):
         # The (OpenERP) module name can be in the ``openerp.addons`` namespace
         # or not. For instance, module ``sale`` can be imported as
@@ -246,7 +238,6 @@ class BaseModel(object):
 
     _inherit = None             # Python-inherited models ('model' or ['model'])
     _inherits = {}              # inherited models {'parent_model': 'm2o_field'}
-    _columns = {}               # field definitions (old API)
     _constraints = []           # Python constraints (old API)
 
     _table = None               # SQL table name used by model
@@ -388,8 +379,6 @@ class BaseModel(object):
         # basic setup of field
         field.setup_base(self, name)
 
-        # cls._columns will be updated once fields are fully set up
-
     @api.model
     def _pop_field(self, name):
         """ Remove the field with the given ``name`` from the model.
@@ -397,7 +386,6 @@ class BaseModel(object):
         """
         cls = type(self)
         field = cls._fields.pop(name)
-        cls._columns.pop(name, None)
         if hasattr(cls, name):
             delattr(cls, name)
         return field
@@ -743,7 +731,6 @@ class BaseModel(object):
         - copy the stored fields' functions in the registry,
         - retrieve custom fields and add them in the model,
         - ensure there is a many2one for each _inherits'd parent,
-        - update the children's _columns,
         - give a chance to each field to initialize itself.
 
         """
@@ -1997,19 +1984,17 @@ class BaseModel(object):
         for gb in groupby_fields:
             assert gb in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
-            groupby_def = self._fields[gb].base_field.column
-            assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
-            if not (gb in self._fields):
-                # Don't allow arbitrary values, as this would be a SQL injection vector!
-                raise UserError(_('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.') % (gb,))
+            gb_field = self._fields[gb].base_field
+            assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
 
         aggregated_fields = [
             f for f in fields
             if f != 'sequence'
             if f not in groupby_fields
-            if f in self._fields
-            if self._fields[f].group_operator
-            if getattr(self._fields[f].base_field.column, '_classic_write', False)
+            for field in [self._fields.get(f)]
+            if field
+            if field.group_operator
+            if field.base_field.store and field.base_field.column_type
         ]
 
         field_formatter = lambda f: (
@@ -2871,8 +2856,7 @@ class BaseModel(object):
         """ Setup the fields, except for recomputation triggers. """
         cls = type(self)
 
-        # set up fields, and determine their corresponding column
-        cls._columns = {}
+        # set up fields
         bad_fields = []
         for name, field in cls._fields.iteritems():
             try:
@@ -2886,9 +2870,6 @@ class BaseModel(object):
                     bad_fields.append(name)
                     continue
                 raise
-            column = field.to_column()
-            if column:
-                cls._columns[name] = column
 
         for name in bad_fields:
             del cls._fields[name]
@@ -3137,7 +3118,7 @@ class BaseModel(object):
         fields_pre = [
             field
             for field in fields
-            if field.base_field.column._classic_write
+            if field.base_field.store and field.base_field.column_type
             if not (field.inherited and callable(field.base_field.translate))
         ]
 
@@ -3197,9 +3178,9 @@ class BaseModel(object):
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
         for f in field_names:
-            column = self._columns[f]
-            if column.deprecated:
-                _logger.warning('Field %s.%s is deprecated: %s', self._name, f, column.deprecated)
+            field = self._fields[f]
+            if field.deprecated:
+                _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
         # store failed values in cache for the records that could not be read
         missing = self - fetched
@@ -3580,7 +3561,7 @@ class BaseModel(object):
         for key, val in vals.iteritems():
             field = self._fields.get(key)
             if field:
-                if field.column or field.inherited:
+                if field.store or field.inherited:
                     old_vals[key] = val
                 if field.inverse and not field.inherited:
                     new_vals[key] = val
@@ -3896,7 +3877,7 @@ class BaseModel(object):
             elif field.inherited:
                 tocreate[field.related_field.model_name][name] = val
                 del vals[name]
-            elif not field.column:
+            elif not field.store:
                 del vals[name]
             elif field.inverse:
                 protected_fields.append(field)
@@ -4143,12 +4124,10 @@ class BaseModel(object):
             # also add missing joins for reaching the table containing the m2o field
             qualified_field = self._inherits_join_calc(alias, order_field, query)
             alias, order_field = qualified_field.replace('"', '').split('.', 1)
-            column = field.base_field.column
-        else:
-            column = field.column
+            field = field.base_field
 
         assert field.type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
-        if not (column and column._classic_write):
+        if not field.store:
             _logger.debug("Many2one function/related fields must be stored "
                           "to be used as ordering fields! Ignoring sorting for %s.%s",
                           self._name, order_field)
@@ -4192,17 +4171,16 @@ class BaseModel(object):
             else:
                 if field.inherited:
                     field = field.base_field
-                column = field.column
-                if column and column._classic_read:
-                    qualifield_name = self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)
-                    if field.type == 'boolean':
-                        qualifield_name = "COALESCE(%s, false)" % qualifield_name
-                    order_by_elements.append("%s %s" % (qualifield_name, order_direction))
-                elif column and column._type == 'many2one':
+                if field.store and field.type == 'many2one':
                     key = (field.model_name, field.comodel_name, order_field)
                     if key not in seen:
                         seen.add(key)
                         order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
+                elif field.store and field.column_type:
+                    qualifield_name = self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)
+                    if field.type == 'boolean':
+                        qualifield_name = "COALESCE(%s, false)" % qualifield_name
+                    order_by_elements.append("%s %s" % (qualifield_name, order_direction))
                 else:
                     continue  # ignore non-readable or "non-joinable" fields
 
@@ -4272,20 +4250,6 @@ class BaseModel(object):
             return [x for x in seq if x not in seen and not seen.add(x)]
 
         return _uniquify_list([x[0] for x in res])
-
-    @api.model
-    def distinct_field_get(self, field, value, args=None, offset=0, limit=None):
-        """ Returns the different values ever entered for one field. This is used,
-            for example, in the client when the user hits enter on a char field.
-
-            Deprecated.
-        """
-        ffield = self._fields[field]
-        if ffield.inherited:
-            parent_model = ffield.related_field.model_name
-            return self.env[parent_model].distinct_field_get(field, value, args, offset, limit)
-        else:
-            return ffield.column.search(self._cr, self._model, args or [], field, value, offset, limit, self._uid)
 
     @api.multi
     @api.returns(None, lambda value: value[0])

@@ -442,7 +442,6 @@ class TestParentStore(TransactionCase):
         # force res_partner_category.copy() to copy children
         category = self.env['res.partner.category']
         self.patch(category._fields['child_ids'], 'copy', True)
-        self.patch(category._columns['child_ids'], 'copy', True)
 
         # setup categories
         self.root = category.create({'name': 'Root category'})
