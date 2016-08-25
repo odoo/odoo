@@ -92,7 +92,7 @@
                 <form string="cashmove form">
                     <sheet>
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id" required="1"/>
                             <field name="date"/>
                             <field name="amount"/>
                         </group>
@@ -366,7 +366,7 @@
 
                         <group>
                             <group>
-                                <field name='user_id' class="oe_inline"/>
+                                <field name='user_id' class="oe_inline" required='1'/>
                                 <field name='date'/>
                             </group>
                             <div>
