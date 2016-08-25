@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+        <record id="view_general_configuration_inherit_website" model="ir.ui.view">
+            <field name="name">general.configuration.inherit.form</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='google']" position="inside">
+                    <label for="id" string="Google Maps"/>
+                    <div name="google_maps">
+                        <div>
+                            Follow <a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">the instructions</a> to create your key.
+                        </div>
+                        <div>
+                            <label for="google_maps_api_key" string="API Key"/>
+                            <field name="google_maps_api_key" class="oe_inline"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_website_config_settings" model="ir.ui.view">
             <field name="name">Website settings</field>
             <field name="model">website.config.settings</field>
