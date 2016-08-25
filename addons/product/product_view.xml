@@ -40,6 +40,7 @@
                     <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]" help="Products your store in the inventory"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
+                    <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', 1)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
@@ -97,6 +98,10 @@
                                 <div>
                                     <field name="sale_ok"/>
                                     <label for="sale_ok"/>
+                                </div>
+                                <div>
+                                    <field name="purchase_ok"/>
+                                    <label for="purchase_ok"/>
                                 </div>
                             </div>
                         </div>
