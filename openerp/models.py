@@ -340,13 +340,6 @@ class BaseModel(object):
     _group_by_full = {}         # {field: method}, where method returns (records
                                 # name_get, {id: fold}) used by read_group()
 
-    # Implementation-generated mapping for inherited fields (with _inherits)
-    # {fname: (mname, rname, column, oname)} where 'mname' is the model from
-    # which 'fname' is inherited, 'rname' is the many2one field towards 'mname',
-    # 'column' is the original _column object itself, and 'oname' is the
-    # original (i.e. top-most) parent model.
-    _inherit_fields = None
-
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     @api.model
@@ -2975,18 +2968,6 @@ class BaseModel(object):
             if name not in self._fields:
                 self._add_field(name, field)
 
-    @classmethod
-    def _inherits_reload(cls):
-        """ Recompute the _inherit_fields mapping. """
-        cls._inherit_fields = struct = {}
-        for parent_model, parent_field in cls._inherits.iteritems():
-            parent = cls.pool[parent_model]
-            parent._inherits_reload()
-            for name, column in parent._columns.iteritems():
-                struct[name] = (parent_model, parent_field, column, parent_model)
-            for name, source in parent._inherit_fields.iteritems():
-                struct[name] = (parent_model, parent_field, source[2], source[3])
-
     @api.model
     def _inherits_check(self):
         for table, field_name in self._inherits.items():
@@ -3134,9 +3115,6 @@ class BaseModel(object):
                 exceptions = (Exception,) if field.manual else ()
                 with tools.ignore(*exceptions):
                     field.setup_triggers(self)
-
-        # determine old-api structures about inherited fields
-        cls._inherits_reload()
 
         # register stuff about low-level function fields
         cls._init_function_fields(cls.pool, self._cr)
