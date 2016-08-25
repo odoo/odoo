@@ -61,7 +61,7 @@ class SaleConfiguration(models.TransientModel):
         ], "Warning", implied_group='sale.group_warning_sale')
     module_website_quote = fields.Selection([
         (0, 'Print quotes or send by email'),
-        (1, 'Send online quotations based on templates (advanced)')
+        (1, 'Send quotations your customer can approve & pay online (advanced)')
         ], "Online Quotations")
     group_sale_delivery_address = fields.Selection([
         (0, "Invoicing and shipping addresses are always the same (Example: services companies)"),
@@ -107,10 +107,6 @@ class SaleConfiguration(models.TransientModel):
     module_sale_contract = fields.Boolean("Manage subscriptions and recurring invoicing")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
     module_website_portal = fields.Boolean("Enable customer portal to track orders, delivery and invoices")
-    module_sale_order_dates = fields.Selection([
-        (0, 'Procurements and deliveries dates are based on the sales order dates'),
-        (1, 'Allow to modify the sales order dates to postpone deliveries and procurements')
-        ], "Date")
 
     @api.multi
     def set_sale_defaults(self):

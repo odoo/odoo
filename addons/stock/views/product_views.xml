@@ -156,6 +156,18 @@
                     <separator string="Description for Pickings" colspan="4"/>
                     <field name="description_picking" placeholder="Description for Pickings (Rack, Row and Case Information)" nolabel="1" colspan="4"/>
                 </field>
+                <group name="email_template_and_project" position="before">
+                    <group name="sale_condition" string="Sale Conditions">
+                        <label for="warranty" groups="stock.group_stock_production_lot"/>
+                        <div groups="stock.group_stock_production_lot">
+                            <field name="warranty" class="oe_inline"/> months
+                        </div>
+                        <label for="sale_delay"/>
+                        <div>
+                            <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
+                        </div>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -358,20 +370,6 @@
                             class="oe_stat_button" icon="fa-cogs"
                             groups="stock.group_adv_location"/>
                     </div>
-                    <group name="email_template_and_project" position="before">
-                        <group name="sale_condition" string="Sale Conditions">
-                            <label for="warranty" groups="stock.group_stock_production_lot"/>
-                            <div groups="stock.group_stock_production_lot">
-                                <field name="warranty" class="oe_inline"/> months
-                            </div>
-                        </group>
-                    </group>
-                    <group name="sale_condition" position="inside">
-                        <label for="sale_delay"/>
-                        <div>
-                            <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
-                        </div>
-                    </group>
                 </data>
             </field>
         </record>

@@ -26,6 +26,10 @@ class SaleConfiguration(models.TransientModel):
         (1, 'Choose specific routes on sales order lines (advanced)')
         ], "Order Routing",
         implied_group='sale_stock.group_route_so_lines')
+    module_sale_order_dates = fields.Selection([
+        (0, 'Procurements and deliveries dates are based on the sales order dates'),
+        (1, 'Allow to modify the sales order dates to postpone deliveries and procurements')
+        ], "Date")
 
     @api.model
     def get_default_sale_config(self, fields):
