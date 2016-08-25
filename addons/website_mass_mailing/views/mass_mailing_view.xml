@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_mail_mass_mailing_list_form">
+        <field name="name">mail.mass_mailing.list.form</field>
+        <field name="model">mail.mass_mailing.list</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_list_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook groups="website_mass_mailing.group_website_popup_on_exit">
+                    <page string="Popup Content">
+                        <field name="popup_content" widget="html_frame" options="{'editor_url': '/website_mass_mailing/field/popup_content'}"/>
+                    </page>
+                </notebook>
+            </xpath>
+            <xpath expr="//div[@class='oe_title']" position="inside">
+                <group groups="website_mass_mailing.group_website_popup_on_exit">
+                    <field name="popup_redirect_url"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
