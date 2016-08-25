@@ -64,6 +64,12 @@ var RunningTourActionHelper = core.Class.extend({
         text = text || "Test";
         if (values.consume_event === "input") {
             values.$element.val(text).trigger("input");
+        } else if (values.$element.is("select")) {
+            values.$element.children("option")
+                .prop("selected", false).removeProp("selected")
+                .filter(function () { return $(this).val() === text; })
+                .prop("selected", true);
+            this._click(values);
         } else {
             values.$element.text(text);
         }
