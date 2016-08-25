@@ -1017,7 +1017,6 @@ class ProductTemplate(models.Model):
     property_account_creditor_price_difference = fields.Many2one(
         'account.account', string="Price Difference Account", company_dependent=True,
         help="This account will be used to value price difference between purchase price and cost price.")
-    purchase_ok = fields.Boolean('Can be Purchased', default=True)
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),
