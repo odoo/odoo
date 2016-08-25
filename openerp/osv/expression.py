@@ -1075,7 +1075,7 @@ class expression(object):
                         right += ' 00:00:00'
                     push(create_substitution_leaf(leaf, (left, operator, right), model))
 
-                elif column.translate and not callable(column.translate) and right:
+                elif field.translate is True and right:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
