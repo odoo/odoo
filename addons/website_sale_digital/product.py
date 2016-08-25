@@ -46,8 +46,8 @@ class Product(models.Model):
         return {
             'name': _('Digital Attachments'),
             'domain': [('product_downloadable', '=', True), '|',
-                       '&', ('res_model', '=', 'product.template'), '&', ('res_id', '=', self.product_tmpl_id.id),
-                       '&', ('res_model', '=', self._name), '&', ('res_id', '=', self.id)],
+                       '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_tmpl_id.id),
+                       '&', ('res_model', '=', self._name), ('res_id', '=', self.id)],
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,form',
