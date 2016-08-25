@@ -37,6 +37,16 @@ class website_account(http.Controller):
             values.update(post)
             if not error:
                 post.update({'zip': post.pop('zipcode', '')})
+                if partner.type == "contact":
+                    address_fields = {
+                        'city': post.pop('city'),
+                        'street': post.pop('street'),
+                        'street2': post.pop('street2'),
+                        'zip': post.pop('zip'),
+                        'country_id': post.pop('country_id'),
+                        'state_id': post.pop('state_id')
+                    }
+                    partner.commercial_partner_id.write(address_fields)
                 partner.sudo().write(post)
                 if redirect:
                     return request.redirect(redirect)

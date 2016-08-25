@@ -206,6 +206,22 @@ function make_message (data) {
         a.url = '/web/content/' + a.id + '?download=true';
     });
 
+    // format date to the local only once by message
+    // can not be done in preprocess, since it alter the original value
+    if (msg.tracking_value_ids && msg.tracking_value_ids.length) {
+        _.each(msg.tracking_value_ids, function(f) {
+            if (_.contains(['date', 'datetime'], f.field_type)) {
+                var format = (f.field_type === 'date') ? 'LL' : 'LLL';
+                if (f.old_value) {
+                    f.old_value = moment.utc(f.old_value).local().format(format);
+                }
+                if (f.new_value) {
+                    f.new_value = moment.utc(f.new_value).local().format(format);
+                }
+            }
+        });
+    }
+
     return msg;
 }
 
@@ -623,7 +639,7 @@ var chat_manager = {
             // post a message in a channel
             return ChannelModel.call('message_post', [options.channel_id], _.extend(msg, {
                 message_type: 'comment',
-                content_subtype: 'html',
+                content_subtype: 'plaintext',
                 subtype: 'mail.mt_comment',
             }));
         }

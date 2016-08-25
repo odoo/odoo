@@ -20,6 +20,7 @@ import sys
 import threading
 import time
 import traceback
+import urllib2
 import urlparse
 import warnings
 from zlib import adler32
@@ -1807,6 +1808,18 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             if rv.status_code == 304:
                 rv.headers.pop('x-sendfile', None)
     return rv
+
+def content_disposition(filename):
+    filename = openerp.tools.ustr(filename)
+    escaped = urllib2.quote(filename.encode('utf8'))
+    browser = request.httprequest.user_agent.browser
+    version = int((request.httprequest.user_agent.version or '0').split('.')[0])
+    if browser == 'msie' and version < 9:
+        return "attachment; filename=%s" % escaped
+    elif browser == 'safari' and version < 537:
+        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
+    else:
+        return "attachment; filename*=UTF-8''%s" % escaped
 
 #----------------------------------------------------------
 # RPC controller
