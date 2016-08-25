@@ -74,30 +74,6 @@ def resolve_mro(model, name, predicate):
     return result
 
 
-def default_new_to_new(field, value):
-    """ Convert the new-API default ``value`` to a callable. """
-    return value if callable(value) else lambda model: value
-
-def default_new_to_old(field, value):
-    """ Convert the new-API default ``value`` to the old API. """
-    if callable(value):
-        from openerp import api
-        return api.model(lambda model: field.convert_to_write(value(model), model))
-    else:
-        return value
-
-def default_old_to_new(field, value):
-    """ Convert the old-API default ``value`` to the new API. """
-    if callable(value):
-        return lambda model: value(model._model, model._cr, model._uid, model._context)
-    else:
-        return lambda model: value
-
-def default_old_to_old(field, value):
-    """ Convert the old-API default ``value`` to the old API. """
-    return value
-
-
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -457,40 +433,10 @@ class Field(object):
             # related fields get their string from their parent field
             self.string = name.replace('_', ' ').capitalize()
 
-        self._setup_default(model, name)
-
-    def _setup_default(self, model, name):
-        """ Determine ``self.default`` and the corresponding ``model._defaults``. """
-        self.default = None
-        model._defaults.pop(name, None)
-
-        # traverse the class hierarchy upwards, and take the first field
-        # definition with a default or _defaults for self
-        for klass in type(model).__mro__:
-            if name in klass.__dict__:
-                field = klass.__dict__[name]
-                if not isinstance(field, type(self)):
-                    # klass contains another value overridden by self
-                    return
-
-                if 'default' in field.args:
-                    # take the value, and adapt it for model._defaults
-                    value = field.args['default']
-                    if value is not None:
-                        self.default = default_new_to_new(self, value)
-                        model._defaults[name] = default_new_to_old(self, value)
-                    return
-
-            # do not look up _defaults on model classes
-            if getattr(klass, 'pool', None):
-                continue
-            defaults = klass.__dict__.get('_defaults') or {}
-            if name in defaults:
-                # take the value from _defaults, and adapt it for self.default
-                value = defaults[name]
-                self.default = default_old_to_new(self, value)
-                model._defaults[name] = default_old_to_old(self, value)
-                return
+        # self.default must be a callable
+        if self.default is not None:
+            value = self.default
+            self.default = value if callable(value) else lambda model: value
 
     ############################################################################
     #
@@ -1430,9 +1376,9 @@ class Datetime(Field):
     @staticmethod
     def context_timestamp(record, timestamp):
         """Returns the given timestamp converted to the client's timezone.
-           This method is *not* meant for use as a _defaults initializer,
+           This method is *not* meant for use as a default initializer,
            because datetime fields are automatically converted upon
-           display on client side. For _defaults you :meth:`fields.datetime.now`
+           display on client side. For default values :meth:`fields.datetime.now`
            should be used instead.
 
            :param datetime timestamp: naive datetime value (expressed in UTC)
