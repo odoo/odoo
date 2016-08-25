@@ -1250,6 +1250,19 @@
     </div>
 </t>
 
+<t t-name="AceEditor">
+    <t t-if="!widget.get('effective_readonly')">
+        <div class="oe_form_field o_ace_view_editor oe_ace_open">
+            <div class="ace-view-editor"/>
+        </div>
+    </t>
+    <t t-if="widget.get('effective_readonly')">
+        <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
+            <span class="oe_form_text_content"></span>
+        </div>
+    </t>
+</t>
+
 <t t-name="notification-box">
     <div t-att-class="'alert alert-dismissible alert-' + type" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">

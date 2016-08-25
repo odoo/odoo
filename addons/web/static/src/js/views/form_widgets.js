@@ -1,6 +1,7 @@
 odoo.define('web.form_widgets', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
@@ -1579,6 +1580,102 @@ var FieldToggleBoolean = common.AbstractField.extend({
     },
 });
 
+/**
+    This widget is intended to be used on Text fields. It will provide Ace Editor for editing XML and Python.
+*/
+
+var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+    template: "AceEditor",
+    willStart: function() {
+        if (!window.ace && !this.loadJS_def) {
+            this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
+                return $.when(ajax.loadJS('/web/static/lib/ace/mode-python.js'),
+                    ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
+                    ajax.loadJS('/web/static/lib/ace/theme-monokai.js'));
+            });
+        }
+        return $.when(this._super(), this.loadJS_def);
+    },
+    initialize_content: function () {
+        if (! this.get("effective_readonly")) {
+            var self = this;
+
+            this.aceEditor = ace.edit(this.$('.ace-view-editor')[0]);
+            this.aceEditor.setOptions({"maxLines": Infinity});
+            this.aceEditor.setTheme("ace/theme/monokai");
+            this.aceEditor.$blockScrolling = true;
+
+            var scrollIntoViewIfNeeded = _.throttle(function () {
+                var node = self.aceEditor.renderer.textarea;
+                if (node.scrollIntoViewIfNeeded) {
+                    node.scrollIntoViewIfNeeded(false);
+                } else {
+                    var offsetParent = node.offsetParent;
+                    while (offsetParent) {
+                        var elY = 0;
+                        var elH = node.offsetHeight+20;
+                        var parent = node;
+                        while (offsetParent && parent) {
+                            elY += node.offsetTop;
+                            // get if a parent have a scrollbar
+                            parent = node.parentNode;
+                            while (parent != offsetParent &&
+                                (parent.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(parent).overflowY) === -1)) {
+                                parent = parent.parentNode;
+                            }
+                            node = parent;
+                            if (parent !== offsetParent) {
+                                elY -= parent.offsetTop;
+                                parent = null;
+                            }
+                            offsetParent = node.offsetParent;
+                        }
+
+                        if ((node.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(node).overflowY) !== -1) &&
+                            (node.scrollTop + node.clientHeight) < (elY + elH)) {
+                            node.scrollTop = (elY + elH) - node.clientHeight;
+                        }
+                    }
+                }
+            });
+            var $moveTextAreaToCursor = this.aceEditor.renderer.$moveTextAreaToCursor;
+            self.aceEditor.renderer.$moveTextAreaToCursor = function() {
+                $moveTextAreaToCursor.call(this);
+                if (parseInt($(self.aceEditor.renderer.textarea).css('top'), 10) >= 0) {
+                    scrollIntoViewIfNeeded();
+                }
+            };
+
+            this.aceSession = this.aceEditor.getSession();
+            this.aceSession.setUseWorker(false);
+            this.aceSession.setMode("ace/mode/"+(this.options.mode || 'xml'));
+
+            this.aceEditor.on("blur", function() {
+                if (self.aceSession.getUndoManager().hasUndo()) {
+                    self.set_value(self.aceSession.getValue());
+                }
+            });
+        }
+    },
+    destroy_content: function() {
+        if (this.aceEditor) {
+            this.aceEditor.destroy();
+        }
+    },
+    render_value: function() {
+        if (! this.get("effective_readonly")) {
+            var value = formats.format_value(this.get('value'), this);
+            this.aceSession.setValue(value);
+
+        } else {
+            var txt = this.get("value") || '';
+            this.$(".oe_form_text_content").text(txt);
+        }
+    },
+    focus: function() {
+        return this.aceEditor.focus();
+    },
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -1614,8 +1711,8 @@ core.form_widget_registry
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)
-    .add('label_selection', LabelSelection);
-
+    .add('label_selection', LabelSelection)
+    .add('ace', AceEditor);
 
 /**
  * Registry of widgets usable in the form view that can substitute to any possible

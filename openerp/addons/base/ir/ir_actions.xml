@@ -292,7 +292,7 @@
                         <notebook colspan="4">
                             <page string="Python Code" name='code' autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
-                                <field name="code" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
+                                <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
                             <page string="Worflow Signal" autofocus="autofocus"
