@@ -910,9 +910,14 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
     </address>
-     <a t-att-href="res_company.google_map_link()" target="_BLANK">
-        <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
-    </a>
+    <t t-if="res_company.google_map_img()">
+        <a t-att-href="res_company.google_map_link()" target="_BLANK">
+           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
+        </a>
+    </t>
+    <t t-else="1">
+        <a t-att-href="res_company.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+    </t>
 </template>
 
 <template id="contactus" name="Contact us" page="True">

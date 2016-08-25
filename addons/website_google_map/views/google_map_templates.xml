@@ -14,7 +14,12 @@
             var odoo_partner_data = <t t-raw="partner_data"/>;
         </script>
         <div id="odoo-google-map"></div>
-        <script src="//maps.google.com/maps/api/js?sensor=false"></script>
+        <t t-if="google_maps_api_key">
+            <script t-attf-src="//maps.google.com/maps/api/js?key=#{google_maps_api_key}"></script>
+        </t>
+        <t t-else="1">
+            <script src="//maps.google.com/maps/api/js"></script>
+        </t>
         <script type="text/javascript" src="/website_google_map/static/src/lib/markerclusterer.js"></script>
         <script type="text/javascript" src="/website_google_map/static/src/js/website_google_map.js"></script>
     </body>

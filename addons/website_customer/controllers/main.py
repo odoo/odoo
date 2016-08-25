@@ -79,6 +79,7 @@ class WebsiteCustomer(http.Controller):
 
         partners = Partner.sudo().search(domain, offset=pager['offset'], limit=self._references_per_page)
         google_map_partner_ids = ','.join(map(str, partners.ids))
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
         tag = tag_id and Tag.browse(tag_id) or False
@@ -94,6 +95,7 @@ class WebsiteCustomer(http.Controller):
             'search_path': "?%s" % werkzeug.url_encode(post),
             'tag': tag,
             'tags': tags,
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_customer.index", values)
 
