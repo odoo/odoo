@@ -2987,20 +2987,6 @@ class BaseModel(object):
             for name, source in parent._inherit_fields.iteritems():
                 struct[name] = (parent_model, parent_field, source[2], source[3])
 
-    @property
-    def _all_columns(self):
-        """ Returns a dict mapping all fields names (self fields and inherited
-        field via _inherits) to a ``column_info`` object giving detailed column
-        information. This property is deprecated, use ``_fields`` instead.
-        """
-        result = {}
-        # do not inverse for loops, since local fields may hide inherited ones!
-        for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
-            result[k] = fields.column_info(k, col, parent, m2o, original_parent)
-        for k, col in self._columns.iteritems():
-            result[k] = fields.column_info(k, col)
-        return result
-
     @api.model
     def _inherits_check(self):
         for table, field_name in self._inherits.items():
