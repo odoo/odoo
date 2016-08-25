@@ -16,5 +16,10 @@
             </field>
         </record>
 
+        <record id="payment.payment_acquirer_custom" model="payment.acquirer">
+            <field name="name">Custom</field>
+            <field name="provider">transfer</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
     </data>
 </odoo>

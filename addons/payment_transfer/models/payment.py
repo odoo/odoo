@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class TransferPaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('transfer', 'Wire Transfer')])
+    provider = fields.Selection(selection_add=[('transfer', 'Wire Transfer')], default='transfer')
 
     def transfer_get_form_action_url(self):
         return '/payment/transfer/feedback'
