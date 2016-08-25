@@ -68,7 +68,6 @@ class TestFields(common.TransactionCase):
         self.assertFalse(field.store)
         self.assertFalse(field.compute)
         self.assertFalse(field.inverse)
-        self.assertFalse(field.column)
 
         # find messages
         for message in self.env['test_new_api.message'].search([]):

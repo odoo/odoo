@@ -102,8 +102,8 @@ def _eval_xml(self, node, env):
             ids = env[f_model].search(q).ids
             if f_use != 'id':
                 ids = map(lambda x: x[f_use], env[f_model].browse(ids).read([f_use]))
-            _cols = env[f_model]._columns
-            if (f_name in _cols) and _cols[f_name]._type=='many2many':
+            _fields = env[f_model]._fields
+            if (f_name in _fields) and _fields[f_name].type == 'many2many':
                 return ids
             f_val = False
             if len(ids):

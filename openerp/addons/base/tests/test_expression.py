@@ -641,11 +641,9 @@ class TestAutoJoin(TransactionCase):
         # Get test columns
         def patch_auto_join(model, fname, value):
             self.patch(model._fields[fname], 'auto_join', value)
-            self.patch(model._columns[fname], '_auto_join', value)
 
         def patch_domain(model, fname, value):
             self.patch(model._fields[fname], 'domain', value)
-            self.patch(model._columns[fname], '_domain', value)
 
         # Get country/state data
         country_us = self.env['res.country'].search([('code', 'like', 'US')], limit=1)
