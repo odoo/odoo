@@ -39,7 +39,7 @@ tour.register('project_tour', {
     position: "right"
 }, {
     trigger: ".o-kanban-button-new",
-    extra_trigger: '.o_kanban_project_tasks .o_kanban_group:nth-child(2)',
+    extra_trigger: '.o_kanban_project_tasks .o_kanban_group:eq(2)',
     content: _t("Now that the project is set up, <b>create a few tasks</b>."),
     position: "right"
 }, {
@@ -47,7 +47,7 @@ tour.register('project_tour', {
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("<b>Drag &amp; drop tasks</b> between columns as you work on them."),
     position: "right",
-    run: "drag_and_drop .o_kanban_group:nth-child(2)",
+    run: "drag_and_drop .o_kanban_group:eq(2) ",
 }, {
     trigger: ".o_kanban_record .o_priority_star",
     extra_trigger: '.o_kanban_project_tasks',
