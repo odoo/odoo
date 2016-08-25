@@ -317,7 +317,6 @@ class BaseModel(object):
     _inherit = None             # Python-inherited models ('model' or ['model'])
     _inherits = {}              # inherited models {'parent_model': 'm2o_field'}
     _columns = {}               # field definitions (old API)
-    _defaults = {}              # field defaults (old API)
     _constraints = []           # Python constraints (old API)
 
     _table = None               # SQL table name used by model
@@ -609,7 +608,6 @@ class BaseModel(object):
                 '_original_module': cls._module,
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_fields': {},                          # populated in _setup_base()
-                '_defaults': {},                        # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
 
@@ -3021,17 +3019,13 @@ class BaseModel(object):
             for name in set(cls._fields) - cls0._proper_fields:
                 delattr(cls, name)
                 cls._fields.pop(name, None)
-                cls._defaults.pop(name, None)
             # collect proper fields on cls0, and add them on cls
             for name in cls0._proper_fields:
                 field = cls0._fields[name]
+                # regular fields are shared, while related fields are setup from scratch
                 if not field.related:
-                    # regular fields are shared, and their default value copied
                     self._add_field(name, field)
-                    if name in cls0._defaults:
-                        cls._defaults[name] = cls0._defaults[name]
                 else:
-                    # related fields are copied, and setup from scratch
                     self._add_field(name, field.new(**field.args))
             cls._proper_fields = set(cls._fields)
 
@@ -3041,7 +3035,6 @@ class BaseModel(object):
             for name in cls._fields:
                 delattr(cls, name)
             cls._fields = {}
-            cls._defaults = {}
             for name, field in getmembers(cls, Field.__instancecheck__):
                 # do not retrieve magic, custom and inherited fields
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
@@ -3121,11 +3114,6 @@ class BaseModel(object):
 
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
-
-        # check defaults
-        for name in cls._defaults:
-            assert name in cls._fields, \
-                "Model %s has a default for nonexiting field %s" % (cls._name, name)
 
         # validate rec_name
         if cls._rec_name:
