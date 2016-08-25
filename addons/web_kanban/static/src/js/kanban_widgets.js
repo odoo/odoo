@@ -139,7 +139,7 @@ var KanbanSelection = AbstractField.extend({
 
         var current_state = _.find(this.states, function(state) {
             return state.name === self.get('value');
-        });
+        }) || {state_class: ''};
 
         self.$el = $(QWeb.render("KanbanSelection", {
             current_state_class: current_state.state_class,
