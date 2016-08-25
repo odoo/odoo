@@ -1082,7 +1082,6 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         this.$('.o_select_file_button').click(function() {
             self.$inputFile.click();
         });
-        this.$('.o_save_file_button').click(this.on_save_as);
         this.$('.o_clear_file_button').click(this.on_clear);
     },
     on_file_change: function(e) {
