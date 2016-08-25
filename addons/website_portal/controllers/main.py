@@ -9,7 +9,7 @@ from odoo.fields import Date
 
 class website_account(http.Controller):
 
-    _items_per_page = 10
+    _items_per_page = 20
 
     def _prepare_portal_layout_values(self):
         """ prepare the values to render portal layout """
