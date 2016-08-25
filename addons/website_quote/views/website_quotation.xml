@@ -396,7 +396,7 @@
             <small t-field="quotation.state"/>
             <div t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print">
                <ul class="list-inline">
-                  <li groups="base.group_website_publisher">
+                  <li groups="base.group_sale_salesman">
                     <a t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
                     <a t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sale Order</a>
                   </li>
