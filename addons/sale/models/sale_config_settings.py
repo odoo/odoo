@@ -39,24 +39,24 @@ class SaleConfiguration(models.TransientModel):
         implied_group='sale.group_discount_per_so_line')
     group_display_incoterm = fields.Selection([
         (0, 'No incoterm on reports'),
-        (1, 'Show incoterms on sale orders and invoices')
+        (1, 'Show incoterms on sales orders and invoices')
         ], "Incoterms",
         implied_group='sale.group_display_incoterm',
-        help="The printed reports will display the incoterms for the sale orders and the related invoices")
+        help="The printed reports will display the incoterms for the sales orders and the related invoices")
     module_product_visible_discount = fields.Selection([
-        (0, 'No discount policy on sale order line'),
-        (1, 'Allow discount policy on sale order line')
+        (0, 'No discount policy on sales order line'),
+        (1, 'Allow discount policy on sales order line')
         ], "Discount Policy")
     module_sale_margin = fields.Selection([
         (0, 'Salespeople do not need to view margins when quoting'),
         (1, 'Display margins on quotations and sales orders')
         ], "Margins")
     group_sale_layout = fields.Selection([
-        (0, 'Do not personalize sale orders and invoice reports'),
-        (1, 'Personalize the sale orders and invoice report with categories, subtotals and page-breaks')
-        ], "Sale Reports Layout", implied_group='sale.group_sale_layout')
+        (0, 'Do not personalize sales orders and invoice reports'),
+        (1, 'Personalize the sales orders and invoice report with categories, subtotals and page-breaks')
+        ], "Sales Reports Layout", implied_group='sale.group_sale_layout')
     group_warning_sale = fields.Selection([
-        (0, 'All the products and the customers can be used in sale orders'),
+        (0, 'All the products and the customers can be used in sales orders'),
         (1, 'An informative or blocking warning can be set on a product or a customer')
         ], "Warning", implied_group='sale.group_warning_sale')
     module_website_quote = fields.Selection([
@@ -102,14 +102,14 @@ class SaleConfiguration(models.TransientModel):
         help='Default product used for payment advances')
     auto_done_setting = fields.Selection([
         (0, "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"),
-        (1, "Never allow to modify a confirmed sale order")
+        (1, "Never allow to modify a confirmed sales order")
         ], "Sale Order Modification")
     module_sale_contract = fields.Boolean("Manage subscriptions and recurring invoicing")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
     module_website_portal = fields.Boolean("Enable customer portal to track orders, delivery and invoices")
     module_sale_order_dates = fields.Selection([
-        (0, 'Procurements and deliveries dates are based on the sale order dates'),
-        (1, 'Allow to modify the sale order dates to postpone deliveries and procurements')
+        (0, 'Procurements and deliveries dates are based on the sales order dates'),
+        (1, 'Allow to modify the sales order dates to postpone deliveries and procurements')
         ], "Date")
 
     @api.multi
