@@ -911,12 +911,3 @@ class Tags(models.Model):
         if self.env.user.karma < forum.karma_tag_create:
             raise KarmaError(_('Not enough karma to create a new Tag'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)
-
-class Message(models.Model):
-    _name = 'mail.message'
-    _inherit = ['mail.message']
-
-    @api.multi
-    def _is_accessible(self):
-        res = super(Message, self)._is_accessible()
-        return self.model == 'forum.post' or res

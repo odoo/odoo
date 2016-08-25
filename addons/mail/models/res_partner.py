@@ -86,7 +86,6 @@ class Partner(models.Model):
             'tracking': tracking,
             'is_discussion': is_discussion,
             'subtype': message.subtype_id,
-            'is_accessible': message._is_accessible()
         }
 
     @api.model
