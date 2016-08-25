@@ -21,6 +21,24 @@ function get_running_delay_key() {
     return get_running_key() + "_delay";
 }
 
+function do_before_unload(if_unload_callback, if_not_unload_callback) {
+    if_unload_callback = if_unload_callback || function () {};
+    if_not_unload_callback = if_not_unload_callback || if_unload_callback;
+
+    var old_before = window.onbeforeunload;
+    var reload_timeout;
+    window.onbeforeunload = function () {
+        clearTimeout(reload_timeout);
+        window.onbeforeunload = old_before;
+        if_unload_callback();
+        if (old_before) return old_before.apply(this, arguments);
+    };
+    reload_timeout = _.defer(function () {
+        window.onbeforeunload = old_before;
+        if_not_unload_callback();
+    });
+}
+
 var RunningTourActionHelper = core.Class.extend({
     init: function (tip_widget) {
         this.tip_widget = tip_widget;
@@ -173,13 +191,7 @@ return core.Class.extend({
 
         if (tour.url) {
             this.pause();
-            var old_before = window.onbeforeunload;
-            var reload_timeout;
-            window.onbeforeunload = function () {
-                clearTimeout(reload_timeout);
-            };
-            reload_timeout = _.defer((function () {
-                window.onbeforeunload = old_before;
+            do_before_unload(null, (function () {
                 this.play();
                 this.update();
             }).bind(this));
@@ -350,6 +362,8 @@ return core.Class.extend({
 
         var action_helper = new RunningTourActionHelper(tip.widget);
         _.delay((function () {
+            do_before_unload(this._consume_tip.bind(this, tip, tour_name));
+
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
@@ -358,7 +372,6 @@ return core.Class.extend({
             } else {
                 action_helper.auto();
             }
-            this._consume_tip(tip, tour_name);
         }).bind(this), this.running_step_delay);
     },
 
