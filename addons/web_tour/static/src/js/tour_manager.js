@@ -149,7 +149,6 @@ return core.Class.extend({
      * @param [Array] dict of steps, each step being a dict containing a tip description
      */
     register: function() {
-        var self = this;
         var args = Array.prototype.slice.call(arguments);
         var last_arg = args[args.length - 1];
         var name = args[0];
@@ -161,12 +160,10 @@ return core.Class.extend({
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
         var tour = {
             name: name,
-            current_step: parseInt(local_storage.getItem(get_step_key(name))) || 0,
-            steps: _.filter(steps, function (step) {
-                return !step.edition || step.edition === self.edition;
-            }),
+            steps: steps,
             url: options.url,
             test: options.test,
+            wait_for: options.wait_for || $.when(),
         };
         if (options.skip_enabled) {
             tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
@@ -176,13 +173,29 @@ return core.Class.extend({
             };
         }
         this.tours[name] = tour;
-        if (this.running_tour === name || (!tour.test && !_.contains(this.consumed_tours, name))) {
-            this._to_next_step(name, 0);
-        }
+    },
+    _register_all: function (do_update) {
+        if (this._all_registered) return;
+        this._all_registered = true;
 
-        if (!this.running_tour || this.running_tour === name) {
-            this.update(name);
-        }
+        _.each(this.tours, this._register.bind(this, do_update));
+    },
+    _register: function (do_update, tour, name) {
+        if (tour.ready) return $.when();
+
+        return tour.wait_for.then((function () {
+            tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
+            tour.steps = _.filter(tour.steps, (function (step) {
+                return !step.edition || step.edition === this.edition;
+            }).bind(this));
+
+            tour.ready = true;
+
+            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !_.contains(this.consumed_tours, name)))) {
+                this._to_next_step(name, 0);
+                this.update(name);
+            }
+        }).bind(this));
     },
     run: function (tour_name, step_delay) {
         if (this.running_tour) {
@@ -204,8 +217,8 @@ return core.Class.extend({
         this._deactivate_tip(this.active_tooltips[tour_name]);
 
         tour.current_step = 0;
+        this._to_next_step(tour_name, 0);
         local_storage.setItem(get_step_key(tour_name), tour.current_step);
-        this.active_tooltips[tour_name] = tour.steps[tour.current_step];
 
         if (tour.url) {
             this.pause();
@@ -232,16 +245,16 @@ return core.Class.extend({
     update: function (tour_name) {
         if (this.paused) return;
 
-        if (this.running_tour) {
-            if (this.tours[this.running_tour] === undefined) return;
-            if (this.running_tour_timeout === undefined) {
-                this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
-            }
-        }
-
         this.$modal_displayed = $('.modal:visible').last();
+
         tour_name = this.running_tour || tour_name;
         if (tour_name) {
+            var tour = this.tours[tour_name];
+            if (!tour || !tour.ready) return;
+
+            if (this.running_tour && this.running_tour_timeout === undefined) {
+                this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
+            }
             this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
         } else {
             _.each(this.active_tooltips, this._check_for_tooltip.bind(this));
