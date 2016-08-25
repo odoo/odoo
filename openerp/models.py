@@ -3067,12 +3067,12 @@ class BaseModel(object):
 
         # determine which fields can be prefetched
         fs = {field}
-        if self._context.get('prefetch_fields', True) and field.column._prefetch:
+        if self._context.get('prefetch_fields', True) and field.prefetch:
             fs.update(
                 f
                 for f in self._fields.itervalues()
-                # select stored fields that can be prefetched
-                if f.store and f.column._prefetch
+                # select fields that can be prefetched
+                if f.prefetch
                 # discard fields with groups that the user may not access
                 if not (f.groups and not self.user_has_groups(f.groups))
                 # discard fields that must be recomputed
