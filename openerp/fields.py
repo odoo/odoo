@@ -340,6 +340,7 @@ class Field(object):
 
         'related_field': None,          # corresponding related field
         'group_operator': None,         # operator for aggregating values
+        'prefetch': True,               # whether the field is prefetched
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -457,6 +458,10 @@ class Field(object):
                 attrs['inverse'] = self._inverse_sparse
 
         self.set_all_attrs(attrs)
+
+        # prefetch only stored, column, non-manual and non-deprecated fields
+        if not (self.store and self.column_type) or self.manual or self.deprecated:
+            self.prefetch = False
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
