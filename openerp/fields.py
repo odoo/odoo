@@ -293,6 +293,7 @@ class Field(object):
 
     type = None                         # type of the field (string)
     relational = False                  # whether the field is a relational one
+    translate = False                   # whether the field is translated
 
     column_type = None                  # database column type (ident, spec)
     column_format = '%s'                # placeholder for value in queries
@@ -1286,6 +1287,12 @@ class _String(Field):
         'translate': False,             # whether the field is translated
     }
 
+    def __init__(self, string=Default, **kwargs):
+        # translate is either True, False, or a callable
+        if 'translate' in kwargs and not callable(kwargs['translate']):
+            kwargs['translate'] = bool(kwargs['translate'])
+        super(_String, self).__init__(string=string, **kwargs)
+
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
 
@@ -1412,7 +1419,7 @@ class Html(_String):
     def _setup_attrs(self, model, name):
         super(Html, self)._setup_attrs(model, name)
         # Translated sanitized html fields must use html_translate or a callable.
-        if self.translate and not callable(self.translate) and self.sanitize:
+        if self.translate is True and self.sanitize:
             self.translate = html_translate
 
     _column_sanitize = property(attrgetter('sanitize'))

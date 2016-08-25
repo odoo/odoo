@@ -876,7 +876,7 @@ def trans_generate(lang, modules, cr):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for field_name, field in record._fields.iteritems():
-            if getattr(field, 'translate', None):
+            if field.translate:
                 name = model + "," + field_name
                 try:
                     value = record[field_name] or ''

@@ -336,7 +336,7 @@ class BaseModel(object):
                 'readonly': bool(field.readonly),
                 'required': bool(field.required),
                 'selectable': bool(field.search or field.store),
-                'translate': bool(getattr(field, 'translate', False)),
+                'translate': bool(field.translate),
                 'relation_field': field.inverse_name if field.type == 'one2many' else None,
                 'serialization_field_id': None,
                 'relation_table': field.relation if field.type == 'many2many' else None,
@@ -2115,8 +2115,7 @@ class BaseModel(object):
             )
             model, alias, field = parent_model, parent_alias, field.related_field
         # handle the case where the field is translated
-        translate = getattr(field, 'translate', None)
-        if translate and not callable(translate):
+        if field.translate is True:
             return model._generate_translated_field(alias, fname, query)
         else:
             return '"%s"."%s"' % (alias, fname)
@@ -3139,7 +3138,7 @@ class BaseModel(object):
             field
             for field in fields
             if field.base_field.column._classic_write
-            if not (field.inherited and callable(field.base_field.column.translate))
+            if not (field.inherited and callable(field.base_field.translate))
         ]
 
         # the query may involve several tables: we need fully-qualified names
@@ -3178,7 +3177,7 @@ class BaseModel(object):
             # translate the fields if necessary
             if context.get('lang'):
                 for field in fields_pre:
-                    if not field.inherited and callable(field.column.translate):
+                    if not field.inherited and callable(field.translate):
                         f = field.name
                         translate = field.get_trans_func(fetched)
                         for vals in result:
@@ -3651,7 +3650,7 @@ class BaseModel(object):
                 if hasattr(field, 'selection') and val:
                     self._check_selection_field_value(name, val)
                 if field.column_type:
-                    if single_lang or not (has_trans and getattr(field, 'translate', None) and not callable(field.translate)):
+                    if single_lang or not (has_trans and field.translate is True):
                         # val is not a translation: update the table
                         val = field.convert_to_column(val, self)
                         updates.append((name, field.column_format, val))
@@ -3681,14 +3680,12 @@ class BaseModel(object):
             # TODO: optimize
             for name in direct:
                 field = self._fields[name]
-                translate = getattr(field, 'translate', None)
-
-                if callable(translate):
+                if callable(field.translate):
                     # The source value of a field has been modified,
                     # synchronize translated terms when possible.
                     self.env['ir.translation']._sync_terms_translations(self._fields[name], self)
 
-                elif has_trans and translate:
+                elif has_trans and field.translate:
                     # The translated value of a field has been modified.
                     src_trans = self.read([name])[0][name]
                     if not src_trans:
@@ -3953,8 +3950,8 @@ class BaseModel(object):
         if self.env.lang and self.env.lang != 'en_US':
             # add translations for self.env.lang
             for name, val in vals.iteritems():
-                column = self._columns[name]
-                if column._classic_write and column.translate and not callable(column.translate):
+                field = self._fields[name]
+                if field.store and field.column_type and field.translate is True:
                     tname = "%s,%s" % (self._name, name)
                     self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
 
@@ -4397,7 +4394,7 @@ class BaseModel(object):
                 for (old_line, new_line) in zip(old_lines, new_lines):
                     old_line.copy_translations(new_line)
 
-            elif getattr(field, 'translate', False):
+            elif field.translate:
                 # for translatable fields we copy their translations
                 trans_name, source_id, target_id = get_trans(field, old, new)
                 domain = [('name', '=', trans_name), ('res_id', '=', source_id)]

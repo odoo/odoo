@@ -443,7 +443,7 @@ class IrTranslation(models.Model):
         between modified strings is not too large. It allows to not retranslate
         data where a typo has been fixed in the English value.
         """
-        if not callable(getattr(field, 'translate', None)):
+        if not callable(field.translate):
             return
 
         trans = self.env['ir.translation']
@@ -643,7 +643,7 @@ class IrTranslation(models.Model):
 
         # insert missing translations, and extend domain for related fields
         for name, fld in record._fields.items():
-            if not getattr(fld, 'translate', False):
+            if not fld.translate:
                 continue
 
             rec = record
