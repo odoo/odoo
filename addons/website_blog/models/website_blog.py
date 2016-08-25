@@ -254,7 +254,7 @@ class BlogPost(osv.Model):
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (post.blog_id.id, post.id),
             'target': 'self',
-            'res_id': self.id,
+            'res_id': post.id,
         }
 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
