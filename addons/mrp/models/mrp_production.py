@@ -149,6 +149,8 @@ class MrpProduction(models.Model):
     has_moves = fields.Boolean(compute='_has_moves')
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
+    priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
+                                readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
 
     @api.multi
     @api.depends('workorder_ids')
