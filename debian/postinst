@@ -25,7 +25,7 @@ case "${1}" in
         # Data dir
         chown $ODOO_USER:$ODOO_GROUP $ODOO_DATA_DIR
         # update-python-modules NOW otherwise invoke-rc.d openerp start will fail
-        update-python-modules
+        # update-python-modules
         ;;
     *)
         ;;
