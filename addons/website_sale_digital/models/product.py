@@ -52,9 +52,8 @@ class Product(models.Model):
         self.ensure_one()
         return {
             'name': _('Digital Attachments'),
-            'domain': [('product_downloadable', '=', True), '|',
-                       '&', ('res_model', '=', 'product.template'), '&', ('res_id', '=', self.product_tmpl_id.id),
-                       '&', ('res_model', '=', self._name), '&', ('res_id', '=', self.id)],
+            'domain': [('product_downloadable', '=', True), ('res_model', 'in', ['product.template', self._name]),
+                       ('res_id', 'in', [self.product_tmpl_id.id, self.id])],
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,form',
