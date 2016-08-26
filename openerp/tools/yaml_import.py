@@ -588,7 +588,7 @@ class YamlInterpreter(object):
         python, statements = node.items()[0]
         assert python.model or python.id, "!python node must have attribute `model` or `id`"
         if python.id is None:
-            record = self.env[python.model]._model
+            record = self.env[python.model]
         elif isinstance(python.id, basestring):
             record = self.get_record(python.id)
         else:
@@ -598,7 +598,7 @@ class YamlInterpreter(object):
         statements = "\n" * python.first_line + statements.replace("\r\n", "\n")
         code_context = {
             'self': record,
-            'model': record._model,
+            'model': record,
             'cr': self.cr,
             'uid': self.uid,
             'log': self._log,

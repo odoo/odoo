@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-__all__ = ['synchronized', 'lazy_property', 'classproperty', 'conditional']
+__all__ = ['synchronized', 'lazy_classproperty', 'lazy_property',
+           'classproperty', 'conditional']
 
 from functools import wraps
 from inspect import getsourcefile
@@ -35,6 +36,13 @@ class lazy_property(object):
         for name in obj_dict.keys():
             if isinstance(getattr(cls, name, None), lazy_property):
                 obj_dict.pop(name)
+
+class lazy_classproperty(lazy_property):
+    """ Similar to :class:`lazy_property`, but for classes. """
+    def __get__(self, obj, cls):
+        val = self.fget(cls)
+        setattr(cls, self.fget.__name__, val)
+        return val
 
 def conditional(condition, decorator):
     """ Decorator for a conditionally applied decorator.

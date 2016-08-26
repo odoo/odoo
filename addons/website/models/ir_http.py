@@ -31,23 +31,24 @@ class RequestUID(object):
 
 
 class Http(models.AbstractModel):
-
     _inherit = 'ir.http'
 
     rerouting_limit = 10
     _geoip_resolver = None
 
-    def _get_converters(self):
+    @classmethod
+    def _get_converters(cls):
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
         """
         return dict(
-            super(Http, self)._get_converters(),
+            super(Http, cls)._get_converters(),
             model=ModelConverter,
             page=PageConverter,
         )
 
-    def _auth_method_public(self):
+    @classmethod
+    def _auth_method_public(cls):
         """ If no user logged, set the public user of current website, or default
             public user as request uid.
             After this method `request.env` can be called, since the `request.uid` is
@@ -65,16 +66,18 @@ class Http(models.AbstractModel):
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
-    def is_a_bot(self):
+    @classmethod
+    def is_a_bot(cls):
         # We don't use regexp and ustr voluntarily
         # timeit has been done to check the optimum method
         user_agent = request.httprequest.environ.get('HTTP_USER_AGENT', '').lower()
         try:
-            return any(bot in user_agent for bot in self.bots)
+            return any(bot in user_agent for bot in cls.bots)
         except UnicodeDecodeError:
-            return any(bot in user_agent.encode('ascii', 'ignore') for bot in self.bots)
+            return any(bot in user_agent.encode('ascii', 'ignore') for bot in cls.bots)
 
-    def get_nearest_lang(self, lang):
+    @classmethod
+    def get_nearest_lang(cls, lang):
         # Try to find a similar lang. Eg: fr_BE and fr_FR
         short = lang.partition('_')[0]
         short_match = False
@@ -85,32 +88,36 @@ class Http(models.AbstractModel):
                 short_match = code
         return short_match
 
-    def _geoip_setup_resolver(self):
-        if self._geoip_resolver is None:
+    @classmethod
+    def _geoip_setup_resolver(cls):
+        if cls._geoip_resolver is None:
             try:
                 import GeoIP
                 # updated database can be downloaded on MaxMind website
                 # http://dev.maxmind.com/geoip/legacy/install/city/
                 geofile = config.get('geoip_database')
                 if os.path.exists(geofile):
-                    self._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
+                    cls._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
                 else:
-                    self._geoip_resolver = False
+                    cls._geoip_resolver = False
                     logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
             except ImportError:
-                self._geoip_resolver = False
+                cls._geoip_resolver = False
 
-    def _geoip_resolve(self):
+    @classmethod
+    def _geoip_resolve(cls):
         if 'geoip' not in request.session:
             record = {}
-            if self._geoip_resolver and request.httprequest.remote_addr:
-                record = self._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+            if cls._geoip_resolver and request.httprequest.remote_addr:
+                record = cls._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
-    def get_page_key(self):
-        return (self._name, "cache", request.uid, request.lang, request.httprequest.full_path)
+    @classmethod
+    def get_page_key(cls):
+        return (cls._name, "cache", request.uid, request.lang, request.httprequest.full_path)
 
-    def _dispatch(self):
+    @classmethod
+    def _dispatch(cls):
         """ Before executing the endpoint method, add website params on request, such as
                 - current website (record)
                 - multilang support (set on cookies)
@@ -126,7 +133,7 @@ class Http(models.AbstractModel):
             if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
                 new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(new_url, 301)
-            func, arguments = self._find_handler()
+            func, arguments = cls._find_handler()
             request.website_enabled = func.routing.get('website', False)
         except werkzeug.exceptions.NotFound:
             # either we have a language prefixed route, either a real 404
@@ -138,19 +145,19 @@ class Http(models.AbstractModel):
             func and func.routing.get('multilang', func.routing['type'] == 'http')
         )
 
-        self._geoip_setup_resolver()
-        self._geoip_resolve()
+        cls._geoip_setup_resolver()
+        cls._geoip_resolve()
 
         # For website routes (only), add website params on `request`
         cook_lang = request.httprequest.cookies.get('website_lang')
         if request.website_enabled:
             try:
                 if func:
-                    self._authenticate(func.routing['auth'])
+                    cls._authenticate(func.routing['auth'])
                 elif request.uid is None:
-                    self._auth_method_public()
+                    cls._auth_method_public()
             except Exception as e:
-                return self._handle_exception(e)
+                return cls._handle_exception(e)
 
             request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
             request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
@@ -159,13 +166,13 @@ class Http(models.AbstractModel):
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
-                nearest_lang = not func and self.get_nearest_lang(path[1])
+                nearest_lang = not func and cls.get_nearest_lang(path[1])
                 url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or self.get_nearest_lang(request.lang)
+                                  or cls.get_nearest_lang(request.lang)
                                   or request.website.default_lang_code)
 
-                is_a_bot = self.is_a_bot()
+                is_a_bot = cls.is_a_bot()
 
                 request.lang = context['lang'] = nearest_lang or preferred_lang
                 # if lang in url but not the displayed or default language --> change or remove
@@ -189,7 +196,7 @@ class Http(models.AbstractModel):
                     request.uid = None
                     path.pop(1)
                     request.context = context
-                    return self.reroute('/'.join(path) or '/')
+                    return cls.reroute('/'.join(path) or '/')
             if path[1] == request.website.default_lang_code:
                 context['edit_translations'] = False
             if not context.get('tz'):
@@ -200,29 +207,31 @@ class Http(models.AbstractModel):
 
         # removed cache for auth public
         request.cache_save = False
-        resp = super(Http, self)._dispatch()
+        resp = super(Http, cls)._dispatch()
 
         if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
             resp.set_cookie('website_lang', request.lang)
         return resp
 
-    def reroute(self, path):
+    @classmethod
+    def reroute(cls, path):
         if not hasattr(request, 'rerouting'):
             request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
             raise Exception("Rerouting loop is forbidden")
         request.rerouting.append(path)
-        if len(request.rerouting) > self.rerouting_limit:
+        if len(request.rerouting) > cls.rerouting_limit:
             raise Exception("Rerouting limit exceeded")
         request.httprequest.environ['PATH_INFO'] = path
         # void werkzeug cached_property. TODO: find a proper way to do this
         for key in ('path', 'full_path', 'url', 'base_url'):
             request.httprequest.__dict__.pop(key, None)
 
-        return self._dispatch()
+        return cls._dispatch()
 
-    def _postprocess_args(self, arguments, rule):
-        super(Http, self)._postprocess_args(arguments, rule)
+    @classmethod
+    def _postprocess_args(cls, arguments, rule):
+        super(Http, cls)._postprocess_args(arguments, rule)
 
         for key, val in arguments.items():
             # Replace uid placeholder by the current request.uid
@@ -233,7 +242,7 @@ class Http(models.AbstractModel):
             _, path = rule.build(arguments)
             assert path is not None
         except Exception, e:
-            return self._handle_exception(e, code=404)
+            return cls._handle_exception(e, code=404)
 
         if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
             generated_path = werkzeug.url_unquote_plus(path)
@@ -245,14 +254,15 @@ class Http(models.AbstractModel):
                     path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path, code=301)
 
-    def _handle_exception(self, exception, code=500):
+    @classmethod
+    def _handle_exception(cls, exception, code=500):
         is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)
         if not is_website_request:
             # Don't touch non website requests exception handling
-            return super(Http, self)._handle_exception(exception)
+            return super(Http, cls)._handle_exception(exception)
         else:
             try:
-                response = super(Http, self)._handle_exception(exception)
+                response = super(Http, cls)._handle_exception(exception)
                 if isinstance(response, Exception):
                     exception = response
                 else:
@@ -300,7 +310,7 @@ class Http(models.AbstractModel):
             )
 
             if not request.uid:
-                self._auth_method_public()
+                cls._auth_method_public()
 
             try:
                 html = request.env['ir.ui.view'].render_template('website.%s' % code, values)
@@ -308,7 +318,8 @@ class Http(models.AbstractModel):
                 html = request.env['ir.ui.view'].render_template('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
-    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+    @classmethod
+    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
         env = env or request.env
         obj = None
         if xmlid:
@@ -318,7 +329,7 @@ class Http(models.AbstractModel):
         if obj and 'website_published' in obj._fields:
             if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
                 env = env(user=SUPERUSER_ID)
-        return super(Http, self).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+        return super(Http, cls).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
 
 class ModelConverter(ir.ir_http.ModelConverter):

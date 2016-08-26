@@ -10,10 +10,10 @@ from werkzeug.exceptions import BadRequest
 
 
 class IrHttp(models.AbstractModel):
-
     _inherit = 'ir.http'
 
-    def _auth_method_calendar(self):
+    @classmethod
+    def _auth_method_calendar(cls):
         token = request.params['token']
         dbname = request.params['db']
 
