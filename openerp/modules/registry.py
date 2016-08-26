@@ -20,8 +20,8 @@ _logger = logging.getLogger(__name__)
 class Registry(Mapping):
     """ Model registry for a particular database.
 
-    The registry is essentially a mapping between model names and model
-    instances. There is one registry instance per database.
+    The registry is essentially a mapping between model names and model classes.
+    There is one registry instance per database.
 
     """
 
@@ -184,7 +184,7 @@ class Registry(Mapping):
             ir_model._instanciate(model_data)
 
         # prepare the setup on all models
-        models = [env[model_name] for model_name in self.models]
+        models = env.values()
         for model in models:
             model._prepare_setup()
 

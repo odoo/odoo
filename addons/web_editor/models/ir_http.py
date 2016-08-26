@@ -8,7 +8,8 @@ from odoo.http import request
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    def _dispatch(self):
+    @classmethod
+    def _dispatch(cls):
         context = dict(request.context)
         if 'editable' in request.httprequest.args and 'editable' not in context:
             context['editable'] = True
@@ -17,4 +18,4 @@ class IrHttp(models.AbstractModel):
         if context.get('lang') != "en_US" and 'translatable' not in context:
             context['translatable'] = True
         request.context = context
-        return super(IrHttp, self)._dispatch()
+        return super(IrHttp, cls)._dispatch()

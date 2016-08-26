@@ -438,23 +438,26 @@ class Users(models.Model):
         # extra records will be deleted by the periodical garbage collection
         self.env['res.users.log'].create({}) # populated by defaults
 
-    def _login(self, db, login, password):
+    @classmethod
+    def _login(cls, db, login, password):
         if not password:
             return False
         user_id = False
         try:
-            with self.pool.cursor() as cr:
-                res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
-                if res:
-                    user_id = res[0]
-                    self.check_credentials(cr, user_id, password)
-                    self._update_last_login(cr, user_id)
+            with cls.pool.cursor() as cr:
+                self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
+                user = self.search([('login', '=', login)])
+                if user:
+                    user_id = user.id
+                    user.sudo(user_id).check_credentials(password)
+                    user.sudo(user_id)._update_last_login()
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False
         return user_id
 
-    def authenticate(self, db, login, password, user_agent_env):
+    @classmethod
+    def authenticate(cls, db, login, password, user_agent_env):
         """Verifies and returns the user ID corresponding to the given
           ``login`` and ``password`` combination, or False if there was
           no matching user.
@@ -464,33 +467,35 @@ class Users(models.Model):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = self._login(db, login, password)
+        uid = cls._login(db, login, password)
         if uid == SUPERUSER_ID:
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
             if user_agent_env and user_agent_env.get('base_location'):
                 try:
-                    with self.pool.cursor() as cr:
+                    with cls.pool.cursor() as cr:
                         base = user_agent_env['base_location']
-                        ICP = self.pool['ir.config_parameter']
-                        if not ICP.get_param(cr, uid, 'web.base.url.freeze'):
-                            ICP.set_param(cr, uid, 'web.base.url', base)
+                        ICP = api.Environment(cr, uid, {})['ir.config_parameter']
+                        if not ICP.get_param('web.base.url.freeze'):
+                            ICP.set_param('web.base.url', base)
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
         return uid
 
-    def check(self, db, uid, passwd):
+    @classmethod
+    def check(cls, db, uid, passwd):
         """Verifies that the given (uid, password) is authorized for the database ``db`` and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
-        if self.__uid_cache[db].get(uid) == passwd:
+        if cls.__uid_cache[db].get(uid) == passwd:
             return
-        cr = self.pool.cursor()
+        cr = cls.pool.cursor()
         try:
-            self.check_credentials(cr, uid, passwd)
-            self.__uid_cache[db][uid] = passwd
+            self = api.Environment(cr, uid, {})[cls._name]
+            self.check_credentials(passwd)
+            cls.__uid_cache[db][uid] = passwd
         finally:
             cr.close()
 

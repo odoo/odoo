@@ -46,7 +46,8 @@ from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
-from .tools import frozendict, lazy_property, ormcache, Collector, LastOrderedSet, OrderedSet
+from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
+                   Collector, LastOrderedSet, OrderedSet
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -266,6 +267,11 @@ class BaseModel(object):
 
     _group_by_full = {}         # {field: method}, where method returns (records
                                 # name_get, {id: fold}) used by read_group()
+
+    # default values for _transient_vacuum()
+    _transient_check_count = 0
+    _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
+    _transient_max_hours = lazy_classproperty(lambda _: config.get('osv_memory_age_limit'))
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
@@ -523,7 +529,7 @@ class BaseModel(object):
         if name in parents:
             if name not in pool:
                 raise TypeError("Model %r does not exist in registry." % name)
-            ModelClass = type(pool[name])
+            ModelClass = pool[name]
             ModelClass._build_model_check_base(cls)
             check_parent = ModelClass._build_model_check_parent
         else:
@@ -541,7 +547,7 @@ class BaseModel(object):
         for parent in parents:
             if parent not in pool:
                 raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
-            parent_class = type(pool[parent])
+            parent_class = pool[parent]
             if parent == name:
                 for base in parent_class.__bases__:
                     bases.add(base)
@@ -554,10 +560,23 @@ class BaseModel(object):
         # determine the attributes of the model's class
         ModelClass._build_model_attributes(pool)
 
-        # instantiate the model, and initialize it
+        check_pg_name(ModelClass._table)
+
+        # Transience
+        if ModelClass._transient:
+            assert ModelClass._log_access, \
+                "TransientModels must have log_access turned on, " \
+                "in order to implement their access rights policy"
+
+        # link the class to the registry, and update the registry
+        ModelClass.pool = pool
+        pool.add(ModelClass._name, ModelClass)
+
+        # backward compatibility: instantiate the model, and initialize it
         model = object.__new__(ModelClass)
         model.__init__(pool, cr)
-        return model
+
+        return ModelClass
 
     @classmethod
     def _build_model_check_base(model_class, cls):
@@ -622,7 +641,7 @@ class BaseModel(object):
 
         # recompute attributes of children models
         for child_name in cls._inherit_children:
-            child_class = type(pool[child_name])
+            child_class = pool[child_name]
             child_class._build_model_attributes(pool)
 
     @api.model
@@ -727,37 +746,11 @@ class BaseModel(object):
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
         # This job is now done entirely by the metaclass MetaModel.
-        #
-        # Do not create an instance here.  Model instances are created by method
-        # _build_model().
         return None
 
     def __init__(self, pool, cr):
-        """ Initialize a model and make it part of the given registry.
-
-        - copy the stored fields' functions in the registry,
-        - retrieve custom fields and add them in the model,
-        - ensure there is a many2one for each _inherits'd parent,
-        - give a chance to each field to initialize itself.
-
-        """
-        cls = type(self)
-
-        # link the class to the registry, and update the registry
-        cls.pool = pool
-        cls._model = self              # backward compatibility
-        pool.add(cls._name, self)
-
-        check_pg_name(cls._table)
-
-        # Transience
-        if cls.is_transient():
-            cls._transient_check_count = 0
-            cls._transient_max_count = config.get('osv_memory_count_limit')
-            cls._transient_max_hours = config.get('osv_memory_age_limit')
-            assert cls._log_access, \
-                "TransientModels must have log_access turned on, " \
-                "in order to implement their access rights policy"
+        """ Deprecated method to initialize the model. """
+        pass
 
     @api.model
     @ormcache()
@@ -912,7 +905,8 @@ class BaseModel(object):
 
         ids = []
         messages = []
-        ModelData = self.env['ir.model.data'].clear_caches()
+        ModelData = self.env['ir.model.data']
+        ModelData.clear_caches()
         extracted = self._extract_records(fields, data, log=messages.append)
         converted = self._convert_records(extracted, log=messages.append)
         for id, xid, record, info in converted:
@@ -1658,15 +1652,16 @@ class BaseModel(object):
         defaults.update(values)
         return defaults
 
-    def clear_caches(self):
+    @classmethod
+    def clear_caches(cls):
         """ Clear the caches
 
         This clears the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            self.pool.cache.clear()
-            self.pool._any_cache_cleared = True
+            cls.pool.cache.clear()
+            cls.pool._any_cache_cleared = True
         except AttributeError:
             pass
 

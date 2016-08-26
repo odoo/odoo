@@ -779,16 +779,15 @@ class IrModelAccess(models.Model):
 
         return bool(r)
 
-    __cache_clearing_methods = []
+    __cache_clearing_methods = set()
 
-    def register_cache_clearing_method(self, model, method):
-        self.__cache_clearing_methods.append((model, method))
+    @classmethod
+    def register_cache_clearing_method(cls, model, method):
+        cls.__cache_clearing_methods.add((model, method))
 
-    def unregister_cache_clearing_method(self, model, method):
-        try:
-            self.__cache_clearing_methods.remove((model, method))
-        except ValueError:
-            pass
+    @classmethod
+    def unregister_cache_clearing_method(cls, model, method):
+        cls.__cache_clearing_methods.discard((model, method))
 
     @api.model_cr
     def call_cache_clearing_methods(self):
@@ -978,14 +977,6 @@ class IrModelData(models.Model):
             except Exception:
                 pass
         return False
-
-    def clear_caches(self):
-        """ Clears all orm caches on the object's methods
-
-        :returns: itself
-        """
-        self.xmlid_lookup.clear_cache(self)
-        return self
 
     @api.multi
     def unlink(self):
