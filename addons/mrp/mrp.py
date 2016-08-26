@@ -264,6 +264,16 @@ class mrp_bom(osv.osv):
                 return True
         return False
 
+    def _bom_explode_product(self, cr, uid, bom_line, qty, factor, _factor_fun, context=None):
+        return dict(
+            name=bom_line.product_id.name,
+            product_id=bom_line.product_id.id,
+            product_qty=qty,
+            product_uom=bom_line.product_uom.id,
+            product_uos_qty=bom_line.product_uos and _factor_fun(bom_line.product_uos_qty * factor, bom_line.product_efficiency, bom_line.product_rounding) or False,
+            product_uos=bom_line.product_uos and bom_line.product_uos.id or False,
+        )
+
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product template.
@@ -322,14 +332,7 @@ class mrp_bom(osv.osv):
 
             #If BoM should not behave like PhantoM, just add the product, otherwise explode further
             if bom_line_id.type != "phantom" and (not bom_id or self.browse(cr, uid, bom_id, context=context).type != "phantom"):
-                result.append({
-                    'name': bom_line_id.product_id.name,
-                    'product_id': bom_line_id.product_id.id,
-                    'product_qty': quantity,
-                    'product_uom': bom_line_id.product_uom.id,
-                    'product_uos_qty': bom_line_id.product_uos and _factor(bom_line_id.product_uos_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding) or False,
-                    'product_uos': bom_line_id.product_uos and bom_line_id.product_uos.id or False,
-                })
+                result.append(self._bom_explode_product(cr, uid, bom_line_id, quantity, factor, _factor, context=context))
             elif bom_id:
                 all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
                 bom2 = self.browse(cr, uid, bom_id, context=context)
