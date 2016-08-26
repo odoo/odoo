@@ -46,7 +46,8 @@ class CrmTeam(models.Model):
                 ('state', 'in', ['open', 'paid']),
                 ('team_id', '=', team.id),
                 ('date', '<=', date.today()),
-                ('date', '>=', date.today().replace(day=1))
+                ('date', '>=', date.today().replace(day=1)),
+                ('type', 'in', ['out_invoice', 'out_refund']),
             ])
             team.invoiced = sum(invoices.mapped('amount_untaxed_signed'))
 

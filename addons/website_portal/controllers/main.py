@@ -14,7 +14,7 @@ class website_account(http.Controller):
     MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street2", "city", "country_id"]
     OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "street"]
 
-    _items_per_page = 10
+    _items_per_page = 20
 
     def _prepare_portal_layout_values(self):
         """ prepare the values to render portal layout """

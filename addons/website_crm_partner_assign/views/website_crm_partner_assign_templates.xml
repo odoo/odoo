@@ -726,17 +726,24 @@
                                                         <div class="form-group">
                                                             <div class="row">
                                                                 <div class="col-sm-6">
+                                                                  <label>Priority: </label>
+                                                                  <div class="input-group">
                                                                     <label class="radio-inline">
-                                                                      <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'"/><i class="fa fa-star"></i>
+                                                                      <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']"/><i class="fa fa-star"></i>
                                                                     </label>
                                                                     <label class="radio-inline">
-                                                                      <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'"/><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                                      <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'"/><i class="fa fa-star"></i><i class="fa fa-star"></i>
                                                                     </label>
                                                                     <label class="radio-inline">
-                                                                      <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                                      <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
                                                                     </label>
+                                                                    <label class="radio-inline">
+                                                                      <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                                    </label>
+                                                                  </div>
                                                                 </div>
                                                                 <div class="col-sm-6">
+                                                                    <label>Deadline: </label>
                                                                     <div class='input-group date'>
                                                                         <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
                                                                         <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -754,7 +761,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label" for="title_action">Details Next Activity</label>
-                                                            <textarea row="3" name="title_action" class="form-control title_action" t-esc="opportunity.title_action"/>
+                                                            <textarea row="3" name="title_action" class="form-control title_action"><t t-esc="opportunity.title_action"/></textarea>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label" for="date_action">Next Activity Date</label>

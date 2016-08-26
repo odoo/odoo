@@ -124,13 +124,14 @@ class StockQuant(models.Model):
         AccountMove = self.env['account.move']
         for cost, qty in quant_cost_qty.iteritems():
             move_lines = move._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
-            date = self._context.get('force_period_date', fields.Date.context_today(self))
-            new_account_move = AccountMove.create({
-                'journal_id': journal_id,
-                'line_ids': move_lines,
-                'date': date,
-                'ref': move.picking_id.name})
-            new_account_move.post()
+            if move_lines:
+                date = self._context.get('force_period_date', fields.Date.context_today(self))
+                new_account_move = AccountMove.create({
+                    'journal_id': journal_id,
+                    'line_ids': move_lines,
+                    'date': date,
+                    'ref': move.picking_id.name})
+                new_account_move.post()
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
@@ -268,7 +269,9 @@ class StockMove(models.Model):
 
         # check that all data is correct
         if self.company_id.currency_id.is_zero(debit_value):
-            raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (self.product_id.name,))
+            if self.product_id.cost_method == 'standard':
+                raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (self.product_id.name,))
+            return []
         credit_value = debit_value
 
         if self.product_id.cost_method == 'average' and self.company_id.anglo_saxon_accounting:

@@ -25,8 +25,8 @@
                         <field name="location_dest_id"/>
                     </group>
                     <group string="Packages" groups="stock.group_tracking_lot">
-                        <field name="package_id" attrs="{'required': [('product_id', '=', False)]}" context="{'location_id': location_id}"/>
-                        <field name="result_package_id" context="{'location_id': location_dest_id}"/>
+                        <field name="package_id" attrs="{'required': [('product_id', '=', False)]}" domain="[('location_id', '=', location_id)]" context="{'location_id': location_id}"/>
+                        <field name="result_package_id" domain="[('location_id', '=', location_dest_id)]" context="{'location_id': location_dest_id}"/>
                     </group>
                 </group>
             </form>

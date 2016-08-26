@@ -282,18 +282,22 @@ return core.Class.extend({
 
         function get_first_visible_element($elements) {
             for (var i = 0 ; i < $elements.length ; i++) {
-                var $elem = $elements.eq(i);
-                if ($elem.is(":visible")) {
-                    var $i = $elem;
-                    while ($i.css("visibility") !== "hidden") {
-                        $i = $i.parent();
-                        if ($i.is("html")) {
-                            return $elem;
-                        }
-                    }
+                var $i = $elements.eq(i);
+                if ($i.is(":visible") && _has_visibility($i)) {
+                    return $i;
                 }
             }
             return $();
+
+            function _has_visibility($elem) {
+                if ($elem.css("visibility") === "hidden") {
+                    return false;
+                }
+                if ($elem.is("html")) {
+                    return true;
+                }
+                return _has_visibility($elem.parent());
+            }
         }
     },
     _activate_tip: function(tip, tour_name, $anchor) {

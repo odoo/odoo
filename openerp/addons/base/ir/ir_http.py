@@ -21,7 +21,8 @@ import werkzeug.utils
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import request, STATIC_CACHE
+from odoo.http import request, STATIC_CACHE, content_disposition
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
@@ -217,16 +218,7 @@ class IrHttp(models.AbstractModel):
             del type(self)._routing_map
 
     def content_disposition(self, filename):
-        filename = tools.ustr(filename)
-        escaped = urllib2.quote(filename.encode('utf8'))
-        browser = request.httprequest.user_agent.browser
-        version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-        if browser == 'msie' and version < 9:
-            return "attachment; filename=%s" % escaped
-        elif browser == 'safari' and version < 537:
-            return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
-        else:
-            return "attachment; filename*=UTF-8''%s" % escaped
+        return content_disposition(filename)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
         """ Get file, attachment or downloadable content
@@ -312,7 +304,8 @@ class IrHttp(models.AbstractModel):
                 attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
-                mimetype = default_mimetype
+                mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
@@ -325,7 +318,6 @@ class IrHttp(models.AbstractModel):
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', self.content_disposition(filename)))
-
         return (status, headers, content)
 
 

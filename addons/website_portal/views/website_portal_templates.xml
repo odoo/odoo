@@ -19,7 +19,7 @@
                 </t>
                 <t t-if="group['date_begin'] != date">
                     <li>
-                        <a t-ignore="True" t-attf-href="#{default_url}?#{keep_query()}&amp;date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
             </t>
