@@ -222,13 +222,22 @@ var DataExport = Dialog.extend({
 
         var got_fields = new $.Deferred();
         this.$import_compat_radios.change(function(e) {
-            self.$fields_list.empty();
             self.$('.o_field_tree_structure').remove();
 
             self.rpc("/web/export/get_fields", {
                 model: self.dataset.model,
                 import_compat: !!$(e.target).val(),
             }).done(function (records) {
+                var compatible_fields = _.map(records, function (record) {return record.id});
+                self.$fields_list
+                    .find('option')
+                    .filter(function () {
+                        var option_field = $(this).attr('value');
+                        if (compatible_fields.indexOf(option_field) === -1) {
+                            return true;
+                        }
+                    })
+                    .remove();
                 got_fields.resolve();
                 self.on_show_data(records);
             });
