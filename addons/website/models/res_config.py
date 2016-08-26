@@ -30,8 +30,15 @@ class WebsiteConfigSettings(models.TransientModel):
     cdn_activated = fields.Boolean('Use a Content Delivery Network (CDN)', related='website_id.cdn_activated')
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
-    module_website_form_editor = fields.Boolean("Form builde = create and customize forms")
-    module_website_version = fields.Boolean("A/B testing and versioning")
+    module_website_form_editor = fields.Boolean("Form builder")
+    module_website_form_editor = fields.Selection([
+        (0, 'Use standard forms'),
+        (1, 'Create and customize forms to generate emails, leads, issues and extra information in the checkout process (new snippet available)')
+        ], "Form Builder")
+    module_website_version = fields.Selection([
+        (0, 'No version management and A/B testing (easy)'),
+        (1, 'Allow multiple versions of the same page (advanced)')
+        ], "A/B Testing")
     favicon = fields.Binary('Favicon', related='website_id.favicon')
     
     # Set as global config parameter since methods using it are not website-aware. To be changed
