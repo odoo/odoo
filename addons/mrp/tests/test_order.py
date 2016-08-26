@@ -187,7 +187,7 @@ class TestMrpOrder(TestMrpCommon):
         }).change_product_qty()
 
         (self.product_2 | self.product_4).write({
-            'tracking': 'lot',
+            'tracking': 'none',
         })
         # assign consume material
         man_order.action_assign()
@@ -273,6 +273,7 @@ class TestMrpOrder(TestMrpCommon):
             'final_lot_id': finished_lot.id,
             'qty_producing': 48
         })
+        
         kit_wo.record_production()
 
         self.assertEqual(kit_wo.state, 'done', "Workorder should be in done state.")
