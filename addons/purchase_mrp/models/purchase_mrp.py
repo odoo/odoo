@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import float_compare
 
+class ProcurementOrder(models.Model):
+    _inherit = 'procurement.order'
+
+    @api.multi
+    def make_po(self):
+        procurement_ids = super(ProcurementOrder, self).make_po()
+        for procurement in self.browse(procurement_ids):
+            if procurement.move_dest_id.raw_material_production_id:
+                purchase = procurement.purchase_id
+                purchase.message_post_with_view('mail.message_origin_link',
+                         values={'self': purchase, 'origin': procurement.move_dest_id.raw_material_production_id},
+                         subtype_id=self.env.ref('mail.mt_note').id)
+        return procurement_ids
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
