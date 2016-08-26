@@ -79,7 +79,7 @@ class PaymentAcquirer(models.Model):
         ('generate_and_pay_invoice', 'On acquirer confirmation, confirm the SO, generate the invoice and pay it')],
         string='Order Confirmation', default='confirm_so', required=True)
     journal_id = fields.Many2one(
-        'account.journal', 'Accounting Journal',
+        'account.journal', 'Payment Journal',
         help="Account journal used for automatic payment reconciliation.")
 
     pre_msg = fields.Html(

@@ -79,9 +79,9 @@
                             <page string="Configuration">
                                 <group name="acquirer_config">
                                     <field name="auto_confirm" widget="radio"/>
-                                    <field name="journal_id" attrs="{'required': [('auto_confirm', '=', 'generate_and_pay_invoice')]}"/>
-                                    <label for="view_template_id"/>
-                                    <div>
+                                    <field name="journal_id" attrs="{'required': [('auto_confirm', '=', 'generate_and_pay_invoice')], 'invisible': [('auto_confirm', '!=', 'generate_and_pay_invoice')]}"/>
+                                    <label for="view_template_id" groups="base.group_no_one"/>
+                                    <div groups="base.group_no_one">
                                         <field name="view_template_id" nolabel="1"/>
                                         <div>
                                             This template renders the acquirer button with all necessary values.
@@ -100,7 +100,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <field name="registration_view_template_id"/>
+                                    <field name="registration_view_template_id" groups="base.group_no_one"/>
                                 </group>
                                 <group name="fees_config" attrs="{'invisible': [('fees_implemented', '=', False)]}">
                                     <field name="fees_active"/>
