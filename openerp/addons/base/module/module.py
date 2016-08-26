@@ -210,11 +210,15 @@ class Module(models.Model):
             module.reports_by_module = "\n".join(sorted(map(attrgetter('name'), browse('ir.actions.report.xml'))))
             module.menus_by_module = "\n".join(sorted(map(attrgetter('complete_name'), browse('ir.ui.menu'))))
 
-    @api.depends('name')
+    @api.depends('icon')
     def _get_icon_image(self):
         for module in self:
             module.icon_image = ''
-            path = modules.get_module_resource(module.name, 'static', 'description', 'icon.png')
+            if module.icon:
+                path_parts = module.icon.split('/')
+                path = modules.get_module_resource(path_parts[1], *path_parts[2:])
+            else:
+                path = modules.get_module_icon(module.name)
             if path:
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = image_file.read().encode('base64')
