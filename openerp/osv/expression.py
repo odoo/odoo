@@ -549,9 +549,11 @@ class ExtendedLeaf(object):
     def get_join_conditions(self):
         conditions = []
         alias = self._models[0]._table
+        links = []
         for context in self.join_context:
             previous_alias = alias
-            alias += '__' + context[4]
+            links.append((context[1]._table, context[4]))
+            alias, _ = generate_table_alias(self._models[0]._table, links)
             conditions.append('"%s"."%s"="%s"."%s"' % (previous_alias, context[2], alias, context[3]))
         return conditions
 
