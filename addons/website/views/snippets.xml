@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="s_cover" name="Cover">
-    <section class="s_text_block_image_fw oe_img_bg oe_custom_bg" style="background-image: url(/web/image/website.s_cover_default_image);">
+    <section class="s_text_block_image_fw oe_img_bg" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 50%">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 mt64 mb64 bg-white">
@@ -15,22 +15,22 @@
 </template>
 
 <template id="s_banner" name="Banner">
-    <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 320px;">
+    <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 400px;">
         <!-- Indicators -->
         <ol class="carousel-indicators hidden">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         </ol>
         <div class="carousel-inner">
-            <div class="item oe_img_bg oe_custom_bg active" style="background-image: url(/web/image/website.s_background_image_05);">
+            <div class="item oe_img_bg active" style="background-image: url(/web/image/website.s_background_image_05); background-position: 50% 50%">
                 <div class="container">
                     <div class="row content">
-                        <div class="carousel-content col-md-6 mt64">
+                        <div class="carousel-content col-md-4 col-md-offset-1 mt96 mb96">
                             <h2>Your Banner Title</h2>
-                            <h3>Click to customize this text</h3>
+                            <h4>Click to customize this text</h4>
                             <p><a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a></p>
                         </div>
-                        <div class="carousel-img col-md-6 hidden-sm hidden-xs">
-                            <img class="img-responsive" src="/website/static/src/img/library/banner_picture.png" alt="Banner Odoo Image"/>
+                        <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs mt48">
+                            <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Banner Odoo Image"/>
                         </div>
                     </div>
                 </div>
@@ -45,19 +45,19 @@
     <section class="s_text_image">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt16">
-                    <h3>A Section Subtitle</h3>
-                    <p>
+                <div class="col-md-6 mt64 mb32">
+                    <h3 style="text-align: right;">A Section Subtitle</h3>
+                    <p style="text-align: right;">
                         Write one or two paragraphs describing your product or
-                        services. To be successful your content needs to be
+                        services.<br/>To be successful your content needs to be
                         useful to your readers.
-                    </p><p>
+                    </p><p style="text-align: right;">
                         Start with the customer – find out what they want
                         and give it to them.
                     </p>
                 </div>
-                <div class="col-md-6 mt16">
-                  <img class="img img-responsive shadow mb16" src="/website/static/src/img/text_image.png" alt="Odoo text and image block"/>
+                <div class="col-md-6 mt32 mb32">
+                  <img class="img img-responsive pull-left mb16" src="/web/image/website.s_text_image_default_image" alt="Odoo text and image block"/>
                 </div>
             </div>
         </div>
@@ -68,10 +68,10 @@
     <section class="s_image_text">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt16">
-                  <img class="img img-responsive shadow mb16" src="/website/static/src/img/image_text.png"  alt="Odoo image and text block"/>
+                <div class="col-md-6 mt32 mb32">
+                  <img class="img img-responsive center-block mb16" src="/web/image/website.s_image_text_default_image"  alt="Odoo image and text block"/>
                 </div>
-                <div class="col-md-6 mt16">
+                <div class="col-md-6 mt64 mb32">
                     <h3>A Section Subtitle</h3>
                     <p>
                         Write one or two paragraphs describing your product,
@@ -166,12 +166,12 @@
 </template>
 
 <template id="s_big_picture" name="Big Picture">
-    <section class="s_big_picture bg-primary">
+    <section class="s_big_picture bg-gray-lighter">
         <div class="container">
             <h2 class="text-center">A Punchy Headline</h2>
             <div class="row">
                 <div class="col-md-12">
-                  <img class="img img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"  alt="Odoo CMS - a big picture"/>
+                  <img class="img img-responsive" src="/web/image/website.s_big_picture_default_image" style="margin: 0 auto;"  alt="Odoo CMS - a big picture"/>
                 </div>
                 <div class="col-md-6 col-md-offset-3 mb16 mt16">
                     <p class="text-center">
@@ -196,7 +196,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mt16">
-                    <img class="img img-rounded img-responsive" src="/website/static/src/img/desert_thumb.jpg" alt="Odoo - Sample 1 for three columns"/>
+                    <img class="img img-rounded img-responsive" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
                     <h4 class="mt16">Feature One</h4>
                     <p>
                         Adapt these three columns to fit you design need.
@@ -205,7 +205,7 @@
                     </p>
                 </div>
                 <div class="col-md-4 mt16">
-                    <img class="img img-rounded img-responsive" src="/website/static/src/img/deers_thumb.jpg" alt="Odoo - Sample 2 for three columns"/>
+                    <img class="img img-rounded img-responsive" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
                     <h4 class="mt16">Feature Two</h4>
                     <p>
                         To add a fourth column, reduce the size of these
@@ -215,7 +215,7 @@
                     </p>
                 </div>
                 <div class="col-md-4 mt16">
-                    <img class="img img-rounded img-responsive" src="/website/static/src/img/china_thumb.jpg" alt="Odoo - Sample 3 for three columns"/>
+                    <img class="img img-rounded img-responsive" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
                     <h4 class="mt16">Feature Three</h4>
                     <p>
                         Delete the above image or replace it with a picture
@@ -264,7 +264,7 @@
 <template id="s_image_floating" name="Image Floating">
     <div class="o_image_floating o_margin_l pull-right s_image_floating">
         <div class="o_container">
-            <img class="img img-rounded img-responsive" src="/website/static/src/img/library/ipad.png" alt="Odoo CMS- Sample image floating"/>
+            <img class="img img-rounded img-responsive" src="/web/image/website.s_image_floating_default_image" alt="Odoo CMS- Sample image floating"/>
         </div>
         <div class="o_footer">
             <small class="text-muted">A great way to catch your reader's attention is to tell a story. Everything you consider writing can be told as a story.</small>
@@ -559,16 +559,16 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="parallax s_parallax"
-            style="background-image: url(/web/image/website.s_background_image_11)"
+    <section class="parallax s_parallax oe_img_bg"
+            style="background-image: url(/web/image/website.s_background_image_04);"
             data-scroll-background-ratio="0.3">
             <div><div class="oe_structure"/></div>
     </section>
 </template>
 
 <template id="s_parallax_slider" name="Parallax Slider">
-    <section class="parallax s_parallax_slider"
-             style="background-image: url(/web/image/website.s_background_image_15);"
+    <section class="parallax s_parallax_slider oe_custom_bg oe_img_bg"
+             style="background-image: url(/web/image/website.s_parallax_slider_default_image);"
             data-scroll-background-ratio="0.3">
         <div><div><div class="oe_structure">
                 <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
@@ -699,24 +699,15 @@
                 <li class="divider"></li>
                 <li data-choose_image="choose_image"><a href="#"><b>Set Custom Image...</b></a></li>
                 <li class="divider"></li>
-                <li data-background="/web/image/website.s_background_image_01"><a href="#">Aqua</a></li>
-                <li data-background="/web/image/website.s_background_image_02"><a href="#">Baby Blue</a></li>
-                <li data-background="/web/image/website.s_background_image_03"><a href="#">Black</a></li>
-                <li data-background="/web/image/website.s_background_image_04"><a href="#">Business Guy</a></li>
-                <li data-background="/web/image/website.s_background_image_05"><a href="#">Color Splash</a></li>
-                <li data-background="/web/image/website.s_background_image_06"><a href="#">Flowers Field</a></li>
-                <li data-background="/web/image/website.s_background_image_07"><a href="#">Purple</a></li>
-                <li data-background="/web/image/website.s_background_image_08"><a href="#">Greenfields</a></li>
-                <li data-background="/web/image/website.s_background_image_09"><a href="#">Landscape</a></li>
-                <li data-background="/web/image/website.s_background_image_10"><a href="#">Mango</a></li>
-                <li data-background="/web/image/website.s_background_image_11"><a href="#">Mountains</a></li>
-                <li data-background="/web/image/website.s_background_image_12"><a href="#">Orange Red</a></li>
-                <li data-background="/web/image/website.s_background_image_13"><a href="#">Sunflower</a></li>
-                <li data-background="/web/image/website.s_background_image_14"><a href="#">Girl</a></li>
-                <li data-background="/web/image/website.s_background_image_15"><a href="#">Quote</a></li>
-                <li data-background="/web/image/website.s_background_image_16"><a href="#">Velour</a></li>
-                <li data-background="/web/image/website.s_background_image_17"><a href="#">Wood</a></li>
-                <li data-background="/web/image/website.s_background_image_18"><a href="#">Yellow Green</a></li>
+                <li data-background="/web/image/website.s_background_image_01"><a href="#">Peak</a></li>
+                <li data-background="/web/image/website.s_background_image_02"><a href="#">Downtown</a></li>
+                <li data-background="/web/image/website.s_background_image_03"><a href="#">Panama Sky</a></li>
+                <li data-background="/web/image/website.s_background_image_04"><a href="#">Cubes</a></li>
+                <li data-background="/web/image/website.s_background_image_05"><a href="#">Building Profile</a></li>
+                <li data-background="/web/image/website.s_background_image_06"><a href="#">Type</a></li>
+                <li data-background="/web/image/website.s_background_image_07"><a href="#">People</a></li>
+                <li data-background="/web/image/website.s_background_image_08"><a href="#">City</a></li>
+                <li data-background="/web/image/website.s_background_image_09"><a href="#">Sails</a></li>
             </ul>
         </li>
     </div>
