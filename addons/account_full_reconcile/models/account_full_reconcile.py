@@ -12,13 +12,19 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def compute_full_after_batch_reconcile(self):
-        super(AccountMoveLine, self).compute_full_after_batch_reconcile()
+        aml_id, partial_rec_id = super(AccountMoveLine, self).compute_full_after_batch_reconcile()
         #check if the reconcilation is full
         partial_rec_set = self.env['account.partial.reconcile']
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
         currency = False
+        # If we have an exchange rate entry, add it's value to amount_currency
+        if aml_id and partial_rec_id:
+            exchange_rate_aml = self.browse([aml_id])
+            exchange_rate_partial_rec = self.env['account.partial.reconcile'].browse([partial_rec_id])
+            total_amount_currency += exchange_rate_aml.amount_currency
+            partial_rec_set |= exchange_rate_partial_rec
         for aml in self:
             total_debit += aml.debit
             total_credit += aml.credit
@@ -26,7 +32,7 @@ class AccountMoveLine(models.Model):
                 currency = aml.currency_id
             if aml.currency_id and aml.currency_id == currency:
                 total_amount_currency += aml.amount_currency
-                partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
+            partial_rec_set |= aml.matched_debit_ids | aml.matched_credit_ids
         partial_rec_ids = [x.id for x in list(partial_rec_set)]
         #if the total debit and credit are equal, and the total amount in currency is 0, the reconciliation is full
         digits_rounding_precision = self[0].company_id.currency_id.rounding
@@ -34,8 +40,9 @@ class AccountMoveLine(models.Model):
           and (not currency or float_is_zero(total_amount_currency, precision_rounding=currency.rounding)):
             #in that case, mark the reference on the partial reconciliations and the entries
             self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
-                'partial_reconcile_ids': [(6, 0, partial_rec_ids)],
-                'reconciled_line_ids': [(6, 0, self.ids)]})
+                'partial_reconcile_ids': [(4, p_id) for p_id in partial_rec_ids],
+                'reconciled_line_ids': [(4, r_id) for r_id in ((self + exchange_rate_aml).ids if aml_id else self.ids)],
+            })
 
 
 class AccountPartialReconcile(models.Model):

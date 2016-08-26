@@ -945,6 +945,8 @@ class AccountMoveLine(models.Model):
         total_amount_currency = 0
         currency = False
         aml_to_balance_currency = self.env['account.move.line']
+        aml_id = False
+        partial_rec_id = False
         maxdate = None
         for aml in self:
             if aml.amount_residual_currency:
@@ -959,6 +961,7 @@ class AccountMoveLine(models.Model):
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
             aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
+        return aml_id, partial_rec_id
 
     @api.multi
     def remove_move_reconcile(self):
