@@ -69,8 +69,8 @@ class SaleConfiguration(models.TransientModel):
         ], "Addresses", implied_group='sale.group_delivery_invoice_address')
     sale_pricelist_setting = fields.Selection([
         ('fixed', 'A single sale price per product'),
-        ('percentage', 'Different prices per customer segment'),
-        ('formula', 'Advanced pricing based on formula')
+        ('percentage', 'Specific prices per customer segment, currency, etc.'),
+        ('formula', 'Advanced pricing based on formulas (discounts, margins, rounding)')
         ], required=True,
         default='fixed',
         help='Fix Price: all price manage from products sale price.\n'
