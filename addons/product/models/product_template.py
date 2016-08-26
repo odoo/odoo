@@ -84,6 +84,7 @@ class ProductTemplate(models.Model):
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
         help="Specify if the product can be selected in a sales order line.")
+    purchase_ok = fields.Boolean('Can be Purchased', default=True)
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist', store=False,
         help='Technical field. Used for searching on pricelists, not stored in database.')
