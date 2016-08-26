@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-03-10 13:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -437,6 +437,11 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 msgid "Closed"
@@ -621,7 +626,6 @@ msgid "Delete"
 msgstr "Hapus"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -868,6 +872,11 @@ msgstr "Dikelompokan berdasarkan .."
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1624,7 +1633,10 @@ msgid "Tag name already exists !"
 msgstr "Nama tag sudah ada!"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Tags"
 
@@ -1933,6 +1945,9 @@ msgstr "oe_kanban_text_red"
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
 
+#~ msgid "If other, precise:"
+#~ msgstr "Jika lainnya, tepat:"
+
 #~ msgid "Is Follower"
 #~ msgstr "Adalah pengikut"
 
@@ -1956,6 +1971,18 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Open HR Menu"
 #~ msgstr "JAM buka Menu"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
+#~ "mailgateway.\n"
+#~ "-Semua orang: setiap orang dapat memposting\n"
+#~ " - mitra: hanya dikonfirmasi mitra  \n"
+#~ " - pengikut: hanya pengikut dokumen terkait\n"
 
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "

@@ -8,22 +8,18 @@
 # Martin Trigaux, 2015
 # Nedim Bjelic <keno-en-nedim@live.nl>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-04-18 07:16+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
@@ -217,7 +213,7 @@ msgstr "# Taken"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -820,17 +816,12 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is "
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
-"<strong>Volg wat u nodig heeft</strong><br/>\n"
-"De gemakkelijkste weg om notificaties te gebruiken is door een heel project "
-"te volgen: u ontvangt dan al de geselecteerde notificaties voor alle "
-"bestaande en nieuwe taken/issues."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1252,8 +1243,8 @@ msgstr "Aliased Model"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
-msgstr "Project voor alle werknemers: Alle werknemers hebben toegang"
+msgid "All employees"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1515,7 +1506,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr "Vink deze optie aan om interne activiteiten te beheren via dit project"
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1544,7 +1535,7 @@ msgstr "Klik om een fase toe te voegen aan de taken pijplijn."
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Click to add/remove from favorite"
-msgstr ""
+msgstr "Klik om toe te voegen/te verwijderen van favorieten"
 
 #. module: project
 #: model:web.tip,description:project.project_tip_1
@@ -1747,7 +1738,7 @@ msgid "Current Timesheet"
 msgstr "Huidige urenstaat"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1756,16 +1747,10 @@ msgid "Customer"
 msgstr "Klant"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr "Klantproject: zichtbaar in portaal als de klant een volger is"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1792,6 +1777,12 @@ msgstr "Klant heeft reparatie geannuleerd"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Klant heeft een nieuwe issue gerapportreerd"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1925,13 +1916,8 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:project.field_project_task_history_display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
@@ -2049,9 +2035,8 @@ msgstr "E-mail alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "E-mail alias"
+msgstr "E-mailsjabloon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2183,7 +2168,7 @@ msgstr "Extra handig wanneer u met een klant bent of in meeting zit."
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Favorite"
-msgstr ""
+msgstr "Favoriet"
 
 #. module: project
 #. openerp-web
@@ -2382,7 +2367,7 @@ msgstr ""
 "is geactiveerd zullen portaalgebruikers de gevolgde taken of issues zien."
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr "Ik neem het"
@@ -2834,7 +2819,7 @@ msgstr "Marketing afdeling"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Leden"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2845,6 +2830,11 @@ msgstr "Maand"
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Meer <i class=\"fa fa-caret-down\"/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr "Meer info"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2886,7 +2876,7 @@ msgid "New"
 msgstr "Nieuw"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "Nieuwe taak"
@@ -3138,7 +3128,7 @@ msgid "Planner"
 msgstr "Planner"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3149,7 +3139,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -3161,7 +3150,8 @@ msgstr ""
 "van de mail gateway.\n"
 "-iedereen: iedereen mag versturen\n"
 "-relaties: alleen geautoriseerde relaties\n"
-"-volgers: allen volgers van een bijbehorend document\n"
+"-volgers: allen volgers van een bijbehorend document of volgers van gevolgde "
+"kanalen\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3187,8 +3177,8 @@ msgstr "Prive / Zichtbaarheid"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
-msgstr "Privé project: Alleen voor volgers"
+msgid "Private: followers only"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3278,6 +3268,11 @@ msgstr "Projecttaken"
 #, python-format
 msgid "Projects"
 msgstr "Projecten"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3536,7 +3531,7 @@ msgstr "Deel bestanden en beheer versies"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Toon project op dashboard"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3633,11 +3628,6 @@ msgid "Starting Date"
 msgstr "Startdatum"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr "Status"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -3646,9 +3636,8 @@ msgstr "Status"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "taken"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -4014,17 +4003,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Hiermee wordt de gebruikte maateenheid ingesteld die wordt gebruikt in "
-"projecten en taken.\n"
-"Wanneer u gebruik maakt van urenstaten gekoppeld aan projecten "
-"(project_timesheet module), vergeet dan niet de juiste eenheid voor uw "
-"werknemers in te stellen."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4399,11 +4382,9 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid "You can save your reports to easily reuse it later"
 msgstr ""
-"U kan rapporten ook opslaan om ze later gemakkelijk opnieuw te kunnen "
-"gebruiken"
+"U kan uw rapporten ook opslaan om ze later gemakkelijk opnieuw te gebruiken"
 
 #. module: project
 #: code:addons/project/project.py:94
@@ -4429,7 +4410,7 @@ msgstr "Uw doelstellingen"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Uw Odoo project applicatie is klaar en draait"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4474,7 +4455,7 @@ msgstr "project.config.settings"
 #. module: project
 #: model:ir.model,name:project.model_project_task_history_cumulative
 msgid "project.task.history.cumulative"
-msgstr ""
+msgstr "project.task.history.cumulative"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4482,7 +4463,7 @@ msgid "send us an email"
 msgstr "stuur ons een e-mail"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "taken"
@@ -4536,14 +4517,32 @@ msgstr "die u heeft opgelijst in de vorige stap"
 #~ msgid "&times;"
 #~ msgstr "&times;"
 
+#~ msgid ""
+#~ "<strong>Follow only what you need</strong><br/>\n"
+#~ "                                    The simplest way to use notifications "
+#~ "is to follow a whole Project: you will then receive all the selected "
+#~ "notifications for all the Project's new and existing and new Tasks or "
+#~ "Issues."
+#~ msgstr ""
+#~ "<strong>Volg wat u nodig heeft</strong><br/>\n"
+#~ "De gemakkelijkste weg om notificaties te gebruiken is door een heel "
+#~ "project te volgen: u ontvangt dan al de geselecteerde notificaties voor "
+#~ "alle bestaande en nieuwe taken/issues."
+
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
+
+#~ msgid "All Employees Project: all employees can access"
+#~ msgstr "Project voor alle werknemers: Alle werknemers hebben toegang"
 
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Vink dit aan als er uren worden geschreven op dit project"
 
 #~ msgid "Close"
 #~ msgstr "Afsluiten"
+
+#~ msgid "Customer Project: visible in portal if the customer is a follower"
+#~ msgstr "Klantproject: zichtbaar in portaal als de klant een volger is"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
@@ -4593,11 +4592,29 @@ msgstr "die u heeft opgelijst in de vorige stap"
 #~ msgid "Open Project Menu"
 #~ msgstr "Open Project Menu"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Beleid om een bericht te versturen bij een document door gebruik te maken "
+#~ "van de mail gateway.\n"
+#~ "-iedereen: iedereen mag versturen\n"
+#~ "-relaties: alleen geautoriseerde relaties\n"
+#~ "-volgers: allen volgers van een bijbehorend document\n"
+
+#~ msgid "Private Project: followers only"
+#~ msgstr "Privé project: Alleen voor volgers"
+
 #~ msgid "Project Time Unit"
 #~ msgstr "Tijdseenheid project"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Registreer urenstaat regels per taak"
+
+#~ msgid "State"
+#~ msgstr "Status"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Abonnementen"
@@ -4616,6 +4633,17 @@ msgstr "die u heeft opgelijst in de vorige stap"
 #~ "aanmaken, bewerken en verwijderen op beide plaatsen.\n"
 #~ "- Dit installeert de module project_timesheet."
 
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Hiermee wordt de gebruikte maateenheid ingesteld die wordt gebruikt in "
+#~ "projecten en taken.\n"
+#~ "Wanneer u gebruik maakt van urenstaten gekoppeld aan projecten "
+#~ "(project_timesheet module), vergeet dan niet de juiste eenheid voor uw "
+#~ "werknemers in te stellen."
+
 #~ msgid "Timesheets on Project"
 #~ msgstr "Urenstaten op project"
 
@@ -4630,3 +4658,65 @@ msgstr "die u heeft opgelijst in de vorige stap"
 
 #~ msgid "Website communication history"
 #~ msgstr "Website communicatie geschiedenis"
+
+#~ msgid "You can save your reports to for easy reuse later"
+#~ msgstr ""
+#~ "U kan rapporten ook opslaan om ze later gemakkelijk opnieuw te kunnen "
+#~ "gebruiken"
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">Klik om een nieuw project aan te "
+#~ "maken.</p>"
+
+#~ msgid "Activate Sample Project"
+#~ msgstr "Activeer voorbeeld project"
+
+#~ msgid "Choose a Project Email"
+#~ msgstr "Kies een project e-mail"
+
+#~ msgid "Click on a card to get the details of the task."
+#~ msgstr "Klik op een kaart om de details van de taak te zien."
+
+#~ msgid "Click on this button to modify the task."
+#~ msgstr "Klik op deze knop om de taak te wijzigen."
+
+#~ msgid "Configuration options are available in the Settings app."
+#~ msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
+
+#~ msgid "Create"
+#~ msgstr "Aanmaken"
+
+#~ msgid "Create a Project"
+#~ msgstr "Maak project aan"
+
+#~ msgid "Create date"
+#~ msgstr "Aanmaakdatum"
+
+#~ msgid "On invitation only"
+#~ msgstr "Enkel via uitnodiging"
+
+#~ msgid "Or"
+#~ msgstr "Of"
+
+#~ msgid "Privacy"
+#~ msgstr "Privacy"
+
+#~ msgid "Project Count"
+#~ msgstr "Project teller"
+
+#~ msgid "Visible by all employees"
+#~ msgstr "Zichtbaar voor alle werknemers"
+
+#~ msgid "Visible by following customers"
+#~ msgstr "Zichtbaar voor volgende klanten"
+
+#~ msgid "Write date"
+#~ msgstr "Schrijfdatum"
+
+#~ msgid "activate a sample project"
+#~ msgstr "activeer een voorbeeld project"
+
+#~ msgid "to play with."
+#~ msgstr "om mee te spelen."

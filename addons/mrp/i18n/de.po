@@ -1,4 +1,3 @@
-# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp
@@ -8,35 +7,22 @@
 # Pascal <paesce@gentlemansclub.de>, 2015
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Wolfgang Taferner, 2016
-# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * mrp
-#
-# Translators:
-# Pascal <paesce@gentlemansclub.de>, 2015
-# Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Wolfgang Taferner, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-13 05:58+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-09 16:29+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:231
+#: code:addons/mrp/stock.py:250
 #, python-format
 msgid " Manufacture"
 msgstr " Fertigung"
@@ -54,13 +40,13 @@ msgid "# Manufacturing Orders"
 msgstr "# Fertigungsaufträge"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:341
+#: code:addons/mrp/mrp.py:343
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1052
+#: code:addons/mrp/mrp.py:1051
 #, python-format
 msgid "%s produced"
 msgstr "%s gefertigt"
@@ -247,6 +233,13 @@ msgid "Approve"
 msgstr "Genehmigen"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Archived"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
@@ -294,7 +287,7 @@ msgid "BOM lines of the referred bom"
 msgstr "Stücklistenzeilen der bezeichneten Stückliste"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:25
+#: code:addons/mrp/stock.py:44
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
@@ -366,7 +359,7 @@ msgid "BoM"
 msgstr "BoM"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:316
+#: code:addons/mrp/mrp.py:318
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr "Die Stückliste \"%s\" beinhaltet eine rekursive Position: \"%s\"."
@@ -397,7 +390,7 @@ msgid "By-Products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:228
+#: code:addons/mrp/stock.py:247
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "Ein passender Fertigungsablaufplan kann nicht ermittelt werden."
@@ -421,19 +414,19 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:150
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Es kann keine Buchung vorgenommen werden mit negativer Menge oder '0'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:651
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Ein Fertigungsauftrag mit Status '%s' kann nicht gelöscht werden."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:719
+#: code:addons/mrp/mrp.py:721
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Es konnte keine Stückliste gefunden werden."
@@ -757,31 +750,21 @@ msgstr "Zusätzliche Informationen"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle_account_id
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour_account_id
-#, fuzzy
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Nur ausfüllen, wenn Sie automatische Kostenbuchungen für Fertigungsaufträge "
-"erzeugen möchten.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tragen Sie nur Werte ein, wenn Sie automatische Kostenstellen Buchungen "
-"durch die Fertigung erstellen wollen."
+"erzeugen möchten."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_product_id
-#, fuzzy
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Tragen Sie das Produkt ein, um Ihre Fertigungskosten in der Kostenrechnung "
-"einfach verfolgen zu können.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tragen Sie hier ein Produkt ein, zur Verfolgung der Fertigungskosten in der "
-"Kostenstellenrechnung."
+"einfach verfolgen zu können."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -899,13 +882,6 @@ msgstr ""
 "diese Löschen zu müssen."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the resource "
-"record without removing it."
-msgstr "Bei Deaktivierung kann die Ansicht der Ressource ausgeblendet werden."
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
@@ -916,12 +892,6 @@ msgstr "Durch Deaktivierung können Sie den Arbeitsplan ausblenden."
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "In Produktion"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Inactive"
-msgstr "Inaktiv"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
@@ -1059,7 +1029,7 @@ msgid "Manager"
 msgstr "Manager"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:244
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1108,7 +1078,7 @@ msgid "Manufacturing Order"
 msgstr "Fertigungsauftrag"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:112
+#: code:addons/mrp/procurement.py:114
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Fertigungsauftrag <em>%s</em> wurde erstellt."
@@ -1147,7 +1117,7 @@ msgid "Manufacturing Reference"
 msgstr "Fertigungsreferenz"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:786
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr ""
@@ -1198,7 +1168,7 @@ msgid "New"
 msgstr "Neu"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:108
+#: code:addons/mrp/procurement.py:110
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "Es gibt keine Stückliste für dieses Produkt!"
@@ -1323,7 +1293,7 @@ msgid "Planning"
 msgstr "Planung"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:136
+#: code:addons/mrp/stock.py:155
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Bitte geben Sie eine korrekte Menge an."
@@ -1560,7 +1530,7 @@ msgstr "Eigenschaften"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1862,7 +1832,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr "Datenfeld, das zur Verfolgung der Fertigungsprodukte eingesetzt wird"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2107,7 +2077,7 @@ msgid "Warehouse"
 msgstr "Lager"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
@@ -2267,7 +2237,7 @@ msgstr ""
 "                - Sie installieren hier das Modul mrp_byproduct."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
+#: code:addons/mrp/mrp.py:359
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2345,6 +2315,15 @@ msgstr "unbekannt"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the "
+#~ "resource record without removing it."
+#~ msgstr ""
+#~ "Bei Deaktivierung kann die Ansicht der Ressource ausgeblendet werden."
+
+#~ msgid "Inactive"
+#~ msgstr "Inaktiv"
 
 #~ msgid "Is Follower"
 #~ msgstr "Ist Beobachter"

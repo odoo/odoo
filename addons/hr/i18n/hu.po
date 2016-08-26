@@ -1,4 +1,3 @@
-# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr
@@ -6,35 +5,23 @@
 # Translators:
 # krnkris, 2015-2016
 # krnkris, 2016
-# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr
-#
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-06-06 19:55+0000\n"
+"Last-Translator: krnkris\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -89,13 +76,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-#, fuzzy
 msgid "<span>Reports</span>"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"<span>Jelentések</span>\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span>Kimutatások</span>"
+msgstr "<span>Jelentések</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -139,6 +121,7 @@ msgid "A good job in a young and dynamic team"
 msgstr "Jó munkahely egy fiatal és dinamikus csapatban"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Aktív"
@@ -149,14 +132,10 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Értékeléshez szükséges, részletezési dokumentumok és ajánlatok írása"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
-#, fuzzy
 msgid "Archived"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Archívált\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Archivált"
+msgstr "Archívált"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -251,11 +230,6 @@ msgid "Click to create a department."
 msgstr "Kattintson egy osztály, részleg létrehozásához."
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Kattintson egy új osztály, részleg létrehozásához."
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr "Kattintson az új munkahely meghatározásához."
@@ -286,13 +260,8 @@ msgstr "Kód"
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_color
-#, fuzzy
 msgid "Color Index"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Szín meghatározó\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Szín jegyzék"
+msgstr "Szín meghatározó"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_tree
@@ -320,13 +289,8 @@ msgstr "Tanácsadó"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
-#, fuzzy
 msgid "Contact Information"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kapcsolat információk\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Kapcsolat információ"
+msgstr "Kapcsolat információk"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -334,11 +298,6 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Contributions to open source projects"
 msgstr "Hozzájárulások a forrás projektek megnyitásához"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Saját osztály létrehozása"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
@@ -384,7 +343,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "Nyújtson általános Odoo rendszer gyakorlati oktatási szakaszokat"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -410,13 +368,8 @@ msgstr "Osztályok/Részlegek"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Név megjelenítése\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -487,13 +440,13 @@ msgid "Employees Tags"
 msgstr "Alkalmazottak címkéi"
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Hiba! Nem hozhat létre egymásba épülő osztályokat."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Hiba! Nem készíthet visszatérő rangsorú alklamazott(ak) listát."
@@ -587,13 +540,8 @@ msgstr "Más nyelvek, nyelvi érzéke"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Csoportosítás...\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Csoportosítás"
+msgstr "Csoportosítás..."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -631,14 +579,14 @@ msgid "Home Address"
 msgstr "Otthoni cím"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "Hr Department"
+msgstr "Emberi erőforrás Osztály, részleg"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#, fuzzy
 msgid "Human Resources"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Humán Erőforrás\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Emberi erőforrás HR"
+msgstr "Humán Erőforrás"
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
@@ -650,13 +598,8 @@ msgstr "Emberi Erőforrás Igazgató"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Azonosító ID"
+msgstr "ID"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
@@ -770,26 +713,16 @@ msgstr "Feladatok"
 #: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utolsó frissítés dátuma\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítve ekkor"
+msgstr "Utolsó frissítés dátuma"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utoljára frissítve, által\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítette"
+msgstr "Utoljára frissítve, által"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
@@ -826,13 +759,8 @@ msgstr "Indítson új termékekre kampányokat és ajánlatokat"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_login
-#, fuzzy
 msgid "Login"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bejelentkező név\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bejelentkezés"
+msgstr "Bejelentkező név"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -911,7 +839,6 @@ msgid "Must have ..."
 msgstr "Kell, hogy legyen ..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -935,23 +862,13 @@ msgstr "Jó ha van"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
-#, fuzzy
 msgid "Note"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Megjegyzés\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Jegyzet"
+msgstr "Megjegyzés"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
-#, fuzzy
 msgid "Notes"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Jegyzetek\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjegyzések"
+msgstr "Jegyzetek"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
@@ -1295,6 +1212,11 @@ msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr "A rendszerbe történő bejelentkezésre szolgál"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr "Felhasználó"
@@ -1559,33 +1481,21 @@ msgstr "Folyékonyan beszél Franciául és Angolul"
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as                     coordinate and supervise "
 "small distributed development teams for specific projects. You will become a "
 "technical                 expert of the product."
 msgstr ""
-"Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében, mint "
-"egyedül, mint irányítás alatt fogja munkáit\n"
-"                     végezni és felügyeli az egyedi projekt témákban a "
-"kisebb fejlesztési csoportoknak \n"
-"                     kiosztott munkákat. A termék Műszaki szakértője lesz."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as coordinate and supervise small distributed "
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
-"Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében, mint "
-"egyedül, mint irányítás alatt fogja munkáit\n"
-"                     végezni és felügyeli az egyedi projekt témákban a "
-"kisebb fejlesztési csoportoknak \n"
-"                     kiosztott munkákat. A termék Műszaki szakértője lesz."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1648,20 +1558,6 @@ msgid "You will work closely with all trainees"
 msgstr "Ön szorosan fog közreműködni a gyakornokokkal"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-" Ön osztályfelépítése az összes munkavállaló \n"
-"                dokumentumának osztályonkénti kezelésére szolgál: "
-"kiadások, \n"
-"                és munkaidő-beosztások, eltávozások és szabadságolások, "
-"felvételiztetések, stb."
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "részleg"
@@ -1673,6 +1569,12 @@ msgstr "Pl. Rész időben"
 
 #~ msgid "Action Needed"
 #~ msgstr "Művelet szükséges"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "Kattintson egy új osztály, részleg létrehozásához."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Saját osztály létrehozása"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
@@ -1722,8 +1624,48 @@ msgstr "Pl. Rész időben"
 #~ msgid "Update Date"
 #~ msgstr "Frissítés Dátuma"
 
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as                     "
+#~ "coordinate and supervise small distributed development teams for specific "
+#~ "projects. You will become a technical                 expert of the "
+#~ "product."
+#~ msgstr ""
+#~ "Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében, mint "
+#~ "egyedül, mint irányítás alatt fogja munkáit\n"
+#~ "                     végezni és felügyeli az egyedi projekt témákban a "
+#~ "kisebb fejlesztési csoportoknak \n"
+#~ "                     kiosztott munkákat. A termék Műszaki szakértője lesz."
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as coordinate and supervise "
+#~ "small distributed development teams for specific projects. You will "
+#~ "become a technical expert of the product."
+#~ msgstr ""
+#~ "Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében, mint "
+#~ "egyedül, mint irányítás alatt fogja munkáit\n"
+#~ "                     végezni és felügyeli az egyedi projekt témákban a "
+#~ "kisebb fejlesztési csoportoknak \n"
+#~ "                     kiosztott munkákat. A termék Műszaki szakértője lesz."
+
+#~ msgid ""
+#~ "Your departments structure is used to manage all documents\n"
+#~ "                related to employees by departments: expenses and "
+#~ "timesheets,\n"
+#~ "                leaves and holidays, recruitments, etc."
+#~ msgstr ""
+#~ " Ön osztályfelépítése az összes munkavállaló \n"
+#~ "                dokumentumának osztályonkénti kezelésére szolgál: "
+#~ "kiadások, \n"
+#~ "                és munkaidő-beosztások, eltávozások és szabadságolások, "
+#~ "felvételiztetések, stb."
+
+#~ msgid "Not Recruiting"
+#~ msgstr "Nem toboroz"
+
 #~ msgid "Resource Name"
 #~ msgstr "Erőforrás neve"
 
-#~ msgid "Used to log into the system"
-#~ msgstr "A rendszerbe történő bejelentkezésre szolgál"
+#~ msgid "e.g. Sales Manager"
+#~ msgstr "pl. Értékesítési menedzsment"

@@ -4,22 +4,18 @@
 #
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-08 03:29+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-07-29 11:43+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project
@@ -213,7 +209,7 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (สำเนา)"
@@ -1002,7 +998,7 @@ msgstr ""
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
+msgid "All employees"
 msgstr ""
 
 #. module: project
@@ -1064,13 +1060,8 @@ msgstr "นำไปใช้"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
-#, fuzzy
 msgid "Archived"
-msgstr ""
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
-"ถูกเก็บ\n"
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
-"เก็บแล้ว"
+msgstr "ถูกเก็บ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1241,7 +1232,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1463,7 +1454,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1472,16 +1463,10 @@ msgid "Customer"
 msgstr "ลูกค้า"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "อีเมลลูกค้า"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1507,6 +1492,12 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
 msgstr ""
 
 #. module: project
@@ -2040,7 +2031,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2452,6 +2443,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "เพิ่มเติม <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2491,7 +2487,7 @@ msgid "New"
 msgstr "ใหม่"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "งานใหม่"
@@ -2712,7 +2708,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2753,7 +2749,7 @@ msgstr ""
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
+msgid "Private: followers only"
 msgstr ""
 
 #. module: project
@@ -2844,6 +2840,11 @@ msgstr ""
 #, python-format
 msgid "Projects"
 msgstr "โปรเจค"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3187,11 +3188,6 @@ msgstr "วันที่เริ่ม"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "วันที่เริ่ม"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -3937,7 +3933,7 @@ msgid "send us an email"
 msgstr "ส่งอีเมลถึงเรา"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr ""

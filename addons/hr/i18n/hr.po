@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-03-22 14:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -123,6 +123,7 @@ msgid "A good job in a young and dynamic team"
 msgstr "Dobar posao u mladom i dinamičnom timu"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Aktivan"
@@ -133,6 +134,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Analiza potreba, pisanje specifikacija i ponuda"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Arhivirano"
@@ -228,11 +230,6 @@ msgid "Click to create a department."
 msgstr "Klikni za kreiranje novog odjela."
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Klikni za definiranje novog odjela."
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr "Klikni ovdje za definiranje novog radnog mjesta."
@@ -303,11 +300,6 @@ msgid "Contributions to open source projects"
 msgstr "Doprinos na open source projektima"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Kreirajte vaše odjele"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -351,7 +343,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "Isporuka generičkih Odoo funkcionalnosti"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -449,13 +440,13 @@ msgid "Employees Tags"
 msgstr "Oznake djelatnika"
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Pogreška! Ne možete kreirati rekurzivne odjele."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Pogreška! Ne možete kreirati rekurzivnu hijerarhiju radnika."
@@ -587,6 +578,11 @@ msgstr "Zaposleni djelatnici"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Kućna adresa"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -842,7 +838,6 @@ msgid "Must have ..."
 msgstr "Mora imati"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -1212,6 +1207,11 @@ msgid "Unread Messages"
 msgstr "Nepročitane poruke"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr "Korisnik"
@@ -1561,18 +1561,6 @@ msgid "You will work closely with all trainees"
 msgstr "Vi ćete usko surađivati ​​sa pripravnicima"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-"Vaša struktura odjela koristi se za upravljanje svim dokumentima koji se "
-"odnose na zaposlenike po odjelima : troškovi , timesheets ,\n"
-"izostanci i praznici , bolovanja , itd."
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "Odjel"
@@ -1584,6 +1572,12 @@ msgstr "npr. povremeni rad"
 
 #~ msgid "Action Needed"
 #~ msgstr "Potrebna dodatna radnja"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "Klikni za definiranje novog odjela."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Kreirajte vaše odjele"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum zadnjeg zapisa"
@@ -1629,3 +1623,36 @@ msgstr "npr. povremeni rad"
 
 #~ msgid "Update Date"
 #~ msgstr "Datum ažuriranja"
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as                     "
+#~ "coordinate and supervise small distributed development teams for specific "
+#~ "projects. You will become a technical                 expert of the "
+#~ "product."
+#~ msgstr ""
+#~ "Vi ćete biti odgovorni za razvoj i unapređenje aplikacija, osim što ćete "
+#~ "raditi samostalno, koordinirati ćete i nadzirati distribuciju malim "
+#~ "razvojnim timovima za specifične projekte. Vi ćete postati tehnički "
+#~ "stručnjak za proizvode"
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as coordinate and supervise "
+#~ "small distributed development teams for specific projects. You will "
+#~ "become a technical expert of the product."
+#~ msgstr ""
+#~ "Vi ćete biti odgovorni za razvoj i unapređenje aplikacija, osim što ćete "
+#~ "raditi samostalno, koordinirati ćete i nadzirati distribuciju malim "
+#~ "razvojnim timovima za specifične projekte. Vi ćete postati tehnički "
+#~ "stručnjak za proizvode"
+
+#~ msgid ""
+#~ "Your departments structure is used to manage all documents\n"
+#~ "                related to employees by departments: expenses and "
+#~ "timesheets,\n"
+#~ "                leaves and holidays, recruitments, etc."
+#~ msgstr ""
+#~ "Vaša struktura odjela koristi se za upravljanje svim dokumentima koji se "
+#~ "odnose na zaposlenike po odjelima : troškovi , timesheets ,\n"
+#~ "izostanci i praznici , bolovanja , itd."

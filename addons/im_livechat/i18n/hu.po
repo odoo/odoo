@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -129,6 +129,22 @@ msgid "Bad"
 msgstr "Rossz"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
+"                it before sending."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
@@ -171,6 +187,11 @@ msgstr "Csatorna beviteli szóköz"
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Társalogjon az egyik munkatársunkkal"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -464,16 +485,11 @@ msgstr "Élő társalgási csatorna"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
-#, fuzzy
 msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-"Élő társalgást támogató csatorna statisztikák lehetővé teszik a vállalata "
-"élő társalgási szakaszai teljesítményének  könnyű visszaellenőrzését és "
-"statisztika készítését. Elhalasztott szakaszok információinak, hallgató "
-"információk, szakasz időszakának kibontása, stb."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.support_page
@@ -597,6 +613,13 @@ msgstr ""
 "Operatorok\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -837,16 +860,12 @@ msgstr "Üdvözlőüzenet"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
-#, fuzzy
 msgid ""
 "You can create channels for each website on which you want\n"
 "                to integrate the website live chat widget, allowing your "
 "website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
-"Létrehozhat csatornákat mindegyik honlaphoz, melyen az élő \n"
-"                társalgás kis ablakot integrálni szeretné, lehetővé téve a \n"
-"                weboldal látogatóinak az élő beszélgetést az operátorokkal."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -870,6 +889,16 @@ msgstr ""
 msgid "seconds"
 msgstr "másodpercek"
 
+#~ msgid ""
+#~ "Livechat Support Channel Statistics allows you to easily check and "
+#~ "analyse your company livechat session performance. Extract informations "
+#~ "about the missed sessions, the audiance, the duration of a session, etc."
+#~ msgstr ""
+#~ "Élő társalgást támogató csatorna statisztikák lehetővé teszik a vállalata "
+#~ "élő társalgási szakaszai teljesítményének  könnyű visszaellenőrzését és "
+#~ "statisztika készítését. Elhalasztott szakaszok információinak, hallgató "
+#~ "információk, szakasz időszakának kibontása, stb."
+
 #~ msgid "My sessions"
 #~ msgstr "Szakaszom"
 
@@ -878,3 +907,27 @@ msgstr "másodpercek"
 
 #~ msgid "Opertor"
 #~ msgstr "Operátor"
+
+#~ msgid ""
+#~ "You can create channels for each website on which you want\n"
+#~ "                to integrate the website live chat widget, allowing you "
+#~ "website\n"
+#~ "                visitors to talk in real time with your operators."
+#~ msgstr ""
+#~ "Létrehozhat csatornákat mindegyik honlaphoz, melyen az élő \n"
+#~ "                társalgás kis ablakot integrálni szeretné, lehetővé téve "
+#~ "a \n"
+#~ "                weboldal látogatóinak az élő beszélgetést az "
+#~ "operátorokkal."
+
+#~ msgid "Configuration"
+#~ msgstr "Beállítások"
+
+#~ msgid "Last Seen Many2many"
+#~ msgstr "Utoljára látott Many2many"
+
+#~ msgid "Live Chat"
+#~ msgstr "Élő társalgás"
+
+#~ msgid "ir.autovacuum"
+#~ msgstr "ir.autovacuum"

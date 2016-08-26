@@ -6,22 +6,18 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # takuan_osho <shimizu.taku@gmail.com>, 2015
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-22 08:14+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-10 02:08+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project
@@ -215,7 +211,7 @@ msgstr "タスク数"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s（コピー）"
@@ -1002,8 +998,8 @@ msgstr "エイリアスするモデル"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
-msgstr "全従業員プロジェクト: 全ての従業員がアクセス可"
+msgid "All employees"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1239,7 +1235,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1463,7 +1459,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1472,16 +1468,10 @@ msgid "Customer"
 msgstr "顧客"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "顧客Eメール"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr "顧客プロジェクト: 顧客がフォロワーなら、ポータルで閲覧可"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1507,6 +1497,12 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
 msgstr ""
 
 #. module: project
@@ -2045,7 +2041,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2462,6 +2458,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "さらに <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2501,7 +2502,7 @@ msgid "New"
 msgstr "新規"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "新規タスク"
@@ -2724,7 +2725,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2765,8 +2766,8 @@ msgstr "プライバシー/可視性"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
-msgstr "プライベートプロジェクト: フォロワーのみ"
+msgid "Private: followers only"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2856,6 +2857,11 @@ msgstr "プロジェクトのタスク"
 #, python-format
 msgid "Projects"
 msgstr "プロジェクト"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3199,11 +3205,6 @@ msgstr "開始日"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "開始日"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr "状態"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -3960,7 +3961,7 @@ msgid "send us an email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "タスク"
@@ -4012,6 +4013,9 @@ msgstr ""
 #~ msgid "Action Needed"
 #~ msgstr "必要なアクション"
 
+#~ msgid "All Employees Project: all employees can access"
+#~ msgstr "全従業員プロジェクト: 全ての従業員がアクセス可"
+
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr ""
 #~ "このプロジェクトでタイムシートを使用する場合は、この項目を選択してくださ"
@@ -4019,6 +4023,9 @@ msgstr ""
 
 #~ msgid "Close"
 #~ msgstr "閉じる"
+
+#~ msgid "Customer Project: visible in portal if the customer is a follower"
+#~ msgstr "顧客プロジェクト: 顧客がフォロワーなら、ポータルで閲覧可"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "記録上の最後のメッセージが投稿された日"
@@ -4050,14 +4057,29 @@ msgstr ""
 #~ msgid "Number of unread messages"
 #~ msgstr "未読メッセージの件数"
 
+#~ msgid "Private Project: followers only"
+#~ msgstr "プライベートプロジェクト: フォロワーのみ"
+
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "タスクに紐付けてタイムシート入力"
+
+#~ msgid "State"
+#~ msgstr "状態"
 
 #~ msgid "Subscriptions"
 #~ msgstr "サブスクリプション"
 
 #~ msgid "Task's Work on Tasks"
 #~ msgstr "タスクでのタイムシート"
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "これはプロジェクトとタスクの中で使われる単位をセットします。\n"
+#~ "プロジェクトにリンクする勤務表（プロジェクトタイムシートモジュール）を使用"
+#~ "する場合は、従業員の中に正しい単位を設定することを忘れないで下さい。"
 
 #~ msgid "Type of Account"
 #~ msgstr "勘定タイプ"

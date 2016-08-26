@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-01-13 15:01+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -57,6 +57,7 @@ msgid "Acer Laptop"
 msgstr "Acer Laptop"
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Actief"
@@ -102,13 +103,19 @@ msgid "Apply"
 msgstr "Toepassen"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Apparatuur"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5764
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Categorie apparatuur"
 
@@ -643,7 +650,6 @@ msgstr "Telefonen"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -651,11 +657,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Beleid om een bericht te versturen bij een document door gebruik te maken "
-"van de mail gateway.\n"
-"-iedereen: iedereen mag versturen\n"
-"-relaties: alleen geautoriseerde relaties\n"
-"-volgers: allen volgers van een bijbehorend document\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -875,7 +876,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -883,11 +883,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"Deze toepassing helpt u om de apparatuur van werknemers te beheren. Maak "
-"laptops,\n"
-"printers en telefoons aan en koppel de apparatuur aan een werknemer of een "
-"afdeling.\n"
-"U kunt toekenningen, problemen en onderhoud van de apparatuur beheren."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -1020,6 +1015,31 @@ msgstr "Zoek onderhoudsopdracht"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "Open menu apparatuur"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Beleid om een bericht te versturen bij een document door gebruik te maken "
+#~ "van de mail gateway.\n"
+#~ "-iedereen: iedereen mag versturen\n"
+#~ "-relaties: alleen geautoriseerde relaties\n"
+#~ "-volgers: allen volgers van een bijbehorend document\n"
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "Deze toepassing helpt u om de apparatuur van werknemers te beheren. Maak "
+#~ "laptops,\n"
+#~ "printers en telefoons aan en koppel de apparatuur aan een werknemer of "
+#~ "een afdeling.\n"
+#~ "U kunt toekenningen, problemen en onderhoud van de apparatuur beheren."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Teller ongelezen berichten"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-04-27 12:56+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -75,6 +75,11 @@ msgid "Activities Done"
 msgstr "Завршени активности"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -93,11 +98,6 @@ msgstr "Кликнете тука за да дефинирате нов прод
 #, python-format
 msgid "Click to set"
 msgstr "Кликнете за да подесете"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Код"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -269,7 +269,7 @@ msgstr "Следна активност"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Само вредност на интегер треба да е валидна"
@@ -358,11 +358,6 @@ msgstr "Водач на тим"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Членови на тим"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "Кодот на тимот за продажба мора да биде единствен !"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -484,7 +479,7 @@ msgstr "Добиено во можности"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Внесовте погрешна вредност."
@@ -497,6 +492,11 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -505,6 +505,9 @@ msgstr "Задоцнето"
 
 #~ msgid "Action Needed"
 #~ msgstr "Потребна е акција"
+
+#~ msgid "Code"
+#~ msgstr "Код"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Датум на испраќање на последната порака"
@@ -545,6 +548,9 @@ msgstr "Задоцнето"
 #~ msgid "Number of unread messages"
 #~ msgstr "Број на непрочитани пораки"
 
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "Кодот на тимот за продажба мора да биде единствен !"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Непрочитани Пораки"
 
@@ -553,3 +559,6 @@ msgstr "Задоцнето"
 
 #~ msgid "Working Hours"
 #~ msgstr "Работни часови"
+
+#~ msgid "Your Pipeline"
+#~ msgstr "Вашиот продажен канал"

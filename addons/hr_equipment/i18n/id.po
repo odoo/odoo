@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-07-30 15:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -54,6 +54,7 @@ msgid "Acer Laptop"
 msgstr ""
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Aktif"
@@ -99,13 +100,19 @@ msgid "Apply"
 msgstr "Terapkan"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Aktiva"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5764
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Kategori Aktiva"
 
@@ -636,7 +643,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -644,11 +650,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
-"mailgateway.\n"
-"-Semua orang: setiap orang dapat memposting\n"
-" - mitra: hanya dikonfirmasi mitra  \n"
-" - pengikut: hanya pengikut dokumen terkait\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -990,6 +991,18 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Jumlah pesan yang belum dibaca"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
+#~ "mailgateway.\n"
+#~ "-Semua orang: setiap orang dapat memposting\n"
+#~ " - mitra: hanya dikonfirmasi mitra  \n"
+#~ " - pengikut: hanya pengikut dokumen terkait\n"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Pesan yang belum dibaca Counter"

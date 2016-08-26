@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-05-13 12:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -106,6 +106,20 @@ msgstr "&amp;times;"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid ""
+"(Un)archiving a forum automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid ""
+"(Un)archiving a post automatically (un)archives its answers. Do you want to "
+"proceed?"
 msgstr ""
 
 #. module: website_forum
@@ -441,6 +455,7 @@ msgstr "Prihvaćanje odgovora"
 
 #. module: website_forum
 #: selection:forum.post,state:0
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
 msgstr "Aktivan"
@@ -497,7 +512,7 @@ msgid "Answer"
 msgstr "Odgovor"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:498
+#: code:addons/website_forum/models/forum.py:507
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -588,6 +603,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
 msgstr "Odgovori"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Archived"
+msgstr ""
 
 #. module: website_forum
 #: selection:forum.post,post_type:0
@@ -686,15 +707,10 @@ msgstr "Natrag na"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:389
+#: code:addons/website_forum/controllers/main.py:393
 #, python-format
 msgid "Bad Request"
 msgstr "Loš zahtjev"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "Badge \""
-msgstr "Značka ''"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
@@ -1390,6 +1406,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
@@ -1866,20 +1883,20 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:833
-#: code:addons/website_forum/models/forum.py:853
+#: code:addons/website_forum/models/forum.py:859
+#: code:addons/website_forum/models/forum.py:879
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "Nije dozvoljeno glasati za vlastite objave"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:897
+#: code:addons/website_forum/models/forum.py:923
 #, fuzzy, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr "Odaberi stavku izbornika za stvaranje novog foruma."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:488
+#: code:addons/website_forum/models/forum.py:497
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -2080,7 +2097,7 @@ msgid "Posted 100 comments"
 msgstr "Objavljeno 100 komentara"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:432
+#: code:addons/website_forum/models/forum.py:441
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -2146,7 +2163,7 @@ msgid "Question"
 msgstr "Pitanje"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:501
+#: code:addons/website_forum/models/forum.py:510
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2224,7 +2241,7 @@ msgid "Questions"
 msgstr "Pitanja"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:515
+#: code:addons/website_forum/models/forum.py:528
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2605,7 +2622,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:408
+#: code:addons/website_forum/models/forum.py:417
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Forum ne dopušta %s"
@@ -2668,7 +2685,7 @@ msgstr "Naslov ne smije biti prazan"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:389
+#: code:addons/website_forum/controllers/main.py:393
 #, python-format
 msgid "Title should not be empty."
 msgstr "Naslov ne smije biti prazan."
@@ -2677,11 +2694,6 @@ msgstr "Naslov ne smije biti prazan."
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
 msgid "To"
 msgstr "za"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.new_question
-msgid "To improve your chance getting an answer:"
-msgstr "Da biste poboljšali šanse za dobivanje odgovora:"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2807,7 +2819,7 @@ msgid "Validate question"
 msgstr "Postavi pitanje"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:777
+#: code:addons/website_forum/models/forum.py:803
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "View"
@@ -2840,6 +2852,11 @@ msgstr "Čeka ovjeru"
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
 msgstr "Čeka ovjeru"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
+msgid "Waiting post"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2896,7 +2913,15 @@ msgid "Why can other people edit my questions/answers?"
 msgstr "Zašto drugi ljudi mogu urediti moja pitanja/odgovore?"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:141
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"You already have one pending post.<br/>\n"
+"            Please wait for a moderator to validate your previous post "
+"before continuing."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:142
 #, python-format
 msgid "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
@@ -3216,11 +3241,6 @@ msgid "racist and hate speech"
 msgstr "rasist i govor mržnje"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "received this badge:"
-msgstr ""
-
-#. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
 msgstr ""
@@ -3275,16 +3295,6 @@ msgid "upvote, add comments"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "user"
-msgstr "korisnik"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "users"
-msgstr "korisnici"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "views"
 msgstr "pogledi"
@@ -3334,6 +3344,13 @@ msgid "your biography can be seen as tooltip"
 msgstr ""
 
 #~ msgid ""
+#~ "<b>Answers should not add or expand questions</b>. Instead either edit "
+#~ "the question edit or add a question comment."
+#~ msgstr ""
+#~ "<b>Odgovori ne smiju dodati ili proširiti pitanja</b>. Umjesto toga ili "
+#~ "uredite pitanje ili dodajte pitanje komentar."
+
+#~ msgid ""
 #~ "<p>A new answer for <i>%s</i> has been posted. <a href=\"%s/forum/%s/"
 #~ "question/%s\">Click here to access the post.</a></p>"
 #~ msgstr ""
@@ -3343,8 +3360,17 @@ msgstr ""
 #~ msgid "Action Needed"
 #~ msgstr "Potrebna dodatna radnja"
 
+#~ msgid "Badge \""
+#~ msgstr "Značka ''"
+
+#~ msgid "By sharing you answer, you will get additionnal"
+#~ msgstr "Dijeleći svoj odgovor, dobit ćete dodatno"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum zadnjeg zapisa"
+
+#~ msgid "Enter a name for your new forum then click 'Continue'."
+#~ msgstr "Unesi naziv svog novog foruma i klikni 'Nastavi'."
 
 #~ msgid "Followers"
 #~ msgstr "Pratitelji"
@@ -3367,6 +3393,9 @@ msgstr ""
 #~ msgid "Last Message Date"
 #~ msgstr "Datum zadnje poruke"
 
+#~ msgid "Messages"
+#~ msgstr "Poruke"
+
 #~ msgid "Messages and communication history"
 #~ msgstr "Poruke i povijest"
 
@@ -3381,6 +3410,12 @@ msgstr ""
 
 #~ msgid "Send a message to the group"
 #~ msgstr "Pošalji poruku grupi"
+
+#~ msgid "This page contain new created question and its answer."
+#~ msgstr "Stranica sadrži novo kreirano pitanje i njegove odgovore."
+
+#~ msgid "To improve your chance getting an answer:"
+#~ msgstr "Da biste poboljšali šanse za dobivanje odgovora:"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Nepročitane poruke"
@@ -3402,3 +3437,9 @@ msgstr ""
 
 #~ msgid "Website meta title"
 #~ msgstr "Web meta naslov"
+
+#~ msgid "user"
+#~ msgstr "korisnik"
+
+#~ msgid "users"
+#~ msgstr "korisnici"

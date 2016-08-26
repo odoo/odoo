@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-03-21 21:32+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -39,7 +39,7 @@ msgid "#Questions"
 msgstr "#Otázky"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
@@ -312,6 +312,11 @@ msgstr "Zodpovedané"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Odpovede"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -771,7 +776,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "Ak zatvorené, ľudia nebudú môcť odpovedať na prieskumy v tomto stĺpci."
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:625
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -1521,6 +1526,7 @@ msgstr "Návrh"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1653,7 +1659,7 @@ msgid "The answer must be in the right type"
 msgstr "Odpoveď musí byť správneho typu"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:623
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1751,19 +1757,19 @@ msgid "They help new users to understand Odoo"
 msgstr "Pomáhajú novým používateľom pochopiť Odoo"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:672 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Táto odpoveď musí byť emailová adresa"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:714 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "Toto nie je dátum/čas"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:691 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "Toto nie je číslo"
@@ -1783,7 +1789,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Táto správa bude zobrazená keď bude prieskum dokončený"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:622
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -2050,13 +2056,13 @@ msgstr ""
 "(v tomto prípade musí byť zapnuté nastavenie \"Verejné na webovej stránke\")."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Nemôžete poslať pozvánku pre prieskum ktorý nemá žiadne otázky."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Nemôžete poslať pozvánky pre zavreté prieskumy."
@@ -2098,6 +2104,11 @@ msgstr "skontrolovať vaše odpovede"
 msgid "try to create and fill survey"
 msgstr "pokúsiť sa vytvoriť a vyplniť prieskum"
 
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
+
 #~ msgid ""
 #~ "\n"
 #~ "                \n"
@@ -2126,6 +2137,9 @@ msgstr "pokúsiť sa vytvoriť a vyplniť prieskum"
 
 #~ msgid "Action Needed"
 #~ msgstr "Potrebná akcia"
+
+#~ msgid "Active domain"
+#~ msgstr "Aktívna doména"
 
 #~ msgid ""
 #~ "Answers do not go in the original document discussion thread. This has an "
@@ -2191,11 +2205,17 @@ msgstr "pokúsiť sa vytvoriť a vyplniť prieskum"
 #~ msgid "From"
 #~ msgstr "Od"
 
+#~ msgid "Human Ressources"
+#~ msgstr "Ľudské zdroje"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Ak iné, konkrétne:"
 
 #~ msgid "Initial thread message."
 #~ msgstr "Pôvodná správa vlákna"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-07-01 09:25+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -18,12 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -109,13 +103,13 @@ msgid "Add Content"
 msgstr "Inhoud toevoegen"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Alle categorieën"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Alle landen"
@@ -349,10 +343,15 @@ msgid "Free"
 msgstr "Vrij"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
 msgstr "Introductie"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -363,7 +362,7 @@ msgstr ""
 "Laten we door de eerste stappen gaan om een nieuw evenement aan te maken."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "Locatie"
@@ -380,7 +379,7 @@ msgstr "Naam"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -396,19 +395,19 @@ msgid "New Event Created"
 msgstr "Nieuw evenement aangemaakt"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Volgende evenementen"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Volgende week"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Volgende maand"
@@ -419,7 +418,7 @@ msgid "No event found"
 msgstr "Geen evenement gevonden"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Oude evenementen"
@@ -457,6 +456,12 @@ msgid "Our Trainings"
 msgstr "Onze trainingen"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr "Deelnemende"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "Telefoon"
@@ -489,7 +494,7 @@ msgid "Reference"
 msgstr "Referentie"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Registreren"
@@ -551,7 +556,7 @@ msgid "Start Tutorial"
 msgstr "Uitleg starten"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Deze week"
@@ -559,11 +564,9 @@ msgstr "Deze week"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:26
-#, fuzzy, python-format
+#, python-format
 msgid "This button allows you to create new pages, events, menus, etc."
 msgstr ""
-"Het <em>Inhoud</em> menu geeft u de mogelijkheid om pagina's, evenementen, "
-"menu's. etc. aan te maken."
 
 #. module: website_event
 #. openerp-web
@@ -575,7 +578,7 @@ msgstr ""
 "pagina wijzigen."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Deze maand"
@@ -591,7 +594,7 @@ msgid "Ticket Type #"
 msgstr "Soort tickets #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Vandaag"
@@ -626,6 +629,16 @@ msgstr "Wij zijn blij uw inschrijving voor ons evenement te bevestigen"
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Website Home"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Website berichten"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Website communicatie geschiedenis"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -673,21 +686,25 @@ msgstr "trek-rechts"
 msgid "to"
 msgstr "aan"
 
+#~ msgid "%(month)s %(start_day)s%(end_day)s"
+#~ msgstr "%(month)s %(start_day)s%(end_day)s"
+
 #~ msgid "Drag the 'Text Block' in your event page."
 #~ msgstr "Sleep het 'Tekst' blok op uw evenmenten pagina."
+
+#~ msgid ""
+#~ "The <em>Content</em> menu allows you to create new pages, events, menus, "
+#~ "etc."
+#~ msgstr ""
+#~ "Het <em>Inhoud</em> menu geeft u de mogelijkheid om pagina's, "
+#~ "evenementen, menu's. etc. aan te maken."
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr ""
 #~ "De volledige URL om het document te kunnen raadplegen via de website."
 
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
 #~ msgid "Website URL"
 #~ msgstr "Website URL"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
 
 #~ msgid "Website meta description"
 #~ msgstr "Website meta omschrijving"
@@ -697,3 +714,12 @@ msgstr "aan"
 
 #~ msgid "Website meta title"
 #~ msgstr "Website meta titel"
+
+#~ msgid "Drag this block and drop it in your page."
+#~ msgstr "Sleep dit blok en laat het los op uw pagina."
+
+#~ msgid "Event Registration"
+#~ msgstr "Evenementregistratie"
+
+#~ msgid "unpublished"
+#~ msgstr "Niet gepubliceerd"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-06-02 08:45+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -35,26 +35,6 @@ msgstr ""
 "bestätigen.\n"
 "* Die \"Fertig\" Status wird verwendet, wenn Stundenzettel durch dessen "
 "Vorgesetzten genehmigt wurden."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
-msgid "# Nbr Timesheet"
-msgstr "# Anzahl Stundenzettel"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
-msgid "# Total Attendance"
-msgstr "# Gesamte Arbeitszeit"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
-msgid "# Total Diff"
-msgstr "# Gesamtabweichung"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
-msgid "# Total Timesheet"
-msgstr "# Gesamte Zeiterfassung"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -129,12 +109,6 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Confirmed"
-msgstr "Bestätigt"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Bestätigte Zeiterfassungen"
@@ -162,23 +136,18 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Von"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Bis"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Abteilung"
 
@@ -207,18 +176,6 @@ msgid "Display Name"
 msgstr "Angezeigter Name"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Done"
-msgstr "Erledigt"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Draft"
-msgstr "Entwurf"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -242,11 +199,6 @@ msgstr ""
 "Fehler ! Anmelden (bzw. Abmelden) muss immer Abmelden folgen (bzw. Anmelden)"
 
 #. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
-msgid "External Timesheet"
-msgstr "Externe Zeiterfassung"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Gruppiere nach"
@@ -255,6 +207,11 @@ msgstr "Gruppiere nach"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Stunden"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -279,11 +236,6 @@ msgid ""
 msgstr ""
 "Um für diesen Mitarbeiter die Zeiterfassung zu ermöglichen, muß er mit einem "
 "Benutzer verbunden sein."
-
-#. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
-msgid "Internal Timesheet"
-msgstr "Interne Zeiterfassung"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -322,7 +274,6 @@ msgid "My Timesheets"
 msgstr "Meine Stundenzettel"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Neu"
@@ -418,9 +369,7 @@ msgid "Sign Out"
 msgstr "Sign Out"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Status"
 
@@ -445,7 +394,6 @@ msgstr ""
 "Abmeldungen nicht übereinstimmt."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -750,17 +698,44 @@ msgstr "bis"
 msgid "waiting approval"
 msgstr "Erwarte Genehmigung"
 
+#~ msgid "# Nbr Timesheet"
+#~ msgstr "# Anzahl Stundenzettel"
+
+#~ msgid "# Total Attendance"
+#~ msgstr "# Gesamte Arbeitszeit"
+
+#~ msgid "# Total Diff"
+#~ msgstr "# Gesamtabweichung"
+
+#~ msgid "# Total Timesheet"
+#~ msgstr "# Gesamte Zeiterfassung"
+
 #~ msgid "Action Needed"
 #~ msgstr "Aktion notwendig"
 
+#~ msgid "Analytic Line"
+#~ msgstr "Analytischer Buchungssatz"
+
 #~ msgid "Cancel"
 #~ msgstr "Abbrechen"
+
+#~ msgid "Confirmed"
+#~ msgstr "Bestätigt"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum der letzten Nachricht."
 
 #~ msgid "Day"
 #~ msgstr "Tag"
+
+#~ msgid "Done"
+#~ msgstr "Erledigt"
+
+#~ msgid "Draft"
+#~ msgstr "Entwurf"
+
+#~ msgid "External Timesheet"
+#~ msgstr "Externe Zeiterfassung"
 
 #~ msgid "Followers"
 #~ msgstr "Beobachter"
@@ -786,6 +761,9 @@ msgstr "Erwarte Genehmigung"
 #~ msgstr ""
 #~ "Um eine Zeiterfassung für diesen Mitarbeiter anzulegen, muss dem "
 #~ "Mitarbeiter ein Produkt zugewiesen werden."
+
+#~ msgid "Internal Timesheet"
+#~ msgstr "Interne Zeiterfassung"
 
 #~ msgid "Is Follower"
 #~ msgstr "Ist Beobachter"

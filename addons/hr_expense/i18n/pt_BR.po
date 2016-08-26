@@ -1,4 +1,3 @@
-# #-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
@@ -7,39 +6,25 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # grazziano <g.negocios@outlook.com.br>, 2015
 # Mateus Lopes <mateus1@gmail.com>, 2015
-# #-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_expense
-#
-# Translators:
-# danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-23 13:02+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-17 08:18+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
 "language/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Currency:</strong>"
-msgstr "Data:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -48,15 +33,13 @@ msgstr "<strong>Funcionário:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Manager:</strong>"
-msgstr "Data:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Status:</strong>"
-msgstr "Data:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -68,6 +51,11 @@ msgstr "Total"
 #, fuzzy
 msgid "Account"
 msgstr "Conta Analítica"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
+msgid "Accounting Date"
+msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -189,7 +177,6 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -306,13 +293,13 @@ msgid "Expenses by Month"
 msgstr "Despesas por Mês"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Despesas devem pertencer ao mesmo Funcionário."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:212
+#: code:addons/hr_expense/models/hr_expense.py:213
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -354,9 +341,8 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-#, fuzzy
 msgid "Generate Accounting Entries"
-msgstr "Gerar Única Entrada Contábil"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -378,6 +364,11 @@ msgstr "Despesas de RH"
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
 msgstr "Despesa com Hotel"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -453,7 +444,7 @@ msgid "New Mail"
 msgstr "Novo Email"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:276
+#: code:addons/hr_expense/models/hr_expense.py:278
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -463,7 +454,7 @@ msgstr ""
 "categoria), por favor, configure uma."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:244
+#: code:addons/hr_expense/models/hr_expense.py:246
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
@@ -471,7 +462,7 @@ msgstr ""
 "configure um."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:240
+#: code:addons/hr_expense/models/hr_expense.py:242
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -509,7 +500,7 @@ msgid "Payment By"
 msgstr "Pago Por"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:280
+#: code:addons/hr_expense/models/hr_expense.py:282
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -578,8 +569,8 @@ msgstr "Recusado"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reporting"
-msgstr "Relatórios"
+msgid "Reports"
+msgstr ""
 
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_1
@@ -587,7 +578,7 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:77
+#: code:addons/hr_expense/models/hr_expense.py:78
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -608,6 +599,7 @@ msgstr "Especifique se o produto pode ser selecionado em uma despesa de RH."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Situação"
 
@@ -716,7 +708,6 @@ msgstr "Esperando pagamento"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
-#, fuzzy
 msgid ""
 "When the expense request is created the status is 'To Submit'.\n"
 " It is submitted by the employee and request is sent to manager, the status "
@@ -725,39 +716,32 @@ msgid ""
 " If the accountant genrate the accounting entries for the expense request, "
 "the status is 'Waiting Payment'."
 msgstr ""
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
 "Quando a solicitação de despesa é criada o estado é 'Enviar'.\n"
 "Quando o funcionário envia ao gerente, o status é 'Enviada'.\n"
 "Se o gerente aprovar, o status é 'Aprovada'.\n"
 "Se o contador gerar os lançamentos contábeis para a solicitação de despesa, "
-"o status é 'Esperando Pagamento'.\n"
-"#-#-#-#-#  pt_BR.po (Odoo 9.0)  #-#-#-#-#\n"
-"Quando a solicitação de despesa é criada o estado é 'Enviar'.\n"
-"É enviada pelo funcionário e enviada ao gerente, o status é 'Enviada'.\n"
-"Se o gerente de aprová-la, o status é 'Aprovada'.\n"
-"Se o contador gerar os lançamentos contábeis para a solicitação de despesa, "
 "o status é 'Esperando Pagamento'."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:111
+#: code:addons/hr_expense/models/hr_expense.py:112
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "Você só pode excluir o rascunho ou despesas recusadas!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:207
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Você só pode gerar entrada contábil de despesa(s) aprovada(s)."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:117
+#: code:addons/hr_expense/models/hr_expense.py:118
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "Você só pode enviar rascunhos de despesas!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:128
+#: code:addons/hr_expense/models/hr_expense.py:129
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -782,12 +766,6 @@ msgstr "ou"
 #: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
 msgid "report.hr_expense.report_expense"
 msgstr ""
-
-#~ msgid "<strong>Description:</strong>"
-#~ msgstr "<strong>Descrição:</strong>"
-
-#~ msgid "<strong>Validated By:</strong>"
-#~ msgstr "<strong>Validado Por:</strong>"
 
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
@@ -837,11 +815,20 @@ msgstr ""
 #~ msgid "Open Expense Menu"
 #~ msgstr "Abrir Menu de Despesas"
 
+#~ msgid "Reporting"
+#~ msgstr "Relatórios"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Mensagens não lidas"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens Não Lidas."
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Descrição:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>Validado Por:</strong>"
 
 #~ msgid "Website Messages"
 #~ msgstr "Mensagens do Site"

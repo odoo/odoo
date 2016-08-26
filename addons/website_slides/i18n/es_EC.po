@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-02-04 19:20+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -101,6 +101,13 @@ msgstr "# de vistas del sitio web"
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
 msgstr "!${user.name} compartió ${object.slide_type} contigo!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -322,6 +329,18 @@ msgid "Actions"
 msgstr "Acciones"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+msgid "Active"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr ""
+
+#. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
 msgstr "Solo usuarios registrados"
@@ -364,6 +383,7 @@ msgstr "Categoría"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -430,7 +450,7 @@ msgstr ""
 "La respuesta recibida es: %serror"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:294
+#: code:addons/website_slides/models/slides.py:304
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -653,8 +673,8 @@ msgstr "Política de destacar"
 #: code:addons/website_slides/controllers/main.py:299
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
 #, python-format
-msgid "File is too big. File size cannot exceed 15MB"
-msgstr "El archivo es demasiado grande. El tamaño no puede exceder los 15MB"
+msgid "File is too big. File size cannot exceed 25MB"
+msgstr "El archivo es demasiado grande. El tamaño no puede exceder los 25MB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -990,8 +1010,8 @@ msgstr ""
 "presentación"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:297
-#: code:addons/website_slides/models/slides.py:518
+#: code:addons/website_slides/models/slides.py:307
+#: code:addons/website_slides/models/slides.py:532
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Por favor, ingrese una URL válida de Youtube o Google Doc"
@@ -1330,7 +1350,7 @@ msgid "Uncategorized presentation"
 msgstr "Presentación sin categorizar"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:507
+#: code:addons/website_slides/models/slides.py:521
 #, python-format
 msgid "Unknown document"
 msgstr "Documento desconocido"
@@ -1385,7 +1405,7 @@ msgid "Videos"
 msgstr "Videos"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:436
+#: code:addons/website_slides/models/slides.py:446
 #, fuzzy, python-format
 msgid "View Slide"
 msgstr "Presentaciones Web"
@@ -1804,6 +1824,14 @@ msgstr "tu-amigo@dominio.com"
 #~ msgstr "Necesaria acción"
 
 #~ msgid ""
+#~ "Could not fetch data from url. Document or access right not available.\n"
+#~ "Here is the received response: %serror"
+#~ msgstr ""
+#~ "No se pudo obtener datos desde la URL. El documento o el acceso no está "
+#~ "disponible.\n"
+#~ "La respuesta recibida es: %serror"
+
+#~ msgid ""
 #~ "Create enterprise grade website with our super easy builder. Use finely "
 #~ "designed building blocks and edit everything inline. Benefit from out-of-"
 #~ "the-box business features; e-Commerce, events, blogs, jobs announces, "
@@ -1828,6 +1856,13 @@ msgstr "tu-amigo@dominio.com"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
+
+#~ msgid ""
+#~ "Document type will be set automatically depending on file type, height "
+#~ "and width."
+#~ msgstr ""
+#~ "Tipo de documento se ajusta automáticamente en función del tipo de "
+#~ "archivo, la altura y la anchura."
 
 #~ msgid "Followers"
 #~ msgstr "Seguidores"
@@ -1941,3 +1976,6 @@ msgstr "tu-amigo@dominio.com"
 
 #~ msgid "Website meta title"
 #~ msgstr "Meta título del sitio web"
+
+#~ msgid "File is too big. File size cannot exceed 15MB"
+#~ msgstr "El archivo es demasiado grande. El tamaño no puede exceder los 15MB"

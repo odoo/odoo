@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-03-31 08:36+0000\n"
 "Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -1268,6 +1268,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:85
 #: code:addons/website/static/src/xml/website.xml:63
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
@@ -1601,6 +1602,11 @@ msgid "Customize the banner"
 msgstr "Προσαρμόστε το διαφημιστικό πλαίσιο"
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_default_lang_id
 #: model:ir.model.fields,field_description:website.field_website_default_lang_id
 msgid "Default language"
@@ -1799,6 +1805,13 @@ msgid "Edit in backend"
 msgstr "Επεξεργασία στο παρασκήνιο"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:29
+#, python-format
+msgid "Edit my Analytics Client ID"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.page_404
 msgid ""
 "Edit the content below this line to adapt the default \"page not found\" "
@@ -1911,6 +1924,11 @@ msgstr "Λογαριασμός Facebook"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fast"
 msgstr "Γρήγορο"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_favicon
+msgid "Favicon"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -2077,6 +2095,13 @@ msgid "GitHub Account"
 msgstr "Λογαριασμός GitHub "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:42
+#, python-format
+msgid "Go to our"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Go to the page you want to translate"
 msgstr ""
@@ -2087,6 +2112,13 @@ msgstr ""
 #, python-format
 msgid "Good Job!"
 msgstr "Μπράβο!"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:72
+#, python-format
+msgid "Google Analytics"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_google_analytics_key
@@ -2213,7 +2245,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_id
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_2055
+#: model:ir.model.fields,field_description:website.field_website_menu_id_2037
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
 msgid "ID"
@@ -2301,6 +2333,13 @@ msgid "Include Asset Bundles"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:95
+#, python-format
+msgid "Incorrect Client ID"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Information about the"
 msgstr "Πληροφορίες σχετικά με το"
@@ -2315,6 +2354,11 @@ msgstr "Εγκατάσταση Εφαρμογών"
 #: model:ir.model,name:website.model_base_language_install
 msgid "Install Language"
 msgstr "Εγκατάσταση γλώσσας"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Install a language"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2490,6 +2534,13 @@ msgid "Limited customization"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:25
+#, python-format
+msgid "Link my Analytics Account"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_social_linkedin
 #: model:ir.model.fields,field_description:website.field_website_social_linkedin
 msgid "LinkedIn Account"
@@ -2553,7 +2604,7 @@ msgid "Meet your existing customers and encourage them to 'repeat buy'."
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:320
+#: code:addons/website/models/website.py:321
 #: model:ir.model.fields,field_description:website.field_website_menu_name
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
 #, python-format
@@ -2561,7 +2612,7 @@ msgid "Menu"
 msgstr "Μενού"
 
 #. module: website
-#: code:addons/website/models/website.py:324
+#: code:addons/website/models/website.py:325
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
@@ -2582,6 +2633,18 @@ msgstr "Προεπισκόπηση κινητού"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Mode"
 msgstr "Μοντέλο"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:48
+#, python-format
+msgid "Month"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "More Info"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2636,6 +2699,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Narrow"
 msgstr "στενό"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "New Language"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2832,23 +2900,8 @@ msgid "Open Source eCommerce"
 msgstr "Ηλεκτρονικό εμπόριο Ανοικτού Κώδικα"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
-msgid "Optimization"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Optimize AdWords Campaign"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Optimize your AdWords account"
 msgstr ""
 
 #. module: website
@@ -2916,14 +2969,14 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:298
+#: code:addons/website/models/website.py:299
 #: code:addons/website/static/src/xml/website.editor.xml:11
 #, python-format
 msgid "Page"
 msgstr "Σελίδα"
 
 #. module: website
-#: code:addons/website/models/website.py:303
+#: code:addons/website/models/website.py:304
 #, python-format
 msgid "Page <b>%s</b> seems to have a link to this page !"
 msgstr ""
@@ -2982,6 +3035,11 @@ msgstr "Λεπτομέρειες συνεργάτη"
 #: model:ir.ui.view,arch_db:website.template_partner_comment
 msgid "Partners"
 msgstr "Συνεργάτες"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Performance Optimization"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3210,6 +3268,7 @@ msgstr "Δείγματα εικόνων"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:76
 #: code:addons/website/static/src/js/website.seo.js:363
 #: code:addons/website/static/src/xml/website.ace.xml:12
 #, python-format
@@ -3325,6 +3384,11 @@ msgid "Sequence"
 msgstr "Ιεράρχηση"
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_website_website_settings
+msgid "Settings"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Settings &gt; Website"
 msgstr ""
@@ -3397,6 +3461,11 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Special effects and animations"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Speed"
 msgstr ""
 
 #. module: website
@@ -3502,7 +3571,7 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:308
+#: code:addons/website/models/website.py:309
 #, python-format
 msgid "Template <b>%s (id:%s)</b> seems to have a link to this page !"
 msgstr ""
@@ -3547,6 +3616,13 @@ msgstr ""
 msgid "The Banner or Big Picture building blocks are good choices for that."
 msgstr ""
 "Το διαφημηστικό πλαίσιο ή η μεγάλη εικόνα είναι καλές επιλογές για αυτό."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:95
+#, python-format
+msgid "The Google Analytics Client ID you have entered seems incorrect."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -3720,6 +3796,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "Third Feature"
 msgstr "Τρίτο Χαρακτηριστικό"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website_config_settings_favicon
+#: model:ir.model.fields,help:website.field_website_favicon
+msgid "This field holds the image used to display a favicon on the website."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
@@ -3940,6 +4022,13 @@ msgid "Use this button to add pages"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:42
+#, python-format
+msgid "User Documentation"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.robots
 msgid ""
 "User-agent: *\n"
@@ -3968,7 +4057,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_published
-#: model:ir.model.fields,field_description:website.field_delivery_carrier_website_published
 #: model:ir.model.fields,field_description:website.field_event_track_website_published
 #: model:ir.model.fields,field_description:website.field_hr_employee_website_published
 #: model:ir.model.fields,field_description:website.field_hr_job_website_published
@@ -3991,6 +4079,13 @@ msgid ""
 "to your site. They could want to learn something, improve their life, grow "
 "their business, find out more about you, etc. What great content can you "
 "offer your visitors? Why should they stay on your website?"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:16
+#, python-format
+msgid "Visits"
 msgstr ""
 
 #. module: website
@@ -4060,8 +4155,18 @@ msgid "Website Apps"
 msgstr "Εφαρμογές ιστοτόπου"
 
 #. module: website
+#: model:ir.actions.client,name:website.backend_dashboard
+msgid "Website Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_domain
 msgid "Website Domain"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_favicon
+msgid "Website Favicon"
 msgstr ""
 
 #. module: website
@@ -4093,11 +4198,6 @@ msgid "Website Partners Comment Form"
 msgstr "Φόρμα Σχολίων Συνεργατών Ιστότοπου"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
-msgid "Website Path"
-msgstr "Διαδρομή ιστοτόπου"
-
-#. module: website
 #: model:crm.team,name:website.salesteam_website_sales
 msgid "Website Sales"
 msgstr "Πωλήσεις ιστοτόπου"
@@ -4121,7 +4221,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_hr_employee_website_url
 #: model:ir.model.fields,field_description:website.field_hr_job_website_url
 #: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_url
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
 #: model:ir.model.fields,field_description:website.field_payment_acquirer_website_url
 #: model:ir.model.fields,field_description:website.field_product_template_website_url
 #: model:ir.model.fields,field_description:website.field_project_project_website_url
@@ -4213,6 +4312,16 @@ msgid "Website meta title"
 msgstr "Μετά τίτλος Ιστότοπου"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
+msgid "Website path"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
+msgid "Website url"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
 msgstr "Ιστότοποι"
@@ -4221,6 +4330,13 @@ msgstr "Ιστότοποι"
 #: model:ir.model.fields,field_description:website.field_base_language_install_website_ids
 msgid "Websites to translate"
 msgstr "Ιστότοποι προς μετάφραση"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:47
+#, python-format
+msgid "Week"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4352,6 +4468,13 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:49
+#, python-format
+msgid "Year"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Yellow Green"
 msgstr "Κίτρινο Πράσινο"
@@ -4418,10 +4541,24 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:37
+#, python-format
+msgid "You do not seem to have access to this Analytics Account."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "You have a lot of choices for that: the References, Quotes Slider, Twitter "
 "Scroller,..."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:36
+#, python-format
+msgid "You need to log in to your Google Account before:"
 msgstr ""
 
 #. module: website
@@ -4453,6 +4590,13 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Your Footer"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:40
+#, python-format
+msgid "Your Google Analytic Client ID:"
 msgstr ""
 
 #. module: website
@@ -4737,6 +4881,13 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:42
+#, python-format
+msgid "to get more information."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "to get started."
 msgstr ""
@@ -4790,6 +4941,43 @@ msgstr "φόρμα με τα στοιχεία της εταιρείας σας"
 #~ msgid ".xml"
 #~ msgstr ".xml"
 
+#~ msgid ""
+#~ "<b>Great stories have personality.</b> Consider telling\n"
+#~ "                        a great story that provides personality. Writing "
+#~ "a story\n"
+#~ "                        with personality for potential clients will asist "
+#~ "with\n"
+#~ "                        making a relationship connection. This shows up "
+#~ "in small\n"
+#~ "                        quirks like word choices or phrases. Write from "
+#~ "your point\n"
+#~ "                        of view, not from someone else's experience."
+#~ msgstr ""
+#~ "<b>Οι μεγάλες ιστορίες έχουν προσωπικότητα.</b> Σκεφτείτε να πείτε μια "
+#~ "σπουδαία ιστορία που να  προβάλει την προσωπικότητα. Γράφοντας μια "
+#~ "ιστορία με προσωπικότητα για πιθανούς πελάτες θα βοηθήσει στη δημιουργία "
+#~ "μιας σχέσης διασύνδεσης. Αυτό καταδεικνύει μικρές ιδιορρυθμίες, όπως "
+#~ "επιλογές λέξεων ή φράσεων. Γράψτε τη δική σας άποψη, όχι την εμπειρία "
+#~ "κάποιου άλλου."
+
+#~ msgid ""
+#~ "A code server action can be executed from the website, using a "
+#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
+#~ "Set this field as True to allow users to run this action. If itset to is "
+#~ "False the action cannot be run through the website."
+#~ msgstr ""
+#~ "Μια δράση κώδικα διακομιστή μπορεί να εκτελεστεί απο την ιστοσελίδα, "
+#~ "χρησιμοποιώντας έναν ειδικό ελεγκτή. Η διεύθυνση είναι <base>/website/"
+#~ "action/<website_path>. Ορίστε αυτό το πεδίο ώς Αληθινό για να επιτρέπει "
+#~ "στους χρήστες να εκτελέσουν αυτή τη δράση. Αν ορισθεί για ώς Λανθασμένη η "
+#~ "δράση δεν μπορεί να εκτελεστεί μέσω της ιστοσελίδας."
+
+#~ msgid "Add new pages and menus"
+#~ msgstr "Προσθήκη νέων σελίδων και μενού"
+
+#~ msgid "Background"
+#~ msgstr "Φόντο"
+
 #~ msgid "Check now and discover more today!"
 #~ msgstr "Ελέγξτε τώρα και ανακαλύψτε περισσότερα σήμερα!"
 
@@ -4808,17 +4996,40 @@ msgstr "φόρμα με τα στοιχεία της εταιρείας σας"
 #~ msgid "Hide link"
 #~ msgstr "Απόκρυψη συνδέσμου"
 
+#~ msgid ""
+#~ "It might be possible to edit the relevant items\n"
+#~ "                                or fix the issue in"
+#~ msgstr ""
+#~ "Μπορεί να είναι πιθανό να επεξεργαστείτε τα είδη\n"
+#~ "ή να διορθώσετε αυτό το θέμα στο"
+
 #~ msgid "Menu Label"
 #~ msgstr "Ετικέτα Μενού"
+
+#~ msgid "Our products &amp; Services"
+#~ msgstr "Τα Προϊόντα μας &amp; οι Υπηρεσίες μας"
 
 #~ msgid "Reset Transformation"
 #~ msgstr "Επαναφορά Μετασχηματισμού"
 
+#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
+#~ msgstr ""
+#~ "Το μενού 'Περιεχόμενο' σας επιτρέπει να προσθέσετε σελίδες ή να "
+#~ "προσθέσετε το μενού στην κορυφή."
+
 #~ msgid "Transform"
 #~ msgstr "Μετασχηματισμός"
 
+#~ msgid "Website Path"
+#~ msgstr "Διαδρομή ιστοτόπου"
+
 #~ msgid "Yes."
 #~ msgstr "Ναι"
+
+#~ msgid "ex: Contact us, Our Customers, Privacy Policy, Events, Bolg, Jobs"
+#~ msgstr ""
+#~ "π.χ.: Επικοινωνήστε μαζί μας, οι πελάτες μας, την Πολιτική Απορρήτου, "
+#~ "Εκδηλώσεις, Ιστολόγια, Προσφορά Εργασίας"
 
 #~ msgid "or"
 #~ msgstr "ή"

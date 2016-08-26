@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-05-14 07:24+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -26,6 +26,14 @@ msgid ""
 msgstr ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Dodanie:</span>"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -76,14 +84,14 @@ msgid "Country..."
 msgstr "Krajina..."
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
-msgstr ""
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
 msgstr "Suma dodania"
+
+#. module: website_sale_delivery
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+msgid "Delivery Methods"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -92,8 +100,8 @@ msgstr "Popis"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on the Online Quotations."
-msgstr "Popis zobrazený na eCommerce a na Online cenovej ponuke."
+msgid "Description displayed on the eCommerce and on online quotations."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
@@ -146,17 +154,7 @@ msgid "Landed Costs"
 msgstr "Dodacie náklady"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "Správa pre riadok nákupnej objednávky"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "Správa pre riadok predajnej objednávky"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:138
+#: code:addons/website_sale_delivery/models/sale_order.py:104
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address. "
@@ -186,16 +184,6 @@ msgid "Products to propose when add to cart."
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "Projekt"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "Riadok nákupnej objednávky"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
 msgstr "Hodnotenie"
@@ -206,26 +194,9 @@ msgid "Sales Order"
 msgstr "Objednávka predaja"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "Položky objednávky"
-
-#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
 msgid "Select..."
 msgstr "Vyberte..."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"Zvolenie možnosti \"Varovanie\" notifikuje používateľa správou, Zvolenie "
-"\"Blokovanie správy\" hodí výnimku so správou a zablokuje tok. Správa musí "
-"byť napísaná v ďalšom poli."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -243,7 +214,7 @@ msgid "Size Y"
 msgstr "Veľkosť Y"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:137
+#: code:addons/website_sale_delivery/models/sale_order.py:103
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Prepáčte, nevieme odoslať vašu objednávku"
@@ -293,6 +264,16 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr "Viditeľné na webstránke"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr "Komentáre webstránky"
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr "Produktová kategória webstránky"
@@ -319,14 +300,35 @@ msgstr "Website meta názov"
 #~ "Zaškrtnite, ak chcete generovať výzvu na cenovú ponuku namiesto "
 #~ "generovania žiadosti o cenovú ponuku."
 
+#~ msgid "Description displayed on the eCommerce and on the Online Quotations."
+#~ msgstr "Popis zobrazený na eCommerce a na Online cenovej ponuke."
+
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "Správa pre riadok nákupnej objednávky"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "Správa pre riadok predajnej objednávky"
+
+#~ msgid "Project"
+#~ msgstr "Projekt"
+
+#~ msgid "Purchase Order Line"
+#~ msgstr "Riadok nákupnej objednávky"
+
+#~ msgid "Sales Order Line"
+#~ msgstr "Položky objednávky"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Zvolenie možnosti \"Varovanie\" notifikuje používateľa správou, Zvolenie "
+#~ "\"Blokovanie správy\" hodí výnimku so správou a zablokuje tok. Správa "
+#~ "musí byť napísaná v ďalšom poli."
+
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "Plné URL pre prístup do dokumentu cez webstránku."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Viditeľné na webstránke"
-
-#~ msgid "Website Comments"
-#~ msgstr "Komentáre webstránky"
 
 #~ msgid "Website URL"
 #~ msgstr "URL webstránky"

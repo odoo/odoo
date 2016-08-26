@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-03-12 18:06+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -469,6 +469,11 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr "Presione para añadir una nueva etapa en el proceso de reclutamiento."
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 msgid "Closed"
@@ -663,7 +668,6 @@ msgid "Delete"
 msgstr "Suprimir"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -913,6 +917,11 @@ msgstr "Agrupar por"
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "Empleados contratados"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -1671,7 +1680,10 @@ msgid "Tag name already exists !"
 msgstr "¡El nombre de etiqueta ya existe!"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Etiquetas"
 
@@ -1913,6 +1925,36 @@ msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
 
 #~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    Es un placer anunciar que <strong> ${object.name} </"
+#~ "strong> se unirá a nosotros con el cargo de ${object.job_id.name}\n"
+#~ "                    en el departamento de ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    Es un placer anunciar que <strong> ${object.name} </"
+#~ "strong> se unirá a nosotros con el cargo de ${object.job_id.name}\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Sea bienvenido y ayudemos a lograr sus metas.</p>\n"
+#~ "            "
+
+#~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
 #~ "        <p>Congrats! Your resume's got our interest!\n"
 #~ "        I will call you as soon as possible to make a 10 minutes phone "
@@ -1975,6 +2017,15 @@ msgstr "oe_kanban_text_red"
 #~ "¿Cuándo llegará el solicitante, conocer el origen del puesto de trabajo "
 #~ "está por venir."
 
+#~ msgid ""
+#~ "Create here some alias...\n"
+#~ "                That will allow you to track from where the applicant is "
+#~ "coming from..."
+#~ msgstr ""
+#~ "Cree aquí algunos alias ...\n"
+#~ "Eso le permitirá realizar un seguimiento desde done el solicitante está "
+#~ "viniendo ..."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
 
@@ -1995,6 +2046,9 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Si otros, precisar"
 
 #~ msgid "Is Follower"
 #~ msgstr "Es un seguidor"
@@ -2024,6 +2078,21 @@ msgstr "oe_kanban_text_red"
 #~ msgstr "Abrir menú RRHH"
 
 #~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Política para enviar un mensaje en el documento usando la pasarela de "
+#~ "correo.\n"
+#~ "- Todos: Todos pueden enviar.\n"
+#~ "- Empresas: Sólo las empresas autenticadas.\n"
+#~ "- Seguidores: Sólo los seguidores del documento relacionado.\n"
+
+#~ msgid "Reset Application"
+#~ msgstr "Reiniciar Aplicación"
+
+#~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
 #~ msgstr ""
@@ -2038,3 +2107,6 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Website communication history"
 #~ msgstr "Historial de comunicaciones del sitio web"
+
+#~ msgid "Welcoming ${object.name} "
+#~ msgstr "Bienvenido ${object.name} "

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2015-12-19 12:53+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -54,6 +54,7 @@ msgid "Acer Laptop"
 msgstr "Acer laptop"
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Aktívny"
@@ -99,13 +100,19 @@ msgid "Apply"
 msgstr "Použiť"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Aktívny"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5764
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Kategória aktíva"
 
@@ -638,7 +645,6 @@ msgstr "Telefóny"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -646,10 +652,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Metóda pre zverejnenie správy na dokumente za použitia mailovj brány.\n"
-"- všeci: všetci môžu zverejňovať\n"
-"- partneri: iba overený partneri\n"
-"- odberatelia: iba odberatelia pridruženého dokumentu\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -865,7 +867,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -873,10 +874,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"Táto aplikácia vám pomôže sledovať vybavenie používané zamestnancami.\n"
-"Vytvorte laptop, tlačiareň alebo telefón a prepojte každé vybavenie so\n"
-"zamestnancom alebo oddlením. Budete spravovať rozdelenie, problémy\n"
-"a údržbu vybavenia."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -1009,6 +1006,29 @@ msgstr "hľadanie údržbovej požiadavky"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "Otvoriť menu vybavení"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Metóda pre zverejnenie správy na dokumente za použitia mailovj brány.\n"
+#~ "- všeci: všetci môžu zverejňovať\n"
+#~ "- partneri: iba overený partneri\n"
+#~ "- odberatelia: iba odberatelia pridruženého dokumentu\n"
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "Táto aplikácia vám pomôže sledovať vybavenie používané zamestnancami.\n"
+#~ "Vytvorte laptop, tlačiareň alebo telefón a prepojte každé vybavenie so\n"
+#~ "zamestnancom alebo oddlením. Budete spravovať rozdelenie, problémy\n"
+#~ "a údržbu vybavenia."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Počítadlo neprečítaných správ"

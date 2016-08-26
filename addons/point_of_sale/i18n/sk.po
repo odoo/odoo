@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-03-08 06:31+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -41,15 +41,15 @@ msgstr "# Objednávok"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1283
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1293
 #, python-format
 msgid "% discount"
 msgstr "% zľava"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1410
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1450
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1420
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1460
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
@@ -181,7 +181,7 @@ msgstr "= Teoretický konečný zostatok"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1885
+#: code:addons/point_of_sale/static/src/js/screens.js:1883
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Kliknutie na \"Potvrdiť\" overí platbu."
@@ -263,7 +263,7 @@ msgstr "Krátky text ktorý bude vložený ako záhlavie vytlačenej potvrdenky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1449
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1459
 #, python-format
 msgid "ABC"
 msgstr "ABC"
@@ -286,8 +286,7 @@ msgid "Acsone.eu"
 msgstr "Acsone.eu"
 
 #. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
-#: selection:pos.config,state:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
 msgid "Active"
 msgstr "Aktívny"
 
@@ -298,7 +297,7 @@ msgstr "Aktívny v mieste predaja"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1729
+#: code:addons/point_of_sale/static/src/js/screens.js:1727
 #, python-format
 msgid "Add Tip"
 msgstr "Pridať tip"
@@ -394,7 +393,7 @@ msgstr "Uplatniť zľavu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1877
+#: code:addons/point_of_sale/static/src/js/screens.js:1875
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
 msgstr "Ste si istý že zákazník chce platiť"
@@ -472,7 +471,7 @@ msgstr "Názvoslovia Čiarového kódu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1157
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1167
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 #, python-format
 msgid "Barcode Scanner"
@@ -532,7 +531,7 @@ msgstr "Obísť tlač prehliadača a tlačiť cez proxy hardvéru"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:781
+#: code:addons/point_of_sale/static/src/xml/pos.xml:791
 #, python-format
 msgid "CHANGE"
 msgstr "ZMENA"
@@ -546,11 +545,11 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:420
-#: code:addons/point_of_sale/static/src/xml/pos.xml:909
-#: code:addons/point_of_sale/static/src/xml/pos.xml:926
-#: code:addons/point_of_sale/static/src/xml/pos.xml:943
-#: code:addons/point_of_sale/static/src/xml/pos.xml:963
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1015
+#: code:addons/point_of_sale/static/src/xml/pos.xml:919
+#: code:addons/point_of_sale/static/src/xml/pos.xml:936
+#: code:addons/point_of_sale/static/src/xml/pos.xml:953
+#: code:addons/point_of_sale/static/src/xml/pos.xml:973
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1025
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_discount
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -566,7 +565,7 @@ msgstr "Zrušené"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1866
+#: code:addons/point_of_sale/static/src/js/screens.js:1864
 #, python-format
 msgid "Cannot return change without a cash payment method"
 msgstr "Nedá sa vrátiť výdavok bez hotovostnej platonej metódy"
@@ -611,7 +610,7 @@ msgid "Cash Register"
 msgstr "Registračná pokladnica"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:106
+#: code:addons/point_of_sale/models/pos_session.py:105
 #, python-format
 msgid "Cash control can only be applied to cash journals."
 msgstr "Kontrola hotovosti môže byť aplikovaná iba na účtovné knihy hotovosti."
@@ -659,7 +658,7 @@ msgstr "Zmeniť zákazníka"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1729
+#: code:addons/point_of_sale/static/src/js/screens.js:1727
 #, python-format
 msgid "Change Tip"
 msgstr "Zmeniť tip"
@@ -667,7 +666,7 @@ msgstr "Zmeniť tip"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:649
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1339
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1349
 #, python-format
 msgid "Change:"
 msgstr "Zmena:"
@@ -710,7 +709,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1917
+#: code:addons/point_of_sale/static/src/js/screens.js:1915
 #, python-format
 msgid "Check your internet connection and try again."
 msgstr "Skontrolujte vaše internetové pripojenie a skúste opäť."
@@ -849,7 +848,7 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:684
-#: code:addons/point_of_sale/static/src/xml/pos.xml:906
+#: code:addons/point_of_sale/static/src/xml/pos.xml:916
 #, python-format
 msgid "Confirm"
 msgstr "Potvrdiť"
@@ -952,7 +951,7 @@ msgstr "Súčasná relácia"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1740
+#: code:addons/point_of_sale/static/src/js/screens.js:1738
 #: code:addons/point_of_sale/static/src/xml/pos.xml:116
 #: code:addons/point_of_sale/static/src/xml/pos.xml:617
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
@@ -991,7 +990,7 @@ msgstr "Dátum objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1147
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1157
 #, python-format
 msgid "Debug Window"
 msgstr "Odstrániť chyby okna"
@@ -1024,7 +1023,7 @@ msgstr "Oneskorenie overenia"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1167
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1177
 #, python-format
 msgid "Delete Paid Orders"
 msgstr "Zmazať zaplatené objednávky"
@@ -1038,7 +1037,7 @@ msgstr "Zmazať zaplatené objednávky ?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1168
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1178
 #, python-format
 msgid "Delete Unpaid Orders"
 msgstr "Zmazať nezaplatené objednávky"
@@ -1054,11 +1053,6 @@ msgstr "Zmazať nezaplatené objednávky ?"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_property_delivery_carrier_id
 msgid "Delivery Method"
 msgstr "Dodacia metóda"
-
-#. module: point_of_sale
-#: selection:pos.config,state:0
-msgid "Deprecated"
-msgstr "Neschválené"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1118,8 +1112,8 @@ msgstr "Zľava upozornenie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:724
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1312
+#: code:addons/point_of_sale/static/src/xml/pos.xml:734
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1322
 #, python-format
 msgid "Discount:"
 msgstr "Zľava:"
@@ -1132,7 +1126,7 @@ msgstr "Zľavnený produkt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:790
+#: code:addons/point_of_sale/static/src/xml/pos.xml:800
 #, python-format
 msgid "Discounts"
 msgstr "Zľavy"
@@ -1217,7 +1211,7 @@ msgstr "Ekomurz.nl"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1150
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1160
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_electronic_scale
 #, python-format
 msgid "Electronic Scale"
@@ -1233,7 +1227,7 @@ msgstr "Email"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1837
+#: code:addons/point_of_sale/static/src/js/screens.js:1835
 #, python-format
 msgid "Empty Order"
 msgstr "Prázdna objednávka"
@@ -1311,14 +1305,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1169
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1179
 #, python-format
 msgid "Export Paid Orders"
 msgstr "Exportovať zaplatené objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1170
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1180
 #, python-format
 msgid "Export Unpaid Orders"
 msgstr "Exportovať nezaplatené objednávky"
@@ -1347,7 +1341,7 @@ msgstr "Vlastnosti"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1029
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1039
 #, python-format
 msgid "Finished Importing Orders"
 msgstr "Importovanie objednávok dokončené"
@@ -1444,7 +1438,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1181
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1191
 #, python-format
 msgid "Hardware Events"
 msgstr "Hardvérové udalosti"
@@ -1456,7 +1450,7 @@ msgstr "Hardvérové proxy / PosBox"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1177
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1187
 #, python-format
 msgid "Hardware Status"
 msgstr "Hardvérový stav"
@@ -1536,7 +1530,7 @@ msgstr "Importovať objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1171
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1181
 #, python-format
 msgid "Import Orders"
 msgstr "Importovať objednávky"
@@ -1571,7 +1565,6 @@ msgstr "Ak chcete vymazať predaj, musí byť nový alebo zrušený."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
-#: selection:pos.config,state:0
 msgid "Inactive"
 msgstr "Neaktívne"
 
@@ -1748,7 +1741,7 @@ msgstr "Zoznam registračných pokladníc"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:484
+#: code:addons/point_of_sale/static/src/js/models.js:477
 #: code:addons/point_of_sale/static/src/xml/pos.xml:38
 #, python-format
 msgid "Loading"
@@ -1835,6 +1828,11 @@ msgstr ""
 "formulárov alebo niektorých kanban zobrazeniach. "
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users_purchase_warn_msg
+msgid "Message for Purchase Order"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:494
 #, python-format
@@ -1911,6 +1909,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Viac <i class=\"fa fa-caret-down\"/>"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
+msgid "More Info"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "My Sales"
 msgstr "Môj predaj"
@@ -1936,7 +1939,7 @@ msgstr "Meno"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1847
+#: code:addons/point_of_sale/static/src/js/screens.js:1845
 #, python-format
 msgid "Negative Bank Payment"
 msgstr "Negatívna banková platba"
@@ -1998,7 +2001,7 @@ msgstr "Žiadna sekvencia nie je definovaná na účtovnej knihe"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1962
+#: code:addons/point_of_sale/static/src/js/screens.js:1960
 #: code:addons/point_of_sale/static/src/xml/pos.xml:332
 #, python-format
 msgid "None"
@@ -2049,14 +2052,14 @@ msgstr "Offline objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:838
-#: code:addons/point_of_sale/static/src/xml/pos.xml:852
-#: code:addons/point_of_sale/static/src/xml/pos.xml:866
-#: code:addons/point_of_sale/static/src/xml/pos.xml:892
-#: code:addons/point_of_sale/static/src/xml/pos.xml:923
-#: code:addons/point_of_sale/static/src/xml/pos.xml:940
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1018
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1054
+#: code:addons/point_of_sale/static/src/xml/pos.xml:848
+#: code:addons/point_of_sale/static/src/xml/pos.xml:862
+#: code:addons/point_of_sale/static/src/xml/pos.xml:876
+#: code:addons/point_of_sale/static/src/xml/pos.xml:902
+#: code:addons/point_of_sale/static/src/xml/pos.xml:933
+#: code:addons/point_of_sale/static/src/xml/pos.xml:950
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1028
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1064
 #, python-format
 msgid "Ok"
 msgstr "Ok"
@@ -2089,7 +2092,7 @@ msgstr "Otvoriť registračnú pokladňu"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:636
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1183
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1193
 #, python-format
 msgid "Open Cashbox"
 msgstr "Otvoriť pokladňu"
@@ -2147,8 +2150,8 @@ msgstr "Objednávka"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1515
-#: code:addons/point_of_sale/static/src/js/models.js:1546
+#: code:addons/point_of_sale/static/src/js/models.js:1539
+#: code:addons/point_of_sale/static/src/js/models.js:1570
 #, python-format
 msgid "Order "
 msgstr "Objednávka"
@@ -2192,7 +2195,7 @@ msgstr "Riadky objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1164
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1174
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_session_orders
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_filtered
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
@@ -2212,7 +2215,7 @@ msgid "Orders Analysis"
 msgstr "Analýza objednávok"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:180
+#: code:addons/point_of_sale/models/pos_config.py:174
 #, fuzzy, python-format
 msgid "POS Order %s"
 msgstr "POS objednávky"
@@ -2238,7 +2241,12 @@ msgid "POS Orders lines"
 msgstr "POS riadky objednávok"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:191
+#: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
+msgid "POS Sales"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:185
 #, fuzzy, python-format
 msgid "POS order line %s"
 msgstr "POS riadky objednávky"
@@ -2378,7 +2386,7 @@ msgstr "Telefón"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1261
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1271
 #, python-format
 msgid "Phone:"
 msgstr "Telefón:"
@@ -2402,7 +2410,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1876
+#: code:addons/point_of_sale/static/src/js/screens.js:1874
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "Prosím potvrďte veľkú sumu"
@@ -2428,7 +2436,7 @@ msgstr "Prosím, vyberte platobnú metódu."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1908
+#: code:addons/point_of_sale/static/src/js/screens.js:1906
 #, python-format
 msgid "Please select the Customer"
 msgstr "Prosím vyberte zákazníka"
@@ -2534,6 +2542,12 @@ msgid "Pos Product Categories"
 msgstr "Pos kategórie produktu"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_order_count
+msgid "Pos order count"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos session username"
 msgstr ""
@@ -2585,7 +2599,7 @@ msgstr "Cenník"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:657
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1184
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1194
 #, python-format
 msgid "Print Receipt"
 msgstr "Vytlačiť potvrdenku"
@@ -2653,6 +2667,11 @@ msgid "Public Category"
 msgstr "Verejná kategória"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_users_purchase_warn
+msgid "Purchase Order"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 msgid "Put Money In"
 msgstr "Vložiť peniaze do"
@@ -2677,7 +2696,7 @@ msgstr "Dotlačiť"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1185
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1195
 #, python-format
 msgid "Read Weighting Scale"
 msgstr "Čítanie mierky váhy"
@@ -2755,7 +2774,7 @@ msgstr "Dotlače"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1154
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1164
 #, python-format
 msgid "Reset"
 msgstr "Reset"
@@ -2781,7 +2800,7 @@ msgid "Resume"
 msgstr "Obnoviť"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:652
+#: code:addons/point_of_sale/models/pos_order.py:653
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -2843,14 +2862,14 @@ msgstr "Váha"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1160
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1170
 #, python-format
 msgid "Scan"
 msgstr "Skenovanie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1161
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1171
 #, python-format
 msgid "Scan EAN-13"
 msgstr "Skenovanie EAN-13"
@@ -2919,7 +2938,7 @@ msgstr "Vybrať používateľa"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1973
+#: code:addons/point_of_sale/static/src/js/screens.js:1971
 #, python-format
 msgid "Select tax"
 msgstr "Vybrať daň"
@@ -2929,6 +2948,14 @@ msgstr "Vybrať daň"
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "Zvolené objednávky nemajú rovnakú reláciu!"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_users_purchase_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_sequence
@@ -2942,20 +2969,20 @@ msgstr "Číslo sekvencie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:704
+#: code:addons/point_of_sale/static/src/xml/pos.xml:712
 #, python-format
 msgid "Served by"
 msgstr "Obslúžený"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1921
+#: code:addons/point_of_sale/static/src/js/screens.js:1919
 #, python-format
 msgid "Server Error"
 msgstr "Chyba servera"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:249
+#: code:addons/point_of_sale/models/pos_config.py:231
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_session_id
@@ -2971,7 +2998,7 @@ msgstr "ID relácie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1043
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1053
 #, python-format
 msgid "Session ids:"
 msgstr "IDs relácie:"
@@ -3000,25 +3027,10 @@ msgstr "Nastaviť zákazníka"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1153
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1163
 #, python-format
 msgid "Set Weight"
 msgstr "Nastaviť váhu"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
-msgid "Set to Active"
-msgstr "Nastaviť na aktívne"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
-msgid "Set to Deprecated"
-msgstr "Nastaviť na neschválené"
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
-msgid "Set to Inactive"
-msgstr "Nastaviť na neaktívne"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_global_settings
@@ -3028,7 +3040,7 @@ msgstr "Konfigurácia"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1263
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1273
 #, python-format
 msgid "Shop:"
 msgstr "Obchod:"
@@ -3112,7 +3124,6 @@ msgid "Statements"
 msgstr "Vyhlásenia"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config_state
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_state
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_state
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_state
@@ -3148,7 +3159,7 @@ msgstr "Pásy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:752
+#: code:addons/point_of_sale/static/src/xml/pos.xml:762
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal_incl
 #, python-format
 msgid "Subtotal"
@@ -3166,21 +3177,21 @@ msgstr "Medzisúčet bez zľavy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1298
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1308
 #, python-format
 msgid "Subtotal:"
 msgstr "Medzisúčet:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1045
 #, python-format
 msgid "Successfully  imported"
 msgstr "Úspešne importované"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1034
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1044
 #, python-format
 msgid "Successfully imported"
 msgstr "Úspešne importované"
@@ -3207,7 +3218,7 @@ msgstr "Mena dodávateľa"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:765
+#: code:addons/point_of_sale/static/src/xml/pos.xml:775
 #, python-format
 msgid "TOTAL"
 msgstr "SÚČET"
@@ -3220,7 +3231,7 @@ msgstr "Vybrať peniaze"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/models/pos_order.py:300
-#: code:addons/point_of_sale/static/src/js/screens.js:1983
+#: code:addons/point_of_sale/static/src/js/screens.js:1981
 #, python-format
 msgid "Tax"
 msgstr "Daň"
@@ -3242,14 +3253,14 @@ msgstr "Dane"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1133
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1143
 #, python-format
 msgid "Taxes:"
 msgstr "Dane :"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:684
+#: code:addons/point_of_sale/static/src/xml/pos.xml:692
 #, python-format
 msgid "Tel:"
 msgstr "Tel:"
@@ -3275,7 +3286,7 @@ msgstr "POS objednávka musí mať riadky pri volaní tejto metódy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:887
+#: code:addons/point_of_sale/static/src/xml/pos.xml:897
 #, python-format
 msgid ""
 "The Point of Sale could not find any product, client, employee\n"
@@ -3285,28 +3296,28 @@ msgstr ""
 "alebo akciu pridružené s naskenovaným čiarovým kódom."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:150
+#: code:addons/point_of_sale/models/pos_config.py:144
 #, python-format
 msgid ""
 "The company of a payment method is different than the one of point of sale"
 msgstr "Spoločnosť platobnej metódy je iná ako tá miesta predaja"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:145
+#: code:addons/point_of_sale/models/pos_config.py:139
 #, python-format
 msgid ""
 "The company of the sale journal is different than the one of point of sale"
 msgstr "Spoločnosť účtovnej knihy je iná ako tá miesta predaja"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:140
+#: code:addons/point_of_sale/models/pos_config.py:134
 #, python-format
 msgid ""
 "The company of the stock location is different than the one of point of sale"
 msgstr "Spoločnosť lokácie skladu je iná ako tá miesta predaja"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:155
+#: code:addons/point_of_sale/models/pos_config.py:149
 #, python-format
 msgid ""
 "The default fiscal position must be included in the available fiscal "
@@ -3332,22 +3343,28 @@ msgstr ""
 "detekovaný, pokiaľ ostanú prázdne"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:93
+#: code:addons/point_of_sale/models/pos_session.py:92
 #: sql_constraint:pos.session:0
 #, python-format
 msgid "The name of this POS Session must be unique !"
 msgstr "Meno tejto POS relácie musí byť jedinečné !"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
+#: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
+msgid "The number of point of sale orders related to this customer"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1916
+#: code:addons/point_of_sale/static/src/js/screens.js:1914
 #, python-format
 msgid "The order could not be sent"
 msgstr "Objednávku sa nepodarilo odoslať"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1927
+#: code:addons/point_of_sale/static/src/js/screens.js:1925
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "Objednávku sa nepodarilo odoslať na server kôli neznámej chybe"
@@ -3414,7 +3431,7 @@ msgstr "Potvrdenka bude vytlačená automaticky na konci každej objednávky "
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1922
+#: code:addons/point_of_sale/static/src/js/screens.js:1920
 #, python-format
 msgid "The server encountered an error while receiving your order."
 msgstr "Server narazil na problém pri príjme vašej objednávky."
@@ -3436,7 +3453,7 @@ msgid "The transactions are processed by MercuryPay"
 msgstr "Transakcie spracováva MercuryPay"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:215
+#: code:addons/point_of_sale/models/pos_session.py:214
 #, python-format
 msgid "The type of the journal for your payment method should be bank or cash "
 msgstr ""
@@ -3460,7 +3477,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1867
+#: code:addons/point_of_sale/static/src/js/screens.js:1865
 #, python-format
 msgid ""
 "There is no cash payment method available in this point of sale to handle "
@@ -3499,7 +3516,7 @@ msgstr "Neexistuje žiadny definovaný príjmový účet  pre vykonanie platby."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1838
+#: code:addons/point_of_sale/static/src/js/screens.js:1836
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
@@ -3675,7 +3692,7 @@ msgstr "Celková cena"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:802
+#: code:addons/point_of_sale/static/src/xml/pos.xml:812
 #, python-format
 msgid "Total Taxes"
 msgstr "Dane celkom"
@@ -3702,8 +3719,8 @@ msgstr "Množ. celkom"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1132
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1318
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1142
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1328
 #, python-format
 msgid "Total:"
 msgstr "Celkom:"
@@ -3721,7 +3738,7 @@ msgid "Tuborg"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:134
+#: code:addons/point_of_sale/models/pos_session.py:133
 #, python-format
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
@@ -3737,14 +3754,14 @@ msgstr "Jednotková cena"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:883
+#: code:addons/point_of_sale/static/src/xml/pos.xml:893
 #, python-format
 msgid "Unknown Barcode"
 msgstr "Neznámy čiarový kód"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1926
+#: code:addons/point_of_sale/static/src/js/screens.js:1924
 #, python-format
 msgid "Unknown Error"
 msgstr "Neznáma chyba"
@@ -3786,7 +3803,7 @@ msgstr "Používateľove produkty"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1262
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1272
 #, python-format
 msgid "User:"
 msgstr "Používateľ:"
@@ -3803,7 +3820,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:687
+#: code:addons/point_of_sale/static/src/xml/pos.xml:695
 #, python-format
 msgid "VAT:"
 msgstr "DPH:"
@@ -3850,7 +3867,7 @@ msgstr "Vážený produkt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1179
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1189
 #, python-format
 msgid "Weighting"
 msgstr "Váženie"
@@ -3874,8 +3891,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1105
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1282
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1115
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1292
 #, python-format
 msgid "With a"
 msgstr "S"
@@ -3925,7 +3942,7 @@ msgstr ""
 "'zaplatené'"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:117
+#: code:addons/point_of_sale/models/pos_session.py:116
 #, python-format
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
@@ -3934,7 +3951,7 @@ msgstr ""
 "predaja!"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:112
+#: code:addons/point_of_sale/models/pos_session.py:111
 #, python-format
 msgid "You cannot create two active sessions with the same responsible!"
 msgstr "Nemôžete vytvoriť dve aktívne relácie s tým istým zodpovedným!"
@@ -3951,7 +3968,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1848
+#: code:addons/point_of_sale/static/src/js/screens.js:1846
 #, python-format
 msgid ""
 "You cannot have a negative amount in a Bank payment. Use a cash payment "
@@ -3961,7 +3978,7 @@ msgstr ""
 "platby pre vrátenie peňazí zákazníkovi."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:231
+#: code:addons/point_of_sale/models/pos_session.py:230
 #, python-format
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
@@ -3995,13 +4012,13 @@ msgid "You have to open at least one cashbox."
 msgstr "Musíte otvoriť aspoň jednu pokladňu."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:724
+#: code:addons/point_of_sale/models/pos_order.py:725
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr "Musíte zvoliť cenník vo formulári predaja !"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:712
+#: code:addons/point_of_sale/models/pos_order.py:713
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -4021,13 +4038,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1909
+#: code:addons/point_of_sale/static/src/js/screens.js:1907
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "Musíte zvoliť zákazníka skôr ako môžete vyfaktúrovať objednávku."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:123
+#: code:addons/point_of_sale/models/pos_session.py:122
 #, python-format
 msgid "You should assign a Point of Sale to your session."
 msgstr "Mali by ste prideliť Miesto predaja svojej relácii."
@@ -4047,7 +4064,7 @@ msgid "Your Internet connection is probably down."
 msgstr "Vaše pripojenie k Internetu pravdepodobne nefunguje."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:213
+#: code:addons/point_of_sale/models/pos_session.py:212
 #, python-format
 msgid ""
 "Your ending balance is too different from the theoretical cash closing "
@@ -4060,7 +4077,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1124
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1134
 #, python-format
 msgid "Your shopping cart is empty"
 msgstr "Váš nákupný košík je prázdny"
@@ -4080,7 +4097,7 @@ msgstr "Cuketa"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1097
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1107
 #, python-format
 msgid "at"
 msgstr "k"
@@ -4092,7 +4109,7 @@ msgstr "barcode.rule"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1040
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1050
 #, python-format
 msgid "belong to another session:"
 msgstr "patrí k inej relácii:"
@@ -4105,7 +4122,7 @@ msgstr "camptocamp.com"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1385
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1395
 #, python-format
 msgid "caps lock"
 msgstr "caps lock"
@@ -4122,43 +4139,43 @@ msgstr "cash.box.out"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1412
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1454
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1422
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1464
 #, python-format
 msgid "close"
 msgstr "zatvoriť"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1370
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1447
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1380
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1457
 #, python-format
 msgid "delete"
 msgstr "zmazať"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1107
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1117
 #, python-format
 msgid "discount"
 msgstr "zľava"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1881
+#: code:addons/point_of_sale/static/src/js/screens.js:1879
 #, python-format
 msgid "for an order of"
 msgstr "pre objednávku"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:171
+#: code:addons/point_of_sale/models/pos_config.py:165
 #, python-format
 msgid "not used"
 msgstr "nepoužité"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1034
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1044
 #, python-format
 msgid "paid orders"
 msgstr "zaplatené objednávky"
@@ -4202,44 +4219,44 @@ msgstr "report.point_of_sale.report_usersproduct"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/models/pos_order.py:139
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1397
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1452
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1407
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1462
 #, python-format
 msgid "return"
 msgstr "návrat"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1398
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1409
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1408
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1419
 #, python-format
 msgid "shift"
 msgstr "shift"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1371
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1381
 #, python-format
 msgid "tab"
 msgstr "tab"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1045
 #, python-format
 msgid "unpaid orders"
 msgstr "nezaplatené objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1037
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1047
 #, python-format
 msgid "unpaid orders could not be imported"
 msgstr "nezaplatené objednávky nie je možné importovať"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1039
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1049
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "boli duplikáty existujúcich objednávok"
@@ -4259,6 +4276,22 @@ msgstr "boli duplikáty existujúcich objednávok"
 #~ msgstr ""
 #~ "<br/>\n"
 #~ "Dátum:"
+
+#~ msgid ""
+#~ "<span class=\"o_stat_text\">Put</span>\n"
+#~ "                                    <span class=\"o_stat_text\">Money In</"
+#~ "span>"
+#~ msgstr ""
+#~ "<span class=\"o_stat_text\">Dať</span>\n"
+#~ "<span class=\"o_stat_text\">peniaze do</span>"
+
+#~ msgid ""
+#~ "<span class=\"o_stat_text\">Take</span>\n"
+#~ "                                    <span class=\"o_stat_text\">Money "
+#~ "Out</span>"
+#~ msgstr ""
+#~ "<span class=\"o_stat_text\">Vziať</span>\n"
+#~ "<span class=\"o_stat_text\">peniaze z</span>"
 
 #~ msgid "<strong>Closing Date</strong>:<br/>"
 #~ msgstr "<strong>Dátum uzávierky</strong>:<br/>"
@@ -4447,11 +4480,17 @@ msgstr "boli duplikáty existujúcich objednávok"
 #~ msgid "Chimay Red 33cl"
 #~ msgstr "Chimay Red 33cl"
 
+#~ msgid "Client ID"
+#~ msgstr "ID klienta"
+
 #~ msgid "Client_id"
 #~ msgstr "Client_id"
 
 #~ msgid "Client_key"
 #~ msgstr "Client_key"
+
+#~ msgid "Coca-Cola Light 33cl"
+#~ msgstr "Coca-Cola Light 33cl"
 
 #~ msgid "Coca-Cola Light 50cl"
 #~ msgstr "Coca-Cola Light 50cl"
@@ -4482,6 +4521,9 @@ msgstr "boli duplikáty existujúcich objednávok"
 
 #~ msgid "Default Point of Sale"
 #~ msgstr "Prednastavené miesto predaja"
+
+#~ msgid "Deprecated"
+#~ msgstr "Neschválené"
 
 #~ msgid "Description"
 #~ msgstr "Popis"
@@ -4696,6 +4738,15 @@ msgstr "boli duplikáty existujúcich objednávok"
 #~ msgid "Session Summary:"
 #~ msgstr "Zhrnutie relácie:"
 
+#~ msgid "Set to Active"
+#~ msgstr "Nastaviť na aktívne"
+
+#~ msgid "Set to Deprecated"
+#~ msgstr "Nastaviť na neschválené"
+
+#~ msgid "Set to Inactive"
+#~ msgstr "Nastaviť na neaktívne"
+
 #~ msgid "Share or embbed any screen of Odoo."
 #~ msgstr "Zdielať lebo vloźiť ktorúkoľvek Odoo obrazovku."
 
@@ -4742,11 +4793,17 @@ msgstr "boli duplikáty existujúcich objednávok"
 #~ msgid "Soft"
 #~ msgstr "Mäkké"
 
+#~ msgid "Start Point of Sale"
+#~ msgstr "Miesto predaja začiatku"
+
 #~ msgid "Statement Details:"
 #~ msgstr "Detaily vyhlásenia:"
 
 #~ msgid "Statement Summary"
 #~ msgstr "Zhrnutie vyhlásenia"
+
+#~ msgid "Stella Artois 33cl"
+#~ msgstr "Stella Artois 33cl"
 
 #~ msgid "Stella Artois 50cl"
 #~ msgstr "Stella Artois 50cl"
@@ -4758,6 +4815,9 @@ msgstr "boli duplikáty existujúcich objednávok"
 
 #~ msgid "The URL to generate the authorization code from Google"
 #~ msgstr "URL pre generovanie autorizačného kódu z Google"
+
+#~ msgid "The receipt will automatically be printed at the end of each order"
+#~ msgstr "Potvrdenka bude vytlačená automaticky na konci každej objednávky "
 
 #~ msgid "This allows users to trigger a password reset from the Login page."
 #~ msgstr "Toto umožňuje spustiť obnovenie hesla z prihlasovacej stránky."

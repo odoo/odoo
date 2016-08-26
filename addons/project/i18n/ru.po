@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-06-02 13:10+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -216,7 +216,7 @@ msgstr "Кол-во задач"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -1234,8 +1234,8 @@ msgstr "Модель алиаса"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
-msgstr "Проект для всех сотрудников: все сотрудники имеют доступ"
+msgid "All employees"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1497,7 +1497,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr "Установите этот флажок, чтобы управлять деятельностью внутри проекта"
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1731,7 +1731,7 @@ msgid "Current Timesheet"
 msgstr "окно &quot;текущее расписание&quot;"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1740,16 +1740,10 @@ msgid "Customer"
 msgstr "Заказчик"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "Email заказчика"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr "Проект клиента: виден на портале, если клиент является подписчиком"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1776,6 +1770,12 @@ msgstr "Заказчик отменил ремонт"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Клиент создал новый запрос"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2358,7 +2358,7 @@ msgstr ""
 "или запросы, на которые они подписаны."
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr "Я беру это"
@@ -2829,6 +2829,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Больше<i class=\"fa fa-caret-down\"/>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Более эффективное взаимодействие между сотрудниками"
@@ -2868,7 +2873,7 @@ msgid "New"
 msgstr "Новый"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "Новая задача"
@@ -3119,7 +3124,7 @@ msgid "Planner"
 msgstr "Планировщик"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3167,8 +3172,8 @@ msgstr "Безопасность/Видимость"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
-msgstr "Частный проект: только для подписчиков"
+msgid "Private: followers only"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3258,6 +3263,11 @@ msgstr "Задания проекта"
 #, python-format
 msgid "Projects"
 msgstr "Проекты"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3610,11 +3620,6 @@ msgstr "Дата начала"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Дата начала"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr "Состояние"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4448,7 +4453,7 @@ msgid "send us an email"
 msgstr "отправить нам письмо"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "задачи"
@@ -4502,14 +4507,32 @@ msgstr "перечисленные на предыдущем шаге"
 #~ msgid "&times;"
 #~ msgstr "&times;"
 
+#~ msgid ""
+#~ "<strong>Follow only what you need</strong><br/>\n"
+#~ "                                    The simplest way to use notifications "
+#~ "is to follow a whole Project: you will then receive all the selected "
+#~ "notifications for all the Project's new and existing and new Tasks or "
+#~ "Issues."
+#~ msgstr ""
+#~ "<strong>Следите только за тем, что вам нужно</strong><br/>\n"
+#~ "Самый простой способ использования уведомлений - это отслеживание всего "
+#~ "проекта: в этом случае вы будете получать все выбранные уведомления для "
+#~ "всех новых и существующих задач и запросов."
+
 #~ msgid "Action Needed"
 #~ msgstr "Требуется реакция"
+
+#~ msgid "All Employees Project: all employees can access"
+#~ msgstr "Проект для всех сотрудников: все сотрудники имеют доступ"
 
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Выберите это поле, если в проекте используются расписания"
 
 #~ msgid "Close"
 #~ msgstr "Закрыть"
+
+#~ msgid "Customer Project: visible in portal if the customer is a follower"
+#~ msgstr "Проект клиента: виден на портале, если клиент является подписчиком"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
@@ -4559,11 +4582,28 @@ msgstr "перечисленные на предыдущем шаге"
 #~ msgid "Open Project Menu"
 #~ msgstr "Открыть меню проекта"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Политики для сообщений в документе с использованием почтового шлюза:\n"
+#~ "- все: каждый может писать\n"
+#~ "- партнёры: только аутентифицированные партнёры;\n"
+#~ "- подписчики: только подписчики соответствующего документа\n"
+
+#~ msgid "Private Project: followers only"
+#~ msgstr "Частный проект: только для подписчиков"
+
 #~ msgid "Project Time Unit"
 #~ msgstr "Единица времени в проекте"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Вести табель учета задач"
+
+#~ msgid "State"
+#~ msgstr "Состояние"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Подписки"
@@ -4583,6 +4623,16 @@ msgstr "перечисленные на предыдущем шаге"
 #~ "удаления любым способом.\n"
 #~ "-Здесь устанавливается модуль project_timesheet."
 
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Это установит единицу измерения, используемую в проектах и задачах. Если "
+#~ "вы используете расписание, ссылающееся на проекты (модуль "
+#~ "project_timesheet), не забудьте установить правильную единицу измерения "
+#~ "для ваших сотрудников."
+
 #~ msgid "Timesheets on Project"
 #~ msgstr "Табели по проекту"
 
@@ -4597,3 +4647,6 @@ msgstr "перечисленные на предыдущем шаге"
 
 #~ msgid "Website communication history"
 #~ msgstr "История общения с сайта"
+
+#~ msgid "You can save your reports to for easy reuse later"
+#~ msgstr "Вы можете сохранять свои отчёты для повторного использования"

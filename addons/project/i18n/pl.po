@@ -5,23 +5,18 @@
 # Translators:
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-07 11:51+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-12 10:16+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -216,7 +211,7 @@ msgstr "# zadań"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -1064,7 +1059,7 @@ msgstr "Aliasowane modele"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
+msgid "All employees"
 msgstr ""
 
 #. module: project
@@ -1298,7 +1293,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr "Zaznacz tę opcję, aby obsługiwać wewnętrzne aktywności w tym projekcie"
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1522,7 +1517,7 @@ msgid "Current Timesheet"
 msgstr "Bieżąca karta pracy"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1531,16 +1526,10 @@ msgid "Customer"
 msgstr "Klient"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "Adres klienta"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1566,6 +1555,12 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
 msgstr ""
 
 #. module: project
@@ -2106,7 +2101,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr "wezmę to"
@@ -2525,6 +2520,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Więcej  <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2564,7 +2564,7 @@ msgid "New"
 msgstr "Nowe"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "Nowe zadanie"
@@ -2791,7 +2791,7 @@ msgid "Planner"
 msgstr "Planista"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2832,8 +2832,8 @@ msgstr "Prywatność / Widoczność"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
-msgstr "Projekt prywatny: tylko obserwatorzy"
+msgid "Private: followers only"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2923,6 +2923,11 @@ msgstr "Zadania projektu"
 #, python-format
 msgid "Projects"
 msgstr "Projekty"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3269,11 +3274,6 @@ msgstr "Data Początkowa"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Data rozpoczęcia"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4037,7 +4037,7 @@ msgid "send us an email"
 msgstr "wyślij nam maila"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "zadania"
@@ -4143,6 +4143,9 @@ msgstr ""
 #~ msgid "Open Project Menu"
 #~ msgstr "Otwórz menu projekt"
 
+#~ msgid "Private Project: followers only"
+#~ msgstr "Projekt prywatny: tylko obserwatorzy"
+
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Rejestruj pozycje kart czasu pracy wg zadań"
 
@@ -4159,6 +4162,16 @@ msgstr ""
 #~ "projektami do wpisów jako linii w karcie czasu pracy dla danej daty i "
 #~ "użytkownika, z możliwością tworzenia, edycji i usuwania na oba sposoby.\n"
 #~ "-Instaluje moduł project_timesheet."
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "To ustala jednostkę czasu stosowaną w projekcie i zadaniach.\n"
+#~ "Jeśli stosujesz karty czasu pracy dołączone do projektu (z modułu "
+#~ "project_timesheet), to nie zapomnij ustawić odpowiedniej jednostki w "
+#~ "ustawieniach pracowników."
 
 #~ msgid "Timesheets on Project"
 #~ msgstr "Karty pracy w projekcie"

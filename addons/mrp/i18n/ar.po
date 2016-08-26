@@ -3,13 +3,14 @@
 # * mrp
 #
 # Translators:
-# Khayel Fadhli <khayel.fadhli@gmail.com>, 2016
+# Khayel Fadhli <inactive+khayel@transifex.com>, 2016
+# Martin Trigaux, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-21 10:49+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-25 12:25+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
@@ -20,7 +21,7 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:231
+#: code:addons/mrp/stock.py:250
 #, python-format
 msgid " Manufacture"
 msgstr "مصنع"
@@ -38,13 +39,13 @@ msgid "# Manufacturing Orders"
 msgstr "# أوامر تصنيع"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:341
+#: code:addons/mrp/mrp.py:343
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1052
+#: code:addons/mrp/mrp.py:1051
 #, python-format
 msgid "%s produced"
 msgstr "تم الانتاج "
@@ -221,6 +222,13 @@ msgid "Approve"
 msgstr "تصديق"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Archived"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
@@ -267,14 +275,14 @@ msgid "BOM lines of the referred bom"
 msgstr "خطوط فاتوره المواد تشير إلى بوم "
 
 #. module: mrp
-#: code:addons/mrp/stock.py:25
+#: code:addons/mrp/stock.py:44
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
 msgstr ""
-"لأن المنتج س٪ يتطلب ذلك، يجب تعيين الرقم التسلسلي لديك المواد الخام ٪ s إلى "
+"لأن المنتج %s يتطلب ذلك، يجب تعيين الرقم التسلسلي لديك المواد الخام %s إلى "
 "المضي قدما في الإنتاج. يرجى الضغط على زر 'إنتاج' للقيام بذلك. "
 
 #. module: mrp
@@ -338,11 +346,11 @@ msgid "BoM"
 msgstr "فاتورة المواد"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:316
+#: code:addons/mrp/mrp.py:318
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
-" فاتوره المواد تحتوي على \"٪ ق\" خط فاتوره المواد مع العودية المنتج: \"٪."
+" فاتوره المواد تحتوي على \"%s\" خط فاتوره المواد مع العودية المنتج: \"%s\"."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
@@ -370,7 +378,7 @@ msgid "By-Products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:228
+#: code:addons/mrp/stock.py:247
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "لا يمكن العثور على أي طريق الصانع بشكل عام . "
@@ -394,19 +402,19 @@ msgid "Cancelled"
 msgstr "ملغي"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:150
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "لا يمكن أن تستهلك هذه الخطوة مع كمية سلبية أو صفر ."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:651
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr "لا يمكن حذف أمر التصنيع في الحاله '٪ ق'."
+msgstr "لا يمكن حذف أمر التصنيع في الحاله '%s'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:719
+#: code:addons/mrp/mrp.py:721
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "لا يمكن العثور على فاتوره المواد لهذا المنتج. "
@@ -855,13 +863,6 @@ msgstr ""
 "اذا كان وضع الحقل الفعال هو خطأ, سيسمح لك بإخفاء فواتير المواد بدون ازالتها."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the resource "
-"record without removing it."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
@@ -872,12 +873,6 @@ msgstr "اذا كان وضع الحقل الفعال هو خطأ, سيسمح ل�
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "في الانتاج"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Inactive"
-msgstr "غير نشط"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
@@ -1014,7 +1009,7 @@ msgid "Manager"
 msgstr "المدير"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:244
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1063,7 +1058,7 @@ msgid "Manufacturing Order"
 msgstr "أمر الإنتاج"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:112
+#: code:addons/mrp/procurement.py:114
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "تم إنشاء أمرالتصنيع %s ."
@@ -1102,7 +1097,7 @@ msgid "Manufacturing Reference"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:786
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr ""
@@ -1153,7 +1148,7 @@ msgid "New"
 msgstr "جديد"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:108
+#: code:addons/mrp/procurement.py:110
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "لا يوجد فاتوره مواد موجود على هذا المنتج!"
@@ -1276,7 +1271,7 @@ msgid "Planning"
 msgstr "التخطيط"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:136
+#: code:addons/mrp/stock.py:155
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "يرجى توفير الكمية المناسبة"
@@ -1511,7 +1506,7 @@ msgstr "ممتلكات"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1813,7 +1808,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr "حقل تقني يستخدم لتتبع المنتجات المنتجة "
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2045,7 +2040,7 @@ msgid "Warehouse"
 msgstr "المخزون"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid "Warning"
 msgstr "تحذير"
@@ -2203,7 +2198,7 @@ msgstr ""
 "هذا سوف يثبت موديول mrp_byproduct."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
+#: code:addons/mrp/mrp.py:359
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2281,6 +2276,9 @@ msgstr "غير معروف"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "عند التفعيل، توجد رسالة جديدة"
+
+#~ msgid "Inactive"
+#~ msgstr "غير نشط"
 
 #~ msgid "Is Follower"
 #~ msgstr "متابع"

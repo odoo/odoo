@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-07-06 08:44+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:231
+#: code:addons/mrp/stock.py:250
 #, python-format
 msgid " Manufacture"
 msgstr " Gyártás"
@@ -39,13 +39,13 @@ msgid "# Manufacturing Orders"
 msgstr "# Gyártási megrendelések"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:341
+#: code:addons/mrp/mrp.py:343
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1052
+#: code:addons/mrp/mrp.py:1051
 #, python-format
 msgid "%s produced"
 msgstr "%s legyártott"
@@ -232,6 +232,13 @@ msgid "Approve"
 msgstr "Jóváhagyás"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Archived"
+msgstr "Archivált"
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
@@ -280,7 +287,7 @@ msgid "BOM lines of the referred bom"
 msgstr "Anyagjegyzék tétel sorok a hivatkozott darabjegyzékből"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:25
+#: code:addons/mrp/stock.py:44
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
@@ -355,7 +362,7 @@ msgid "BoM"
 msgstr "Anyagjegyzék"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:316
+#: code:addons/mrp/mrp.py:318
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr "Anyagjegyzék (BoM) \"%s\" tartalmaz egy ismétlődő terméksort: \"%s\"."
@@ -386,7 +393,7 @@ msgid "By-Products"
 msgstr "Termékenként"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:228
+#: code:addons/mrp/stock.py:247
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "Nem található egyetlen általános gyátási útvonal."
@@ -410,19 +417,19 @@ msgid "Cancelled"
 msgstr "Törölt"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:150
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Nem tud elhasználni ebből, mivel negatív vagy nulla ma mennyiség."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:651
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Nem lehet a gyártási megrendelést törölni ezen az állapoton '%s'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:719
+#: code:addons/mrp/mrp.py:721
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Nem található anyagjegyzék ehhez a termékhez."
@@ -894,15 +901,6 @@ msgstr ""
 "az anyagjegyzékeket, anélkül, hogy törölné azokat."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the resource "
-"record without removing it."
-msgstr ""
-"Ha az aktív mező hamisra van állítva, akkor elrejtheti az erőforrást, "
-"anélkül, hogy törölné azt."
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
@@ -915,12 +913,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "Termelésben"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Inactive"
-msgstr "Inaktív"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
@@ -1058,7 +1050,7 @@ msgid "Manager"
 msgstr "Igazgató"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:244
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1107,7 +1099,7 @@ msgid "Manufacturing Order"
 msgstr "Gyártási utasítás"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:112
+#: code:addons/mrp/procurement.py:114
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Gyártási rendelés <em>%s</em> létrehozva."
@@ -1146,7 +1138,7 @@ msgid "Manufacturing Reference"
 msgstr "Gyártási hivatkozás"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:786
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr "Gyártási rendelés visszavonva."
@@ -1201,7 +1193,7 @@ msgid "New"
 msgstr "Új"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:108
+#: code:addons/mrp/procurement.py:110
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "Nem létezik anyagjegyzék (BoM) ehhez a termékhez!"
@@ -1330,7 +1322,7 @@ msgid "Planning"
 msgstr "Tervezés"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:136
+#: code:addons/mrp/stock.py:155
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Kérem adjon meg megfelelő mennyiséget."
@@ -1567,7 +1559,7 @@ msgstr "Tulajdonság"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1880,7 +1872,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr "Technikai mező a megtermelt termékek nyomon követhetőségéhez."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2131,7 +2123,7 @@ msgid "Warehouse"
 msgstr "Raktár"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid "Warning"
 msgstr "Figyelem"
@@ -2314,7 +2306,7 @@ msgstr ""
 "-Ez a mrp_byproduct modult telepíti."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
+#: code:addons/mrp/mrp.py:359
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2360,9 +2352,8 @@ msgstr "report.mrp.report_mrpbomstructure"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_bom_cost
-#, fuzzy
 msgid "report.mrp_bom_cost"
-msgstr "report.mrp.report_mrpbomstructure"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
@@ -2393,6 +2384,16 @@ msgstr "ismeretlen"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the "
+#~ "resource record without removing it."
+#~ msgstr ""
+#~ "Ha az aktív mező hamisra van állítva, akkor elrejtheti az erőforrást, "
+#~ "anélkül, hogy törölné azt."
+
+#~ msgid "Inactive"
+#~ msgstr "Inaktív"
 
 #~ msgid "Is Follower"
 #~ msgstr "Ez egy követő"
@@ -2429,3 +2430,326 @@ msgstr "ismeretlen"
 
 #~ msgid "Website communication history"
 #~ msgstr "Weboldal  kommunikáció történet"
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                        Documents are attached to the tasks and issues of "
+#~ "your project.</p><p>\n"
+#~ "                        Send messages or log internal notes with "
+#~ "attachments to link\n"
+#~ "                        documents to your project.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                         Dokumentumok vannak mellékelve a projekt témái "
+#~ "feladataihoz és ügyeihez.</p><p>\n"
+#~ "                        Küldjön üzenetet vagy naplózzon belső jegyzeteket "
+#~ "mellékletekkel a projekt\n"
+#~ "                        témákhoz fűzött dokumentumként.\n"
+#~ "                    </p>"
+
+#~ msgid "<span>New</span>"
+#~ msgstr "<span>Új</span>"
+
+#~ msgid "<span>Reports</span>"
+#~ msgstr "<span>Kimutatások</span>"
+
+#~ msgid "<span>View</span>"
+#~ msgstr "<span>Nézet</span>"
+
+#~ msgid "Add a description..."
+#~ msgstr "Leírás hozzáadása..."
+
+#~ msgid "All"
+#~ msgstr "Összes"
+
+#~ msgid "Attachments"
+#~ msgstr "Mellékletek"
+
+#~ msgid "Author"
+#~ msgstr "Szerző"
+
+#~ msgid "Availability"
+#~ msgstr "Elérhetőség"
+
+#~ msgid "Available"
+#~ msgstr "Rendelkezésre álló"
+
+#~ msgid "Based on"
+#~ msgstr "Alapján"
+
+#~ msgid "Blocked"
+#~ msgstr "Zárolt"
+
+#~ msgid "Can be Expensed"
+#~ msgstr "Költségként elszámolható"
+
+#~ msgid "Click to start a new work order."
+#~ msgstr "Kattintson egy gyártási megrendelési folyamat elindításához."
+
+#~ msgid "Color"
+#~ msgstr "Szín"
+
+#~ msgid "Confirmed"
+#~ msgstr "Jóváhagyott"
+
+#~ msgid "Current Production"
+#~ msgstr "Jelenlegi gyártás"
+
+#~ msgid "Dashboard"
+#~ msgstr "Műszerfal"
+
+#~ msgid "Date"
+#~ msgstr "Dátum"
+
+#~ msgid "Destination Location"
+#~ msgstr "Célállomás helye"
+
+#~ msgid "Discard"
+#~ msgstr "Elvetés"
+
+#~ msgid "Draft"
+#~ msgstr "Tervezet"
+
+#~ msgid "Duration"
+#~ msgstr "Időtartam"
+
+#~ msgid "Effective Date"
+#~ msgstr "Teljesítés kelte"
+
+#~ msgid "Expected Date"
+#~ msgstr "Várható időpont"
+
+#~ msgid "Extra Features"
+#~ msgstr "Extra jellemzők..."
+
+#~ msgid "Filters"
+#~ msgstr "Szűrők"
+
+#~ msgid "Finish Order"
+#~ msgstr "Megrendelés elvégzése"
+
+#~ msgid "Finished"
+#~ msgstr "Befejezett"
+
+#~ msgid "Gives the sequence order when displaying a list of tasks."
+#~ msgstr ""
+#~ "Ha megjelemníti a  feladatok listáját akkor kiadja a megrendelés sorozatát"
+
+#~ msgid "Group by..."
+#~ msgstr "Csoportosítás..."
+
+#~ msgid "High"
+#~ msgstr "Magas"
+
+#~ msgid ""
+#~ "If checked, when the previous move of the move (which was generated by a "
+#~ "next procurement) is cancelled or split, the move generated by this move "
+#~ "will too"
+#~ msgstr ""
+#~ "Ha bejelölt, és az előző mozgás mozgása ( melyet a következő beszerzés "
+#~ "hozott létre) elutasított vagy kettéosztott, akkor a létrehozott mozgás "
+#~ "is olyan lesz"
+
+#~ msgid "In Progress"
+#~ msgstr "Folyamatban"
+
+#~ msgid "Lots"
+#~ msgstr "Készlet szettek"
+
+#~ msgid "Low"
+#~ msgstr "Alacsony"
+
+#~ msgid "Maintenance"
+#~ msgstr "Karbantartás"
+
+#~ msgid "Message"
+#~ msgstr "Üzenet"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Egyéb"
+
+#~ msgid "More <i class=\"fa fa-caret-down\"/>"
+#~ msgstr "Tovább <i class=\"fa fa-caret-down\"/>"
+
+#~ msgid "Move"
+#~ msgstr "Bizonylat, áthelyezés"
+
+#~ msgid "Moves"
+#~ msgstr "Mozgások"
+
+#~ msgid "None"
+#~ msgstr "Egyik sem"
+
+#~ msgid "Operations"
+#~ msgstr "Műveletek"
+
+#~ msgid "Orders"
+#~ msgstr "Megrendelések"
+
+#~ msgid "Partially Available"
+#~ msgstr "Részlegesen elérhető"
+
+#~ msgid "Pause"
+#~ msgstr "Szünet"
+
+#~ msgid "Performance"
+#~ msgstr "Teljesítmény"
+
+#~ msgid "Picking Type"
+#~ msgstr "A kiválogatás típusa"
+
+#~ msgid "Planned Date"
+#~ msgstr "Tervezett időpont"
+
+#~ msgid "Procurement Group"
+#~ msgstr "Beszerzési Csoport"
+
+#~ msgid "Production Workcenter"
+#~ msgstr "Termelési munkaállomás"
+
+#~ msgid "Propagate cancel and split"
+#~ msgstr "Továbbítás törölve és szétválasztás"
+
+#~ msgid "Quantity Available"
+#~ msgstr "Rendelkezésre álló mennyiség"
+
+#~ msgid "Quantity Produced"
+#~ msgstr "Gyártott mennyiség"
+
+#~ msgid "Quants"
+#~ msgstr "Mennyiségek (csomagok)"
+
+#~ msgid "Reason"
+#~ msgstr "Ok"
+
+#~ msgid "Reporting"
+#~ msgstr "Riport készítés"
+
+#~ msgid "Save"
+#~ msgstr "Mentés"
+
+#~ msgid "Scrap"
+#~ msgstr "Hulladék"
+
+#~ msgid "Scrap Move"
+#~ msgstr "Szemét mozgatása"
+
+#~ msgid "Search Work Orders"
+#~ msgstr "Munka állomások keresése"
+
+#~ msgid "Settings"
+#~ msgstr "Beállítások"
+
+#~ msgid "Source"
+#~ msgstr "Forrás"
+
+#~ msgid "Specify whether the product can be selected in an HR expense."
+#~ msgstr ""
+#~ "Pontosítsa, vajon a termék választható egy emberi erőforrás készpénzes "
+#~ "kiadási tételsorának."
+
+#~ msgid "Start Working"
+#~ msgstr "Munka kezdése"
+
+#~ msgid "State"
+#~ msgstr "Állapot"
+
+#~ msgid "Stock Moves"
+#~ msgstr "Készletmozgások"
+
+#~ msgid "The picking type determines the picking view"
+#~ msgstr "A kiválogatás típusa határozza meg a kiválogatás nézetet"
+
+#~ msgid "This Month"
+#~ msgstr "Ebben a hónapban"
+
+#~ msgid "This Year"
+#~ msgstr "Tárgyév"
+
+#~ msgid "Time Tracking"
+#~ msgstr "Idő követés"
+
+#~ msgid "To Do"
+#~ msgstr "Tennivalók"
+
+#~ msgid ""
+#~ "To manufacture or assemble products, and use raw materials and\n"
+#~ "            finished products you must also handle manufacturing "
+#~ "operations.\n"
+#~ "            Manufacturing operations are often called Work Orders. The "
+#~ "various\n"
+#~ "            operations will have different impacts on the costs of\n"
+#~ "            manufacturing and planning depending on the available "
+#~ "workload."
+#~ msgstr ""
+#~ "Termékek gyártásához és összeszereléséhez, valamint nyersanyagok és "
+#~ "késztermékek\n"
+#~ "            felhasználásához gyártási műveleteket kell igénybe vennie.\n"
+#~ "            Gyártási műveleteket legtöbbször gyártási rendeléseknek "
+#~ "nevezzük. A különböző\n"
+#~ "            műveletek különbözőképpen hatnak a gyártási és tervezési \n"
+#~ "            költségekre az aktuális munkamennyiségtől függően."
+
+#~ msgid "Today"
+#~ msgstr "Ma"
+
+#~ msgid "Tracking"
+#~ msgstr "Nyomonkövetés"
+
+#~ msgid "Unreserve"
+#~ msgstr "Fenn nem tartott"
+
+#~ msgid "Variant"
+#~ msgstr "Variáció"
+
+#~ msgid "Very High"
+#~ msgstr "Nagyon nagy"
+
+#~ msgid "Waiting"
+#~ msgstr "Várakozó"
+
+#~ msgid "Waiting Availability"
+#~ msgstr "Hozzáférésre várás"
+
+#~ msgid ""
+#~ "When processing a sales order for this product, the delivery order\n"
+#~ "                                will contain the raw materials, instead "
+#~ "of the finished product."
+#~ msgstr ""
+#~ "Ha ehhez a termékhez vevői megrendelést dolgoz fel, a szállítási "
+#~ "megbízás\n"
+#~ "                                az alapanyagokat fogja tartalmazni, az "
+#~ "elkészült végtermék helyett."
+
+#~ msgid "Work Orders Planning"
+#~ msgstr "Munka megrendelés tervezés"
+
+#~ msgid ""
+#~ "Work Orders is the list of operations to be performed for each\n"
+#~ "            manufacturing order. Once you start the first work order of "
+#~ "a\n"
+#~ "            manufacturing order, the manufacturing order is "
+#~ "automatically\n"
+#~ "            marked as started. Once you finish the latest operation of a\n"
+#~ "            manufacturing order, the MO is automatically done and the "
+#~ "related\n"
+#~ "            products are produced."
+#~ msgstr ""
+#~ "Gyártási munka megrendelések olyan művelet listák, melyeket minden "
+#~ "gyártási megrendelésnél \n"
+#~ "            végre kell hajtani. Ha egyszer elkezdte az első gyártási  \n"
+#~ "            munka megrendelést, akkor a gyártási megrendelés \n"
+#~ "            automatikusan elkezdettként lesz megjelölve. Ha befejezte a \n"
+#~ "            legutolsó műveletet a gyártási megrendelésen, a GYM akkor\n"
+#~ "            az automatikusan befejezett és az ide vonatkozó termék \n"
+#~ "            legyártott."
+
+#~ msgid "ir.attachment"
+#~ msgstr "ir.attachment"
+
+#~ msgid "minutes"
+#~ msgstr "percek"
+
+#~ msgid "to"
+#~ msgstr "ig"

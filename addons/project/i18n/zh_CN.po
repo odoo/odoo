@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-07-22 05:15+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -223,7 +223,7 @@ msgstr "#  任务"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -785,16 +785,12 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is "
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
-"<strong>只跟进您需要的东西</strong><br/>\n"
-"                                    最简单的通知使用方法是跟进整个项目: 您将"
-"收到有关项目的新任务或议题的所有选定通知。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1176,8 +1172,8 @@ msgstr "别名模型"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
-msgstr "全员项目：所有的员工都可以登进"
+msgid "All employees"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1426,7 +1422,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr "选择这个框来通过这个项目管理内部活动"
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1455,7 +1451,7 @@ msgstr "在任务管道点击添加阶段"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Click to add/remove from favorite"
-msgstr ""
+msgstr "点击从收藏夹添加/删除"
 
 #. module: project
 #: model:web.tip,description:project.project_tip_1
@@ -1652,7 +1648,7 @@ msgid "Current Timesheet"
 msgstr "当前的工时单"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1661,16 +1657,10 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr "客户项目：如果客户是关注者，那么他会在门户中看到"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1697,6 +1687,12 @@ msgstr "客户取消了修理"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "客户汇报了新议题"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1937,9 +1933,8 @@ msgstr "邮箱别名"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "邮箱别名"
+msgstr "Email模板"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2062,7 +2057,7 @@ msgstr "当你和客户在一起的时候或者在会议中的时候非常有用
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Favorite"
-msgstr ""
+msgstr "喜好的"
 
 #. module: project
 #. openerp-web
@@ -2249,7 +2244,7 @@ msgstr ""
 "到关注的任务和议题"
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr "我来做"
@@ -2672,7 +2667,7 @@ msgstr "市场部门"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "会员"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2683,6 +2678,11 @@ msgstr "月份"
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "更多 <i class=\"fa fa-caret-down\"/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr "更多信息"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2724,7 +2724,7 @@ msgid "New"
 msgstr "新建"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "新的任务"
@@ -2957,7 +2957,7 @@ msgid "Planner"
 msgstr "计划"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2966,7 +2966,6 @@ msgstr "请删除链接到你想删除的科目的项目中的任务"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -2974,10 +2973,10 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"文档信息发送使用邮件服务器规则。\n"
-"- 所有人：所有人都允许\n"
-"- 业务伙伴：仅认证的业务伙伴\n"
-"- 关注者：仅关注相关文档者\n"
+"策略是通过邮件网关在文档上提交一个消息\n"
+"- everyone: 任何人都可以提交\n"
+"- partners: 只有认证过的合作伙伴\n"
+"- followers: 只有相关文件或下列频道成员的跟随者\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3003,8 +3002,8 @@ msgstr "隐私/能见度"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
-msgstr "私有项目：只开放给关注者"
+msgid "Private: followers only"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3094,6 +3093,11 @@ msgstr "项目任务"
 #, python-format
 msgid "Projects"
 msgstr "项目"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3347,7 +3351,7 @@ msgstr "分享文档并且管理版本"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "在仪表板显示项目"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3443,11 +3447,6 @@ msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr "状态"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -3456,9 +3455,8 @@ msgstr "状态"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "任务"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3801,15 +3799,11 @@ msgstr "这会在项目模块中增加一个新的菜单，它可以被用来去
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"此操作用于设置项目和任务的所采用的计量单位\n"
-"如果您安装了project_timesheet模块，工作时间表会与项目连接，请记得在员工设置中"
-"选择正确的计量单位。"
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4150,9 +4144,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid "You can save your reports to easily reuse it later"
-msgstr "您可以将报表保存便于以后重复使用"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:94
@@ -4230,7 +4223,7 @@ msgid "send us an email"
 msgstr "给我们发邮件"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "任务"
@@ -4282,14 +4275,31 @@ msgstr "先前步骤中你列出的"
 #~ msgid "&times;"
 #~ msgstr "&times;"
 
+#~ msgid ""
+#~ "<strong>Follow only what you need</strong><br/>\n"
+#~ "                                    The simplest way to use notifications "
+#~ "is to follow a whole Project: you will then receive all the selected "
+#~ "notifications for all the Project's new and existing and new Tasks or "
+#~ "Issues."
+#~ msgstr ""
+#~ "<strong>只跟进您需要的东西</strong><br/>\n"
+#~ "                                    最简单的通知使用方法是跟进整个项目: 您"
+#~ "将收到有关项目的新任务或议题的所有选定通知。"
+
 #~ msgid "Action Needed"
 #~ msgstr "所需行动"
+
+#~ msgid "All Employees Project: all employees can access"
+#~ msgstr "全员项目：所有的员工都可以登进"
 
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "如果要用项目管理工时单，就勾选这个字段"
 
 #~ msgid "Close"
 #~ msgstr "关闭"
+
+#~ msgid "Customer Project: visible in portal if the customer is a follower"
+#~ msgstr "客户项目：如果客户是关注者，那么他会在门户中看到"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
@@ -4339,11 +4349,28 @@ msgstr "先前步骤中你列出的"
 #~ msgid "Open Project Menu"
 #~ msgstr "打开项目菜单"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "文档信息发送使用邮件服务器规则。\n"
+#~ "- 所有人：所有人都允许\n"
+#~ "- 业务伙伴：仅认证的业务伙伴\n"
+#~ "- 关注者：仅关注相关文档者\n"
+
+#~ msgid "Private Project: followers only"
+#~ msgstr "私有项目：只开放给关注者"
+
 #~ msgid "Project Time Unit"
 #~ msgstr "项目时间单位"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "记录每个任务的时间表线"
+
+#~ msgid "State"
+#~ msgstr "状态"
 
 #~ msgid "Subscriptions"
 #~ msgstr "订阅"
@@ -4361,6 +4388,15 @@ msgstr "先前步骤中你列出的"
 #~ "户。无论哪种方式的都将影响生成、编辑、删除\n"
 #~ "这会安装项目时间表模块"
 
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "此操作用于设置项目和任务的所采用的计量单位\n"
+#~ "如果您安装了project_timesheet模块，工作时间表会与项目连接，请记得在员工设"
+#~ "置中选择正确的计量单位。"
+
 #~ msgid "Timesheets on Project"
 #~ msgstr "项目的工时单"
 
@@ -4375,3 +4411,45 @@ msgstr "先前步骤中你列出的"
 
 #~ msgid "Website communication history"
 #~ msgstr "网站沟通记录"
+
+#~ msgid "You can save your reports to for easy reuse later"
+#~ msgstr "您可以将报表保存便于以后重复使用"
+
+#~ msgid "Activate Sample Project"
+#~ msgstr "激活示例项目"
+
+#~ msgid "Choose a Project Email"
+#~ msgstr "选择项目邮件"
+
+#~ msgid "Click to create a new project.<br>"
+#~ msgstr "点击创建新项目.<br>"
+
+#~ msgid "Create"
+#~ msgstr "创建"
+
+#~ msgid "Create a Project"
+#~ msgstr "创建项目"
+
+#~ msgid "Create date"
+#~ msgstr "创建日期"
+
+#~ msgid "On invitation only"
+#~ msgstr "仅受邀请"
+
+#~ msgid "Or"
+#~ msgstr "或"
+
+#~ msgid "Privacy"
+#~ msgstr "隐私"
+
+#~ msgid "Project Count"
+#~ msgstr "项目计数"
+
+#~ msgid "Visible by all employees"
+#~ msgstr "所有员工可见"
+
+#~ msgid "Visible by following customers"
+#~ msgstr "关注中客户可见"
+
+#~ msgid "activate a sample project"
+#~ msgstr "激活示例项目"

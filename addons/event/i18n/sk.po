@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-02-21 12:42+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -745,6 +745,11 @@ msgid "Event Beginning Date"
 msgstr "Dátum začatia udalosti"
 
 #. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
@@ -831,6 +836,11 @@ msgid "Event Type"
 msgstr "Typ udalosti"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -858,11 +868,6 @@ msgstr "Analýza udalosti"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Poštové plánovače udalostí"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Typy udalostí"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1148,7 +1153,7 @@ msgid "Mail Scheduler"
 msgstr "Poštový plánovač"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Poštové plánovače"
 
@@ -1855,6 +1860,13 @@ msgid "training material."
 msgstr "tréningový materiál."
 
 #~ msgid ""
+#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
+#~ ">the event or change the dates on which it is held.)</em>"
+#~ msgstr ""
+#~ "<em>(Pracovná komora si vyhradzuje právo zrušiť, premenovať alebo "
+#~ "premiesniť <br/>udalosť alebo meniť dátumy počas ktorých sa koná.)</em>"
+
+#~ msgid ""
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
 #~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
@@ -1869,6 +1881,21 @@ msgstr "tréningový materiál."
 #~ "${object.event_id.date_end_located}.\n"
 #~ "FPre akékoľvek ďalšie informácie kontaktujte prosím naše oddelenie "
 #~ "podujatí.</p>\n"
+#~ "<p>Ďakujeme za Vašu účasť!</p>\n"
+#~ "<p>S pozdravom</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Dobrý deň ${object.name},</p>\n"
+#~ "<p>Potvrdzujeme že Vaše predplatné na udalosť ${object.event_id.name} "
+#~ "bolo zaznamenané.\n"
+#~ "Prosím, nájdite Vaše <b>Event Badge</b> pripojené k tomuto emailu.</p>\n"
 #~ "<p>Ďakujeme za Vašu účasť!</p>\n"
 #~ "<p>S pozdravom</p>"
 
@@ -1921,8 +1948,17 @@ msgstr "tréningový materiál."
 #~ msgid "Action Needed"
 #~ msgstr "Potrebná akcia"
 
+#~ msgid "Badge Innner Left"
+#~ msgstr "Ľavé vnútro odznaku"
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Ovládače a Zobrazenia"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Events Types"
+#~ msgstr "Typy udalostí"
 
 #~ msgid "Followers"
 #~ msgstr "Odberatelia"

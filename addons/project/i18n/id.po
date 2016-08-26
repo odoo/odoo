@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-06-24 04:54+0000\n"
 "Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -212,7 +212,7 @@ msgstr "# Kegiatans"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -1247,8 +1247,8 @@ msgstr "Alias Model"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
-msgstr "Semua karyawan proyek: semua karyawan yang dapat mengakses"
+msgid "All employees"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1512,7 +1512,7 @@ msgstr ""
 "Centang kotak ini untuk mengelola pelaksanaan kegiatan melalui proyek ini"
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1743,7 +1743,7 @@ msgid "Current Timesheet"
 msgstr "Saat ini absen"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1752,16 +1752,10 @@ msgid "Customer"
 msgstr "Pelanggan"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "Email Supporter"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr "Proyek pelanggan: terlihat di portal jika pelanggan adalah pengikut"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1788,6 +1782,12 @@ msgstr "Pelanggan telah dibatalkan perbaikan"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Pelanggan telah melaporkan masalah baru"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2368,7 +2368,7 @@ msgstr ""
 "melihat tugas-tugas yang diikuti atau masalah."
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr "Saya mengambil"
@@ -2839,6 +2839,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Lebih<i class=\"fa fa-caret-down\"></i>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Lebih efisien komunikasi antara karyawan"
@@ -2878,7 +2883,7 @@ msgid "New"
 msgstr "Baru"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "Tugas baru"
@@ -3126,7 +3131,7 @@ msgid "Planner"
 msgstr "Perencana"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3175,8 +3180,8 @@ msgstr "Privasi / visibilitas"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
-msgstr "Proyek pribadi: pengikut hanya"
+msgid "Private: followers only"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3266,6 +3271,11 @@ msgstr "Kegiatan-kegiatan proyek"
 #, python-format
 msgid "Projects"
 msgstr "Proyek"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3617,11 +3627,6 @@ msgstr "Tanggal Mulai"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Tanggal Awal"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr "Pernyataan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -4468,7 +4473,7 @@ msgid "send us an email"
 msgstr "Kirim email"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "Kegiatan"
@@ -4522,14 +4527,32 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ msgid "&times;"
 #~ msgstr "&times;"
 
+#~ msgid ""
+#~ "<strong>Follow only what you need</strong><br/>\n"
+#~ "                                    The simplest way to use notifications "
+#~ "is to follow a whole Project: you will then receive all the selected "
+#~ "notifications for all the Project's new and existing and new Tasks or "
+#~ "Issues."
+#~ msgstr ""
+#~ "<strong>Ikuti hanya apa yang Anda butuhkan</strong><br/>Cara termudah "
+#~ "untuk menggunakan pemberitahuan adalah mengikuti seluruh proyek: Anda "
+#~ "akan menerima semua pemberitahuan yang dipilih untuk semua proyek baru "
+#~ "dan tugas-tugas yang ada dan baru atau masalah."
+
 #~ msgid "Action Needed"
 #~ msgstr "Tindakan diperlukan"
+
+#~ msgid "All Employees Project: all employees can access"
+#~ msgstr "Semua karyawan proyek: semua karyawan yang dapat mengakses"
 
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Periksa bidang ini jika proyek ini mengelola timesheets"
 
 #~ msgid "Close"
 #~ msgstr "Tutup"
+
+#~ msgid "Customer Project: visible in portal if the customer is a follower"
+#~ msgstr "Proyek pelanggan: terlihat di portal jika pelanggan adalah pengikut"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Tanggal pesan terakhir diposting pada catatan."
@@ -4579,11 +4602,29 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ msgid "Open Project Menu"
 #~ msgstr "Proyek terbuka Menu"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
+#~ "mailgateway.\n"
+#~ "-Semua orang: setiap orang dapat memposting\n"
+#~ " - mitra: hanya dikonfirmasi mitra  \n"
+#~ " - pengikut: hanya pengikut dokumen terkait\n"
+
+#~ msgid "Private Project: followers only"
+#~ msgstr "Proyek pribadi: pengikut hanya"
+
 #~ msgid "Project Time Unit"
 #~ msgstr "Satuan Waktu Proyek"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Catatan absen baris per kegiatan"
+
+#~ msgid "State"
+#~ msgstr "Pernyataan"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Langganan"
@@ -4603,6 +4644,17 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ "menghapus cara baik.\n"
 #~ "-Ini akan menginstal modul project_timesheet."
 
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Ini akan menetapkan satuan ukuran yang digunakan dalam proyek-proyek dan "
+#~ "kegiatan.\n"
+#~ "Jika Anda menggunakan absen yang terkait dengan proyek-proyek "
+#~ "(project_timesheet modul), jangan lupa untuk men-setup tepat satuan "
+#~ "ukuran Anda karyawan."
+
 #~ msgid "Timesheets on Project"
 #~ msgstr "Timesheets pada proyek"
 
@@ -4617,3 +4669,6 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 
 #~ msgid "Website communication history"
 #~ msgstr "Sejarah komunikasi situs"
+
+#~ msgid "You can save your reports to for easy reuse later"
+#~ msgstr "Anda dapat menyimpan laporan untuk mudah digunakan kembali kemudian"

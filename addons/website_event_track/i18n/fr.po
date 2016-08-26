@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-05-29 00:27+0000\n"
 "Last-Translator: Shark McGnark <peculiarcheese@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -45,27 +45,23 @@ msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Proposed By</b>:"
-msgstr "Proposé par "
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Speakers Biography</b>:"
-msgstr "Biographie du confériencer"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Talk Introduction</b>:"
-msgstr "Session d'introduction"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "<b>Title</b>:"
-msgstr "<b>Date</b><br/>"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -132,6 +128,11 @@ msgid "About The Author"
 msgstr "A propos de l'auteur"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_active
+msgid "Active"
+msgstr "Actif"
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
 msgstr ""
@@ -143,7 +144,7 @@ msgid "Advanced reporting with Google Spreadsheets integration."
 msgstr "Rapports avancés grâce à l'intégration avec Google Spreadsheets."
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:160
+#: code:addons/website_event_track/models/event.py:45
 #, python-format
 msgid "Agenda"
 msgstr "Agenda"
@@ -172,6 +173,11 @@ msgstr "Annoncé"
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
 msgstr "Application"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Archived"
+msgstr "Archivé"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
@@ -354,9 +360,9 @@ msgstr "Filtre de sessions...."
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid ""
-"Find out what people see and say about this event, \n"
+"Find out what people see and say about this event,\n"
 "                        and join the conversation."
-msgstr "Nouvelle Session"
+msgstr ""
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
@@ -558,9 +564,8 @@ msgstr "Nouvelle session créée"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
 msgid "New track proposal"
-msgstr "Nouvelle proposition de parcours"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
@@ -673,7 +678,7 @@ msgid "Responsible"
 msgstr "Responsable"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8478
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8928
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Salle"
@@ -705,7 +710,7 @@ msgid "Speaker Biography"
 msgstr "Biographie du confériencer"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:116
+#: code:addons/website_event_track/models/website_event_track.py:122
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_speaker_ids
 #, python-format
 msgid "Speakers"
@@ -760,11 +765,6 @@ msgid "Submit Proposal"
 msgstr "Soumettez un projet"
 
 #. module: website_event_track
-#: model:web.tip,description:website_event_track.event_track_tip_1
-msgid "Switch to the calendar view to see the availability of each room."
-msgstr "Passez en vue calendrier pour consulter la disponibilité des salles."
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
 msgid "Tag"
 msgstr "Étiquette"
@@ -786,7 +786,7 @@ msgid "Talk Introduction"
 msgstr "Session d'introduction"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:162
+#: code:addons/website_event_track/models/event.py:47
 #, python-format
 msgid "Talk Proposals"
 msgstr "Propositions de sessions"
@@ -797,7 +797,7 @@ msgid "Talk Title"
 msgstr "Titre de la session"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:159
+#: code:addons/website_event_track/models/event.py:44
 #, python-format
 msgid "Talks"
 msgstr "Sessions"
@@ -1011,6 +1011,11 @@ msgstr "Discuter"
 #~ msgid "Event Blog"
 #~ msgstr "Blog d'événement"
 
+#~ msgid ""
+#~ "Find out what people see and say about this event, \n"
+#~ "                        and join the conversation."
+#~ msgstr "Nouvelle Session"
+
 #~ msgid "Followers"
 #~ msgstr "Abonnés"
 
@@ -1041,6 +1046,9 @@ msgstr "Discuter"
 #~ msgid "Messages and communication history"
 #~ msgstr "Historique des messages et communications"
 
+#~ msgid "New Track Proposal"
+#~ msgstr "Nouvelle proposition de parcours"
+
 #~ msgid "News"
 #~ msgstr "Actualités"
 
@@ -1055,6 +1063,16 @@ msgstr "Discuter"
 
 #~ msgid "Phone"
 #~ msgstr "Tél."
+
+#~ msgid "Proposed By"
+#~ msgstr "Proposé par "
+
+#~ msgid "Speakers Biography"
+#~ msgstr "Biographie du confériencer"
+
+#~ msgid "Switch to the calendar view to see the availability of each room."
+#~ msgstr ""
+#~ "Passez en vue calendrier pour consulter la disponibilité des salles."
 
 #~ msgid "The full URL to access the document through the website."
 #~ msgstr "L'URL complète afin d'accéder au document à travers le site web."
@@ -1082,3 +1100,6 @@ msgstr "Discuter"
 
 #~ msgid "Website meta title"
 #~ msgstr "Titre du site web"
+
+#~ msgid "unpublished"
+#~ msgstr "Non publiés"

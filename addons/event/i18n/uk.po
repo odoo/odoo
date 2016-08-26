@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-07-04 09:20+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -682,13 +682,8 @@ msgstr "Виконано"
 #. module: event
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
-#, fuzzy
 msgid "Draft"
-msgstr ""
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Чорновий\n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Чернетка"
+msgstr "Чорновий"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -746,6 +741,11 @@ msgstr "Бейдж"
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Beginning Date"
 msgstr "Дата початку події"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -834,6 +834,11 @@ msgid "Event Type"
 msgstr "Тип Події"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -861,11 +866,6 @@ msgstr "Аналіз подій"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Планувальники пошти подій"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Типи подій"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1153,7 +1153,7 @@ msgid "Mail Scheduler"
 msgstr "Планувальник розсилок"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Планувальники розсилок"
 
@@ -1853,6 +1853,13 @@ msgid "training material."
 msgstr ""
 
 #~ msgid ""
+#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
+#~ ">the event or change the dates on which it is held.)</em>"
+#~ msgstr ""
+#~ "<em>(Chamber Works зберігає за собою право скасовувати, перейменовувати, "
+#~ "змінювати місце або час проведення заходу.)</em>"
+
+#~ msgid ""
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
 #~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
@@ -1867,6 +1874,20 @@ msgstr ""
 #~ "date_begin_located} по ${object.event_id.date_end_located}.\n"
 #~ "За більш детальною інформацією зв'яжіться з нашим відділом проведення "
 #~ "заходів.</p>\n"
+#~ "<p>Дякуємо Вам за участь!</p>\n"
+#~ "<p>Всіх благ</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Привіт ${object.name},</p>\n"
+#~ "<p>Ми підтверджуємо, що Вашу заявку на ${object.event_id.name} прийнято.\n"
+#~ "Знайдіть, будь ласка, свій <b>Бейдж</b> прикріплений до цього листа.</p>\n"
 #~ "<p>Дякуємо Вам за участь!</p>\n"
 #~ "<p>Всіх благ</p>"
 
@@ -1917,8 +1938,17 @@ msgstr ""
 #~ msgid "Action Needed"
 #~ msgstr "Необхідна дія"
 
+#~ msgid "Badge Innner Left"
+#~ msgstr "Всередині зліва"
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Регулятори і "
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата останнього повідомлення по запису."
+
+#~ msgid "Events Types"
+#~ msgstr "Типи подій"
 
 #~ msgid "Followers"
 #~ msgstr "Підписники"

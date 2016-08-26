@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -212,7 +212,7 @@ msgstr "# számú feladat"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -828,18 +828,12 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is "
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
-"<strong>Csak azt kövesse amire szüksége van</strong><br/>\n"
-"                                    Az üzenetek használatának a "
-"legegyszerűbb módja a teljes Projekt téma követése: akkor az összes "
-"kiválasztott üzenetet megkapja az összes új és meglévő Projekt témához és új "
-"Feladatokhoz és Ügyekhez."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1272,8 +1266,8 @@ msgstr "Minta álnév"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
-msgstr "Összes munkavállaló projekt feladata: összes munkavállaló hozzáférhet"
+msgid "All employees"
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1541,7 +1535,7 @@ msgstr ""
 "tevékenységek kezeléséhez."
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1570,7 +1564,7 @@ msgstr "Kattintson a egy új szakasz hozzáadásához a folyamat útvonalába."
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Click to add/remove from favorite"
-msgstr ""
+msgstr "Kattintson a kedvencek hozzáadásához/kikapcsolásához."
 
 #. module: project
 #: model:web.tip,description:project.project_tip_1
@@ -1773,7 +1767,7 @@ msgid "Current Timesheet"
 msgstr "Jelenlegi munkaidő-kiosztás"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1782,16 +1776,10 @@ msgid "Customer"
 msgstr "Vevő"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "Vevői e-mail"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr "Vásárlói Projekt témák: látható a portálon, ha a vásárló egy követő"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1818,6 +1806,12 @@ msgstr "Vásárló megszakította a javíttatást"
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Vásárló új ügyet jelentett be"
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2069,9 +2063,8 @@ msgstr "E-mail fedőnevek"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "E-mail fedőnevek"
+msgstr "E-mail sablon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2208,7 +2201,7 @@ msgstr "Kimondottan hasznos akkor, ha ügyféllel van vagy egy találkozón."
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Favorite"
-msgstr ""
+msgstr "Kedvenc"
 
 #. module: project
 #. openerp-web
@@ -2407,7 +2400,7 @@ msgstr ""
 "    aktivált, portál felhasználók látják a követett feladatokat, ügyeket."
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr "Átveszem"
@@ -2861,7 +2854,7 @@ msgstr "Marketing részleg"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Tagok"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2872,6 +2865,11 @@ msgstr "Hónap"
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Tovább <i class=\"fa fa-caret-down\"/>"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr "További információ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2913,7 +2911,7 @@ msgid "New"
 msgstr "Új"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr "Új Feladat"
@@ -3165,7 +3163,7 @@ msgid "Planner"
 msgstr "Tervező"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3176,7 +3174,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -3188,7 +3185,8 @@ msgstr ""
 "üzenetek kiküldéséhez.\n"
 "- mindenki: mindenki tud üzenni\n"
 "- ügyfelek: csak a hitelesített partnerek\n"
-"- követők: csak az idevonatkozó dokumentum követői\n"
+"- követők: csak az idevonatkozó dokumentum követői vagy a következő "
+"csatornák tagjai\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3214,8 +3212,8 @@ msgstr "Szabályzat / Láthatóság"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
-msgstr "Privát projekt téma: kizárólag követőknek"
+msgid "Private: followers only"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3305,6 +3303,11 @@ msgstr "Projekt feladatai"
 #, python-format
 msgid "Projects"
 msgstr "Projekt témák"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3656,11 +3659,6 @@ msgid "Starting Date"
 msgstr "Kezdési dátum"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr "Állapot"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -3669,9 +3667,8 @@ msgstr "Állapot"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "feladatok"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -4037,16 +4034,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Ez állítja be a projektekben és a feladatokban használt mértékegységet.\n"
-"Ha használja a projektekhez kapcsolt munkaidő-beosztás (project_timesheet "
-"modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
-"űrlapon."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4421,9 +4413,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid "You can save your reports to easily reuse it later"
-msgstr "Elmentheti a  jelentéseit későbbi újbóli felhasználáshoz"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:94
@@ -4501,7 +4492,7 @@ msgid "send us an email"
 msgstr "küldjön nekünk egy e-mailt"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "feladatok"
@@ -4555,8 +4546,25 @@ msgstr "az előbbi lépésen listáztás"
 #~ msgid "&times;"
 #~ msgstr "&times;"
 
+#~ msgid ""
+#~ "<strong>Follow only what you need</strong><br/>\n"
+#~ "                                    The simplest way to use notifications "
+#~ "is to follow a whole Project: you will then receive all the selected "
+#~ "notifications for all the Project's new and existing and new Tasks or "
+#~ "Issues."
+#~ msgstr ""
+#~ "<strong>Csak azt kövesse amire szüksége van</strong><br/>\n"
+#~ "                                    Az üzenetek használatának a "
+#~ "legegyszerűbb módja a teljes Projekt téma követése: akkor az összes "
+#~ "kiválasztott üzenetet megkapja az összes új és meglévő Projekt témához és "
+#~ "új Feladatokhoz és Ügyekhez."
+
 #~ msgid "Action Needed"
 #~ msgstr "Művelet szükséges"
+
+#~ msgid "All Employees Project: all employees can access"
+#~ msgstr ""
+#~ "Összes munkavállaló projekt feladata: összes munkavállaló hozzáférhet"
 
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr ""
@@ -4565,6 +4573,9 @@ msgstr "az előbbi lépésen listáztás"
 
 #~ msgid "Close"
 #~ msgstr "Bezár"
+
+#~ msgid "Customer Project: visible in portal if the customer is a follower"
+#~ msgstr "Vásárlói Projekt témák: látható a portálon, ha a vásárló egy követő"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
@@ -4614,11 +4625,29 @@ msgstr "az előbbi lépésen listáztás"
 #~ msgid "Open Project Menu"
 #~ msgstr "Projekt menü megnyitás"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra "
+#~ "vonatkozó üzenetek kiküldéséhez.\n"
+#~ "- mindenki: mindenki tud üzenni\n"
+#~ "- ügyfelek: csak a hitelesített partnerek\n"
+#~ "- követők: csak az idevonatkozó dokumentum követői\n"
+
+#~ msgid "Private Project: followers only"
+#~ msgstr "Privát projekt téma: kizárólag követőknek"
+
 #~ msgid "Project Time Unit"
 #~ msgstr "Projekt idő egység"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Feladatonkénti időbeosztás sor felvétele"
+
+#~ msgid "State"
+#~ msgstr "Állapot"
 
 #~ msgid "Subscriptions"
 #~ msgstr "Feliratkozások"
@@ -4638,6 +4667,16 @@ msgstr "az előbbi lépésen listáztás"
 #~ "megvalósításával.\n"
 #~ "-Ez a project_timesheet modult telepíti."
 
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Ez állítja be a projektekben és a feladatokban használt mértékegységet.\n"
+#~ "Ha használja a projektekhez kapcsolt munkaidő-beosztás (project_timesheet "
+#~ "modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
+#~ "űrlapon."
+
 #~ msgid "Timesheets on Project"
 #~ msgstr "A projekt témák időkiosztásai"
 
@@ -4652,3 +4691,18 @@ msgstr "az előbbi lépésen listáztás"
 
 #~ msgid "Website communication history"
 #~ msgstr "Weboldal  kommunikáció történet"
+
+#~ msgid "You can save your reports to for easy reuse later"
+#~ msgstr "Elmentheti a  jelentéseit későbbi újbóli felhasználáshoz"
+
+#~ msgid "Create"
+#~ msgstr "Létrehozás"
+
+#~ msgid "Create date"
+#~ msgstr "Létrehozás dátuma"
+
+#~ msgid "Or"
+#~ msgstr "Vagy"
+
+#~ msgid "Privacy"
+#~ msgstr "Adatvédelem"

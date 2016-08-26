@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-07-22 09:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
@@ -103,6 +103,11 @@ msgid "% discount"
 msgstr "% sconto"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "&amp;bull;"
+msgstr ""
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -146,6 +151,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
 msgstr "<i class=\"fa fa-check\"/> Accetta"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -430,6 +440,11 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
 msgstr ""
 
 #. module: website_quote
@@ -861,6 +876,11 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
@@ -935,8 +955,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:233
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -1246,13 +1266,13 @@ msgid "Optional Products Lines"
 msgstr "Righe di prodotti opzionali"
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/order.py:298
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr "Ordine pagato da %s. Transazione: %s. Importo: %s."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:98
 #, python-format
 msgid "Order signed by %s"
 msgstr "Ordine firmato da %s"
@@ -1335,8 +1355,8 @@ msgstr ""
 "sul nostro software (vedi Training Funzionale)"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:70
+#: code:addons/website_quote/controllers/main.py:237
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Paga & Conferma"
@@ -1373,7 +1393,6 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
-#: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
 msgstr "Prezzo"
@@ -1504,7 +1523,7 @@ msgid "Quotation Viewed"
 msgstr "Preventivo visualizzato"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Preventivo visualizzato dal cliente"
@@ -1608,11 +1627,19 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr "Schedula chiamate e meeting"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+msgid "Section"
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Token di Sicurezza"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
 msgstr "Sequenza"
@@ -1646,6 +1673,11 @@ msgstr "Struttura del training"
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
 msgstr "Prodotti consigliati"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Tax Excluded Price"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1911,7 +1943,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:147
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Non puoi modificare un ordine confermato."
@@ -2067,6 +2099,16 @@ msgstr "Sconosciuto"
 #~ "all'interno della tab \"Note\" del prodotto aggiungi un testo a "
 #~ "\"Descrizione per preventivi\"</b>"
 
+#~ msgid ""
+#~ "Change the look and feel from the front-end(GUI) rather than aneed of "
+#~ "technical knowledge."
+#~ msgstr ""
+#~ "Modifica la grafica direttamente dal frontend, senza bisogno di "
+#~ "competenze tecniche."
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Controller e Viste"
+
 #~ msgid "Online Training + Certification"
 #~ msgstr "Training Online + Certificazione"
 
@@ -2075,6 +2117,9 @@ msgstr "Sconosciuto"
 
 #~ msgid "Order payed by %s. Transaction: %s. Amount: %s."
 #~ msgstr "Ordine pagato da %s. Transazione: %s. Importo: %s."
+
+#~ msgid "Our offer"
+#~ msgstr "La nostra offerta"
 
 #~ msgid ""
 #~ "Our offer is based on 3 commitments, which drive our business and our "
@@ -2090,8 +2135,14 @@ msgstr "Sconosciuto"
 #~ "I nostri prezzi sono i più bassi in zona, e se ne trovi di più bassi, ti "
 #~ "rimborseremo la differenza"
 
+#~ msgid "Quality"
+#~ msgstr "Qualità"
+
 #~ msgid "Send by Email"
 #~ msgstr "Invia per Email"
+
+#~ msgid "Service"
+#~ msgstr "Servizio"
 
 #~ msgid ""
 #~ "The description of products/services from your quotation will be "

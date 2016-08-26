@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-03-24 16:58+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -75,6 +75,11 @@ msgid "Activities Done"
 msgstr "Suoritettua toimenpidettä"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -93,11 +98,6 @@ msgstr "Klikkaa luodaksesi uuden myyntitiimin."
 #, python-format
 msgid "Click to set"
 msgstr "Aseta klikkaamalla"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Koodi"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -269,7 +269,7 @@ msgstr "Seuraavat toimenpiteet"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Vain kokonaisluku on sallittu."
@@ -358,11 +358,6 @@ msgstr "Tiiminvetäjä"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Tiimin jäsenet"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "Myyntitiimin koodin tulee olla ainutkertainen!"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -483,7 +478,7 @@ msgstr "Voitettua mahdollisuutta"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Väärä arvo syötetty!"
@@ -496,6 +491,11 @@ msgid "exp. closing"
 msgstr "sulkeutumassa"
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -504,6 +504,9 @@ msgstr "myöhässä"
 
 #~ msgid "Action Needed"
 #~ msgstr "Vaatii toimia"
+
+#~ msgid "Code"
+#~ msgstr "Koodi"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Viimeisen viestin päivämäärä"
@@ -544,6 +547,9 @@ msgstr "myöhässä"
 #~ msgid "Number of unread messages"
 #~ msgstr "Lukemattomien viestien määrä"
 
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "Myyntitiimin koodin tulee olla ainutkertainen!"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Lukemattomia viestejä"
 
@@ -552,3 +558,6 @@ msgstr "myöhässä"
 
 #~ msgid "Working Hours"
 #~ msgstr "Työtunnit"
+
+#~ msgid "Your Pipeline"
+#~ msgstr "Oma myyntiputki"

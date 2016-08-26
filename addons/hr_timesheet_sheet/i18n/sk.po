@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-02-21 12:42+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -34,26 +34,6 @@ msgstr ""
 "používateľom.\n"
 "* Status \"Hotovo\"  sa používa keď je časový rozvrh akceptovaný jeho / jej "
 "nadriadeným."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
-msgid "# Nbr Timesheet"
-msgstr "# Č časového rozvrhu"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
-msgid "# Total Attendance"
-msgstr "# Celková dochádzka"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
-msgid "# Total Diff"
-msgstr "# Celkový rozdiel"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
-msgid "# Total Timesheet"
-msgstr "# Celkový časový rozvrh"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -130,12 +110,6 @@ msgid "Company"
 msgstr "Spoločnost"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Confirmed"
-msgstr "Potvrdené"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Potvrdené časové rozvrhy"
@@ -163,23 +137,18 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Dátum od"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Dátum do"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Oddelenie"
 
@@ -208,18 +177,6 @@ msgid "Display Name"
 msgstr "Zobraziť meno"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Done"
-msgstr "Dokončiť"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Draft"
-msgstr "Návrh"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -244,11 +201,6 @@ msgstr ""
 "prihlásenie)"
 
 #. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
-msgid "External Timesheet"
-msgstr "Externý časový rozvrh"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Zoskupiť podľa"
@@ -257,6 +209,11 @@ msgstr "Zoskupiť podľa"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Hodiny"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -281,11 +238,6 @@ msgid ""
 msgstr ""
 "V záujme vytvorenia časového rozvrhu pre tohto zamestnanca, je nutné ho / ju "
 "prepojiť  s užívateľom."
-
-#. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
-msgid "Internal Timesheet"
-msgstr "Interný časový rozvrh"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -324,7 +276,6 @@ msgid "My Timesheets"
 msgstr "Moje Časové rozvrhy"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Nové"
@@ -418,9 +369,7 @@ msgid "Sign Out"
 msgstr "Odhlásenie"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Stav"
 
@@ -445,7 +394,6 @@ msgstr ""
 "prihlásení sa a odhlásení sa."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -742,17 +690,44 @@ msgstr "na"
 msgid "waiting approval"
 msgstr "čaká na schválenie"
 
+#~ msgid "# Nbr Timesheet"
+#~ msgstr "# Č časového rozvrhu"
+
+#~ msgid "# Total Attendance"
+#~ msgstr "# Celková dochádzka"
+
+#~ msgid "# Total Diff"
+#~ msgstr "# Celkový rozdiel"
+
+#~ msgid "# Total Timesheet"
+#~ msgstr "# Celkový časový rozvrh"
+
 #~ msgid "Action Needed"
 #~ msgstr "Potrebná akcia"
 
+#~ msgid "Analytic Line"
+#~ msgstr "Analytický riadok"
+
 #~ msgid "Cancel"
 #~ msgstr "Zrušiť"
+
+#~ msgid "Confirmed"
+#~ msgstr "Potvrdené"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."
 
 #~ msgid "Day"
 #~ msgstr "Deň"
+
+#~ msgid "Done"
+#~ msgstr "Dokončiť"
+
+#~ msgid "Draft"
+#~ msgstr "Návrh"
+
+#~ msgid "External Timesheet"
+#~ msgstr "Externý časový rozvrh"
 
 #~ msgid "Followers"
 #~ msgstr "Odberatelia"
@@ -778,6 +753,9 @@ msgstr "čaká na schválenie"
 #~ msgstr ""
 #~ "V záujme vytvorenia časového rozvrhu pre tohto zamestnanca, musíte toho "
 #~ "zamestnanca prepojiť  s preoduktom."
+
+#~ msgid "Internal Timesheet"
+#~ msgstr "Interný časový rozvrh"
 
 #~ msgid "Is Follower"
 #~ msgstr "Je odberateľ"

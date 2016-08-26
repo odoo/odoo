@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-06-09 17:02+0000\n"
 "Last-Translator: oğulcan hayrat <ogulcanhayrat@gmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -50,7 +50,7 @@ msgid "Accept terms of use and click on the Create button at the bottom"
 msgstr "Kullanım koşullarını kabul ve altındaki Oluşturma  butonuna tıklayın"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:38
+#: code:addons/website_twitter/models/website_twitter_config.py:14
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
@@ -100,7 +100,7 @@ msgid "Get favorites from this screen name"
 msgstr "Bu ekran adınsan favorileri alın"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:49
+#: code:addons/website_twitter/models/website_twitter_config.py:46
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP Hatası: Bir şey yanlış yapılandırıldı"
@@ -116,7 +116,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:62
+#: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
 msgid "Internet connection refused"
 msgstr "İnternet bağlantısı reddedildi"
@@ -137,14 +137,14 @@ msgid "Last Updated on"
 msgstr "Son Güncellenen"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:64
-#: code:addons/website_twitter/models/twitter_config.py:65
+#: code:addons/website_twitter/models/website_twitter_config.py:59
+#: code:addons/website_twitter/models/website_twitter_config.py:60
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
 msgstr "Lüten Twitter API tuşunuzu ve sırrınızı iki kere kontrol ediniz!"
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:25
+#: code:addons/website_twitter/controllers/main.py:27
 #, python-format
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
@@ -154,7 +154,7 @@ msgstr ""
 "aynı olması gerekmez)"
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:21
+#: code:addons/website_twitter/controllers/main.py:23
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
 msgstr "Websitesi Ayarlar Twitter API Key ve Gizli ayarlayın."
@@ -167,7 +167,7 @@ msgid "Reload"
 msgstr "Yeninden Yükle"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:40
+#: code:addons/website_twitter/models/website_twitter_config.py:16
 #, python-format
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
@@ -207,14 +207,14 @@ msgid "Switch to the API Keys tab: <br/>"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:43
+#: code:addons/website_twitter/models/website_twitter_config.py:19
 #, python-format
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:44
+#: code:addons/website_twitter/models/website_twitter_config.py:20
 #, python-format
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
@@ -222,7 +222,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:39
+#: code:addons/website_twitter/models/website_twitter_config.py:15
 #, python-format
 msgid ""
 "The request is understood, but it has been refused or access is not allowed. "
@@ -230,7 +230,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:37
+#: code:addons/website_twitter/models/website_twitter_config.py:13
 #, python-format
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
@@ -238,7 +238,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:36
+#: code:addons/website_twitter/models/website_twitter_config.py:12
 #, python-format
 msgid "There was no new data to return."
 msgstr ""
@@ -302,24 +302,19 @@ msgid "Twitter Configuration"
 msgstr "Twitter yapılandırma"
 
 #. module: website_twitter
-#: model:ir.model,name:website_twitter.model_website_twitter_tweet
-msgid "Twitter Tweets"
-msgstr "Heyecan tweetleri"
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:65
+#: code:addons/website_twitter/models/website_twitter_config.py:60
 #, python-format
 msgid "Twitter authorization error!"
 msgstr "Twitter yetkilendirme hatası!"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:42
+#: code:addons/website_twitter/models/website_twitter_config.py:18
 #, python-format
 msgid "Twitter is down or being upgraded."
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:41
+#: code:addons/website_twitter/models/website_twitter_config.py:17
 #, python-format
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
@@ -327,7 +322,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:36
+#: code:addons/website_twitter/controllers/main.py:37
 #, python-format
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more "
@@ -337,8 +332,8 @@ msgstr ""
 "fazla favori ekleyin ya da farklı bir ad seçin."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/twitter_config.py:61
-#: code:addons/website_twitter/models/twitter_config.py:62
+#: code:addons/website_twitter/models/website_twitter_config.py:56
+#: code:addons/website_twitter/models/website_twitter_config.py:57
 #, python-format
 msgid "We failed to reach a twitter server."
 msgstr ""
@@ -365,6 +360,14 @@ msgid "website.config.settings"
 msgstr ""
 
 #. module: website_twitter
+#: model:ir.model,name:website_twitter.model_website_twitter_tweet
+msgid "website.twitter.tweet"
+msgstr ""
+
+#. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid "with the following values:"
 msgstr "Aşağıdaki değerlerle:"
+
+#~ msgid "Twitter Tweets"
+#~ msgstr "Heyecan tweetleri"

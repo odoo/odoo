@@ -1,4 +1,3 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
@@ -13,45 +12,18 @@
 # Quentin THEURET <quentin@theuret.net>, 2015
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2015
-# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * event
-#
-# Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Nancy Bolognesi <nb@microcom.ca>, 2016\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"PO-Revision-Date: 2016-05-27 16:15+0000\n"
+"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: event
@@ -67,7 +39,6 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
-#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
@@ -77,12 +48,6 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
-"<p>Bonjour ${object.name},</p>\n"
-"<p>Nous vous confirmons que votre inscription à l’événement ${object."
-"event_id.name} a été enregistrée.\n"
-"Vous trouverez votre <b>badge</b> attaché à ce courriel.</p>\n"
-"<p>Merci pour votre participation !</p>\n"
-"<p>Cordialement</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -134,14 +99,10 @@ msgstr "5 jours intensifs"
 
 #. module: event
 #: model:event.event,description:event.event_2
-#, fuzzy
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
 "event or change the dates on which it is held.)</em>"
 msgstr ""
-"<em>(La chambre de commerce se réserve le droit d'annuler, de renommer ou de "
-"relocaliser<br/>l'événement ou de changer la date à laquelle il est tenu.)</"
-"em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -550,13 +511,8 @@ msgstr "Confirmation non requise"
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
-#, fuzzy
 msgid "Confirmed"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Confirmé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Confirmée"
+msgstr "Confirmé"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -577,9 +533,8 @@ msgstr "Contact"
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-#, fuzzy
 msgid "Controllers and Views"
-msgstr "Contrôleurs et vues"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -703,13 +658,8 @@ msgstr "Développer un nouveau module pour une application particulière."
 #: model:ir.model.fields,field_description:event.field_event_registration_display_name
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom affiché\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
@@ -726,13 +676,8 @@ msgstr "Plongez dans les ficelles"
 #. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
-#, fuzzy
 msgid "Done"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Terminé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Fait"
+msgstr "Terminé"
 
 #. module: event
 #: selection:report.event.registration,event_state:0
@@ -801,6 +746,11 @@ msgid "Event Beginning Date"
 msgstr "Date de début de l'événement"
 
 #. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
@@ -856,13 +806,8 @@ msgstr "Organisation de l'évènement"
 #: model:ir.ui.view,arch_db:event.view_event_registration_calendar
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_registration_search
-#, fuzzy
 msgid "Event Registration"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Inscription à l'événement\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Inscription à l'évènement"
+msgstr "Inscription à l'événement"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_user_id
@@ -892,6 +837,11 @@ msgid "Event Type"
 msgstr "Type d'évènement"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -919,11 +869,6 @@ msgstr "Analyse des évènements"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Planificateurs de courriels des évènements"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Types d'événements"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -957,13 +902,8 @@ msgstr "Nombre de participants attendus"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
-#, fuzzy
 msgid "Extended Filters..."
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Filtres étendus\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Filtres étendus..."
+msgstr "Filtres étendus"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1164,13 +1104,8 @@ msgstr "Code Couleur Kanban"
 #: model:ir.model.fields,field_description:event.field_event_registration___last_update
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dernière modification le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
@@ -1180,13 +1115,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_write_uid
 #: model:ir.model.fields,field_description:event.field_event_registration_write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour par\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_date
@@ -1196,13 +1126,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_write_date
 #: model:ir.model.fields,field_description:event.field_event_registration_write_date
 #: model:ir.model.fields,field_description:event.field_event_type_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1237,7 +1162,7 @@ msgid "Mail Scheduler"
 msgstr "Planificateur de courriel"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Planificateurs de courriel"
 
@@ -1258,13 +1183,8 @@ msgstr "ids d'enregistrement Mail"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
-#, fuzzy
 msgid "Manager"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Responsable\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gestionnaire"
+msgstr "Responsable"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
@@ -1442,13 +1362,8 @@ msgstr "Partenaire"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_phone
-#, fuzzy
 msgid "Phone"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tél.\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Téléphone"
+msgstr "Tél."
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1619,23 +1534,13 @@ msgstr "Séminaire"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
-#, fuzzy
 msgid "Send by Email"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Envoyer par courriel\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Envoyer par email"
+msgstr "Envoyer par courriel"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
-#, fuzzy
 msgid "Sent"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Envoyé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Envoyer par email"
+msgstr "Envoyé"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1659,13 +1564,8 @@ msgstr "Montrer"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
-#, fuzzy
 msgid "Source Document"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Document Source\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Document d'origine"
+msgstr "Document Source"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
@@ -1679,13 +1579,8 @@ msgstr "Date de début située"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
-#, fuzzy
 msgid "Start Month"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mois de départ\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mois de début"
+msgstr "Mois de départ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_state
@@ -1732,13 +1627,8 @@ msgstr "Ce champs contient le modèle du mail qui sera envoyé automatiquement"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
-#, fuzzy
 msgid "Tickets"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tickets\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Billets"
+msgstr "Tickets"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
@@ -1982,6 +1872,14 @@ msgid "training material."
 msgstr "matériel de formation."
 
 #~ msgid ""
+#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
+#~ ">the event or change the dates on which it is held.)</em>"
+#~ msgstr ""
+#~ "<em>(La chambre de commerce se réserve le droit d'annuler, de renommer ou "
+#~ "de relocaliser<br/>l'événement ou de changer la date à laquelle il est "
+#~ "tenu.)</em>"
+
+#~ msgid ""
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
 #~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
@@ -1996,6 +1894,21 @@ msgstr "matériel de formation."
 #~ "event_id.date_end}.\n"
 #~ "Pour de plus amples informations, veuillez contacter notre département "
 #~ "d’événements.</p>\n"
+#~ "<p>Merci pour votre participation !</p>\n"
+#~ "<p>Cordialement</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Bonjour ${object.name},</p>\n"
+#~ "<p>Nous vous confirmons que votre inscription à l’événement ${object."
+#~ "event_id.name} a été enregistrée.\n"
+#~ "Vous trouverez votre <b>badge</b> attaché à ce courriel.</p>\n"
 #~ "<p>Merci pour votre participation !</p>\n"
 #~ "<p>Cordialement</p>"
 
@@ -2052,8 +1965,14 @@ msgstr "matériel de formation."
 #~ msgid "Badge Innner Left"
 #~ msgstr "Badge Intérieur Gauche"
 
+#~ msgid "Controlers and Views"
+#~ msgstr "Contrôleurs et vues"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Date du dernier message posté sur cet enregistrement"
+
+#~ msgid "Events Types"
+#~ msgstr "Types d'événements"
 
 #~ msgid "Followers"
 #~ msgstr "Abonnés"

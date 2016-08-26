@@ -6,23 +6,18 @@
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-13 09:17+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"PO-Revision-Date: 2016-08-12 09:18+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  pl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -736,6 +731,11 @@ msgid "Event Beginning Date"
 msgstr "Data początku wydarzenia"
 
 #. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
@@ -822,6 +822,11 @@ msgid "Event Type"
 msgstr "Typ wydarzenia"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -849,11 +854,6 @@ msgstr "Analiza wydarzeń"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Planista wiadomości dla wydarzeń"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Typy wydarzeń"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1142,7 +1142,7 @@ msgid "Mail Scheduler"
 msgstr "Planista wiadomości"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Planowanie wiadomości"
 
@@ -1858,6 +1858,22 @@ msgstr "materiały szkoleniowe."
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
 #~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Dzień dobry ${object.name},</p>\n"
+#~ "<p>Potwierdzamy, że twoja subskrypcja na wydarzenie ${object.event_id."
+#~ "name} została zarejestrowana.\n"
+#~ "Twój <b>Identyfikator uczestnika</b> została dołączony do tej wiadomości."
+#~ "</p>\n"
+#~ "<p>Dziękujemy za zgloszenie!</p>\n"
+#~ "<p>Pozdrawiamy</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
 #~ "You will automatically receive an email providing you more practical "
 #~ "information (such as the schedule, the agenda...) as soon as the event is "
 #~ "confirmed.</p>\n"
@@ -1902,8 +1918,17 @@ msgstr "materiały szkoleniowe."
 #~ msgid "Action Needed"
 #~ msgstr "Wymagana akcja"
 
+#~ msgid "Badge Innner Left"
+#~ msgstr "Identyfikator środkowa lewa strona"
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Kontrolery i widoki"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data ostatniej wiadomości w rekordzie."
+
+#~ msgid "Events Types"
+#~ msgstr "Typy wydarzeń"
 
 #~ msgid "Followers"
 #~ msgstr "Obserwatorzy"

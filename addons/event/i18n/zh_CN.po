@@ -1,4 +1,3 @@
-# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
@@ -14,30 +13,19 @@
 # Rona Lin <ssauapw@qq.com>, 2015
 # Xia Fajin <xia.fajin@elico-corp.com>, 2015
 # liAnGjiA <liangjia@qq.com>, 2015
-# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * event
-#
-# Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"PO-Revision-Date: 2016-07-12 07:31+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event
@@ -53,7 +41,6 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
-#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
@@ -63,11 +50,6 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
-"<p>你好 ${object.name},</p>\n"
-"<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n"
-"请查看本邮件相关附件<b>Event Badge</b> </p>\n"
-"<p>多谢您的参与!</p>\n"
-"<p>此致</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -119,13 +101,10 @@ msgstr "紧张的5天"
 
 #. module: event
 #: model:event.event,description:event.event_2
-#, fuzzy
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
 "event or change the dates on which it is held.)</em>"
 msgstr ""
-"<em>(Chamber Works 保留取消的权利,重命名或者重定位<br/>该事件或者更改举办的日"
-"期)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -288,13 +267,8 @@ msgstr "应用"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
-#, fuzzy
 msgid "Archived"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"存档\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"已归档"
+msgstr "存档"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -324,13 +298,8 @@ msgstr "参加活动"
 #: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
-#, fuzzy
 msgid "Attendee"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"参与者\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"出席者"
+msgstr "参与者"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -349,13 +318,8 @@ msgstr "与会者姓名"
 #: model:ir.model.fields,field_description:event.field_event_event_registration_ids
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model:ir.ui.view,arch_db:event.view_event_form
-#, fuzzy
 msgid "Attendees"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"出席\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"与会者"
+msgstr "出席"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
@@ -482,13 +446,9 @@ msgstr "公司"
 
 #. module: event
 #: code:addons/event/models/event.py:402
-#, fuzzy, python-format
+#, python-format
 msgid "Compose Email"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"撰写电子邮件\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"撰写邮件"
+msgstr "撰写电子邮件"
 
 #. module: event
 #: model:event.type,name:event.event_type_2
@@ -556,21 +516,15 @@ msgstr "已确认的活动"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
-#, fuzzy
 msgid "Contact"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"联系人\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"联系"
+msgstr "联系人"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-#, fuzzy
 msgid "Controllers and Views"
-msgstr "控制器和视图"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -610,13 +564,8 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_create_date
 #: model:ir.model.fields,field_description:event.field_event_registration_create_date
 #: model:ir.model.fields,field_description:event.field_event_type_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"创建时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"创建于"
+msgstr "创建时间"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_create_date
@@ -658,13 +607,8 @@ msgstr "Day 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
-#, fuzzy
 msgid "Day(s)"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"天\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"天(s)"
+msgstr "天"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_registration_max
@@ -707,13 +651,8 @@ msgstr "显示名称"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
-#, fuzzy
 msgid "Display order"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"显示排序\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"现实顺序"
+msgstr "显示排序"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -764,13 +703,8 @@ msgstr "要发送的电子邮件"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
-#, fuzzy
 msgid "End Date"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"终止日期\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"结束日期"
+msgstr "终止日期"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -796,6 +730,11 @@ msgstr "事件徽章"
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Event Beginning Date"
 msgstr "活动开始日期"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -884,6 +823,11 @@ msgid "Event Type"
 msgstr "活动类型"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -911,11 +855,6 @@ msgstr "活动分析"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "事件邮件发送排定器"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "事件类型"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1038,13 +977,8 @@ msgstr "怎样Debug"
 #: model:ir.model.fields,field_description:event.field_event_registration_id
 #: model:ir.model.fields,field_description:event.field_event_type_id
 #: model:ir.model.fields,field_description:event.field_report_event_registration_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"标识"
+msgstr "ID"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
@@ -1146,13 +1080,8 @@ msgstr "看板颜色索引"
 #: model:ir.model.fields,field_description:event.field_event_registration___last_update
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后修改时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后修改日"
+msgstr "最后修改时间"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
@@ -1162,13 +1091,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_write_uid
 #: model:ir.model.fields,field_description:event.field_event_registration_write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新者\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后更新人"
+msgstr "最后更新者"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_date
@@ -1178,13 +1102,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_write_date
 #: model:ir.model.fields,field_description:event.field_event_registration_write_date
 #: model:ir.model.fields,field_description:event.field_event_type_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最近更新时间"
+msgstr "最后更新时间"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1219,7 +1138,7 @@ msgid "Mail Scheduler"
 msgstr "邮件调度"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "邮件调度"
 
@@ -1240,13 +1159,8 @@ msgstr "电子邮箱注册的ids"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
-#, fuzzy
 msgid "Manager"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"管理员\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"经理"
+msgstr "管理员"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
@@ -1293,13 +1207,8 @@ msgstr "我的活动"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
-#, fuzzy
 msgid "New"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"新建\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"新的"
+msgstr "新建"
 
 #. module: event
 #: selection:event.config.settings,group_email_scheduling:0
@@ -1547,13 +1456,8 @@ msgstr "报表引擎"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
-#, fuzzy
 msgid "Reports"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"报告\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"报表"
+msgstr "报告"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1605,13 +1509,8 @@ msgstr "以邮件发送"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
-#, fuzzy
 msgid "Sent"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"送出\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"已汇"
+msgstr "送出"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1635,13 +1534,8 @@ msgstr "显示"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
-#, fuzzy
 msgid "Source Document"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"源单据\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"源文档"
+msgstr "源单据"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
@@ -1700,13 +1594,8 @@ msgstr "这个字段包含自动发送的邮件模板"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
-#, fuzzy
 msgid "Tickets"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"票\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"入场券"
+msgstr "票"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
@@ -1769,13 +1658,8 @@ msgstr "了解不同的模块"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
-#, fuzzy
 msgid "Unit"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"单件\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"单位"
+msgstr "单件"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1945,6 +1829,13 @@ msgid "training material."
 msgstr "培训资料"
 
 #~ msgid ""
+#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
+#~ ">the event or change the dates on which it is held.)</em>"
+#~ msgstr ""
+#~ "<em>(Chamber Works 保留取消的权利,重命名或者重定位<br/>该事件或者更改举办"
+#~ "的日期)</em>"
+
+#~ msgid ""
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
 #~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
@@ -1958,6 +1849,20 @@ msgstr "培训资料"
 #~ "${object.event_id.date_begin_located} 到 ${object.event_id."
 #~ "date_end_located}.\n"
 #~ "如想进一步咨询，请联系我们的活动相关部门</p>\n"
+#~ "<p>多谢您的参与!</p>\n"
+#~ "<p>此致</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>你好 ${object.name},</p>\n"
+#~ "<p>我们在此通知您对我们活动的订阅 ${object.event_id.name} 已经记录好了\n"
+#~ "请查看本邮件相关附件<b>Event Badge</b> </p>\n"
 #~ "<p>多谢您的参与!</p>\n"
 #~ "<p>此致</p>"
 
@@ -2010,8 +1915,14 @@ msgstr "培训资料"
 #~ msgid "Badge Innner Left"
 #~ msgstr "徽章内部左边"
 
+#~ msgid "Controlers and Views"
+#~ msgstr "控制器和视图"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
+
+#~ msgid "Events Types"
+#~ msgstr "事件类型"
 
 #~ msgid "Followers"
 #~ msgstr "关注者"

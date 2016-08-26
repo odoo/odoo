@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-01-08 22:18+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -44,7 +44,7 @@ msgid "#Questions"
 msgstr "Nb de questions"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -253,9 +253,8 @@ msgstr "À propos de votre utilisation d'Odoo"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
 msgid "Active"
-msgstr "Domaine actif"
+msgstr "Actif"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -319,6 +318,11 @@ msgstr "Répondu"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Réponses"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr "Archivé"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -697,9 +701,8 @@ msgstr "Comment contribuez-vous ou prévoyez-vous contribuer à Odoo?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
-#, fuzzy
 msgid "Human Resources"
-msgstr "Ressources Humaines"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -783,7 +786,7 @@ msgstr ""
 "dans cette colonne."
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:625
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -797,9 +800,9 @@ msgstr ""
 #: model:survey.question,comments_message:survey.feedback_3_2
 #: model:survey.question,comments_message:survey.feedback_3_3
 #: model:survey.question,comments_message:survey.feedback_4_1
-#, fuzzy, python-format
+#, python-format
 msgid "If other, please specify:"
-msgstr "Si autre, précisez :"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -1537,6 +1540,7 @@ msgstr "Suggestion"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1669,7 +1673,7 @@ msgid "The answer must be in the right type"
 msgstr "La réponse doit être du bon type"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:623
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1765,19 +1769,19 @@ msgid "They help new users to understand Odoo"
 msgstr "Ils aident les nouveaux utilisateurs à comprendre Odoo"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:672 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "La réponse doit être une adresse courriel"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:714 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "Ce n'est pas une date"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:691 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "Ce n'est pas un nombre"
@@ -1798,7 +1802,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Ce message sera affiché quand le sondage sera entièrement complété"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:622
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -2067,7 +2071,7 @@ msgstr ""
 "être activé)."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
@@ -2075,7 +2079,7 @@ msgstr ""
 "questions."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Vous ne pouvez pas envoyer d'invitations pour les sondages fermés."
@@ -2098,7 +2102,7 @@ msgstr "vous identifier"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2116,6 +2120,11 @@ msgstr "consulter vos réponses"
 #, python-format
 msgid "try to create and fill survey"
 msgstr "Essayer de créer et de remplir le sondage"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
 
 #~ msgid ""
 #~ "\n"
@@ -2145,6 +2154,9 @@ msgstr "Essayer de créer et de remplir le sondage"
 
 #~ msgid "Action Needed"
 #~ msgstr "A besoin d'une action"
+
+#~ msgid "Active domain"
+#~ msgstr "Domaine actif"
 
 #~ msgid ""
 #~ "Answers do not go in the original document discussion thread. This has an "
@@ -2211,11 +2223,17 @@ msgstr "Essayer de créer et de remplir le sondage"
 #~ msgid "From"
 #~ msgstr "De"
 
+#~ msgid "Human Ressources"
+#~ msgstr "Ressources Humaines"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Si coché, de nouveaux messages demandent votre attention."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Si autre, précisez :"
 
 #~ msgid "Initial thread message."
 #~ msgstr "Message initial du fil."
@@ -2346,3 +2364,9 @@ msgstr "Essayer de créer et de remplir le sondage"
 
 #~ msgid "on"
 #~ msgstr "le"
+
+#~ msgid "Thanks Message"
+#~ msgstr "Message de remerciement"
+
+#~ msgid "ir.autovacuum"
+#~ msgstr "ir.autovacuum"

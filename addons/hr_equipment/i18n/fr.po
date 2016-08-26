@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2015-11-24 23:03+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -58,6 +58,7 @@ msgid "Acer Laptop"
 msgstr "Ordinateur Acer"
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Actif"
@@ -103,13 +104,19 @@ msgid "Apply"
 msgstr "Appliquer"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Actifs"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5764
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Catégorie d'immobilisation"
 
@@ -644,7 +651,6 @@ msgstr "Téléphones"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -652,11 +658,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Politique pour publier un message sur le document via la passerelle de "
-"courriel.\n"
-"- tout le monde : tout le monde peut publier\n"
-"- partenaires : seulement les partenaires authentifiés\n"
-"- abonnés : seulement les abonnés au document associé\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -874,7 +875,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -882,10 +882,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"Cette application aide à suivre les équipements utilisés par les employés. "
-"Créer des ordinateurs portables, une imprimante ou un téléphone et relier "
-"chaque équipement à un employé ou à un département. Ceci permettra de gérer "
-"les affectations, les incidents et la maintenance des équipements."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -1019,6 +1015,31 @@ msgstr "Recherche de demande d'entretien "
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "Ouvrir le menu Équipements"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Politique pour publier un message sur le document via la passerelle de "
+#~ "courriel.\n"
+#~ "- tout le monde : tout le monde peut publier\n"
+#~ "- partenaires : seulement les partenaires authentifiés\n"
+#~ "- abonnés : seulement les abonnés au document associé\n"
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "Cette application aide à suivre les équipements utilisés par les "
+#~ "employés. Créer des ordinateurs portables, une imprimante ou un téléphone "
+#~ "et relier chaque équipement à un employé ou à un département. Ceci "
+#~ "permettra de gérer les affectations, les incidents et la maintenance des "
+#~ "équipements."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Compteur de messages non lus"
