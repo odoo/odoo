@@ -456,7 +456,7 @@
                                     <strong>
                                         Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
                                         <t t-if="ticket['price'] > 0">
-                                            <t t-esc="ticket['price']" t-esc-options='{"widget": "monetary", "display_currency": "website.pricelist_id.currency_id"}'/>
+                                            <t t-esc="ticket['price']" t-options='{"widget": "monetary", "display_currency": website.pricelist_id.currency_id}'/>
                                         </t>
                                         <t t-if="ticket['price'] == 0">Free</t>)
                                     </strong>
