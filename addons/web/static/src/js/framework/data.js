@@ -503,7 +503,9 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      * @returns {$.Deferred}
      */
     call: function (method, args) {
-        return this._model.call(method, args);
+        return this._model.call(method, args, {
+            context: this.get_context()
+        });
     },
     /**
      * Calls a button method, usually returning some sort of action
