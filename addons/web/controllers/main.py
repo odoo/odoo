@@ -34,7 +34,7 @@ from openerp.tools.translate import _
 from openerp.tools import ustr
 from openerp.tools.misc import str2bool, xlwt
 from openerp import http
-from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.http import request, serialize_exception as _serialize_exception, content_disposition
 from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
@@ -412,10 +412,6 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
             kids.append(kid.tail)
     res["children"] = kids
     return res
-
-def content_disposition(filename):
-    return request.registry['ir.http'].content_disposition(filename)
-
 
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
     return request.registry['ir.http'].binary_content(
@@ -937,6 +933,11 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
+    def force_contenttype(self, headers, contenttype='image/png'):
+        dictheaders = dict(headers)
+        dictheaders['Content-Type'] = contenttype
+        return dictheaders.items()
+
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -995,8 +996,15 @@ class Binary(http.Controller):
             if height > 500:
                 height = 500
             content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
+            # resize force png as filetype
+            headers = self.force_contenttype(headers, contenttype='image/png')
 
-        image_base64 = content and base64.b64decode(content) or self.placeholder()
+        if content:
+            image_base64 = base64.b64decode(content)
+        else:
+            image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
+            headers = self.force_contenttype(headers, contenttype='image/png')
+
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
         response.status_code = status

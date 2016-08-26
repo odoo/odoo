@@ -678,8 +678,7 @@ class GroupsView(models.Model):
     @api.multi
     def write(self, values):
         res = super(GroupsView, self).write(values)
-        if 'category_id' in values:
-            self._update_user_groups_view()
+        self._update_user_groups_view()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
