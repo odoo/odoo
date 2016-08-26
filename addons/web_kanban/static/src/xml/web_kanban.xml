@@ -21,6 +21,9 @@
                         <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
                         <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
                     </t>
+                    <t t-if="widget.can_be_archived">
+                        <li><a class="o_column_archive_column" href="#">Archive Column</a></li>
+                    </t>
                     <t t-if="widget.has_active_field">
                         <li><a class="o_column_archive" href="#">Archive Records</a></li>
                         <li><a class="o_column_unarchive" href="#">Unarchive Records</a></li>

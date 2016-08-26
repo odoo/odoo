@@ -40,6 +40,7 @@ var KanbanView = View.extend({
         'kanban_record_update': 'update_record',
         'kanban_column_add_record': 'add_record_to_column',
         'kanban_column_delete': 'delete_column',
+        'kanban_column_archive': 'archive_column',
         'kanban_column_archive_records': 'archive_records',
         'column_add_record': 'column_add_record',
         'quick_create_add_column': 'add_new_column',
@@ -229,19 +230,23 @@ var KanbanView = View.extend({
             // fetch group data (display information)
             var group_ids = _.without(_.map(groups, function (elem) { return elem.attributes.value[0];}), undefined);
             if (options.grouped_by_m2o && group_ids.length) {
-                return new data.DataSet(self, options.relation)
-                    .read_ids(group_ids, _.union(['display_name'], group_by_fields_to_read))
-                    .then(function(results) {
-                        _.each(groups, function (group) {
-                            var group_id = group.attributes.value[0];
-                            var result = _.find(results, function (data) {return group_id === data.id;});
-                            group.title = result ? result.display_name : _t("Undefined");
-                            group.values = result;
-                            group.id = group_id;
-                            group.options = group_options;
+                var relation_ds = new data.DataSet(self, options.relation);
+                // TMP
+                return relation_ds.call('fields_get', [['active']]).then(function (results) {
+                    var fields_to_read = results.hasOwnProperty('active') ? ['display_name', 'active'] : ['display_name'];
+                    return relation_ds.read_ids(group_ids, _.union(fields_to_read, group_by_fields_to_read))
+                        .then(function(results) {
+                            _.each(groups, function (group) {
+                                var group_id = group.attributes.value[0];
+                                var result = _.find(results, function (data) {return group_id === data.id;});
+                                group.title = result ? result.display_name : _t("Undefined");
+                                group.values = result;
+                                group.id = group_id;
+                                group.options = group_options;
+                            });
+                            return groups;
                         });
-                        return groups;
-                    });
+                });
             } else {
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
@@ -639,6 +644,28 @@ var KanbanView = View.extend({
         var self = this;
         var column = event.target;
         (new data.DataSet(this, this.relation)).unlink([column.id]).done(function() {
+            if (column.is_empty()) {
+                var index = self.widgets.indexOf(column);
+                self.widgets.splice(index,1);
+                column.destroy();
+                self.update_buttons();
+            } else {
+                self.do_reload();
+            }
+        });
+    },
+
+    archive_column: function (event) {
+        if (! event.target.can_be_archived) {
+            return;
+        }
+        var active_value = !event.data.archive;
+        var self = this;
+        var column = event.target;
+        (new data.DataSet(this, this.relation, self.dataset.context)).call(
+            'archive',
+            [[column.id], active_value, false, false, self.dataset.context]
+        ).done(function() {
             if (column.is_empty()) {
                 var index = self.widgets.indexOf(column);
                 self.widgets.splice(index,1);
