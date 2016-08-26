@@ -913,9 +913,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
     </address>
-     <a t-att-href="res_company.google_map_link()" target="_BLANK">
-        <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
-    </a>
+    <!-- FORWARD-PORT UP TO SAAS-12 -->
+     <a t-att-href="res_company.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
 </template>
 
 <template id="contactus" name="Contact us" page="True">
