@@ -7,7 +7,11 @@ body .modal {
     }
 
     &.o_website_modal {
-        font-family: "Roboto", Roboto, sans-serif;
+        font-family: @o-we-font-family;
+
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            font-family: @o-we-font-family;
+        }
 
         .modal-content {
             border-radius: 0;
@@ -80,6 +84,7 @@ body .modal {
                 color: lightgray;
                 opacity: 1;
                 font-size: 25px;
+                font-weight: normal;
             }
 
             .modal-content {
@@ -91,6 +96,16 @@ body .modal {
                 .modal-header {
                     border: none;
                     cursor: pointer;
+                    font-family: @o-we-font-family;
+
+                    h4 {
+                        font-family:inherit;
+                        font-weight: normal;
+
+                        .fa {
+                            margin-left: @grid-gutter-width/2;
+                        }
+                    }
                 }
 
                 .modal-body {
@@ -125,6 +140,8 @@ body .modal {
 
     // ADD NEW PAGE MODAL
     &#o_website_add_page_modal {
+        font-family: @o-we-font-family;
+
         &.in {
             .o-flex-display()!important;
             .o-justify-content(center);

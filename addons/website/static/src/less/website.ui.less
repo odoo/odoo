@@ -10,7 +10,7 @@ body.o_connected_user {
     position: fixed;
     z-index: 1001;
 
-    font-family: Roboto, @font-family-sans-serif;
+    font-family: @o-we-font-family;
     font-size: @odoo-font-size-base;
     a:hover, a:focus {
         text-decoration: none;
@@ -25,12 +25,7 @@ body.o_connected_user {
             padding: 0 @grid-gutter-width/2;
 
             &[data-action="edit"], &[data-action="translate"] {
-                background-color: @odoo-brand-optional;
-                outline: 1px solid @odoo-brand-optional;
-                &:hover, &:focus {
-                    background-color: darken(@odoo-brand-optional, 10%);
-                    outline-color: darken(@odoo-brand-optional, 10%);
-                }
+                .button-variant(white, @odoo-brand-optional, @odoo-brand-optional);
 
                 @media (max-width: @screen-xs-max) {
                     &, &:hover, &:focus {
