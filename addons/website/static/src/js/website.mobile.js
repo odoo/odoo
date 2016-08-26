@@ -39,7 +39,7 @@ website.TopBar.include({
         var self = this;
         this.$el.on('click', 'a[data-action=show-mobile-preview]', function () {
             new MobilePreviewDialog(self, {
-                title: _t('Mobile preview') + " <span class='fa fa-repeat'/>",
+                title: _t('Mobile preview') + " <span class='fa fa-refresh'/>",
             }).open();
         });
         return this._super();

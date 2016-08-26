@@ -8,7 +8,7 @@
 
     background-color: rgba(0,0,0,0);
     .o-transition(background-color, 400ms, @o-we-md-ease);
-    font-family: Roboto, @font-family-sans-serif;
+    font-family: @o-we-font-family;
 
     form.navbar-form {
         height: 100%;
@@ -28,20 +28,30 @@
             height: 100%;
             margin: 0;
             padding: 10px;
-            line-height: 1;
-            font-weight: bold;
+            line-height: 1.2;
+            font-size: 13px;
+            font-family: @o-we-font-family;
 
             .o-transition(all, 0.3s);
             border: none;
             border-radius: 0;
 
+            .fa {
+                margin-right: @grid-gutter-width/4;
+                &.fa-times {
+                    color: @o-we-color-danger;
+                }
+            }
+
             &.btn-primary {
                 .button-variant(white, @odoo-brand-primary, @odoo-brand-primary);
-                text-transform: uppercase;
             }
             &.btn-default {
                 .button-variant(white, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
-                text-transform: uppercase;
+
+                &:hover {
+                    background: fade(black, 50%);
+                }
             }
 
             &:focus, &:active, &:focus:active {
@@ -92,8 +102,10 @@ html[lang] > body.editor_enable{
         padding: 0;
         background: @o-we-color-dark;
         text-align: center;
-        font-size: 20px;
+        font-weight: normal;
+        font-size: 17px;
         color: white;
+        font-family: @o-we-font-family;
     }
 
     #o_scroll {
@@ -286,6 +298,7 @@ html[lang] > body.editor_enable{
 
         // OVERLAY OPTIONS
         > .oe_overlay_options {
+            font-family: @o-we-font-family;
             .o-position-absolute(@bottom: 0, @left: 0);
             width: 250px; // the parent oe_overlay has a width equal to the snippet width, the 250px is there to force the options to stay on one line without overriding bootstrap .btn-group
             text-align: left;
@@ -304,7 +317,7 @@ html[lang] > body.editor_enable{
                     line-height: @o-overlay-option-size;
                     font-size: 11px;
                     border-radius: 0;
-                    font-weight: 600;
+                    font-weight: normal;
 
                     .o-transition(all, 400ms);
                     color: @o-we-color-text-light;
@@ -312,18 +325,32 @@ html[lang] > body.editor_enable{
                     &:hover {
                         color: white;
                         background-color: lighten(@o-we-color-dark, 10%);
+
+                        > .fa {
+                            color: white;
+                        }
                     }
 
                     &.oe_snippet_remove {
                         color: white;
                         background-color: @o-we-color-danger;
                         border-color: darken(@o-we-color-danger, 20%);
+
+                        > .fa {
+                            color: white;
+                        }
+
                         &:hover {
                             background-color: darken(@o-we-color-danger, 20%);
                         }
                     }
                     &.oe_snippet_parent > i {
                         .scaleX(-1);
+                        font-size: 12px;
+                    }
+
+                    > .fa {
+                        color: @o-we-color-text-light;
                     }
                 }
 
@@ -383,9 +410,9 @@ html[lang] > body.editor_enable{
                         background-color: @o-we-color-light;
                         a {
                             color: @o-we-color-text-light;
-                            font-weight: 600;
+                            font-weight: normal;
                             font-size: 12px;
-                            padding: 5px 20px;
+                            padding: 5px 35px 5px 20px;
                         }
 
                         > li {
@@ -410,7 +437,7 @@ html[lang] > body.editor_enable{
                             }
                             &.divider {
                                 background-color: @o-we-color-divider;
-                                margin: 0;
+                                margin: 0 8px;
                             }
                             &.active > a {
                                 color: white;
@@ -423,32 +450,52 @@ html[lang] > body.editor_enable{
                                 }
                             }
                             &.dropdown-header {
-                                color: wheat;
+                                color: white;
                                 font-weight: bold;
+                                font-size: 12px;
+                                margin-top: 2px;
 
                                 &:hover {
                                     background-color: initial;
                                 }
 
                                 &.o_main_header {
-                                    padding-left: 4px;
+                                    padding-left: 8px;
                                 }
                                 &.o_parent_editor_header {
+                                    color: wheat;
+                                    font-weight: 400;
+                                    font-size: 10px;
+                                    margin: 7px 0 4px 4px;
                                     &::before {
                                         content: "\f148";
-                                        .o-position-absolute(@top: 0, @left: 5px);
+                                        .o-position-absolute(@top: 2px, @left: 8px);
                                         font-family: FontAwesome;
                                         .scaleX(-1);
                                     }
                                     ~ li:not(.dropdown-header) {
-                                        padding-left: 16px;
+                                        a {
+                                            font-size: 11px;
+                                            padding: 4px 35px 4px 20px;
+                                            opacity: 0.8;
+                                            &:hover {
+                                                opacity: 1;
+                                            }
+                                        }
                                     }
                                 }
                             }
 
+                            &.separator {
+                                display: block;
+                                margin: 4px 35px 4px 20px;
+                                height: 1px;
+                                background: fade(@o-we-color-text-light, 10%);
+                            }
+
                             > a > i {
                                 width: 16px;
-                                margin-right: 4px;
+                                margin-right: 8px;
                             }
                         }
                     }
@@ -679,6 +726,11 @@ html[lang] > body.editor_enable{
     .popover-content {
         height: @odoo-navbar-height;
         white-space: nowrap;
+        font-family: @o-we-font-family;
+
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            font-family: @o-we-font-family;
+        }
 
         .btn {
             height: @odoo-navbar-height;
@@ -689,9 +741,18 @@ html[lang] > body.editor_enable{
             color: @o-we-color-text-normal;
             border-top: 2px solid transparent;
             .o-transition(all, 0.3s);
+
+            > .fa {
+                color: @o-we-color-text-normal;
+            }
+
             &:hover {
                 border-top: 2px solid @o-we-color-text-normal;
-                color: @o-we-color-text-normal;
+                color: @o-we-color-text-light;
+
+                > .fa {
+                    color: @o-we-color-text-light;
+                }
             }
 
             .o_image_alt {
@@ -704,16 +765,26 @@ html[lang] > body.editor_enable{
                 background-color: @o-we-color-dark;
                 color: @o-we-color-text-light;
                 box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.5);
+
+                > .fa {
+                    color: @o-we-color-text-light;
+                }
             }
         }
         > .btn-group {
             margin-top: -2px;
 
-            &.open .dropdown-toggle {
-                border-top: 2px solid white;
-                background-color: @o-we-color-darker;
-                color: white;
-                box-shadow: none;
+            &.open, .btn-group.open {
+                .dropdown-toggle {
+                    border-top: 2px solid white;
+                    background-color: @o-we-color-darker;
+                    color: white;
+                    box-shadow: none;
+
+                    > .fa, > span {
+                        color: white;
+                    }
+                }
             }
         }
         .dropdown-menu {
@@ -725,9 +796,17 @@ html[lang] > body.editor_enable{
                 width: 100%;
                 color: @o-we-color-text-light;
 
+                > .fa {
+                    color: @o-we-color-text-light;
+                }
+
                 &:hover {
                     background-color: @o-we-tab-active-bg;
                     color: white;
+
+                    > .fa {
+                        color: white;
+                    }
                 }
             }
         }
@@ -940,8 +1019,10 @@ table.colorpicker {
         padding: 5px 10px 0;
         .note-color-reset {
             font-size: 20px!important;
+            color: desaturate(fade(@o-we-color-danger, 60%), 40%);
             margin: 3px 0 0;
             padding: 0;
+            cursor: pointer;
             &:hover {
                 background: transparent!important;
                 color: @o-we-color-danger;
