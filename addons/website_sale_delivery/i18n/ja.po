@@ -4,22 +4,18 @@
 #
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-14 11:36+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-07-30 05:54+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_delivery
@@ -27,6 +23,14 @@ msgstr ""
 msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -76,13 +80,13 @@ msgid "Country..."
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Create a task under this project on sale order validation."
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
+msgid "Delivery Amount"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
-msgid "Delivery Amount"
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+msgid "Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -92,7 +96,7 @@ msgstr "説明"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on the Online Quotations."
+msgid "Description displayed on the eCommerce and on online quotations."
 msgstr ""
 
 #. module: website_sale_delivery
@@ -146,17 +150,7 @@ msgid "Landed Costs"
 msgstr "仕入諸掛"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "発注明細のメッセージ"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "受注明細のメッセージ"
-
-#. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:138
+#: code:addons/website_sale_delivery/models/sale_order.py:104
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address. "
@@ -184,16 +178,6 @@ msgid "Products to propose when add to cart."
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
-msgid "Project"
-msgstr "プロジェクト"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "発注明細"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
 msgstr "評価"
@@ -204,26 +188,9 @@ msgid "Sales Order"
 msgstr "受注"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid "Sales Order Line"
-msgstr "受注明細"
-
-#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
 msgid "Select..."
 msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"警告オプションを選択するとユーザにメッセージを通知します。メッセージをブロッ"
-"クを選択するとメッセージとともに例外が発生しその流れがブロックされます。メッ"
-"セージは次の項目で記述する必要があります。"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -241,7 +208,7 @@ msgid "Size Y"
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:137
+#: code:addons/website_sale_delivery/models/sale_order.py:103
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr ""
@@ -287,6 +254,16 @@ msgid "Tracking:"
 msgstr ""
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
+msgid "Visible in Website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
+msgid "Website Comments"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
 msgstr ""
@@ -305,3 +282,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr ""
+
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "発注明細のメッセージ"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "受注明細のメッセージ"
+
+#~ msgid "Project"
+#~ msgstr "プロジェクト"
+
+#~ msgid "Purchase Order Line"
+#~ msgstr "発注明細"
+
+#~ msgid "Sales Order Line"
+#~ msgstr "受注明細"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "警告オプションを選択するとユーザにメッセージを通知します。メッセージをブ"
+#~ "ロックを選択するとメッセージとともに例外が発生しその流れがブロックされま"
+#~ "す。メッセージは次の項目で記述する必要があります。"

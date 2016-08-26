@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-05-16 12:13+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -410,7 +410,7 @@ msgid "Bounced Ratio"
 msgstr "Omjer odbijenog"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "Kampanja"
@@ -425,6 +425,13 @@ msgstr "Naziv kampanje"
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
 msgid "Campaign Stages"
 msgstr "Faze kampanje"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mass_mailing_tag_action
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_tag_menu
+#: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_tag_view_form
+msgid "Campaign Tags"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_mass_mailing_campaign
@@ -467,6 +474,16 @@ msgstr "Kliknite za kreiranje nove liste za slanje mailova"
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Click here to create a new mailing."
 msgstr "Kliknie za kreiranje nove poruke"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid "Click here to create a new template."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
@@ -651,11 +668,6 @@ msgstr "Obriši"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Isporučeno"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_hr_department
-msgid "Department"
-msgstr ""
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
@@ -882,6 +894,11 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_id
@@ -1034,6 +1051,13 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing.menu_email_template
 msgid "Mail Templates"
 msgstr "Predlošci mailova"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid ""
+"Mail templates are meant to design e-mails that can be used for several mass "
+"mailing campaigns."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
@@ -1231,6 +1255,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_module_mass_mailing_themes
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Mass mailing themes"
 msgstr ""
 
@@ -1249,6 +1274,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
+msgid "More Info"
 msgstr ""
 
 #. module: mass_mailing
@@ -1784,7 +1814,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #, fuzzy
 msgid ""
 "This name helps you tracking your different campaign efforts, e.g. "
@@ -1949,6 +1979,17 @@ msgstr "© 2014 Sva prava pridržana"
 
 #~ msgid ""
 #~ "&amp;nbsp;\n"
+#~ "                                                <span class=\"fa fa-10x "
+#~ "fa-music\"/>\n"
+#~ "                                                &amp;nbsp;"
+#~ msgstr ""
+#~ "&amp;nbsp;\n"
+#~ "                                                <span class=\"fa fa-10x "
+#~ "fa-music\"/>\n"
+#~ "                                                &amp;nbsp;"
+
+#~ msgid ""
+#~ "&amp;nbsp;\n"
 #~ "                                <span class=\"fa fa-10x fa-music\"/>\n"
 #~ "                                &amp;nbsp;"
 #~ msgstr ""
@@ -1982,6 +2023,58 @@ msgstr "© 2014 Sva prava pridržana"
 #~ "&amp;nbsp;\n"
 #~ "                                <span class=\"fa fa-usd fa-3x\"/>\n"
 #~ "                                &amp;nbsp;"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-"
+#~ "top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
+#~ "            <i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: "
+#~ "inline-block; font-size: 0.6em; margin-top: -0.15em;\"/>\n"
+#~ "        </span> Footers"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-"
+#~ "top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
+#~ "            <i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: "
+#~ "inline-block; font-size: 0.6em; margin-top: -0.15em;\"/>\n"
+#~ "        </span> Podnožja"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-"
+#~ "top: -0.15em; height: 0.9em; display: inline-block; overflow: hidden;\"/"
+#~ ">\n"
+#~ "            <i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: "
+#~ "0.25em; display: inline-block; font-size: 0.6em;\"/>\n"
+#~ "        </span> Headers"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-"
+#~ "top: -0.15em; height: 0.9em; display: inline-block; overflow: hidden;\"/"
+#~ ">\n"
+#~ "            <i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: "
+#~ "0.25em; display: inline-block; font-size: 0.6em;\"/>\n"
+#~ "        </span> Zaglavlja"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\" style=\"display: "
+#~ "inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
+#~ "        </span> Extra"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\" style=\"display: "
+#~ "inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
+#~ "        </span> Dodatno"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\"/>\n"
+#~ "        </span> Body"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\"/>\n"
+#~ "        </span> Tijelo"
 
 #~ msgid "Action Needed"
 #~ msgstr "Potrebna dodatna radnja"
@@ -2024,6 +2117,23 @@ msgstr "© 2014 Sva prava pridržana"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Broj nepročitanih poruka"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Ime koje vam pomaže pratiti napore različitih kampanja, npr: "
+#~ "Jesenska_akcija, Božićni_specijal"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Ovo je način isporuke. Npr. razglednica, e-mail, oglas"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "To je obavijest linka Ex. pretraživač, druga domena ili ime sa popisa e-"
+#~ "pošte"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Nepročitane poruke"

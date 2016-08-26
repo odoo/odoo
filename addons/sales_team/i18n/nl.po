@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2015-11-22 14:01+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -75,6 +75,11 @@ msgid "Activities Done"
 msgstr "Activiteiten gedaan"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -93,11 +98,6 @@ msgstr "Klik hier om een nieuw verkoopteam te definiëren."
 #, python-format
 msgid "Click to set"
 msgstr "Klik om in te stellen"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Code"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -244,9 +244,9 @@ msgstr "Meer informatie"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, fuzzy, python-format
+#, python-format
 msgid "My Pipeline"
-msgstr "Uw pijplijn"
+msgstr "Mijn pijplijn"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -269,7 +269,7 @@ msgstr "Volgende acties"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Alleen gehele getallen zijn geldig."
@@ -358,11 +358,6 @@ msgstr "Teamleider"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Teamleden"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "De verkoopteam code moet uniek zijn!"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -483,7 +478,7 @@ msgstr "Gewonnen als prospect"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Verkeerde waarde ingevoerd!"
@@ -496,6 +491,11 @@ msgid "exp. closing"
 msgstr "Ver. afsluiting"
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -504,6 +504,9 @@ msgstr "vervallen"
 
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
+
+#~ msgid "Code"
+#~ msgstr "Code"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
@@ -544,6 +547,9 @@ msgstr "vervallen"
 #~ msgid "Number of unread messages"
 #~ msgstr "Aantal ongelezen berichten"
 
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "De verkoopteam code moet uniek zijn!"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Ongelezen berichten"
 
@@ -552,3 +558,82 @@ msgstr "vervallen"
 
 #~ msgid "Working Hours"
 #~ msgstr "Werkuren"
+
+#~ msgid "Your Pipeline"
+#~ msgstr "Uw pijplijn"
+
+#~ msgid "Apply"
+#~ msgstr "Toepassen"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Bankrekeningen"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuleer"
+
+#~ msgid "Configuration"
+#~ msgstr "Instellingen"
+
+#~ msgid "Configure Sales"
+#~ msgstr "Instellen verkoop"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Titels contact"
+
+#~ msgid "Contacts"
+#~ msgstr "Contacten"
+
+#~ msgid "Countries"
+#~ msgstr "Landen"
+
+#~ msgid "Country Group"
+#~ msgstr "Landengroep"
+
+#~ msgid "Customers"
+#~ msgstr "Klanten"
+
+#~ msgid "Fed. States"
+#~ msgstr "Fed. staten/Provincies"
+
+#~ msgid "Leads & Opportunities"
+#~ msgstr "Leads & prospects"
+
+#~ msgid "Localization"
+#~ msgstr "Positie in magazijn"
+
+#~ msgid "Manager"
+#~ msgstr "Beheerder"
+
+#~ msgid "Opportunities"
+#~ msgstr "prospects"
+
+#~ msgid "Product Variants"
+#~ msgstr "Productvarianten"
+
+#~ msgid "Products"
+#~ msgstr "Producten"
+
+#~ msgid "Sales"
+#~ msgstr "Verkopen"
+
+#~ msgid "sale.config.settings"
+#~ msgstr "sale.config.settings"
+
+#~ msgid ""
+#~ "the user will have access to all records of everyone in the sales "
+#~ "application."
+#~ msgstr ""
+#~ "de gebruiker heeft toegang tot alle regels van iedereen in de "
+#~ "verkoopapplicatie."
+
+#~ msgid "the user will have access to his own data in the sales application."
+#~ msgstr ""
+#~ "de gebruiker zal toegang hebben tot zijn eigen gegevens in de verkoop "
+#~ "applicatie."
+
+#~ msgid ""
+#~ "the user will have an access to the sales configuration as well as "
+#~ "statistic reports."
+#~ msgstr ""
+#~ "De gebruiker krijgt toegang tot de verkoop instellingen en de "
+#~ "statistische rapporten"

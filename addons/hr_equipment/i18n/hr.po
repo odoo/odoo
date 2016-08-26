@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2015-11-05 14:00+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -57,6 +57,7 @@ msgid "Acer Laptop"
 msgstr "Acer Laptop"
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "Aktivan"
@@ -102,13 +103,19 @@ msgid "Apply"
 msgstr "Primjeni"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "Sredstvo"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5764
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "Kategorija DI"
 
@@ -641,7 +648,6 @@ msgstr "Telefoni"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -649,10 +655,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
-"-svatko:svatko može objaviti poruku\n"
-"-partneri: samo autentificirani partner\n"
-"-pratitelji: samo pratitelji srodne dokumentacije\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -868,7 +870,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -876,10 +877,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"Ova aplikacija pomaže vam pratiti opremu koju koriste djelatnici.  Kreirajte "
-"neki laptop, pisač ili telefon i povežite svu opremu sa\n"
-"djelatnikom ili odjelom. Vi će upravljati raspodjelom, izdavanjem\n"
-"i održavanjem opreme."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -1012,6 +1009,29 @@ msgstr "Pretraživanje zahtjeva za održavanjem"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "Otvori izbornik opreme"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
+#~ "-svatko:svatko može objaviti poruku\n"
+#~ "-partneri: samo autentificirani partner\n"
+#~ "-pratitelji: samo pratitelji srodne dokumentacije\n"
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "Ova aplikacija pomaže vam pratiti opremu koju koriste djelatnici.  "
+#~ "Kreirajte neki laptop, pisač ili telefon i povežite svu opremu sa\n"
+#~ "djelatnikom ili odjelom. Vi će upravljati raspodjelom, izdavanjem\n"
+#~ "i održavanjem opreme."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Brojač nepročitanih poruka"

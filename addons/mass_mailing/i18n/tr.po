@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-06-25 20:46+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -357,7 +357,7 @@ msgid "Bounced Ratio"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "Kampanya"
@@ -372,6 +372,13 @@ msgstr "Kampanya Adı"
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
 msgid "Campaign Stages"
 msgstr "Kampanya Aşamaları"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mass_mailing_tag_action
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_tag_menu
+#: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_tag_view_form
+msgid "Campaign Tags"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_mass_mailing_campaign
@@ -413,6 +420,16 @@ msgstr ""
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Click here to create a new mailing."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid "Click here to create a new template."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
+msgid "Click to add a new tag."
 msgstr ""
 
 #. module: mass_mailing
@@ -598,11 +615,6 @@ msgstr "Sil"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "TeslimEdilen"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_hr_department
-msgid "Department"
-msgstr ""
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
@@ -829,6 +841,11 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_id
@@ -989,6 +1006,13 @@ msgstr "Posta İstatistikleri"
 #: model:ir.ui.menu,name:mass_mailing.menu_email_template
 msgid "Mail Templates"
 msgstr "Mail Şablonları"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid ""
+"Mail templates are meant to design e-mails that can be used for several mass "
+"mailing campaigns."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
@@ -1190,6 +1214,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_module_mass_mailing_themes
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Mass mailing themes"
 msgstr ""
 
@@ -1208,6 +1233,11 @@ msgstr "Mesaj-ID"
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
+msgid "More Info"
 msgstr ""
 
 #. module: mass_mailing
@@ -1746,7 +1776,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #, fuzzy
 msgid ""
 "This name helps you tracking your different campaign efforts, e.g. "
@@ -1927,11 +1957,28 @@ msgstr ""
 #~ msgid "Followers (Partners)"
 #~ msgstr "İzleyiciler (İş ortakları)"
 
+#~ msgid ""
+#~ "ID of the related mail_mail. This field is an integer field becausethe "
+#~ "related mail_mail can be deleted separately from its statistics.However "
+#~ "the ID is needed for several action and controllers."
+#~ msgstr ""
+#~ "İlgili mail_mail Teşhıs kodu Bu alan, ilgili mail_mail-ebilmek var olmak "
+#~ "silmek ayrı ayrı kendi istatistiklerinden tamsayı alanı çünkü. Ancak "
+#~ "kimliği birkaç eylem ve denetleyicileri için gereklidir."
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid ""
+#~ "If checked, recipients will be mailed only once, allowing to sendvarious "
+#~ "mailings in a single campaign to test the effectivenessof the mailings."
+#~ msgstr ""
+#~ "Bu onay kutusu işaretlendiğinde, alıcılar yalnızca tek bir kampanyadaki "
+#~ "sendvarious postalar için postalar effectivenessof test etmek için izin "
+#~ "bir kez gönderilecektir."
 
 #~ msgid "Is Follower"
 #~ msgstr "Takipçi mi"
@@ -1950,6 +1997,23 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Okunmamış mesaj sayısı"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Farklı kampanya çabalarınızı izlemenize yardımcı olacak bir isimdir Örn: "
+#~ "Sonbahar_Sürüşü, Yılbaşı_Özel"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Bu teslimat yöntemidir. örn: Postakartı, Eposta yada Reklam Afişi"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Bu bağlantının kaynağıdır. örn: Arama Motoru, başka alan adı yada bir "
+#~ "eposta listesi adı"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Okunmamış Mesajlar"

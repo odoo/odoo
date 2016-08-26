@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-05-10 13:55+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -21,13 +21,13 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:367
+#: code:addons/fleet/fleet.py:369
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:643
+#: code:addons/fleet/fleet.py:645
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s ugovor(i) treba(ju) biti obnovljeni ili zatvoreni!"
@@ -79,6 +79,12 @@ msgid "Activation Cost"
 msgstr ""
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_active
+msgid "Active"
+msgstr ""
+
+#. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_form
 msgid "Additional Details"
@@ -110,6 +116,12 @@ msgstr "Zamjena alternatora"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_amount
 msgid "Amount"
 msgstr "Iznos"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
+msgid "Archived"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_9
@@ -230,6 +242,11 @@ msgstr "Odaberite da li je ugovor još uvijek valjan ili ne"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type_category
 msgid "Choose wheter the service refer to contracts, vehicle services or both"
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
+msgid "Click to add a new tag."
 msgstr ""
 
 #. module: fleet
@@ -492,7 +509,7 @@ msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2976
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2944
 msgid "Current state of the vehicle"
 msgstr "Trenutno stanje vozila"
 
@@ -582,7 +599,7 @@ msgid "Driver of the vehicle"
 msgstr "Vozač ovog vozila"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:384
+#: code:addons/fleet/fleet.py:386
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Vozač : od '%s' do '%s'"
@@ -822,7 +839,7 @@ msgstr "Hibridno"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2925
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2892
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
@@ -963,7 +980,7 @@ msgid "License Plate"
 msgstr "Registracija"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:391
+#: code:addons/fleet/fleet.py:393
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Registarska oznaka: od '%s' do '%s'"
@@ -1061,7 +1078,7 @@ msgid "Miles"
 msgstr "Milja"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2958
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2925
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1090,12 +1107,12 @@ msgid "Model of a vehicle"
 msgstr "Model vozila"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2958
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2925
 msgid "Model of the vehicle"
 msgstr "Model vozila"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:380
+#: code:addons/fleet/fleet.py:382
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Model: od '%s' do '%s'"
@@ -1139,8 +1156,8 @@ msgid "No"
 msgstr "Ne"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:379 code:addons/fleet/fleet.py:383
-#: code:addons/fleet/fleet.py:387 code:addons/fleet/fleet.py:390
+#: code:addons/fleet/fleet.py:381 code:addons/fleet/fleet.py:385
+#: code:addons/fleet/fleet.py:389 code:addons/fleet/fleet.py:392
 #, python-format
 msgid "None"
 msgstr "Ništa"
@@ -1380,7 +1397,7 @@ msgid "Refueling Details"
 msgstr "Podaci o točenju goriva"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:714
+#: code:addons/fleet/fleet.py:716
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1534,7 +1551,7 @@ msgid "Starter Replacement"
 msgstr "Zamjena startera"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2976
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2944
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Županija"
@@ -1545,7 +1562,7 @@ msgid "State name already exists"
 msgstr "Naziv stanja već postoji"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:388
+#: code:addons/fleet/fleet.py:390
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Stanje: od '%s' do '%s'"
@@ -1711,7 +1728,7 @@ msgstr "Broj šasije/motora (VIN/SN number)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2991
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2959
 msgid "Unit"
 msgstr "Jedinica"
 
@@ -1780,6 +1797,13 @@ msgid "Vehicle Status"
 msgstr "Status vozila"
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_form
+msgid "Vehicle Tags"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_vehicle_id
@@ -1802,6 +1826,7 @@ msgstr "Vozila"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vehicles Contracts"
 msgstr "Ugovori za vozila"
 
@@ -2050,3 +2075,6 @@ msgstr "Prikaži povijest servisa za ovo vozilo"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Brojač nepročitanih poruka"
+
+#~ msgid "Write here all supplementary informations relative to this contract"
+#~ msgstr "Ovdje upišite sve dodatne informacije vezane za ovaj ugovor"

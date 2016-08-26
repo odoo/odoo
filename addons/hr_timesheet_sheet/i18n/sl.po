@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-01-14 10:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -32,26 +32,6 @@ msgstr ""
 " * Stanje 'Osnutek' ob nastanku časovnice.                 \n"
 "* Stanje 'Potrjeno', ko uporabnik potrdi svojo časovnico.                 \n"
 "* Stanje 'Opravljeno', ko je sprejeto/overjeno s strani nadrejenih."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
-msgid "# Nbr Timesheet"
-msgstr "# časovnic"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
-msgid "# Total Attendance"
-msgstr "# Skupna prisotnost"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_diff
-msgid "# Total Diff"
-msgstr "# Skupaj razlika"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_timesheet
-msgid "# Total Timesheet"
-msgstr "# Skupaj časovnica"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -127,12 +107,6 @@ msgid "Company"
 msgstr "Družba"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Confirmed"
-msgstr "Potrjeno"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
 msgstr "Potrjene časovnice"
@@ -160,23 +134,18 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_from
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
 msgid "Date from"
 msgstr "Od dne"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_date_to
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date to"
 msgstr "Datum do"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_department_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Department"
 msgstr "Oddelek"
 
@@ -205,18 +174,6 @@ msgid "Display Name"
 msgstr "Prikaz naziva"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Done"
-msgstr "Opravljeno"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
-msgid "Draft"
-msgstr "Osnutek"
-
-#. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_employee_id
 msgid "Employee"
@@ -239,11 +196,6 @@ msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr "Napaka: Prijava (odnosno Odjava) mora slediti Odjavi (odnosno Prijavi)"
 
 #. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
-msgid "External Timesheet"
-msgstr "Zunanja časovnica"
-
-#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
 msgstr "Združeno po"
@@ -252,6 +204,11 @@ msgstr "Združeno po"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Ure"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -275,11 +232,6 @@ msgid ""
 "user."
 msgstr ""
 "Delojemalec mora biti povezan z uporabnikom, da se lahko ustvari časovnica."
-
-#. module: hr_timesheet_sheet
-#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
-msgid "Internal Timesheet"
-msgstr "Notranja časovnica"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -318,7 +270,6 @@ msgid "My Timesheets"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,state:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "New"
 msgstr "Novo"
@@ -412,9 +363,7 @@ msgid "Sign Out"
 msgstr "Odjavi"
 
 #. module: hr_timesheet_sheet
-#: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_state
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
-#: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_timesheet_report_search
 msgid "Status"
 msgstr "Status"
 
@@ -439,7 +388,6 @@ msgstr ""
 "odjav."
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
@@ -730,17 +678,44 @@ msgstr "za"
 msgid "waiting approval"
 msgstr ""
 
+#~ msgid "# Nbr Timesheet"
+#~ msgstr "# časovnic"
+
+#~ msgid "# Total Attendance"
+#~ msgstr "# Skupna prisotnost"
+
+#~ msgid "# Total Diff"
+#~ msgstr "# Skupaj razlika"
+
+#~ msgid "# Total Timesheet"
+#~ msgstr "# Skupaj časovnica"
+
 #~ msgid "Action Needed"
 #~ msgstr "Potreben je ukrep"
 
+#~ msgid "Analytic Line"
+#~ msgstr "Analitična postavka"
+
 #~ msgid "Cancel"
 #~ msgstr "Preklic"
+
+#~ msgid "Confirmed"
+#~ msgstr "Potrjeno"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
 
 #~ msgid "Day"
 #~ msgstr "Dan"
+
+#~ msgid "Done"
+#~ msgstr "Opravljeno"
+
+#~ msgid "Draft"
+#~ msgstr "Osnutek"
+
+#~ msgid "External Timesheet"
+#~ msgstr "Zunanja časovnica"
 
 #~ msgid "Followers"
 #~ msgstr "Sledilci"
@@ -766,6 +741,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Delojemalec mora biti povezan s proizvodom, da se zanj lahko ustvari "
 #~ "časovnica."
+
+#~ msgid "Internal Timesheet"
+#~ msgstr "Notranja časovnica"
 
 #~ msgid "Is Follower"
 #~ msgstr "Je sledilec"

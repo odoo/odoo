@@ -5,22 +5,18 @@
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-21 08:28+0000\n"
-"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-07-28 11:56+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: lunch
@@ -50,19 +46,6 @@ msgid ""
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
-msgid ""
-"A lunch order is defined by its user, date and order lines.\n"
-"                Each order line corresponds to a product, an additional note "
-"and a price.\n"
-"                Before selecting your order lines, don't forget to read the "
-"warnings displayed in the reddish area."
-msgstr ""
-"ランチの注文は個人名、日付、注文ラインに紐付いています。\n"
-"各注文ラインは商品、追加項目、価格に対応しています。\n"
-"注文ラインを選択する前に、赤いエリアの注意事項をよく読んでください。"
-
-#. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
 msgstr "名前・カテゴリ・価格・販売業者によって、商品は定義されます。"
@@ -81,7 +64,7 @@ msgid "Add"
 msgstr "追加"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:253
+#: code:addons/lunch/models/lunch.py:262
 #, python-format
 msgid "Alert"
 msgstr "警告"
@@ -141,6 +124,11 @@ msgid "By Employee"
 msgstr "従業員ごと"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
+msgid "By Order"
+msgstr ""
+
+#. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "By User"
 msgstr "ユーザごと"
@@ -175,7 +163,6 @@ msgstr "食事を取り消す"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Cancelled"
 msgstr "取消済"
@@ -206,11 +193,6 @@ msgstr "クリックして 「ランチ通知」 を作成"
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Click to create a lunch category."
 msgstr "クリックして 「ランチ分類」 を作成"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_order_action_tree
-msgid "Click to create a lunch order."
-msgstr "クリックして 「ランチ注文」 を作成"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
@@ -422,7 +404,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1894
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1883
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_id
 msgid "ID"
 msgstr "ID"
@@ -473,13 +455,8 @@ msgstr "リスト"
 #. module: lunch
 #: model:ir.module.category,name:lunch.module_lunch_category
 #: model:ir.ui.menu,name:lunch.menu_lunch
-#, fuzzy
 msgid "Lunch"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"ランチ\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"昼食"
+msgstr "ランチ"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
@@ -487,7 +464,7 @@ msgid "Lunch Alert"
 msgstr ""
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:224
+#: code:addons/lunch/models/lunch.py:233
 #, python-format
 msgid "Lunch Cashmove"
 msgstr ""
@@ -497,13 +474,9 @@ msgstr ""
 #: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
 #: model:ir.model,name:lunch.model_lunch_order
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
-#, fuzzy, python-format
+#, python-format
 msgid "Lunch Order"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"ランチオーダ\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"昼食オーダ"
+msgstr "ランチオーダ"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -538,7 +511,7 @@ msgid "My Lunch"
 msgstr "ランチメニュー"
 
 #. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "My Orders"
 msgstr "自分のオーダ"
 
@@ -548,7 +521,6 @@ msgid "Name/Date"
 msgstr "名前 / 日付"
 
 #. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "New"
 msgstr "新規"
@@ -576,6 +548,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_note
 msgid "Note"
 msgstr "注記"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch.py:193
+#, python-format
+msgid "Only your lunch manager cancels the orders."
+msgstr ""
+
+#. module: lunch
+#: code:addons/lunch/models/lunch.py:162
+#, python-format
+msgid "Only your lunch manager processes the orders."
+msgstr ""
+
+#. module: lunch
+#: code:addons/lunch/models/lunch.py:182
+#, python-format
+msgid "Only your lunch manager sets the orders as received."
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -641,6 +631,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_price
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_price
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Price"
 msgstr "価格"
 
@@ -703,7 +694,6 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Received"
 msgstr "受信済"
@@ -789,6 +779,13 @@ msgid "The date of your order is in the past."
 msgstr ""
 
 #. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action
+msgid ""
+"There is no previous order recorded. Click on \"My Lunch\" and then create a "
+"new lunch order."
+msgstr ""
+
+#. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/xml/lunch.xml:4
 #, python-format
@@ -838,11 +835,6 @@ msgid "User"
 msgstr "ユーザ"
 
 #. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
-msgid "Users"
-msgstr "ユーザ"
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_supplier_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_supplier
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_supplier
@@ -876,7 +868,7 @@ msgid "Your Lunch Account"
 msgstr "あなたのアカウント"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.lunch_order_action_tree
+#: model:ir.actions.act_window,name:lunch.lunch_order_line_action
 msgid "Your Orders"
 msgstr ""
 
@@ -913,11 +905,6 @@ msgstr "従業員の支払い"
 #: model:ir.model,name:lunch.model_lunch_order_line
 msgid "lunch order line"
 msgstr ""
-
-#. module: lunch
-#: model:ir.ui.view,arch_db:lunch.lunch_order_view_search
-msgid "lunch orders"
-msgstr "注文内容"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
@@ -964,3 +951,23 @@ msgstr ""
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "to announce that the order isn't available"
 msgstr ""
+
+#~ msgid ""
+#~ "A lunch order is defined by its user, date and order lines.\n"
+#~ "                Each order line corresponds to a product, an additional "
+#~ "note and a price.\n"
+#~ "                Before selecting your order lines, don't forget to read "
+#~ "the warnings displayed in the reddish area."
+#~ msgstr ""
+#~ "ランチの注文は個人名、日付、注文ラインに紐付いています。\n"
+#~ "各注文ラインは商品、追加項目、価格に対応しています。\n"
+#~ "注文ラインを選択する前に、赤いエリアの注意事項をよく読んでください。"
+
+#~ msgid "Click to create a lunch order."
+#~ msgstr "クリックして 「ランチ注文」 を作成"
+
+#~ msgid "Users"
+#~ msgstr "ユーザ"
+
+#~ msgid "lunch orders"
+#~ msgstr "注文内容"

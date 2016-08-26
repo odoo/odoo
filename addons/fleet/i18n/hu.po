@@ -1,4 +1,3 @@
-# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fleet
@@ -7,41 +6,29 @@
 # krnkris, 2015
 # krnkris, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
-# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * fleet
-#
-# Translators:
-# Oregional <geza.nagy@oregional.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
-"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-04-12 10:04+0000\n"
+"Last-Translator: krnkris\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:367
+#: code:addons/fleet/fleet.py:369
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s flottához hozzáadva!"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:643
+#: code:addons/fleet/fleet.py:645
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s szerződés(eket) szükséges megújítani és/vagy lezárni!"
@@ -93,6 +80,12 @@ msgid "Activation Cost"
 msgstr "Költség aktiválás"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_active
+msgid "Active"
+msgstr "Aktív"
+
+#. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_form
 msgid "Additional Details"
@@ -124,6 +117,12 @@ msgstr "Váltóáram generátor csere"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_amount
 msgid "Amount"
 msgstr "Összeg"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
+msgid "Archived"
+msgstr "Archivált"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_9
@@ -249,6 +248,11 @@ msgstr ""
 "szervizelésekre vagy mindkettőre"
 
 #. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
+msgid "Click to add a new tag."
+msgstr "Kattintson egy új címke hozzáadásához."
+
+#. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
 msgid "Click to create a new contract."
 msgstr "Kattintson egy új szerződés létrehozásához."
@@ -305,13 +309,8 @@ msgstr "Szín"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_color
-#, fuzzy
 msgid "Color Index"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Szín meghatározó\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Szín jegyzék"
+msgstr "Szín meghatározó"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_color
@@ -514,7 +513,7 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2976
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2944
 msgid "Current state of the vehicle"
 msgstr "Ennek a gépjárműnek a jelenlegi állapota"
 
@@ -582,13 +581,8 @@ msgstr "Dízel"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Név megjelenítése\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
@@ -611,7 +605,7 @@ msgid "Driver of the vehicle"
 msgstr "A gépjármú vezetője"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:384
+#: code:addons/fleet/fleet.py:386
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Autóvezető: ettől '%s' eddig '%s'"
@@ -860,18 +854,13 @@ msgstr "Hibrid"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2925
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2892
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Azonosító ID"
+msgstr "ID"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -955,13 +944,8 @@ msgstr "Kilométer"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer___last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state___last_update
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utolsó frissítés dátuma\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítve ekkor"
+msgstr "Utolsó frissítés dátuma"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer
@@ -981,13 +965,8 @@ msgstr "Utolsó kilométeróra állás"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_write_uid
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utoljára frissítve, által\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítette"
+msgstr "Utoljára frissítve, által"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_contract_state_write_date
@@ -1002,13 +981,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_write_date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utoljára frissítve\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítve "
+msgstr "Utoljára frissítve"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
@@ -1021,7 +995,7 @@ msgid "License Plate"
 msgstr "Rendszám tábla"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:391
+#: code:addons/fleet/fleet.py:393
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Rendszám tábla: ettől '%s' eddig '%s'"
@@ -1125,16 +1099,11 @@ msgid "Miles"
 msgstr "Mérföld"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2958
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2925
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
-#, fuzzy
 msgid "Model"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Model\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Modell"
+msgstr "Model"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_form
@@ -1159,12 +1128,12 @@ msgid "Model of a vehicle"
 msgstr "Egy gépjármű modellje"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2958
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2925
 msgid "Model of the vehicle"
 msgstr "Egy gépjármű modellje"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:380
+#: code:addons/fleet/fleet.py:382
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Modell: ettől '%s' eddig '%s'"
@@ -1208,27 +1177,18 @@ msgid "No"
 msgstr "Nem"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:379 code:addons/fleet/fleet.py:383
-#: code:addons/fleet/fleet.py:387 code:addons/fleet/fleet.py:390
-#, fuzzy, python-format
+#: code:addons/fleet/fleet.py:381 code:addons/fleet/fleet.py:385
+#: code:addons/fleet/fleet.py:389 code:addons/fleet/fleet.py:392
+#, python-format
 msgid "None"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nem\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Egyik sem"
+msgstr "Nem"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_notes
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_notes
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_form
-#, fuzzy
 msgid "Notes"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Jegyzetek\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjegyzések"
+msgstr "Jegyzetek"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
@@ -1429,13 +1389,8 @@ msgstr "Gépjármű teljesítménye kW-ban"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_tree
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_form
-#, fuzzy
 msgid "Price"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Érték\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Ár"
+msgstr "Érték"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
@@ -1474,7 +1429,7 @@ msgid "Refueling Details"
 msgstr "Tankolás részletei"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:714
+#: code:addons/fleet/fleet.py:716
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1631,7 +1586,7 @@ msgid "Starter Replacement"
 msgstr "Önindító csere"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2976
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2944
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Állapot"
@@ -1642,7 +1597,7 @@ msgid "State name already exists"
 msgstr "Állapot név már létezik"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:388
+#: code:addons/fleet/fleet.py:390
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Állapot: ettől '%s' eddig '%s'"
@@ -1810,7 +1765,7 @@ msgstr "Gépjármű motorjára írt egyedi motorszám (VIN/SN szám)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2991
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2959
 msgid "Unit"
 msgstr "Egység"
 
@@ -1879,6 +1834,13 @@ msgid "Vehicle Status"
 msgstr "Gépjármű állapot"
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_form
+msgid "Vehicle Tags"
+msgstr "Gépjármű rendszámok"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_vehicle_id
@@ -1901,6 +1863,7 @@ msgstr "Járművek"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vehicles Contracts"
 msgstr "Gépjármű szerződések"
 
@@ -1942,24 +1905,14 @@ msgstr "Gépjárművek kilóméter órái"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_insurer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_vendor_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_vendor_id
-#, fuzzy
 msgid "Vendor"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kereskedő\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Beszállító"
+msgstr "Kereskedő"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_vendors
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
-#, fuzzy
 msgid "Vendors"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kereskedők\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Beszállítók"
+msgstr "Kereskedők"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_days_left
@@ -2000,6 +1953,7 @@ msgstr "Ide írja a szerződéssel kapcsolatos összes egyéb információt"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
 msgid "Write here all supplementary information relative to this contract"
 msgstr ""
+"Ide írja a szerződéssel kapcsolatos összes egyéb kiegészítő információt"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_form
@@ -2172,11 +2126,22 @@ msgstr "mutassa a gépjárműre vonatkozó szolgáltatások naplóit"
 #~ msgstr ""
 #~ "Ide írja a szerződéssel kapcsolatos összes egyéb kiegészítő információt"
 
-#~ msgid "Active"
-#~ msgstr "Aktív"
+#~ msgid "Car value"
+#~ msgstr "Gépjármű értéke"
 
-#~ msgid "Archived"
-#~ msgstr "Archivált"
+#~ msgid ""
+#~ "Costs paid at regular intervals, depending on the cost frequency.If the "
+#~ "cost frequency is set to unique, the cost will be logged at the start date"
+#~ msgstr ""
+#~ "Megadott időközönként fizetett költségek, a költség gyakoriságától függ. "
+#~ "Ha a költség gyakoriságát egyedire állította, akkor a költséget az "
+#~ "indulási dátumra naplózza"
 
-#~ msgid "Click to add a new tag."
-#~ msgstr "Kattintson egy új címke hozzáadásához."
+#~ msgid "License plate"
+#~ msgstr "Rendszám tábla"
+
+#~ msgid "License plate number of the vehicle (i = plate number for a car)"
+#~ msgstr "Gépjármű rendszám táblája (i = egy autó rendszám táblája)"
+
+#~ msgid "Price per liter"
+#~ msgstr "Literenkénti ár"

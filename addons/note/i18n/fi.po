@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-06-21 06:39+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -34,6 +34,11 @@ msgstr "Arkisto"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Muistilaput ryhmittäin"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -132,7 +137,7 @@ msgid "New"
 msgstr "Uusi"
 
 #. module: note
-#: code:addons/note/note.py:165
+#: code:addons/note/models/note.py:128
 #, python-format
 msgid "New Note"
 msgstr ""
@@ -180,8 +185,8 @@ msgstr "Omistaja"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Muistiinpanon vaiheen omistaja."
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -233,13 +238,15 @@ msgid "Tag name already exists !"
 msgstr "Tunnisteen nimi on jo olemassa!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Tunnisteet"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Tällä viikolla"
@@ -325,6 +332,9 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Lukemattomien viestien määrä"
+
+#~ msgid "Owner of the note stage."
+#~ msgstr "Muistiinpanon vaiheen omistaja."
 
 #~ msgid "Unread Messages"
 #~ msgstr "Lukemattomia viestejä"

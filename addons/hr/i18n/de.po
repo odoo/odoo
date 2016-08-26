@@ -10,26 +10,22 @@
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Tina Rittmüller <tr@ife.de>, 2015
 # Wolfgang Taferner, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-08 10:21+0000\n"
-"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-09 16:21+0000\n"
+"Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/hr.py:120
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -129,6 +125,7 @@ msgid "A good job in a young and dynamic team"
 msgstr "Ein guter Job in einem jungen, dynamischen Team"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "Aktiv"
@@ -139,6 +136,7 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Bedarfsanalysen, erstellen von Pflichtenheften und Angeboten"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Archiviert"
@@ -236,11 +234,6 @@ msgid "Click to create a department."
 msgstr "Klicken Sie hier, um eine neue Abteilung anzulegen."
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid "Click to define a new department."
-msgstr "Klicken Sie hier, um eine neue Abteilung zu definieren."
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
 msgstr "Klicken Sie hier um neue Arbeitsstellen zu definieren."
@@ -311,11 +304,6 @@ msgid "Contributions to open source projects"
 msgstr "Beiträge zu Open Source -Projekten"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.view_department_form_installer
-msgid "Create Your Departments"
-msgstr "Erzeugen Sie Ihre Abteilungen"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -359,7 +347,6 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr "Allgemein funktionale Schulungen zu Odoo liefern"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -457,13 +444,13 @@ msgid "Employees Tags"
 msgstr "Mitarbeiter-Tags"
 
 #. module: hr
-#: code:addons/hr/hr.py:294 constraint:hr.department:0
+#: code:addons/hr/models/hr.py:264
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Fehler ! Sie können keine rekursiven Abteilungen anlegen."
 
 #. module: hr
-#: code:addons/hr/hr.py:264 constraint:hr.employee:0
+#: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Fehler ! Sie können keine rekursiven Mitarbeiterkategorien erstellen."
@@ -594,6 +581,11 @@ msgstr "Einstellungen"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Home Address"
 msgstr "Privatanschrift"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "Hr Department"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -849,7 +841,6 @@ msgid "Must have ..."
 msgstr "Must have ..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
@@ -1225,6 +1216,11 @@ msgid "Unread Messages"
 msgstr "Ungelesene Mitteilungen"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee_login
+msgid "Used to log into the system"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr "Benutzer"
@@ -1480,13 +1476,8 @@ msgstr "Sie haben eine hohe Affinität zum Produkt"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
-#, fuzzy
 msgid "You have good knowledge in accounting"
-msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Sie besitzen gutes Wissen in der Buchführung\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Sie haben sehr gutes Wissen in der Buchhaltung"
+msgstr "Sie besitzen gutes Wissen in der Buchführung"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1590,18 +1581,6 @@ msgid "You will work closely with all trainees"
 msgstr "Sie werden mit allen Trainees eng zusammen arbeiten."
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents\n"
-"                related to employees by departments: expenses and "
-"timesheets,\n"
-"                leaves and holidays, recruitments, etc."
-msgstr ""
-"Ihre Abteilungsstruktur wird genutzt bei der Verwaltung aller \n"
-"Dokumente mit Bezug zu Mitarbeitern nach Abteilung: Auslagen,\n"
-"Zeitnachweise und Urlaub, Einstellungen, u.s.w."
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "Abteilung"
@@ -1613,6 +1592,12 @@ msgstr "z.B. Teilzeit"
 
 #~ msgid "Action Needed"
 #~ msgstr "Aktion notwendig"
+
+#~ msgid "Click to define a new department."
+#~ msgstr "Klicken Sie hier, um eine neue Abteilung zu definieren."
+
+#~ msgid "Create Your Departments"
+#~ msgstr "Erzeugen Sie Ihre Abteilungen"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum der letzten Nachricht."
@@ -1661,3 +1646,36 @@ msgstr "z.B. Teilzeit"
 
 #~ msgid "Update Date"
 #~ msgstr "Datum aktualisieren"
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as                     "
+#~ "coordinate and supervise small distributed development teams for specific "
+#~ "projects. You will become a technical                 expert of the "
+#~ "product."
+#~ msgstr ""
+#~ "Sie sind verantwortlich für die eigenverantwortliche Entwicklung und "
+#~ "Verbesserung von Applikationen, in dem Sie kleine, verteilte "
+#~ "Entwicklungsteams für spezifische Projekte koordinieren und überprüfen. "
+#~ "Sie werden ein technischer Experte für das Produkt."
+
+#~ msgid ""
+#~ "You will be responsible for developing and improving applications, such "
+#~ "as the You will work autonomously as well as coordinate and supervise "
+#~ "small distributed development teams for specific projects. You will "
+#~ "become a technical expert of the product."
+#~ msgstr ""
+#~ "Sie sind verantwortlich für die Entwicklung und die Verbesserung von "
+#~ "Anwendungen, sowie für die Koordination und Überprüfung kleiner, "
+#~ "verteilter Entwicklungsteams für spezifische Projekte. Sie sollen sich "
+#~ "als ein technischer Experte für unsere Produkte repräsentieren."
+
+#~ msgid ""
+#~ "Your departments structure is used to manage all documents\n"
+#~ "                related to employees by departments: expenses and "
+#~ "timesheets,\n"
+#~ "                leaves and holidays, recruitments, etc."
+#~ msgstr ""
+#~ "Ihre Abteilungsstruktur wird genutzt bei der Verwaltung aller \n"
+#~ "Dokumente mit Bezug zu Mitarbeitern nach Abteilung: Auslagen,\n"
+#~ "Zeitnachweise und Urlaub, Einstellungen, u.s.w."

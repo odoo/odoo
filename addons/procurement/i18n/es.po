@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
@@ -65,6 +65,11 @@ msgstr "Activo"
 #: selection:procurement.group,move_type:0
 msgid "All at once"
 msgstr "Todo junto"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Archivado"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -148,9 +153,8 @@ msgstr "Creado en"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Método entrega"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -287,7 +291,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/procurement.py:197
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ninguna regla casa con este abastecimiento"
@@ -524,16 +528,12 @@ msgstr "Muy urgente"
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
-#, fuzzy
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
 "                creates the necessary operations to fulfill the need: "
 "purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
-"Cuando la orden de compra se confirma , automáticamente\n"
-"crea las operaciones necesarias para fullfil la necesidad de: compra\n"
-"propuesta de pedido, orden de producción, etc."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
@@ -565,6 +565,9 @@ msgstr "Por ejemplo, SO005"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
+
+#~ msgid "Delivery Method"
+#~ msgstr "Método entrega"
 
 #~ msgid "Followers"
 #~ msgstr "Seguidores"
@@ -613,3 +616,13 @@ msgstr "Por ejemplo, SO005"
 
 #~ msgid "Website communication history"
 #~ msgstr "Historial de comunicaciones del sitio web"
+
+#~ msgid ""
+#~ "When the procurement order is confirmed, it automatically\n"
+#~ "                creates the necessary operations to fullfil the need: "
+#~ "purchase\n"
+#~ "                order proposition, manufacturing order, etc."
+#~ msgstr ""
+#~ "Cuando la orden de compra se confirma , automáticamente\n"
+#~ "crea las operaciones necesarias para fullfil la necesidad de: compra\n"
+#~ "propuesta de pedido, orden de producción, etc."

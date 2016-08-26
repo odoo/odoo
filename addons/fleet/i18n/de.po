@@ -1,4 +1,3 @@
-# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fleet
@@ -10,43 +9,28 @@
 # darenkster <renkosp@gmail.com>, 2015
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Wolfgang Taferner, 2015-2016
-# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * fleet
-#
-# Translators:
-# Manu Miu <miu.manu@gmx.de>, 2015
-# Ralf Hilgenstock <rh@dialoge.info>, 2016
-# darenkster <renkosp@gmail.com>, 2015
-# Rudolf Schnapka <rs@techno-flex.de>, 2016
-# Wolfgang Taferner, 2015-2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-13 20:40+0000\n"
-"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-08-08 12:15+0000\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:367
+#: code:addons/fleet/fleet.py:369
 #, python-format
 msgid "%s %s has been added to the fleet!"
 msgstr "%s %s wurde zur Flotte hinzugefügt!"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:643
+#: code:addons/fleet/fleet.py:645
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s Verträge müssen erneuert oder beendet werden!"
@@ -98,6 +82,12 @@ msgid "Activation Cost"
 msgstr "Einmalige Gebühr"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_active
+msgid "Active"
+msgstr ""
+
+#. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_form
 msgid "Additional Details"
@@ -129,6 +119,12 @@ msgstr "Lichtmaschine (Ersatz)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_amount
 msgid "Amount"
 msgstr "Betrag"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
+msgid "Archived"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_9
@@ -252,6 +248,11 @@ msgid "Choose wheter the service refer to contracts, vehicle services or both"
 msgstr ""
 "Wählen Sie aus, ob sich dieser Wartungsservice auf Vertragsservice, "
 "Fahrzeugservices oder beides bezieht"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
@@ -514,7 +515,7 @@ msgid "Created on"
 msgstr "Angelegt am"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2976
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id_2944
 msgid "Current state of the vehicle"
 msgstr "Aktueller Fahrzeugzustand"
 
@@ -604,7 +605,7 @@ msgid "Driver of the vehicle"
 msgstr "Fahrer des Fahrzeugs"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:384
+#: code:addons/fleet/fleet.py:386
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Fahrer: von '%s' bis '%s'"
@@ -620,15 +621,10 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
-#, fuzzy
 msgid "Each service can used in contracts, as a standalone service or both."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Jede Dienstleistung kann in Verträgen, eigenständig oder kombiniert "
-"eingesetzt werden.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Jeder Dienst kann in Verträgen, Eigenständig sowie kompiniert eingesetzt "
-"werden."
+"eingesetzt werden."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_search
@@ -860,7 +856,7 @@ msgstr "Hybrid-Kraftstoff"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2925
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_2892
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
@@ -1001,7 +997,7 @@ msgid "License Plate"
 msgstr "Kennzeichen"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:391
+#: code:addons/fleet/fleet.py:393
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Nummernschild: von '%s' bis '%s'"
@@ -1105,7 +1101,7 @@ msgid "Miles"
 msgstr "Meilen"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2958
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_2925
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_search
 msgid "Model"
@@ -1134,12 +1130,12 @@ msgid "Model of a vehicle"
 msgstr "Fahrzeugmodell"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2958
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id_2925
 msgid "Model of the vehicle"
 msgstr "Fahrzeugmarke"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:380
+#: code:addons/fleet/fleet.py:382
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Modell: von '%s' bis '%s'"
@@ -1183,8 +1179,8 @@ msgid "No"
 msgstr "Nein"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:379 code:addons/fleet/fleet.py:383
-#: code:addons/fleet/fleet.py:387 code:addons/fleet/fleet.py:390
+#: code:addons/fleet/fleet.py:381 code:addons/fleet/fleet.py:385
+#: code:addons/fleet/fleet.py:389 code:addons/fleet/fleet.py:392
 #, python-format
 msgid "None"
 msgstr "Keine"
@@ -1272,69 +1268,46 @@ msgstr "Kilometerstand zum Zeitpunkt des Protokolls"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
-#, fuzzy
 msgid ""
 "Odoo helps you keeping track of all the services done\n"
 "                on your vehicle. Services can be of many type: occasional\n"
 "                repair, fixed maintenance, etc."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Odoo hilft Ihnen beim Überwachen der an Ihrem Fahrzeug\n"
 "erbrachten Dienstleistungen. Diese können vielfältiger Natur sein:\n"
-"Gelegentliche Reparatur, Unterhalt, usw.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Odoo hilft Ihnen beim Überwachen der an Ihrem Fahrzeug\n"
-"erbrachten Diensten. Diese können vielfältiger Natur sein:\n"
-"Gelegentliche Reparatur, Regelwartung, usw."
+"Gelegentliche Reparatur, Unterhalt, usw."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
-#, fuzzy
 msgid ""
 "Odoo helps you managing the costs for your different\n"
 "                vehicles. Costs are created automatically from services,\n"
 "                contracts (fixed or recurring) and fuel logs."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Odoo hilft Ihnen die Kosten verschiedener Fahrzeuge zu überwachen.\n"
 "Kosten werden automatisch aus Dienstleistungen, Verträgen (fix oder "
-"wiederkehrend) und Tankbelegen erstellt.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Odoo hilft Ihnen die Kosten verschiedener Fahrzeuge zu überwachen.\n"
-"Kosten werden automatisch aus Diensten, Verträgen (Fix od. Wiederkehrend) "
-"und Tankbelegen, verursacht"
+"wiederkehrend) und Tankbelegen erstellt."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
-#, fuzzy
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears "
 "here."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Odoo hilft Ihnen die Kosten Ihrer verschiedenen Fahrzeuge zu überwachen.\n"
 "Kosten werden im Allgemeinen durch Dienstleistungen und Verträge verursacht "
-"und erscheinen hier.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Odoo hilft Ihnen die Kosten Ihrer verschiedenen Fahrzeuge zu überwachen.\n"
-"Kosten werden im Allgemeinen durch Dienste und Verträge verursacht\n"
 "und erscheinen hier."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
-#, fuzzy
 msgid ""
 "Odoo will warn you when services or contract have to be\n"
 "                renewed."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Odoo macht Sie darauf aufmerksam, wenn Dienstleistungen oder Verträge "
 "erneuert\n"
-"werden müssen.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Odoo macht Sie darauf aufmerksam, wenn Verträge verlängert\n"
 "werden müssen."
 
 #. module: fleet
@@ -1459,7 +1432,7 @@ msgid "Refueling Details"
 msgstr "Tankübersicht"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:714
+#: code:addons/fleet/fleet.py:716
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
 #, python-format
@@ -1616,7 +1589,7 @@ msgid "Starter Replacement"
 msgstr "Anlasser (Ersatz)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2976
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2944
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_tree
 msgid "State"
 msgstr "Bundesland"
@@ -1627,7 +1600,7 @@ msgid "State name already exists"
 msgstr "Statusbezeichnung existiert bereits"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:388
+#: code:addons/fleet/fleet.py:390
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Status: von '%s' bis '%s'"
@@ -1678,17 +1651,12 @@ msgstr "Bedingungen und Konditionen"
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
-#, fuzzy
 msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Dank der verschiedenen Filter kann Odoo die effektiven Kosten\n"
-"selektiv drucken und diese nach Art und Fahrzeug sortieren.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dank der verschiedenen Filter kann Odoo die effektiven Kosten\n"
-"selektiv drucken, diese nach Art und Fahrzeug sortieren."
+"selektiv drucken und diese nach Art und Fahrzeug sortieren."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1800,7 +1768,7 @@ msgstr "Fahrgestellnummer"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2991
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2959
 msgid "Unit"
 msgstr "Einheit"
 
@@ -1869,6 +1837,13 @@ msgid "Vehicle Status"
 msgstr "Fahrzeugzustand"
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_form
+msgid "Vehicle Tags"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_vehicle_id
@@ -1891,6 +1866,7 @@ msgstr "Fahrzeuge"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vehicles Contracts"
 msgstr "Fahrzeugverträge"
 
@@ -2021,21 +1997,15 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
-#, fuzzy
 msgid ""
 "You will be able to manage your fleet by keeping track of the\n"
 "                contracts, services, fixed and recurring costs, odometers "
 "and\n"
 "                fuel logs associated to each vehicle."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Sie können Ihre Flotte verwalten, in dem Sie die Verträge, \n"
 "Dienstleistungen, fixe und regelmäßige Kosten, Zähler und \n"
-"Tankbelege zum jeweiligen Fahrzeug nachverfolgen.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Sie können Ihre Flotte verwalten, in dem Sie die Verträge, Dienste,\n"
-"fixe und regelmäßige Kosten, Zähler und Tankbelege zum jeweiligen\n"
-"Fahrzeug einpflegen und kontrollieren."
+"Tankbelege zum jeweiligen Fahrzeug nachverfolgen."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_form
@@ -2153,3 +2123,6 @@ msgstr "Anzeige der Wartungsprotokolle"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Zähler der ungelesenen Nachrichten"
+
+#~ msgid "Write here all supplementary informations relative to this contract"
+#~ msgstr "Schreiben Sie hier alle erforderlichen Zusatzinformationen auf."

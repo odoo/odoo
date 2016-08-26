@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:13+0000\n"
 "PO-Revision-Date: 2016-02-20 10:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -978,6 +978,7 @@ msgid "Activated by default when subscribing."
 msgstr "Ativado por padrão na inscrição"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_active
 #: model:ir.model.fields,field_description:crm.field_crm_lead_active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
@@ -986,10 +987,14 @@ msgstr "Ativo"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_action
+#: model:ir.actions.act_window,name:crm.crm_activity_report_action_tree
+#: model:ir.model.fields,field_description:crm.field_res_partner_activities_count
+#: model:ir.model.fields,field_description:crm.field_res_users_activities_count
 #: model:ir.ui.menu,name:crm.crm_activity_menu
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_form
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_tree
+#: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Activities"
 msgstr "Atividades"
 
@@ -1089,7 +1094,7 @@ msgstr ""
 "mesclar contatos com e-mails diferentes ."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:865
+#: code:addons/crm/crm_lead.py:863
 #, python-format
 msgid ""
 "All email incoming to %(link)s  will automatically create new opportunity.\n"
@@ -1233,11 +1238,6 @@ msgid "Better visibility on team activities"
 msgstr "Melhor visibilidade nas atividades da equipa"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0
-msgid "Blocked"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Boost your online sales with sleek product pages."
 msgstr "Aumente as suas vendas online com páginas de produtos modernas."
@@ -1360,7 +1360,7 @@ msgstr ""
 "Formação, Serviço"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:870
+#: code:addons/crm/crm_lead.py:868
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr "Clique para adicionar uma nova oportunidade"
@@ -1410,8 +1410,8 @@ msgstr "Data de fecho"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
-msgid "Closed"
-msgstr "Fechado"
+msgid "Closed Date"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:90
@@ -1669,7 +1669,7 @@ msgid "Current Line"
 msgstr "Linha Atual"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:945
+#: code:addons/crm/crm_lead.py:943
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1684,7 +1684,7 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:947
+#: code:addons/crm/crm_lead.py:945
 #, python-format
 msgid "Customer Email"
 msgstr "E-mail do cliente"
@@ -2123,7 +2123,7 @@ msgid "Force assignation"
 msgstr "Forçar Atribuição"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:504
+#: code:addons/crm/crm_lead.py:502
 #, python-format
 msgid "From %s : %s"
 msgstr "De %s: %s"
@@ -2464,9 +2464,10 @@ msgid "Last Updated on"
 msgstr "Última Actualização em"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:780 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:778 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
@@ -2747,7 +2748,7 @@ msgid "Medium"
 msgstr "Médio"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1010
+#: code:addons/crm/crm_lead.py:1008
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Reunião agendada no '%s 'Assunto: %s <br> Duração: %s hora ( s)"
@@ -2824,25 +2825,25 @@ msgid "Merge with existing opportunities"
 msgstr "Fundir com diferentes oportunidades"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:489
+#: code:addons/crm/crm_lead.py:487
 #, python-format
 msgid "Merged lead"
 msgstr "Prospecto fundido"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:483
+#: code:addons/crm/crm_lead.py:481
 #, python-format
 msgid "Merged leads"
 msgstr "Prospectos fundidos"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:485
+#: code:addons/crm/crm_lead.py:483
 #, python-format
 msgid "Merged opportunities"
 msgstr "Oportunidades intercaladas"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:489
+#: code:addons/crm/crm_lead.py:487
 #, python-format
 msgid "Merged opportunity"
 msgstr "Oportunidade Fundida"
@@ -2921,6 +2922,11 @@ msgid "Month"
 msgstr "Mês"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Motivation letter from the management"
 msgstr "Carta motivacional da gerência"
@@ -2962,8 +2968,14 @@ msgstr "Nova Oportunidade"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
+#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action
 msgid "Next Action"
 msgstr "Próxima ação"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action_date
+msgid "Next Action Date"
+msgstr "Data da Próxima Ação"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -2995,7 +3007,17 @@ msgid "Next activity"
 msgstr "Próxima Atividade"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:966
+#: selection:crm.lead,kanban_state:0
+msgid "Next activity is planned"
+msgstr ""
+
+#. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "Next activity late"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:964
 #, python-format
 msgid "No Subject"
 msgstr "Sem Assunto"
@@ -3007,14 +3029,18 @@ msgid "No activity"
 msgstr "Próxima Atividade"
 
 #. module: crm
+#: selection:crm.lead,kanban_state:0
+msgid "No next activity planned"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
 msgstr "Sem vendedor"
 
 #. module: crm
-#: selection:crm.lead,kanban_state:0 selection:crm.lead,priority:0
-#: selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Normal"
 msgstr "Normal"
 
@@ -3028,6 +3054,11 @@ msgstr ""
 #, fuzzy
 msgid "Note"
 msgstr "Notas"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_payment_next_action
+msgid "Note regarding the next action."
+msgstr "Nota em relação à próxima ação."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3238,7 +3269,7 @@ msgid "Opportunities that are assigned to me"
 msgstr "Oportunidades atribuídas a mim"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:759 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:757 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event_opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_name
@@ -3471,7 +3502,7 @@ msgid "Planner"
 msgstr "Planeador"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:574
+#: code:addons/crm/crm_lead.py:572
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -3534,6 +3565,7 @@ msgid "Priority Management Explanation"
 msgstr "Explicação de Gestão de Prioridades"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_probability
 msgid "Probability"
@@ -3574,11 +3606,6 @@ msgstr "Qualificado"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_priority
 msgid "Rating"
 msgstr "Classificação"
-
-#. module: crm
-#: selection:crm.lead,kanban_state:0
-msgid "Ready for next stage"
-msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3742,6 +3769,11 @@ msgstr "Actividades Atrasadas"
 #, fuzzy
 msgid "Schedule Next Activity"
 msgstr "Próxima Atividade"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
+msgid "Schedule an Activity"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4040,6 +4072,7 @@ msgstr "Gestão de Subscrições"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
+#: model:ir.model.fields,field_description:crm.field_crm_activity_report_subject
 msgid "Summary"
 msgstr ""
 
@@ -4104,6 +4137,11 @@ msgstr "Templates de emails"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
 msgstr "Templates de orçamentos (use Propostas Online do Odoo para isto)"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_users_payment_next_action_date
+msgid "The date before which no action should be taken."
+msgstr "A data antes da qual nenhuma ação deve ser realizada."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -4291,7 +4329,7 @@ msgstr ""
 "mostrar."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1164
+#: code:addons/crm/crm_lead.py:1162
 #, python-format
 msgid "This target does not exist."
 msgstr "Este alvo não existe."
@@ -4373,6 +4411,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Mensagens por ler"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
+msgid "Unreconciled aml ids"
+msgstr "Unreconciled aml ids"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
@@ -4520,6 +4563,11 @@ msgstr "Muito Elevada"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
 msgid "VoIP integration"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_sale_config_settings
+msgid "Voip integration"
 msgstr ""
 
 #. module: crm
@@ -4891,7 +4939,7 @@ msgid "e.g. Product Pricing"
 msgstr "ex. Preço do Produto"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:859
 #, python-format
 msgid "opportunities"
 msgstr "oportunidades"
@@ -4972,7 +5020,7 @@ msgstr ""
 "                                 nome (ex. sales@yourcompany.com)"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "unknown"
 msgstr "Desconhecido"
@@ -5005,8 +5053,19 @@ msgstr "com o seu trabalho acima"
 #~ msgid "Both"
 #~ msgstr "Ambos"
 
+#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
+#~ msgstr ""
+#~ "Clique para estabelecer uma nova etapa no seu canal de prospectos/"
+#~ "oportunidades."
+
+#~ msgid "Closed"
+#~ msgstr "Fechado"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
+
+#~ msgid "Deduplicate Contact"
+#~ msgstr "Remover Contacto"
 
 #~ msgid "Done"
 #~ msgstr "Concluído"
@@ -5035,6 +5094,16 @@ msgstr "com o seu trabalho acima"
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 
+#~ msgid ""
+#~ "If you followed the preceeding steps, you already setup\n"
+#~ "                        the foundations to a strong process leading to\n"
+#~ "                        continuous improvements of your sales teams."
+#~ msgstr ""
+#~ "Se tiver seguido os passos precedentes, já estabeleceu \n"
+#~ "                        os alicerces de um processo forte conduzindo\n"
+#~ "                        a melhoramentos contínuos das suas equipas de "
+#~ "vendas."
+
 #~ msgid "Incoming"
 #~ msgstr "Entrada"
 
@@ -5052,6 +5121,9 @@ msgstr "com o seu trabalho acima"
 #~ msgid "Is Follower"
 #~ msgstr "É um seguidor"
 
+#~ msgid "Last Activity"
+#~ msgstr "Última Atividade"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Data da Última Mensagem"
 
@@ -5062,6 +5134,9 @@ msgstr "com o seu trabalho acima"
 #~ "Ligação entre as etapas e as equipas de vendas. Ao definir, a etapa atual "
 #~ "só se aplica à equipa de vendas selecionada."
 
+#~ msgid "Mark As Lost"
+#~ msgstr "Marcar como Perdido"
+
 #~ msgid "Messages"
 #~ msgstr "Mensagens"
 
@@ -5071,9 +5146,6 @@ msgstr "com o seu trabalho acima"
 #~ msgid "Negotiation"
 #~ msgstr "Negociação"
 
-#~ msgid "Next Action Date"
-#~ msgstr "Data da Próxima Ação"
-
 #~ msgid "Next Activity 1"
 #~ msgstr "Próxima Atividade 1"
 
@@ -5082,9 +5154,6 @@ msgstr "com o seu trabalho acima"
 
 #~ msgid "Next Activity 3"
 #~ msgstr "Próxima Atividade 3"
-
-#~ msgid "Note regarding the next action."
-#~ msgstr "Nota em relação à próxima ação."
 
 #~ msgid "Number of Actions"
 #~ msgstr "Número de Ações"
@@ -5098,8 +5167,27 @@ msgstr "com o seu trabalho acima"
 #~ msgid "Open Sale Menu"
 #~ msgstr "Abrir menu de vendas"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Política para enviar uma mensagem sobre o documento usando o "
+#~ "MailGateway .\n"
+#~ "- Todos : todos podem postar\n"
+#~ "- Parceiros: parceiros apenas autenticados\n"
+#~ "- Seguidores: apenas os seguidores do documento relacionado\n"
+
 #~ msgid "Qualification"
 #~ msgstr "Qualificação"
+
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "Lembrete de Dica: ${object.id} de ${object.partner_id != False and object."
+#~ "partner_id.name or object.contact_name}"
 
 #~ msgid "Sales Tags"
 #~ msgstr "Etiquetas de Venda"
@@ -5107,8 +5195,22 @@ msgstr "com o seu trabalho acima"
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Selecionar etapas da Equipa de Vendas"
 
-#~ msgid "The date before which no action should be taken."
-#~ msgstr "A data antes da qual nenhuma ação deve ser realizada."
+#~ msgid ""
+#~ "Show all opportunities for which the next action date is today or before"
+#~ msgstr ""
+#~ "Mostrar todas as oportunidades para as quais a próxima data de ação é "
+#~ "hoje ou antes"
+
+#~ msgid ""
+#~ "Stages will allow salespersons to easily track how a specific\n"
+#~ "                lead or opportunity is positioned in the sales cycle."
+#~ msgstr ""
+#~ "As etapas permitem ao pessoal de vendas acompanharem facilmente como um\n"
+#~ "                prospecto ou oportunidade específico(a) é posicionado(a) "
+#~ "no ciclo de vendas."
+
+#~ msgid "Teams"
+#~ msgstr "Equipas"
 
 #~ msgid ""
 #~ "This field is used to distinguish stages related to Leads from stages "
@@ -5136,11 +5238,15 @@ msgstr "com o seu trabalho acima"
 #~ "Esta é a origem do link Ex: Search Engine, um outro domínio ou nome de "
 #~ "lista de e-mail"
 
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr ""
+#~ "Esta etapa aparecerá dobrada no kanban quando não houver tarefas para "
+#~ "mostrar."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens por Ler"
-
-#~ msgid "Unreconciled aml ids"
-#~ msgstr "Unreconciled aml ids"
 
 #~ msgid "Website Messages"
 #~ msgstr "Mensagens do Website"
@@ -5148,8 +5254,23 @@ msgstr "com o seu trabalho acima"
 #~ msgid "Website communication history"
 #~ msgstr "Histórico de Comunicação do Website"
 
+#~ msgid ""
+#~ "What are the main KPIs you need to track for your the sales actities?"
+#~ msgstr ""
+#~ "Quais são as principais KPIs que precisa para rastrear as suas atividades "
+#~ "de vendas?"
+
 #~ msgid "Your Customers"
 #~ msgstr "Seus Clientes"
+
+#~ msgid "Your Customizations"
+#~ msgstr "Suas Customizações"
+
+#~ msgid "Your Prices"
+#~ msgstr "Seus Preços"
+
+#~ msgid "Your Products"
+#~ msgstr "Seus Produtos"
 
 #~ msgid "Your Proposal"
 #~ msgstr "Sua Proposta"

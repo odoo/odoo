@@ -1,4 +1,3 @@
-# #-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
@@ -6,41 +5,25 @@
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-# #-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_expense
-#
-# Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-#, fuzzy
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-17 12:01+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Currency:</strong>"
-msgstr "<strong>Datum:</strong>"
+msgstr "<strong>Valuta:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -49,15 +32,13 @@ msgstr "<strong>Werknemer:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Manager:</strong>"
-msgstr "<strong>Datum:</strong>"
+msgstr "<strong>Manager:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Status:</strong>"
-msgstr "<strong>Datum:</strong>"
+msgstr "<strong>Status:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -68,6 +49,11 @@ msgstr "<strong>Totaal</strong>"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
 msgid "Account"
 msgstr "Rekening"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
+msgid "Accounting Date"
+msgstr "Boekhouddatum"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -104,13 +90,8 @@ msgstr "Kan gedeclareerd worden"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
-#, fuzzy
 msgid "Cancel"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Annuleren\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Annuleer"
+msgstr "Annuleren"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.car_travel
@@ -155,13 +136,8 @@ msgstr "Klik om een nieuwe declaratie-categorie aan te maken."
 #: selection:hr.expense,payment_mode:0
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_company_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#, fuzzy
 msgid "Company"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bedrijf\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bedijf"
+msgstr "Bedrijf"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -197,7 +173,6 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -287,13 +262,8 @@ msgstr "Declaratie afgekeurd"
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:product.category,name:hr_expense.cat_expense
-#, fuzzy
 msgid "Expenses"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Declaraties\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Kosten"
+msgstr "Declaraties"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_filtered
@@ -319,13 +289,13 @@ msgid "Expenses by Month"
 msgstr "Declaraties per maand"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Declaraties moeten dot dezelfde werknemer behoren."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:212
+#: code:addons/hr_expense/models/hr_expense.py:213
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -367,19 +337,13 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-#, fuzzy
 msgid "Generate Accounting Entries"
-msgstr "Genereer enkele financiële boeking"
+msgstr "Genereren financiële boekingen"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Groeperen op\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Groepeer op"
+msgstr "Groeperen op"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense
@@ -396,6 +360,11 @@ msgstr "HR declaraties"
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
 msgstr "Hotel accommodatie"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+msgid "Hr Department"
+msgstr "HR afdeling"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -471,7 +440,7 @@ msgid "New Mail"
 msgstr "Nieuwe e-mail"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:276
+#: code:addons/hr_expense/models/hr_expense.py:278
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -481,13 +450,13 @@ msgstr ""
 "configureer er één aub."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:244
+#: code:addons/hr_expense/models/hr_expense.py:246
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr "Geen thuisadres gevonden voor werknemer %s, configureer er één aub."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:240
+#: code:addons/hr_expense/models/hr_expense.py:242
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -524,7 +493,7 @@ msgid "Payment By"
 msgstr "Betaling door"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:280
+#: code:addons/hr_expense/models/hr_expense.py:282
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -535,13 +504,8 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
-#, fuzzy
 msgid "Post Journal Entries"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Boekingsregels boeken\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dagboekregels boeken"
+msgstr "Boekingsregels boeken"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -582,13 +546,8 @@ msgstr "Reden om onkosten te weigeren."
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
-#, fuzzy
 msgid "Refuse"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weigeren\n"
-"#-#-#-#-#  nl.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Weiger"
+msgstr "Weigeren"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
@@ -603,8 +562,8 @@ msgstr "Geweigerd"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reporting"
-msgstr "Rapportages"
+msgid "Reports"
+msgstr ""
 
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_1
@@ -612,7 +571,7 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr "Selecteer de regels welke je wilt indienen voor terugbetaling."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:77
+#: code:addons/hr_expense/models/hr_expense.py:78
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -633,6 +592,7 @@ msgstr "Specificeer of het product kan worden gebruikt als declaratie."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Status"
 
@@ -761,26 +721,26 @@ msgstr ""
 "'Wachten op betaling'."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:111
+#: code:addons/hr_expense/models/hr_expense.py:112
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "U kan enkel concept of geweigerde uitgaven verwijderen!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:207
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 "U kan enkel financiële boekingen verrichten voor goedgekeurde uitgave(s)."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:117
+#: code:addons/hr_expense/models/hr_expense.py:118
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "U kunt alleen declaraties in de conceptfase verwijderen."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:128
+#: code:addons/hr_expense/models/hr_expense.py:129
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -805,12 +765,6 @@ msgstr "of"
 #: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
 msgid "report.hr_expense.report_expense"
 msgstr ""
-
-#~ msgid "<strong>Description:</strong>"
-#~ msgstr "<strong>Omschrijving:</strong>"
-
-#~ msgid "<strong>Validated By:</strong>"
-#~ msgstr "<strong>Gevalideerd door:</strong>"
 
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
@@ -860,23 +814,26 @@ msgstr ""
 #~ msgid "Open Expense Menu"
 #~ msgstr "Open onkosten menu"
 
+#~ msgid "Reporting"
+#~ msgstr "Rapportages"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Ongelezen berichten"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Teller ongelezen berichten"
 
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
+#~ msgid "<strong>Date:</strong>"
+#~ msgstr "<strong>Datum:</strong>"
 
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Omschrijving:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>Gevalideerd door:</strong>"
 
 #~ msgid "Accounting"
 #~ msgstr "Boekhouding"
-
-#~ msgid "Accounting Date"
-#~ msgstr "Boekhouddatum"
 
 #~ msgid "Alias Domain"
 #~ msgstr "Alias domein"
@@ -913,9 +870,6 @@ msgstr ""
 
 #~ msgid "Hide payment method"
 #~ msgstr "Verberg betaalmethode"
-
-#~ msgid "Hr Department"
-#~ msgstr "HR afdeling"
 
 #~ msgid "Memo"
 #~ msgstr "Memo"

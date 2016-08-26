@@ -4,22 +4,18 @@
 #
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-08 03:19+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-07-29 11:43+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_forum
@@ -108,6 +104,20 @@ msgstr "&amp;times;"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid ""
+"(Un)archiving a forum automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid ""
+"(Un)archiving a post automatically (un)archives its answers. Do you want to "
+"proceed?"
 msgstr ""
 
 #. module: website_forum
@@ -422,6 +432,7 @@ msgstr ""
 
 #. module: website_forum
 #: selection:forum.post,state:0
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
 msgstr "เปิดใช้งาน"
@@ -478,7 +489,7 @@ msgid "Answer"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:498
+#: code:addons/website_forum/models/forum.py:507
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -568,6 +579,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Archived"
 msgstr ""
 
 #. module: website_forum
@@ -667,14 +684,9 @@ msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:389
+#: code:addons/website_forum/controllers/main.py:393
 #, python-format
 msgid "Bad Request"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "Badge \""
 msgstr ""
 
 #. module: website_forum
@@ -1369,6 +1381,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
@@ -1845,20 +1858,20 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:833
-#: code:addons/website_forum/models/forum.py:853
+#: code:addons/website_forum/models/forum.py:859
+#: code:addons/website_forum/models/forum.py:879
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:897
+#: code:addons/website_forum/models/forum.py:923
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:488
+#: code:addons/website_forum/models/forum.py:497
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -2057,7 +2070,7 @@ msgid "Posted 100 comments"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:432
+#: code:addons/website_forum/models/forum.py:441
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -2123,7 +2136,7 @@ msgid "Question"
 msgstr "คำถาม"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:501
+#: code:addons/website_forum/models/forum.py:510
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2201,7 +2214,7 @@ msgid "Questions"
 msgstr "คำถาม"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:515
+#: code:addons/website_forum/models/forum.py:528
 #, python-format
 msgid "Re: %s"
 msgstr "ตอบกลับ: %s"
@@ -2577,7 +2590,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:408
+#: code:addons/website_forum/models/forum.py:417
 #, python-format
 msgid "This forum does not allow %s"
 msgstr ""
@@ -2640,7 +2653,7 @@ msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:322
-#: code:addons/website_forum/controllers/main.py:389
+#: code:addons/website_forum/controllers/main.py:393
 #, python-format
 msgid "Title should not be empty."
 msgstr ""
@@ -2649,11 +2662,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
 msgid "To"
 msgstr "To"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.new_question
-msgid "To improve your chance getting an answer:"
-msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2776,7 +2784,7 @@ msgid "Validate question"
 msgstr "คำถามโปรด (5)"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:777
+#: code:addons/website_forum/models/forum.py:803
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "View"
@@ -2808,6 +2816,11 @@ msgstr "กำลังรอการยืนยัน"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
+msgid "Waiting post"
 msgstr ""
 
 #. module: website_forum
@@ -2865,7 +2878,15 @@ msgid "Why can other people edit my questions/answers?"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:141
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"You already have one pending post.<br/>\n"
+"            Please wait for a moderator to validate your previous post "
+"before continuing."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:142
 #, python-format
 msgid "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
@@ -3182,11 +3203,6 @@ msgid "racist and hate speech"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "received this badge:"
-msgstr ""
-
-#. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
 msgstr ""
@@ -3237,16 +3253,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "upvote, add comments"
 msgstr ""
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "user"
-msgstr "ผู้ใช้"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.badge_user
-msgid "users"
-msgstr "ผู้ใช้"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3324,6 +3330,9 @@ msgstr ""
 #~ msgid "Last Message Date"
 #~ msgstr "วันที่ข้อความล่าสุด"
 
+#~ msgid "Messages"
+#~ msgstr "ข้อความ"
+
 #~ msgid "Messages and communication history"
 #~ msgstr "ข้อความและประวัติการติดต่อ"
 
@@ -3344,3 +3353,9 @@ msgstr ""
 
 #~ msgid "Website communication history"
 #~ msgstr "ประวัติการสื่อสารเว็บไซต์"
+
+#~ msgid "user"
+#~ msgstr "ผู้ใช้"
+
+#~ msgid "users"
+#~ msgstr "ผู้ใช้"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-03-27 21:07+0000\n"
 "Last-Translator: Dejan Sraka <dejan.sraka@picolabs.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -357,7 +357,7 @@ msgid "Bounced Ratio"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "Kampanija"
@@ -372,6 +372,13 @@ msgstr "Ime kampanje"
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
 msgid "Campaign Stages"
 msgstr "Stopnje kampanje"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mass_mailing_tag_action
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_tag_menu
+#: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_tag_view_form
+msgid "Campaign Tags"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_mass_mailing_campaign
@@ -413,6 +420,16 @@ msgstr ""
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Click here to create a new mailing."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid "Click here to create a new template."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
+msgid "Click to add a new tag."
 msgstr ""
 
 #. module: mass_mailing
@@ -598,11 +615,6 @@ msgstr "Izbriši"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Dostavljeno"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_hr_department
-msgid "Department"
-msgstr ""
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
@@ -829,6 +841,11 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_id
@@ -989,6 +1006,13 @@ msgstr "Statistika pošte"
 #: model:ir.ui.menu,name:mass_mailing.menu_email_template
 msgid "Mail Templates"
 msgstr "Predloge pošte"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid ""
+"Mail templates are meant to design e-mails that can be used for several mass "
+"mailing campaigns."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
@@ -1190,6 +1214,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_module_mass_mailing_themes
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Mass mailing themes"
 msgstr ""
 
@@ -1208,6 +1233,11 @@ msgstr "ID sporočila"
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
+msgid "More Info"
 msgstr ""
 
 #. module: mass_mailing
@@ -1745,7 +1775,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #, fuzzy
 msgid ""
 "This name helps you tracking your different campaign efforts, e.g. "
@@ -1926,11 +1956,28 @@ msgstr ""
 #~ msgid "Followers (Partners)"
 #~ msgstr "Sledilci (partnerji)"
 
+#~ msgid ""
+#~ "ID of the related mail_mail. This field is an integer field becausethe "
+#~ "related mail_mail can be deleted separately from its statistics.However "
+#~ "the ID is needed for several action and controllers."
+#~ msgstr ""
+#~ "ID povezanega mail_mail. To polje je celo število, ker se povezani "
+#~ "mail_mail lahko briše ločeno iz lastne statistike. Kljub vsemu pa je ID "
+#~ "potreben za številna dejanja in kontrolnike."
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#~ msgid ""
+#~ "If checked, recipients will be mailed only once, allowing to sendvarious "
+#~ "mailings in a single campaign to test the effectivenessof the mailings."
+#~ msgstr ""
+#~ "Če je označeno, bo prejemnikom razposlano le enkrat in omogočilo "
+#~ "razpošiljanje razne pošte v sklopu iste kampanje za potrebe testiranja "
+#~ "učinkovitosti razpošiljanja pošte."
 
 #~ msgid "Is Follower"
 #~ msgstr "Je sledilec"
@@ -1949,6 +1996,22 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Število neprebranih sporočil"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Naziv, ki pomaga slediti kampanjskim naporom Primer: Posebna_ponudba, "
+#~ "Božična_akcija"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr "Metoda dostave. Primer: razglednica, E-pošta, pasica, ..."
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Vir povezave. Primer: Iskalnik, druga domena, naziv e-poštnega seznama"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Neprebrana sporočila"

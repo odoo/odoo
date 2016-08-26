@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2015-12-17 11:04+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -119,11 +119,6 @@ msgid "Conditions"
 msgstr "Συνθήκες"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
-msgid "Create Date"
-msgstr "Ημερομηνία Δημιουργίας"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
@@ -131,6 +126,7 @@ msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
@@ -149,13 +145,12 @@ msgstr "Καθυστέρηση Μετά την Ημερομηνία Εναύσμ
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
-"Delay after the trigger date.You can put a negative number if you need a "
-"delay before thetrigger date, like sending a reminder 15 minutes before a "
-"meeting."
+"Delay after the trigger date.\n"
+"                                    You can put a negative number if you "
+"need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 "
+"minutes before a meeting."
 msgstr ""
-"Καθυστέρηση μετά την ημερομηνία έναυσης. Μπορείτε να βάλετε ένα αρνητικό "
-"αριθμό εάν χρειάζεστε καθυστέρηση πριν την ημερομηνία έναυσης, όπως να "
-"στείλετε μια υπενθύμιση 15 λεπτά πριν από μια συνάντηση."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -276,11 +271,6 @@ msgid "Last Modified on"
 msgstr "Τελευταία αλλαγή στις"
 
 #. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
-msgid "Last Run"
-msgstr "Τελευταία εκτέλεση"
-
-#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
@@ -295,8 +285,18 @@ msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
+msgid "Last run"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "Line ids"
 msgstr ""
 
 #. module: base_action_rule
@@ -473,12 +473,10 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
-"When should the condition be triggered. If present, will be checked by the "
+"When should the condition be triggered.\n"
+"                                  If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"Όταν θα πρέπει να πυροδοτηθεί ο όρος. Εάν υπάρχει, θα ελεχθεί από τον "
-"προγραμματιστή. Εάν είναι κενό, θα ελεγχθεί στη  δημιουργία και την "
-"αναβάθμιση."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
@@ -497,7 +495,25 @@ msgid ""
 "new filter:"
 msgstr ""
 
-#. module: base_action_rule
-#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
-msgid "unknown"
-msgstr ""
+#~ msgid "Create Date"
+#~ msgstr "Ημερομηνία Δημιουργίας"
+
+#~ msgid ""
+#~ "Delay after the trigger date.You can put a negative number if you need a "
+#~ "delay before thetrigger date, like sending a reminder 15 minutes before a "
+#~ "meeting."
+#~ msgstr ""
+#~ "Καθυστέρηση μετά την ημερομηνία έναυσης. Μπορείτε να βάλετε ένα αρνητικό "
+#~ "αριθμό εάν χρειάζεστε καθυστέρηση πριν την ημερομηνία έναυσης, όπως να "
+#~ "στείλετε μια υπενθύμιση 15 λεπτά πριν από μια συνάντηση."
+
+#~ msgid "Last Run"
+#~ msgstr "Τελευταία εκτέλεση"
+
+#~ msgid ""
+#~ "When should the condition be triggered. If present, will be checked by "
+#~ "the scheduler. If empty, will be checked at creation and update."
+#~ msgstr ""
+#~ "Όταν θα πρέπει να πυροδοτηθεί ο όρος. Εάν υπάρχει, θα ελεχθεί από τον "
+#~ "προγραμματιστή. Εάν είναι κενό, θα ελεγχθεί στη  δημιουργία και την "
+#~ "αναβάθμιση."

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -56,6 +56,7 @@ msgid "Acer Laptop"
 msgstr "宏基笔记本"
 
 #. module: hr_equipment
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_active
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
 msgid "Active"
 msgstr "有效"
@@ -101,13 +102,19 @@ msgid "Apply"
 msgstr "应用"
 
 #. module: hr_equipment
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
 msgstr "资产"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5764
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5719
 msgid "Asset Category"
 msgstr "资产类别"
 
@@ -636,7 +643,6 @@ msgstr "电话"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -644,10 +650,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"文档信息发送使用邮件服务器规则。\n"
-"- 所有人：所有人都允许\n"
-"- 业务伙伴：仅认证的业务伙伴\n"
-"- 关注者：仅关注相关文档者\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -858,7 +860,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -866,9 +867,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n"
-"且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n"
-"问题追踪和设备维护"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -996,6 +994,28 @@ msgstr "维护请求搜索"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "打开设备菜单"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "文档信息发送使用邮件服务器规则。\n"
+#~ "- 所有人：所有人都允许\n"
+#~ "- 业务伙伴：仅认证的业务伙伴\n"
+#~ "- 关注者：仅关注相关文档者\n"
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n"
+#~ "且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n"
+#~ "问题追踪和设备维护"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "未读消息计数器"

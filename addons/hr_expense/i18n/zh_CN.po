@@ -1,4 +1,3 @@
-# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
@@ -8,37 +7,25 @@
 # fausthuang, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
-# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_expense
-#
-# Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-17 08:18+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Currency:</strong>"
-msgstr "<strong>日期:</strong>"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -47,15 +34,13 @@ msgstr "<strong>员工：</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Manager:</strong>"
-msgstr "<strong>日期:</strong>"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-#, fuzzy
 msgid "<strong>Status:</strong>"
-msgstr "<strong>日期:</strong>"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -68,6 +53,11 @@ msgid "Account"
 msgstr "账户"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
+msgid "Accounting Date"
+msgstr "会计日期"
+
+#. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
@@ -76,13 +66,8 @@ msgstr "飞机票"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#, fuzzy
 msgid "Analytic Account"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"分析账户\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"分析会计"
+msgstr "分析账户"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -175,23 +160,13 @@ msgstr "创建者"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"创建时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"创建于"
+msgstr "创建时间"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_currency_id
-#, fuzzy
 msgid "Currency"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"货币\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"币种"
+msgstr "货币"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
@@ -200,7 +175,6 @@ msgid "Date"
 msgstr "日期"
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -317,13 +291,13 @@ msgid "Expenses by Month"
 msgstr "费用 按月份"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "费用必须属于同一个员工"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:212
+#: code:addons/hr_expense/models/hr_expense.py:213
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -344,13 +318,8 @@ msgstr "费用等待批复"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-#, fuzzy
 msgid "Expenses to Invoice"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"要开票的报销单\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"要开票的费用"
+msgstr "要开票的报销单"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -366,9 +335,8 @@ msgstr "当人力资源管理员验证后，在此处会计可以批复或拒绝
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-#, fuzzy
 msgid "Generate Accounting Entries"
-msgstr "生成单一会计分录"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -392,6 +360,11 @@ msgid "Hotel Accommodation"
 msgstr "酒店住宿"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Hr Expense refuse Reason wizard"
 msgstr "HR费用拒绝理由向导"
@@ -400,13 +373,8 @@ msgstr "HR费用拒绝理由向导"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"标识"
+msgstr "ID"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_move_id
@@ -422,35 +390,20 @@ msgstr "日记账项目"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard___last_update
 #: model:ir.model.fields,field_description:hr_expense.field_report_hr_expense_report_expense___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后修改时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后修改日"
+msgstr "最后修改时间"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新者\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后更新人"
+msgstr "最后更新者"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最近更新时间"
+msgstr "最后更新时间"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -485,7 +438,7 @@ msgid "New Mail"
 msgstr "新邮件"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:276
+#: code:addons/hr_expense/models/hr_expense.py:278
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -493,13 +446,13 @@ msgid ""
 msgstr "找不到产品 %s (或者这个产品)的费用科目，请配置一下"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:244
+#: code:addons/hr_expense/models/hr_expense.py:246
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr "员工%s地址没有找到，请设置"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:240
+#: code:addons/hr_expense/models/hr_expense.py:242
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr "找不到%s日记账的贷方科目，　请配置一下"
@@ -524,13 +477,8 @@ msgstr "当你生成了你的费用申请，发送给你的经理，他会验证
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
-#, fuzzy
 msgid "Paid"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"已付\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"已支付"
+msgstr "已付"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_payment_mode
@@ -538,7 +486,7 @@ msgid "Payment By"
 msgstr "由...支付"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:280
+#: code:addons/hr_expense/models/hr_expense.py:282
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -578,13 +526,8 @@ msgstr "数量"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_description
-#, fuzzy
 msgid "Reason"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"理由\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"原因"
+msgstr "理由"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -610,8 +553,8 @@ msgstr "已拒绝"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reporting"
-msgstr "报告"
+msgid "Reports"
+msgstr ""
 
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_1
@@ -619,7 +562,7 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr "选择你想要提交以得到偿还的费用行."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:77
+#: code:addons/hr_expense/models/hr_expense.py:78
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -638,6 +581,7 @@ msgstr "标明产品是否能够被在人资费用中选择"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "状态"
 
@@ -759,25 +703,25 @@ msgstr ""
 "如果会计师生成费用的会计分录，状态是‘待支付’"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:111
+#: code:addons/hr_expense/models/hr_expense.py:112
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "你只能删除草稿或拒绝费用申请"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:206
+#: code:addons/hr_expense/models/hr_expense.py:207
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "你只能对已批准的费用生产会计分录"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:117
+#: code:addons/hr_expense/models/hr_expense.py:118
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "你只能发送费用申请草稿"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:128
+#: code:addons/hr_expense/models/hr_expense.py:129
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -802,12 +746,6 @@ msgstr "或"
 #: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
 msgid "report.hr_expense.report_expense"
 msgstr ""
-
-#~ msgid "<strong>Description:</strong>"
-#~ msgstr "<strong>说明:</strong>"
-
-#~ msgid "<strong>Validated By:</strong>"
-#~ msgstr "<strong>验证于:</strong>"
 
 #~ msgid "Action Needed"
 #~ msgstr "需要行动"
@@ -857,23 +795,26 @@ msgstr ""
 #~ msgid "Open Expense Menu"
 #~ msgstr "打开费用菜单"
 
+#~ msgid "Reporting"
+#~ msgstr "报告"
+
 #~ msgid "Unread Messages"
 #~ msgstr "未读消息"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "未读消息计数器"
 
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
+#~ msgid "<strong>Date:</strong>"
+#~ msgstr "<strong>日期:</strong>"
 
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>说明:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>验证于:</strong>"
 
 #~ msgid "Accounting"
 #~ msgstr "会计"
-
-#~ msgid "Accounting Date"
-#~ msgstr "会计日期"
 
 #~ msgid "Alias Domain"
 #~ msgstr "别名域"

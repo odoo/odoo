@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-05-31 17:11+0000\n"
 "Last-Translator: palica <pavol.cupka@gmail.com>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -1504,6 +1504,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:85
 #: code:addons/website/static/src/xml/website.xml:63
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
@@ -1849,6 +1850,11 @@ msgid "Customize the banner"
 msgstr "Prispôsobiť banner"
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_default_lang_id
 #: model:ir.model.fields,field_description:website.field_website_default_lang_id
 msgid "Default language"
@@ -2051,6 +2057,13 @@ msgid "Edit in backend"
 msgstr "Editovať v backedne"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:29
+#, python-format
+msgid "Edit my Analytics Client ID"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.page_404
 msgid ""
 "Edit the content below this line to adapt the default \"page not found\" "
@@ -2168,6 +2181,11 @@ msgstr "Facebookový účet"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fast"
 msgstr "Rýchlo"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_config_settings_favicon
+msgid "Favicon"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -2345,6 +2363,13 @@ msgid "GitHub Account"
 msgstr "GitHub účet"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:42
+#, python-format
+msgid "Go to our"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Go to the page you want to translate"
 msgstr "Prejdite na stránku ktorú chcete preložiť"
@@ -2355,6 +2380,13 @@ msgstr "Prejdite na stránku ktorú chcete preložiť"
 #, python-format
 msgid "Good Job!"
 msgstr "Dobrá práca!"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:72
+#, python-format
+msgid "Google Analytics"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_google_analytics_key
@@ -2479,7 +2511,7 @@ msgstr "Som si istý, chcem túto stránku zmazať definitívne"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_id
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_2055
+#: model:ir.model.fields,field_description:website.field_website_menu_id_2037
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
 msgid "ID"
@@ -2581,6 +2613,13 @@ msgid "Include Asset Bundles"
 msgstr "Zahŕňať zväzky aktív"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:95
+#, python-format
+msgid "Incorrect Client ID"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Information about the"
 msgstr "Informácia o "
@@ -2595,6 +2634,11 @@ msgstr "Nainštalovať aplikácie"
 #: model:ir.model,name:website.model_base_language_install
 msgid "Install Language"
 msgstr "Nainštalovať jazyk"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Install a language"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2795,6 +2839,13 @@ msgid "Limited customization"
 msgstr "Limitované prispôsobovanie"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:25
+#, python-format
+msgid "Link my Analytics Account"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_social_linkedin
 #: model:ir.model.fields,field_description:website.field_website_social_linkedin
 msgid "LinkedIn Account"
@@ -2860,7 +2911,7 @@ msgstr ""
 "nákupu'."
 
 #. module: website
-#: code:addons/website/models/website.py:320
+#: code:addons/website/models/website.py:321
 #: model:ir.model.fields,field_description:website.field_website_menu_name
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
 #, python-format
@@ -2868,7 +2919,7 @@ msgid "Menu"
 msgstr "Menu"
 
 #. module: website
-#: code:addons/website/models/website.py:324
+#: code:addons/website/models/website.py:325
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr "Menu <b>%s</b> sa zdá mať odkaz na túto stránku !"
@@ -2889,6 +2940,18 @@ msgstr "Mobilný náhľad"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Mode"
 msgstr "Model"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:48
+#, python-format
+msgid "Month"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "More Info"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2943,6 +3006,11 @@ msgstr "Moja webstránka"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Narrow"
 msgstr "Úzke"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "New Language"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -3147,23 +3215,8 @@ msgid "Open Source eCommerce"
 msgstr "Open Source eCommerce"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_config_settings
-msgid "Optimization"
-msgstr "Optimizácia"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Optimize AdWords Campaign"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Optimize your AdWords account"
 msgstr ""
 
 #. module: website
@@ -3231,14 +3284,14 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:298
+#: code:addons/website/models/website.py:299
 #: code:addons/website/static/src/xml/website.editor.xml:11
 #, python-format
 msgid "Page"
 msgstr "Strana"
 
 #. module: website
-#: code:addons/website/models/website.py:303
+#: code:addons/website/models/website.py:304
 #, python-format
 msgid "Page <b>%s</b> seems to have a link to this page !"
 msgstr "Stránka <b>%s</b> sa zdá mať odkaz na túto stránku !"
@@ -3295,6 +3348,11 @@ msgstr "Detail partnera"
 #: model:ir.ui.view,arch_db:website.template_partner_comment
 msgid "Partners"
 msgstr "Partneri"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Performance Optimization"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3527,6 +3585,7 @@ msgstr "Vzorové obrázky"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:76
 #: code:addons/website/static/src/js/website.seo.js:363
 #: code:addons/website/static/src/xml/website.ace.xml:12
 #, python-format
@@ -3637,6 +3696,11 @@ msgid "Sequence"
 msgstr "Postupnosť"
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_website_website_settings
+msgid "Settings"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Settings &gt; Website"
 msgstr "Nastavenia &gt; Webstránky"
@@ -3710,6 +3774,11 @@ msgstr "Niektoré závislosti môžu existovať ..."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Special effects and animations"
 msgstr "Špeciálne efekty a animácie"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_website_config_settings
+msgid "Speed"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3823,7 +3892,7 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr "Povedzte, čo je hodnota tejto funkcie<br/>pre zákazníka."
 
 #. module: website
-#: code:addons/website/models/website.py:308
+#: code:addons/website/models/website.py:309
 #, python-format
 msgid "Template <b>%s (id:%s)</b> seems to have a link to this page !"
 msgstr "Šablóna <b>%s (id:%s)</b> sa zdá mať odkaz na túto stránku !"
@@ -3865,6 +3934,13 @@ msgstr "Menu 'Obsah' vám umožní pridať stránky alebo pridať vrchné menu."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "The Banner or Big Picture building blocks are good choices for that."
 msgstr "Banner alebo stavebné bloky Veĺký obrázok sú na to dobré voľby."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.backendDashboard.js:95
+#, python-format
+msgid "The Google Analytics Client ID you have entered seems incorrect."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -4051,6 +4127,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "Third Feature"
 msgstr "Tretia funkcia"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website_config_settings_favicon
+#: model:ir.model.fields,help:website.field_website_favicon
+msgid "This field holds the image used to display a favicon on the website."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
@@ -4297,6 +4379,13 @@ msgid "Use this button to add pages"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:42
+#, python-format
+msgid "User Documentation"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.robots
 msgid ""
 "User-agent: *\n"
@@ -4327,7 +4416,6 @@ msgstr "Zobraziť náš výber tém"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_published
-#: model:ir.model.fields,field_description:website.field_delivery_carrier_website_published
 #: model:ir.model.fields,field_description:website.field_event_track_website_published
 #: model:ir.model.fields,field_description:website.field_hr_employee_website_published
 #: model:ir.model.fields,field_description:website.field_hr_job_website_published
@@ -4355,6 +4443,13 @@ msgstr ""
 "vašu stránku. Mohli by sa chcieť niečo dozvedieť, zlepšiť svoj život, "
 "rozšíriť ich podnikanie, dozvedieť sa viac o vás, atď. Aký skvelý obsah "
 "môžete ponúknuť svojim návštevníkom? Prečo majú zostať na vašej webstránke?"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:16
+#, python-format
+msgid "Visits"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
@@ -4423,9 +4518,19 @@ msgid "Website Apps"
 msgstr "Aplikácie webstránky"
 
 #. module: website
+#: model:ir.actions.client,name:website.backend_dashboard
+msgid "Website Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_domain
 msgid "Website Domain"
 msgstr "Doména webstránky"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_favicon
+msgid "Website Favicon"
+msgstr ""
 
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website_homepage
@@ -4455,11 +4560,6 @@ msgid "Website Partners Comment Form"
 msgstr "Formulár komentára partnera webstránky "
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
-msgid "Website Path"
-msgstr "Trasa webstránky"
-
-#. module: website
 #: model:crm.team,name:website.salesteam_website_sales
 msgid "Website Sales"
 msgstr "Predaje webstránky"
@@ -4483,7 +4583,6 @@ msgstr "Téma webstránky"
 #: model:ir.model.fields,field_description:website.field_hr_employee_website_url
 #: model:ir.model.fields,field_description:website.field_hr_job_website_url
 #: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_url
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
 #: model:ir.model.fields,field_description:website.field_payment_acquirer_website_url
 #: model:ir.model.fields,field_description:website.field_product_template_website_url
 #: model:ir.model.fields,field_description:website.field_project_project_website_url
@@ -4575,6 +4674,16 @@ msgid "Website meta title"
 msgstr "Website meta názov"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
+msgid "Website path"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
+msgid "Website url"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
 msgstr "Webstránky"
@@ -4583,6 +4692,13 @@ msgstr "Webstránky"
 #: model:ir.model.fields,field_description:website.field_base_language_install_website_ids
 msgid "Websites to translate"
 msgstr "Webstránky na preloženie"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:47
+#, python-format
+msgid "Week"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4717,6 +4833,13 @@ msgid ""
 msgstr "Napíšte, čo by zákazník chcel vedieť,<br/>nie čo chcete ukázať."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:49
+#, python-format
+msgid "Year"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Yellow Green"
 msgstr "Žltá zelená"
@@ -4804,6 +4927,13 @@ msgstr ""
 "na vlastnú doménu, alebo ju zmeniť na takú, ktorú už vlastníte."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:37
+#, python-format
+msgid "You do not seem to have access to this Analytics Account."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "You have a lot of choices for that: the References, Quotes Slider, Twitter "
@@ -4811,6 +4941,13 @@ msgid ""
 msgstr ""
 "Máte pre to veľa možností: Referencie, Slider cenových ponúk, Twitter "
 "Scroller, ..."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:36
+#, python-format
+msgid "You need to log in to your Google Account before:"
+msgstr ""
 
 #. module: website
 #: model:ir.actions.act_window,help:website.action_module_theme
@@ -4844,6 +4981,13 @@ msgstr "Názov vašej domény"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Your Footer"
 msgstr "Vaše zápätie"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:40
+#, python-format
+msgid "Your Google Analytic Client ID:"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -5145,6 +5289,13 @@ msgstr ""
 "jazyk)."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:42
+#, python-format
+msgid "to get more information."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "to get started."
 msgstr "pre začatie."
@@ -5199,6 +5350,33 @@ msgstr "formulár detailov vašej Spoločnosti"
 #~ msgstr ".xml"
 
 #~ msgid ""
+#~ "<b>Great stories have personality.</b> Consider telling\n"
+#~ "                        a great story that provides personality. Writing "
+#~ "a story\n"
+#~ "                        with personality for potential clients will asist "
+#~ "with\n"
+#~ "                        making a relationship connection. This shows up "
+#~ "in small\n"
+#~ "                        quirks like word choices or phrases. Write from "
+#~ "your point\n"
+#~ "                        of view, not from someone else's experience."
+#~ msgstr ""
+#~ "<b>Veľké príbehy majú osobnosť.</b> Zvážte vyrozprávať\n"
+#~ "skvelý príbeh, ktorý poskytuje osobnosť. Písanie príbehu\n"
+#~ "s osobnosťou pre potenciálnych klientov pomôže s\n"
+#~ "vytvorením vzťahového prepojenia. To sa ukáže v drobných\n"
+#~ "manieroch ako voľba slov alebo fráz. Píšte z vášho\n"
+#~ "pohľadu na vec, nie zo skúsenosti niekoho iného."
+
+#~ msgid "<i class=\"fa fa-th-large\"/> Website<b class=\"caret\"/>"
+#~ msgstr "<i class=\"fa fa-th-large\"/> Webová stránka<b class=\"caret\"/>"
+
+#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
+#~ msgstr ""
+#~ "<span class=\"fa fa-envelope-o\"/> Nápíšte email nášmu webovému "
+#~ "expertovi  "
+
+#~ msgid ""
 #~ "<span class=\"fa-stack\">\n"
 #~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
 #~ "        </span> Content"
@@ -5249,6 +5427,34 @@ msgstr "formulár detailov vašej Spoločnosti"
 
 #~ msgid "<strong>Click Here</strong>"
 #~ msgstr "<strong>Kliknite tu</strong>"
+
+#~ msgid ""
+#~ "A code server action can be executed from the website, using a "
+#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
+#~ "Set this field as True to allow users to run this action. If itset to is "
+#~ "False the action cannot be run through the website."
+#~ msgstr ""
+#~ "Zavedenie akcie kódu servera môže byť spustené z webstránky, za použitia "
+#~ "dedikovaného ovládača. Adresa je <base>/website/action/<website_path>. "
+#~ "Nastavte toto pole ako True pre umožnenie použivateľom spustiť túto "
+#~ "akciu. Ak nastavené na False, akcia nemôže byť spustená cez webstránku."
+
+#~ msgid "Add new pages and menus"
+#~ msgstr "Pridať nové stránky a menu"
+
+#~ msgid ""
+#~ "As you add more pages to your website, you main menu will begin to feel "
+#~ "overcrowded.\n"
+#~ "                            You can regroup similar pages into a sub-"
+#~ "menu, so they will appear under a unique drop-down menu."
+#~ msgstr ""
+#~ "Ako budete pridávať viac stránok na svoje webstránky, vaše hlavné menu "
+#~ "začnú pôsobiť preplnene.\n"
+#~ "Môžete peskupiť podobné stránky do podmenu, takže sa objaví pod "
+#~ "jedinečným rozbaľovaciom menu."
+
+#~ msgid "Background"
+#~ msgstr "Pozadie"
 
 #~ msgid "Check now and discover more today!"
 #~ msgstr "Skontrolujte teraz a objavte viac dnes!"
@@ -5317,6 +5523,13 @@ msgstr "formulár detailov vašej Spoločnosti"
 #~ "Taktiež sme pripravili krátke FAQ pre vysvetlenie všetkých týchto zmien\n"
 #~ "vám všetkým. <br/>"
 
+#~ msgid ""
+#~ "It might be possible to edit the relevant items\n"
+#~ "                                or fix the issue in"
+#~ msgstr ""
+#~ "Mohlo by byť možné upravovať príslušne položky\n"
+#~ "alebo opraviť problém v"
+
 #~ msgid "Menu Label"
 #~ msgstr "Štítok menu"
 
@@ -5331,6 +5544,9 @@ msgstr "formulár detailov vašej Spoločnosti"
 #~ "zariadení ktoré\n"
 #~ "môže zobraziť webstránky s malým až žiadnym požadovaným nastavením."
 
+#~ msgid "Our products &amp; Services"
+#~ msgstr "Naše produkty &amp; Služby"
+
 #~ msgid "Press The Top-Left Edit Button"
 #~ msgstr "Stlačte ľavé horné tlačidl Editovať"
 
@@ -5343,6 +5559,12 @@ msgstr "formulár detailov vašej Spoločnosti"
 #~ msgid "Reset Transformation"
 #~ msgstr "Resetovať transformáciu"
 
+#~ msgid "Optimization"
+#~ msgstr "Optimizácia"
+
+#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
+#~ msgstr "Menu 'Obsah' vám umožní pridať stránky alebo pridať vrchné menu."
+
 #~ msgid ""
 #~ "The Point of Sale works perfectly on any kind of touch enabled\n"
 #~ "                device, whether it's multi-touch tablets like an iPad or\n"
@@ -5354,6 +5576,12 @@ msgstr "formulár detailov vašej Spoločnosti"
 
 #~ msgid "Transform"
 #~ msgstr "Transformovať"
+
+#~ msgid "Use Google Adword"
+#~ msgstr "Použiť Google Adword"
+
+#~ msgid "Website Path"
+#~ msgstr "Trasa webstránky"
 
 #~ msgid "What a day it was yesterday - such a big day for us!"
 #~ msgstr "To bol ale včera deň - taký veľký deň pre nás!"
@@ -5387,6 +5615,14 @@ msgstr "formulár detailov vašej Spoločnosti"
 
 #~ msgid "Yes."
 #~ msgstr "Áno."
+
+#~ msgid "You should try others search criteria."
+#~ msgstr "Mali by ste vyskúšať iné kritéria vyhľadávania."
+
+#~ msgid "ex: Contact us, Our Customers, Privacy Policy, Events, Bolg, Jobs"
+#~ msgstr ""
+#~ "napr.: Kontaktujte nás, Naši zákazníci, Ochrana súkromia, Udalosti, Blog, "
+#~ "Práce"
 
 #~ msgid "or"
 #~ msgstr "alebo"

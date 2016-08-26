@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-19 16:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
 "Language: lv\n"
@@ -19,7 +19,7 @@ msgstr ""
 "2);\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:231
+#: code:addons/mrp/stock.py:250
 #, python-format
 msgid " Manufacture"
 msgstr ""
@@ -37,13 +37,13 @@ msgid "# Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:341
+#: code:addons/mrp/mrp.py:343
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopēt)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1052
+#: code:addons/mrp/mrp.py:1051
 #, python-format
 msgid "%s produced"
 msgstr ""
@@ -215,6 +215,13 @@ msgid "Approve"
 msgstr "Apstiprināt"
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Archived"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid ""
@@ -259,7 +266,7 @@ msgid "BOM lines of the referred bom"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:25
+#: code:addons/mrp/stock.py:44
 #, python-format
 msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
@@ -327,7 +334,7 @@ msgid "BoM"
 msgstr "Recepte"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:316
+#: code:addons/mrp/mrp.py:318
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
@@ -358,7 +365,7 @@ msgid "By-Products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:228
+#: code:addons/mrp/stock.py:247
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr ""
@@ -382,19 +389,19 @@ msgid "Cancelled"
 msgstr "Atcelts"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:150
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:651
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Statusā '%s' ražošanas orderi nav iespējams dzēst."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:719
+#: code:addons/mrp/mrp.py:721
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Nevar atrast šī produkta recepti."
@@ -842,13 +849,6 @@ msgid ""
 msgstr "Ja lauks nav aktivizēts, tas ļauj paslēpt receptes neizdzēšot tās."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
-msgid ""
-"If the active field is set to False, it will allow you to hide the resource "
-"record without removing it."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
@@ -859,12 +859,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
 msgstr "Ražošanā"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Inactive"
-msgstr "Neaktīvs"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
@@ -998,7 +992,7 @@ msgid "Manager"
 msgstr "Menedžeris"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:225
+#: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:244
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1047,7 +1041,7 @@ msgid "Manufacturing Order"
 msgstr "Ražošanas orderis"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:112
+#: code:addons/mrp/procurement.py:114
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Ražošanas orderis <em>%s</em> izveidots."
@@ -1086,7 +1080,7 @@ msgid "Manufacturing Reference"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:786
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr ""
@@ -1137,7 +1131,7 @@ msgid "New"
 msgstr "Jauns/-a"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:108
+#: code:addons/mrp/procurement.py:110
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr ""
@@ -1260,7 +1254,7 @@ msgid "Planning"
 msgstr "Plānošana"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:136
+#: code:addons/mrp/stock.py:155
 #, python-format
 msgid "Please provide proper quantity."
 msgstr ""
@@ -1495,7 +1489,7 @@ msgstr "Īpašība"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1795,7 +1789,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2022,7 +2016,7 @@ msgid "Warehouse"
 msgstr "Noliktava"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351 code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
 #, python-format
 msgid "Warning"
 msgstr "Brīdinājums"
@@ -2174,7 +2168,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
+#: code:addons/mrp/mrp.py:359
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -2239,6 +2233,9 @@ msgstr "nav zināms"
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Ja atzīmēts, tad jauni ziņojumi pieprasīs jūsu uzmanību."
 
+#~ msgid "Inactive"
+#~ msgstr "Neaktīvs"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Pēdēja ziņojuma datums"
 
@@ -2253,3 +2250,9 @@ msgstr "nav zināms"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Neizlasīti ziņojumi"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mājaslapas Ziņojumi"
+
+#~ msgid "Website communication history"
+#~ msgstr "Mājaslapas komunikācijas vēsture"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-02-20 10:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -209,7 +209,7 @@ msgstr "#  Εργασιών"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (αντίγραφο)"
@@ -1008,7 +1008,7 @@ msgstr "Μοντέλο Ψευδωνύμου"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
+msgid "All employees"
 msgstr ""
 
 #. module: project
@@ -1242,7 +1242,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1464,7 +1464,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1473,16 +1473,10 @@ msgid "Customer"
 msgstr "Πελάτης"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "Email Πελάτη"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1508,6 +1502,12 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
 msgstr ""
 
 #. module: project
@@ -2047,7 +2047,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2464,6 +2464,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2503,7 +2508,7 @@ msgid "New"
 msgstr "Νέο"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr ""
@@ -2730,7 +2735,7 @@ msgid "Planner"
 msgstr "Σχεδιασμός"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2777,7 +2782,7 @@ msgstr ""
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
+msgid "Private: followers only"
 msgstr ""
 
 #. module: project
@@ -2868,6 +2873,11 @@ msgstr "Εργασίες Έργου"
 #, python-format
 msgid "Projects"
 msgstr "Έργα"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3211,11 +3221,6 @@ msgstr "Ημερομηνία Έναρξης"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Ημερομηνία Εκκίνησης"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -3979,7 +3984,7 @@ msgid "send us an email"
 msgstr "στείλτε μας ένα email"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr ""
@@ -4078,6 +4083,27 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
+#~ "χρησιμοποιώντας το mailgateway.\n"
+#~ "- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
+#~ "- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
+#~ "- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Ορισμός της μονάδας μέτρησης για Έργα και Εργασίες.\n"
+#~ "Αν συνδέετε τα έργα με φύλλα χρόνου εργασίας (άρθρωμα project_timesheet), "
+#~ "μην ξεχάσετε να ρυθμίσετε τη σωστή μονάδα μέτρησης στους υπαλλήλους."
 
 #~ msgid "Type of Account"
 #~ msgstr "Είδος Λογαριασμού"

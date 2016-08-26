@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-06-03 05:15+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -128,6 +128,22 @@ msgid "Bad"
 msgstr "Slecht"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
+#: model:ir.ui.menu,name:im_livechat.canned_responses
+msgid "Canned Responses"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid ""
+"Canned responses allow you to insert prewritten responses in\n"
+"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
+"                it before sending."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
@@ -170,6 +186,11 @@ msgstr "Chat invoerveld"
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Chat met een van onze medewerkers"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Click to create a new canned response."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -459,15 +480,11 @@ msgstr "Livechat kanaal"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
-#, fuzzy
 msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
-"Live chat ondersteuningskanaal statistieken staan u toe om gemakkelijk de "
-"prestaties van uw bedrijf zijn live chat sessies te analyseren. Haal "
-"informatie uit de gemiste sessies, de doelgroep, de duur van een sessie, etc."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.support_page
@@ -592,6 +609,13 @@ msgstr ""
 "Operators\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Operators that do not show any activity In Odoo for more than 30 minutes "
+"will be considered as disconnected."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -834,17 +858,12 @@ msgstr "Welkomstbericht"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
-#, fuzzy
 msgid ""
 "You can create channels for each website on which you want\n"
 "                to integrate the website live chat widget, allowing your "
 "website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
-"U kan kanalen aanmaken voor elke website welke u de\n"
-"website live chat widget wilt integreren, dit staat u toe om uw "
-"websitebezoekers\n"
-"live te praten met uw operators."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -867,6 +886,16 @@ msgstr ""
 msgid "seconds"
 msgstr "seconden"
 
+#~ msgid ""
+#~ "Livechat Support Channel Statistics allows you to easily check and "
+#~ "analyse your company livechat session performance. Extract informations "
+#~ "about the missed sessions, the audiance, the duration of a session, etc."
+#~ msgstr ""
+#~ "Live chat ondersteuningskanaal statistieken staan u toe om gemakkelijk de "
+#~ "prestaties van uw bedrijf zijn live chat sessies te analyseren. Haal "
+#~ "informatie uit de gemiste sessies, de doelgroep, de duur van een sessie, "
+#~ "etc."
+
 #~ msgid "My sessions"
 #~ msgstr "Mijn sessies"
 
@@ -875,3 +904,35 @@ msgstr "seconden"
 
 #~ msgid "Opertor"
 #~ msgstr "Operator"
+
+#~ msgid ""
+#~ "You can create channels for each website on which you want\n"
+#~ "                to integrate the website live chat widget, allowing you "
+#~ "website\n"
+#~ "                visitors to talk in real time with your operators."
+#~ msgstr ""
+#~ "U kan kanalen aanmaken voor elke website welke u de\n"
+#~ "website live chat widget wilt integreren, dit staat u toe om uw "
+#~ "websitebezoekers\n"
+#~ "live te praten met uw operators."
+
+#~ msgid "# of Sessions"
+#~ msgstr "# sessies"
+
+#~ msgid "Configuration"
+#~ msgstr "Instellingen"
+
+#~ msgid "Has a Rating"
+#~ msgstr "Heeft een beoordeling"
+
+#~ msgid "Last Seen Many2many"
+#~ msgstr "Laatst gezien Many2many"
+
+#~ msgid "Live Chat"
+#~ msgstr "Live Chat"
+
+#~ msgid "Sessions History"
+#~ msgstr "Sessie geschiedenis"
+
+#~ msgid "ir.autovacuum"
+#~ msgstr "ir.autovacuum"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-06-13 15:11+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -57,9 +57,8 @@ msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
 msgid "Activation"
-msgstr "Offerte"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -126,7 +125,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factuur"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -201,6 +200,16 @@ msgid "Membership Start Date"
 msgstr "Lidmaatschap startdatum"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "Bericht voor verkooporder"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "Bericht voor Picking"
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nieuwe offerte"
@@ -227,9 +236,8 @@ msgstr "Orders"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-#, fuzzy
 msgid "Partnership Date"
-msgstr "Annuleer lidmaatschap datum"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -249,6 +257,7 @@ msgstr "Offertes"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Verkooporders"
 
@@ -256,6 +265,24 @@ msgstr "Verkooporders"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Selecteer als u een gratis lid,maatschap wilt geven."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Door de 'Waarschuwingsoptie' te selecteren wordt het bericht naar de "
+"gebruiker gestuurd. Door het 'Blokkerend bericht' te kiezen wordt een fout "
+"gegenereerd met de boodschap en het proces wordt geblokkeerd. Het bericht "
+"moet in het volgende veld worden ingevoerd."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr "Voorraad picking"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -343,3 +370,13 @@ msgstr "Plaats leverancier"
 #~ msgstr ""
 #~ "Dit is de bron van de link. Bijvoorbeeld: Zoekmachine, ander domein of de "
 #~ "naam van de e-mail lijst"
+
+#~ msgid ""
+#~ "A member with whom you want to associate your membership. It will "
+#~ "consider the membership state of the associated member."
+#~ msgstr ""
+#~ "Een lid waarmee u uw lidmaatschap wilt associëren. Het houdt rekening met "
+#~ "de lidmaatschap status van het geassocieerde lid."
+
+#~ msgid "Payment Tokens"
+#~ msgstr "Betaal tokens"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-03-10 13:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -468,6 +468,11 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr "Kliknite da biste dodali novu fazu u procesu zapošljavanja."
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 msgid "Closed"
@@ -662,7 +667,6 @@ msgid "Delete"
 msgstr "Obriši"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -911,6 +915,11 @@ msgstr "Grupiraj po"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1671,7 +1680,10 @@ msgid "Tag name already exists !"
 msgstr "Naziv oznake već postoji !"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Oznake"
 
@@ -1903,6 +1915,37 @@ msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
 
 #~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ " <p>\n"
+#~ "%if objekt.odjel_id:\n"
+#~ " Sa velikim zadovoljstvom obznanjujem ovo <strong> ${objekt.ime} </"
+#~ "strong> pridružit će nam se kao ${objekt.posao_id.ime}\n"
+#~ "u ${objekt.odjel_id.ime}.\n"
+#~ " %osim:\n"
+#~ "Sa velikim zadovoljstvom obznanjujem ovo <strong> ${objekt.ime} </strong> "
+#~ "pridružit će nam se kao ${objekt.posao_id.ime}.\n"
+#~ " %endif\n"
+#~ " </p>\n"
+#~ " <p>Molim vas da poželite dobrodošlicu njemu/njoj i pomognete mu/njoj "
+#~ "pronaći njegova/njena obilježja.</p>\n"
+#~ "            "
+
+#~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
 #~ "        <p>Congrats! Your resume's got our interest!\n"
 #~ "        I will call you as soon as possible to make a 10 minutes phone "
@@ -1957,6 +2000,14 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Campaign"
 #~ msgstr "Kampanja"
 
+#~ msgid ""
+#~ "Create here some alias...\n"
+#~ "                That will allow you to track from where the applicant is "
+#~ "coming from..."
+#~ msgstr ""
+#~ "Kreirajte ovdje neki pseudonim. To će Vam omogućiti da pratite odakle "
+#~ "podnositelj zamolbe dolazi..."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum zadnjeg zapisa"
 
@@ -1977,6 +2028,9 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Ostalo, precizirajte:"
 
 #~ msgid "Is Follower"
 #~ msgstr "Je pratitelj"
@@ -2006,6 +2060,20 @@ msgstr "oe_kanban_text_red"
 #~ msgstr "Otvori izbornik ljudskih resursa"
 
 #~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
+#~ "- svatko: svatko može objaviti poruku\n"
+#~ "- partneri: samo autentificirani partner\n"
+#~ "- pratitelji: samo pratitelji srodne dokumentacije\n"
+
+#~ msgid "Reset Application"
+#~ msgstr "Reset aplikacije"
+
+#~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
 #~ msgstr ""
@@ -2020,3 +2088,6 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Website communication history"
 #~ msgstr "Povijest komunikacije Web stranice"
+
+#~ msgid "Welcoming ${object.name} "
+#~ msgstr "Početna poruka ${object.name} "

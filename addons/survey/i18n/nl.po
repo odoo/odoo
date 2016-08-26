@@ -4,22 +4,18 @@
 #
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-30 17:16+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: survey
@@ -43,7 +39,7 @@ msgid "#Questions"
 msgstr "#Vragen"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -252,9 +248,8 @@ msgstr "Over uw Odoo gebruik"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
 msgid "Active"
-msgstr "Actief domein"
+msgstr "Actief"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -317,6 +312,11 @@ msgstr "Beantwoord"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Antwoorden"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr "Gearchiveerd"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -574,13 +574,8 @@ msgstr "Niet akkoord"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Weergave naam\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
@@ -700,9 +695,8 @@ msgstr "Hoe draagt u bij of bent u van plan om bij te dragen aan Odoo?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
-#, fuzzy
 msgid "Human Resources"
-msgstr "Personeelsbeheer"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -783,7 +777,7 @@ msgstr ""
 "Indien gesloten kunnen mensen niet antwoorden op enquêtes in deze kolom."
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:625
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -797,9 +791,9 @@ msgstr ""
 #: model:survey.question,comments_message:survey.feedback_3_2
 #: model:survey.question,comments_message:survey.feedback_3_3
 #: model:survey.question,comments_message:survey.feedback_4_1
-#, fuzzy, python-format
+#, python-format
 msgid "If other, please specify:"
-msgstr "Indien andere, specifieer:"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -1534,6 +1528,7 @@ msgstr "Suggestie"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1664,7 +1659,7 @@ msgid "The answer must be in the right type"
 msgstr "Het antwoord moet van het juiste type zijn"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:623
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1763,19 +1758,19 @@ msgid "They help new users to understand Odoo"
 msgstr "Ze helpen nieuwe gebruikers Odoo te begrijpen"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:672 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Dit antwoord moet een geildig e-mailadres zijn"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:714 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "Dit is geen datum/tijd"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:691 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "Dit is geen cijfer"
@@ -1795,7 +1790,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Dit bericht wordt getoond als de enquête voltooid is"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:622
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -2062,7 +2057,7 @@ msgstr ""
 "geval, moet de instelling \"Openbaar in de website\" worden ingeschakeld)."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
@@ -2070,7 +2065,7 @@ msgstr ""
 "vragen heeft."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Het is niet mogelijk uitnodigingen versturen voor gesloten enquêtes."
@@ -2093,7 +2088,7 @@ msgstr "log in"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr ""
+msgstr "of"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2111,6 +2106,11 @@ msgstr "controleer uw antwoorden"
 #, python-format
 msgid "try to create and fill survey"
 msgstr "probeer een enquête aan te maken en in te vullen"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
 
 #~ msgid ""
 #~ "\n"
@@ -2143,6 +2143,9 @@ msgstr "probeer een enquête aan te maken en in te vullen"
 
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
+
+#~ msgid "Active domain"
+#~ msgstr "Actief domein"
 
 #~ msgid ""
 #~ "Answers do not go in the original document discussion thread. This has an "
@@ -2209,11 +2212,17 @@ msgstr "probeer een enquête aan te maken en in te vullen"
 #~ msgid "From"
 #~ msgstr "Van"
 
+#~ msgid "Human Ressources"
+#~ msgstr "Personeelsbeheer"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Indien andere, specifieer:"
 
 #~ msgid "Initial thread message."
 #~ msgstr "Initiële bericht thread"
@@ -2342,3 +2351,21 @@ msgstr "probeer een enquête aan te maken en in te vullen"
 
 #~ msgid "on"
 #~ msgstr "aan"
+
+#~ msgid "Is closed"
+#~ msgstr "Is gesloten"
+
+#~ msgid "Question 2"
+#~ msgstr "Vraag 2"
+
+#~ msgid "Quizz Mode"
+#~ msgstr "Toetsmodus"
+
+#~ msgid "Send Invitation Again"
+#~ msgstr "Verstuur uitnodiging opnieuw"
+
+#~ msgid "Thanks Message"
+#~ msgstr "Bedanktbericht"
+
+#~ msgid "ir.autovacuum"
+#~ msgstr "ir.autovacuum"

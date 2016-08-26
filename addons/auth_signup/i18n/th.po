@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-06-07 07:46+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -131,11 +131,6 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
 msgstr "อนุญาตให้ผู้ใช้ภายนอกสมัครเข้าใช้งาน"
@@ -179,6 +174,11 @@ msgstr "ยืนยัน"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
 msgstr "ยืนยันรหัสผ่าน"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Confirmed"
+msgstr ""
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-05-25 07:51+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -59,6 +59,15 @@ msgid "# of Product Variants"
 msgstr "Ürün Varyant Sayısı"
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:73
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
+
+#. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "<span>kg</span>"
 msgstr ""
@@ -74,16 +83,6 @@ msgstr "<strong>Taşıyıcı</strong>"
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>Ağırlık</strong>"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
-msgid ""
-"A consumable is a product for which you don't manage stock, a service is a "
-"non-material product provided by a company or an individual."
-msgstr ""
-"Bir tüketim maddesi, stok yönetimim olmayan bir üründür, bir servis bir "
-"firma ya da şahıs tarafından sağlanan malzeme olmayan bir üründür."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -114,9 +113,29 @@ msgid ""
 msgstr "Ürünün bir özet açıklaması, yalnızca iç bilgi amacıyla kullanılır."
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
+msgid ""
+"A stockable product is a product for which you manage stock. The \"Inventory"
+"\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not "
+"managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files "
+"attached to the products are the one that are sold on the e-commerce such as "
+"e-books, music, pictures,... The \"Digital Product\" module has to be "
+"installed."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
 msgid "Action Needed"
 msgstr "Eylem Gerekiyor"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
+msgid "Action while validating Delivery Orders"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -136,11 +155,6 @@ msgid ""
 msgstr ""
 "Bedelsiz nakliyeden yararlanacak sipariş tutarı, firma para biriminde "
 "belirtilmiştir."
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-msgid "Archived"
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -253,7 +267,6 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "Nakliyeci"
@@ -330,6 +343,11 @@ msgstr "Maliyet Yöntemi"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
 msgid "Countries"
 msgstr "Ülkeler"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -428,9 +446,8 @@ msgstr "Teslim"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-#, fuzzy
-msgid "Delivery Carrier Search"
-msgstr "teslim Fiyaı Kuralları"
+msgid "Delivery Carrier"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -589,6 +606,13 @@ msgstr ""
 "Sevkiyatı toplamaya göre faturalandırmayı planlıyorsanız, bu alanı doldurun."
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+
+#. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
 msgid "Fixed Price"
@@ -643,6 +667,16 @@ msgstr "Ücretsiz teslimat ücretleri"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
 msgstr "Sipariş bu miktardan fazla ise Ücretsiz"
+
+#. module: delivery
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate and Create Shipment"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -772,6 +806,16 @@ msgstr "Gelir Hesabı"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
 msgid "Incoming"
 msgstr "Gelen/Yolda"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
+msgid "Integration Level"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -964,6 +1008,16 @@ msgid "Membership Start Date"
 msgstr "Üyelik Başlangıç ​​Tarihi"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
 msgid "Messages"
 msgstr "Mesajlar"
@@ -1074,7 +1128,7 @@ msgstr "Paketler"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
-#: code:addons/delivery/models/stock_picking.py:128
+#: code:addons/delivery/models/stock_picking.py:129
 #, fuzzy, python-format
 msgid "Package Details"
 msgstr "Paketler"
@@ -1113,13 +1167,6 @@ msgid "Price"
 msgstr "Fiyat"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-msgid "Price Computation"
-msgstr "Fiyat Hesaplama"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
 msgid "Price Difference Account"
 msgstr "Fiyat Farkı Hesabı"
@@ -1137,6 +1184,7 @@ msgstr "Fiyat Listesi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
 msgid "Pricelist Items"
 msgstr "Fiyat Listesi Öğeleri"
 
@@ -1213,6 +1261,18 @@ msgid "Products"
 msgstr "Ürünler"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_project_id
+msgid "Project"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
 msgid "Purchase Description"
 msgstr "Satınalma Açıklaması"
@@ -1221,6 +1281,11 @@ msgstr "Satınalma Açıklaması"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_gap
 msgid "Purchase Gap"
 msgstr "Alış Farkı"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
@@ -1290,6 +1355,16 @@ msgid "Reordering Rules"
 msgstr "Sipariş Yenileleme Kurallları"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
+msgid "Reordering max qty"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
+msgid "Reordering min qty"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 #, fuzzy
 msgid "Return Picking"
@@ -1331,6 +1406,7 @@ msgstr "Satış Siparişi"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn
 msgid "Sales Order Line"
 msgstr "Satış Siparişi Satırı"
 
@@ -1354,7 +1430,7 @@ msgstr ""
 "kullanırken, o olacak Bu türü sadece etkinlikleri filtrelemede."
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:284
+#: code:addons/delivery/models/delivery_carrier.py:296
 #, python-format
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
@@ -1362,6 +1438,15 @@ msgid ""
 msgstr ""
 "Teslimat taşımacı(ları)sı kriterlerini karşılamayan ürün teslimat yöntemi "
 "içinden seç."
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_line_warn
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1385,7 +1470,7 @@ msgid "Set to True if your credentials are certified for production."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:147
+#: code:addons/delivery/models/stock_picking.py:148
 #, fuzzy, python-format
 msgid ""
 "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: "
@@ -1402,11 +1487,6 @@ msgstr "Taşıma maliyeti"
 #, fuzzy
 msgid "Shipping Weight"
 msgstr "Taşıma maliyeti"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_shipping_enabled
-msgid "Shipping enabled"
-msgstr "Taşıma etkin"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1477,6 +1557,16 @@ msgid "Stock Output Account"
 msgstr "Stok Çıkış Hesabı"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
+msgid "Stock move ids"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Stock quant ids"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
@@ -1511,6 +1601,12 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr "Tedarikçi Faturalarındaki Miktarın Toplamı"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
+#: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
+msgid "Technical: used to compute quantities."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "Şablon Adı"
@@ -1537,11 +1633,6 @@ msgstr ""
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
 "Teslimat satırı eklemek için sipariş durumu taslak olarak ayarlanmalıdır."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_partner_id
-msgid "The partner that is doing the delivery service."
-msgstr "Teslimat hizmetini veren iş ortağı."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1687,11 +1778,6 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_id
-msgid "Transporter Company"
-msgstr "Taşıma Firması"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
 msgid "Turnover"
 msgstr "Devir Hızı"
@@ -1705,14 +1791,6 @@ msgstr "Ciro - Standart fiyat"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_type_id
 msgid "Type of Event"
 msgstr "Etkinlik Türü"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_shipping_enabled
-msgid ""
-"Uncheck this box to disable package shipping while validating Delivery Orders"
-msgstr ""
-"Teslimat Emirlerinin doğrulanması sırasında paket sevkiyatını devre dışı "
-"bırakmak için bu kutudaki işareti kaldırın"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
@@ -1799,18 +1877,6 @@ msgstr "Depo"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warranty
 msgid "Warranty"
 msgstr "Garanti"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
-msgid "Website Messages"
-msgstr "Mesajlar"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
-msgid "Website communication history"
-msgstr "Mesajlar ve iletişim geçmişi"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1917,7 +1983,7 @@ msgid "Width must be positive"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:187
+#: code:addons/delivery/models/stock_picking.py:188
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -1925,7 +1991,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:163
+#: code:addons/delivery/models/stock_picking.py:164
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
@@ -1951,11 +2017,19 @@ msgstr "örn. UPS Ekspres"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "bilinmeyen"
+
+#~ msgid ""
+#~ "A consumable is a product for which you don't manage stock, a service is "
+#~ "a non-material product provided by a company or an individual."
+#~ msgstr ""
+#~ "Bir tüketim maddesi, stok yönetimim olmayan bir üründür, bir servis bir "
+#~ "firma ya da şahıs tarafından sağlanan malzeme olmayan bir üründür."
+
+#~ msgid "Carrier Information"
+#~ msgstr "Taşıyıcı Bilgisi"
 
 #~ msgid "Carrier Tracking Ref"
 #~ msgstr "Nakliyeci İzleme Ref"
@@ -1963,5 +2037,45 @@ msgstr "bilinmeyen"
 #~ msgid "Gross Weight"
 #~ msgstr "Bürüt Ağırlık"
 
+#~ msgid "Messages and communication history"
+#~ msgstr "Mesajlar ve iletişim geçmişi"
+
+#~ msgid "Price Computation"
+#~ msgstr "Fiyat Hesaplama"
+
+#~ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+#~ msgstr "% Taşımacısına %s takip numarası seferi ile gönderilen sevkiyat"
+
+#~ msgid "Shipping enabled"
+#~ msgstr "Taşıma etkin"
+
 #~ msgid "Status"
 #~ msgstr "Durumu"
+
+#~ msgid "The partner that is doing the delivery service."
+#~ msgstr "Teslimat hizmetini veren iş ortağı."
+
+#~ msgid "Transporter Company"
+#~ msgstr "Taşıma Firması"
+
+#~ msgid ""
+#~ "Uncheck this box to disable package shipping while validating Delivery "
+#~ "Orders"
+#~ msgstr ""
+#~ "Teslimat Emirlerinin doğrulanması sırasında paket sevkiyatını devre dışı "
+#~ "bırakmak için bu kutudaki işareti kaldırın"
+
+#~ msgid "Vendor"
+#~ msgstr "Tedarikçi"
+
+#, fuzzy
+#~ msgid "Delivery Carrier Search"
+#~ msgstr "teslim Fiyaı Kuralları"
+
+#, fuzzy
+#~ msgid "Website Messages"
+#~ msgstr "Mesajlar"
+
+#, fuzzy
+#~ msgid "Website communication history"
+#~ msgstr "Mesajlar ve iletişim geçmişi"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2015-12-29 15:05+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -78,6 +78,11 @@ msgid "Activities Done"
 msgstr "Activités terminées"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -96,11 +101,6 @@ msgstr "Cliquer ici pour créer une nouvelle équipe commerciale."
 #, python-format
 msgid "Click to set"
 msgstr "Cliquer pour valider"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Code"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -247,9 +247,9 @@ msgstr "Plus d'infos"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, fuzzy, python-format
+#, python-format
 msgid "My Pipeline"
-msgstr "Votre pipeline"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -272,7 +272,7 @@ msgstr "Actions suivantes"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Seul entier sera une valeur valide."
@@ -361,11 +361,6 @@ msgstr "Chef d'équipe"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Membres de l'équipe"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "Le code de l'équipe de vente doit être unique !"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -486,7 +481,7 @@ msgstr "Nombre d'opportunités gagnées"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Mauvaise valeur saisie !"
@@ -499,6 +494,11 @@ msgid "exp. closing"
 msgstr "clôture prévue"
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -507,6 +507,9 @@ msgstr "en retard"
 
 #~ msgid "Action Needed"
 #~ msgstr "A besoin d'une action"
+
+#~ msgid "Code"
+#~ msgstr "Code"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Date du dernier message posté sur cet enregistrement"
@@ -548,6 +551,9 @@ msgstr "en retard"
 #~ msgid "Number of unread messages"
 #~ msgstr "Nombre de messages non lus"
 
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "Le code de l'équipe de vente doit être unique !"
+
 #~ msgid "Unread Messages"
 #~ msgstr "Messages non lus"
 
@@ -556,3 +562,80 @@ msgstr "en retard"
 
 #~ msgid "Working Hours"
 #~ msgstr "Heures de travail"
+
+#~ msgid "Your Pipeline"
+#~ msgstr "Votre pipeline"
+
+#~ msgid "Apply"
+#~ msgstr "Appliquer"
+
+#~ msgid "Bank Accounts"
+#~ msgstr "Comptes bancaires"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgid "Configuration"
+#~ msgstr "Configuration"
+
+#~ msgid "Configure Sales"
+#~ msgstr "Paramétrer les ventes"
+
+#~ msgid "Contact Titles"
+#~ msgstr "Civilités"
+
+#~ msgid "Contacts"
+#~ msgstr "Contacts"
+
+#~ msgid "Countries"
+#~ msgstr "Pays"
+
+#~ msgid "Country Group"
+#~ msgstr "Groupe de pays"
+
+#~ msgid "Customers"
+#~ msgstr "Clients"
+
+#~ msgid "Fed. States"
+#~ msgstr "États Fédéraux"
+
+#~ msgid "Leads & Opportunities"
+#~ msgstr "Pistes et opportunités"
+
+#~ msgid "Localization"
+#~ msgstr "Localisation"
+
+#~ msgid "Manager"
+#~ msgstr "Gestionnaire"
+
+#~ msgid "Opportunities"
+#~ msgstr "Opportunités"
+
+#~ msgid "Product Variants"
+#~ msgstr "Variantes d'article"
+
+#~ msgid "Products"
+#~ msgstr "Articles"
+
+#~ msgid "Sales"
+#~ msgstr "Ventes"
+
+#~ msgid "sale.config.settings"
+#~ msgstr "sale.config.settings"
+
+#~ msgid ""
+#~ "the user will have access to all records of everyone in the sales "
+#~ "application."
+#~ msgstr ""
+#~ "l'utilisateur aura accès à tous les enregistrements dans l'application "
+#~ "des ventes."
+
+#~ msgid "the user will have access to his own data in the sales application."
+#~ msgstr "l'utilisateur aura accès à ses données dans l'application Ventes."
+
+#~ msgid ""
+#~ "the user will have an access to the sales configuration as well as "
+#~ "statistic reports."
+#~ msgstr ""
+#~ "L'utilisateur aura un accès à la configuration des ventes aussi bien "
+#~ "qu'aux rapports statistiques."

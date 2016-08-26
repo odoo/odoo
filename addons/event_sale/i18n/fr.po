@@ -1,4 +1,3 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
@@ -8,58 +7,30 @@
 # Martin Trigaux, 2016
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Xavier Symons <xsy@openerp.com>, 2015
-# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * event_sale
-#
-# Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Not Telling <levequevincel2@gmail.com>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
-# Benedicte HANET <hanetb@gmail.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>, 2016\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"PO-Revision-Date: 2016-05-20 07:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:170
+#: code:addons/event_sale/models/event.py:147
 #, python-format
 msgid " with ticket %s"
 msgstr "avec le billet %s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-#, fuzzy
 msgid "Apply"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Postuler\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Appliquer"
+msgstr "Postuler"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
@@ -143,6 +114,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
@@ -154,13 +126,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom affiché\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
@@ -181,6 +148,11 @@ msgid "Event"
 msgstr "Évènement"
 
 #. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event Name"
+msgstr "Nom de l'événement"
+
+#. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
 msgstr "Inscriptions à l'événement"
@@ -188,6 +160,7 @@ msgstr "Inscriptions à l'événement"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Subscription"
@@ -211,6 +184,11 @@ msgstr "Billets d'événement"
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_type_id
 msgid "Event Type"
 msgstr "Type d'évènement"
+
+#. module: event_sale
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event's Ticket"
+msgstr ""
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
@@ -239,37 +217,22 @@ msgstr "A expiré"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket___last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dernière modification le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour par\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
@@ -288,13 +251,13 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:131
+#: code:addons/event_sale/models/event.py:108
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr "Plus de places disponibles pour le billet"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:153
+#: code:addons/event_sale/models/event.py:130
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Plus de places disponibles pour ce billet"
@@ -317,13 +280,8 @@ msgstr "Inscription originale"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
-#, fuzzy
 msgid "Phone"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tél.\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Téléphone"
+msgstr "Tél."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price
@@ -368,13 +326,8 @@ msgstr "Places réservées"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
-#, fuzzy
 msgid "Sale Order"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Commande client\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bon de commande"
+msgstr "Commande client"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
@@ -405,6 +358,7 @@ msgstr "Sièges occupés"
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_type_id
 msgid ""
 "Select event types so when we use this product in sales order lines, it will "
 "filter events of this type only."
@@ -431,7 +385,7 @@ msgid "Standard"
 msgstr "Standard"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:21
+#: code:addons/event_sale/models/event.py:19
 #, python-format
 msgid "Subscription"
 msgstr "Abonnement"
@@ -443,7 +397,7 @@ msgid "Technical Training"
 msgstr "Formation technique"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:168
+#: code:addons/event_sale/models/event.py:145
 #, python-format
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
@@ -487,11 +441,6 @@ msgid "VIP"
 msgstr "VIP"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
-msgid "event_ok"
-msgstr "event_ok"
-
-#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
 msgstr "s'il vous plait donnez des détails à propos des inscriptions."
@@ -506,8 +455,8 @@ msgstr "registration.editor"
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
 
-#~ msgid "Event Name"
-#~ msgstr "Nom de l'événement"
+#~ msgid "event_ok"
+#~ msgstr "event_ok"
 
 #~ msgid "Event Registration"
 #~ msgstr "Inscription à l'évènement"

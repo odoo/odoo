@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-04-26 05:33+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -432,6 +432,11 @@ msgid "Click to add a new stage in the recruitment process."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 msgid "Closed"
@@ -613,7 +618,6 @@ msgid "Delete"
 msgstr "삭제"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -858,6 +862,11 @@ msgstr "그룹화"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1599,7 +1608,10 @@ msgid "Tag name already exists !"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "태그"
 
@@ -1832,6 +1844,9 @@ msgstr "oe_kanban_text_red"
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
 
+#~ msgid "If other, precise:"
+#~ msgstr "다른 경우의 정밀도 :"
+
 #~ msgid "Last Message Date"
 #~ msgstr "최근 메시지 날짜"
 
@@ -1843,6 +1858,17 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Open HR Menu"
 #~ msgstr "인사 메뉴 열기"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "메일 게이트웨이를 이용해서 문서에 메시지를 게시하는 보안정책.\n"
+#~ "- 모두 : 모두다 메시지 게시 가능\n"
+#~ "- 파트너 : 인증된 파트너만 가능\n"
+#~ "- 팔로워 : 관련 문서의 팔로워만 가능\n"
 
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "

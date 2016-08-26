@@ -3,13 +3,14 @@
 # * survey
 #
 # Translators:
+# AMAAL RU <Fabu1410@yahoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-15 20:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-08-17 06:33+0000\n"
+"Last-Translator: AMAAL RU <Fabu1410@yahoo.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +40,7 @@ msgid "#Questions"
 msgstr "# الأسئلة"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/survey.py:232
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
@@ -290,6 +291,11 @@ msgstr "مجابة"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "الإجابات"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -742,7 +748,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/survey.py:625
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -1202,7 +1208,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
 msgid "Purchases Management"
-msgstr ""
+msgstr "ادارة المشتريات"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
@@ -1487,6 +1493,7 @@ msgstr "اقتراح"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1617,7 +1624,7 @@ msgid "The answer must be in the right type"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/survey.py:623
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1707,19 +1714,19 @@ msgid "They help new users to understand Odoo"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:672 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:714 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:691 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr ""
@@ -1737,7 +1744,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/survey.py:622
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1988,13 +1995,13 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/survey.py:425
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/survey.py:430
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr ""
@@ -2036,8 +2043,16 @@ msgstr ""
 msgid "try to create and fill survey"
 msgstr ""
 
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "unknown"
+msgstr ""
+
 #~ msgid "Action Needed"
 #~ msgstr "الاجراء المطلوب"
+
+#~ msgid "Active domain"
+#~ msgstr "النطاق النشط"
 
 #~ msgid "Author"
 #~ msgstr "الكاتب"
@@ -2082,11 +2097,17 @@ msgstr ""
 #~ msgid "From"
 #~ msgstr "مِن"
 
+#~ msgid "Human Ressources"
+#~ msgstr "الموارد البشرية"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "عند التفعيل، توجد رسالة جديدة"
+
+#~ msgid "If other, precise:"
+#~ msgstr "إذا غير ذلك، اذكر بدقة:"
 
 #~ msgid "Initial thread message."
 #~ msgstr "الرسالة الأولى"

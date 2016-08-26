@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-04-30 18:51+0000\n"
 "Last-Translator: Mari Løken <mari@tinderbox.no>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
@@ -75,6 +75,11 @@ msgid "Activities Done"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -93,11 +98,6 @@ msgstr ""
 #, python-format
 msgid "Click to set"
 msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Kode"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -265,7 +265,7 @@ msgstr "Neste handling."
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -354,11 +354,6 @@ msgstr "Teamleder"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Gruppemedlemmer"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "Koden for salgsteamet må være unik!"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -474,7 +469,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr ""
@@ -487,6 +482,11 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -495,6 +495,9 @@ msgstr ""
 
 #~ msgid "Action Needed"
 #~ msgstr "Handling"
+
+#~ msgid "Code"
+#~ msgstr "Kode"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dato for siste melding på denne posten."
@@ -522,6 +525,9 @@ msgstr ""
 
 #~ msgid "Number of unread messages"
 #~ msgstr "Antall uleste meldinger"
+
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "Koden for salgsteamet må være unik!"
 
 #~ msgid "Unread Messages"
 #~ msgstr "Uleste meldinger."

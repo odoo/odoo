@@ -1,41 +1,21 @@
-# #-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_gengo
 #
 # Translators:
 # Alejandro Santana <alejandrosantana@anubia.es>, 2015
-# #-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * base_gengo
-#
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Ivan Nieto <ivan.n.s@tuta.io>, 2016\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"PO-Revision-Date: 2015-09-11 04:17+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_gengo
@@ -78,6 +58,11 @@ msgstr ""
 "principalmente por motivos de prueba."
 
 #. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+msgid "Click here to Configure Gengo Parameters"
+msgstr ""
+
+#. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_comment
 msgid "Comments"
 msgstr "Comentarios"
@@ -104,23 +89,13 @@ msgstr "Creado por"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Creado en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Creado el"
+msgstr "Creado en"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mostrar nombre\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nombre a mostrar"
+msgstr "Mostrar nombre"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
@@ -149,6 +124,11 @@ msgstr "Clave pública Gengo"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+msgid "Gengo Public or Private keys are wrong or missing."
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
 msgstr "Formulario de solicitud Gengo"
 
@@ -163,7 +143,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Nivel de servicio de traducción Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:63
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:83
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -173,7 +153,7 @@ msgstr ""
 "autentificación bajo `Configuracion > Compañías > Parámetros Gengo`."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:74
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:94
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -190,13 +170,8 @@ msgstr "Gengo: Solicitud manual de traducción"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID (identificación)\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"ID"
+msgstr "ID (identificación)"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_auto_approve
@@ -215,23 +190,13 @@ msgstr "Última modificación en"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización de\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización por"
+msgstr "Última actualización de"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"Última actualización en\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Última actualización el"
+msgstr "Última actualización en"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_sync_limit
@@ -295,7 +260,7 @@ msgid "Sync Type"
 msgstr "Tipo de sincronización"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:115
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
@@ -303,6 +268,11 @@ msgid ""
 msgstr ""
 "El númeor de términos a sincronizar debería estar entre 1 y 200 para "
 "trabajar con los servicios de traducción de Gengo."
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_authorized_credentials
+msgid "The private and public keys are valid"
+msgstr ""
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_comment
@@ -314,7 +284,7 @@ msgstr ""
 "enviadas a Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:90
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:110
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Este idioma no está soportado por los servicios de traducción de Gengo"
@@ -355,10 +325,5 @@ msgstr "base.gengo.translations"
 
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_ir_translation
-#, fuzzy
 msgid "ir.translation"
-msgstr ""
-"#-#-#-#-#  es.po (Odoo 9.0)  #-#-#-#-#\n"
-"ir.traduccion\n"
-"#-#-#-#-#  es.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"ir.translation"
+msgstr "ir.traduccion"

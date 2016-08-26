@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-06-27 12:41+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -54,6 +54,11 @@ msgstr "Anuluj"
 msgid ""
 "Check this box if you're using the sandbox mode of Gengo, mainly used for "
 "testing purpose."
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+msgid "Click here to Configure Gengo Parameters"
 msgstr ""
 
 #. module: base_gengo
@@ -118,6 +123,11 @@ msgstr "Publiczny klucz Gengo"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+msgid "Gengo Public or Private keys are wrong or missing."
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
 msgstr "Formularz zapotrzebowania Gengo"
 
@@ -132,7 +142,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Poziom usług tłumaczeń Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:63
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:83
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -142,7 +152,7 @@ msgstr ""
 "uwierzytelnienia Gengo pod 'Ustawienia > Firmy > Parametry Gengo'."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:74
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:94
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -249,11 +259,16 @@ msgid "Sync Type"
 msgstr "typ Sync"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:115
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
 "translation services."
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_authorized_credentials
+msgid "The private and public keys are valid"
 msgstr ""
 
 #. module: base_gengo
@@ -266,7 +281,7 @@ msgstr ""
 "wysłanym do Gengo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:90
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:110
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Ten język nie jest wspierany przez usługi tłumaczeń Gengo."

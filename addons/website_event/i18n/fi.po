@@ -3,29 +3,19 @@
 # * website_event
 #
 # Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-15 04:40+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
+"PO-Revision-Date: 2016-08-10 07:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -108,13 +98,13 @@ msgid "Add Content"
 msgstr "Lisää sisältöä"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Kaikki ryhmät"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Kaikki maat"
@@ -345,9 +335,14 @@ msgid "Free"
 msgstr "Vapaa"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
 msgstr ""
 
 #. module: website_event
@@ -358,7 +353,7 @@ msgid "Let's go through the first steps to publish a new event."
 msgstr "Käydään läpi ensimmäiset askeleet uuden tapahtuman julkaisemiseksi."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "Sijainti"
@@ -375,7 +370,7 @@ msgstr "Nimi"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -391,19 +386,19 @@ msgid "New Event Created"
 msgstr "Uusi tapahtuma luotu"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Seuraavat tapahtumat"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Ensi viikolla"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Ensi kuussa"
@@ -414,7 +409,7 @@ msgid "No event found"
 msgstr "Ei tapahtumia"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Menneet tapahtumat"
@@ -452,6 +447,12 @@ msgid "Our Trainings"
 msgstr ""
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr ""
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "Puhelin"
@@ -484,7 +485,7 @@ msgid "Reference"
 msgstr "Viite"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Rekisteröidy"
@@ -546,7 +547,7 @@ msgid "Start Tutorial"
 msgstr "Käynnistä ohjattu opastus"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Tällä viikolla"
@@ -568,7 +569,7 @@ msgid "This is your new event page. We will edit the event presentation page."
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Tässä kuussa"
@@ -584,7 +585,7 @@ msgid "Ticket Type #"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Tänään"
@@ -618,6 +619,16 @@ msgstr ""
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -662,14 +673,15 @@ msgstr "pull-right"
 msgid "to"
 msgstr " - "
 
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
+#~ msgid ""
+#~ "The <em>Content</em> menu allows you to create new pages, events, menus, "
+#~ "etc."
+#~ msgstr ""
+#~ "<em>Sisältö</em>-valikon avulla voit luoda uusia sivuja, tapahtumia, "
+#~ "valikkoja, etc."
 
 #~ msgid "Website URL"
 #~ msgstr "Verkkosivuston osoite"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
 
 #~ msgid "Website meta description"
 #~ msgstr "Verkkosivuston metakuvaus"

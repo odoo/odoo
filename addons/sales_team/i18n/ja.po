@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-07-21 01:03+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -75,6 +75,11 @@ msgid "Activities Done"
 msgstr "完了"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -93,11 +98,6 @@ msgstr "クリックして販売チームを新規作成してください。"
 #, python-format
 msgid "Click to set"
 msgstr "クリックして設定"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "コード"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -265,7 +265,7 @@ msgstr "次のアクション"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -354,11 +354,6 @@ msgstr "チームリーダー"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "チームメンバ"
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "営業チームのコードは固有である必要があります。"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -474,7 +469,7 @@ msgstr "受注済案件"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "入力した値が間違っています!"
@@ -487,6 +482,11 @@ msgid "exp. closing"
 msgstr "完了遅延"
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
@@ -495,6 +495,9 @@ msgstr "遅延"
 
 #~ msgid "Action Needed"
 #~ msgstr "必要なアクション"
+
+#~ msgid "Code"
+#~ msgstr "コード"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "記録上の最後のメッセージが投稿された日"
@@ -523,6 +526,9 @@ msgstr "遅延"
 #~ msgid "Number of unread messages"
 #~ msgstr "未読メッセージ数"
 
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "営業チームのコードは固有である必要があります。"
+
 #~ msgid "Unread Messages"
 #~ msgstr "未読メッセージ"
 
@@ -531,3 +537,6 @@ msgstr "遅延"
 
 #~ msgid "Working Hours"
 #~ msgstr "労働時間"
+
+#~ msgid "Your Pipeline"
+#~ msgstr "自分のパイプライン"

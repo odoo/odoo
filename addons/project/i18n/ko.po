@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-04-26 05:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -208,7 +208,7 @@ msgstr "업무 갯수"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (사본)"
@@ -1000,7 +1000,7 @@ msgstr "별칭 모델"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
+msgid "All employees"
 msgstr ""
 
 #. module: project
@@ -1234,7 +1234,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1458,7 +1458,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1467,16 +1467,10 @@ msgid "Customer"
 msgstr "고객"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "고객 이메일"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1502,6 +1496,12 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
 msgstr ""
 
 #. module: project
@@ -2040,7 +2040,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2458,6 +2458,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "더 보기 <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2497,7 +2502,7 @@ msgid "New"
 msgstr "신규"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr ""
@@ -2720,7 +2725,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2766,7 +2771,7 @@ msgstr "개인 / 가시성"
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
+msgid "Private: followers only"
 msgstr ""
 
 #. module: project
@@ -2857,6 +2862,11 @@ msgstr "프로젝트 업무"
 #, python-format
 msgid "Projects"
 msgstr "프로젝트"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3202,11 +3212,6 @@ msgstr "시작일"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "시작일"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -3966,7 +3971,7 @@ msgid "send us an email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "업무"
@@ -4045,11 +4050,31 @@ msgstr ""
 #~ msgid "Open Project Menu"
 #~ msgstr "프로젝트 메뉴 열기"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "메일 게이트웨이를 이용해서 문서에 메시지를 게시하는 보안정책.\n"
+#~ "- 모두 : 모두다 메시지 게시 가능\n"
+#~ "- 파트너 : 인증된 파트너만 가능\n"
+#~ "- 팔로워 : 관련 문서의 팔로워만 가능\n"
+
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "업무별 작업표 내용 기록"
 
 #~ msgid "Task's Work on Tasks"
 #~ msgstr "업무에 대한 업무의 작업"
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "프로젝트와 과제에서 사용되는 측정 단위를 설정합니다. \n"
+#~ "프로젝트에 연결된 작업표를 이용한다면 (project_timesheet module), 직원들"
+#~ "을 위한 적절한 측정 단위 설정을 잊지 마십시오."
 
 #~ msgid "Type of Account"
 #~ msgstr "계정 유형"

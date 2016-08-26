@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 9.saas~11c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
+"PO-Revision-Date: 2016-08-26 12:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:231
+#: code:addons/mrp/stock.py:250
 #, python-format
 msgid " Manufacture"
 msgstr ""
@@ -34,13 +34,13 @@ msgid "# Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:341
+#: code:addons/mrp/mrp.py:343
 #, python-format
 msgid "%s (copy)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1052
+#: code:addons/mrp/mrp.py:1051
 #, python-format
 msgid "%s produced"
 msgstr ""
@@ -203,6 +203,13 @@ msgid "Approve"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
+msgid "Archived"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template_produce_delay
 msgid "Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added."
@@ -245,7 +252,7 @@ msgid "BOM lines of the referred bom"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:25
+#: code:addons/mrp/stock.py:44
 #, python-format
 msgid "Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so."
 msgstr ""
@@ -305,7 +312,7 @@ msgid "BoM"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:316
+#: code:addons/mrp/mrp.py:318
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
@@ -336,7 +343,7 @@ msgid "By-Products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:228
+#: code:addons/mrp/stock.py:247
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr ""
@@ -360,19 +367,19 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:150
+#: code:addons/mrp/stock.py:169
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:651
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:719
+#: code:addons/mrp/mrp.py:721
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -804,11 +811,6 @@ msgid "If the active field is set to False, it will allow you to hide the bills 
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
-msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
 msgid "If the active field is set to False, it will allow you to hide the routing without removing it."
 msgstr ""
@@ -816,12 +818,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "In Production"
-msgstr ""
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
-#: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Inactive"
 msgstr ""
 
 #. module: mrp
@@ -954,7 +950,7 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:15
-#: code:addons/mrp/stock.py:225
+#: code:addons/mrp/stock.py:244
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #, python-format
 msgid "Manufacture"
@@ -1003,7 +999,7 @@ msgid "Manufacturing Order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:112
+#: code:addons/mrp/procurement.py:114
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
@@ -1042,7 +1038,7 @@ msgid "Manufacturing Reference"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:786
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr ""
@@ -1091,7 +1087,7 @@ msgid "New"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:108
+#: code:addons/mrp/procurement.py:110
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr ""
@@ -1207,7 +1203,7 @@ msgid "Planning"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/stock.py:136
+#: code:addons/mrp/stock.py:155
 #, python-format
 msgid "Please provide proper quantity."
 msgstr ""
@@ -1440,7 +1436,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1733,8 +1729,8 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351
-#: code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353
+#: code:addons/mrp/mrp.py:452
 #, python-format
 msgid "The Product Unit of Measure you chose has a different category than in the product form."
 msgstr ""
@@ -1933,8 +1929,8 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:351
-#: code:addons/mrp/mrp.py:450
+#: code:addons/mrp/mrp.py:353
+#: code:addons/mrp/mrp.py:452
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -2073,7 +2069,7 @@ msgid "You can configure by-products in the bill of material.\n"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
+#: code:addons/mrp/mrp.py:359
 #, python-format
 msgid "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."

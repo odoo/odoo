@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-26 12:14+0000\n"
 "PO-Revision-Date: 2016-07-12 01:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
@@ -208,7 +208,7 @@ msgstr "# av aktiviteter"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
-#: code:addons/project/project.py:446
+#: code:addons/project/project.py:438
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -1000,7 +1000,7 @@ msgstr "Aliasobjekt"
 #. module: project
 #: code:addons/project/project.py:133
 #, python-format
-msgid "All Employees Project: all employees can access"
+msgid "All employees"
 msgstr ""
 
 #. module: project
@@ -1234,7 +1234,7 @@ msgid "Check this box to manage internal activities through this project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:648
+#: code:addons/project/project.py:640
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1458,7 +1458,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1467,16 +1467,10 @@ msgid "Customer"
 msgstr "Kund"
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:860
 #, python-format
 msgid "Customer Email"
 msgstr "Kund-e-postmeddelande"
-
-#. module: project
-#: code:addons/project/project.py:132
-#, python-format
-msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1502,6 +1496,12 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:132
+#, python-format
+msgid "Customer project"
 msgstr ""
 
 #. module: project
@@ -2040,7 +2040,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:799
+#: code:addons/project/project.py:791
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2456,6 +2456,11 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Mer <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_config_settings
+msgid "More Info"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2495,7 +2500,7 @@ msgid "New"
 msgstr "Ny"
 
 #. module: project
-#: code:addons/project/project.py:801
+#: code:addons/project/project.py:793
 #, python-format
 msgid "New Task"
 msgstr ""
@@ -2719,7 +2724,7 @@ msgid "Planner"
 msgstr "Planerare"
 
 #. module: project
-#: code:addons/project/project.py:961
+#: code:addons/project/project.py:953
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2760,7 +2765,7 @@ msgstr ""
 #. module: project
 #: code:addons/project/project.py:134
 #, python-format
-msgid "Private Project: followers only"
+msgid "Private: followers only"
 msgstr ""
 
 #. module: project
@@ -2851,6 +2856,11 @@ msgstr "Projektets aktiviteter"
 #, python-format
 msgid "Projects"
 msgstr "Projekt"
+
+#. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3194,11 +3204,6 @@ msgstr "Startdatum"
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
 msgstr "Startdatum"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project_account_type
-msgid "State"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -3962,7 +3967,7 @@ msgid "send us an email"
 msgstr "skicka ett meddelande till oss via e-post"
 
 #. module: project
-#: code:addons/project/project.py:605
+#: code:addons/project/project.py:597
 #, python-format
 msgid "tasks"
 msgstr "Aktiviteter"
@@ -4065,6 +4070,15 @@ msgstr ""
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Tidrapporteringsrader på aktivitetsnivå"
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Detta ställer in den måttenhet som används i projekt och aktiviteter.\n"
+#~ "Om du använder tidrapporten kopplad till projekt (project_timesheet "
+#~ "modulen), glöm inte att ställa in rätt måttenhet för dina medarbetare."
 
 #~ msgid "Type of Account"
 #~ msgstr "Typ av konto"

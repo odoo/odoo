@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-02-28 17:03+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -505,7 +505,7 @@ msgid "Bounced Ratio"
 msgstr "Pomer odrazenia"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "Kampaň"
@@ -520,6 +520,13 @@ msgstr "Názov kampane"
 #: model:ir.ui.menu,name:mass_mailing.menu_view_mass_mailing_stages
 msgid "Campaign Stages"
 msgstr "Fázy kampane"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.mass_mailing_tag_action
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_tag_menu
+#: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_tag_view_form
+msgid "Campaign Tags"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_mass_mailing_campaign
@@ -562,6 +569,16 @@ msgstr "Kliknite sem pre vytvorenie nového mailing listu."
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Click here to create a new mailing."
 msgstr "Kliknite sem pre vytvorenie nového mailingu."
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid "Click here to create a new template."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
@@ -753,11 +770,6 @@ msgstr "Zmazať"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Dodané"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_hr_department
-msgid "Department"
-msgstr ""
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_2
@@ -1006,6 +1018,11 @@ msgstr ""
 "obľúbenej témi."
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_id
@@ -1166,6 +1183,13 @@ msgstr "Štatistiky správ "
 #: model:ir.ui.menu,name:mass_mailing.menu_email_template
 msgid "Mail Templates"
 msgstr "Šablóny správy"
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
+msgid ""
+"Mail templates are meant to design e-mails that can be used for several mass "
+"mailing campaigns."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
@@ -1371,6 +1395,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_module_mass_mailing_themes
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Mass mailing themes"
 msgstr "Témy hromadného mailu"
 
@@ -1390,6 +1415,11 @@ msgstr "ID správy"
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
 msgstr "Ábel Kábel"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
+msgid "More Info"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1931,7 +1961,7 @@ msgstr "Tento hromadný mail je naplánovaný "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3605
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3574
 #, fuzzy
 msgid ""
 "This name helps you tracking your different campaign efforts, e.g. "
@@ -2098,6 +2128,17 @@ msgstr "© 2014 Všetky práva vyhradené"
 
 #~ msgid ""
 #~ "&amp;nbsp;\n"
+#~ "                                                <span class=\"fa fa-10x "
+#~ "fa-music\"/>\n"
+#~ "                                                &amp;nbsp;"
+#~ msgstr ""
+#~ "&amp;nbsp;\n"
+#~ "                                                <span class=\"fa fa-10x "
+#~ "fa-music\"/>\n"
+#~ "                                                &amp;nbsp;"
+
+#~ msgid ""
+#~ "&amp;nbsp;\n"
 #~ "                                <span class=\"fa fa-10x fa-music\"/>\n"
 #~ "                                &amp;nbsp;"
 #~ msgstr ""
@@ -2131,12 +2172,75 @@ msgstr "© 2014 Všetky práva vyhradené"
 #~ "&amp;nbsp;\n"
 #~ "                                <span class=\"fa fa-usd fa-3x\"/>\n"
 #~ "                                &amp;nbsp;"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-"
+#~ "top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
+#~ "            <i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: "
+#~ "inline-block; font-size: 0.6em; margin-top: -0.15em;\"/>\n"
+#~ "        </span> Footers"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-"
+#~ "top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
+#~ "            <i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: "
+#~ "inline-block; font-size: 0.6em; margin-top: -0.15em;\"/>\n"
+#~ "        </span> Pätičky"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-"
+#~ "top: -0.15em; height: 0.9em; display: inline-block; overflow: hidden;\"/"
+#~ ">\n"
+#~ "            <i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: "
+#~ "0.25em; display: inline-block; font-size: 0.6em;\"/>\n"
+#~ "        </span> Headers"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-"
+#~ "top: -0.15em; height: 0.9em; display: inline-block; overflow: hidden;\"/"
+#~ ">\n"
+#~ "            <i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: "
+#~ "0.25em; display: inline-block; font-size: 0.6em;\"/>\n"
+#~ "        </span> Hlavičky"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\" style=\"display: "
+#~ "inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
+#~ "        </span> Extra"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\" style=\"display: "
+#~ "inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
+#~ "        </span> Extra"
+
+#~ msgid ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\"/>\n"
+#~ "        </span> Body"
+#~ msgstr ""
+#~ "<span class=\"fa-stack\">\n"
+#~ "            <i class=\"fa fa-align-left fa-stack-1x\"/>\n"
+#~ "        </span> Telo správy"
 
 #~ msgid "Action Needed"
 #~ msgstr "Potrebná akcia"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid ""
+#~ "Dear Bob,<br/>\n"
+#~ "                                    We would like you to know that your "
+#~ "order has shipped! To track your order or make any changes please click "
+#~ "the \"my order\" button below."
+#~ msgstr ""
+#~ "Drahý Juraj,<br/>\n"
+#~ "je nám potešením informovať Vás že Vaša objednávka bola odoslaná! Pre "
+#~ "sledovanie zásielky alebo pre akúkoľvek zmenu prosím kliknite na  "
+#~ "tlačidlo \"Moja objednávka\" nižšie."
 
 #~ msgid "Email Campaign - Products"
 #~ msgstr "Emailová kampaň - Produkty"
@@ -2150,11 +2254,42 @@ msgstr "© 2014 Všetky práva vyhradené"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Odberatelia (Partneri)"
 
+#~ msgid ""
+#~ "Great stories have personality. Consider telling a great story that "
+#~ "provides personality. Writing a story with personality for potential "
+#~ "clients will assist with making a relationship connection. This shows up "
+#~ "in small quirks like word choices or phrases. Write from your point of "
+#~ "view, not from someone else's experience.<br/>"
+#~ msgstr ""
+#~ "Veľké príbehy majú osobnosť. Zvážte vyrozprávať\n"
+#~ "skvelý príbeh, ktorý poskytuje osobnosť. Písanie príbehu\n"
+#~ "s osobnosťou pre potenciálnych klientov pomôže s\n"
+#~ "vytvorením vzťahového prepojenia. To sa ukáže v drobných\n"
+#~ "manieroch ako voľba slov alebo fráz. Píšte z vášho\n"
+#~ "pohľadu na vec, nie zo skúsenosti niekoho iného."
+
+#~ msgid ""
+#~ "ID of the related mail_mail. This field is an integer field becausethe "
+#~ "related mail_mail can be deleted separately from its statistics.However "
+#~ "the ID is needed for several action and controllers."
+#~ msgstr ""
+#~ "ID súvisiaceho mail_mail. Toto pole je pole integer pretože súvisiaci "
+#~ "mail_mail môže buť odstránený nezávisle od jeho štatistík. Jeho ID je "
+#~ "však potrebné pre rôzne akcie a kontrolery."
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid ""
+#~ "If checked, recipients will be mailed only once, allowing to sendvarious "
+#~ "mailings in a single campaign to test the effectivenessof the mailings."
+#~ msgstr ""
+#~ "Pokiaľ je zaškrtnuté, prijímatelia dostanú email iba raz, poskytujúc "
+#~ "odoslať rozdielne maily v rámci jednotlivej kampane pre testovanie "
+#~ "efektícnosti mailov."
 
 #~ msgid "Is Follower"
 #~ msgstr "Je odberateľ"
@@ -2176,6 +2311,24 @@ msgstr "© 2014 Všetky práva vyhradené"
 
 #~ msgid "Open Mass Mailing Menu"
 #~ msgstr "Otvoriť menu hromadného mailu"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Jedná sa o názov, ktorý vám pomôže sledovať snahu vašich rôznych kampaní. "
+#~ "Príklad: Fall_Drive, Christmas_Special"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr ""
+#~ "Ide o metódu dodávky. Príklad: Pohľadnice, email, alebo bannerová reklama"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Toto je zdroj odkazu. Príklad: vyhľadávaci prostriedok, iná doména, alebo "
+#~ "názov emailového zoznamu"
 
 #~ msgid "Tracked Link"
 #~ msgstr "Linka sledovania"

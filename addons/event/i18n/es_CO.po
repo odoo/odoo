@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-03-04 16:35+0000\n"
 "Last-Translator: Felipe Palomino <omega@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -746,6 +746,11 @@ msgid "Event Beginning Date"
 msgstr "Fecha de Inicio del Evento"
 
 #. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
@@ -832,6 +837,11 @@ msgid "Event Type"
 msgstr "Tipo de Evento"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -859,11 +869,6 @@ msgstr "Análisis de Eventos"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Programadores de Correo de Eventos"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Tipos de Evento"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1153,7 +1158,7 @@ msgid "Mail Scheduler"
 msgstr "Programador de Correos"
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Programadores de Correos"
 
@@ -1864,6 +1869,13 @@ msgid "training material."
 msgstr "material de capacitación."
 
 #~ msgid ""
+#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
+#~ ">the event or change the dates on which it is held.)</em>"
+#~ msgstr ""
+#~ "<em>(Nubark se reserva el derecho a cancelar, renombrar o reubicar<br/>el "
+#~ "evento o cambiar las fechas en las que se celebra.)</em>"
+
+#~ msgid ""
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
 #~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
@@ -1878,6 +1890,21 @@ msgstr "material de capacitación."
 #~ "event_id.date_begin_located} al ${object.event_id.date_end_located}.\n"
 #~ "Para más información, contacte por favor con nuestro departamento de "
 #~ "eventos.</p>\n"
+#~ "<p>Gracias por su participación!</p>\n"
+#~ "<p>Saludos cordiales</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Hola ${object.name},</p>\n"
+#~ "<p>Le confirmamos que su suscripción al evento ${object.event_id.name} ha "
+#~ "sido registrada.\n"
+#~ "Encontrará su <b>Escarapela</b> adjunta a este correo.</p>\n"
 #~ "<p>Gracias por su participación!</p>\n"
 #~ "<p>Saludos cordiales</p>"
 
@@ -1931,8 +1958,17 @@ msgstr "material de capacitación."
 #~ msgid "Action Needed"
 #~ msgstr "Acción Requerida"
 
+#~ msgid "Badge Innner Left"
+#~ msgstr "Escarapela Interior Izquierda"
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Controladores y Vistas"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
+
+#~ msgid "Events Types"
+#~ msgstr "Tipos de Evento"
 
 #~ msgid "Followers"
 #~ msgstr "Seguidores"

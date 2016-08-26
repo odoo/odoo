@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-07-19 16:08+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -104,6 +104,11 @@ msgid "% discount"
 msgstr "% discount (kedvezmény)"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -138,6 +143,11 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
 msgstr ""
 
 #. module: website_quote
@@ -388,11 +398,16 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
-msgstr ""
+msgstr "Rólunk"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
 msgstr ""
 
 #. module: website_quote
@@ -451,7 +466,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Back"
-msgstr ""
+msgstr "Vissza"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -528,13 +543,10 @@ msgstr "Megszakítás"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
-#, fuzzy
 msgid ""
 "Change the look and feel from the front-end (GUI) rather than a need of "
 "technical knowledge."
 msgstr ""
-"Változtassa meg a kinézetet a kapcsolóval(GUI) bármiféle műszaki tudás "
-"nélkül. "
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
@@ -571,9 +583,8 @@ msgstr "Lépjen velünk kapcsolatba"
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
-#, fuzzy
 msgid "Controllers and Views"
-msgstr "Vezérlők és nézetek"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -821,6 +832,11 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
@@ -895,8 +911,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:233
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -1171,9 +1187,8 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
-#, fuzzy
 msgid "Online Training"
-msgstr "Műstaki képzés"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1203,13 +1218,13 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/order.py:298
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:98
 #, python-format
 msgid "Order signed by %s"
 msgstr ""
@@ -1221,9 +1236,8 @@ msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid "Our Offer"
-msgstr "Megrendelése"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1237,9 +1251,8 @@ msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid "Our Service"
-msgstr "Szolgáltatás"
+msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1291,8 +1304,8 @@ msgstr ""
 "Funkcionális gyakorlat)."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:70
+#: code:addons/website_quote/controllers/main.py:237
 #, python-format
 msgid "Pay & Confirm"
 msgstr ""
@@ -1316,7 +1329,7 @@ msgstr "Fizetési tranzakció"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
-msgstr ""
+msgstr "Előnézet"
 
 #. module: website_quote
 #: model:web.tip,description:website_quote.quotation_tip_1
@@ -1327,7 +1340,6 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
-#: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
 msgstr "Érték"
@@ -1458,7 +1470,7 @@ msgid "Quotation Viewed"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr ""
@@ -1562,11 +1574,19 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+msgid "Section"
+msgstr "Szakasz"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Biztonsági token"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
 msgstr "Sorszám"
@@ -1600,6 +1620,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
 msgstr "Javasolt termékek"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Tax Excluded Price"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1854,7 +1879,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:147
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr ""
@@ -2184,5 +2209,21 @@ msgstr "ismeretlen"
 #~ "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 #~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
+#~ msgid ""
+#~ "Change the look and feel from the front-end(GUI) rather than aneed of "
+#~ "technical knowledge."
+#~ msgstr ""
+#~ "Változtassa meg a kinézetet a kapcsolóval(GUI) bármiféle műszaki tudás "
+#~ "nélkül. "
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Vezérlők és nézetek"
+
 #~ msgid "Send by Email"
 #~ msgstr "Küldés Email-ben"
+
+#~ msgid "Service"
+#~ msgstr "Szolgáltatás"
+
+#~ msgid "Total Price"
+#~ msgstr "Összérték"

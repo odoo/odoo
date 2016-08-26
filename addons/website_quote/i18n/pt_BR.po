@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-26 12:16+0000\n"
 "PO-Revision-Date: 2016-07-15 20:46+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -106,6 +106,11 @@ msgid "% discount"
 msgstr "% desconto"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "&amp;bull;"
+msgstr ""
+
+#. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
 #: model:product.template,quote_description:website_quote.product_template_quote_2
@@ -149,6 +154,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
 msgstr "<i class=\"fa fa-check\"/> Aceitar"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -433,6 +443,11 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
 msgstr "Acesso ao Prospecto"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
+msgstr ""
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -890,6 +905,11 @@ msgstr ""
 "venda."
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
@@ -967,8 +987,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:233
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -1297,13 +1317,13 @@ msgid "Optional Products Lines"
 msgstr "Linhas de produto opcionais"
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/order.py:298
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr "Pedido pago por %s. Transação: %s. Montante: %s."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:98
 #, python-format
 msgid "Order signed by %s"
 msgstr "Pedido assinado por %s"
@@ -1395,8 +1415,8 @@ msgstr ""
 "software (ver Treinamento Funcional)."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:70
+#: code:addons/website_quote/controllers/main.py:237
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Pagar & Confirmar"
@@ -1431,7 +1451,6 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
-#: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
 msgstr "Preço"
@@ -1562,7 +1581,7 @@ msgid "Quotation Viewed"
 msgstr "Cotação Visualizada"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Cotação visualizada pelo cliente"
@@ -1674,11 +1693,19 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr "Agendar Ligações e Reuniões"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+msgid "Section"
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Chave de segurança"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
 msgstr "Seqüência"
@@ -1712,6 +1739,11 @@ msgstr "Estrutura do Treinamento"
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
 msgstr "Produtos sugeridos:"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Tax Excluded Price"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1994,7 +2026,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:147
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Você não pode adicionar opções para o pedido confirmado."
@@ -2148,6 +2180,16 @@ msgstr "desconhecido"
 #~ "<b> Para escrever uma descrição de cotação, edite o seu produto, acesse a "
 #~ "aba de vendas e adicione um texto em \"Descrição de cotações\" </b>"
 
+#~ msgid ""
+#~ "Change the look and feel from the front-end(GUI) rather than aneed of "
+#~ "technical knowledge."
+#~ msgstr ""
+#~ "Alterar a aparência do front-end (GUI) em vez da necessidade de "
+#~ "conhecimento técnico."
+
+#~ msgid "Controlers and Views"
+#~ msgstr "Controladores e Visualizações"
+
 #~ msgid "Online Training + Certification"
 #~ msgstr "Treinamento Online + Certificação"
 
@@ -2156,6 +2198,9 @@ msgstr "desconhecido"
 
 #~ msgid "Order payed by %s. Transaction: %s. Amount: %s."
 #~ msgstr "Pedido pago por %s. Transação: %s. Montante: %s."
+
+#~ msgid "Our offer"
+#~ msgstr "Nossa oferta"
 
 #~ msgid ""
 #~ "Our offer is based on 3 commitments, which drive our business and our "
@@ -2171,6 +2216,9 @@ msgstr "desconhecido"
 #~ "Nossos preços são os mais baixos da região, se você encontrar mais barato "
 #~ "noutro local, nós devolveremos a diferença"
 
+#~ msgid "Quality"
+#~ msgstr "Qualidade"
+
 #~ msgid "Quality in many ways, our reputation was built on the first value."
 #~ msgstr ""
 #~ "Qualidade em vários aspectos, nossa reputação foi construída sobre o "
@@ -2179,11 +2227,30 @@ msgstr "desconhecido"
 #~ msgid "Send by Email"
 #~ msgstr "Enviar por e-mail"
 
+#~ msgid "Service"
+#~ msgstr "Serviço"
+
 #~ msgid ""
 #~ "The description of products/services from your quotation will be "
 #~ "displayed below"
 #~ msgstr ""
 #~ "A descrição dos produtos/serviços da sua cotação será exibida abaixo"
+
+#~ msgid ""
+#~ "These courses feature the same high quality course content found in our "
+#~ "traditional classroom trainings, supplemented with modular sessions and "
+#~ "cloud-based labs. Many of our online learning courses also include dozens "
+#~ "of recorded webinars and live sessions by our senior instructors. At the "
+#~ "end of the training, you can pass the Odoo Certification exam in one of "
+#~ "the 5000+ Pearson VUE test centers worldwide."
+#~ msgstr ""
+#~ "Estes cursos apresentam o mesmo conteúdo do curso de alta qualidade "
+#~ "encontrados em nossos treinamentos em sala de aula tradicional, "
+#~ "complementado com sessões modulares e laboratórios baseados em nuvem. "
+#~ "Muitos de nossos cursos de aprendizagem on-line também incluem dezenas de "
+#~ "webinars gravadas e sessões ao vivo por nossos instrutores seniores. No "
+#~ "final do treinamento, você pode fazer o exame de Certificação Odoo em um "
+#~ "dos mais de 5000 centros de teste da Pearson VUE em todo o mundo."
 
 #~ msgid "View Online Quotation"
 #~ msgstr "Ver Cotação Online"

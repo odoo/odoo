@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-26 12:15+0000\n"
 "PO-Revision-Date: 2016-05-27 23:18+0000\n"
 "Last-Translator: Владимир Куряев <istercul@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -726,6 +726,11 @@ msgid "Event Beginning Date"
 msgstr "Дата начала события"
 
 #. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Event Categories"
+msgstr ""
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
@@ -812,6 +817,11 @@ msgid "Event Type"
 msgstr "Тип события"
 
 #. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+msgid "Event Types"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
 #: model:ir.ui.view,arch_db:event.report_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -839,11 +849,6 @@ msgstr "Анализ мероприятий"
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Мероприятия: планировщики почты"
-
-#. module: event
-#: model:ir.actions.act_window,name:event.action_event_type
-msgid "Events Types"
-msgstr "Виды событий"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1134,7 +1139,7 @@ msgid "Mail Scheduler"
 msgstr ""
 
 #. module: event
-#: model:ir.ui.menu,name:event.menu_event_type
+#: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
 msgstr "Планировщики почты"
 
@@ -1855,6 +1860,22 @@ msgstr ""
 #~ "<p>Hello ${object.name},</p>\n"
 #~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
 #~ "has been recorded.\n"
+#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
+#~ "<p>Thank you for your participation!</p>\n"
+#~ "<p>Best regards</p>"
+#~ msgstr ""
+#~ "<p>Здравствуйте, ${object.name},</p>\n"
+#~ "<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id."
+#~ "name}\".\n"
+#~ "Ваш <b>бэйдж участника</b> находится в приложении к данному сообщению.</"
+#~ "p>\n"
+#~ "<p>Благодарим за участие!</p>\n"
+#~ "<p>С уважением,</p>"
+
+#~ msgid ""
+#~ "<p>Hello ${object.name},</p>\n"
+#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
+#~ "has been recorded.\n"
 #~ "You will automatically receive an email providing you more practical "
 #~ "information (such as the schedule, the agenda...) as soon as the event is "
 #~ "confirmed.</p>\n"
@@ -1875,8 +1896,14 @@ msgstr ""
 #~ msgid "Action Needed"
 #~ msgstr "Требуется реакция"
 
+#~ msgid "Badge Innner Left"
+#~ msgstr "Значок внутри слева"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
+
+#~ msgid "Events Types"
+#~ msgstr "Виды событий"
 
 #~ msgid "Followers"
 #~ msgstr "Подписчики"
