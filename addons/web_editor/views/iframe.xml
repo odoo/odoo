@@ -14,6 +14,13 @@
             <script type="text/javascript">
                 var snippets_url = '<t t-esc="snippets or ''"/>';
                 var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
+
+                var odoo = {
+                    session_info: {
+                        is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
+                        is_frontend: true, // this is not really the frontend here but this key is used to detect if xml has to be manually loaded
+                    },
+                };
             </script>
             <t t-if="not dont_load_assets">
                 <t t-call-assets="web.assets_common" t-js="false"/>

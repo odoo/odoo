@@ -14,7 +14,7 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js("/", "console.log('ok')", "'website.snippets.editor' in odoo.__DEBUG__.services", login='admin')
 
     def test_03_admin_tour_banner(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('banner')", "odoo.__DEBUG__.services['web_tour.tour'].tours.banner", login='admin')
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('banner')", "odoo.__DEBUG__.services['web_tour.tour'].tours.banner.ready", login='admin')
 
     def test_03_admin_tour_rte_translator(self):
         self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('rte_translator', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.rte_translator", login='admin')
