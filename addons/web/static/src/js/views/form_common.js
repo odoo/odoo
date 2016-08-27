@@ -11,6 +11,7 @@ var SearchView = require('web.SearchView');
 var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var Model = require('web.Model');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -669,6 +670,9 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         this.$translate = (_t.database.multi_lang && this.field.translate) ? $('<button/>', {
             type: 'button',
         }).addClass('o_field_translate fa fa-globe btn btn-link') : $();
+
+        this.$company_dependent = (this.field.company_dependent && session.debug && session.user_companies) ?
+            $('<i/>').addClass('o_field_property fa fa-sitemap btn btn-link') : $();
     },
 
     renderElement: function() {
@@ -694,6 +698,20 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         this.field_manager.on("change:display_invalid_fields", this, this._check_css_flags);
         this._check_css_flags();
     },
+    append_company_dependent: function() {
+        if (!this.get("effective_readonly") && !this.$company_dependent_icon) {
+            this.$company_dependent_icon = this.$company_dependent
+                .insertAfter(this.$el)
+                .on('click', _.bind(this.on_property_open, this));
+            }
+    },
+    on_property_open: function(e) {
+        var self = this;
+        e.stopImmediatePropagation();
+        new Model('ir.model.fields').call('get_property_action', [self.name, self.field_manager.model, self.field_manager.dataset.context]).then(function(result) {
+            self.do_action(result);
+        });
+    },
     start: function() {
         this._super();
         this.on("change:value", this, function() {
@@ -705,6 +723,12 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         this.on("change:effective_readonly", this, function() {
             this._toggle_label();
         });
+        if (this.$company_dependent.length) {
+            this.on("change:effective_readonly", this, function() {
+                this.append_company_dependent();
+            });
+            this.append_company_dependent();
+        }
         this.render_value();
         this._toggle_label();
 
@@ -762,6 +786,8 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         var show_translate = (!this.get('effective_readonly') && this.field_manager.get('actual_mode') !== "create");
         this.$translate.toggleClass('o_translate_active', !!show_translate);
 
+        var show_property = (!this.get('effective_readonly') || this.field_manager.get('actual_mode') !== "create");
+        this.$company_dependent.toggleClass('o_property_active', !!show_property);
         this.$el.add(this.$label)
             .toggleClass('o_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
     },

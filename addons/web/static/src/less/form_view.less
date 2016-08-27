@@ -210,6 +210,37 @@
         display: none;
     }
 
+    //Property Icon
+    .o_field_property {
+        padding: 0px !important;
+        cursor: pointer;
+        &.o_property_active {
+            position: absolute;
+            display: inline-block;
+        }
+        &.o_field_property_m2o {
+            margin: 0;
+        }
+        &.o_field_property_controls {
+            position: absolute;
+            margin: 0;
+        }
+        &.o_field_property_textarea {
+            margin: 0;
+        }
+    }
+    .o_field_property_boolean {
+        top: 0;
+    }
+    .o_field_property_image {
+        position: absolute;
+        top: 0;
+        margin: 0px;
+    }
+    .o_field_property_selection {
+        position: relative;
+    }
+
     // Dropdowns input (many2one, ...)
     .o_form_input_dropdown {
         .o-flex(1, 0, auto);

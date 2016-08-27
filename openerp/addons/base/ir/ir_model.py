@@ -238,6 +238,17 @@ class IrModelFields(models.Model):
             field.modules = ", ".join(sorted(installed_names & module_names))
 
     @api.model
+    def get_property_action(self, field_name=False, field_model=False):
+        field = self.search([('name', '=', field_name), ('model', '=', field_model)], limit=1)
+        return {
+            'name': _("Company Properties"),
+            'res_model': 'ir.property',
+            'domain': [('fields_id', '=', field.id)],
+            'views': [(self.env.ref('base.ir_property_value_view_tree').id, 'list')],
+            'type': 'ir.actions.act_window',
+        }
+
+    @api.model
     def _check_selection(self, selection):
         try:
             items = safe_eval(selection)

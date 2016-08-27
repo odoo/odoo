@@ -304,6 +304,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             isSelecting = false;
         });
         this.setupFocus(this.$follow_button);
+        this.append_company_dependent();
     },
     render_value: function(no_recurse) {
         var self = this;
@@ -411,6 +412,14 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         this.no_ed = false;
         return res;
     },
+    append_company_dependent: function() {
+        if (!this.get("effective_readonly")) {
+            this.$company_dependent_icon = this.$company_dependent
+                .appendTo(this.$el)
+                .addClass("o_field_property_m2o")
+                .on('click', _.bind(this.on_property_open, this));
+        }
+    }
 });
 
 /**
