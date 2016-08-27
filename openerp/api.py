@@ -41,7 +41,7 @@ __all__ = [
     'cr_uid_id', 'cr_uid_id_context',
     'cr_uid_ids', 'cr_uid_ids_context',
     'cr_uid_records', 'cr_uid_records_context',
-    'constrains', 'depends', 'onchange', 'returns',
+    'constrains', 'depends', 'onchange', 'onwrite', 'returns',
 ]
 
 import logging
@@ -178,6 +178,27 @@ def onchange(*args):
             supported and will be ignored
     """
     return lambda method: decorate(method, '_onchange', args)
+
+
+def onwrite(*args):
+    """ Trigger the decorated method when the chosen fields are changed.
+
+    Example::
+
+        @api.multi
+        @api.onwrite("partner_id", "user_id")
+        def _onwrite_partner_user_combine(self):
+            for s in self:
+                if s.partner_id.user_id != s.user_id:
+                    s.user_id = s.partner_id.user_id
+
+    .. warning::
+
+        ``@onwrite`` only supports simple field names, dotted names
+        (fields of relational fields e.g. ``partner_id.customer``) are not
+        supported and will be ignored.
+    """
+    return constrains(*args)
 
 
 def depends(*args):
