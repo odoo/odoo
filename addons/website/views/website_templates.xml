@@ -909,14 +909,14 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div t-field="res_company.partner_id" t-options='{
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
+        <t t-if="not res_company.google_map_img()">
+            <span class="fa fa-map-marker fa-fw mt16"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
+        </t>
     </address>
     <t t-if="res_company.google_map_img()">
         <a t-att-href="res_company.google_map_link()" target="_BLANK">
            <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
         </a>
-    </t>
-    <t t-else="1">
-        <a t-att-href="res_company.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
     </t>
 </template>
 
@@ -935,7 +935,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                         </div>
                     </div>
                     <div class="text-center mt64" name="mail_button">
-                        <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary">Send us an email</a>
+                        <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
                     </div>
                 </div>
                 <div class="col-md-4 mb32">
