@@ -3,22 +3,18 @@
 # * project
 #
 # Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-04 07:04+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-24 09:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ca.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  ca.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
@@ -182,16 +178,6 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
-msgstr ""
-
-#. module: project
-#: model:mail.template,body_html:project.mail_template_data_project_task
-msgid ""
-"\n"
-"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
-"<p>Thank you for your enquiry.<br /></p>\n"
-"<p>If you have any questions, please let us know.</p>\n"
-"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1201,11 +1187,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr ""
-
-#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Per Responsable"
@@ -1221,7 +1202,6 @@ msgstr "Cancel·la"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
-#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Cancel·lada"
@@ -1711,7 +1691,6 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
-#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Realitzat"
@@ -2155,7 +2134,6 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
-#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "En procés"
@@ -2489,11 +2467,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2535,11 +2508,6 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_0
-msgid "Not validated"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2931,21 +2899,11 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
-msgstr ""
-
-#. module: project
-#: model:mail.template,subject:project.mail_template_data_project_task
-msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -3043,7 +3001,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_sale_service
 msgid "Sale Service"
-msgstr ""
+msgstr "Servei de venda"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3647,7 +3605,6 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
-#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Per fer"
@@ -3716,11 +3673,6 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
-msgstr ""
-
-#. module: project
-#: model:project.task.type,legend_priority:project.project_stage_0
-msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3989,7 +3941,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
-msgstr ""
+msgstr "enviïs un correu electrònic"
 
 #. module: project
 #: code:addons/project/project.py:605
@@ -4099,6 +4051,18 @@ msgstr ""
 #~ msgid "Open Project Menu"
 #~ msgstr "Obrir menú de projecte"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Política per enviar un missatge en el document utilitzant la passarel·la "
+#~ "del correu.\n"
+#~ "-Tots: Tothom pot enviar.\n"
+#~ "-Empreses: Només les empreses autenticades.\n"
+#~ "-Seguidors: Només els seguidors del document relacionat.\n"
+
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Registrar full de temps per tasques"
 
@@ -4118,6 +4082,16 @@ msgstr ""
 #~ "projectes a les entrades del part d'hores per una data i usuari en "
 #~ "concret, amb l'efecte de crear, editar i esborrar en els dos sentits.\n"
 #~ "- Això instal·la el mòdul project_timesheet."
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Permet fixar la unitat de mesura utilitzada en projectes i tasques.\n"
+#~ "Si utilitzeu els fulls d'horaris relacionats amb projectes (mòdul "
+#~ "project_timesheet), no oblideu configurar la unitat de mesura correcta en "
+#~ "els vostres empleats."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Comptador de missatges no llegits"

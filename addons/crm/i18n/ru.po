@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-03-19 12:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -235,19 +235,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> смотреть примеры</i>"
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1200,18 +1187,6 @@ msgid "Call"
 msgstr "Звонок"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr "Звонок для демонстрации"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr "Звонок для демонстрации"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1781,11 +1756,6 @@ msgid "Download the"
 msgstr "Скачать"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Черновые кандидаты"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr ""
@@ -1977,18 +1947,6 @@ msgstr "Завершено"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "Свернуто в Воронке продаж"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2457,11 +2415,6 @@ msgid "Leads by Source"
 msgstr "Потенциальные Покупатели по Источникам"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Кандидаты из США"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Назначенные мне кандидаты"
@@ -2578,12 +2531,6 @@ msgstr ""
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Низкий"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3447,12 +3394,6 @@ msgid "Relation field"
 msgstr "Относящееся поле"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Напоминание пользователю"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 #, fuzzy
 msgid ""
@@ -3621,12 +3562,6 @@ msgid "Selection"
 msgstr "Выбор"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3638,11 +3573,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Нумерация"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Установить отдел в подразделении продаж"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4691,11 +4621,26 @@ msgstr ""
 #~ msgid "Both"
 #~ msgstr "Оба"
 
+#~ msgid "Call for Demo"
+#~ msgstr "Звонок для демонстрации"
+
+#~ msgid "Call for a demo"
+#~ msgstr "Звонок для демонстрации"
+
+#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
+#~ msgstr "Нажмите для установки нового этапа в вашей воронке продаж."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
 
+#~ msgid "Deduplicate Contact"
+#~ msgstr "Дедуплицировать контакты"
+
 #~ msgid "Done"
 #~ msgstr "Сделано"
+
+#~ msgid "Draft Leads"
+#~ msgstr "Черновые кандидаты"
 
 #~ msgid "Follow-up"
 #~ msgstr "Напоминание"
@@ -4724,8 +4669,14 @@ msgstr ""
 #~ msgid "Is Follower"
 #~ msgstr "Подписчик"
 
+#~ msgid "Last Activity"
+#~ msgstr "Последняя активность"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Последнее сообщение по дате"
+
+#~ msgid "Leads from USA"
+#~ msgstr "Кандидаты из США"
 
 #~ msgid ""
 #~ "Link between stages and sales teams. When set, this limitate the current "
@@ -4733,6 +4684,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Связь между этапами и отделами продаж. При установке, ограничивает этап "
 #~ "для выбранного отдела продаж."
+
+#~ msgid "Mark As Lost"
+#~ msgstr "Отметить как потерянный"
 
 #~ msgid "Messages"
 #~ msgstr "Сообщения"
@@ -4770,14 +4724,41 @@ msgstr ""
 #~ msgid "Open Sale Menu"
 #~ msgstr "Открыть меню продаж"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Политики для сообщений в документе с использованием почтового шлюза:\n"
+#~ "- все: каждый может писать\n"
+#~ "- партнёры: только аутентифицированные партнёры;\n"
+#~ "- подписчики: только подписчики соответствующего документа\n"
+
 #~ msgid "Qualification"
 #~ msgstr "Уточнение"
+
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "Напоминание о кандидате: ${object.id} from ${object.partner_id != False и "
+#~ "object.partner_id.name or object.contact_name}"
+
+#~ msgid "Reminder to User"
+#~ msgstr "Напоминание пользователю"
 
 #~ msgid "Sales Tags"
 #~ msgstr "Теги продаж"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Выберите этапы для этого отдела продаж"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Установить отдел в подразделении продаж"
+
+#~ msgid "Teams"
+#~ msgstr "Комманда"
 
 #~ msgid "The date before which no action should be taken."
 #~ msgstr "Дата, перед которой никаких действий не должно быть принято."
@@ -4807,6 +4788,13 @@ msgstr ""
 #~ "Это источник ссылки. Например: поисковик, другой домен, название списка "
 #~ "рассылки."
 
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr ""
+#~ "Этот этап складывается в kanban view, когда в этой стадии отсутствуют "
+#~ "записи для отображения."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Счетчик непрочтённых сообщений"
 
@@ -4821,6 +4809,12 @@ msgstr ""
 
 #~ msgid "Your Customers"
 #~ msgstr "Ваши заказчики"
+
+#~ msgid "Your Prices"
+#~ msgstr "Ваши цены"
+
+#~ msgid "Your Products"
+#~ msgstr "Ваши продукты"
 
 #~ msgid "Your Proposal"
 #~ msgstr "Ваши предложения"

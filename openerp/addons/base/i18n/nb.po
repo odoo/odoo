@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
 "PO-Revision-Date: 2016-06-22 11:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
@@ -4290,7 +4290,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr "%y - År uten århundre [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1082
+#: code:addons/base/ir/ir_model.py:1083
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -5193,8 +5193,8 @@ msgstr ""
 "Administrative inndelinger for landet. For eksempel stat, departement, fylke"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:619 code:addons/base/ir/ir_model.py:682
-#: code:addons/base/ir/ir_model.py:1201
+#: code:addons/base/ir/ir_model.py:619 code:addons/base/ir/ir_model.py:683
+#: code:addons/base/ir/ir_model.py:1202
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Administratortilgang kreves for å avinstallere en modul"
@@ -5374,7 +5374,7 @@ msgstr ""
 "(topptekst på rapporter)."
 
 #. module: base
-#: code:addons/base/res/res_users.py:711
+#: code:addons/base/res/res_users.py:710
 #: model:ir.model,name:base.model_ir_module_category
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
@@ -5970,11 +5970,6 @@ msgstr ""
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
 msgstr "Det britiske territoriet i Indiahavet"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_6
-msgid "Bronze"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -6645,11 +6640,6 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_17
-msgid "Company Contact"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
 msgid "Company Name"
 msgstr "Firmanavn"
@@ -6692,11 +6682,6 @@ msgstr "Full ID"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
 msgid "Complete Name"
 msgstr "Fullt navn"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_9
-msgid "Components Buyer"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
@@ -6831,11 +6816,6 @@ msgstr "Begrensningstype"
 #. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_8
-msgid "Consultancy Services"
 msgstr ""
 
 #. module: base
@@ -7340,6 +7320,7 @@ msgstr "Valutakode (ISO 4217)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
+#: model:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
 msgstr "Valutakurs"
 
@@ -7952,11 +7933,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_13
-msgid "Distributor"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr ""
@@ -7973,7 +7949,7 @@ msgid "Document Management"
 msgstr "Budsjettstyring"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:848 code:addons/base/ir/ir_model.py:851
+#: code:addons/base/ir/ir_model.py:849 code:addons/base/ir/ir_model.py:852
 #, python-format
 msgid "Document model"
 msgstr ""
@@ -8146,7 +8122,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
 #: model:ir.model.fields,field_description:base.field_res_users_employee
 #: model:res.groups,name:base.group_user
-#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
 msgstr ""
 
@@ -8232,6 +8207,12 @@ msgstr ""
 #: code:addons/models.py:1344
 #, python-format
 msgid "Error details:"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1357
+#, python-format
+msgid "Error while validating constraint"
 msgstr ""
 
 #. module: base
@@ -9060,11 +9041,6 @@ msgid "Go to the configuration panel"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_4
-msgid "Gold"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
 msgid "Google Analytics"
 msgstr ""
@@ -9613,11 +9589,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_iso_code
 msgid "ISO code"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_7
-msgid "IT Services"
 msgstr ""
 
 #. module: base
@@ -11101,11 +11072,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_14
-msgid "Manufacturer"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
@@ -12043,11 +12009,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_12
-msgid "Office Supplies"
-msgstr ""
-
-#. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
 msgstr ""
@@ -12158,7 +12119,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:848
+#: code:addons/base/ir/ir_model.py:849
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -12246,7 +12207,7 @@ msgid "Original View"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:725 code:addons/base/res/res_users.py:890
+#: code:addons/base/res/res_users.py:724 code:addons/base/res/res_users.py:889
 #, python-format
 msgid "Other"
 msgstr ""
@@ -12453,7 +12414,6 @@ msgstr ""
 #: model:ir.model,name:base.model_res_partner
 #: model:ir.model.fields,field_description:base.field_res_company_partner_id
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
-#: model:res.partner.category,name:base.res_partner_category_0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
 msgstr ""
@@ -12652,7 +12612,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:851
+#: code:addons/base/ir/ir_model.py:852
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -12923,11 +12883,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_website_theme_install
 msgid "Propose to install a theme on website installation"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_2
-msgid "Prospect"
 msgstr ""
 
 #. module: base
@@ -13460,11 +13415,6 @@ msgid "Restrict to lists"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_16
-msgid "Retailer"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
 msgstr ""
@@ -13980,11 +13930,6 @@ msgid "Server Actions"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_11
-msgid "Services"
-msgstr ""
-
-#. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
 msgstr ""
@@ -14095,11 +14040,6 @@ msgid "Signup"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_5
-msgid "Silver"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
 msgstr ""
@@ -14192,25 +14132,25 @@ msgid "Sometimes called BIC or Swift."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:323 code:addons/base/ir/ir_model.py:842
+#: code:addons/base/ir/ir_attachment.py:323 code:addons/base/ir/ir_model.py:843
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:844
+#: code:addons/base/ir/ir_model.py:845
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:845
+#: code:addons/base/ir/ir_model.py:846
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:843
+#: code:addons/base/ir/ir_model.py:844
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr ""
@@ -16071,11 +16011,6 @@ msgid "Vehicle, leasing, insurances, costs"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_1
-msgid "Vendor"
-msgstr "Leverandør"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -16502,11 +16437,6 @@ msgstr ""
 msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_15
-msgid "Wholesaler"
 msgstr ""
 
 #. module: base
@@ -17555,6 +17485,36 @@ msgstr ""
 
 #~ msgid ""
 #~ "\n"
+#~ "Create recurring documents.\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "This module allows to create new documents and add subscriptions on that "
+#~ "document.\n"
+#~ "\n"
+#~ "e.g. To have an invoice generated automatically periodically:\n"
+#~ "-------------------------------------------------------------\n"
+#~ "    * Define a document type based on Invoice object\n"
+#~ "    * Define a subscription whose source document is the document defined "
+#~ "as\n"
+#~ "      above. Specify the interval information and partner to be invoice.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Opprett gjentagende dokumenter.\n"
+#~ "============================\n"
+#~ "\n"
+#~ "Denne modulen lar deg opprette nye dokumenter og legge til abonnementer "
+#~ "på det dokumentet.\n"
+#~ "\n"
+#~ "For eksempel, for å lage en faktura som periodisk genereres:\n"
+#~ "---------------------------------------------------------------\n"
+#~ "    * Definer en dokumenttype basert på faktura objektet\n"
+#~ "    * Definer et abonnement som har et kildedokument definert som\n"
+#~ "       over. Spesifiser intervallet og partneren som skal faktureres.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
 #~ "Menu for Marketing.\n"
 #~ "===================\n"
 #~ "\n"
@@ -17570,6 +17530,40 @@ msgstr ""
 
 #~ msgid ""
 #~ "\n"
+#~ "Module for defining analytic accounting object.\n"
+#~ "===============================================\n"
+#~ "\n"
+#~ "In OpenERP, analytic accounts are linked to general accounts but are "
+#~ "treated\n"
+#~ "totally independently. So, you can enter various different analytic "
+#~ "operations\n"
+#~ "that have no counterpart in the general financial accounts.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Modul for definering av objekt for analytisk regnskapsføring.\n"
+#~ "=================================================\n"
+#~ "\n"
+#~ "I OpenERP er analytiske kontoer knyttet til generelle kontoer, men blir "
+#~ "behandlet\n"
+#~ "uavhengig. Du kan dermed gå inn i forskjellige analytiske operasjoner som "
+#~ "ikke har\n"
+#~ "noen tilsvarende enhet i de generelle finanskontoene.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web Calendar view.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Webkalendervisning.\n"
+#~ "=========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
 #~ "OpenERP Web Gantt chart view.\n"
 #~ "=============================\n"
 #~ "\n"
@@ -17577,6 +17571,32 @@ msgstr ""
 #~ "\n"
 #~ "OpenERP Web Gantt diagramvisning.\n"
 #~ "==============================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web core module.\n"
+#~ "========================\n"
+#~ "\n"
+#~ "This module provides the core of the OpenERP Web Client.\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Web core module.\n"
+#~ "========================\n"
+#~ "\n"
+#~ "Denne modulen tilbyr kjernen i OpenERP webklienten.\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web kanban view.\n"
+#~ "========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Web kanban visning.\n"
+#~ "========================\n"
 #~ "\n"
 
 #~ msgid ""
@@ -17600,11 +17620,111 @@ msgstr ""
 #~ "Redigering, oppretting eller sletting kan skje begge veier.\n"
 #~ "    "
 
+#~ msgid ""
+#~ "\n"
+#~ "The kernel of OpenERP, needed for all installation.\n"
+#~ "===================================================\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Kjernen av OpenERP, nødvendig for alle installasjoner.\n"
+#~ "===================================================\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Ecuador in "
+#~ "OpenERP.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "Accounting chart and localization for Ecuador.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Dette er basismodulen for å styre kontoplaner for Ecuador i OpenERP.\n"
+#~ "=========================================================\n"
+#~ "\n"
+#~ "Kontoplan og lokalisering for Ecuador.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module implements a timesheet system.\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "Each employee can encode and track their time spent on the different "
+#~ "projects.\n"
+#~ "A project is an analytic account and the time spent on a project "
+#~ "generates costs on\n"
+#~ "the analytic account.\n"
+#~ "\n"
+#~ "Lots of reporting on time and employee tracking are provided.\n"
+#~ "\n"
+#~ "It is completely integrated with the cost accounting module. It allows "
+#~ "you to set\n"
+#~ "up a management by affair.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Denne modulen implementerer et timelistesystem.\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "Hver ansatt kan legge inn og spore tid brukt på forskjellige prosjekter.\n"
+#~ "Et prosjekt er en analytisk konto, og tid brukt på prosjektet genererer "
+#~ "kostnaer på\n"
+#~ "den analytiske kontoen.\n"
+#~ "\n"
+#~ "Mange muligheter for rapportering på time og ressursbruk tilbys.\n"
+#~ "\n"
+#~ "Modulen er tett integrert med kostnadsstyringsmodulen. Den lar deg sette\n"
+#~ "opp styring per affære.\n"
+#~ "    "
+
+#~ msgid "%B - Full month name."
+#~ msgstr "%B - Fullt navn på måned."
+
+#~ msgid "%H - Hour (24-hour clock) [00,23]."
+#~ msgstr "%H - Time (24-times klokke)  [00,23]."
+
+#~ msgid "%I - Hour (12-hour clock) [01,12]."
+#~ msgstr "%I - Time (12-times klokke) som et desimalnummer [01,12]."
+
+#~ msgid "%M - Minute [00,59]."
+#~ msgstr "%M - Minutt [00,59]."
+
+#~ msgid "%S - Seconds [00,61]."
+#~ msgstr "%S - Sekunder [00,61]."
+
+#~ msgid "%Y - Year with century."
+#~ msgstr "%Y - År med århundre."
+
+#~ msgid "%d - Day of the month [01,31]."
+#~ msgstr "%d - Dag i måneden [01,31]."
+
+#~ msgid "%j - Day of the year [001,366]."
+#~ msgstr "%j - Dag i året som et desimaltall [001,366]."
+
+#~ msgid "%m - Month number [01,12]."
+#~ msgstr "%m - Måned som et desimaltall [01,12]."
+
+#~ msgid "%p - Equivalent of either AM or PM."
+#~ msgstr "%p - Tilsvarende til enten AM eller PM."
+
+#~ msgid "%w - Weekday number [0(Sunday),6]."
+#~ msgstr "%w - Ukedag [0(Søndag),6]."
+
+#~ msgid "%y - Year without century [00,99]."
+#~ msgstr "%y - År uten århundre [00,99]."
+
+#~ msgid "2.  %a ,%A         ==> Fri, Friday"
+#~ msgstr "2.  %a ,%A         ==> Fre, Fredag"
+
 #~ msgid "Account Report"
 #~ msgstr "Kontoutskrift"
 
 #~ msgid "Account Reports"
 #~ msgstr "Kontoutskrifter"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Regnskapsrapporter"
 
 #~ msgid "Albanian / Shqip"
 #~ msgstr "Albansk / Shqipëri"
@@ -17624,6 +17744,13 @@ msgstr ""
 #~ msgid "Catalan / Català"
 #~ msgstr "Catalan / Català"
 
+#~ msgid ""
+#~ "Check this to define the report footer manually.  Otherwise it will be "
+#~ "filled in automatically."
+#~ msgstr ""
+#~ "Huk av her for å definere rapportbunnteksten manuelt. Hvis ikke blir den "
+#~ "fylt inn automatisk."
+
 #~ msgid "Chinese (CN) / 简体中文"
 #~ msgstr "Kinesisk (CN) / 简体中文"
 
@@ -17636,8 +17763,14 @@ msgstr ""
 #~ msgid "Claims Management"
 #~ msgstr "Claims Management"
 
+#~ msgid "Company Registry"
+#~ msgstr "Firmaregister"
+
 #~ msgid "Croatian / hrvatski jezik"
 #~ msgstr "Kroatisk / hrvatski jezik"
+
+#~ msgid "Custom Footer"
+#~ msgstr "Tilpasset bunntekst"
 
 #~ msgid "Customer Relationship Management"
 #~ msgstr "Kunderelasjonshåndtering"
@@ -17648,8 +17781,14 @@ msgstr ""
 #~ msgid "Danish / Dansk"
 #~ msgstr "Dansk / Dansk"
 
+#~ msgid "OpenERP Web Diagram"
+#~ msgstr "OpenERP Webdiagram"
+
 #~ msgid "Payment Follow-up Management"
 #~ msgstr "Betalingsoppfølging"
 
 #~ msgid "Print Invoice"
 #~ msgstr "Skriv ut faktura"
+
+#~ msgid "Vendor"
+#~ msgstr "Leverandør"

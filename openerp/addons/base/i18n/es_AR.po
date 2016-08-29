@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
 "PO-Revision-Date: 2016-05-30 02:01+0000\n"
 "Last-Translator: Virginia Castro <castrovirginia88@gmail.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/"
@@ -4540,7 +4540,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr "%y - Año sin el siglo [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1082
+#: code:addons/base/ir/ir_model.py:1083
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -5432,8 +5432,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:619 code:addons/base/ir/ir_model.py:682
-#: code:addons/base/ir/ir_model.py:1201
+#: code:addons/base/ir/ir_model.py:619 code:addons/base/ir/ir_model.py:683
+#: code:addons/base/ir/ir_model.py:1202
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Se requiere acceso como administrador para desinstalar un módulo"
@@ -5604,7 +5604,7 @@ msgstr ""
 "impresos (encabezado del informe)."
 
 #. module: base
-#: code:addons/base/res/res_users.py:711
+#: code:addons/base/res/res_users.py:710
 #: model:ir.model,name:base.model_ir_module_category
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
@@ -6199,11 +6199,6 @@ msgstr ""
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
 msgstr "Territorio Británico del Océano Índico"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_6
-msgid "Bronze"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -6866,11 +6861,6 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_17
-msgid "Company Contact"
-msgstr "Contacto de la compañía"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
 msgid "Company Name"
 msgstr "Nombre de la compañía"
@@ -6913,11 +6903,6 @@ msgstr "Id. completa"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
 msgid "Complete Name"
 msgstr "Nombre completo"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_9
-msgid "Components Buyer"
-msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
@@ -7052,11 +7037,6 @@ msgstr ""
 #. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_8
-msgid "Consultancy Services"
 msgstr ""
 
 #. module: base
@@ -7562,6 +7542,7 @@ msgstr "Código de moneda (ISO 4217)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
+#: model:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
 msgstr "Tasa monetaria"
 
@@ -8175,11 +8156,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_13
-msgid "Distributor"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr ""
@@ -8196,7 +8172,7 @@ msgid "Document Management"
 msgstr "Gestión de existencias"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:848 code:addons/base/ir/ir_model.py:851
+#: code:addons/base/ir/ir_model.py:849 code:addons/base/ir/ir_model.py:852
 #, python-format
 msgid "Document model"
 msgstr ""
@@ -8369,7 +8345,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
 #: model:ir.model.fields,field_description:base.field_res_users_employee
 #: model:res.groups,name:base.group_user
-#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
 msgstr ""
 
@@ -8455,6 +8430,12 @@ msgstr ""
 #: code:addons/models.py:1344
 #, python-format
 msgid "Error details:"
+msgstr ""
+
+#. module: base
+#: code:addons/models.py:1357
+#, python-format
+msgid "Error while validating constraint"
 msgstr ""
 
 #. module: base
@@ -9287,11 +9268,6 @@ msgid "Go to the configuration panel"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_4
-msgid "Gold"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
 msgid "Google Analytics"
 msgstr ""
@@ -9845,11 +9821,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_iso_code
 msgid "ISO code"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_7
-msgid "IT Services"
 msgstr ""
 
 #. module: base
@@ -11333,11 +11304,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_14
-msgid "Manufacturer"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
@@ -12277,11 +12243,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_12
-msgid "Office Supplies"
-msgstr "Material de oficina"
-
-#. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
 msgstr "Directivo"
@@ -12402,7 +12363,7 @@ msgstr ""
 "actual.\n"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:848
+#: code:addons/base/ir/ir_model.py:849
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -12492,7 +12453,7 @@ msgid "Original View"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:725 code:addons/base/res/res_users.py:890
+#: code:addons/base/res/res_users.py:724 code:addons/base/res/res_users.py:889
 #, python-format
 msgid "Other"
 msgstr ""
@@ -12699,7 +12660,6 @@ msgstr "Clase parseadora"
 #: model:ir.model,name:base.model_res_partner
 #: model:ir.model.fields,field_description:base.field_res_company_partner_id
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
-#: model:res.partner.category,name:base.res_partner_category_0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
 msgstr "Partner"
@@ -12899,7 +12859,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr "Plan de cuentas SNC para Portugal"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:851
+#: code:addons/base/ir/ir_model.py:852
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -13186,11 +13146,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_website_theme_install
 msgid "Propose to install a theme on website installation"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_2
-msgid "Prospect"
 msgstr ""
 
 #. module: base
@@ -13730,11 +13685,6 @@ msgid "Restrict to lists"
 msgstr "Restringir a las listas"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_16
-msgid "Retailer"
-msgstr "Minorista"
-
-#. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
 msgstr ""
@@ -14256,11 +14206,6 @@ msgid "Server Actions"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_11
-msgid "Services"
-msgstr ""
-
-#. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
 msgstr ""
@@ -14369,11 +14314,6 @@ msgid "Signup"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_5
-msgid "Silver"
-msgstr "Plata"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
 msgstr "Descuentos simples en el TPV "
@@ -14466,25 +14406,25 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Algunas veces llamado BIC o Swift"
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:323 code:addons/base/ir/ir_model.py:842
+#: code:addons/base/ir/ir_attachment.py:323 code:addons/base/ir/ir_model.py:843
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:844
+#: code:addons/base/ir/ir_model.py:845
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Lo siento, no estás autorizado a crear este tipo de documento."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:845
+#: code:addons/base/ir/ir_model.py:846
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Lo siento, no está autorizado a eliminar este documento."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:843
+#: code:addons/base/ir/ir_model.py:844
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Lo siento, no está autorizado para modificar este documento."
@@ -16411,11 +16351,6 @@ msgid "Vehicle, leasing, insurances, costs"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_1
-msgid "Vendor"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -16864,11 +16799,6 @@ msgid ""
 msgstr ""
 "Si los valores de este campo pueden ser traducidos (activa el mecanismo de "
 "traducción para este campo)."
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_15
-msgid "Wholesaler"
-msgstr "Mayorista"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_window
@@ -17954,6 +17884,150 @@ msgstr ""
 
 #~ msgid ""
 #~ "\n"
+#~ "Base Module for Ethiopian Localization\n"
+#~ "======================================\n"
+#~ "\n"
+#~ "This is the latest Ethiopian OpenERP localization and consists of:\n"
+#~ "    - Chart of Accounts\n"
+#~ "    - VAT tax structure\n"
+#~ "    - Withholding tax structure\n"
+#~ "    - Regional State listings\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Módulo base para la localización etíope.\n"
+#~ "======================================\n"
+#~ "\n"
+#~ "Ésta es la última localización de OpenERP para Etiopía y consiste en:\n"
+#~ "    - Plan de cuentas\n"
+#~ "    - Estructura de impuestos\n"
+#~ "    - Estructura de retenciones\n"
+#~ "    - Listado de regiones\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Base module for the Brazilian localization\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists in:\n"
+#~ "\n"
+#~ " - Generic Brazilian chart of accounts\n"
+#~ " - Brazilian taxes such as:\n"
+#~ "\n"
+#~ "        - IPI\n"
+#~ "        - ICMS\n"
+#~ "        - PIS\n"
+#~ "        - COFINS\n"
+#~ "        - ISS\n"
+#~ "        - IR\n"
+#~ "        - IRPJ\n"
+#~ "        - CSLL\n"
+#~ "\n"
+#~ "The field tax_discount has also been added in the account.tax.template "
+#~ "and \n"
+#~ "account.tax objects to allow the proper computation of some Brazilian "
+#~ "VATs \n"
+#~ "such as ICMS. The chart of account creation wizard has been extended to \n"
+#~ "propagate those new data properly.\n"
+#~ "\n"
+#~ "It's important to note however that this module lack many implementations "
+#~ "to \n"
+#~ "use OpenERP properly in Brazil. Those implementations (such as the "
+#~ "electronic \n"
+#~ "fiscal Invoicing which is already operational) are brought by more than "
+#~ "15 \n"
+#~ "additional modules of the Brazilian Launchpad localization project \n"
+#~ "https://launchpad.net/openerp.pt-br-localiz and their dependencies in "
+#~ "the \n"
+#~ "extra addons branch. Those modules aim at not breaking with the "
+#~ "remarkable \n"
+#~ "OpenERP modularity, this is why they are numerous but small. One of the \n"
+#~ "reasons for maintaining those modules apart is that Brazilian "
+#~ "Localization \n"
+#~ "leaders need commit rights agility to complete the localization as "
+#~ "companies \n"
+#~ "fund the remaining legal requirements (such as soon fiscal ledgers, \n"
+#~ "accounting SPED, fiscal SPED and PAF ECF that are still missing as "
+#~ "September \n"
+#~ "2011). Those modules are also strictly licensed under AGPL V3 and today "
+#~ "don't \n"
+#~ "come with any additional paid permission for online use of 'private "
+#~ "modules'.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Módulo base para la localización brasileña\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "Este módulo consiste en:\n"
+#~ "\n"
+#~ " - Plan de cuentas general brasiñeño\n"
+#~ " - Impuestos brasileños tales como:\n"
+#~ "\n"
+#~ "        - IPI\n"
+#~ "        - ICMS\n"
+#~ "        - PIS\n"
+#~ "        - COFINS\n"
+#~ "        - ISS\n"
+#~ "        - IR\n"
+#~ "        - IRPJ\n"
+#~ "        - CSLL\n"
+#~ "\n"
+#~ "Se ha añadido también un campo tax_discount en los objetos account.tax."
+#~ "template y account.tax objects para permitir el cálculo correcto de "
+#~ "algunos IVAs brasileños, tales como el ICMS. Se ha extendido el asistente "
+#~ "de creación del plan de cuentas para propagar estos nuevos datos "
+#~ "convenientemente.\n"
+#~ "\n"
+#~ "Es importante destacar sin embargo que a este módulo le falta algunas "
+#~ "implementaciones para usar OpenERP adecuadamente en Brasil. Estas "
+#~ "implementaciones (como la factura electrónica fiscal que ya es "
+#~ "operativa), se consiguen con más de 15 módulos adicionales en el proyecto "
+#~ "de localización brasileña de Launchpad en https://launchpad.net/openerp."
+#~ "pt-br-localiz y sus dependencias en la rama de extra addons. Esos módulos "
+#~ "buscan no romper con la modularidad destacable de OpenERP, por eso es por "
+#~ "lo que son tan numeroso aunque pequeños. Una de las razones para mantener "
+#~ "esos módulos aparte es que los líderes de la localización brasileña "
+#~ "necesitan agilidad en los aportes para complear la localización conforme "
+#~ "las compañías subvencionan los requisitos legales remanentes (tales como "
+#~ "libro mayor fiscal, SPED de contabilidad, SPED fiscal y PAF ECF que aún "
+#~ "están pendientes a fecha septiembre de 2011). Estos módulos están "
+#~ "licenciados estrictamente bajo AGPL V3 y hoy no vienen con ningún permiso "
+#~ "adicional pagado para el uso en línea de 'módulos privados'.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Create recurring documents.\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "This module allows to create new documents and add subscriptions on that "
+#~ "document.\n"
+#~ "\n"
+#~ "e.g. To have an invoice generated automatically periodically:\n"
+#~ "-------------------------------------------------------------\n"
+#~ "    * Define a document type based on Invoice object\n"
+#~ "    * Define a subscription whose source document is the document defined "
+#~ "as\n"
+#~ "      above. Specify the interval information and partner to be invoice.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Crea documentos recurrentes.\n"
+#~ "===========================\n"
+#~ "\n"
+#~ "Este módulo permite crear nuevos documentos y añadir suscripciones en ese "
+#~ "documento.\n"
+#~ "\n"
+#~ "Por ejemplo, tener una factura generada automáticamente periódicamente:\n"
+#~ "-------------------------------------------------------------\n"
+#~ "    * Defina un tipo de documento basado en el objeto factura\n"
+#~ "    * Defina una suscripción cuyo documento fuente es el documento "
+#~ "definido antes. Especifique la información del intervalo y la empresa a "
+#~ "ser facturada.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
 #~ "Menu for Marketing.\n"
 #~ "===================\n"
 #~ "\n"
@@ -17965,6 +18039,29 @@ msgstr ""
 #~ "===================\n"
 #~ "\n"
 #~ "Contiene el instalador para los módulos relacionados con marketing.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "Module for defining analytic accounting object.\n"
+#~ "===============================================\n"
+#~ "\n"
+#~ "In OpenERP, analytic accounts are linked to general accounts but are "
+#~ "treated\n"
+#~ "totally independently. So, you can enter various different analytic "
+#~ "operations\n"
+#~ "that have no counterpart in the general financial accounts.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Módulo para definir el objeto contabilidad analítica\n"
+#~ "===============================================\n"
+#~ "\n"
+#~ "En OpenERP, las cuentas analíticas están enlazadas con las cuentas "
+#~ "generales\n"
+#~ "pero se tratan de forma totalmente independiente. Por tanto, se pueden "
+#~ "introducir\n"
+#~ "operaciones analíticas sin contrapartida en la contabilidad financiera\n"
 #~ "    "
 
 #~ msgid ""
@@ -18152,6 +18249,26 @@ msgstr ""
 
 #~ msgid ""
 #~ "\n"
+#~ "Module to trigger warnings in OpenERP objects.\n"
+#~ "==============================================\n"
+#~ "\n"
+#~ "Warning messages can be displayed for objects like sale order, purchase "
+#~ "order,\n"
+#~ "picking and invoice. The message is triggered by the form's onchange "
+#~ "event.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Módulo que lanza avisos en los objetos de Odoo.\n"
+#~ "=========================================\n"
+#~ "\n"
+#~ "Se pueden mostrar mensajes de aviso para objetos tales como notas de "
+#~ "pedido, Ordenes de compra y facturas. El mensaje es lanzado por el evento "
+#~ "onchange del formulario.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
 #~ "Synchronization of project task work entries with timesheet entries.\n"
 #~ "====================================================================\n"
 #~ "\n"
@@ -18172,11 +18289,59 @@ msgstr ""
 #~ "vías.\n"
 #~ "    "
 
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Ecuador in "
+#~ "OpenERP.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "Accounting chart and localization for Ecuador.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Este es el módulo base para administrar el plan de cuentas de Ecuador en "
+#~ "OpenERP.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "Plan de cuentas y localización para Ecuador.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "This module adds claim menu and features to your portal if claim and "
+#~ "portal are installed.\n"
+#~ "==========================================================================================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Este módulo añade el menú y características de reclamaciones al portal si "
+#~ "los módulos 'claim' y 'portal' están instalados.\n"
+#~ "=================================================================================================\n"
+#~ "    "
+
+#~ msgid "%B - Full month name."
+#~ msgstr "%B - Nombre del mes completo."
+
+#~ msgid "%Y - Year with century."
+#~ msgstr "%Y - Año con siglo."
+
+#~ msgid "%p - Equivalent of either AM or PM."
+#~ msgstr "%p - Equivalente a AM o PM."
+
+#~ msgid "%y - Year without century [00,99]."
+#~ msgstr "%y - Año sin el siglo [00,99]."
+
+#~ msgid "2.  %a ,%A         ==> Fri, Friday"
+#~ msgstr "2. %a ,%A ==> Vie, Viernes"
+
 #~ msgid "Account Report"
 #~ msgstr "Informe financiero"
 
 #~ msgid "Account Reports"
 #~ msgstr "Informes de Contabilidad"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Informe financiero"
 
 #~ msgid "Albanian / Shqip"
 #~ msgstr "Albanés / Shqip"
@@ -18208,8 +18373,14 @@ msgstr ""
 #~ msgid "Claims Management"
 #~ msgstr "Gestión de reclamaciones"
 
+#~ msgid "Company Contact"
+#~ msgstr "Contacto de la compañía"
+
 #~ msgid "Croatian / hrvatski jezik"
 #~ msgstr "Croata / hrvatski jezik"
+
+#~ msgid "Custom Footer"
+#~ msgstr "Pie de página personalizado."
 
 #~ msgid "Customer Relationship Management"
 #~ msgstr "Gestión de las Relaciones con el Cliente (CRM)"
@@ -18226,14 +18397,26 @@ msgstr ""
 #~ msgid "Georgian / ქართული ენა"
 #~ msgstr "Georgiano / ქართული ენა"
 
+#~ msgid "Hardware Drivers"
+#~ msgstr "Drivers"
+
 #~ msgid "Kabyle / Taqbaylit"
 #~ msgstr "Cabila / taqbaylit"
 
 #~ msgid "Norwegian Bokmål / Norsk bokmål"
 #~ msgstr "Noruego Bokmål / Norsk bokmål"
 
+#~ msgid "Office Supplies"
+#~ msgstr "Material de oficina"
+
+#~ msgid "OpenERP Web Diagram"
+#~ msgstr "Diagrama para web"
+
 #~ msgid "Partner Tag"
 #~ msgstr "Etiqueta de empresa"
+
+#~ msgid "Partners Geo-Localization"
+#~ msgstr "Geo-localización de empresas"
 
 #~ msgid "Payment Follow-up Management"
 #~ msgstr "Gestión de seguimientos de pago"
@@ -18246,6 +18429,9 @@ msgstr ""
 
 #~ msgid "Print Invoice"
 #~ msgstr "Imprimir Factura"
+
+#~ msgid "Retailer"
+#~ msgstr "Minorista"
 
 #~ msgid "Romanian / română"
 #~ msgstr "Rumano / română"
@@ -18265,6 +18451,9 @@ msgstr ""
 
 #~ msgid "Serbian (Latin) / srpski"
 #~ msgstr "Serbio (Latín) / srpski"
+
+#~ msgid "Silver"
+#~ msgstr "Plata"
 
 #~ msgid "Slovak / Slovenský jazyk"
 #~ msgstr "Eslovaco / Slovenský jazyk"
@@ -18290,6 +18479,9 @@ msgstr ""
 #~ msgid "Spanish (PE) / Español (PE)"
 #~ msgstr "Español (PE) / Español (PE)"
 
+#~ msgid "Stock Management"
+#~ msgstr "Gestión de existencias"
+
 #~ msgid "Telugu / తెలుగు"
 #~ msgstr "Telugu / తెలుగు"
 
@@ -18299,11 +18491,31 @@ msgstr ""
 #~ msgid "Ukrainian / українська"
 #~ msgstr "Ucraniano / українська"
 
+#~ msgid "Update Languague Terms"
+#~ msgstr "Actualizar términos de idioma"
+
 #~ msgid "Use Company Address"
 #~ msgstr "Utilizar la dirección de la empresa"
+
+#~ msgid ""
+#~ "Use the HR ressources for the gamification process.\n"
+#~ "\n"
+#~ "The HR officer can now manage challenges and badges.\n"
+#~ "This allow the user to send badges to employees instead of simple users.\n"
+#~ "Badge received are displayed on the user profile.\n"
+#~ msgstr ""
+#~ "Usar los recursos de RRHH para el proceso de gamificación.\n"
+#~ "\n"
+#~ "El gestor de RRHH podrá administrar los desafíos e insignias.\n"
+#~ "Esto le permite enviar insignias a los empleados en lugar de que sean los "
+#~ "usuarios normales.\n"
+#~ "Las insignias recibidas se muestran en el perfil de usuario.\n"
 
 #~ msgid "Vietnamese / Tiếng Việt"
 #~ msgstr "Vietnamita / Tiếng Việt"
 
 #~ msgid "View Editor"
 #~ msgstr "Editor de vistas"
+
+#~ msgid "Wholesaler"
+#~ msgstr "Mayorista"

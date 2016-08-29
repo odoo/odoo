@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-30 10:08+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -269,7 +269,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "<strong>Add to Cart</strong>"
-msgstr ""
+msgstr "<strong>Kosárba helyez</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -532,11 +532,6 @@ msgid "Apply"
 msgstr "Alkalmaz"
 
 #. module: website_sale
-#: model:product.pricelist,name:website_sale.list_benelux
-msgid "Benelux Pricelist"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Bill To:"
@@ -601,11 +596,6 @@ msgstr ""
 #, python-format
 msgid "Choose name"
 msgstr "Vállasszon nevet"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas Pricelist"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -812,7 +802,7 @@ msgstr "Alapértelmezett árlista"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "Default Sales Team"
-msgstr ""
+msgstr "Alapértelmezett értékesítő csapat"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
@@ -926,6 +916,12 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Egyenlő : Költségeket egyenlő részekre osztja.\n"
+"Mennyiségenként : Költségeket a termékek mennyisége szerint osztja el.\n"
+"Jelenlegi költségenként : Költségeket a termékek jelenlegi költségeiknek "
+"megfelelően osztja el.\n"
+"Súlyonként : Költségeket a súlyok szerint osztja el.\n"
+"Térfogatonként : Költségeket a térfogatok szerint osztja el."
 
 #. module: website_sale
 #: constraint:product.public.category:0
@@ -1074,7 +1070,7 @@ msgstr "Rejtett"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11000
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11001
 msgid "ID"
 msgstr "ID"
 
@@ -1427,9 +1423,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
-#, fuzzy
 msgid "Product Public Categories"
-msgstr "Termék termékkategóriái"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -1445,7 +1440,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.product
 #: model:ir.ui.view,arch_db:website_sale.product_price
 msgid "Product not available"
-msgstr ""
+msgstr "Termék nem elérhető"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
@@ -1869,9 +1864,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Fedex integráció"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2192,12 +2186,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_comment
 msgid "comment"
-msgstr ""
+msgstr "megjegyzés"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_comment
 msgid "comments"
-msgstr ""
+msgstr "megjegyzések"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_ebay
@@ -2310,6 +2304,9 @@ msgstr "☑ Ogone által feldolgozva"
 #~ msgid "Procurement"
 #~ msgstr "Beszerzés"
 
+#~ msgid "Product Product Categories"
+#~ msgstr "Termék termékkategóriái"
+
 #~ msgid "Project"
 #~ msgstr "Projekt"
 
@@ -2324,3 +2321,48 @@ msgstr "☑ Ogone által feldolgozva"
 
 #~ msgid "Website Comments"
 #~ msgstr "Honlap hozzászólások"
+
+#~ msgid "Add Delivery Costs to Online Sales"
+#~ msgstr "Szállítási költséget ad az online értékesítésekhez"
+
+#~ msgid "Amount"
+#~ msgstr "Összeg"
+
+#~ msgid "Availability"
+#~ msgstr "Elérhetőség"
+
+#~ msgid "Confirm Order"
+#~ msgstr "Rendelés visszaigazolása"
+
+#~ msgid "HS Code"
+#~ msgstr "HS Kód"
+
+#~ msgid "Invoices"
+#~ msgstr "Számlák"
+
+#~ msgid "More Info"
+#~ msgstr "További információ"
+
+#~ msgid "Orders"
+#~ msgstr "Megrendelések"
+
+#~ msgid "Payment Acquirers"
+#~ msgstr "Fizetés kézhezvevői"
+
+#~ msgid "Pricelists"
+#~ msgstr "Árlisták"
+
+#~ msgid "Subtotal:"
+#~ msgstr "Részösszeg:"
+
+#~ msgid "Taxes:"
+#~ msgstr "Adók:"
+
+#~ msgid "Warning"
+#~ msgstr "Figyelmeztetés"
+
+#~ msgid "Websites"
+#~ msgstr "Honlapok"
+
+#~ msgid "Your Reference"
+#~ msgstr "Partner hivatkozása"

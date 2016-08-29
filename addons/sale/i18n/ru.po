@@ -3,16 +3,18 @@
 # * sale
 #
 # Translators:
+# Andrey Samorukov <andrey.samorukov@me.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Stepan Letov <trueswordfish@gmail.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-06-06 12:07+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-23 16:47+0000\n"
+"Last-Translator: Stepan Letov <trueswordfish@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -454,12 +456,6 @@ msgstr "Время выполнения доставки"
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "Адрес доставки для текущего заказа продаж."
-
-#. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Депозит"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
@@ -1744,6 +1740,9 @@ msgid ""
 "This progress bar shows the stages your quotation will go through.\n"
 "                Use buttons on the left to move forward to the next stages."
 msgstr ""
+"Этот индикатор показывает этапы через которые будет проходить ваш "
+"предложение.\n"
+"Используйте кнопки слева, чтобы двигаться вперед к следующим этапам."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1863,7 +1862,7 @@ msgstr "Сумма до налогов"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total Price"
-msgstr ""
+msgstr "Итоговая цена без налогов"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -1883,6 +1882,10 @@ msgid ""
 "                Select measures, filter and group dimensions to get the "
 "perfect report according to your needs."
 msgstr ""
+"Используйте сводный или графический виды для анализа ваших источников "
+"информации о продажах.\n"
+"Выберите измерения, фильтр и меры группировки для получения идеального "
+"отчета в соответствии с вашими потребностями."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
@@ -2178,6 +2181,13 @@ msgstr "неизвестен"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+
 #~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
 #~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Скид.(%)</span>"
 
@@ -2187,11 +2197,20 @@ msgstr "неизвестен"
 #~ msgid "Allows you to specify an analytic account on sales orders."
 #~ msgstr "Позволяет вам указывать аналитический счет в заказах продаж."
 
+#~ msgid "Analytic Line"
+#~ msgstr "Позиция аналитики"
+
 #~ msgid "Analytic accounting for sales"
 #~ msgstr "Аналитический учет для продаж"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
+
+#~ msgid "Deposit"
+#~ msgstr "Депозит"
+
+#~ msgid "Expense Account"
+#~ msgstr "Счет расходов"
 
 #~ msgid "Followers"
 #~ msgstr "Подписчики"
@@ -2234,6 +2253,30 @@ msgstr "неизвестен"
 
 #~ msgid "Open Sale Menu"
 #~ msgstr "Открыть меню продаж"
+
+#~ msgid ""
+#~ "Some products may be sold/purchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Некоторые продукты могут быть проданы/куплены в других единицах "
+#~ "измерения(расширенные)"
+
+#~ msgid ""
+#~ "This account will be used for invoices instead of the default one to "
+#~ "value expenses for the current product."
+#~ msgstr ""
+#~ "Этот счет будет использоваться для счетов-фактур вместо установленного по-"
+#~ "умолчанию, чтобы оценить значения расходов для текущего продукта."
+
+#~ msgid ""
+#~ "This account will be used for invoices instead of the default one to "
+#~ "value sales for the current product."
+#~ msgstr ""
+#~ "Этот счет будет использоваться для счетов-фактур вместо установленного по-"
+#~ "умолчанию, чтобы оценить значения продаж для текущего продукта."
+
+#~ msgid "Timesheets on contract"
+#~ msgstr "Расписания по контракту"
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Единица измерения"

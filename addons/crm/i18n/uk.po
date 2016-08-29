@@ -7,13 +7,12 @@
 # Bohdan Lisnenko, 2016
 # Zoriana Zaiats, 2015
 # ТАрас <tratatuta@i.ua>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-04 09:20+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-28 12:33+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
@@ -21,10 +20,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
@@ -240,19 +235,6 @@ msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> показати приклади</i>"
 
 #. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Events"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Встановити Події"
@@ -394,6 +376,10 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-pencil-square-o\"/>\n"
+"<strong> Create Custom Reports</strong>\n"
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -404,6 +390,10 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-sitemap\"/>\n"
+"<strong> Налаштування робочого процесу</strong>\n"
+"</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1145,18 +1135,6 @@ msgid "Call"
 msgstr "Дзвінок"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr "Замовлення демонстрації"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr "Замовлення демонстрації"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1719,11 +1697,6 @@ msgid "Download the"
 msgstr "Завантажити"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Чернетки приводів"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr ""
@@ -1910,18 +1883,6 @@ msgstr "Завершено"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "Згорнуто"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr "Пропозиція післядії"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
-msgstr "Пропозиція післядії"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2379,11 +2340,6 @@ msgid "Leads by Source"
 msgstr "Приводи по джерелу"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Приводи з США"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Приводи, що призначені мені"
@@ -2495,12 +2451,6 @@ msgstr "Причини втрати"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Низький"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr "Зробити пропозицію"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3338,12 +3288,6 @@ msgid "Relation field"
 msgstr "Поле зв'язку"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Нагадування користувачу"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 #, fuzzy
 msgid ""
@@ -3509,12 +3453,6 @@ msgid "Selection"
 msgstr "Вибір"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr "Надіслати пропозицію"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3526,11 +3464,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Послідовність"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Вказати відділ команди продажу"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3893,6 +3826,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Ці адреси будуть додані до поля СС для всіх вхідних та вихідних листів для "
+"цього запису перед відправкою. Можна вказати декілька адрес, розділяючи їх "
+"комою."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -4529,17 +4465,39 @@ msgstr ""
 #~ msgid "Both"
 #~ msgstr "Обидва"
 
+#~ msgid "Call for Demo"
+#~ msgstr "Замовлення демонстрації"
+
+#~ msgid "Call for a demo"
+#~ msgstr "Замовлення демонстрації"
+
+#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
+#~ msgstr ""
+#~ "Натисніть, щоб створити нову стадію у вашому конвеєрі приводів/нагод."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата останнього повідомлення по запису."
+
+#~ msgid "Deduplicate Contact"
+#~ msgstr "Вилучили дублювання клієнта"
 
 #~ msgid "Done"
 #~ msgstr "Виконано"
 
+#~ msgid "Draft Leads"
+#~ msgstr "Чернетки приводів"
+
 #~ msgid "Follow-up"
 #~ msgstr "Післядія"
 
+#~ msgid "Follow-up Quote"
+#~ msgstr "Пропозиція післядії"
+
 #~ msgid "Follow-up call"
 #~ msgstr "Дзвінок післядії"
+
+#~ msgid "Follow-up quote"
+#~ msgstr "Пропозиція післядії"
 
 #~ msgid "Followers"
 #~ msgstr "Підписники"
@@ -4569,8 +4527,20 @@ msgstr ""
 #~ msgid "Is Follower"
 #~ msgstr "Стежить"
 
+#~ msgid "Last Activity"
+#~ msgstr "Остання дія"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Дата останнього повідомлення"
+
+#~ msgid "Leads from USA"
+#~ msgstr "Приводи з США"
+
+#~ msgid "Make Quote"
+#~ msgstr "Зробити пропозицію"
+
+#~ msgid "Mark As Lost"
+#~ msgstr "Втрачено"
 
 #~ msgid "Messages"
 #~ msgstr "Повідомлення"
@@ -4611,8 +4581,31 @@ msgstr ""
 #~ msgid "Qualification"
 #~ msgstr "Підтвердження"
 
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "Нагадування по приводу: ${object.id} від ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+
+#~ msgid "Reminder to User"
+#~ msgstr "Нагадування користувачу"
+
 #~ msgid "Sales Tags"
 #~ msgstr "Мітки продажу"
+
+#~ msgid "Send a quotation"
+#~ msgstr "Надіслати пропозицію"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Вказати відділ команди продажу"
+
+#~ msgid ""
+#~ "Show all opportunities for which the next action date is today or before"
+#~ msgstr "Показати всі нагоди, для яких дата наступної дії сьогодні чи раніше"
+
+#~ msgid "Teams"
+#~ msgstr "Команди"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Кількість непрочитаних повідомлень"
@@ -4625,6 +4618,15 @@ msgstr ""
 
 #~ msgid "Your Customers"
 #~ msgstr "Ваші клієнти"
+
+#~ msgid "Your Customizations"
+#~ msgstr "Ваші налаштування"
+
+#~ msgid "Your Prices"
+#~ msgstr "Ваші ціни"
+
+#~ msgid "Your Products"
+#~ msgstr "Ваші товари"
 
 #~ msgid "Your Proposal"
 #~ msgstr "Ваша пропозиція"

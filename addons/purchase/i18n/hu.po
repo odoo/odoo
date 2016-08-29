@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-22 12:22+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -53,16 +53,11 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship Route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Létrehozza a dropship /viszonteladás közvetlenül a gyártótól a vevőhöz/ "
-"útvonalat és jóval részletesebb leírásokat ad hozzá-Ez a stock_dropshipping "
-"modult telepíti."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:81
@@ -288,7 +283,7 @@ msgid "Billed Qty"
 msgstr "Számlázott menny."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
+#: code:addons/purchase/purchase.py:719 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -311,7 +306,6 @@ msgstr "Felhívás tenderezésre"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
-#, fuzzy
 msgid ""
 "Calls for tenders are used when you want to generate requests for quotations "
 "to several vendors for a given set of products.\n"
@@ -319,11 +313,6 @@ msgid ""
 "one vendor or if you want a Call for Tenders to compare offers from several "
 "vendors."
 msgstr ""
-"Az ajánlati tenderre felhívást akkor használja, ha több beszállítóhoz "
-"szeretne árajánlat kérést küldeni egy megadott termék szettre.\n"
-"            Beállíthatja termékenként is, ha direkt egy beszállítóhoz küld \n"
-"            árajánlat kérést vagy egy tenderre akar hívni több beszállító "
-"ajánlata alapján végzett összehasonlítás végzéséhez."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
@@ -333,7 +322,7 @@ msgid "Can be Purchased"
 msgstr "Beszerezhető"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:733
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -360,7 +349,7 @@ msgid "Cancelled"
 msgstr "Törölt"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:612
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -403,9 +392,8 @@ msgstr ""
 
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_1
-#, fuzzy
 msgid "Click to scrap products."
-msgstr "Kattintson egy új termék meghatározásához."
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -583,9 +571,8 @@ msgstr "Email összeállító varázsló"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Email összeállító varázsló"
+msgstr "Email összeállító varázsló a felméréshez"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -622,7 +609,7 @@ msgstr "Ehhez a vásárlói megrendeléshez tartozó szállítások lekérdezés
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruttó súly"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -769,9 +756,8 @@ msgstr "Termék hely & Raktárépület"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid "Lock Bills"
-msgstr "Beszállítói számlák"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -840,7 +826,7 @@ msgid "No variants on products"
 msgstr "Nincsenek variációk a termékre"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:893
+#: code:addons/purchase/purchase.py:895
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -1147,7 +1133,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Beszerzési megrendelés statisztikák"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:616
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Beszerzési megrendelés tételsora törölve."
@@ -1356,13 +1342,10 @@ msgstr "Beállít egy fix költség árat mindegyik terméken"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid ""
 "Set a purchase order as done if you don't want to receive vendor bills "
 "anymore for this purchase order."
 msgstr ""
-"Késznek nyilvánított beszerzési megrendelés többé kézzel nem módosítható. "
-"Erre a beszerzési rendelésre többé nem érkeztethet számlát."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1386,12 +1369,9 @@ msgstr "Egyszerű tenderre hívás (csak egy árajánlat kéréshez válassza)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
 msgstr ""
-"Egyes termékek már másik mértékegységben kerültek eladásra/beszerezésre "
-"(haladó)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1572,7 +1552,7 @@ msgid "Transfer"
 msgstr "Átvitel"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:300
+#: code:addons/purchase/purchase.py:302
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
@@ -1581,14 +1561,12 @@ msgstr ""
 "tétel."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:303
-#, fuzzy, python-format
+#: code:addons/purchase/purchase.py:305
+#, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
-"Nem tudja törölni ezt a beszerzési megrendelést. Először az ide vonatkozó "
-"beszállítói számlákat törölje."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1715,7 +1693,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Térfogat"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1753,19 +1731,14 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
-#, fuzzy
 msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
-"Mindenre amit beszerez arra egy terméket kell meghatároznia, akár \n"
-"            egy fizikai termék egy fogyó termék vagy szolgáltatás melyet "
-"viszonteladásra \n"
-"            vásárol."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:335
+#: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Hozzá kell rendelnie egy Beszálítót ehhez a partnerhez %s"
@@ -2053,6 +2026,16 @@ msgstr "purchase.config.settings"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "\n"
+#~ "Creates the dropship Route and add more complex tests-This installs the "
+#~ "module stock_dropshipping."
+#~ msgstr ""
+#~ "\n"
+#~ "Létrehozza a dropship /viszonteladás közvetlenül a gyártótól a vevőhöz/ "
+#~ "útvonalat és jóval részletesebb leírásokat ad hozzá-Ez a "
+#~ "stock_dropshipping modult telepíti."
+
 #~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
 #~ msgstr ""
 #~ "${object.company_id.name|safe} Megrendelés (Ref ${object.name or 'n/a' })"
@@ -2067,6 +2050,21 @@ msgstr "purchase.config.settings"
 
 #~ msgid "Analytic accounting for purchases"
 #~ msgstr "Gyűjtő/elemző számla a beszerzésekhez"
+
+#~ msgid ""
+#~ "Calls for tenders are used when you want to generate requests for "
+#~ "quotations to several vendors for a given set of products.\n"
+#~ "                    You can configure per product if you directly do a "
+#~ "Request for Quotation\n"
+#~ "                    to one vendor or if you want a Call for Tenders to "
+#~ "compare offers from several vendors."
+#~ msgstr ""
+#~ "Az ajánlati tenderre felhívást akkor használja, ha több beszállítóhoz "
+#~ "szeretne árajánlat kérést küldeni egy megadott termék szettre.\n"
+#~ "            Beállíthatja termékenként is, ha direkt egy beszállítóhoz "
+#~ "küld \n"
+#~ "            árajánlat kérést vagy egy tenderre akar hívni több beszállító "
+#~ "ajánlata alapján végzett összehasonlítás végzéséhez."
 
 #~ msgid "Click to mark products as received."
 #~ msgstr "Kattintson a termék megérkezettként jelöléséhez."
@@ -2085,6 +2083,13 @@ msgstr "purchase.config.settings"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Követők (Partnerek)"
+
+#~ msgid ""
+#~ "If a purchase order is done, you cannot modify it manually anymore. You "
+#~ "will not be able to receive invoices anymore for this purchase order."
+#~ msgstr ""
+#~ "Késznek nyilvánított beszerzési megrendelés többé kézzel nem módosítható. "
+#~ "Erre a beszerzési rendelésre többé nem érkeztethet számlát."
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
@@ -2125,6 +2130,20 @@ msgstr "purchase.config.settings"
 #~ msgid "Set to Done"
 #~ msgstr "Készre állítja"
 
+#~ msgid ""
+#~ "Some products may be sold/puchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Egyes termékek már másik mértékegységben kerültek eladásra/beszerezésre "
+#~ "(haladó)"
+
+#~ msgid ""
+#~ "Unable to cancel this purchase order.i You must first cancel related "
+#~ "vendor bills."
+#~ msgstr ""
+#~ "Nem tudja törölni ezt a beszerzési megrendelést. Először az ide vonatkozó "
+#~ "beszállítói számlákat törölje."
+
 #~ msgid "Unit of Measures"
 #~ msgstr "Mértékegységek"
 
@@ -2143,8 +2162,76 @@ msgstr "purchase.config.settings"
 #~ msgid "Website communication history"
 #~ msgstr "Weboldal  kommunikáció történet"
 
+#~ msgid ""
+#~ "You must define a product for everything you purchase, whether\n"
+#~ "            it's a physical product, a consumable or services you buy to\n"
+#~ "            subcontractants."
+#~ msgstr ""
+#~ "Mindenre amit beszerez arra egy terméket kell meghatároznia, akár \n"
+#~ "            egy fizikai termék egy fogyó termék vagy szolgáltatás melyet "
+#~ "viszonteladásra \n"
+#~ "            vásárol."
+
 #~ msgid "account.config.settings"
 #~ msgstr "account.config.settings"
 
 #~ msgid "unknown"
 #~ msgstr "ismeretlen"
+
+#~ msgid ""
+#~ "An informative or blocking warning can be set on a product or a customer"
+#~ msgstr ""
+#~ "Egy információs vagy blokkoló figyelmeztetés állítható be az egyes "
+#~ "termékekre vagy egy vevőre"
+
+#~ msgid "Analytic Tags"
+#~ msgstr "Gyűjtő/Elemző címkék"
+
+#~ msgid "Bills"
+#~ msgstr "Számlák"
+
+#~ msgid "Blocking Message"
+#~ msgstr "Blokkoló üzenet"
+
+#~ msgid "Message for Purchase Order"
+#~ msgstr "Üzenet a beszerzési megrendelésről"
+
+#~ msgid "Message for Purchase Order Line"
+#~ msgstr "Üzenet a szállítói megrendelés sorról"
+
+#~ msgid "No Message"
+#~ msgstr "Nincs üzenet"
+
+#~ msgid "Ordered quantity decreased!"
+#~ msgstr "Megrendelt mennyiség csökkent!"
+
+#~ msgid "RFQ"
+#~ msgstr "Ajánlatkérés"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
+#~ "értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az "
+#~ "üzenethez és leblokkolja a folyamatot. Az üzenetet a következő mezőbe "
+#~ "kell beírni."
+
+#~ msgid "Sequence"
+#~ msgstr "Sorszám"
+
+#~ msgid "Vendors"
+#~ msgstr "Beszállítók"
+
+#~ msgid "Warning"
+#~ msgstr "Figyelmeztetés"
+
+#~ msgid "Warning for %s"
+#~ msgstr "Figyelmeztetés erre %s"
+
+#~ msgid "Warning on the Purchase Order"
+#~ msgstr "Figyelmeztetés a beszerzési megrendelésre"
+
+#~ msgid "Warning when Purchasing this Product"
+#~ msgstr "Figyelmeztetés, amikor ebből a termékből beszerzés történik"

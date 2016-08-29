@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-02 03:49+0000\n"
 "Last-Translator: Eng.Walid Ramadan <tdatasa@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:347
+#: code:addons/account_asset/account_asset.py:348
 #, python-format
 msgid " (copy)"
 msgstr " (نسخ)"
@@ -57,7 +57,7 @@ msgid "Active"
 msgstr "نشط"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:484
+#: code:addons/account_asset/account_asset.py:486
 #, python-format
 msgid "Amount"
 msgstr "المبلغ"
@@ -146,7 +146,7 @@ msgid "Asset category"
 msgstr "فئة الأصل"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:235
+#: code:addons/account_asset/account_asset.py:236
 #, python-format
 msgid "Asset created"
 msgstr "تم إنشاء الأصل"
@@ -157,7 +157,7 @@ msgid "Asset depreciation line"
 msgstr "بند إهلاك الأصل"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:268
+#: code:addons/account_asset/account_asset.py:269
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr "تم بيع أو تخريد الأصل . الإثبات المحاسبي يحتاج للمراجعه و التأكيد"
@@ -347,7 +347,7 @@ msgid "Cumulative Depreciation"
 msgstr "إجمالي الإهلاكات"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:484
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -362,11 +362,6 @@ msgstr "الحالي"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr "الإهلاك الحالي"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
-msgid "Customer"
-msgstr "العميل"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -480,13 +475,13 @@ msgid "Depreciation Name"
 msgstr "اسم الإهلاك"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
 #, python-format
 msgid "Depreciation board modified"
 msgstr "تم تعديل لوحة الإهلاكات"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:487
+#: code:addons/account_asset/account_asset.py:489
 #, python-format
 msgid "Depreciation line posted."
 msgstr "تم ترحيل قيد الإهلاك"
@@ -502,19 +497,19 @@ msgid "Display Name"
 msgstr "اسم العرض"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:271
+#: code:addons/account_asset/account_asset.py:272
 #, python-format
 msgid "Disposal Move"
 msgstr "حركة تخريد"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:274
+#: code:addons/account_asset/account_asset.py:275
 #, python-format
 msgid "Disposal Moves"
 msgstr "حركات التخريد"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:466
+#: code:addons/account_asset/account_asset.py:468
 #, python-format
 msgid "Document closed."
 msgstr "إقفال المستند ."
@@ -666,7 +661,7 @@ msgid "Journal"
 msgstr "اليومية"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:374
+#: code:addons/account_asset/account_asset.py:375
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -763,10 +758,9 @@ msgid "Number of Months in a Period"
 msgstr "عدد الشهور في الفترة."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:488
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "الشريك"
@@ -824,7 +818,7 @@ msgid "Prorata Temporis"
 msgstr "تناسب زمني"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:313
+#: code:addons/account_asset/account_asset.py:314
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -1008,25 +1002,25 @@ msgid "Year"
 msgstr "السنة"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:96
+#: code:addons/account_asset/account_asset.py:97
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr " لا يمكنك حذف مستند في حالة %s."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:98
+#: code:addons/account_asset/account_asset.py:99
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "لا يمكنك حذف مستند يحتوي على قيود مرحّلة"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:495
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "لا يمكنك حذف بنود إهلاك مرحّلة."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:499
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "لا يمكنك حذف بنود دفعات مرحّلة."
@@ -1054,6 +1048,9 @@ msgstr "شهور"
 
 #~ msgid "Action Needed"
 #~ msgstr "الاجراء المطلوب"
+
+#~ msgid "Customer"
+#~ msgstr "العميل"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "تاريخ آخر رسالة في هذا السجل."

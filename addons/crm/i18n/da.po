@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-10 11:01+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
@@ -227,19 +227,6 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
 msgstr ""
 
 #. module: crm
@@ -1136,18 +1123,6 @@ msgid "Call"
 msgstr ""
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1711,11 +1686,6 @@ msgid "Download the"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Kladde emner"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr ""
@@ -1901,18 +1871,6 @@ msgstr "Færdig"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2375,11 +2333,6 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Emner fra USA"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Mine emner"
@@ -2492,12 +2445,6 @@ msgstr ""
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Lav"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3330,12 +3277,6 @@ msgid "Relation field"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Påmindelse til bruger"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3496,12 +3437,6 @@ msgid "Selection"
 msgstr "Udvælgelse"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3513,11 +3448,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Rækkefølge"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Sæt team til Salgsafdeling"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4529,6 +4459,9 @@ msgstr ""
 #~ msgid "Done"
 #~ msgstr "Udført"
 
+#~ msgid "Draft Leads"
+#~ msgstr "Kladde emner"
+
 #~ msgid "Follow-up"
 #~ msgstr "Følg op"
 
@@ -4559,6 +4492,12 @@ msgstr ""
 #~ msgid "Last Message Date"
 #~ msgstr "Sidste dato for besked"
 
+#~ msgid "Leads from USA"
+#~ msgstr "Emner fra USA"
+
+#~ msgid "Mark As Lost"
+#~ msgstr "Mærk som tabt"
+
 #~ msgid "Messages"
 #~ msgstr "Beskeder"
 
@@ -4583,11 +4522,17 @@ msgstr ""
 #~ msgid "Qualification"
 #~ msgstr "Kvalifikation"
 
+#~ msgid "Reminder to User"
+#~ msgstr "Påmindelse til bruger"
+
 #~ msgid "Sales Tags"
 #~ msgstr "Salgs nøgleord"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Valgte faser for dette salgsteam"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Sæt team til Salgsafdeling"
 
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
@@ -4606,6 +4551,12 @@ msgstr ""
 #~ "Dette er kilden for linket, f.eks. søgemaskine, andet domæne eller navn "
 #~ "på mail liste."
 
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr ""
+#~ "Denne fase er folded i kanban viewet når der ikke er nogen poster i fasen."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Ulæste besked tæller"
 
@@ -4617,6 +4568,9 @@ msgstr ""
 
 #~ msgid "Your Customers"
 #~ msgstr "Dine kunder"
+
+#~ msgid "Your Products"
+#~ msgstr "Dine varer"
 
 #~ msgid "oe_kanban_text_red"
 #~ msgstr "oe_kanban_text_red"

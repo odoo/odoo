@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-26 21:30+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -285,7 +285,7 @@ msgid "Billed Qty"
 msgstr "Cantidad Facturada"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
+#: code:addons/purchase/purchase.py:719 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -330,7 +330,7 @@ msgid "Can be Purchased"
 msgstr "Puede ser Comprado"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:733
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -357,7 +357,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:612
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "No puede borrar una línea de orden de compra con estado '%s'."
@@ -834,7 +834,7 @@ msgid "No variants on products"
 msgstr "El producto no tiene variantes"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:893
+#: code:addons/purchase/purchase.py:895
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -1141,7 +1141,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Estadísticas ordenes de compra"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:616
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Línea de orden de compra borrada"
@@ -1563,7 +1563,7 @@ msgid "Transfer"
 msgstr "Transferencia"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:300
+#: code:addons/purchase/purchase.py:302
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
@@ -1572,7 +1572,7 @@ msgstr ""
 "se encuentran en estado realizado"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:303
+#: code:addons/purchase/purchase.py:305
 #, fuzzy, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -1753,7 +1753,7 @@ msgstr ""
 "subcontratistas"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:335
+#: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Usted debe configurar una Ubicación de Compras para esta empresa %s"
@@ -2039,6 +2039,15 @@ msgstr "purchase.config.settings"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "\n"
+#~ "Creates the dropship Route and add more complex tests-This installs the "
+#~ "module stock_dropshipping."
+#~ msgstr ""
+#~ "\n"
+#~ "Permite crear una ruta de envío triangulado y agregar test mas complejos- "
+#~ "Esto instala el módulo stock_dropshipping"
+
 #~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
 #~ msgstr ""
 #~ "${object.company_id.name|safe} Pedido (Ref ${object.name or 'n/a' })"
@@ -2053,6 +2062,20 @@ msgstr "purchase.config.settings"
 
 #~ msgid "Analytic accounting for purchases"
 #~ msgstr "Cuentas analíticas para Compras"
+
+#~ msgid ""
+#~ "Calls for tenders are used when you want to generate requests for "
+#~ "quotations to several vendors for a given set of products.\n"
+#~ "                    You can configure per product if you directly do a "
+#~ "Request for Quotation\n"
+#~ "                    to one vendor or if you want a Call for Tenders to "
+#~ "compare offers from several vendors."
+#~ msgstr ""
+#~ "Llamadas para Licitantes es usado cuando usted quiere generar solicitudes "
+#~ "de presupuestos a varios proveedores para un listado de productos\n"
+#~ "Usted puede configurar por producto si se requiere directamente una "
+#~ "Solicitud de Presupuesto para un Proveedor o si usted desea una "
+#~ "licitación para comparar varias ofertas entre varios proveedores"
 
 #~ msgid "Click to mark products as received."
 #~ msgstr "Presione para marcar los productos como recibidos."
@@ -2071,6 +2094,13 @@ msgstr "purchase.config.settings"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Terceros)"
+
+#~ msgid ""
+#~ "If a purchase order is done, you cannot modify it manually anymore. You "
+#~ "will not be able to receive invoices anymore for this purchase order."
+#~ msgstr ""
+#~ "Si una orden de compra esta realizada, usted no puede modificarla, Usted "
+#~ "no puede recibir  facturas y asociarlas a esta orden de compra"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si esta habilitado, los nuevos mensajes deben ser revisados"
@@ -2111,6 +2141,20 @@ msgstr "purchase.config.settings"
 #~ msgid "Set to Done"
 #~ msgstr "Marcar como Terminado"
 
+#~ msgid ""
+#~ "Some products may be sold/puchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Algunos productos pueden ser vendidos/comprados en diferentes unidades de "
+#~ "medidas (Avanzado)"
+
+#~ msgid ""
+#~ "Unable to cancel this purchase order.i You must first cancel related "
+#~ "vendor bills."
+#~ msgstr ""
+#~ "No es permitido cancelar esta orden de compra!. Usted primero debe "
+#~ "cancelar las facturas de proveedor relacionadas"
+
 #~ msgid "Unit of Measures"
 #~ msgstr "Unidades de Medida"
 
@@ -2128,6 +2172,15 @@ msgstr "purchase.config.settings"
 
 #~ msgid "Website communication history"
 #~ msgstr "Historia de comunicación en Portal Web"
+
+#~ msgid ""
+#~ "You must define a product for everything you purchase, whether\n"
+#~ "            it's a physical product, a consumable or services you buy to\n"
+#~ "            subcontractants."
+#~ msgstr ""
+#~ "Usted debe definir un producto para todo lo que compre, esto es así\n"
+#~ "si es un producto físico, un consumible o un servicio que usted compre a\n"
+#~ "subcontratistas"
 
 #~ msgid "account.config.settings"
 #~ msgstr "account.config.settings"

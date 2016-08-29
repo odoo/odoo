@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-04-26 04:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -226,19 +226,6 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
 msgstr ""
 
 #. module: crm
@@ -1096,18 +1083,6 @@ msgid "Call"
 msgstr ""
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1671,11 +1646,6 @@ msgid "Download the"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "개척 기안"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr ""
@@ -1864,18 +1834,6 @@ msgstr "완료됨"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2344,11 +2302,6 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "미국 개척"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "내게 할당된 개척"
@@ -2459,12 +2412,6 @@ msgstr ""
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "낮음"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3313,12 +3260,6 @@ msgid "Relation field"
 msgstr "관련 필드"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "사용자에게 알림"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 #, fuzzy
 msgid ""
@@ -3486,12 +3427,6 @@ msgid "Selection"
 msgstr "선택"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3503,11 +3438,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "순서"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "팀을 영업 부서로 설정"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4519,6 +4449,9 @@ msgstr ""
 #~ msgid "Done"
 #~ msgstr "완료"
 
+#~ msgid "Draft Leads"
+#~ msgstr "개척 기안"
+
 #~ msgid "Follow-up"
 #~ msgstr "후속 조치"
 
@@ -4537,11 +4470,17 @@ msgstr ""
 #~ msgid "Last Message Date"
 #~ msgstr "최근 메시지 날짜"
 
+#~ msgid "Leads from USA"
+#~ msgstr "미국 개척"
+
 #~ msgid ""
 #~ "Link between stages and sales teams. When set, this limitate the current "
 #~ "stage to the selected sales teams."
 #~ msgstr ""
 #~ "단계와 영업팀 간의 연결. 설정 시 선택된 영업팀을 현재 단계로 제한합니다."
+
+#~ msgid "Mark As Lost"
+#~ msgstr "수주 실패로 표시"
 
 #~ msgid "Messages"
 #~ msgstr "메시지"
@@ -4555,14 +4494,38 @@ msgstr ""
 #~ msgid "Open Sale Menu"
 #~ msgstr "판매 메뉴 열기"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "메일 게이트웨이를 이용해서 문서에 메시지를 게시하는 보안정책.\n"
+#~ "- 모두 : 모두다 메시지 게시 가능\n"
+#~ "- 파트너 : 인증된 파트너만 가능\n"
+#~ "- 팔로워 : 관련 문서의 팔로워만 가능\n"
+
 #~ msgid "Qualification"
 #~ msgstr "자격"
+
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "개척 알림 : ${object.id} from ${object.partner_id != False and object."
+#~ "partner_id.name or object.contact_name}"
+
+#~ msgid "Reminder to User"
+#~ msgstr "사용자에게 알림"
 
 #~ msgid "Sales Tags"
 #~ msgstr "영업 태그"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "이 영업팀의 단계 선택"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "팀을 영업 부서로 설정"
 
 #~ msgid ""
 #~ "This field is used to distinguish stages related to Leads from stages "
@@ -4587,6 +4550,11 @@ msgstr ""
 #~ msgstr ""
 #~ "이것은 링크의 소스입니다. 예시: 검색엔진, 다른 도메인 또는 이메일 목록의 "
 #~ "이름"
+
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr "이 단계에 표시할 레코드가 없으면 칸반 화면은 접혀 있습니다."
 
 #~ msgid "Website Messages"
 #~ msgstr "웹사이트 메시지"

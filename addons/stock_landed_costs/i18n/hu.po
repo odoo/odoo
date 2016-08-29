@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -182,6 +182,12 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Egyenlő : Költségeket egyenlő részekre osztja.\n"
+"Mennyiségenként : Költségeket a termékek mennyisége szerint osztja el.\n"
+"Jelenlegi költségenként : Költségeket a termékek jelenlegi költségeiknek "
+"megfelelően osztja el.\n"
+"Súlyonként : Költségeket a súlyok szerint osztja el.\n"
+"Térfogatonként : Költségeket a térfogatok szerint osztja el."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -255,7 +261,7 @@ msgstr "Össz költségek"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "Teljes költséget a vásárlási mértékegység alapján számítja ki."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -510,3 +516,17 @@ msgstr "purchase.config.settings"
 
 #~ msgid "Website communication history"
 #~ msgstr "Weboldal  kommunikáció történet"
+
+#~ msgid ""
+#~ "Cost and adjustments lines do not match. You should maybe recompute the "
+#~ "landed costs."
+#~ msgstr ""
+#~ "Költség és kerekítés sorok nem egyeznek. Talán számítsa újra a "
+#~ "újraszámíthatná a teljes költséget /termék+szállítás+biztosítás+.../"
+
+#~ msgid ""
+#~ "No valuation adjustments lines. You should maybe recompute the landed "
+#~ "costs."
+#~ msgstr ""
+#~ "Nincsenek készlet érték beállítás sorok. Talán számítsa újra a "
+#~ "újraszámíthatná a teljes költséget /termék+szállítás+biztosítás+.../"

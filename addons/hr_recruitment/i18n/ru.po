@@ -3,14 +3,15 @@
 # * hr_recruitment
 #
 # Translators:
+# Andrey Samorukov <andrey.samorukov@me.com>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-04-06 20:36+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"PO-Revision-Date: 2016-08-24 08:21+0000\n"
+"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -514,16 +515,6 @@ msgid "Contract"
 msgstr "Договор"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
-msgid "Contract Proposal"
-msgstr "Предложение"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
-msgid "Contract Signed"
-msgstr "Отмеченные контакты"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Дата создания"
@@ -835,11 +826,6 @@ msgid "Filter and view on next actions and date"
 msgstr "Фильтр и вид для следующих действий и даты"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Первое собеседование"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "Скрыто в модели найма"
@@ -965,11 +951,6 @@ msgstr "Важность"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Важное"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Qualification"
-msgstr "Первоначальная квалификация"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1139,7 +1120,7 @@ msgstr "Наиболее важно"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My"
-msgstr ""
+msgstr "Мой"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_name
@@ -1415,7 +1396,7 @@ msgstr "Ответственность за набор кадров"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
-msgstr ""
+msgstr "Наймы сотрудников"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
@@ -1526,11 +1507,6 @@ msgstr "Поиск претендентов"
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
 msgstr "Искать по резюме и сопроводительным письмам."
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "Второе собеседование"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1879,7 +1855,7 @@ msgstr "напр. пригласить на собеседование"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
 msgid "hr.recruitment.config.settings"
-msgstr ""
+msgstr "hr.recruitment.config.settings"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:298
@@ -1891,6 +1867,35 @@ msgstr "претенденты на должность"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
+
+#~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<p>\n"
+#~ "%if object.department_id:\n"
+#~ "Мы рады сообщить, что в отдете ${object.department_id.name} появился "
+#~ "новый ${object.job_id.name}: <strong> ${object.name} </strong>.\n"
+#~ "%else:\n"
+#~ "Мы рады сообщить, что у нас появился новый ${object.job_id.name}: "
+#~ "<strong> ${object.name} </strong> .\n"
+#~ "%endif\n"
+#~ "</p>\n"
+#~ "<p>Пожалуйста, примите его/её в коллектив и помогите включиться в работу."
+#~ "</p>"
 
 #~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
@@ -1946,6 +1951,12 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Campaign"
 #~ msgstr "Кампания"
 
+#~ msgid "Contract Proposal"
+#~ msgstr "Предложение"
+
+#~ msgid "Contract Signed"
+#~ msgstr "Отмеченные контакты"
+
 #~ msgid ""
 #~ "Create email and url for each distinct source. <br>\n"
 #~ "                When the applicant will arrive, you will know from wich "
@@ -1954,8 +1965,19 @@ msgstr "oe_kanban_text_red"
 #~ "Настройте email и адрес сайта для каждого источника.<br>\n"
 #~ "Когда появится соискатель, вы узнаете, откуда он узнал о вакансии."
 
+#~ msgid ""
+#~ "Create here some alias...\n"
+#~ "                That will allow you to track from where the applicant is "
+#~ "coming from..."
+#~ msgstr ""
+#~ "Здесь можно создать некий алиас...\n"
+#~ "Это поможет видеть, откуда пришёл соискатель..."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Дата последнего сообщения"
+
+#~ msgid "First Interview"
+#~ msgstr "Первое собеседование"
 
 #~ msgid "Followers"
 #~ msgstr "Подписчики"
@@ -1974,6 +1996,12 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Если прочее, уточните:"
+
+#~ msgid "Initial Qualification"
+#~ msgstr "Первоначальная квалификация"
 
 #~ msgid "Is Follower"
 #~ msgstr "Подписчик"
@@ -2003,6 +2031,23 @@ msgstr "oe_kanban_text_red"
 #~ msgstr "Открыть кадровое меню"
 
 #~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Политики для сообщений в документе с использованием почтового шлюза:\n"
+#~ "- все: каждый может писать\n"
+#~ "- партнёры: только аутентифицированные партнёры;\n"
+#~ "- подписчики: только подписчики соответствующего документа\n"
+
+#~ msgid "Reset Application"
+#~ msgstr "Сброс приложения"
+
+#~ msgid "Second Interview"
+#~ msgstr "Второе собеседование"
+
+#~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
 #~ msgstr ""
@@ -2017,3 +2062,6 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Website communication history"
 #~ msgstr "История общения с сайта"
+
+#~ msgid "Welcoming ${object.name} "
+#~ msgstr "Приветствие ${object.name}"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-02-21 12:42+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -228,19 +228,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> zobraziť príklady</i>"
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1274,18 +1261,6 @@ msgid "Call"
 msgstr "Volať"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr "Volať pre Demo"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr "Volať pre demo"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1867,11 +1842,6 @@ msgid "Download the"
 msgstr "Stiahnuť"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Koncept iniciatív"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr "Každý email poslaný na alias vytvára novú príležitosť"
@@ -2080,18 +2050,6 @@ msgstr "Ukončené"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "Zložené v reťazovom spracovaní"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr "Cenová ponuka naviazania"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
-msgstr "Cenová ponuka naviazania"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2580,11 +2538,6 @@ msgid "Leads by Source"
 msgstr "Iniciatívy podľa zdroja"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Iniciatívy z USA"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Iniciatívy ktoré sú pridelené mne"
@@ -2701,12 +2654,6 @@ msgstr "Dôvody strát"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Nízka"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr "Uviesť cenu"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3608,12 +3555,6 @@ msgid "Relation field"
 msgstr "Pole vzťahu"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Pripomienka Používateľovi"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 #, fuzzy
 msgid ""
@@ -3789,12 +3730,6 @@ msgid "Selection"
 msgstr "Výber"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr "Poslať cenovú ponuku"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3808,11 +3743,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Postupnosť"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Nastavte tím obchodného oddelenia"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4952,17 +4882,40 @@ msgstr "s vašou prácou vyššie"
 #~ msgid "Both"
 #~ msgstr "Obe"
 
+#~ msgid "Call for Demo"
+#~ msgstr "Volať pre Demo"
+
+#~ msgid "Call for a demo"
+#~ msgstr "Volať pre demo"
+
+#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
+#~ msgstr ""
+#~ "Kliknite pre nastavenie novej etapy vo vašom reťazovom spracovaní "
+#~ "iniciatív/príležitostí."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "Deduplicate Contact"
+#~ msgstr "Deduplikovať kontakt"
 
 #~ msgid "Done"
 #~ msgstr "Dokončiť"
 
+#~ msgid "Draft Leads"
+#~ msgstr "Koncept iniciatív"
+
 #~ msgid "Follow-up"
 #~ msgstr "Naviazanie"
 
+#~ msgid "Follow-up Quote"
+#~ msgstr "Cenová ponuka naviazania"
+
 #~ msgid "Follow-up call"
 #~ msgstr "Naväzujúci telefonát"
+
+#~ msgid "Follow-up quote"
+#~ msgstr "Cenová ponuka naviazania"
 
 #~ msgid "Followers"
 #~ msgstr "Odberatelia"
@@ -4985,6 +4938,15 @@ msgstr "s vašou prácou vyššie"
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 
+#~ msgid ""
+#~ "If you followed the preceeding steps, you already setup\n"
+#~ "                        the foundations to a strong process leading to\n"
+#~ "                        continuous improvements of your sales teams."
+#~ msgstr ""
+#~ "Ak ste postupovli podľa predchádzajucích krokov, položili ste\n"
+#~ "základy silného procesu vedúceho k \n"
+#~ "neustálemu zlepšovaniu vašich predajných tímov."
+
 #~ msgid "Incoming"
 #~ msgstr "Prichádzajúci"
 
@@ -5001,8 +4963,14 @@ msgstr "s vašou prácou vyššie"
 #~ msgid "Is Follower"
 #~ msgstr "Je odberateľ"
 
+#~ msgid "Last Activity"
+#~ msgstr "Posledná aktivita"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Dátum poslednej správy"
+
+#~ msgid "Leads from USA"
+#~ msgstr "Iniciatívy z USA"
 
 #~ msgid ""
 #~ "Link between stages and sales teams. When set, this limitate the current "
@@ -5010,6 +4978,12 @@ msgstr "s vašou prácou vyššie"
 #~ msgstr ""
 #~ "Prepojenie medzi fázami a predajnými tímami. Keď je toto nastavené, "
 #~ "limituje to súčasnú fázu na vybrané predajné tímy."
+
+#~ msgid "Make Quote"
+#~ msgstr "Uviesť cenu"
+
+#~ msgid "Mark As Lost"
+#~ msgstr "Označiť ako stratené"
 
 #~ msgid "Messages"
 #~ msgstr "Správy"
@@ -5047,14 +5021,57 @@ msgstr "s vašou prácou vyššie"
 #~ msgid "Open Sale Menu"
 #~ msgstr "Otvorť menu predaja"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Metóda pre zverejnenie správy na dokumente za použitia mailovj brány.\n"
+#~ "- všeci: všetci môžu zverejňovať\n"
+#~ "- partneri: iba overený partneri\n"
+#~ "- odberatelia: iba odberatelia pridruženého dokumentu\n"
+
 #~ msgid "Qualification"
 #~ msgstr "Kvalifikácia"
+
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "Pripomienka na Iniciatívu: ${object.id} od ${object.partner_id != False "
+#~ "and object.partner_id.name or object.contact_name}"
+
+#~ msgid "Reminder to User"
+#~ msgstr "Pripomienka Používateľovi"
 
 #~ msgid "Sales Tags"
 #~ msgstr "Menovky predajov"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Zvoliť fázy pre tento predajný tím"
+
+#~ msgid "Send a quotation"
+#~ msgstr "Poslať cenovú ponuku"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Nastavte tím obchodného oddelenia"
+
+#~ msgid ""
+#~ "Show all opportunities for which the next action date is today or before"
+#~ msgstr ""
+#~ "Zobraziť všetky príležitosti, pre ktoré je ďalší dátum akcie dnes alebo "
+#~ "pred"
+
+#~ msgid ""
+#~ "Stages will allow salespersons to easily track how a specific\n"
+#~ "                lead or opportunity is positioned in the sales cycle."
+#~ msgstr ""
+#~ "Fázy umožnia predajcovi jednoducho sledovať ako špecifická\n"
+#~ "iniciatíva alebo príležitosť je umiestnená v predajnom cykle."
+
+#~ msgid "Teams"
+#~ msgstr "Tímy"
 
 #~ msgid "The date before which no action should be taken."
 #~ msgstr "Dátum pred ktorým nemá byť vykonaná žiadna akcia."
@@ -5084,6 +5101,13 @@ msgstr "s vašou prácou vyššie"
 #~ "Toto je zdroj odkazu. Príklad: vyhľadávaci prostriedok, iná doména, alebo "
 #~ "názov emailového zoznamu"
 
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr ""
+#~ "Táto fáza je zložená v kanban zobrazení keď v tejto fáze nie sú žiadne "
+#~ "záznamy na zobrazenie."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Počítadlo neprečítaných správ"
 
@@ -5096,8 +5120,21 @@ msgstr "s vašou prácou vyššie"
 #~ msgid "Website communication history"
 #~ msgstr "História komunikácie webovej stránky"
 
+#~ msgid ""
+#~ "What are the main KPIs you need to track for your the sales actities?"
+#~ msgstr "Aké sú hlavné KPI ktoré musíte sledovať pre vaše predajné činnosti?"
+
 #~ msgid "Your Customers"
 #~ msgstr "Vaši zákazníci"
+
+#~ msgid "Your Customizations"
+#~ msgstr "Vaše prispôsobenia"
+
+#~ msgid "Your Prices"
+#~ msgstr "Vaše ceny"
+
+#~ msgid "Your Products"
+#~ msgstr "Vaše produkty"
 
 #~ msgid "Your Proposal"
 #~ msgstr "Vaše návrhy"

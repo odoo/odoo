@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -106,12 +106,11 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
@@ -127,6 +126,10 @@ msgid ""
 "support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Példa: előre-fizetendő szolgáltatás ajánlatok, melyekre a vevőnek \n"
+"extra                óra csomagokat kell vásárolnia, mivel az összes "
+"támogatási óráit\n"
+"                elhasználta.</i>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -460,12 +463,6 @@ msgid "Delivery address for current sales order."
 msgstr "Szállítási cím a jelenlegi vásárlói megrendeléshez."
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Befizetés"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr "Befizetett termék"
@@ -483,9 +480,8 @@ msgstr "Vásárlói szegmensenkénti különböző árak"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Árengedmény (%)"
+msgstr "Áreng. (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -531,9 +527,8 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_layout:0
-#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr "Vásárlói megrendeléseken és számlákon az Incoterms megjelenítése"
+msgstr "Ne tegye személyessé a vevői megrendeléseket és számla kimutatásokat"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -584,9 +579,8 @@ msgstr "Email összeállító varázsló"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Email összeállító varázsló"
+msgstr "Email összeállító varázsló a felméréshez"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -643,7 +637,7 @@ msgstr "Teljesen kiszámlázott"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruttó súly"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1352,9 +1346,8 @@ msgstr "Árajánlatok elemzése"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Árajánlat elküldve"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1370,9 +1363,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Számla állapota"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1618,12 +1610,9 @@ msgstr "Jelenítse meg az árlistákat a vásárlóknak"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Egyes termékek már másik mértékegységben kerültek eladásra/beszerezésre "
-"(haladó)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1815,9 +1804,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
-#, fuzzy
 msgid "Timesheets on project"
-msgstr "Kapcsolatok időkiosztásai"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1867,7 +1855,6 @@ msgstr "Mértékegység"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
 msgstr "Mértékegység"
 
@@ -1922,7 +1909,7 @@ msgstr "ÁFA:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Térfogat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1972,9 +1959,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Megrendelési tételek készen állnak számlázásra"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2001,9 +1987,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Gyűjtőkód tétel"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2197,6 +2182,13 @@ msgstr "ismeretlen"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+
 #~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
 #~ msgstr ""
 #~ "<span groups=\"sale.group_discount_per_so_line\">Árengedm.(%)</span>"
@@ -2209,11 +2201,17 @@ msgstr "ismeretlen"
 #~ "Lehetővé teszi az analitikus/elemző könyvelés gyűjtőkód meghatározását a "
 #~ "vevői megrendeléseken."
 
+#~ msgid "Analytic Line"
+#~ msgstr "Gyűjtőkód tétel"
+
 #~ msgid "Analytic accounting for sales"
 #~ msgstr "Analitikus/elemző könyvelési gyűjtőkód az értékesítésekhez"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
+
+#~ msgid "Deposit"
+#~ msgstr "Befizetés"
 
 #~ msgid "Expense Account"
 #~ msgstr "Költség főkönyvi számla"
@@ -2261,6 +2259,13 @@ msgstr "ismeretlen"
 #~ msgstr "Értékesítési menü megnyitása"
 
 #~ msgid ""
+#~ "Some products may be sold/purchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Egyes termékek már másik mértékegységben kerültek eladásra/beszerezésre "
+#~ "(haladó)"
+
+#~ msgid ""
 #~ "This account will be used for invoices instead of the default one to "
 #~ "value expenses for the current product."
 #~ msgstr ""
@@ -2273,6 +2278,9 @@ msgstr "ismeretlen"
 #~ msgstr ""
 #~ "A rendszer az alapértelmezett helyett ezt a számlát fogja használni az "
 #~ "értékesítések értékeinek a jelenlegi terméken."
+
+#~ msgid "Timesheets on contract"
+#~ msgstr "Kapcsolatok időkiosztásai"
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Mértékegységek"
@@ -2291,3 +2299,469 @@ msgstr "ismeretlen"
 
 #~ msgid "account.config.settings"
 #~ msgstr "account.config.settings"
+
+#~ msgid ""
+#~ "\n"
+#~ "% set access_action = object.get_access_action()\n"
+#~ "% set doc_name = 'quotation' if object.state in ('draft', 'sent') else "
+#~ "'order confirmation'\n"
+#~ "% set is_online = access_action and access_action['type'] == 'ir.actions."
+#~ "act_url'\n"
+#~ "% set access_name = is_online and object.template_id and 'Accept and pay "
+#~ "%s online' % doc_name or 'View %s' % doc_name\n"
+#~ "% set access_url = is_online and access_action['url'] or object."
+#~ "get_signup_url()\n"
+#~ "<p>Dear ${object.partner_id.name} \n"
+#~ "% if object.partner_id.parent_id:\n"
+#~ "    (<i>${object.partner_id.parent_id.name}</i>)\n"
+#~ "% endif\n"
+#~ ",</p>\n"
+#~ "<p>\n"
+#~ "Here is your ${doc_name} <strong>${object.name}</strong>\n"
+#~ "% if object.origin:\n"
+#~ "(with reference: ${object.origin} )\n"
+#~ "% endif\n"
+#~ "amounting in <strong>${object.amount_total} ${object.pricelist_id."
+#~ "currency_id.name}</strong>\n"
+#~ "from ${object.company_id.name}.\n"
+#~ "</p>\n"
+#~ "\n"
+#~ "    <br/><br/>\n"
+#~ "    <center>\n"
+#~ "        <a href=\"${access_url}\" style=\"background-color: #1abc9c; "
+#~ "padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; "
+#~ "font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+#~ "        <br/><br/>\n"
+#~ "        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+#~ "    </center>\n"
+#~ "    <br/>\n"
+#~ "\n"
+#~ "<p>You can reply to this email if you have any questions.</p>\n"
+#~ "<p>Thank you,</p>\n"
+#~ "\n"
+#~ "<p style=\"color:#eeeeee;\">\n"
+#~ "% if object.user_id and object.user_id.signature:\n"
+#~ "    ${object.user_id.signature | safe}\n"
+#~ "% endif\n"
+#~ "</p>\n"
+#~ msgstr ""
+#~ "\n"
+#~ "% set access_action = object.get_access_action()\n"
+#~ "% set doc_name = 'quotation' if object.state in ('draft', 'sent') else "
+#~ "'order confirmation'\n"
+#~ "% set is_online = access_action and access_action['type'] == 'ir.actions."
+#~ "act_url'\n"
+#~ "% set access_name = is_online and object.template_id and 'Accept and pay "
+#~ "%s online' % doc_name or 'View %s' % doc_name\n"
+#~ "% set access_url = is_online and access_action['url'] or object."
+#~ "get_signup_url()\n"
+#~ "<p>Tisztelt ${object.partner_id.name} \n"
+#~ "% if object.partner_id.parent_id:\n"
+#~ "    (<i>${object.partner_id.parent_id.name}</i>)\n"
+#~ "% endif\n"
+#~ ",</p>\n"
+#~ "<p>\n"
+#~ "Itt találja az Ön ${doc_name} <strong>${object.name}</strong>\n"
+#~ "% if object.origin:\n"
+#~ "(hivatkozása: ${object.origin} )\n"
+#~ "% endif\n"
+#~ "összegezve ebben <strong>${object.amount_total} ${object.pricelist_id."
+#~ "currency_id.name}</strong>\n"
+#~ "innen ${object.company_id.name}.\n"
+#~ "</p>\n"
+#~ "\n"
+#~ "    <br/><br/>\n"
+#~ "    <center>\n"
+#~ "        <a href=\"${access_url}\" style=\"background-color: #1abc9c; "
+#~ "padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; "
+#~ "font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+#~ "        <br/><br/>\n"
+#~ "        <span style=\"color:#888888\">(vagy nézze meg a mellékelt PDF-"
+#~ "et)</span>\n"
+#~ "    </center>\n"
+#~ "    <br/>\n"
+#~ "\n"
+#~ "<p>Kérdés esetén válaszolhat erre az emailre.</p>\n"
+#~ "<p>Köszönjük,</p>\n"
+#~ "\n"
+#~ "<p style=\"color:#eeeeee;\">\n"
+#~ "% if object.user_id and object.user_id.signature:\n"
+#~ "    ${object.user_id.signature | safe}\n"
+#~ "% endif\n"
+#~ "</p>\n"
+
+#~ msgid "${object.subject}"
+#~ msgstr "${object.subject}"
+
+#~ msgid "&amp;bull;"
+#~ msgstr "&amp;bull;"
+
+#~ msgid ""
+#~ "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email "
+#~ "per line.</i>"
+#~ msgstr ""
+#~ "<b>Hívjon meg értékesítőt vagy vezetőket</b> emailen.<br/><i>Soronként "
+#~ "egy emailt adjon meg.</i>"
+
+#~ msgid ""
+#~ "<html>\n"
+#~ "                <head></head>\n"
+#~ "                <body style=\"margin: 0; padding: 0;\">\n"
+#~ "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" "
+#~ "bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" "
+#~ "class=\"o_mail_notification\">\n"
+#~ "                    <tbody>\n"
+#~ "\n"
+#~ "                      <!-- HEADER -->\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\" style=\"min-width: 590px;"
+#~ "\">\n"
+#~ "                          <table width=\"590\" border=\"0\" cellpadding="
+#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
+#~ "rgb(162, 70, 137); padding: 20px;\">\n"
+#~ "                            <tr>\n"
+#~ "                              <td valign=\"middle\">\n"
+#~ "                                  <span style=\"font-size:20px; color:"
+#~ "white; font-weight: bold;\">\n"
+#~ "                                      ${object.record_name}\n"
+#~ "                                  </span>\n"
+#~ "                              </td>\n"
+#~ "                              <td valign=\"middle\" align=\"right\">\n"
+#~ "                                  <img src=\"/logo.png\" style=\"padding: "
+#~ "0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id."
+#~ "name}\">\n"
+#~ "                              </td>\n"
+#~ "                            </tr>\n"
+#~ "                          </table>\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "\n"
+#~ "                      <!-- CONTENT -->\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\" style=\"min-width: 590px;"
+#~ "\">\n"
+#~ "                          <table width=\"590\" border=\"0\" cellpadding="
+#~ "\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
+#~ "rgb(255, 255, 255); padding: 20px;\">\n"
+#~ "                            <tbody>\n"
+#~ "                              <td valign=\"top\" style=\"font-family:"
+#~ "Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+#~ "                                ${object.body | safe}\n"
+#~ "                              </td>\n"
+#~ "                            </tbody>\n"
+#~ "                          </table>\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "\n"
+#~ "                      <!-- FOOTER -->\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\" style=\"min-width: 590px;"
+#~ "\">\n"
+#~ "                          <table width=\"590\" border=\"0\" cellpadding="
+#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
+#~ "rgb(162, 70, 137); padding: 20px;\">\n"
+#~ "                            <tr>\n"
+#~ "                              <td valign=\"middle\" align=\"left\" style="
+#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
+#~ "\">\n"
+#~ "                                ${user.company_id.name}<br/>\n"
+#~ "                                ${user.company_id.phone or ''}\n"
+#~ "                              </td>\n"
+#~ "                              <td valign=\"middle\" align=\"right\" style="
+#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
+#~ "\">\n"
+#~ "                                % if user.company_id.email:\n"
+#~ "                                <a href=\"mailto:${user.company_id."
+#~ "email}\" style=\"text-decoration:none; color: white;\">${user.company_id."
+#~ "email}</a><br/>\n"
+#~ "                                % endif\n"
+#~ "                                % if user.company_id.website:\n"
+#~ "                                    <a href=\"${user.company_id."
+#~ "website}\" style=\"text-decoration:none; color: white;\">\n"
+#~ "                                        ${user.company_id.website}\n"
+#~ "                                    </a>\n"
+#~ "                                % endif\n"
+#~ "                              </td>\n"
+#~ "                            </tr>\n"
+#~ "                          </table>\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\">\n"
+#~ "                            Powered by <a href=\"https://www.odoo.com"
+#~ "\">Odoo</a>.\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "                    </tbody>\n"
+#~ "                </table>\n"
+#~ "                </body>\n"
+#~ "                </html>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<html>\n"
+#~ "                <head></head>\n"
+#~ "                <body style=\"margin: 0; padding: 0;\">\n"
+#~ "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" "
+#~ "bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" "
+#~ "class=\"o_mail_notification\">\n"
+#~ "                    <tbody>\n"
+#~ "\n"
+#~ "                      <!-- HEADER -->\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\" style=\"min-width: 590px;"
+#~ "\">\n"
+#~ "                          <table width=\"590\" border=\"0\" cellpadding="
+#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
+#~ "rgb(162, 70, 137); padding: 20px;\">\n"
+#~ "                            <tr>\n"
+#~ "                              <td valign=\"middle\">\n"
+#~ "                                  <span style=\"font-size:20px; color:"
+#~ "white; font-weight: bold;\">\n"
+#~ "                                      ${object.record_name}\n"
+#~ "                                  </span>\n"
+#~ "                              </td>\n"
+#~ "                              <td valign=\"middle\" align=\"right\">\n"
+#~ "                                  <img src=\"/logo.png\" style=\"padding: "
+#~ "0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id."
+#~ "name}\">\n"
+#~ "                              </td>\n"
+#~ "                            </tr>\n"
+#~ "                          </table>\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "\n"
+#~ "                      <!-- CONTENT -->\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\" style=\"min-width: 590px;"
+#~ "\">\n"
+#~ "                          <table width=\"590\" border=\"0\" cellpadding="
+#~ "\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
+#~ "rgb(255, 255, 255); padding: 20px;\">\n"
+#~ "                            <tbody>\n"
+#~ "                              <td valign=\"top\" style=\"font-family:"
+#~ "Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+#~ "                                ${object.body | safe}\n"
+#~ "                              </td>\n"
+#~ "                            </tbody>\n"
+#~ "                          </table>\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "\n"
+#~ "                      <!-- FOOTER -->\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\" style=\"min-width: 590px;"
+#~ "\">\n"
+#~ "                          <table width=\"590\" border=\"0\" cellpadding="
+#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
+#~ "rgb(162, 70, 137); padding: 20px;\">\n"
+#~ "                            <tr>\n"
+#~ "                              <td valign=\"middle\" align=\"left\" style="
+#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
+#~ "\">\n"
+#~ "                                ${user.company_id.name}<br/>\n"
+#~ "                                ${user.company_id.phone or ''}\n"
+#~ "                              </td>\n"
+#~ "                              <td valign=\"middle\" align=\"right\" style="
+#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
+#~ "\">\n"
+#~ "                                % if user.company_id.email:\n"
+#~ "                                <a href=\"mailto:${user.company_id."
+#~ "email}\" style=\"text-decoration:none; color: white;\">${user.company_id."
+#~ "email}</a><br/>\n"
+#~ "                                % endif\n"
+#~ "                                % if user.company_id.website:\n"
+#~ "                                    <a href=\"${user.company_id."
+#~ "website}\" style=\"text-decoration:none; color: white;\">\n"
+#~ "                                        ${user.company_id.website}\n"
+#~ "                                    </a>\n"
+#~ "                                % endif\n"
+#~ "                              </td>\n"
+#~ "                            </tr>\n"
+#~ "                          </table>\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "                      <tr>\n"
+#~ "                        <td align=\"center\">\n"
+#~ "                            Támogatja <a href=\"https://www.odoo.com"
+#~ "\">Odoo</a>.\n"
+#~ "                        </td>\n"
+#~ "                      </tr>\n"
+#~ "                    </tbody>\n"
+#~ "                </table>\n"
+#~ "                </body>\n"
+#~ "                </html>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<p><b>Confirm the order</b> if the customer purchases.</p><p><i>The "
+#~ "customer can also confirm the order directly from the email he received.</"
+#~ "i></p>"
+#~ msgstr ""
+#~ "<p><b>Erősítse meg a vásárlói megrendelést</b> ha a vevő vásárolt.</"
+#~ "p><p><i>A vásárló megerősítheti a rendelését közvetlenül a hozzá érkezett "
+#~ "email-en is.</i></p>"
+
+#~ msgid "<strong>Subtotal: </strong>"
+#~ msgstr "<strong>Részösszeg: </strong>"
+
+#~ msgid "A warning can be set on a product or a customer (Sale)"
+#~ msgstr ""
+#~ "Egy figyelmeztetést állíthat be egy terméken vagy egy vásárlón "
+#~ "(Értékesítés)"
+
+#~ msgid "Add pagebreak"
+#~ msgstr "Oldaltörés hozzáadása"
+
+#~ msgid "Add subtotal"
+#~ msgstr "Részösszeg hozzáadása"
+
+#~ msgid "All the products and the customers can be used in sale orders"
+#~ msgstr "Az összes termék és vevő használható a vevői megrendeléseken"
+
+#~ msgid "Allow discount policy on sale order line"
+#~ msgstr ""
+#~ "Engedélyezi a vásárlói megrendelés tételeire az árengedmény szabályt"
+
+#~ msgid ""
+#~ "Allow to modify the sale order dates to postpone deliveries and "
+#~ "procurements"
+#~ msgstr ""
+#~ "Engedélyezi a vevői megrendeléseken a dátumok módosítását a kiszállítások "
+#~ "és a beszerzések elhalasztásához"
+
+#~ msgid ""
+#~ "Allows to manage different prices based on rules per category of "
+#~ "customers.\n"
+#~ "                Example: 10% for retailers, promotion of 5 EUR on this "
+#~ "product, etc."
+#~ msgstr ""
+#~ "Lehetővé teszi a vásárlói kategóriák szabályai szerinti különböző árak "
+#~ "használatát.\n"
+#~ "                Példa: 10% a kiskereskedőknek, befektetésösztönzés 5 EUR "
+#~ "ezen a terméken, stb."
+
+#~ msgid ""
+#~ "An informative or blocking warning can be set on a product or a customer"
+#~ msgstr ""
+#~ "Egy információs vagy blokkoló figyelmeztetés állítható be az egyes "
+#~ "termékekre vagy egy vevőre"
+
+#~ msgid "Analytic Tags"
+#~ msgstr "Gyűjtő/Elemző címkék"
+
+#~ msgid "At cost"
+#~ msgstr "Költségen"
+
+#~ msgid "At sale price"
+#~ msgstr "Eladási áron"
+
+#~ msgid "Attribute Values"
+#~ msgstr "Termékjellemző értékek"
+
+#~ msgid "Attributes"
+#~ msgstr "Tulajdonságok"
+
+#~ msgid "Blocking Message"
+#~ msgstr "Blokkoló üzenet"
+
+#~ msgid "Breaks Page"
+#~ msgstr "Megszakítások oldala"
+
+#~ msgid "Click the <i>Home icon</i> to navigate across apps."
+#~ msgstr ""
+#~ "Kattintson a <i>Kezdőlap ikonra</i> az alkalmazásokon keresztüli "
+#~ "navigációhoz."
+
+#~ msgid "Configuration options are available in the Settings app."
+#~ msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
+
+#~ msgid "Confirmation Date"
+#~ msgstr "Megerősítés dátuma"
+
+#~ msgid "Date"
+#~ msgstr "Dátum"
+
+#~ msgid "Date on which the sale order is confirmed."
+#~ msgstr "A vevői megrendelés megerősítésének dátuma."
+
+#~ msgid "Delivery address for current invoice."
+#~ msgstr "A jelenlegi vásárlói megrendelés szállítási címe."
+
+#~ msgid "Discount Policy"
+#~ msgstr "Árengedmény házirendje"
+
+#~ msgid "Group By Name"
+#~ msgstr "Név szerinti csoportosítás"
+
+#~ msgid "Layout Sequence"
+#~ msgstr "Sorrendbe rendezés"
+
+#~ msgid "Material"
+#~ msgstr "Anyag"
+
+#~ msgid "Message for Sales Order"
+#~ msgstr "Üzenet a beszerzési rendelésről"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "Üzenet a vevői megrendelés sorára"
+
+#~ msgid "More Info"
+#~ msgstr "További információ"
+
+#~ msgid "Name"
+#~ msgstr "Név"
+
+#~ msgid "No"
+#~ msgstr "Nem"
+
+#~ msgid "No Message"
+#~ msgstr "Nincs üzenet"
+
+#~ msgid "Pricelists"
+#~ msgstr "Árlisták"
+
+#~ msgid "Product Categories"
+#~ msgstr "Termékkategóriák"
+
+#~ msgid "Report Configuration"
+#~ msgstr "Kimutatás beállítás"
+
+#~ msgid "Report Layout Categories"
+#~ msgstr "Kimutatás elrendezés kategóriái"
+
+#~ msgid "Search Name"
+#~ msgstr "Név keresése"
+
+#~ msgid "Section"
+#~ msgstr "Szakasz"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
+#~ "értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az "
+#~ "üzenethez és leblokkolja a folyamatot. Az üzenetet a következő mezőbe "
+#~ "kell beírni."
+
+#~ msgid "Services"
+#~ msgstr "Szolgáltatások"
+
+#~ msgid "TIN:"
+#~ msgstr "Adóazonosító szám; TIN, VAT:"
+
+#~ msgid "Unit of Measure Categories"
+#~ msgstr "Mértékegység kategóriák"
+
+#~ msgid "Warning"
+#~ msgstr "Figyelmeztetés"
+
+#~ msgid "Warning for %s"
+#~ msgstr "Figyelmeztetés erre %s"
+
+#~ msgid "Warning on the Sales Order"
+#~ msgstr "Figyelmesztetés a beszerzési rendelésen"
+
+#~ msgid "Warning when Selling this Product"
+#~ msgstr "Figyelmeztetés, amikor ebből a termékből értékesítés történik"

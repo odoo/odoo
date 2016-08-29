@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-05-19 13:55+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -230,19 +230,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> види примери</i>"
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1273,18 +1260,6 @@ msgid "Call"
 msgstr "Повик"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1865,11 +1840,6 @@ msgid "Download the"
 msgstr "Симнете го/ја"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Нацрт траги"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr "Секој меил испратен кон контактот Ви креира нова можност"
@@ -2079,18 +2049,6 @@ msgstr "Завршено"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "Претставено во продажен канал"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr "Проследена понуда"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
-msgstr "Проследена понуда"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2584,11 +2542,6 @@ msgid "Leads by Source"
 msgstr "Траги по извор"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Траги од САД"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Траги што ми се доделени"
@@ -2702,12 +2655,6 @@ msgstr "Причини за загуба"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Ниско"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr "Направи понуда"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3606,12 +3553,6 @@ msgid "Relation field"
 msgstr "Поле за врска"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Потсетник за корисник"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 #, fuzzy
 msgid ""
@@ -3793,12 +3734,6 @@ msgid "Selection"
 msgstr "Избор"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr "Испрати понуда"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3812,11 +3747,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Секвенца"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Постави тим на Одделот Продажби"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4963,17 +4893,33 @@ msgstr "со вашата работа нагоре"
 #~ msgid "Both"
 #~ msgstr "Двата"
 
+#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
+#~ msgstr ""
+#~ "Кликни да креираш ново ниво во вашиот продажен канал на трага/можност."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Датум на испраќање на последната порака"
+
+#~ msgid "Deduplicate Contact"
+#~ msgstr "Отстрани дупликати од контакти"
 
 #~ msgid "Done"
 #~ msgstr "Завршено"
 
+#~ msgid "Draft Leads"
+#~ msgstr "Нацрт траги"
+
 #~ msgid "Follow-up"
 #~ msgstr "Проследи"
 
+#~ msgid "Follow-up Quote"
+#~ msgstr "Проследена понуда"
+
 #~ msgid "Follow-up call"
 #~ msgstr "Проследен телефонски повик"
+
+#~ msgid "Follow-up quote"
+#~ msgstr "Проследена понуда"
 
 #~ msgid "Followers"
 #~ msgstr "Пратители"
@@ -4996,6 +4942,15 @@ msgstr "со вашата работа нагоре"
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
 
+#~ msgid ""
+#~ "If you followed the preceeding steps, you already setup\n"
+#~ "                        the foundations to a strong process leading to\n"
+#~ "                        continuous improvements of your sales teams."
+#~ msgstr ""
+#~ "Доколку сте ги следеле проследувачките постапки, тогаш веќе сте засновале "
+#~ "силен процес водејќи кон \n"
+#~ "проследувани напредувања на вашите продажни тимови."
+
 #~ msgid "Incoming"
 #~ msgstr "Влезни"
 
@@ -5012,8 +4967,14 @@ msgstr "со вашата работа нагоре"
 #~ msgid "Is Follower"
 #~ msgstr "е следач"
 
+#~ msgid "Last Activity"
+#~ msgstr "Последна активност"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Датум на последна порака"
+
+#~ msgid "Leads from USA"
+#~ msgstr "Траги од САД"
 
 #~ msgid ""
 #~ "Link between stages and sales teams. When set, this limitate the current "
@@ -5021,6 +4982,12 @@ msgstr "со вашата работа нагоре"
 #~ msgstr ""
 #~ "Линк помеѓу етапите и тимовите за продажба. Кога е подесено, ова ја "
 #~ "ограничува тековната етапа на селектираните тимови за продажба."
+
+#~ msgid "Make Quote"
+#~ msgstr "Направи понуда"
+
+#~ msgid "Mark As Lost"
+#~ msgstr "Означи како изгубено"
 
 #~ msgid "Messages"
 #~ msgstr "Пораки"
@@ -5058,14 +5025,57 @@ msgstr "со вашата работа нагоре"
 #~ msgid "Open Sale Menu"
 #~ msgstr "Отвори мени Продажба"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Полиса за постирање на пораки на документот користејќи го mailgateway.\n"
+#~ "- секој: секој може да постира\n"
+#~ "- партнери: само автентизирани партнери можат\n"
+#~ "- следачи: само следачи на соодветниот документ можат\n"
+
 #~ msgid "Qualification"
 #~ msgstr "Квалификација"
+
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "Подсетник за трага: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+
+#~ msgid "Reminder to User"
+#~ msgstr "Потсетник за корисник"
 
 #~ msgid "Sales Tags"
 #~ msgstr "Тагови за продажба"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Избери етапи за овој тим за продажба"
+
+#~ msgid "Send a quotation"
+#~ msgstr "Испрати понуда"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Постави тим на Одделот Продажби"
+
+#~ msgid ""
+#~ "Show all opportunities for which the next action date is today or before"
+#~ msgstr ""
+#~ "Покажи ги сите можности за кој следниот датум на акција е денес или "
+#~ "претходно"
+
+#~ msgid ""
+#~ "Stages will allow salespersons to easily track how a specific\n"
+#~ "                lead or opportunity is positioned in the sales cycle."
+#~ msgstr ""
+#~ "Нивоата ќе им овозможат на продавачите лесно да проследат како \n"
+#~ "специфична трага или можност е позиционирана во продажниот циклус."
+
+#~ msgid "Teams"
+#~ msgstr "Тимови"
 
 #~ msgid "The date before which no action should be taken."
 #~ msgstr "Датумот пред кој било која акција не треба да биде земена."
@@ -5095,6 +5105,13 @@ msgstr "со вашата работа нагоре"
 #~ "ова е извор на врската пр. : пребарувач, друг домен или име од е-маил "
 #~ "листа"
 
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr ""
+#~ "Оваа фаза е прикажана во kanban погледот кога не постојат записи од таа "
+#~ "фаза да се прикажат."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Тезга на непрочитаните пораки"
 
@@ -5107,8 +5124,23 @@ msgstr "со вашата работа нагоре"
 #~ msgid "Website communication history"
 #~ msgstr "Историја на веб комуникација"
 
+#~ msgid ""
+#~ "What are the main KPIs you need to track for your the sales actities?"
+#~ msgstr ""
+#~ "Кои ви се главните KPIs што ви требаат за да ги следите вашите активности "
+#~ "во продажба?"
+
 #~ msgid "Your Customers"
 #~ msgstr "Ваши клиенти"
+
+#~ msgid "Your Customizations"
+#~ msgstr "Вашите костумизации"
+
+#~ msgid "Your Prices"
+#~ msgstr "Вашите цени"
+
+#~ msgid "Your Products"
+#~ msgstr "Ваши производи"
 
 #~ msgid "Your Proposal"
 #~ msgstr "Вашиот предлог"

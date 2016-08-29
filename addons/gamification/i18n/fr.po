@@ -1,4 +1,3 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * gamification
@@ -7,50 +6,22 @@
 # Lucas Deliege <lud@odoo.com>, 2015
 # Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
-# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * gamification
-#
-# Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Lionel Sausin <ls@numerigraphe.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Agathe Mollé <molleagathe@gmail.com>, 2016
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# ShevAbam <shevabam@gmail.com>, 2016
-# Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
-# Saad Thaifa <saad.thaifa@gmail.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"POT-Creation-Date: 2016-08-29 12:00+0000\n"
+"PO-Revision-Date: 2015-10-07 20:13+0000\n"
+"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
-#, fuzzy
 msgid ""
 "\n"
 "        <p>Congratulation, you have received the badge <strong>${object."
@@ -66,23 +37,11 @@ msgid ""
 "        % endif\n"
 "        "
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
 "\n"
 "<p>Félicitations, vous avez reçu le badge <strong>${object.badge_id.name}</"
 "strong> !\n"
 "% if object.sender_id\n"
 "Ce badge est délivré par<strong>${object.sender_id.name}</strong>.\n"
-"% endif\n"
-"</p>\n"
-"% if object.comment\n"
-"<p><em>${object.comment}</em></p>\n"
-"% endif\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"\n"
-"<p>Félicitations, vous avez reçu le badge <strong>${object.badge_id.name}</"
-"strong> !\n"
-"% if object.sender_id\n"
-"Ce badge est délivré par <strong>${object.sender_id.name}</strong>.\n"
 "% endif\n"
 "</p>\n"
 "% if object.comment\n"
@@ -191,29 +150,21 @@ msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:744
-#, fuzzy, python-format
+#, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
 "<br/>Récompense (badge %s) pour chaque utilisateur atteignant les objectifs "
-"a été envoyée à %s.\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<br/>La récompense (badge %s) pour chaque utilisateur atteignant les "
-"objectifs a été envoyée à %s."
+"a été envoyée à %s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:753
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
 "<br/>Des récompenses spéciales ont été envoyées pour les meilleurs "
-"utilisateurs. Le classement pour ce concours est:\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<br/>Des récompenses spéciales ont été envoyées pour les meilleurs "
-"utilisateurs. Le classement pour ce défi est :"
+"utilisateurs. Le classement pour ce concours est:"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -273,13 +224,8 @@ msgstr ""
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
-#, fuzzy
 msgid "A selected list of users"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Une liste sélectionnée d'utilisateurs\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Une sélection d'utilisateurs"
+msgstr "Une liste sélectionnée d'utilisateurs"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
@@ -318,13 +264,8 @@ msgstr "Apparaît sur"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "Assign Challenge To"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Attribuer un Défi\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Attribuer un Défi à"
+msgstr "Attribuer un Défi"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
@@ -348,13 +289,8 @@ msgstr "Utilisateurs habilités"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
-#, fuzzy
 msgid "Automatic: execute a specific Python code"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Automatique : exécuter du code Python spécifique\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Automatique : exécute du code Python spécifique"
+msgstr "Automatique : exécuter du code Python spécifique"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -387,24 +323,14 @@ msgstr "Badge délivré"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_list_view
-#, fuzzy
 msgid "Badge List"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Liste de Badge\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Liste de Badges"
+msgstr "Liste de Badge"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_badge_name
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
-#, fuzzy
 msgid "Badge Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom de Badge\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nom du Badge"
+msgstr "Nom de Badge"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
@@ -414,22 +340,15 @@ msgstr "Badges"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid ""
 "Badges are granted when a challenge is finished. This is either at the end "
 "of a running period (eg: end of the month for a monthly challenge), at the "
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
 "Les badges sont délivrés en fin de défi. Cette fin est déterminée soit par "
 "une période (ex: fin de mois pour un défi mensuel) soit par la date de fin "
 "(si une périodicité n'est pas définie) soit par la fermeture manuelle du "
-"défi.\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Les badges sont délivrés en fin de défi. Un défi se termine soit à la fin "
-"d'une période (ex: fin de mois pour un défi mensuel), soit par une date de "
-"fin (si une périodicité n'est pas définie) soit par la fermeture manuelle du "
 "défi."
 
 #. module: gamification
@@ -439,13 +358,8 @@ msgstr "Mode Groupé"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
-#, fuzzy
 msgid "Brilliant"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Brilliant\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Brillant"
+msgstr "Brilliant"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
@@ -700,13 +614,9 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Décrire le défi : Ce qu'il fait, qui il concerne, quel est son intérêt...\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Décrire le défi : ce qu'il fait, qui il concerne, quel est son intérêt..."
+"Décrire le défi : Ce qu'il fait, qui il concerne, quel est son intérêt..."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -724,13 +634,8 @@ msgstr "Description"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_visibility_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
-#, fuzzy
 msgid "Display Mode"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mode Affichage\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mode d'affichage"
+msgstr "Mode Affichage"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_display_name
@@ -741,13 +646,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom affiché\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_mode
@@ -774,13 +674,8 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.challenge,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
-#, fuzzy
 msgid "Done"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Terminé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Fait"
+msgstr "Terminé"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0 selection:gamification.goal,state:0
@@ -872,73 +767,38 @@ msgstr "Suffixe Complet"
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
-#, fuzzy
 msgid "Gamification Tools"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Outils de l'Émulation\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Outils de ludification"
+msgstr "Outils de l'Émulation"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
-#, fuzzy
 msgid "Gamification badge"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Badge d'émulation\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Badge de ludification"
+msgstr "Badge d'émulation"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
-#, fuzzy
 msgid "Gamification challenge"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Défi d'émulation\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Défi de ludification"
+msgstr "Défi d'émulation"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
-#, fuzzy
 msgid "Gamification generic goal for challenge"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Objectif générique d'émulation pour les défis\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Objectif générique de ludification pour les défis"
+msgstr "Objectif générique d'émulation pour les défis"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
-#, fuzzy
 msgid "Gamification goal definition"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Définition d'objectif d'émulation\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Définition d'objectif de ludification"
+msgstr "Définition d'objectif d'émulation"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
-#, fuzzy
 msgid "Gamification goal instance"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Occurrence d'objectif d'émulation\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Occurrence d'objectif de ludification"
+msgstr "Occurrence d'objectif d'émulation"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
-#, fuzzy
 msgid "Gamification user badge"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Badge d'émulation pour utilisateur\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Badge de ludification pour utilisateur"
+msgstr "Badge d'émulation pour utilisateur"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_goal_id
@@ -1168,13 +1028,8 @@ msgstr "Invité"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal___last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition___last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dernière modification le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_last_report_date
@@ -1195,13 +1050,8 @@ msgstr "Dernière mise à jour"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour par\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_date
@@ -1212,13 +1062,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
@@ -1471,13 +1316,8 @@ msgstr "Référence"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "Refresh Challenge"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Rafraîchir de Défi\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Rafraîchir le défi"
+msgstr "Rafraîchir de Défi"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
@@ -1491,13 +1331,8 @@ msgstr "Objectifs relatifs"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_remaining_sending
-#, fuzzy
 msgid "Remaining Sending Allowed"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Envoi de restant autorisé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Envoi du restant autorisé"
+msgstr "Envoi de restant autorisé"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_remind_update_delay
@@ -1960,13 +1795,8 @@ msgstr "Ce champ contient l'image du badge, limitée à 256x256"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
-#, fuzzy
 msgid "To"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vers\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"A"
+msgstr "Vers"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_target_goal
@@ -1995,13 +1825,8 @@ msgstr "Unité"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
-#, fuzzy
 msgid "Update"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mettre à jour\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mise à jour"
+msgstr "Mettre à jour"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:495

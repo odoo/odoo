@@ -1,4 +1,3 @@
-# #-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm
@@ -7,32 +6,19 @@
 # krnkris, 2015-2016
 # krnkris, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
-# #-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * crm
-#
-# Translators:
-# krnkris <krnkris@freemail.hu>, 2016
-# Kovács Tibor <kovika@gmail.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-06-06 19:55+0000\n"
+"Last-Translator: krnkris\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
+"hu/)\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm
@@ -233,13 +219,8 @@ msgstr "(itt tudja megváltoztatni)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ", if accounting or purchase is installed"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-", ha a könyvelés vagy a beszerzés telepítve\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-", ha a könyvelés vagy a beszerzés telepítve van"
+msgstr ", ha a könyvelés vagy a beszerzés telepítve"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -250,19 +231,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> példák megtekintése</i>"
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -973,17 +941,12 @@ msgstr "<strong>e-Értékesítés</strong>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_defaults
-#, fuzzy
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Egy Python szótár aminak a kiértékelésével alapértékeket biztosít, ha ehhez "
-"az álnévhez új rekordokat hoz létre.\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Egy Python szótár aminek a kiértékelésével alapértékeket biztosít, ha ehhez "
-"az álnévhez új feljegyzéseket hoz létre."
+"az álnévhez új rekordokat hoz létre."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1193,13 +1156,8 @@ msgstr "Archívum"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#, fuzzy
 msgid "Archived"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Archívált\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Archivált"
+msgstr "Archívált"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1339,18 +1297,6 @@ msgid "Call"
 msgstr "Hívás"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr "Felhívás demó bemutatóra"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr "Felhívás egy demó bemutatóra"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1364,13 +1310,8 @@ msgstr "Kampány"
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
-#, fuzzy
 msgid "Cancel"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Megszakítás\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mégse"
+msgstr "Megszakítás"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
@@ -1469,13 +1410,8 @@ msgstr "Kattintson az ehhez a vásárlóhoz tartozó lehetőségek megtekintés�
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
-#, fuzzy
 msgid "Close"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bezár\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Bezárás"
+msgstr "Bezár"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_closed
@@ -1496,13 +1432,8 @@ msgstr "Lezárt/szunnyadó érdeklődéseket nem lehet lehetőséggé alakítani
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_color
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_color
-#, fuzzy
 msgid "Color Index"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Szín meghatározó\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Szín jegyzék"
+msgstr "Szín meghatározó"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_company_id
@@ -1630,13 +1561,8 @@ msgstr "Ország"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Create Customers"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vevő létrehozása\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Vásárlók létrehozása"
+msgstr "Vevő létrehozása"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1741,13 +1667,8 @@ msgstr "Hónap létrehozás"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
-#, fuzzy
 msgid "Currency"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Valuta\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Pénznem"
+msgstr "Valuta"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1770,13 +1691,9 @@ msgstr "Jelenlegi sor"
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#, fuzzy, python-format
+#, python-format
 msgid "Customer"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vevő\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Vásárló"
+msgstr "Vevő"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:947
@@ -1786,25 +1703,15 @@ msgstr "Vevői e-mail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_name
-#, fuzzy
 msgid "Customer Name"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vevő neve\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Vásárló neve"
+msgstr "Vevő neve"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
-#, fuzzy
 msgid "Customers"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Vevők\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Vásárlók"
+msgstr "Vevők"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1931,13 +1838,8 @@ msgstr "Kapcsolati célszemély"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Név megjelenítése\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1960,13 +1862,8 @@ msgstr "Ne felejtse el megváltoztatni ezt a címet itt:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Don't hesitate to"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Ne habozzon\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Ne habozzon megteeni"
+msgstr "Ne habozzon"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1979,11 +1876,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
 msgstr "Tölse le a"
-
-#. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Érdeklődés tervezet"
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -2024,13 +1916,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#, fuzzy
 msgid "Edit"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Szerkeszt\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Szerkesztés"
+msgstr "Szerkeszt"
 
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_data_email
@@ -2039,13 +1926,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:mail.message.subtype,name:crm.crm_activity_data_email_mail_message_subtype
-#, fuzzy
 msgid "Email"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Email\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"E-mail"
+msgstr "Email"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -2085,13 +1967,8 @@ msgstr "A lehetőség elnyerésének körülbelüli időpontja/dátuma."
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
-#, fuzzy
 msgid "Event"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Rendezvény\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Esemény"
+msgstr "Rendezvény"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2212,18 +2089,6 @@ msgid "Folded in Pipeline"
 msgstr "A folyamatban behajtott"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr "Árajánlat nyomon-követés"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
-msgstr "Árajánlat nyomon-követés"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "For every deal, review the next action, the expected closing, the pain "
@@ -2273,13 +2138,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Gamification"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Gamifikáció\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Gamifikáció, játékosítás"
+msgstr "Gamifikáció"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -2305,13 +2165,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#, fuzzy
 msgid "Group By"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Csoportosítás...\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Csoportosítás"
+msgstr "Csoportosítás..."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_number_group
@@ -2405,27 +2260,17 @@ msgstr "Magas"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_id
 #: model:ir.model.fields,field_description:crm.field_crm_stage_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Azonosító ID"
+msgstr "ID"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_thread_id
-#, fuzzy
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "A szülő rekord azonosító ID-je fogja az álneveket (például: projekt fogja a "
-"részfeladat létrehozó álnevet)\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"A szülő feljegyzés azonosító ID-je fogja az álneveket (például: projekt "
-"fogja a részfeladat létrehozó álnevet)"
+"részfeladat létrehozó álnevet)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_aggr_ids
@@ -2569,13 +2414,8 @@ msgstr "Utolsó művelet"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding___last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utolsó frissítés dátuma\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítve ekkor"
+msgstr "Utolsó frissítés dátuma"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_last_stage_update
@@ -2597,13 +2437,8 @@ msgstr "Utolsó szint frissítése"
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity_write_uid
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_write_uid
 #: model:ir.model.fields,field_description:crm.field_crm_stage_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utoljára frissítve, által\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utoljára frissítette"
+msgstr "Utoljára frissítve, által"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_write_date
@@ -2683,13 +2518,8 @@ msgstr "Érdeklődés/Lehetőség tömeges levelezés"
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
-#, fuzzy
 msgid "Leads"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Érdeklődők\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Érdeklődések"
+msgstr "Érdeklődők"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:60
@@ -2742,11 +2572,6 @@ msgstr "Érdeklődés generálása"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Leads by Source"
 msgstr "Érdeklődések forrásokként"
-
-#. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Érdeklődés USA-ból"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2863,12 +2688,6 @@ msgstr "Meghiúsulás okai"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Alacsony"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr "Készítsen Árajánlatot"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3061,23 +2880,13 @@ msgstr "Vegyes"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_mobile
-#, fuzzy
 msgid "Mobile"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mobil\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mobilszám"
+msgstr "Mobil"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_res_model
-#, fuzzy
 msgid "Model"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Model\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Modell"
+msgstr "Model"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_res_model
@@ -3206,13 +3015,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_description
-#, fuzzy
 msgid "Notes"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Jegyzetek\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Megjegyzések"
+msgstr "Jegyzetek"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_delay_close
@@ -3469,21 +3273,14 @@ msgstr "Opció"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_force_thread_id
-#, fuzzy
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Az összefűzés (rekord) választható ID azonosítója, amely minden beérkezett "
 "üzenethez hozzá lesz mellékleve, még akkor is ha nem válaszoltak rá. Ha "
-"beállított, akkor teljesen ki lesz kapcsolva az új rekord létrehozása.\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Az összefűzés (feljegyzés) választható ID azonosítója, amely minden "
-"beérkezett üzenethez hozzá lesz mellékleve, még akkor is ha nem válaszoltak "
-"rá. Ha beállított, akkor teljesen ki lesz kapcsolva az új feljegyzés "
-"létrehozása."
+"beállított, akkor teljesen ki lesz kapcsolva az új rekord létrehozása."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3522,29 +3319,18 @@ msgstr "Forrásmodell"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_parent_thread_id
-#, fuzzy
 msgid "Parent Record Thread ID"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Szülő rekord folyamat azonosító ID\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Szülő feljegyzés folyamat azonosító ID"
+msgstr "Szülő rekord folyamat azonosító ID"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_parent_model_id
-#, fuzzy
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not "
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Szülő modell fogja az álnevet. Az álnév hivatkozást megfogó modell\n"
 "nme szükségszerüen megadott az alias_model_id -ben.\n"
-"(például: projekt (parent_model) és folyamat (model))\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Szülő modell fogja az álnevet. Az álnév hivatkozást megfogó modell\n"
-"nem szükségszerűen megadott az alias_model_id -ben.\n"
 "(például: projekt (parent_model) és folyamat (model))"
 
 #. module: crm
@@ -3718,23 +3504,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_priority
-#, fuzzy
 msgid "Priority"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Prioritás\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Elsőbbségi"
+msgstr "Prioritás"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_legend_priority
-#, fuzzy
 msgid "Priority Management Explanation"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Elsődleges  szervezés magyarázata\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Priorizálás kezelésének leírása"
+msgstr "Elsődleges  szervezés magyarázata"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_probability
@@ -3799,13 +3575,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
-#, fuzzy
 msgid "Record Thread ID"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Összefűzési azonosító ID elmentése\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Feljegyzés összefűzési azonosító ID"
+msgstr "Összefűzési azonosító ID elmentése"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_referred
@@ -3826,12 +3597,6 @@ msgid "Relation field"
 msgstr "Reléciós/összefüggés mező"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Emlékeztő a felhasználónak"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3840,13 +3605,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Reporting"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kimutatás készítés\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Riport készítés"
+msgstr "Kimutatás készítés"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -4011,12 +3771,6 @@ msgid "Selection"
 msgstr "Kiválasztás"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr "Küldjön egy árajánlatot"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -4030,11 +3784,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Sorszám"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Csoport beállítása az értékesítési osztályhoz"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4199,13 +3948,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_state_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "State"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Állam\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Állapot"
+msgstr "Állam"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street
@@ -4226,13 +3970,8 @@ msgstr "Utca..."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street2
-#, fuzzy
 msgid "Street2"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Utca 2\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Utca2"
+msgstr "Utca 2"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -4280,13 +4019,8 @@ msgstr "Címke"
 
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
-#, fuzzy
 msgid "Tag name already exists !"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Rendszám már létezik!\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Címke név már létezik!"
+msgstr "Rendszám már létezik!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
@@ -4296,13 +4030,8 @@ msgstr "Címkék"
 #. module: crm
 #: model:crm.activity,name:crm.crm_activity_data_meeting
 #: model:mail.message.subtype,name:crm.crm_activity_data_meeting_mail_message_subtype
-#, fuzzy
 msgid "Task"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Feladat\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Fladat"
+msgstr "Feladat"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
@@ -4354,20 +4083,14 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_model_id
-#, fuzzy
 msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "a modell (Odoo rendszer Dokumentum féle), amelyhez ez az álnév tartozik. "
 "Bármely bejövő email, mely nem válaszol egy meglévő rekordra egy új rekordot "
-"fog létrehozni ehhez a modellhez (pl. egy projekt ügyet)\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"a modell (Odoo rendszer Dokumentum féle), amelyhez ez az álnév tartozik. "
-"Bármely bejövő email, mely nem válaszol egy meglévő feljegyzésre egy új "
-"feljegyzést fog létrehozni ehhez a modellhez (pl. egy projekt ügyet)"
+"fog létrehozni ehhez a modellhez (pl. egy projekt ügyet)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_name
@@ -4389,25 +4112,17 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_user_id
-#, fuzzy
 msgid ""
 "The owner of records created upon receiving emails on this alias. If this "
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "A rekord tulajdonosa létrehozva amikor erre az álnévre e-mailek  érkeznek. "
 "Ha ez a mező nincs kialakítva akkor a rendszer megpróbálja megkeresni a "
 "jogos tulajdonost a elküldési (űrlap) címről, vagy az adminisztrátor "
 "felhasználót fogja használni ha nem talált rendszer felhasználót azzal a "
-"címmel.\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"A feljegyzés tulajdonosa létrehozva amikor erre az álnévre e-mailek  "
-"érkeznek. Ha ez a mező nincs kialakítva akkor a rendszer megpróbálja "
-"megkeresni a jogos tulajdonost a elküldési (űrlap) címről, vagy az "
-"adminisztrátor felhasználót fogja használni ha nem talált rendszer "
-"felhasználót azzal a címmel."
+"címmel."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4608,13 +4323,8 @@ msgstr "Olvasatlan üzenetek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
-#, fuzzy
 msgid "Update Date"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Frissítés Dátuma\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dátum frissítése"
+msgstr "Frissítés Dátuma"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4749,13 +4459,8 @@ msgstr "VIP levél lehetséges szponzoroknak"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
-#, fuzzy
 msgid "Very High"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nagyon magas\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nagyon nagy"
+msgstr "Nagyon magas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
@@ -4780,14 +4485,10 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "We can automate steps in your workflow, for example:"
 msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
 "Automatikusan lefutó lépéseket tudunk hozzáadni a munkafolyamataihoz, "
-"például:\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Automatikus lépéseket lehet hozzáadni a munkafolyamatokhoz, például:"
+"például:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4864,13 +4565,8 @@ msgstr "Heti találkozók"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Welcome"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Üdvözlöm\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Üdvözlet"
+msgstr "Üdvözlöm"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -5094,13 +4790,8 @@ msgstr "Irányítószám"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_zip
-#, fuzzy
 msgid "Zip"
-msgstr ""
-"#-#-#-#-#  hu.po (Odoo 9.0)  #-#-#-#-#\n"
-"Irsz\n"
-"#-#-#-#-#  hu.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Irsz."
+msgstr "Irsz"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -5253,6 +4944,12 @@ msgstr "a fenti munkájával"
 #~ msgid "Both"
 #~ msgstr "Mindkettő"
 
+#~ msgid "Call for Demo"
+#~ msgstr "Felhívás demó bemutatóra"
+
+#~ msgid "Call for a demo"
+#~ msgstr "Felhívás egy demó bemutatóra"
+
 #~ msgid "Click to set a new stage in your lead/opportunity pipeline."
 #~ msgstr ""
 #~ "Kattintson az érdeklődési/lehetőségi folyamat új szintjének megadásához"
@@ -5266,11 +4963,20 @@ msgstr "a fenti munkájával"
 #~ msgid "Done"
 #~ msgstr "Kész"
 
+#~ msgid "Draft Leads"
+#~ msgstr "Érdeklődés tervezet"
+
 #~ msgid "Follow-up"
 #~ msgstr "Fizetési emlékeztető"
 
+#~ msgid "Follow-up Quote"
+#~ msgstr "Árajánlat nyomon-követés"
+
 #~ msgid "Follow-up call"
 #~ msgstr "Hívás nyomon-követés"
+
+#~ msgid "Follow-up quote"
+#~ msgstr "Árajánlat nyomon-követés"
 
 #~ msgid "Followers"
 #~ msgstr "Követők"
@@ -5326,6 +5032,9 @@ msgstr "a fenti munkájával"
 #~ msgid "Last Message Date"
 #~ msgstr "Utolsó üzenet dátuma"
 
+#~ msgid "Leads from USA"
+#~ msgstr "Érdeklődés USA-ból"
+
 #~ msgid ""
 #~ "Link between stages and sales teams. When set, this limitate the current "
 #~ "stage to the selected sales teams."
@@ -5333,6 +5042,9 @@ msgstr "a fenti munkájával"
 #~ "Kapcsolatok a szintek és az értékesítő csoportok között. Ha beállított, "
 #~ "ez lehatárolja a kiválasztott értékesítési csoportokat a jelenlegi "
 #~ "szintekre."
+
+#~ msgid "Make Quote"
+#~ msgstr "Készítsen Árajánlatot"
 
 #~ msgid "Mark As Lost"
 #~ msgstr "Meghiúsultnak jelölt"
@@ -5395,11 +5107,20 @@ msgstr "a fenti munkájával"
 #~ "Emlékeztető ehhez az érdeklődésehez: ${object.id} from ${object."
 #~ "partner_id != False and object.partner_id.name or object.contact_name}"
 
+#~ msgid "Reminder to User"
+#~ msgstr "Emlékeztő a felhasználónak"
+
 #~ msgid "Sales Tags"
 #~ msgstr "Értékesítési címkék"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Értékesítési szint kiválasztása ehhez az értékesítési csoporthoz"
+
+#~ msgid "Send a quotation"
+#~ msgstr "Küldjön egy árajánlatot"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Csoport beállítása az értékesítési osztályhoz"
 
 #~ msgid ""
 #~ "Show all opportunities for which the next action date is today or before"
@@ -5490,6 +5211,9 @@ msgstr "a fenti munkájával"
 
 #~ msgid "oe_kanban_text_red"
 #~ msgstr "oe_kanban_text_red"
+
+#~ msgid "Configuration options are available in the Settings app."
+#~ msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
 
 #~ msgid "Create"
 #~ msgstr "Létrehozás"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-29 12:00+0000\n"
 "PO-Revision-Date: 2016-07-28 00:08+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -50,12 +50,6 @@ msgid ""
 msgstr ""
 "Um dicionário python que será avaliado para gerar valores padrão quando "
 "forem criados novos registros para este apelido."
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
-msgid "Acer Laptop"
-msgstr "Notebook Acer"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -413,17 +407,6 @@ msgid "Group by..."
 msgstr "Agrupar por..."
 
 #. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
-msgid "HP Inkjet printer"
-msgstr "Impressora HP Inkjet"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
-msgid "HP Laptop"
-msgstr "Notebook HP"
-
-#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Alta"
@@ -563,11 +546,6 @@ msgid "Model"
 msgstr "Modelo"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
-msgid "Monitors"
-msgstr "Monitores"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Meus Equipamentos"
@@ -637,13 +615,7 @@ msgstr ""
 "(example: project (parent_model) and task (model))"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
-msgid "Phones"
-msgstr "Telefones"
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -651,10 +623,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Política para enviar uma mensagem sobre o documento usando o MailGateway.\n"
-"- todos: todos podem postar\n"
-"- parceiros: parceiros única autenticados\n"
-"- seguidores: apenas seguidores do documento relacionado\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -726,13 +694,6 @@ msgstr "Redefinir Solicitação"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Responsável"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
-msgid "Samsung Monitor 15\""
-msgstr "Monitor Samsung 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -871,7 +832,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -879,11 +839,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"Este aplicativo ajuda a localizar equipamentos utilizados pelos "
-"funcionários.\n"
-"Crie alguns laptop, impressoras ou telefones e link cada equipamento a um "
-"funcionário ou departamento.\n"
-"Você irá gerenciar alocações, problemas e manutenção de equipamentos."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -969,6 +924,9 @@ msgstr "Solicitação de manutenção"
 msgid "maintenance Request Search"
 msgstr "Localizar solicitação de manutenção"
 
+#~ msgid "Acer Laptop"
+#~ msgstr "Notebook Acer"
+
 #~ msgid "Action Needed"
 #~ msgstr "Ação Necessária"
 
@@ -983,6 +941,12 @@ msgstr "Localizar solicitação de manutenção"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "HP Inkjet printer"
+#~ msgstr "Impressora HP Inkjet"
+
+#~ msgid "HP Laptop"
+#~ msgstr "Notebook HP"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
@@ -1002,6 +966,9 @@ msgstr "Localizar solicitação de manutenção"
 #~ msgid "Messages and communication history"
 #~ msgstr "Histórico de mensagens e comunicação"
 
+#~ msgid "Monitors"
+#~ msgstr "Monitores"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Número de ações"
 
@@ -1013,6 +980,37 @@ msgstr "Localizar solicitação de manutenção"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "Abrir Menu de Equipamentos"
+
+#~ msgid "Phones"
+#~ msgstr "Telefones"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Política para enviar uma mensagem sobre o documento usando o "
+#~ "MailGateway.\n"
+#~ "- todos: todos podem postar\n"
+#~ "- parceiros: parceiros única autenticados\n"
+#~ "- seguidores: apenas seguidores do documento relacionado\n"
+
+#~ msgid "Samsung Monitor 15\""
+#~ msgstr "Monitor Samsung 15\""
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "Este aplicativo ajuda a localizar equipamentos utilizados pelos "
+#~ "funcionários.\n"
+#~ "Crie alguns laptop, impressoras ou telefones e link cada equipamento a um "
+#~ "funcionário ou departamento.\n"
+#~ "Você irá gerenciar alocações, problemas e manutenção de equipamentos."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Contador de Mensagens Não Lidas."

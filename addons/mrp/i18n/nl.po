@@ -5,22 +5,18 @@
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 12:11+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-07-29 06:56+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp
@@ -1296,13 +1292,8 @@ msgstr "Ok"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
-#, fuzzy
 msgid "Operation"
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bewerking\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Handeling"
+msgstr "Bewerking"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
@@ -1572,7 +1563,7 @@ msgstr "Eigenschap"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9666
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1805,13 +1796,8 @@ msgstr "Zoek naar een productieplaats"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
-#, fuzzy
 msgid "Security days for each manufacturing operation."
-msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Veiligheidsmarge in dagen voor elke productiebewerking\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Veiligheidsmarge in dagen voor elke productiehandeling."
+msgstr "Veiligheidsmarge in dagen voor elke productiebewerking"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_qty
@@ -1930,22 +1916,15 @@ msgstr "De capaciteit per cyclus moet strikt positief zijn."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
-#, fuzzy
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "De lijst van de bewerkingen (lijst van de productieplaatsen) om het "
 "eindproduct te vervaardigen. De productie route wordt vooral gebruikt om de "
 "kosten van werkplaats te berekenen tijdens bewerkingen en de toekomstige "
-"belastingen op de productieplaatsen door middel van planningssystemen.\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"De lijst van de bewerkingen (lijst van de productieplaatsen) om het "
-"eindproduct te vervaardigen. De productie route wordt vooral gebruikt om de "
-"kosten van werkplekken te berekenen tijdens bewerkingen en de toekomstige "
 "belastingen op de productieplaatsen door middel van planningssystemen."
 
 #. module: mrp
@@ -2378,9 +2357,8 @@ msgstr "report.mrp.report_mrpbomstructure"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_bom_cost
-#, fuzzy
 msgid "report.mrp_bom_cost"
-msgstr "report.mrp.report_mrpbomstructure"
+msgstr "report.mrp_bom_cost"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
@@ -2447,3 +2425,391 @@ msgstr "onbekend"
 
 #~ msgid "Website communication history"
 #~ msgstr "Website communicatie geschiedenis"
+
+#~ msgid "# Done Work Orders"
+#~ msgstr "# Werkorders gered"
+
+#~ msgid "# Read Work Orders"
+#~ msgstr "# Lees werkorders"
+
+#~ msgid "# Work Orders"
+#~ msgstr "# Werkorders"
+
+#~ msgid ""
+#~ "<span class=\"label label-danger\" attrs=\"{'invisible': ['|', "
+#~ "('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+#~ "('confirmed','progress'))]}\">Raw materials not available!</span>"
+#~ msgstr ""
+#~ "<span class=\"label label-danger\" attrs=\"{'invisible': ['|', "
+#~ "('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+#~ "('confirmed','progress'))]}\">Grondstoffen niet beschikbaar!</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Lost</span>"
+#~ msgstr "<span class=\"o_stat_text\">Verloren</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Performance</span>"
+#~ msgstr "<span class=\"o_stat_text\">Performantie</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Scraps</span>"
+#~ msgstr "<span class=\"o_stat_text\">Rest</span>"
+
+#~ msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
+#~ msgstr "<span class=\"o_stat_text\">Tijd<br/> analyse</span>"
+
+#~ msgid "<span>Actions</span>"
+#~ msgstr "<span>Acties</span>"
+
+#~ msgid "<span>New</span>"
+#~ msgstr "<span>Nieuw</span>"
+
+#~ msgid "<span>Plan Orders</span>"
+#~ msgstr "<span>Plan Orders</span>"
+
+#~ msgid "<span>Reports</span>"
+#~ msgstr "<span>Rapporten</span>"
+
+#~ msgid "<span>View</span>"
+#~ msgstr "<span>Bekijk</span>"
+
+#~ msgid "<span>Work Orders</span>"
+#~ msgstr "<span>Werk orders</span>"
+
+#~ msgid "<strong>No. Of Minutes</strong>"
+#~ msgstr "<strong>Aantal minuten</strong>"
+
+#~ msgid "Add a description..."
+#~ msgstr "Voeg een omschrijving toe..."
+
+#~ msgid "All"
+#~ msgstr "Alle"
+
+#~ msgid "Archived"
+#~ msgstr "Gearchiveerd"
+
+#~ msgid "Attachments"
+#~ msgstr "Bijlagen"
+
+#~ msgid "Author"
+#~ msgstr "Auteur"
+
+#~ msgid "Availability"
+#~ msgstr "Beschikbaarheid"
+
+#~ msgid "Available"
+#~ msgstr "Beschikbaar"
+
+#~ msgid "Based on"
+#~ msgstr "Gebaseerd op"
+
+#~ msgid "Block"
+#~ msgstr "Blokkeer"
+
+#~ msgid "Blocked"
+#~ msgstr "Geblokkeerd"
+
+#~ msgid "Can be Expensed"
+#~ msgstr "Declaratie product"
+
+#~ msgid "Capacity"
+#~ msgstr "Capaciteit"
+
+#~ msgid "Check availability"
+#~ msgstr "Controleer beschikbaarheid"
+
+#~ msgid "Click to create a new message."
+#~ msgstr "Klik om een nieuw bericht aan te maken."
+
+#~ msgid "Click to start a new work order."
+#~ msgstr "Klik om een nieuw werkorder aan te maken."
+
+#~ msgid "Color"
+#~ msgstr "Kleur"
+
+#~ msgid "Confirmed"
+#~ msgstr "Bevestigd"
+
+#~ msgid "Continue Production"
+#~ msgstr "Productie hervatten"
+
+#~ msgid "Current Production"
+#~ msgstr "Huidige productie"
+
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "Destination Location"
+#~ msgstr "Bestemming"
+
+#~ msgid "Discard"
+#~ msgstr "Negeren"
+
+#~ msgid "Draft"
+#~ msgstr "Concept"
+
+#~ msgid "Duration"
+#~ msgstr "Tijdsduur"
+
+#~ msgid "Effective Date"
+#~ msgstr "Boek datum"
+
+#~ msgid "Expected Date"
+#~ msgstr "Datum verwacht"
+
+#~ msgid "Extra Features"
+#~ msgstr "Extra opties"
+
+#~ msgid "Filters"
+#~ msgstr "Filters"
+
+#~ msgid "Finish Order"
+#~ msgstr "Order afronden"
+
+#~ msgid "Finished"
+#~ msgstr "Klaar"
+
+#~ msgid "Gives the sequence order when displaying a list of tasks."
+#~ msgstr ""
+#~ "Geeft de volgorde weer wanneer de lijst van taken wordt weergegeven."
+
+#~ msgid "Group by..."
+#~ msgstr "Groepeer op..."
+
+#~ msgid "High"
+#~ msgstr "Hoog"
+
+#~ msgid ""
+#~ "If checked, when the previous move of the move (which was generated by a "
+#~ "next procurement) is cancelled or split, the move generated by this move "
+#~ "will too"
+#~ msgstr ""
+#~ "Indien aangevinkt en de vorige mutatie wordt geannuleerd of gesplitst, "
+#~ "dan wordt de mutatie gegenereerd door deze mutatie ook geannuleerd of "
+#~ "gesplitst"
+
+#~ msgid "In Progress"
+#~ msgstr "In Behandeling"
+
+#~ msgid "Lots"
+#~ msgstr "Partijen"
+
+#~ msgid "Low"
+#~ msgstr "Laag"
+
+#~ msgid "Maintenance"
+#~ msgstr "Onderhoud"
+
+#~ msgid "Message"
+#~ msgstr "Bericht"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Diversen"
+
+#~ msgid "More <i class=\"fa fa-caret-down\"/>"
+#~ msgstr "Meer <i class=\"fa fa-caret-down\"/>"
+
+#~ msgid "Move"
+#~ msgstr "Mutatie"
+
+#~ msgid "Moves"
+#~ msgstr "Mutaties"
+
+#~ msgid "None"
+#~ msgstr "Geen"
+
+#~ msgid "Operations"
+#~ msgstr "Bewerkingen"
+
+#~ msgid "Orders"
+#~ msgstr "Orders"
+
+#~ msgid "Partially Available"
+#~ msgstr "Gedeeltelijk beschikbaar"
+
+#~ msgid "Pause"
+#~ msgstr "Pauze"
+
+#~ msgid "Performance"
+#~ msgstr "Prestaties"
+
+#~ msgid "Picking Type"
+#~ msgstr "Type levering"
+
+#~ msgid "Planned Date"
+#~ msgstr "Datum gepland"
+
+#~ msgid "Procurement Group"
+#~ msgstr "Verwervingsgroep"
+
+#~ msgid "Production Workcenter"
+#~ msgstr "Productie werkplaats"
+
+#~ msgid "Propagate cancel and split"
+#~ msgstr "Annuleren en splitsen doorgeven"
+
+#~ msgid "Quality"
+#~ msgstr "Kwaliteit"
+
+#~ msgid "Quantity Available"
+#~ msgstr "Virtuele voorraad"
+
+#~ msgid "Quantity Produced"
+#~ msgstr "Hoeveelheid geproduceerd"
+
+#~ msgid "Quants"
+#~ msgstr "Aantallen"
+
+#~ msgid "Reason"
+#~ msgstr "Reden"
+
+#~ msgid "Reporting"
+#~ msgstr "Rapportering"
+
+#~ msgid "Save"
+#~ msgstr "Opslaan"
+
+#~ msgid "Scrap"
+#~ msgstr "Afgekeurd"
+
+#~ msgid "Scrap Move"
+#~ msgstr "Afkeur mutatie"
+
+#~ msgid "Scraps"
+#~ msgstr "Afgekeurd"
+
+#~ msgid "Search Work Orders"
+#~ msgstr "Zoek werkopdrachten"
+
+#~ msgid "Settings"
+#~ msgstr "Instellingen"
+
+#~ msgid "Source"
+#~ msgstr "Bron"
+
+#~ msgid "Specify whether the product can be selected in an HR expense."
+#~ msgstr "Specificeer of het product kan worden gebruikt als declaratie."
+
+#~ msgid "Start Working"
+#~ msgstr "Start met werken"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Stock Moves"
+#~ msgstr "Voorraadmutaties"
+
+#~ msgid "The picking type determines the picking view"
+#~ msgstr "De verzamelsoort bepaald de weergave van de levering"
+
+#~ msgid "This Month"
+#~ msgstr "Deze maand"
+
+#~ msgid "This Year"
+#~ msgstr "Dit jaar"
+
+#~ msgid "Time Tracking"
+#~ msgstr "Tijdregistratie"
+
+#~ msgid "To Do"
+#~ msgstr "Te doen"
+
+#~ msgid "To Produce"
+#~ msgstr "Te produceren"
+
+#~ msgid ""
+#~ "To manufacture or assemble products, and use raw materials and\n"
+#~ "            finished products you must also handle manufacturing "
+#~ "operations.\n"
+#~ "            Manufacturing operations are often called Work Orders. The "
+#~ "various\n"
+#~ "            operations will have different impacts on the costs of\n"
+#~ "            manufacturing and planning depending on the available "
+#~ "workload."
+#~ msgstr ""
+#~ "Om producten te produceren of te assembleren, en om gebruik te maken van\n"
+#~ "grondstoffen en afgewerkte producten,  moet u werken met productie-\n"
+#~ "activiteiten. Productie-activiteiten worden veelal werkopdrachten "
+#~ "genoemd.\n"
+#~ "Die werkopdrachten hebben een verschillende uitwerking op de kosten\n"
+#~ "van productie en planning, en zijn afhankelijk van de hoeveelheid werk. "
+
+#~ msgid "Today"
+#~ msgstr "Vandaag"
+
+#~ msgid "Tracking"
+#~ msgstr "Volgen"
+
+#~ msgid "Unreserve"
+#~ msgstr "Reservering ongedaan maken"
+
+#~ msgid "Variant"
+#~ msgstr "Variant"
+
+#~ msgid "Very High"
+#~ msgstr "Zeer hoog"
+
+#~ msgid "Waiting"
+#~ msgstr "Wachten"
+
+#~ msgid "Waiting Availability"
+#~ msgstr "Wachten op beschikbaarheid"
+
+#~ msgid ""
+#~ "When processing a sales order for this product, the delivery order\n"
+#~ "                                will contain the raw materials, instead "
+#~ "of the finished product."
+#~ msgstr ""
+#~ "Wanneer een verkooporder voor dit product wordt verwerkt, zal de "
+#~ "uitgaande levering\n"
+#~ "                                de grondstoffen (componenten) bevatten, "
+#~ "in plaats van het eindproduct."
+
+#~ msgid "Work Orders Planning"
+#~ msgstr "Werkopdrachten planning"
+
+#~ msgid ""
+#~ "Work Orders is the list of operations to be performed for each\n"
+#~ "            manufacturing order. Once you start the first work order of "
+#~ "a\n"
+#~ "            manufacturing order, the manufacturing order is "
+#~ "automatically\n"
+#~ "            marked as started. Once you finish the latest operation of a\n"
+#~ "            manufacturing order, the MO is automatically done and the "
+#~ "related\n"
+#~ "            products are produced."
+#~ msgstr ""
+#~ "Een werkopdracht is de lijst van verwerkingen welke moeten worden "
+#~ "uitgevoerd\n"
+#~ "voor elke productieorder. Wanneer de eerste werkopdracht wordt gestart, "
+#~ "dan\n"
+#~ "wordt de productieorder automatisch gemarkeerd als gestart. Wanneer je de "
+#~ "laatste\n"
+#~ "verwerking van een productieorder afrondt, dan is de productieorder "
+#~ "automatisch\n"
+#~ "gereed en zijn de gerelateerde producten geproduceerd."
+
+#~ msgid "Workorder Messages"
+#~ msgstr "Werkopdracht berichten"
+
+#~ msgid "from"
+#~ msgstr "van"
+
+#~ msgid "ir.attachment"
+#~ msgstr "ir.attachment"
+
+#~ msgid "last"
+#~ msgstr "laatste"
+
+#~ msgid "minutes"
+#~ msgstr "minuten"
+
+#~ msgid "stock.scrap"
+#~ msgstr "stock.scrap"
+
+#~ msgid "to"
+#~ msgstr "tot"
+
+#~ msgid "work orders"
+#~ msgstr "werkorders"

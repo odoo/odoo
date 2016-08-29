@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-04-30 19:54+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -1415,7 +1415,6 @@ msgstr "Нажмите на значок, чтобы адаптировать е
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
-#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Нажмите, чтобы настроить этот текст"
@@ -1541,10 +1540,8 @@ msgstr "Обратитесь к Менеджеру Домена в вашей с
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
-#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
-#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Свяжитесь с нами"
 
@@ -1750,11 +1747,6 @@ msgstr "Отключить автозапуск"
 #, python-format
 msgid "Discard"
 msgstr "Отменить"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Discuss and Comments"
-msgstr "Обсуждение и комментарии"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2267,7 +2259,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
-#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Главная"
 
@@ -2276,11 +2267,6 @@ msgstr "Главная"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Главная страница"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website2_homepage
-msgid "Homepage 0.0.0.0"
-msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2654,11 +2640,6 @@ msgstr "Меню"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Message"
-msgstr "Сообщение"
 
 #. module: website
 #. openerp-web
@@ -3062,16 +3043,6 @@ msgid "Partner"
 msgstr "Контрагент"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Partner Detail"
-msgstr "Подробнее о партнере"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Partners"
-msgstr "Контрагенты"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr "План"
@@ -3228,11 +3199,6 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Recipient"
-msgstr "Получатель"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3384,16 +3350,6 @@ msgstr "Продавать онлайн. Легко."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send a Message to our Partners"
-msgstr "Отправить сообщение нашим партнерам"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3611,11 +3567,6 @@ msgstr "Возврат шаблона"
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "Протестировать вашу мобильную версию"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Thank you for posting a message !"
-msgstr "Спасибо, что опубликовали сообщение !"
 
 #. module: website
 #. openerp-web
@@ -3867,7 +3818,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
-#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Верхнее меню"
@@ -4088,6 +4038,11 @@ msgstr ""
 "сайте?"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.company_description
+msgid "Visualize on Google Maps"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 msgid ""
 "We are a team of passionate people whose goal is to improve everyone's\n"
@@ -4172,16 +4127,6 @@ msgstr "Меню сайта"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "Название сайта"
-
-#. module: website
-#: model:ir.actions.server,name:website.action_partner_post
-msgid "Website Partner Post and Thanks Demo"
-msgstr "Публикация партнера сайта и демо-версия с благодарностью"
-
-#. module: website
-#: model:ir.actions.server,name:website.action_partner_comment
-msgid "Website Partners Comment Form"
-msgstr "Форма для комментариев партнеров сайта"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4880,6 +4825,12 @@ msgstr ""
 #~ msgid ".xml"
 #~ msgstr ".xml"
 
+#~ msgid "<i class=\"fa fa-th-large\"/> Website<b class=\"caret\"/>"
+#~ msgstr "<i class=\"fa fa-th-large\"/> Веб-сайт<b class=\"caret\"/>"
+
+#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
+#~ msgstr "<span class=\"fa fa-envelope-o\"/> Напишите нашему веб-эксперту"
+
 #~ msgid ""
 #~ "<span class=\"fa-stack\">\n"
 #~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
@@ -4911,6 +4862,24 @@ msgstr ""
 #~ msgid "<span title=\"Promote page on the web\">Optimize SEO</span>"
 #~ msgstr "<span title=\"Promote page on the web\">SEO-оптимизация</span>"
 
+#~ msgid ""
+#~ "A code server action can be executed from the website, using a "
+#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
+#~ "Set this field as True to allow users to run this action. If itset to is "
+#~ "False the action cannot be run through the website."
+#~ msgstr ""
+#~ "Кодирующее действие сервера может быть выполнено с веб-сайта с помощью "
+#~ "выделенного контроллера. Адрес - <base>/веб-сайт/действие/<website_path>. "
+#~ "Установите в этом поле значение \"Верно\", чтобы позволить пользователям "
+#~ "использовать это действие. Если будет установлено значение \"Неверно\", "
+#~ "действие нельзя будет запустить через веб-сайт."
+
+#~ msgid "Add new pages and menus"
+#~ msgstr "Добавить новые страницы и меню"
+
+#~ msgid "Background"
+#~ msgstr "Фон"
+
 #~ msgid "Color"
 #~ msgstr "Цвет"
 
@@ -4933,6 +4902,9 @@ msgstr ""
 
 #~ msgid "Discover more about Odoo"
 #~ msgstr "Узнайте больше о Odoo"
+
+#~ msgid "Discuss and Comments"
+#~ msgstr "Обсуждение и комментарии"
 
 #~ msgid "Edit Menu Entry"
 #~ msgstr "Редактировать пункт меню"
@@ -4968,17 +4940,55 @@ msgstr ""
 #~ "также подготовили короткий FAQ, чтобы прояснить эти изменения для каждого "
 #~ "из вас.<br/>"
 
+#~ msgid ""
+#~ "It might be possible to edit the relevant items\n"
+#~ "                                or fix the issue in"
+#~ msgstr ""
+#~ "Возможно отредактировать соответствующие пункты\n"
+#~ "                                или устранить проблему в"
+
 #~ msgid "Menu Label"
 #~ msgstr "Ярлык меню"
+
+#~ msgid "Message"
+#~ msgstr "Сообщение"
+
+#~ msgid "Our products &amp; Services"
+#~ msgstr "Наши решения и услуги"
+
+#~ msgid "Partner Detail"
+#~ msgstr "Подробнее о партнере"
+
+#~ msgid "Partners"
+#~ msgstr "Контрагенты"
 
 #~ msgid "Promote <span class=\"caret\"/>"
 #~ msgstr "Продвижение <span class=\"caret\"/>"
 
+#~ msgid "Recipient"
+#~ msgstr "Получатель"
+
 #~ msgid "Reset Transformation"
 #~ msgstr "Сбросить преобразование"
 
+#~ msgid "Send a Message to our Partners"
+#~ msgstr "Отправить сообщение нашим партнерам"
+
+#~ msgid "Thank you for posting a message !"
+#~ msgstr "Спасибо, что опубликовали сообщение !"
+
+#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
+#~ msgstr ""
+#~ "Меню \"Наполнение\" позволяет вам добавлять страницы или  главное меню."
+
 #~ msgid "Transform"
 #~ msgstr "Преобразовать"
+
+#~ msgid "Website Partner Post and Thanks Demo"
+#~ msgstr "Публикация партнера сайта и демо-версия с благодарностью"
+
+#~ msgid "Website Partners Comment Form"
+#~ msgstr "Форма для комментариев партнеров сайта"
 
 #~ msgid "Yes."
 #~ msgstr "Да."

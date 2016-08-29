@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-28 02:49+0000\n"
 "Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -230,19 +230,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> lihat contoh</i>"
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1185,18 +1172,6 @@ msgid "Call"
 msgstr "Panggilan"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1762,11 +1737,6 @@ msgid "Download the"
 msgstr "Men-download"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Rancangan mengarah"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr ""
@@ -1957,18 +1927,6 @@ msgstr "Selesai"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2439,11 +2397,6 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Arahan dari Amerika Serikat"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Arahan yang ditugaskan pada saya"
@@ -2559,12 +2512,6 @@ msgstr ""
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Rendah"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3428,12 +3375,6 @@ msgid "Relation field"
 msgstr "Bidang hubungan"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Pengingat untuk Pengguna"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 #, fuzzy
 msgid ""
@@ -3601,12 +3542,6 @@ msgid "Selection"
 msgstr "Pemilihan"
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3618,11 +3553,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Berurutan"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Mengatur tim untuk Sales Department"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4655,8 +4585,14 @@ msgstr "dengan kinerja anda diatas"
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Tanggal pesan terakhir diposting pada catatan."
 
+#~ msgid "Deduplicate Contact"
+#~ msgstr "Duplikasi Kontak"
+
 #~ msgid "Done"
 #~ msgstr "selesai"
+
+#~ msgid "Draft Leads"
+#~ msgstr "Rancangan mengarah"
 
 #~ msgid "Follow-up"
 #~ msgstr "Tembusan"
@@ -4691,8 +4627,14 @@ msgstr "dengan kinerja anda diatas"
 #~ msgid "Is Follower"
 #~ msgstr "Adalah pengikut"
 
+#~ msgid "Last Activity"
+#~ msgstr "Aktivitas Terakhir"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Tanggal pesan terakhir"
+
+#~ msgid "Leads from USA"
+#~ msgstr "Arahan dari Amerika Serikat"
 
 #~ msgid ""
 #~ "Link between stages and sales teams. When set, this limitate the current "
@@ -4700,6 +4642,9 @@ msgstr "dengan kinerja anda diatas"
 #~ msgstr ""
 #~ "Hubungan antara tahapan dan tim penjualan. Ketika set, ini limitate tahap "
 #~ "saat ini untuk tim penjualan yang dipilih."
+
+#~ msgid "Mark As Lost"
+#~ msgstr "Mark Sebagai Hilang"
 
 #~ msgid "Messages"
 #~ msgstr "Pesan"
@@ -4734,14 +4679,42 @@ msgstr "dengan kinerja anda diatas"
 #~ msgid "Open Sale Menu"
 #~ msgstr "Menu Buka Penjualan"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
+#~ "mailgateway.\n"
+#~ "-Semua orang: setiap orang dapat memposting\n"
+#~ " - mitra: hanya dikonfirmasi mitra  \n"
+#~ " - pengikut: hanya pengikut dokumen terkait\n"
+
 #~ msgid "Qualification"
 #~ msgstr "Kualifikasi"
+
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "Pengingat tentang Lead: $ {} object.id dari $ {object.partner_id = False "
+#~ "dan object.partner_id.name atau object.contact_name!}"
+
+#~ msgid "Reminder to User"
+#~ msgstr "Pengingat untuk Pengguna"
 
 #~ msgid "Sales Tags"
 #~ msgstr "Penjualan Tags"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Pilih Tahapan untuk Tim Penjualan ini"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Mengatur tim untuk Sales Department"
+
+#~ msgid "Teams"
+#~ msgstr "Tim"
 
 #~ msgid ""
 #~ "This field is used to distinguish stages related to Leads from stages "
@@ -4769,6 +4742,13 @@ msgstr "dengan kinerja anda diatas"
 #~ "Ini adalah sumber dari link Ex: Search Engine, domain lain, atau nama "
 #~ "daftar email"
 
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr ""
+#~ "Tahap ini dilipat di tampilan kanban whenthere tidak ada catatan di "
+#~ "panggung untuk menampilkan."
+
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Pesan yang belum dibaca Counter"
 
@@ -4780,6 +4760,15 @@ msgstr "dengan kinerja anda diatas"
 
 #~ msgid "Your Customers"
 #~ msgstr "Pelanggan Anda"
+
+#~ msgid "Your Customizations"
+#~ msgstr "Kustomisasi Anda"
+
+#~ msgid "Your Prices"
+#~ msgstr "Harga Anda"
+
+#~ msgid "Your Products"
+#~ msgstr "Produk Anda"
 
 #~ msgid "Your Proposal"
 #~ msgstr "Proposal Anda"

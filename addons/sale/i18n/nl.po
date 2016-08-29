@@ -9,22 +9,18 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
 # Volluta <volluta@tutanota.com>, 2015
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-12 18:27+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-23 18:00+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale
@@ -113,13 +109,12 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Offerte' or 'Verkooporder'} (Referentie ${object.name or 'n/a' })"
+"${object.company_id.name} ${object.state in ('draft', 'sent') and 'Offerte' "
+"or 'Orderbevestiging'} (Ref ${object.name or 'n/b' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -463,12 +458,6 @@ msgid "Delivery address for current sales order."
 msgstr "Afleveradres voor de huidige verkooporder"
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Aanbetaling"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr "Product aanbetaling"
@@ -486,7 +475,6 @@ msgstr "Verschillende prijzen per klantsegment"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
 msgstr "Krt. (%)"
 
@@ -532,9 +520,8 @@ msgstr "Toon de marges voor offertes en verkooporders"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_layout:0
-#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr "Toon leveringscondities op verkooporders en facturen"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -585,9 +572,8 @@ msgstr "E-mail samenstellen wizard"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "E-mail samenstellen wizard"
+msgstr "E-mail opmaak wizard voor enquête"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -645,7 +631,7 @@ msgstr "Volledig gefactureerd"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruto gewicht"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1147,17 +1133,13 @@ msgstr "U dient een verkoop dagboek aan te maken voor dit bedrijf."
 
 #. module: sale
 #: code:addons/sale/sale.py:703
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "U dient een omzetrekening te bepalen voor product: \"%s\" (id:%d) - of voor "
-"de categorie waartoe het behoort: \"%s\".\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"U dient een inkomstenrekening te bepalen voor product: \"%s\" (id:%d) - of "
-"voor de categorie waartoe het behoort: \"%s\"."
+"de categorie waartoe het behoort: \"%s\"."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1352,9 +1334,8 @@ msgstr "Offerte analyse"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Offerte verstuurd"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1368,9 +1349,8 @@ msgstr "Referentie van het document dat deze verkooporder aanvraag genereerde."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Factuurstatus"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1614,12 +1594,9 @@ msgstr "Toon prijslijsten aan klanten"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Sommige producten kunnen verkocht/ingekocht worden met verschillende "
-"maateenheden (geavanceerd)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1683,7 +1660,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr "Het bedrag dat vooruit gefactureerd wordt, belastingen uitgezonderd. "
+msgstr "Het bedrag dat vooruit gefactureerd wordt, excl. belastingen."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -1731,16 +1708,12 @@ msgstr "De waarde van de aanbetaling moet positief zijn."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:73
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to "
 "install a chart of account from Accounting app, settings menu."
 msgstr ""
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
 "Er bestaat geen omzetrekening voor het product \"%s\". U moet eerst een "
-"grootboek aanmaken in de boekhoudinstellingen.\n"
-"#-#-#-#-#  nl.po (Odoo 9.0)  #-#-#-#-#\n"
-"Er bestaat geen inkomstenrekening voor het product \"%s\". U moet eerst een "
 "grootboek aanmaken in de boekhoudinstellingen."
 
 #. module: sale
@@ -1810,9 +1783,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
-#, fuzzy
 msgid "Timesheets on project"
-msgstr "Urenstaten op contract"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1862,9 +1834,8 @@ msgstr "Maateenheid"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Maateenheid"
+msgstr "Maateenheden"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1916,7 +1887,7 @@ msgstr "BTW:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1967,9 +1938,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Verkooporderregels gereed om te factureren"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1994,9 +1964,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Kostenplaatsboeking"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2190,6 +2159,13 @@ msgstr "onbekend"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Offerte' or 'Verkooporder'} (Referentie ${object.name or 'n/a' })"
+
 #~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
 #~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Kort.(%)</span>"
 
@@ -2200,11 +2176,17 @@ msgstr "onbekend"
 #~ msgstr ""
 #~ "Geeft u de mogelijkheid om kostenplaatsen te koppelen aan verkooporders"
 
+#~ msgid "Analytic Line"
+#~ msgstr "Kostenplaatsboeking"
+
 #~ msgid "Analytic accounting for sales"
 #~ msgstr "Kostenplaatsen voor verkopen"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#~ msgid "Deposit"
+#~ msgstr "Aanbetaling"
 
 #~ msgid "Expense Account"
 #~ msgstr "Kostenrekening"
@@ -2252,6 +2234,13 @@ msgstr "onbekend"
 #~ msgstr "Open verkoop menu"
 
 #~ msgid ""
+#~ "Some products may be sold/purchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Sommige producten kunnen verkocht/ingekocht worden met verschillende "
+#~ "maateenheden (geavanceerd)"
+
+#~ msgid ""
 #~ "This account will be used for invoices instead of the default one to "
 #~ "value expenses for the current product."
 #~ msgstr ""
@@ -2264,6 +2253,9 @@ msgstr "onbekend"
 #~ msgstr ""
 #~ "Deze rekening zal gebruikt worden voor de facturen in plaats van de "
 #~ "standaardrekening om de opbrengst van dit product te waarderen."
+
+#~ msgid "Timesheets on contract"
+#~ msgstr "Urenstaten op contract"
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Maateenheden"
@@ -2282,3 +2274,124 @@ msgstr "onbekend"
 
 #~ msgid "account.config.settings"
 #~ msgstr "account.config.settings"
+
+#~ msgid "${object.subject}"
+#~ msgstr "${object.subject}"
+
+#~ msgid "&amp;bull;"
+#~ msgstr "&amp;bull;"
+
+#~ msgid "<strong>Subtotal: </strong>"
+#~ msgstr "<strong>Subtotaal: </strong>"
+
+#~ msgid "Add pagebreak"
+#~ msgstr "Pagina einde toevoegen"
+
+#~ msgid "Add subtotal"
+#~ msgstr "Subtotaal toevoegen"
+
+#~ msgid "Analytic Tags"
+#~ msgstr "Labels kostenplaats"
+
+#~ msgid "At cost"
+#~ msgstr "Aan kosten"
+
+#~ msgid "Attribute Values"
+#~ msgstr "Kenmerk waardes"
+
+#~ msgid "Attributes"
+#~ msgstr "Kenmerken"
+
+#~ msgid "Blocking Message"
+#~ msgstr "Blokkerend bericht"
+
+#~ msgid "Click the <i>Home icon</i> to navigate across apps."
+#~ msgstr "Klik op het <i>Thuis icoon</i> om doorheen apps te navigeren."
+
+#~ msgid "Configuration options are available in the Settings app."
+#~ msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
+
+#~ msgid "Confirmation Date"
+#~ msgstr "Datum bevestigd"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "Discount Policy"
+#~ msgstr "Kortingsbeleid"
+
+#~ msgid "Group By Name"
+#~ msgstr "Groepeer op naam"
+
+#~ msgid "Layout Sequence"
+#~ msgstr "Layout volgorde"
+
+#~ msgid "Material"
+#~ msgstr "Materiaal"
+
+#~ msgid "Message for Sales Order"
+#~ msgstr "Bericht voor verkooporder"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "Bericht bij een verkooporderregel"
+
+#~ msgid "More Info"
+#~ msgstr "Meer info"
+
+#~ msgid "Name"
+#~ msgstr "Naam"
+
+#~ msgid "No"
+#~ msgstr "Nee"
+
+#~ msgid "No Message"
+#~ msgstr "Geen bericht"
+
+#~ msgid "Pricelists"
+#~ msgstr "Prijslijsten"
+
+#~ msgid "Product Categories"
+#~ msgstr "Productcategorieën"
+
+#~ msgid "Report Configuration"
+#~ msgstr "Rapport instellingen"
+
+#~ msgid "Report Layout Categories"
+#~ msgstr "Rapport opmaak categoriën"
+
+#~ msgid "Search Name"
+#~ msgstr "Zoek Naam"
+
+#~ msgid "Section"
+#~ msgstr "Sectie"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Door de 'Waarschuwingsoptie' te selecteren wordt het bericht naar de "
+#~ "gebruiker gestuurd. Door het 'Blokkerend bericht' te kiezen wordt een "
+#~ "fout gegenereerd met de boodschap en het proces wordt geblokkeerd. Het "
+#~ "bericht moet in het volgende veld worden ingevoerd."
+
+#~ msgid "Services"
+#~ msgstr "Diensten"
+
+#~ msgid "TIN:"
+#~ msgstr "BTW:"
+
+#~ msgid "Unit of Measure Categories"
+#~ msgstr "Maateenheid categorieën"
+
+#~ msgid "Warning"
+#~ msgstr "Waarschuwing"
+
+#~ msgid "Warning for %s"
+#~ msgstr "Waarschuwing voor %s"
+
+#~ msgid "Warning on the Sales Order"
+#~ msgstr "Waarschuwing bij een verkooporder"
+
+#~ msgid "Warning when Selling this Product"
+#~ msgstr "Waarschuw bij verkopen van dit product"

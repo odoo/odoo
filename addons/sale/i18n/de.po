@@ -12,22 +12,18 @@
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-13 05:56+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-09 16:21+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale
@@ -170,13 +166,8 @@ msgstr "Total"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "<strong>Your Reference:</strong>"
-msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"<strong>Ihre Referenz:</strong>\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Ihre Referenz"
+msgstr "<strong>Ihre Referenz:</strong>"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -470,12 +461,6 @@ msgstr "Tage bis Auslieferung"
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "Lieferadresse für den aktuellen Auftrag."
-
-#. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Anzahlung"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
@@ -1147,14 +1132,11 @@ msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:246
-#, fuzzy, python-format
+#, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Definieren Sie bitte ein Buchungsjournal für den Verkauf in diesem "
-"Unternehmen.\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Definieren Sie bitte ein Finanzverkaufsjournal für dieses Unternehmen."
+"Unternehmen."
 
 #. module: sale
 #: code:addons/sale/sale.py:703
@@ -2209,6 +2191,13 @@ msgstr "unbekannt"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+
 #~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
 #~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Rabatt(%)</span>"
 
@@ -2218,16 +2207,17 @@ msgstr "unbekannt"
 #~ msgid "Allows you to specify an analytic account on sales orders."
 #~ msgstr "Angabe einer Kostenstelle bei der Auftragseingabe."
 
-#, fuzzy
+#~ msgid "Analytic Line"
+#~ msgstr "Analytischer Buchungssatz"
+
 #~ msgid "Analytic accounting for sales"
-#~ msgstr ""
-#~ "#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-#~ "Kostenrechnung für den Verkauf\n"
-#~ "#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-#~ "Kostenstellen für den Verkauf"
+#~ msgstr "Kostenrechnung für den Verkauf"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Datum der letzten Nachricht."
+
+#~ msgid "Deposit"
+#~ msgstr "Anzahlung"
 
 #~ msgid "Expense Account"
 #~ msgstr "Aufwandskonto"
@@ -2275,6 +2265,13 @@ msgstr "unbekannt"
 #~ msgstr "Öffne Menü Verkauf"
 
 #~ msgid ""
+#~ "Some products may be sold/purchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Einige Produkte können in verschieden Maßeinheiten ein-/verkauft werden "
+#~ "(erweitert)"
+
+#~ msgid ""
 #~ "This account will be used for invoices instead of the default one to "
 #~ "value expenses for the current product."
 #~ msgstr ""
@@ -2287,6 +2284,9 @@ msgstr "unbekannt"
 #~ msgstr ""
 #~ "In der Faktura wird, statt dem Standardkonto, dieses Konto für Verkäufe "
 #~ "dieses Produkts benutzt."
+
+#~ msgid "Timesheets on contract"
+#~ msgstr "Stundenzettel auf Vertrag"
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Maßeinheiten"

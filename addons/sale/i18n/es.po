@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-07-20 21:27+0000\n"
 "Last-Translator: Antonio Hidalgo Rodríguez <antonio.hidalgo@clearcorp.co."
 "cr>\n"
@@ -111,13 +111,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Presupuesto' or 'Pedido'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -461,12 +458,6 @@ msgid "Delivery address for current sales order."
 msgstr "Dirección de envío para el pedido de ventas actual."
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Depósito"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr "Producto de Depósito"
@@ -484,9 +475,8 @@ msgstr "Diferentes precios por segmento de clientes"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Descuento (%)"
+msgstr "Desc.(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -531,9 +521,8 @@ msgstr "Mostrar márgenes en presupuestos y pedidos de venta"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_layout:0
-#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr "Mostrar incoterms en los pedidos de ventas y en facturas"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -584,9 +573,8 @@ msgstr "Asistente de redacción de correo electrónico."
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Asistente de redacción de correo electrónico."
+msgstr "Asistente de composición de correo electrónico para la encuesta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -646,7 +634,7 @@ msgstr "Facturado"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Peso bruto"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1351,9 +1339,8 @@ msgstr "Análisis de presupuestos"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Presupuesto enviado"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1368,9 +1355,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Estado factura"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1615,12 +1601,9 @@ msgstr "Mostrar tarifas a los clientes"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Algunos productos pueden ser vendidos/comprados en unidades de medida "
-"diferentes (avanzado)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1807,9 +1790,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
-#, fuzzy
 msgid "Timesheets on project"
-msgstr "Parte de horas del contrato"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1859,9 +1841,8 @@ msgstr "Unidad de medida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Unidad de medida"
+msgstr "Unidades de medida"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1910,7 +1891,7 @@ msgstr "CIF/NIF:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1961,9 +1942,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Líneas de pedidos de venta listas para facturar"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1990,9 +1970,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Línea Analítica"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2184,6 +2163,13 @@ msgstr "desconocido"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Presupuesto' or 'Pedido'} (Ref ${object.name or 'n/a' })"
+
 #~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
 #~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Desc.(%)</span>"
 
@@ -2193,11 +2179,17 @@ msgstr "desconocido"
 #~ msgid "Allows you to specify an analytic account on sales orders."
 #~ msgstr "Permite especificar una cuenta analítica en pedidos de venta."
 
+#~ msgid "Analytic Line"
+#~ msgstr "Línea Analítica"
+
 #~ msgid "Analytic accounting for sales"
 #~ msgstr "Contabilidad analítica para ventas"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
+
+#~ msgid "Deposit"
+#~ msgstr "Depósito"
 
 #~ msgid "Expense Account"
 #~ msgstr "Cuenta de gasto"
@@ -2245,11 +2237,21 @@ msgstr "desconocido"
 #~ msgstr "Abrir menú de ventas"
 
 #~ msgid ""
+#~ "Some products may be sold/purchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Algunos productos pueden ser vendidos/comprados en unidades de medida "
+#~ "diferentes (avanzado)"
+
+#~ msgid ""
 #~ "This account will be used for invoices instead of the default one to "
 #~ "value expenses for the current product."
 #~ msgstr ""
 #~ "Esta cuenta será usada para facturas en vez de la cuenta por defecto para "
 #~ "valorar los gastos del producto vigente"
+
+#~ msgid "Timesheets on contract"
+#~ msgstr "Parte de horas del contrato"
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Unidad de medida"
@@ -2268,3 +2270,120 @@ msgstr "desconocido"
 
 #~ msgid "account.config.settings"
 #~ msgstr "Parámetros de configuración contable"
+
+#~ msgid "${object.subject}"
+#~ msgstr "${object.subject}"
+
+#~ msgid "&amp;bull;"
+#~ msgstr "&amp;bull;"
+
+#~ msgid "<strong>Subtotal: </strong>"
+#~ msgstr "<strong>Subtotal: </strong>"
+
+#~ msgid "Add pagebreak"
+#~ msgstr "Añadir salto de página"
+
+#~ msgid "Add subtotal"
+#~ msgstr "Añadir subtotal"
+
+#~ msgid "Analytic Tags"
+#~ msgstr "Etiquetas analíticas"
+
+#~ msgid "Attribute Values"
+#~ msgstr "Valores de atributo"
+
+#~ msgid "Attributes"
+#~ msgstr "Atributos"
+
+#~ msgid "Blocking Message"
+#~ msgstr "Mensaje de bloqueo"
+
+#~ msgid "Click the <i>Home icon</i> to navigate across apps."
+#~ msgstr ""
+#~ "Haga click en el <i>Icono de Inicio</ i> para navegar a través de las "
+#~ "aplicaciones."
+
+#~ msgid "Confirmation Date"
+#~ msgstr "Fecha confirmación"
+
+#~ msgid "Date"
+#~ msgstr "Fecha"
+
+#~ msgid "Discount Policy"
+#~ msgstr "Política de descuento"
+
+#~ msgid "Group By Name"
+#~ msgstr "Agrupar por nombre"
+
+#~ msgid "Layout Sequence"
+#~ msgstr "Secuencia plantilla"
+
+#~ msgid "Material"
+#~ msgstr "Material"
+
+#~ msgid "Message for Sales Order"
+#~ msgstr "Mensaje para el pedido de venta"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "Mensaje para la línea de pedido de venta"
+
+#~ msgid "More Info"
+#~ msgstr "Más información"
+
+#~ msgid "Name"
+#~ msgstr "Nombre"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "No Message"
+#~ msgstr "Sin mensaje"
+
+#~ msgid "Pricelists"
+#~ msgstr "Tarifas"
+
+#~ msgid "Product Categories"
+#~ msgstr "Categorías de productos"
+
+#~ msgid "Report Configuration"
+#~ msgstr "Configuración de informes"
+
+#~ msgid "Report Layout Categories"
+#~ msgstr "Categorías de impresión del informe"
+
+#~ msgid "Search Name"
+#~ msgstr "Buscar nombre"
+
+#~ msgid "Section"
+#~ msgstr "Sección"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Si selecciona la opción \"Aviso\" se notificará a los usuarios con el "
+#~ "mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción "
+#~ "con el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
+#~ "siguiente campo."
+
+#~ msgid "Services"
+#~ msgstr "Servicios"
+
+#~ msgid "TIN:"
+#~ msgstr "NIF:"
+
+#~ msgid "Unit of Measure Categories"
+#~ msgstr "Categorías de las unidades de medida"
+
+#~ msgid "Warning"
+#~ msgstr "Aviso"
+
+#~ msgid "Warning for %s"
+#~ msgstr "Aviso para %s"
+
+#~ msgid "Warning on the Sales Order"
+#~ msgstr "Advertencia en el pedido de venta"
+
+#~ msgid "Warning when Selling this Product"
+#~ msgstr "Aviso cuando vende este producto"

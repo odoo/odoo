@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
 "PO-Revision-Date: 2016-06-04 06:58+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -503,16 +503,6 @@ msgid "Contract"
 msgstr "Contract"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
-msgid "Contract Proposal"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
-msgid "Contract Signed"
-msgstr "Sözleşme İmzaladı"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Oluşturma Tarihi"
@@ -812,11 +802,6 @@ msgid "Filter and view on next actions and date"
 msgstr "Filtre ve sonraki eylem ve tarihte görüntüle"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "İlk Görüşme"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -940,11 +925,6 @@ msgstr "Önem"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Önemli"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Qualification"
-msgstr "İlk Elemeler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1494,11 +1474,6 @@ msgid "Search through resumes and motivation letters."
 msgstr ""
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "İkinci Görüşme"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1857,6 +1832,37 @@ msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
 
 #~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    <strong> ${object.name} </strong> bize ${object."
+#~ "job_id.name} olarak katılacaktır, duyurmaktan memnunluk duyarım.\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    <strong> ${object.name} </strong> bize ${object."
+#~ "job_id.name} olarak katılacaktır, duyurmaktan memnunluk duyarım.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Lütfen ona hoşgeldiniz deyin ve işaretlerini bulmasına "
+#~ "yardımcı olun.</p>\n"
+#~ "            "
+
+#~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
 #~ "        <p>Congrats! Your resume's got our interest!\n"
 #~ "        I will call you as soon as possible to make a 10 minutes phone "
@@ -1912,8 +1918,14 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Campaign"
 #~ msgstr "Kampanya"
 
+#~ msgid "Contract Signed"
+#~ msgstr "Sözleşme İmzaladı"
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Kayıta işlenmiş son mesajın tarihi."
+
+#~ msgid "First Interview"
+#~ msgstr "İlk Görüşme"
 
 #~ msgid "Followers"
 #~ msgstr "İzleyiciler"
@@ -1932,6 +1944,12 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Eğer diğer, kesin:"
+
+#~ msgid "Initial Qualification"
+#~ msgstr "İlk Elemeler"
 
 #~ msgid "Is Follower"
 #~ msgstr "Takipçi mi"
@@ -1956,6 +1974,21 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Open HR Menu"
 #~ msgstr "İK Menüsünü Aç"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Mail gateway'i kullanarak gönderilecek mesajların kurallarını "
+#~ "belirleyin:\n"
+#~ " Herkes : Herkes eposta alır.\n"
+#~ " İş Ortakları : Sadece yetkili iş ortakları. \n"
+#~ "Takipçiler : Sadece ilgili doküman veya konunun takipçileri\n"
+
+#~ msgid "Second Interview"
+#~ msgstr "İkinci Görüşme"
 
 #~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "

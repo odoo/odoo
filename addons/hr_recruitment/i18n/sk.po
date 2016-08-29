@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
 "PO-Revision-Date: 2016-03-25 17:38+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -518,16 +518,6 @@ msgid "Contract"
 msgstr "Contract "
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
-msgid "Contract Proposal"
-msgstr "Návrh zmluvy"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
-msgid "Contract Signed"
-msgstr "Zmluva podpísaná"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Dátum vytvorenia"
@@ -839,11 +829,6 @@ msgid "Filter and view on next actions and date"
 msgstr "Filter a zobrazenie ďalších akcií a dátumov"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Prvý pohovor"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "Zložené v toku náboru"
@@ -969,11 +954,6 @@ msgstr "Dôležitosť"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Dôležité"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Qualification"
-msgstr "Počiatočná kvalifikácia"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1533,11 +1513,6 @@ msgid "Search through resumes and motivation letters."
 msgstr "Hľadať v životopisoch a motivačných listoch."
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "Druhý pohovor"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1901,6 +1876,36 @@ msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red "
 
 #~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "<p>\n"
+#~ "%if object.department_id:\n"
+#~ "Je mi veľkou cťou vám oznámiť, že <strong> ${object.name} </strong> sa k "
+#~ "nám pridá ako ${object.job_id.name}\n"
+#~ "in ${object.department_id.name}.\n"
+#~ "%else:\n"
+#~ "Je mi veľkou cťou vám oznámiť, že <strong> ${object.name} </strong> sa k "
+#~ "nám pridá ako ${object.job_id.name}.\n"
+#~ "%endif\n"
+#~ "</p>\n"
+#~ "<p>Prosím, privítajte ho / ju a pomôžte mu / jej nájsť jeho / jej cieľ.</"
+#~ "p>"
+
+#~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
 #~ "        <p>Congrats! Your resume's got our interest!\n"
 #~ "        I will call you as soon as possible to make a 10 minutes phone "
@@ -1954,6 +1959,12 @@ msgstr "oe_kanban_text_red "
 #~ msgid "Campaign"
 #~ msgstr "Kampaň"
 
+#~ msgid "Contract Proposal"
+#~ msgstr "Návrh zmluvy"
+
+#~ msgid "Contract Signed"
+#~ msgstr "Zmluva podpísaná"
+
 #~ msgid ""
 #~ "Create email and url for each distinct source. <br>\n"
 #~ "                When the applicant will arrive, you will know from wich "
@@ -1963,8 +1974,19 @@ msgstr "oe_kanban_text_red "
 #~ "Keď úchádzač dorazí, budete vedieť, z akého zdroja prichádza pracovná "
 #~ "pozícia."
 
+#~ msgid ""
+#~ "Create here some alias...\n"
+#~ "                That will allow you to track from where the applicant is "
+#~ "coming from..."
+#~ msgstr ""
+#~ "Tu vytvorte nejaký alias...\n"
+#~ "To vám umožní sledovať odkiaľ uchádzač prichádza..."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Dátum poslednej správy zaslanej záznamu."
+
+#~ msgid "First Interview"
+#~ msgstr "Prvý pohovor"
 
 #~ msgid "Followers"
 #~ msgstr "Odberatelia"
@@ -1983,6 +2005,12 @@ msgstr "oe_kanban_text_red "
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Ak iné, konkrétne:"
+
+#~ msgid "Initial Qualification"
+#~ msgstr "Počiatočná kvalifikácia"
 
 #~ msgid "Is Follower"
 #~ msgstr "Je odberateľ"
@@ -2012,6 +2040,23 @@ msgstr "oe_kanban_text_red "
 #~ msgstr "Otvoriť HR menu"
 
 #~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Metóda pre zverejnenie správy na dokumente za použitia mailovj brány.\n"
+#~ "- všeci: všetci môžu zverejňovať\n"
+#~ "- partneri: iba overený partneri\n"
+#~ "- odberatelia: iba odberatelia pridruženého dokumentu\n"
+
+#~ msgid "Reset Application"
+#~ msgstr "Obnoviť žiadosť"
+
+#~ msgid "Second Interview"
+#~ msgstr "Druhý pohovor"
+
+#~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
 #~ msgstr ""
@@ -2026,3 +2071,6 @@ msgstr "oe_kanban_text_red "
 
 #~ msgid "Website communication history"
 #~ msgstr "História komunikácie webovej stránky"
+
+#~ msgid "Welcoming ${object.name} "
+#~ msgstr "Vítanie ${object.name} "

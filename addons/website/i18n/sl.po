@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-02-11 10:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -1329,7 +1329,6 @@ msgstr "Kliknite na ikono za njeno prilagoditev"
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
-#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Kliknite za prilagajanje tega besedila"
@@ -1453,10 +1452,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
-#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
-#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Kontakt"
 
@@ -1659,11 +1656,6 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Opusti"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Discuss and Comments"
-msgstr "Razprave in komentarji"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2164,7 +2156,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
-#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Domov"
 
@@ -2173,11 +2164,6 @@ msgstr "Domov"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Domača stran"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website2_homepage
-msgid "Homepage 0.0.0.0"
-msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2542,11 +2528,6 @@ msgstr "Meni"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Message"
-msgstr "Sporočilo"
 
 #. module: website
 #. openerp-web
@@ -2944,16 +2925,6 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Partner Detail"
-msgstr "Partnerjeve podrobnosti"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Partners"
-msgstr "Partnerji"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr ""
@@ -3108,11 +3079,6 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Recipient"
-msgstr "Prejemnik"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3264,16 +3230,6 @@ msgstr "Spletna prodaja. Enostavno."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send a Message to our Partners"
-msgstr "Pošljite sporočilo našim partnerjem"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3491,11 +3447,6 @@ msgstr "Zasilna predloga"
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "Preizkus mobilne verzije"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Thank you for posting a message !"
-msgstr "Hvala za objavo sporočila."
 
 #. module: website
 #. openerp-web
@@ -3743,7 +3694,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
-#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Gornji menu"
@@ -3955,6 +3905,11 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.company_description
+msgid "Visualize on Google Maps"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 msgid ""
 "We are a team of passionate people whose goal is to improve everyone's\n"
@@ -4039,16 +3994,6 @@ msgstr "Meni spletne strani"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "Naziv spletne strani"
-
-#. module: website
-#: model:ir.actions.server,name:website.action_partner_post
-msgid "Website Partner Post and Thanks Demo"
-msgstr "Partnerjeva objava na spletni strani in zahvalna predstavitev"
-
-#. module: website
-#: model:ir.actions.server,name:website.action_partner_comment
-msgid "Website Partners Comment Form"
-msgstr "Spletni obrazec partnerjevih komentarjev"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4726,6 +4671,24 @@ msgstr ""
 #~ msgid ".xml"
 #~ msgstr ".xml"
 
+#~ msgid ""
+#~ "A code server action can be executed from the website, using a "
+#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
+#~ "Set this field as True to allow users to run this action. If itset to is "
+#~ "False the action cannot be run through the website."
+#~ msgstr ""
+#~ "Koda strežniškega dejanja se lahko izvrši iz spletne strani z uporabo "
+#~ "namenskega kontrolnika. Naslov je <base>/website/action/<website_path>. "
+#~ "To polje nastavite na 'True' ('pravilno'), da bi uporabnikom dovolili "
+#~ "zagon tega dejanja. Če je nastavljeno na 'False' (nepravilno), se dejanje "
+#~ "ne more zaganjati preko spletne strani."
+
+#~ msgid "Add new pages and menus"
+#~ msgstr "Dodaj nove strani in menije"
+
+#~ msgid "Background"
+#~ msgstr "Ozadje"
+
 #~ msgid "Check now and discover more today!"
 #~ msgstr "Preverite in odkrijte več še danes!"
 
@@ -4735,20 +4698,58 @@ msgstr ""
 #~ msgid "Discover more about Odoo"
 #~ msgstr "Odkrijte več o Odoo"
 
+#~ msgid "Discuss and Comments"
+#~ msgstr "Razprave in komentarji"
+
 #~ msgid "Edit Menu Entry"
 #~ msgstr "Urejanje vnosa v meni"
 
 #~ msgid "Hide link"
 #~ msgstr "Skrij povezavo"
 
+#~ msgid ""
+#~ "It might be possible to edit the relevant items\n"
+#~ "                                or fix the issue in"
+#~ msgstr ""
+#~ "Mogoče It might be possible to edit the relevant items\n"
+#~ "                                or fix the issue in"
+
 #~ msgid "Menu Label"
 #~ msgstr "Oznaka menija"
+
+#~ msgid "Message"
+#~ msgstr "Sporočilo"
+
+#~ msgid "Partner Detail"
+#~ msgstr "Partnerjeve podrobnosti"
+
+#~ msgid "Partners"
+#~ msgstr "Partnerji"
+
+#~ msgid "Recipient"
+#~ msgstr "Prejemnik"
 
 #~ msgid "Reset Transformation"
 #~ msgstr "Ponastavi transformacijo"
 
+#~ msgid "Send a Message to our Partners"
+#~ msgstr "Pošljite sporočilo našim partnerjem"
+
+#~ msgid "Thank you for posting a message !"
+#~ msgstr "Hvala za objavo sporočila."
+
+#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
+#~ msgstr ""
+#~ "Meni 'Vsebina' omogoča dodajanje strani ali dodajanje gornjega menija."
+
 #~ msgid "Transform"
 #~ msgstr "Transformacija"
+
+#~ msgid "Website Partner Post and Thanks Demo"
+#~ msgstr "Partnerjeva objava na spletni strani in zahvalna predstavitev"
+
+#~ msgid "Website Partners Comment Form"
+#~ msgstr "Spletni obrazec partnerjevih komentarjev"
 
 #~ msgid "Yes."
 #~ msgstr "Da."

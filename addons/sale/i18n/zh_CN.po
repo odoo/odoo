@@ -10,13 +10,12 @@
 # odoo9yzj <odoo9yzj@guerrillamail.com>, 2015
 # zhangpeiqing <zpq001@live.com>, 2015
 # zhining wu <wzn63@21cn.com>, 2015
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-22 05:18+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-03 04:06+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
@@ -24,9 +23,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale
@@ -115,13 +111,12 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} ${object.state in ('draft', 'sent') and '报价单' "
+"or '订单'} (单号 ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -249,13 +244,8 @@ msgstr "销售分析会计"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
-#, fuzzy
 msgid "By Product"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"按产品\n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"By Product"
+msgstr "按产品"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
@@ -464,12 +454,6 @@ msgid "Delivery address for current sales order."
 msgstr "当前销售订单的发运地址"
 
 #. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "押金"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr "押金产品"
@@ -487,7 +471,6 @@ msgstr "每客户段不同售价"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
 msgstr "折扣(%)"
 
@@ -532,9 +515,8 @@ msgstr "在报价单和销售订单中显示利润"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_layout:0
-#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr "在销售订单和发票中显示国际贸易术语"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -585,9 +567,8 @@ msgstr "Email撰写向导"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Email撰写向导"
+msgstr "调查功能电子邮件撰写向导"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -606,13 +587,8 @@ msgstr "扩展过滤器"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
-#, fuzzy
 msgid "Fiscal Position"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"财政状态\n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"财务状况:"
+msgstr "财政状态"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_sale_pricelist_setting
@@ -645,7 +621,7 @@ msgstr "完全开票"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "毛重"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1335,9 +1311,8 @@ msgstr "报价单分析"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "报价单送出"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1351,9 +1326,8 @@ msgstr "生成此销售订单相关的请求单据"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "发票状态"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1390,7 +1364,7 @@ msgstr "销售价格"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_layout
 msgid "Sale Reports Layout"
-msgstr ""
+msgstr "销售报表布局"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -1594,10 +1568,9 @@ msgstr "给客户显示价格表"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
-msgstr "一些产品可使用不同的单位销售 / 采购 ( 高级 )"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1766,9 +1739,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
-#, fuzzy
 msgid "Timesheets on project"
-msgstr "合同上的记工单"
+msgstr "项目的工时单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1818,7 +1790,6 @@ msgstr "计量单位"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
 msgstr "计量单位"
 
@@ -1869,7 +1840,7 @@ msgstr "VAT:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "体积"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1917,9 +1888,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "销售订单行已经被开票"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1943,9 +1913,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "分析行"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1962,6 +1931,13 @@ msgstr "sale.config.settings"
 msgid "unknown"
 msgstr "未知的"
 
+#~ msgid ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+
 #~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
 #~ msgstr "<span groups=\"sale.group_discount_per_so_line\">折扣(%)</span>"
 
@@ -1971,11 +1947,17 @@ msgstr "未知的"
 #~ msgid "Allows you to specify an analytic account on sales orders."
 #~ msgstr "允许你在销售订单指定一个分析会计账户"
 
+#~ msgid "Analytic Line"
+#~ msgstr "分析行"
+
 #~ msgid "Analytic accounting for sales"
 #~ msgstr "销售分析会计账户"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "发布到记录上的最后消息的日期"
+
+#~ msgid "Deposit"
+#~ msgstr "押金"
 
 #~ msgid "Expense Account"
 #~ msgstr "费用科目"
@@ -2022,6 +2004,14 @@ msgstr "未知的"
 #~ msgid "Open Sale Menu"
 #~ msgstr "打开销售订单"
 
+#~ msgid ""
+#~ "Some products may be sold/purchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr "一些产品可使用不同的单位销售 / 采购 ( 高级 )"
+
+#~ msgid "Timesheets on contract"
+#~ msgstr "合同上的记工单"
+
 #~ msgid "Unit of Measures"
 #~ msgstr "计量单位"
 
@@ -2039,3 +2029,171 @@ msgstr "未知的"
 
 #~ msgid "account.config.settings"
 #~ msgstr "会计.配置.设定"
+
+#~ msgid "&amp;bull;"
+#~ msgstr "&amp;bull;"
+
+#~ msgid "<strong>Subtotal: </strong>"
+#~ msgstr "<strong>分类汇总: </strong>"
+
+#~ msgid "A warning can be set on a product or a customer (Sale)"
+#~ msgstr "可以为产品和客户设置警告信息(销售)"
+
+#~ msgid "Add pagebreak"
+#~ msgstr "添加页面分隔"
+
+#~ msgid "Add subtotal"
+#~ msgstr "添加小计"
+
+#~ msgid "All the products and the customers can be used in sale orders"
+#~ msgstr "所有产品和客户在订单可用"
+
+#~ msgid "Allow discount policy on sale order line"
+#~ msgstr "允许在销售订单明细行上折扣"
+
+#~ msgid "Analytic Tags"
+#~ msgstr "分析标签"
+
+#~ msgid "At cost"
+#~ msgstr "成本"
+
+#~ msgid "At sale price"
+#~ msgstr "销售价格"
+
+#~ msgid "Attribute Values"
+#~ msgstr "属性值"
+
+#~ msgid "Attributes"
+#~ msgstr "属性"
+
+#~ msgid "Blocking Message"
+#~ msgstr "受阻消息"
+
+#~ msgid "Breaks Page"
+#~ msgstr "分隔页"
+
+#~ msgid "Configuration options are available in the Settings app."
+#~ msgstr "配置选项在模块的设置里可用。"
+
+#~ msgid "Confirmation Date"
+#~ msgstr "确认日期"
+
+#~ msgid "Date"
+#~ msgstr "日期"
+
+#~ msgid "Date on which the sale order is confirmed."
+#~ msgstr "销售订单确认日期。"
+
+#~ msgid "Delivery address for current invoice."
+#~ msgstr "当前发票的交货地址"
+
+#~ msgid "Discount Policy"
+#~ msgstr "折扣政策"
+
+#~ msgid "Group By Name"
+#~ msgstr "按名称分组"
+
+#~ msgid "Layout Sequence"
+#~ msgstr "布局序列"
+
+#~ msgid "Let's have a look at the quotations of this sales team."
+#~ msgstr "对此销售团队的报价单有个认识."
+
+#~ msgid "Lock"
+#~ msgstr "锁"
+
+#~ msgid "Locked"
+#~ msgstr "已锁定"
+
+#~ msgid "Material"
+#~ msgstr "物料"
+
+#~ msgid "Message for Sales Order"
+#~ msgstr "销售订单消息"
+
+#~ msgid "Message for Sales Order Line"
+#~ msgstr "销售订单行消息"
+
+#~ msgid "More Info"
+#~ msgstr "更多信息"
+
+#~ msgid "Name"
+#~ msgstr "名称"
+
+#~ msgid "No"
+#~ msgstr "否"
+
+#~ msgid "No Message"
+#~ msgstr "没消息"
+
+#~ msgid "No discount policy on sale order line"
+#~ msgstr "不允许在销售订单明细行中设置折扣"
+
+#~ msgid "Pricelists"
+#~ msgstr "价格表"
+
+#~ msgid "Product Categories"
+#~ msgstr "产品类别"
+
+#~ msgid "Report Configuration"
+#~ msgstr "设定报表"
+
+#~ msgid "Report Layout Categories"
+#~ msgstr "报表布局类别"
+
+#~ msgid "Sale pricelist setting"
+#~ msgstr "销售价格表设置"
+
+#~ msgid "Search Name"
+#~ msgstr "搜索名称"
+
+#~ msgid "Section"
+#~ msgstr "部分"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "选择此“警告“选项，将通知用户此消息。\r\n"
+#~ "选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+#~ "消息写入下一个字段。"
+
+#~ msgid "Services"
+#~ msgstr "服务"
+
+#~ msgid "Show subtotal"
+#~ msgstr "显示小计"
+
+#~ msgid "Show total"
+#~ msgstr "显示总计"
+
+#~ msgid "TIN:"
+#~ msgstr "税务识别号码："
+
+#~ msgid "Tax Display"
+#~ msgstr "税金显示"
+
+#~ msgid "Tax display B2B"
+#~ msgstr "税金显示B2B"
+
+#~ msgid "Tax display B2C"
+#~ msgstr "税金显示B2C"
+
+#~ msgid "Unit of Measure Categories"
+#~ msgstr "计量单位类别"
+
+#~ msgid "Untaxed Total"
+#~ msgstr "不含税总计"
+
+#~ msgid "Warning"
+#~ msgstr "警告"
+
+#~ msgid "Warning for %s"
+#~ msgstr "%s 的警告"
+
+#~ msgid "Warning on the Sales Order"
+#~ msgstr "销售订单警告"
+
+#~ msgid "Warning when Selling this Product"
+#~ msgstr "销售这产品时的警告"
