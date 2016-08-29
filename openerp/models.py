@@ -1386,7 +1386,7 @@ class BaseModel(object):
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
-        of the current model except the m2m and o2m ones.
+        of the current model.
 
         :param cr: database cursor
         :param int user: user id
@@ -1397,7 +1397,7 @@ class BaseModel(object):
         view = etree.Element('form', string=self._description)
         group = etree.SubElement(view, 'group', col="4")
         for fname, field in self._fields.iteritems():
-            if field.automatic or field.type in ('one2many', 'many2many'):
+            if field.automatic:
                 continue
 
             etree.SubElement(group, 'field', name=fname)
