@@ -891,18 +891,16 @@ class QWeb(object):
             if body:
                 def_name = self._create_def(options, body, prefix='set', lineno=el.sourceline)
                 return [
-                    # $varset = []
+                    # content = []
                     ast.Assign(
-                        targets=[
-                            self._values_var(ast.Str(varname), ctx=ast.Store())
-                        ],
+                        targets=[ast.Name(id='content', ctx=ast.Store())],
                         value=ast.List(elts=[], ctx=ast.Load())
                     ),
                     # set(self, $varset.append)
                     ast.Expr(self._call_def(
                         def_name,
                         append=ast.Attribute(
-                            value=self._values_var(ast.Str(varname), ctx=ast.Load()),
+                            value=ast.Name(id='content', ctx=ast.Load()),
                             attr='append',
                             ctx=ast.Load()
                         )
@@ -912,7 +910,7 @@ class QWeb(object):
                         targets=[self._values_var(ast.Str(varname), ctx=ast.Store())],
                         value=ast.Call(
                             func=ast.Attribute(value=ast.Str(u''), attr='join', ctx=ast.Load()),
-                            args=[self._values_var(ast.Str(varname), ctx=ast.Load())], keywords=[],
+                            args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
                             starargs=None, kwargs=None
                         )
                     )
