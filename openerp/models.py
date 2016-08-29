@@ -1242,11 +1242,14 @@ class BaseModel(object):
         for fname, field in self._fields.iteritems():
             if field.automatic:
                 continue
-            group.append(E.field(name=fname))
-            if field.type == 'text':
+            elif field.type in ('one2many', 'many2many', 'text', 'html'):
                 group.append(E.newline())
+                group.append(E.field(name=fname, colspan="4"))
+                group.append(E.newline())
+            else:
+                group.append(E.field(name=fname))
         group.append(E.separator())
-        return E.form(group, string=self._description)
+        return E.form(E.sheet(group, string=self._description))
 
     @api.model
     def _get_default_search_view(self):
