@@ -617,8 +617,10 @@ class PaymentToken(models.Model):
             custom_method_name = '%s_create' % acquirer.provider
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(values))
-
-        return super(PaymentToken, self).create(values)
+                # remove all non-model fields used by (provider)_create method to avoid warning
+                fields_wl = set(self._fields.keys()) & set(values.keys())
+                clean_vals = {field: values[field] for field in fields_wl}
+        return super(PaymentToken, self).create(clean_vals)
 
     @api.multi
     @api.depends('name')
