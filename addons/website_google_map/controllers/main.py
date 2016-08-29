@@ -63,9 +63,11 @@ class google_map(http.Controller):
         else:
             partner_url = '/partners/'
 
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
         # generate the map
         values = {
             'partner_url': partner_url,
-            'partner_data': json.dumps(partner_data)
+            'partner_data': json.dumps(partner_data),
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.website.render("website_google_map.google_map", values)

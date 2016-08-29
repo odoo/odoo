@@ -332,7 +332,14 @@
                 </div>
                 <div class="panel-body">
                     <!-- FORWARD-PORT UP TO SAAS-12 -->
-                    <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+                    <t t-if="'key=' in event.google_map_img()">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">
+                           <img class="thumbnail img-responsive" t-att-src="event.google_map_img()" />
+                        </a>
+                    </t>
+                    <t t-if="'key=' not in event.google_map_img()">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+                    </t>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
                         "widget": "contact",
                         "fields": ["address", "phone", "mobile", "fax", "email"]

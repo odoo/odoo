@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-07-08 10:56+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"PO-Revision-Date: 2016-08-26 16:55+0000\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgid ""
 "                    </pre>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n\n<p>\n${object.name},\n</p>\n<p>\nSinut on kutsuttu liittymään yritykseen \"${object.company_id.name}\" saadaksesi pääsyn dokumentteihisi Odoossa.\n</p>\n<p>\nHyväksyäksesi kutsun, klikkaa seuraavaa linkkiä:\n</p>\n<ul>\n<li><a href=\"${object.signup_url}\">Hyväksy kutsu yritykseen \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\nThanks,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -62,7 +63,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} kutsuu sinut liittymään Odooseen"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -76,7 +77,7 @@ msgstr ""
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>Kutsusähköposti on lähetetty seuraavalla liittymislinkillä:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -126,7 +127,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "Kirjautunut"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:43
@@ -159,7 +160,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Ei kirjautumista"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -195,7 +196,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Lähetä kutsu sähköpostilla"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login

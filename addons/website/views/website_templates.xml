@@ -927,7 +927,14 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
     </address>
     <!-- FORWARD-PORT UP TO SAAS-12 -->
-     <a t-att-href="res_company.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+    <t t-if="'key=' in res_company.google_map_img()">
+        <a t-att-href="res_company.google_map_link()" target="_BLANK">
+           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
+        </a>
+    </t>
+    <t t-if="'key=' not in res_company.google_map_img()">
+        <a t-att-href="res_company.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+    </t>
 </template>
 
 <template id="contactus" name="Contact us" page="True">
