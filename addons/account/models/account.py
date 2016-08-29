@@ -652,6 +652,17 @@ class AccountTax(models.Model):
             return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.multi
+    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None):
+        """ Just converts parameters in browse records and calls for compute_all, because js widgets can't serialize browse records """
+        if currency_id:
+            currency_id = self.env['res.currency'].browse(currency_id)
+        if product_id:
+            product_id = self.env['product.product'].browse(product_id)
+        if partner_id:
+            partner_id = self.env['res.partner'].browse(partner_id)
+        return self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id)
+
+    @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
             We consider the sequence of the parent for group of taxes.
