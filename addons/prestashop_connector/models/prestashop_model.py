@@ -5,7 +5,7 @@ import pytz
 from datetime import datetime
 
 from openerp.osv import fields, orm
-
+from openerp import api, models
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.session import ConnectorSession
@@ -73,6 +73,9 @@ class prestashop_backend(orm.Model):
         'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
         'discount_product_id': fields.many2one('product.product', 'Dicount Product', select=1, required=False),
         'shipping_product_id': fields.many2one('product.product', 'Shipping Product', select=1, required=False),
+        'property_account_receivable_id': fields.many2one('account.account', 'Account Receivable', select=1, required=True),
+        'property_account_payable_id': fields.many2one('account.account', 'Account Payable', select=1, required=True),
+        'unrealized_product_category_id': fields.many2one('product.category', 'Unrealized Product Category', select=1, required=True),
     }
 
     _defaults = {
@@ -130,11 +133,11 @@ class prestashop_backend(orm.Model):
             since_date = self._date_as_user_tz(
                 cr, uid, backend_record.import_partners_since
             )
-            import_customers_since.delay(
+            import_customers_since(
                 session,
+                'prestashop.res.partner',
                 backend_record.id,
                 since_date,
-                priority=10,
             )
 
         return True
@@ -577,3 +580,12 @@ class account_tax_group(orm.Model):
         ),
         'company_id': fields.many2one('res.company', 'Company', select=1, required=True),
     }
+
+class QueueJob(models.Model):
+    _inherit = 'queue.job'
+
+    @api.model
+    def assign_then_enqueue(self, cr, uid, context=None):
+        """"""
+        session = ConnectorSession(cr, uid, context=context)
+        

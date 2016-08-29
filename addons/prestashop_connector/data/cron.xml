@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+    
+        <record forcecreate="True" id="ir_cron_import_sale_orders" model="ir.cron">
+            <field name="name">Prestashop - Import Sales Orders</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_import_sale_orders'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_update_product_stock_qty" model="ir.cron">
+            <field name="name">Prestashop -  Export Stock Quantities</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_update_product_stock_qty'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_import_customers" model="ir.cron">
+            <field name="name">Prestashop -  Import Customers and Groups</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_import_customers'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+
+        <record forcecreate="True" id="ir_cron_import_products" model="ir.cron">
+            <field name="name">Prestashop -  Import Products and Categories</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'prestashop.backend'"/>
+            <field name="function" eval="'_scheduler_import_products'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+    
+    </data>
+</openerp>

@@ -1,37 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import socket
 import base64
 import logging
+import xmlrpclib
+
 from prestapyt import PrestaShopWebServiceDict
 from openerp.addons.connector.unit.backend_adapter import CRUDAdapter
+from openerp.addons.connector.exception import (NetworkRetryableError,
+                                                RetryableJobError)
 from ..backend import prestashop
 
 _logger = logging.getLogger(__name__)
-
-
-class PrestaShopWebServiceImage(PrestaShopWebServiceDict):
-
-    def get_image(self, resource, resource_id=None, image_id=None,
-                  options=None):
-        full_url = self._api_url + 'images/' + resource
-        if resource_id is not None:
-            full_url += "/%s" % (resource_id,)
-            if image_id is not None:
-                full_url += "/%s" % (image_id)
-        if options is not None:
-            self._validate_query_options(options)
-            full_url += "?%s" % (self._options_to_querystring(options),)
-        response = self._execute(full_url, 'GET')
-
-        image_content = base64.b64encode(response.content)
-
-        return {
-            'type': response.headers['content-type'],
-            'content': image_content,
-            'id_' + resource[:-1]: resource_id,
-            'id_image': image_id
-        }
-
 
 class PrestaShopLocation(object):
 
@@ -81,16 +61,20 @@ class PrestaShopCRUDAdapter(CRUDAdapter):
     def delete(self, id):
         """ Delete a record on the external system """
         raise NotImplementedError
-
+    
+    def connect(self):
+        try:
+            prestashop_api = PrestaShopWebServiceDict(self.prestashop.api_url, self.prestashop.webservice_key)
+            return prestashop_api
+        except (socket.gaierror, socket.error, socket.timeout) as err:
+            raise NetworkRetryableError(
+                'A network error caused the failure of the job: '
+                '%s' % err)
 
 class GenericAdapter(PrestaShopCRUDAdapter):
 
     _model_name = None
     _prestashop_model = None
-
-    def connect(self):
-        return PrestaShopWebServiceDict(self.prestashop.api_url,
-                                        self.prestashop.webservice_key)
 
     def search(self, filters=None):
         """ Search records according to some criterias
@@ -192,61 +176,25 @@ class ProductCategoryAdapter(GenericAdapter):
     _model_name = 'prestashop.product.category'
     _prestashop_model = 'categories'
 
-
-# @prestashop
-# class ProductImageAdapter(PrestaShopCRUDAdapter):
-#     _model_name = 'prestashop.product.image'
-#     _prestashop_image_model = 'products'
-
-#     def read(self, product_id, image_id, options=None):
-#         api = PrestaShopWebServiceImage(self.prestashop.api_url,
-#                                         self.prestashop.webservice_key)
-#         return api.get_image(
-#             self._prestashop_image_model,
-#             product_id,
-#             image_id,
-#             options=options
-#         )
-
-# @prestashop
-# class SupplierImageAdapter(PrestaShopCRUDAdapter):
-#     _model_name = 'prestashop.supplier.image'
-#     _prestashop_image_model = 'suppliers'
-
-#     def read(self, supplier_id, options=None):
-#         api = PrestaShopWebServiceImage(self.prestashop.api_url,
-#                                         self.prestashop.webservice_key)
-#         res = api.get_image(
-#             self._prestashop_image_model,
-#             supplier_id,
-#             options=options
-#         )
-#         return res['content']
-
-
 @prestashop
 class TaxGroupAdapter(GenericAdapter):
     _model_name = 'prestashop.account.tax.group'
     _prestashop_model = 'tax_rule_groups'
-
 
 @prestashop
 class OrderPaymentAdapter(GenericAdapter):
     _model_name = '__not_exist_prestashop.payment'
     _prestashop_model = 'order_payments'
 
-
 @prestashop
 class OrderDiscountAdapter(GenericAdapter):
     _model_name = 'prestashop.sale.order.line.discount'
     _prestashop_model = 'order_discounts'
 
-
 @prestashop
 class SupplierAdapter(GenericAdapter):
     _model_name = 'prestashop.supplier'
     _prestashop_model = 'suppliers'
-
 
 @prestashop
 class SupplierInfoAdapter(GenericAdapter):
@@ -257,13 +205,6 @@ class SupplierInfoAdapter(GenericAdapter):
 class MailMessageAdapter(GenericAdapter):
     _model_name = 'prestashop.mail.message'
     _prestashop_model = 'messages'
-
-
-# @prestashop
-# class BundleAdapter(GenericAdapter):
-#     _model_name = ['prestashop.mrp.bom', 'prestashop.combination.mrp.bom']
-#     _prestashop_model = 'products'
-
 
 @prestashop
 class PricelistAdapter(GenericAdapter):

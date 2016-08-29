@@ -299,7 +299,7 @@ class ProductInventoryExport(Exporter):
     _model_name = ['prestashop.product.product']
 
     def get_filter(self, product):
-        binder = self.get_binder_for_model()
+        binder = self.binder_for()
         prestashop_id = binder.to_backend(product.id)
         return {
             'filter[id_product]': prestashop_id,
@@ -364,9 +364,9 @@ class ProductInventoryImport(PrestashopImportSynchronizer):
 
     def _get_product(self, record):
         if record['id_product_attribute'] == '0':
-            binder = self.get_binder_for_model('prestashop.product.product')
+            binder = self.binder_for('prestashop.product.product')
             return binder.to_openerp(record['id_product'], unwrap=True)
-        binder = self.get_binder_for_model('prestashop.product.combination')
+        binder = self.binder_for('prestashop.product.combination')
         return binder.to_openerp(record['id_product_attribute'], unwrap=True)
 
     def run(self, record):
