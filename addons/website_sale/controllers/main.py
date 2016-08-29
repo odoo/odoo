@@ -129,16 +129,15 @@ class WebsiteSale(http.Controller):
         """
         # product attributes with at least two choices
         visible_attrs_ids = product.mapped('attribute_line_ids.attribute_id').filtered(lambda attr: len(attr.value_ids) > 1).ids
-        pl = request.website.get_current_pricelist()
-        to_currency = pl.currency_id
+        to_currency = request.website.get_current_pricelist().currency_id
         attribute_value_ids = []
         for variant in product.product_variant_ids:
             if to_currency != product.currency_id:
-                price = variant.currency_id.compute(variant.display_price(pl, public=True), to_currency)
+                price = variant.currency_id.compute(variant.website_public_price, to_currency)
             else:
-                price = variant.display_price(pl, public=True)
+                price = variant.website_public_price
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.display_price(pl), price])
+            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price, price])
         return attribute_value_ids
 
     def _get_search_order(self, post):
@@ -205,6 +204,9 @@ class WebsiteSale(http.Controller):
             pricelist_context['pricelist'] = pricelist.id
         else:
             pricelist = request.env['product.pricelist'].browse(pricelist_context['pricelist'])
+
+        request.env = request.env(context=dict(request.env.context, pricelist=pricelist.id, partner=request.env.user.partner_id))
+
         url = "/shop"
         if search:
             post["search"] = search
@@ -227,7 +229,7 @@ class WebsiteSale(http.Controller):
 
         product_count = Product.search_count(domain)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
-        products = Product.with_context(pricelist_context).search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
+        products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
 
         ProductAttribute = request.env['product.attribute']
         if products:
@@ -388,7 +390,7 @@ class WebsiteSale(http.Controller):
         value['website_sale.cart_lines'] = request.env['ir.ui.view'].render_template("website_sale.cart_lines", {
             'website_sale_order': order,
             'compute_currency': lambda price: from_currency.compute(price, to_currency),
-            'suggested_products': order.with_context(pricelist=order.pricelist_id.id)._cart_accessories()
+            'suggested_products': order._cart_accessories()
         })
         return value
 
@@ -893,8 +895,8 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
     def get_unit_price(self, product_ids, add_qty, **kw):
-        products = request.env['product.product'].browse(product_ids)
-        return {product.id: request.website.get_product_price(product, qty=add_qty) / add_qty for product in products}
+        products = request.env['product.product'].with_context({'quantity': add_qty}).browse(product_ids)
+        return {product.id: product.website_price / add_qty for product in products}
 
     # ------------------------------------------------------
     # Edit
