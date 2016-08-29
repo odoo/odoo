@@ -111,6 +111,16 @@ class ProductTemplate(models.Model):
             p.website_price = p.product_variant_id.website_price
             p.website_public_price = p.product_variant_id.website_public_price
 
+    website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
+    website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
+
+    def _website_price(self):
+        self.mapped('product_variant_id')
+
+        for p in self:
+            p.website_price = p.product_variant_id.website_price
+            p.website_public_price = p.product_variant_id.website_public_price
+
     def _default_website_sequence(self):
         self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
         min_sequence = self._cr.fetchone()[0]
