@@ -1116,7 +1116,7 @@ data.Editor = Class.extend({
         var $style_button = this.$overlay.find(".oe_options");
         var $ul = $style_button.find("ul:first");
         var $headers = $ul.find(".dropdown-header:data(editor)");
-        _.each($headers, function (el) {
+        _.each($headers, (function (el) {
             var $el = $(el);
             var styles = _.values($el.data("editor").styles);
             if ($el.data("editor") !== this) {
@@ -1125,7 +1125,7 @@ data.Editor = Class.extend({
             _.each(_.sortBy(styles, "__order").reverse(), function (style) {
                 do_action(style, $el);
             });
-        });
+        }).bind(this));
 
         // Activate the overlay
         $style_button.toggleClass("hidden", $ul.children(":not(.dropdown-header):not(.divider):not(.hidden)").length === 0);
