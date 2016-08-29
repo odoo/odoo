@@ -722,31 +722,27 @@ function summernote_ie_fix (event, pred) {
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     fn_attach.call(this, oLayoutInfo, options);
+
     oLayoutInfo.editor().on('dragstart', 'img', function (e) { e.preventDefault(); });
-    $(document).on('mousedown', summernote_mousedown);
-    $(document).on('mouseup', summernote_mouseup);
+    $(document).on('mousedown', summernote_mousedown).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
-    var imageSelector = 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image';
-    var show_tooltip = true;
-    oLayoutInfo.editor().on('dblclick', imageSelector, function (event) {
-        show_tooltip = false;
-        if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
-            new widgets.MediaDialog(null, {}, oLayoutInfo.editor(), event.target).open();
-        }
+
+    /**
+     * Open Media Dialog on double click on an image/video/icon.
+     * Shows a tooltip on click to say to the user he can double click.
+     */
+    create_dblclick_feature("img, .media_iframe_video, i.fa, span.fa, a.o_image", function () {
+        eventHandler.modules.imageDialog.show(oLayoutInfo);
     });
-    oLayoutInfo.editor().on('click', imageSelector, function (event) {
-        if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
-            setTimeout(function () {
-                if (show_tooltip) {
-                    $(event.target).tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
-                    setTimeout(function () {
-                        $(event.target).tooltip('destroy');
-                    }, 800);
-                }
-            }, 400);
-            show_tooltip = true;
-        }
+
+    /**
+     * Open Link Dialog on double click on a link/button.
+     * Shows a tooltip on click to say to the user he can double click.
+     */
+    create_dblclick_feature("a[href], .btn", function () {
+        eventHandler.modules.linkDialog.show(oLayoutInfo);
     });
+
     if(oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
         oLayoutInfo.editor().on('click', 'img', function (event) {
             $(event.target).trigger("dblclick");
@@ -813,6 +809,29 @@ eventHandler.attach = function (oLayoutInfo, options) {
             $('button[data-event="undo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasUndo());
             $('button[data-event="redo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasRedo());
         });
+
+    function create_dblclick_feature(selector, callback) {
+        var show_tooltip = true;
+
+        oLayoutInfo.editor().on("dblclick", selector, function (e) {
+            if ($(e.target).closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
+            show_tooltip = false;
+            callback();
+        });
+
+        oLayoutInfo.editor().on("click", selector, function (e) {
+            var $target = $(e.target);
+            if ($target.closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
+            show_tooltip = true;
+            setTimeout(function () {
+                if (!show_tooltip) return;
+                $target.tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
+                setTimeout(function () {
+                    $target.tooltip('destroy');
+                }, 800);
+            }, 400);
+        });
+    }
 };
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {
