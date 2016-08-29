@@ -77,9 +77,9 @@ class PackOperation(models.Model):
     def _set_is_done(self):
         # TDE FIXME: whuuuut ???
         if not self.product_id:
-            if self.processed_boolean and self.qty_done == 0:
+            if self.is_done and self.qty_done == 0:
                 self.qty_done = 1.0
-            if not self.processed_boolean and self.qty_done != 0:
+            if not self.is_done and self.qty_done != 0:
                 self.qty_done = 0.0
 
     def _get_remaining_prod_quantities(self):
