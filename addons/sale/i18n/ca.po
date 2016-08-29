@@ -5,13 +5,14 @@
 # Translators:
 # Jordi Morató Lluvià <jmorato@mibrit.com>, 2016
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2015-2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-06-22 07:22+0000\n"
-"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-29 08:15+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -452,12 +453,6 @@ msgstr "Temps inicial d'entrega"
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "Adreça d'enviament per la comanda de venda actual."
-
-#. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
-msgstr "Dipòsit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
@@ -1089,7 +1084,7 @@ msgstr "Quantitats demanades"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "Comandes per augmentar les vendes"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -2183,6 +2178,13 @@ msgstr "desconegut"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') i "
+#~ "'Pressupost' or 'Commanda'} (Ref ${object.name or 'n/a' })"
+
 #~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
 #~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Desc.(%)</span>"
 
@@ -2193,11 +2195,17 @@ msgstr "desconegut"
 #~ msgstr ""
 #~ "Permetre-us especificar un compte analític en les comandes de venda."
 
+#~ msgid "Analytic Line"
+#~ msgstr "Línia analítica"
+
 #~ msgid "Analytic accounting for sales"
 #~ msgstr "Comptabilitat analítica de vendes"
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Data de l'últim missatge enviat al registre."
+
+#~ msgid "Deposit"
+#~ msgstr "Dipòsit"
 
 #~ msgid "Expense Account"
 #~ msgstr "Compte de despeses"
@@ -2245,6 +2253,13 @@ msgstr "desconegut"
 #~ msgstr "Obrir menú de venda  "
 
 #~ msgid ""
+#~ "Some products may be sold/purchased in different unit of measures "
+#~ "(advanced)"
+#~ msgstr ""
+#~ "Alguns productes poden ser venuts/comprats en diferents unitats de mesura "
+#~ "(avançat)"
+
+#~ msgid ""
 #~ "This account will be used for invoices instead of the default one to "
 #~ "value expenses for the current product."
 #~ msgstr ""
@@ -2257,6 +2272,9 @@ msgstr "desconegut"
 #~ msgstr ""
 #~ "Aquest compte s'utilitzarà per les factures en comptes del valor de "
 #~ "vendes per defecte del producte actual."
+
+#~ msgid "Timesheets on contract"
+#~ msgstr "Full de treball als contactes"
 
 #~ msgid "Unit of Measures"
 #~ msgstr "Unitat de mesures"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
 "PO-Revision-Date: 2016-03-12 18:06+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -522,16 +522,6 @@ msgid "Contract"
 msgstr "Contrato"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
-msgid "Contract Proposal"
-msgstr "Propuesta de contrato"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
-msgid "Contract Signed"
-msgstr "Contrato firmado"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Fecha creación"
@@ -844,11 +834,6 @@ msgid "Filter and view on next actions and date"
 msgstr "Filtro y vista en las próximas acciones y fecha"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Primera entrevista"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "Archivado en la lista de Mantenimiento"
@@ -973,11 +958,6 @@ msgstr "Importancia"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Importante"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Qualification"
-msgstr "Calificación inicial"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1536,11 +1516,6 @@ msgid "Search through resumes and motivation letters."
 msgstr "Realice una búsqueda entre hojas de vida y cartas de presentación."
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "Segunda entrevista"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1913,6 +1888,36 @@ msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
 
 #~ msgid ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
+#~ "                    in ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    I’m very pleased to announce that <strong> ${object."
+#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Please welcome him/her and help him/her finding his/her "
+#~ "marks.</p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "            <p>\n"
+#~ "                %if object.department_id:\n"
+#~ "                    Es un placer anunciar que <strong> ${object.name} </"
+#~ "strong> se unirá a nosotros con el cargo de ${object.job_id.name}\n"
+#~ "                    en el departamento de ${object.department_id.name}.\n"
+#~ "                %else:\n"
+#~ "                    Es un placer anunciar que <strong> ${object.name} </"
+#~ "strong> se unirá a nosotros con el cargo de ${object.job_id.name}\n"
+#~ "                %endif\n"
+#~ "            </p>\n"
+#~ "            <p>Sea bienvenido y ayudemos a lograr sus metas.</p>\n"
+#~ "            "
+
+#~ msgid ""
 #~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
 #~ "        <p>Congrats! Your resume's got our interest!\n"
 #~ "        I will call you as soon as possible to make a 10 minutes phone "
@@ -1966,6 +1971,12 @@ msgstr "oe_kanban_text_red"
 #~ msgid "Campaign"
 #~ msgstr "Campaña"
 
+#~ msgid "Contract Proposal"
+#~ msgstr "Propuesta de contrato"
+
+#~ msgid "Contract Signed"
+#~ msgstr "Contrato firmado"
+
 #~ msgid ""
 #~ "Create email and url for each distinct source. <br>\n"
 #~ "                When the applicant will arrive, you will know from wich "
@@ -1975,8 +1986,20 @@ msgstr "oe_kanban_text_red"
 #~ "¿Cuándo llegará el solicitante, conocer el origen del puesto de trabajo "
 #~ "está por venir."
 
+#~ msgid ""
+#~ "Create here some alias...\n"
+#~ "                That will allow you to track from where the applicant is "
+#~ "coming from..."
+#~ msgstr ""
+#~ "Cree aquí algunos alias ...\n"
+#~ "Eso le permitirá realizar un seguimiento desde done el solicitante está "
+#~ "viniendo ..."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Fecha del último mensaje publicado en el registro."
+
+#~ msgid "First Interview"
+#~ msgstr "Primera entrevista"
 
 #~ msgid "Followers"
 #~ msgstr "Seguidores"
@@ -1995,6 +2018,12 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "If checked, new messages require your attention."
 #~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
+
+#~ msgid "If other, precise:"
+#~ msgstr "Si otros, precisar"
+
+#~ msgid "Initial Qualification"
+#~ msgstr "Calificación inicial"
 
 #~ msgid "Is Follower"
 #~ msgstr "Es un seguidor"
@@ -2024,6 +2053,24 @@ msgstr "oe_kanban_text_red"
 #~ msgstr "Abrir menú RRHH"
 
 #~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Política para enviar un mensaje en el documento usando la pasarela de "
+#~ "correo.\n"
+#~ "- Todos: Todos pueden enviar.\n"
+#~ "- Empresas: Sólo las empresas autenticadas.\n"
+#~ "- Seguidores: Sólo los seguidores del documento relacionado.\n"
+
+#~ msgid "Reset Application"
+#~ msgstr "Reiniciar Aplicación"
+
+#~ msgid "Second Interview"
+#~ msgstr "Segunda entrevista"
+
+#~ msgid ""
 #~ "This is a name that helps you keep track of your different campaign "
 #~ "efforts Ex: Fall_Drive, Christmas_Special"
 #~ msgstr ""
@@ -2038,3 +2085,6 @@ msgstr "oe_kanban_text_red"
 
 #~ msgid "Website communication history"
 #~ msgstr "Historial de comunicaciones del sitio web"
+
+#~ msgid "Welcoming ${object.name} "
+#~ msgstr "Bienvenido ${object.name} "

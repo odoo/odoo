@@ -5,8 +5,8 @@
 # Translators:
 # Andi Fadhel <cliffryu@gmail.com>, 2016
 # Budi Iskandar <budiiskandar11@gmail.com>, 2015
-# Deddy ddr <deddy.ddr@gmail.com>, 2016
-# Edi Santoso <repopamor@gmail.com>, 2016
+# Deddy Ddr <deddy.ddr@gmail.com>, 2016
+# Edi RepoDev <repopamor@gmail.com>, 2016
 # Lorenz Adam Damara <lorenzrenz@gmail.com>, 2015
 # Martin Trigaux, 2015-2016
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2015
@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-06-28 02:13+0000\n"
-"Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-24 08:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
 "Language: id\n"
@@ -92,7 +92,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1502
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1524
 #, python-format
 msgid " seconds"
 msgstr "detik"
@@ -106,9 +106,8 @@ msgstr "# Digit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
-#, fuzzy
 msgid "# of Lines"
-msgstr "# dari tagihan"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -117,12 +116,11 @@ msgstr "# dari Transaksi"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
-#, fuzzy
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name|safe} tagihan (Ref ${object.number or 'n/a'})"
+msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:322
+#: code:addons/account/models/account_bank_statement.py:464
 #, python-format
 msgid "%d transactions were automatically reconciled."
 msgstr "%d transaksi telah direkonsiliasi otomatis"
@@ -153,9 +151,8 @@ msgstr ", jika modul Akunting atau purchase diinstall"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "-> Reconcile"
-msgstr "Mendamaikan"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -164,7 +161,7 @@ msgid "-> View partially reconciled entries"
 msgstr "Memiliki unreconciled entri"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:323
+#: code:addons/account/models/account_bank_statement.py:465
 #, python-format
 msgid "1 transaction was automatically reconciled."
 msgstr "1 transaksi telah direkonsiliasi otomatis"
@@ -178,11 +175,6 @@ msgstr "15 Hari"
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
 msgstr "30 Hari"
-
-#. module: account
-#: model:account.payment.term,name:account.account_payment_term_advance
-msgid "30% Advance End of Following Month"
-msgstr "30% Pembayaran dimuka pada akhir bulan berikutnya"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -408,9 +400,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Balance in Odoo\">Saldo pada Odoo</span>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -901,14 +892,14 @@ msgstr ""
 "              </p>"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1312
+#: code:addons/account/models/account_invoice.py:1315
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
 msgstr ""
 "Jangka waktu pembayaran harus memiliki lini terakhir jenis keseimbangan."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1315
+#: code:addons/account/models/account_invoice.py:1318
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
@@ -979,14 +970,14 @@ msgstr ""
 "                        Pilih bagaimana Anda ingin membuat produk Anda:"
 
 #. module: account
-#: code:addons/account/models/account_move.py:732
+#: code:addons/account/models/account_move.py:742
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
 msgstr "Pendamaian harus melibatkan minimal 2 pindah baris."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:836
-#: code:addons/account/models/account_bank_statement.py:839
+#: code:addons/account/models/account_bank_statement.py:862
+#: code:addons/account/models/account_bank_statement.py:865
 #, python-format
 msgid "A selected move line was already reconciled."
 msgstr "Garis dipilih bergerak sudah didamaikan."
@@ -1004,7 +995,7 @@ msgstr ""
 "Posisi fiskal pajak dapat didefinisikan hanya sekali waktu pajak yang sama."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:388
+#: code:addons/account/models/account_bank_statement.py:384
 #, python-format
 msgid "A transaction can't have a 0 amount."
 msgstr "Transaksi tidak memiliki jumlah 0."
@@ -1025,8 +1016,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:100
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:105
-#: code:addons/account/static/src/xml/account_reconciliation.xml:140
-#: code:addons/account/static/src/xml/account_reconciliation.xml:266
+#: code:addons/account/static/src/xml/account_reconciliation.xml:141
+#: code:addons/account/static/src/xml/account_reconciliation.xml:267
 #: model:ir.model,name:account.model_account_account
 #: model:ir.model.fields,field_description:account.field_account_invoice_account_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_account_id
@@ -1532,7 +1523,7 @@ msgstr "Neraca percobaan"
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
+#: code:addons/account/static/src/xml/account_reconciliation.xml:298
 #, python-format
 msgid "All"
 msgstr "Semua"
@@ -1589,8 +1580,8 @@ msgstr "Semua akun"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:309
-#: code:addons/account/static/src/xml/account_reconciliation.xml:316
+#: code:addons/account/static/src/xml/account_reconciliation.xml:310
+#: code:addons/account/static/src/xml/account_reconciliation.xml:317
 #, python-format
 msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
@@ -1689,8 +1680,8 @@ msgstr "Mengizinkan anda menggunakan akunting analitik"
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:140
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:144
-#: code:addons/account/static/src/xml/account_reconciliation.xml:149
-#: code:addons/account/static/src/xml/account_reconciliation.xml:265
+#: code:addons/account/static/src/xml/account_reconciliation.xml:150
+#: code:addons/account/static/src/xml/account_reconciliation.xml:266
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
@@ -1967,7 +1958,14 @@ msgid "Automatic formatting"
 msgstr "Otomatis format"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:328
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Automatic reconciliation"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:470
 #, python-format
 msgid "Automatically reconciled items"
 msgstr "Item secara otomatis didamaikan"
@@ -2167,7 +2165,7 @@ msgstr "Pernyataan Bank"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:204
+#: code:addons/account/static/src/xml/account_reconciliation.xml:205
 #, python-format
 msgid "Bank statements are fully reconciled."
 msgstr "Pernyataan bank sepenuhnya didamaikan."
@@ -2227,9 +2225,8 @@ msgstr "Pembayaran"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "Bills"
-msgstr "paruh"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2379,7 +2376,7 @@ msgid "Cancelled Invoice"
 msgstr "Pembatalan tagihan"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1045
+#: code:addons/account/models/account_move.py:1055
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -2414,7 +2411,7 @@ msgstr ""
 "Silakan pergi ke konfigurasi Akun."
 
 #. module: account
-#: code:addons/account/models/account_move.py:314
+#: code:addons/account/models/account_move.py:324
 #, python-format
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should "
@@ -2669,7 +2666,7 @@ msgstr "Memilih akuntansi Template"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1867
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1889
 #, python-format
 msgid "Choose counterpart"
 msgstr "Counterpart"
@@ -2737,14 +2734,14 @@ msgstr "Klik untuk mendaftar pembayaran"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:40
+#: code:addons/account/static/src/xml/account_reconciliation.xml:41
 #, python-format
 msgid "Close"
 msgstr "Tutup"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:226
+#: code:addons/account/static/src/xml/account_reconciliation.xml:227
 #, python-format
 msgid "Close the statement"
 msgstr "Semua garis entri akun harus diproses untuk menutup pernyataan."
@@ -3011,7 +3008,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1506
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1528
 #, python-format
 msgid "Congrats, you're all done !"
 msgstr "Selamat, anda sudah selesai!"
@@ -3089,7 +3086,7 @@ msgstr "Membuat vendor"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1864
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1886
 #, python-format
 msgid "Create Write-off"
 msgstr "Membuat Write-off"
@@ -3113,7 +3110,7 @@ msgstr "Membuat tagihan tagihan"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2466
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2488
 #, python-format
 msgid "Create writeoff"
 msgstr "Membuat writeoff"
@@ -3323,8 +3320,8 @@ msgid "Currency as per company's country."
 msgstr "Mata uang sesuai perusahaan negara."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1337
-#: code:addons/account/models/account_move.py:1347
+#: code:addons/account/models/account_move.py:1345
+#: code:addons/account/models/account_move.py:1355
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Perbedaan kurs mata uang"
@@ -3406,7 +3403,7 @@ msgstr "Referensi Pelanggan"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:294
+#: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #: model:ir.ui.menu,name:account.menu_account_customer
 #, python-format
 msgid "Customers"
@@ -3422,8 +3419,8 @@ msgstr "Dasbor"
 #: selection:account.print.journal,sort_selection:0
 #: selection:account.report.general.ledger,sortby:0
 #: selection:accounting.report,filter_cmp:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:142
-#: code:addons/account/static/src/xml/account_reconciliation.xml:261
+#: code:addons/account/static/src/xml/account_reconciliation.xml:143
+#: code:addons/account/static/src/xml/account_reconciliation.xml:262
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_date
@@ -3457,9 +3454,8 @@ msgstr "Tanggal"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
-#, fuzzy
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr "Hari setelah tanggal tagihan"
+msgstr ""
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3599,7 +3595,7 @@ msgstr "Jelaskan mengapa Anda mengambil uang dari cash register:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:264
+#: code:addons/account/static/src/xml/account_reconciliation.xml:265
 #: model:ir.model.fields,field_description:account.field_account_account_type_note
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_name
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -3794,7 +3790,7 @@ msgstr "Jangan ragu untuk"
 #. module: account
 #. openerp-web
 #: selection:account.invoice.report,state:0
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2453
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2475
 #, python-format
 msgid "Done"
 msgstr "selesai"
@@ -3852,7 +3848,7 @@ msgstr "Jatuh Tempo"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:143
+#: code:addons/account/static/src/xml/account_reconciliation.xml:144
 #: model:ir.model.fields,field_description:account.field_account_invoice_date_due
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_date_due
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -3911,13 +3907,13 @@ msgstr "EXCH"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1510
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1532
 #, python-format
 msgid "Efficiency at its finest"
 msgstr "Efisiensi dengan baik"
 
 #. module: account
-#: code:addons/account/models/account_move.py:885
+#: code:addons/account/models/account_move.py:895
 #, python-format
 msgid "Either pass both debit and credit or none."
 msgstr "Baik menyampaikan baik debet dan kredit atau tidak."
@@ -3964,11 +3960,6 @@ msgid "End Date"
 msgstr "Tanggal berakhir"
 
 #. module: account
-#: model:account.payment.term,name:account.account_payment_term
-msgid "End of Following Month"
-msgstr "Akhir mengikuti bulan"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
 msgid "Ending Balance"
 msgstr "Saldo Akhir"
@@ -3995,7 +3986,7 @@ msgid "Entries Sorted by"
 msgstr "# Masukkan"
 
 #. module: account
-#: code:addons/account/models/account_move.py:850
+#: code:addons/account/models/account_move.py:860
 #, python-format
 msgid "Entries are not of the same account!"
 msgstr "Entri yang tidak dari akun yang sama!"
@@ -4118,7 +4109,7 @@ msgstr "Fitur tambahan"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1517
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1539
 #, python-format
 msgid "Fast reconciler"
 msgstr "Wah, itu cepat!"
@@ -4165,7 +4156,7 @@ msgstr "Filter menurut Kota"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:68
+#: code:addons/account/static/src/xml/account_reconciliation.xml:69
 #, python-format
 msgid "Filter..."
 msgstr "Filter"
@@ -4521,14 +4512,14 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:225
+#: code:addons/account/static/src/xml/account_reconciliation.xml:226
 #, python-format
 msgid "Go to bank statements"
 msgstr "Pergi ke laporan bank"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:465
-#: code:addons/account/models/account_move.py:315
+#: code:addons/account/models/account_move.py:325
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Menuju panel konfigurasi"
@@ -4541,9 +4532,9 @@ msgstr "Bagus!"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:204
-#: code:addons/account/static/src/xml/account_reconciliation.xml:308
-#: code:addons/account/static/src/xml/account_reconciliation.xml:315
+#: code:addons/account/static/src/xml/account_reconciliation.xml:205
+#: code:addons/account/static/src/xml/account_reconciliation.xml:309
+#: code:addons/account/static/src/xml/account_reconciliation.xml:316
 #, python-format
 msgid "Good Job!"
 msgstr "Bagus!"
@@ -4687,7 +4678,7 @@ msgid "INV"
 msgstr "INV"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:394
+#: code:addons/account/models/account_bank_statement.py:390
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
 msgstr "Jika \"Jumlah mata uang\" ditetapkan, maka \"Jumlah\" harus juga."
@@ -4935,7 +4926,7 @@ msgid "In Odoo,"
 msgstr "Di Odoo,"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:414
+#: code:addons/account/models/account_bank_statement.py:410
 #, python-format
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete "
@@ -5020,7 +5011,7 @@ msgstr "Akun pendapatan pada produk Template"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1790
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1812
 #, python-format
 msgid "Incorrect Operation"
 msgstr "Operasi salah"
@@ -5190,7 +5181,7 @@ msgid "Invoice refund"
 msgstr "tagihan pengembalian"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1401
+#: code:addons/account/models/account_invoice.py:1404
 #, python-format
 msgid "Invoice sent"
 msgstr "tagihan dikirim"
@@ -5233,7 +5224,7 @@ msgstr "tagihans"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2099
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2121
 #, python-format
 msgid "Invoices & Payments Matching"
 msgstr "tagihan & pembayaran pencocokan"
@@ -5308,7 +5299,7 @@ msgid "It indicates that the invoice has been sent."
 msgstr "Ini menunjukkan bahwa tagihan telah dikirim."
 
 #. module: account
-#: code:addons/account/models/account_move.py:883
+#: code:addons/account/models/account_move.py:893
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
@@ -5316,7 +5307,7 @@ msgstr "Wajib untuk menetapkan tagihan dan jurnal untuk menciptakan write-off."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "It took you"
 msgstr "Anda butuh"
@@ -5373,9 +5364,9 @@ msgstr "Januari"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2135
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2140
-#: code:addons/account/static/src/xml/account_reconciliation.xml:141
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2157
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2162
+#: code:addons/account/static/src/xml/account_reconciliation.xml:142
 #: model:ir.model,name:account.model_account_journal
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_id
@@ -5474,7 +5465,7 @@ msgstr "Item Jurnal"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2098
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2120
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
@@ -5638,7 +5629,7 @@ msgstr "Terakhir Dimodifikasi pada"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:329
+#: code:addons/account/static/src/xml/account_reconciliation.xml:330
 #, python-format
 msgid "Last Reconciliation :"
 msgstr "Rekonsiliasi terakhir:"
@@ -5810,21 +5801,26 @@ msgstr "Nama hukum"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
-#, fuzzy
 msgid "Legal Notes..."
-msgstr "Catatan internal"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
-#, fuzzy
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr "Daftar semua pajak yang harus diinstal oleh wizard"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:145
 #, python-format
 msgid "Less Payment"
 msgstr "Pembayaran kurang"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Let odoo try to reconcile entries for the user"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6097,7 +6093,7 @@ msgstr "Miscellaneous operasi"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:81
+#: code:addons/account/static/src/xml/account_reconciliation.xml:82
 #, python-format
 msgid "Modify presets"
 msgstr "Mengubah preset"
@@ -6116,7 +6112,7 @@ msgstr "Omzet perbulannya"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:104
+#: code:addons/account/static/src/xml/account_reconciliation.xml:105
 #, python-format
 msgid "More"
 msgstr "Selengkapnya"
@@ -6157,7 +6153,7 @@ msgid "Move line ids"
 msgstr "Memindahkan baris id"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1172
+#: code:addons/account/models/account_move.py:1180
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "Memindahkan nama (id): %s (%s)"
@@ -6220,7 +6216,7 @@ msgstr "Baru"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:88
+#: code:addons/account/static/src/xml/account_reconciliation.xml:89
 #, python-format
 msgid "New Operation"
 msgstr "Operasi baru"
@@ -6236,14 +6232,14 @@ msgid "New Transactions"
 msgstr "Transaksi baru"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1149
+#: code:addons/account/models/account_move.py:1157
 #, python-format
 msgid "New expected payment date: "
 msgstr "Tanggal pembayaran diharapkan baru:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:80
+#: code:addons/account/static/src/xml/account_reconciliation.xml:81
 #, python-format
 msgid "New preset"
 msgstr "Preset yang baru"
@@ -6276,7 +6272,7 @@ msgstr "Tidak ada detail"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:123
+#: code:addons/account/static/src/xml/account_reconciliation.xml:124
 #, python-format
 msgid "No result matching '"
 msgstr "Tidak ada hasil pencocokan '"
@@ -6342,7 +6338,7 @@ msgstr "Tidak dilaksanakan."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:267
+#: code:addons/account/static/src/xml/account_reconciliation.xml:268
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
 #, python-format
 msgid "Note"
@@ -6395,7 +6391,7 @@ msgstr "Jumlah digit kode akun"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:192
+#: code:addons/account/static/src/xml/account_reconciliation.xml:193
 #, python-format
 msgid "OK"
 msgstr "OK"
@@ -6558,7 +6554,7 @@ msgstr "Hanya administrator yang dapat mengubah pengaturan"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1511
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1533
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
 msgstr ""
@@ -6590,9 +6586,9 @@ msgstr "Buka pembayaran"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1870
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1902
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2037
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1892
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1924
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2059
 #, python-format
 msgid "Open balance"
 msgstr "Saldo Akhir"
@@ -6664,7 +6660,7 @@ msgstr "Info lainnya"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "OtherAccounts"
 msgstr "OtherAccounts"
@@ -6782,8 +6778,8 @@ msgstr "Parsial mendamaikan"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1731
-#: code:addons/account/static/src/xml/account_reconciliation.xml:262
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1753
+#: code:addons/account/static/src/xml/account_reconciliation.xml:263
 #: model:ir.model,name:account.model_res_partner
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_id
@@ -7001,16 +6997,6 @@ msgid "Payment term: 30 Net Days"
 msgstr "Pembayaran: 30 hari bersih"
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term_advance
-msgid "Payment term: 30% Advance End of Following Month"
-msgstr "Pembayaran: 30% Advance akhir bulan berikutnya"
-
-#. module: account
-#: model:account.payment.term,note:account.account_payment_term
-msgid "Payment term: End of Following Month"
-msgstr "Pembayaran: akhir bulan berikutnya"
-
-#. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment term: Immediate Payment"
 msgstr "Pembayaran: pembayaran segera"
@@ -7135,7 +7121,7 @@ msgid "Percentage of balance"
 msgstr "Persentase dari saldo"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1383
+#: code:addons/account/models/account_invoice.py:1386
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
 msgstr "Persentase untuk baris istilah pembayaran harus antara 0 dan 100."
@@ -7391,16 +7377,6 @@ msgid "Proforma"
 msgstr "LKM tersebut proforma"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:593
-#, python-format
-msgid ""
-"Programmation error : domain_maker_move_line_amount requires comparator '=' "
-"or '<'"
-msgstr ""
-"Kesalahan programmation: domain_maker_move_line_amount memerlukan komparator "
-"'=' atau ' <'"
-
-#. module: account
 #: code:addons/account/models/account_payment.py:123
 #, python-format
 msgid ""
@@ -7530,9 +7506,9 @@ msgstr "Menerima uang"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1852
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2450
-#: code:addons/account/static/src/xml/account_reconciliation.xml:322
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1874
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2472
+#: code:addons/account/static/src/xml/account_reconciliation.xml:323
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7607,7 +7583,7 @@ msgstr "Rekonsiliasi Bank"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2163
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2185
 #, python-format
 msgid "Reconciling "
 msgstr "Rekonsiliasi"
@@ -7831,7 +7807,7 @@ msgstr "Reset ke Draft"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:149
+#: code:addons/account/static/src/xml/account_reconciliation.xml:150
 #, python-format
 msgid "Residual"
 msgstr "Sisa"
@@ -8031,14 +8007,14 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1759
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1781
 #, python-format
 msgid "Select Partner"
 msgstr "Memilih mitra"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:234
+#: code:addons/account/static/src/xml/account_reconciliation.xml:235
 #, python-format
 msgid "Select a partner or choose a counterpart"
 msgstr "Memilih mitra atau memilih mitra"
@@ -8165,7 +8141,7 @@ msgstr "Nama singkat"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:289
+#: code:addons/account/static/src/xml/account_reconciliation.xml:290
 #, python-format
 msgid "Show"
 msgstr "Tampilkan"
@@ -8182,7 +8158,7 @@ msgstr "Jurnal Tampilkan pada dashboard"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:19
+#: code:addons/account/static/src/xml/account_reconciliation.xml:20
 #, python-format
 msgid "Show more... ("
 msgstr "Lihat semua"
@@ -8334,7 +8310,7 @@ msgstr "Mengambil uang"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1518
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1540
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
 msgstr "Mengambil rata-rata kurang dari 5 detik untuk mendamaikan transaksi."
@@ -8665,7 +8641,7 @@ msgstr "Syarat dan ketentuan..."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "That's on average"
 msgstr "Harga Rata-rata"
@@ -8702,7 +8678,7 @@ msgstr ""
 "kredit terbuat dari beberapa transaksi."
 
 #. module: account
-#: code:addons/account/models/account_move.py:852
+#: code:addons/account/models/account_move.py:862
 #, python-format
 msgid "The account %s (%s) is not marked as reconciliable !"
 msgstr "Account %s (%s) tidak ditandai sebagai reconciliable!"
@@ -8732,7 +8708,7 @@ msgstr ""
 "perusahaan satu."
 
 #. module: account
-#: code:addons/account/models/account_move.py:421
+#: code:addons/account/models/account_move.py:431
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account "
@@ -8914,7 +8890,7 @@ msgstr ""
 "terakhir kali tagihan & pembayaran pencocokan dilakukan."
 
 #. module: account
-#: code:addons/account/models/account_move.py:854
+#: code:addons/account/models/account_move.py:864
 #, python-format
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
@@ -8948,7 +8924,7 @@ msgid ""
 msgstr "Jumlah sisa pada jurnal item dinyatakan dalam mata uang perusahaan."
 
 #. module: account
-#: code:addons/account/models/account_move.py:406
+#: code:addons/account/models/account_move.py:416
 #, fuzzy, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
@@ -8959,7 +8935,7 @@ msgstr ""
 "multi-mata uang dalam hal jurnal."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1245
+#: code:addons/account/models/account_invoice.py:1248
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -9000,15 +8976,15 @@ msgstr "Ada tidak ada jurnal item dalam status draft untuk posting."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:308
-#: code:addons/account/static/src/xml/account_reconciliation.xml:315
+#: code:addons/account/static/src/xml/account_reconciliation.xml:309
+#: code:addons/account/static/src/xml/account_reconciliation.xml:316
 #, python-format
 msgid "There is nothing to reconcile."
 msgstr "Tidak ada untuk mendamaikan."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1494
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1516
 #, python-format
 msgid "There you go, it's all done !"
 msgstr "Sana Anda pergi, itu semua dilakukan!"
@@ -9282,7 +9258,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:205
+#: code:addons/account/static/src/xml/account_reconciliation.xml:206
 #, python-format
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
@@ -9293,7 +9269,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:153
+#: code:addons/account/static/src/xml/account_reconciliation.xml:154
 #, python-format
 msgid "This payment is registered but not reconciled."
 msgstr "Pembayaran ini terdaftar tetapi tidak didamaikan."
@@ -9365,7 +9341,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:20
+#: code:addons/account/static/src/xml/account_reconciliation.xml:21
 #, fuzzy, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
 msgstr ""
@@ -9403,7 +9379,7 @@ msgstr ""
 "yang tepat dan/atau akun sesuai dengan pelanggan negara dan negara."
 
 #. module: account
-#: code:addons/account/models/account_move.py:848
+#: code:addons/account/models/account_move.py:858
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
 msgstr "Untuk mendamaikan entri perusahaan harus sama untuk semua entri!"
@@ -9415,7 +9391,7 @@ msgstr "Menggunakan <strong>multi-mata uang pilihan:</strong>"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:145
+#: code:addons/account/static/src/xml/account_reconciliation.xml:146
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_company_signed
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
@@ -9497,7 +9473,7 @@ msgstr "Total transaksi baris."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:263
+#: code:addons/account/static/src/xml/account_reconciliation.xml:264
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Transaction"
@@ -9595,9 +9571,9 @@ msgstr "Satuan Ukuran"
 
 #. module: account
 #: code:addons/account/report/account_aged_partner_balance.py:264
-#, fuzzy, python-format
+#, python-format
 msgid "Unknown Partner"
-msgstr "Rekanan"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9800,7 +9776,7 @@ msgstr "PPN yang diperlukan"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1869
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1891
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -9899,7 +9875,7 @@ msgstr "Penjual pajak"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #, python-format
 msgid "Vendors"
@@ -9912,9 +9888,8 @@ msgstr "Tampilkan"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "View reconciled entries"
-msgstr "Memiliki unreconciled entri"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9927,8 +9902,8 @@ msgid "Volume"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1183
-#: code:addons/account/models/account_invoice.py:1244
+#: code:addons/account/models/account_invoice.py:1186
+#: code:addons/account/models/account_invoice.py:1247
 #, python-format
 msgid "Warning!"
 msgstr "Peringatan!"
@@ -9989,7 +9964,7 @@ msgstr "Apakah jurnal ini harus ditampilkan di dasbor atau tidak"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1505
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1527
 #, python-format
 msgid "Whew, that was fast !"
 msgstr "Wah, itu cepat!"
@@ -10030,7 +10005,7 @@ msgid "With tax"
 msgstr "Dengan pajak"
 
 #. module: account
-#: code:addons/account/models/account_move.py:889
+#: code:addons/account/models/account_move.py:899
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
@@ -10062,7 +10037,7 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Kredit yang salah atau nilai debit dalam entri akuntansi!"
 
 #. module: account
-#: code:addons/account/models/account_move.py:846
+#: code:addons/account/models/account_move.py:856
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr "Anda mencoba untuk mendamaikan beberapa entri yang sudah didamaikan!"
@@ -10130,13 +10105,10 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:179
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
-"Anda tidak dapat menambahkan/mengubah entri sebelum dan termasuk tanggal "
-"lock %s. Periksa pengaturan perusahaan atau meminta seseorang dengan peran "
-"'Penasihat'"
 
 #. module: account
 #: code:addons/account/models/account_move.py:181
@@ -10170,15 +10142,7 @@ msgstr ""
 "item."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1138
-#, python-format
-msgid "You cannot change the tax, you should remove and recreate lines."
-msgstr ""
-"Anda tidak dapat mengubah pajak, Anda harus menghapus dan membuat ulang "
-"garis."
-
-#. module: account
-#: code:addons/account/models/account_move.py:413
+#: code:addons/account/models/account_move.py:423
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -10216,7 +10180,7 @@ msgid "You cannot do that on an account that contains journal items."
 msgstr "Anda tidak bisa melakukan itu pada akun yang berisi jurnal item."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1174
+#: code:addons/account/models/account_move.py:1182
 #, python-format
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just "
@@ -10230,7 +10194,7 @@ msgstr ""
 "%s."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1176
+#: code:addons/account/models/account_move.py:1184
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -10271,7 +10235,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1791
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1813
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr "Anda tidak dapat mencampur item dari akun piutang dan dibayarkan."
@@ -10304,14 +10268,14 @@ msgstr ""
 "pelanggan, atau vendor."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1013
-#: code:addons/account/models/account_move.py:1140
+#: code:addons/account/models/account_move.py:1023
+#: code:addons/account/models/account_move.py:1148
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Anda tidak dapat menggunakan akun usang."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1069
+#: code:addons/account/models/account_move.py:1079
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -10333,7 +10297,7 @@ msgid "You must define a Start Date"
 msgstr "Anda harus menetapkan tanggal mulai"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1184
+#: code:addons/account/models/account_invoice.py:1187
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Anda harus memilih dulu mitra!"
@@ -10351,7 +10315,7 @@ msgid "You must set a start date."
 msgstr "Anda harus mengeset tanggal mulai"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1321
+#: code:addons/account/models/account_move.py:1329
 #, python-format
 msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings, "
@@ -10363,7 +10327,7 @@ msgstr ""
 "antara nilai tukar."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1323
+#: code:addons/account/models/account_move.py:1331
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -10375,7 +10339,7 @@ msgstr ""
 "dengan perbedaan antara nilai tukar."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1325
+#: code:addons/account/models/account_move.py:1333
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -10398,7 +10362,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:214
+#: code:addons/account/static/src/xml/account_reconciliation.xml:215
 #, python-format
 msgid "You validated"
 msgstr "Anda divalidasi"
@@ -10498,7 +10462,7 @@ msgstr "Aktifkan fitur ini"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
+#: code:addons/account/static/src/xml/account_reconciliation.xml:298
 #, python-format
 msgid "all"
 msgstr "seperti bukan orang"
@@ -10537,7 +10501,7 @@ msgstr "membuat entri jurnal"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:294
+#: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #, python-format
 msgid "customers"
 msgstr "Pelanggan"
@@ -10584,7 +10548,7 @@ msgstr "atau"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "others"
 msgstr "Lainnya"
@@ -10601,14 +10565,14 @@ msgstr "pembayaran yang luar biasa"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:214
+#: code:addons/account/static/src/xml/account_reconciliation.xml:215
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
 msgstr "rekonsiliasi dengan ctrl-masukkan pintas."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:19
+#: code:addons/account/static/src/xml/account_reconciliation.xml:20
 #, python-format
 msgid "remaining)"
 msgstr "tersisa"
@@ -10658,7 +10622,7 @@ msgstr "pembalikan:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "seconds per transaction."
 msgstr "detik per transaksi."
@@ -10680,7 +10644,7 @@ msgstr "setup akun bank Anda."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "suppliers"
 msgstr "pemasok"
@@ -10707,7 +10671,7 @@ msgstr "untuk menggambarkan<br/>pengalaman Anda atau menyarankan perbaikan!"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "to reconcile"
 msgstr "Rekonsiliasi"
@@ -10719,7 +10683,7 @@ msgstr "untuk mengatur keseimbangan semua akun Anda."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:212
+#: code:addons/account/static/src/xml/account_reconciliation.xml:213
 #, python-format
 msgid "transactions."
 msgstr "transaksi."
@@ -10877,17 +10841,88 @@ msgstr "Menghitung →"
 #~ "</div>\n"
 #~ "            "
 
+#~ msgid ""
+#~ " * The 'Draft' status is used when a user is encoding a new and "
+#~ "unconfirmed Invoice.\n"
+#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
+#~ "number.\n"
+#~ " * The 'Open' status is used when user create invoice, an invoice number "
+#~ "is generated. Its in open status till user does not pay invoice.\n"
+#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
+#~ "related journal entries may or may not be reconciled.\n"
+#~ " * The 'Cancelled' status is used when user cancel invoice."
+#~ msgstr ""
+#~ "* Status 'Draft' digunakan ketika pengguna pengkodean tagihan yang baru "
+#~ "dan belum dikonfirmasi.\n"
+#~ " * Status 'Pro-forma' digunakan tagihan tidak memiliki nomor invoice.\n"
+#~ " * Status 'Open' digunakan ketika pengguna membuat tagihan, nomor tagihan "
+#~ "yang dihasilkan. Statusnya terbuka di sampai pengguna tidak membayar "
+#~ "tagihan.\n"
+#~ " * Status 'Dibayar' diatur secara otomatis ketika tagihan dibayar. Entri "
+#~ "jurnal terkait yang mungkin atau mungkin tidak dapat didamaikan.\n"
+#~ " * Status 'Dibatalkan' digunakan ketika pengguna membatalkan tagihan."
+
+#~ msgid "30% Advance End of Following Month"
+#~ msgstr "30% Pembayaran dimuka pada akhir bulan berikutnya"
+
+#~ msgid "A bank account can anly belong to one journal."
+#~ msgstr "Akun bank dapat anly milik satu jurnal."
+
+#~ msgid "A list of your customer and suppler payment terms."
+#~ msgstr "Daftar pelanggan Anda dan elastis syarat-syarat pembayaran."
+
 #~ msgid "Action Needed"
 #~ msgstr "Tindakan diperlukan"
+
+#~ msgid ""
+#~ "Aged Partner Balance is a more detailed report of your receivables by "
+#~ "intervals. When opening that report, Odoo asks for the name of the "
+#~ "company, the Start Date and the size of the interval to be analyzed (in "
+#~ "days). Odoo then calculates a table of credit balance by start Date. So "
+#~ "if you request an interval of 30 days Odoo generates an analysis of "
+#~ "creditors for the past month, past two months, and so on."
+#~ msgstr ""
+#~ "Umur pasangan keseimbangan adalah laporan selengkapnya piutang dengan "
+#~ "interval. Ketika membuka laporan tersebut, Odoo meminta nama perusahaan, "
+#~ "mulai tanggal dan ukuran interval dianalisis (dalam hari). Odoo kemudian "
+#~ "menghitung tabel Saldo kredit oleh mulai tanggal. Jadi, jika Anda meminta "
+#~ "selang waktu 30 hari, Odoo menghasilkan analisis kreditor selama sebulan "
+#~ "terakhir, melewati dua bulan, dan sebagainya."
+
+#~ msgid "Allows you multi currency environment"
+#~ msgstr "Memungkinkan Anda lingkungan multi mata uang"
 
 #~ msgid "Analytic Line"
 #~ msgstr "analitik entri berdasarkan baris"
 
+#~ msgid ""
+#~ "Asset management: This allows you to manage the assets owned by a company "
+#~ "or a person. It keeps track of the depreciation occurred on those assets, "
+#~ "and creates account move for those depreciation lines.\n"
+#~ "\n"
+#~ "-This installs the module account_asset. If you do not check this box, "
+#~ "you will be able to do invoicing & payments, but not accounting (Journal "
+#~ "Items, Chart of Accounts, ...)"
+#~ msgstr ""
+#~ "Aset managemen: Hal ini memungkinkan Anda untuk mengelola aset-aset yang "
+#~ "dimiliki oleh perusahaan atau perorangan. Anda dapat terus melacak "
+#~ "depresiasi yang terjadi pada aset-aset ini, dan menciptakan akun untuk "
+#~ "memindahkan baris-baris depresiasi.\n"
+#~ "\n"
+#~ "-Ini modul pengaplikasian account_asset. Jika Anda tidak mencentang kotak "
+#~ "ini, Anda hanya mampu untuk melakukan pemfakturan & pembayaran, tetapi "
+#~ "tidak untuk akuntansi (Isi Jurnal, Bagan Perhitungan, ...)"
+
 #~ msgid "Bank Synchronization"
 #~ msgstr "Bank sinkronisasi"
 
-#~ msgid "Bills &amp; Refunds"
-#~ msgstr "Tagihan &amp; pengembalian dana"
+#~ msgid ""
+#~ "Chart of Accounts has been\n"
+#~ "                            installed. You should review it and create "
+#~ "any additionnal accounts."
+#~ msgstr ""
+#~ "Kode akun telah diinstal. Anda harus meninjau itu dan membuat akun "
+#~ "additionnal."
 
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Tanggal pesan terakhir diposting pada catatan."
@@ -10895,8 +10930,11 @@ msgstr "Menghitung →"
 #~ msgid "Direct Costs"
 #~ msgstr "Biaya langsung"
 
-#~ msgid "Fixed day of the following month"
-#~ msgstr "Tetap hari bulan berikutnya"
+#~ msgid "End of Following Month"
+#~ msgstr "Akhir mengikuti bulan"
+
+#~ msgid "Exchange Rate Entry of"
+#~ msgstr "Masuknya nilai tukar"
 
 #~ msgid "Followers"
 #~ msgstr "Pengikut"
@@ -10907,6 +10945,42 @@ msgstr "Menghitung →"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Pengikut (mitra)"
 
+#~ msgid ""
+#~ "Get your bank statements from you bank and import them through plaid."
+#~ "com.\n"
+#~ "-that installs the module account_plaid."
+#~ msgstr ""
+#~ "Mendapatkan akun bank Anda dari bank Anda dan impor mereka melalui plaid."
+#~ "com.\n"
+#~ "-yang menginstal modul tagihan_plaid."
+
+#~ msgid ""
+#~ "Get your bank statements from your bank and import them in Odoo in the ."
+#~ "OFX format.\n"
+#~ "This installs the module account_bank_statement_import_ofx."
+#~ msgstr ""
+#~ "Mendapatkan akun bank Anda dari bank Anda dan impor mereka dalam Odoo di. "
+#~ "OFX format.\n"
+#~ "Ini akan menginstal modul tagihan_bank_statement_import_ofx."
+
+#~ msgid ""
+#~ "Get your bank statements from your bank and import them in Odoo in the ."
+#~ "QIF format.\n"
+#~ "This installs the module account_bank_statement_import_qif."
+#~ msgstr ""
+#~ "Mendapatkan akun bank Anda dari bank Anda dan impor mereka dalam Odoo di. "
+#~ "QIF format.\n"
+#~ "Ini akan menginstal modul tagihan_bank_statement_import_qif."
+
+#~ msgid ""
+#~ "Get your bank statements from your bank and import them through yodlee."
+#~ "com.\n"
+#~ "-that installs the module account_yodlee."
+#~ msgstr ""
+#~ "Mendapatkan akun bank Anda dari bank Anda dan impor mereka melalui yodlee."
+#~ "com.\n"
+#~ "-yang menginstal modul tagihan_yodlee."
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
 
@@ -10916,20 +10990,20 @@ msgstr "Menghitung →"
 #~ msgid "Invoices &amp; Refunds"
 #~ msgstr "tagihan &amp; pengembalian dana"
 
-#~ msgid "Invoicing"
-#~ msgstr "invoicing"
-
 #~ msgid "Is Follower"
 #~ msgstr "Ini Pengikut"
 
 #~ msgid "Last Message Date"
 #~ msgstr "Tanggal pesan terakhir"
 
-#~ msgid "Less Cost of Sales"
-#~ msgstr "Kurang biaya penjualan"
-
 #~ msgid "Less Current Liabilities"
 #~ msgstr "Kewajiban lancar"
+
+#~ msgid "Less Expenses"
+#~ msgstr "Biaya kurang"
+
+#~ msgid "Less Non-Current Liabilities"
+#~ msgstr "Kurang kewajiban tidak lancar"
 
 #~ msgid "Less Payable Accounts"
 #~ msgstr "Kurang dibayar akun"
@@ -10949,8 +11023,34 @@ msgstr "Menghitung →"
 #~ msgid "Open account dashboard menu"
 #~ msgstr "Menu dashboard Buka akun"
 
+#~ msgid "Payment term: 30% Advance End of Following Month"
+#~ msgstr "Pembayaran: 30% Advance akhir bulan berikutnya"
+
+#~ msgid "Payment term: End of Following Month"
+#~ msgstr "Pembayaran: akhir bulan berikutnya"
+
+#~ msgid ""
+#~ "Programmation error : domain_maker_move_line_amount requires comparator "
+#~ "'=' or '<'"
+#~ msgstr ""
+#~ "Kesalahan programmation: domain_maker_move_line_amount memerlukan "
+#~ "komparator '=' atau ' <'"
+
 #~ msgid "Sales Team"
 #~ msgstr "Tim Penjualan"
+
+#~ msgid ""
+#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
+#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
+#~ "in customer or vendor payments. Select 'General' for miscellaneous "
+#~ "operations journals. Select 'Opening/Closing Situation' for entries "
+#~ "generated for new fiscal years."
+#~ msgstr ""
+#~ "Pilih 'Dijual' untuk pelanggan tagihan jurnal. Pilih 'Beli' untuk Penjual "
+#~ "tagihan jurnal. Pilih 'Uang' atau 'Bank' untuk jurnal yang digunakan "
+#~ "dalam pembayaran pelanggan atau vendor. Pilih 'Umum' untuk operasi yang "
+#~ "bermacam-macam jurnal. Pilih 'Situasi pembukaan/penutupan' untuk entri "
+#~ "yang dihasilkan untuk tahun fiskal baru."
 
 #~ msgid ""
 #~ "Technical field used to keep track of the origin of journal entries "
@@ -10966,6 +11066,20 @@ msgstr "Menghitung →"
 #~ msgid "The bank statement line was already reconciled."
 #~ msgstr "Garis pernyataan bank telah didamaikan."
 
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or "
+#~ "select a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Akun yang dipilih dari entri jurnal Anda memaksa memberikan mata uang "
+#~ "sekunder. Anda harus menghapus mata sekunder pada Akun atau pilih "
+#~ "tampilan multi-mata uang dalam hal jurnal."
+
+#~ msgid ""
+#~ "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
+#~ msgstr ""
+#~ "Tip: Tekan ctrl-enter untuk mendamaikan semua item seimbang dalam lembar."
+
 #~ msgid "Unread Messages"
 #~ msgstr "%d pesan belum terbaca"
 
@@ -10977,3 +11091,20 @@ msgstr "Menghitung →"
 
 #~ msgid "Website communication history"
 #~ msgstr "Sejarah komunikasi situs"
+
+#~ msgid "You cannot change the tax, you should remove and recreate lines."
+#~ msgstr ""
+#~ "Anda tidak dapat mengubah pajak, Anda harus menghapus dan membuat ulang "
+#~ "garis."
+
+#~ msgid "Bills &amp; Refunds"
+#~ msgstr "Tagihan &amp; pengembalian dana"
+
+#~ msgid "Fixed day of the following month"
+#~ msgstr "Tetap hari bulan berikutnya"
+
+#~ msgid "Invoicing"
+#~ msgstr "invoicing"
+
+#~ msgid "Less Cost of Sales"
+#~ msgstr "Kurang biaya penjualan"

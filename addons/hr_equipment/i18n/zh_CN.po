@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-29 12:00+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -48,12 +48,6 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr "当创建别名的新记录时，一个Python字典被提供作为默认值"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
-msgid "Acer Laptop"
-msgstr "宏基笔记本"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -410,17 +404,6 @@ msgid "Group by..."
 msgstr "分组 于"
 
 #. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
-msgid "HP Inkjet printer"
-msgstr "HP Inkjet打印机"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
-msgid "HP Laptop"
-msgstr "HP笔记本"
-
-#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "高"
@@ -558,11 +541,6 @@ msgid "Model"
 msgstr "模型"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
-msgid "Monitors"
-msgstr "显示器"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "我的设备"
@@ -630,13 +608,7 @@ msgstr ""
 "project(parent_model) and task (model))"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
-msgid "Phones"
-msgstr "电话"
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -644,10 +616,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"文档信息发送使用邮件服务器规则。\n"
-"- 所有人：所有人都允许\n"
-"- 业务伙伴：仅认证的业务伙伴\n"
-"- 关注者：仅关注相关文档者\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -719,13 +687,6 @@ msgstr "重设请求"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "负责人"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
-msgid "Samsung Monitor 15\""
-msgstr "三星显示器1515\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -858,7 +819,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -866,9 +826,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n"
-"且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n"
-"问题追踪和设备维护"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -952,6 +909,9 @@ msgstr "维护请求"
 msgid "maintenance Request Search"
 msgstr "维护请求搜索"
 
+#~ msgid "Acer Laptop"
+#~ msgstr "宏基笔记本"
+
 #~ msgid "Action Needed"
 #~ msgstr "所需行动"
 
@@ -966,6 +926,12 @@ msgstr "维护请求搜索"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "关注者（业务伙伴）"
+
+#~ msgid "HP Inkjet printer"
+#~ msgstr "HP Inkjet打印机"
+
+#~ msgid "HP Laptop"
+#~ msgstr "HP笔记本"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "查看是否有需要留意的新信息。"
@@ -985,6 +951,9 @@ msgstr "维护请求搜索"
 #~ msgid "Messages and communication history"
 #~ msgstr "消息和通信历史"
 
+#~ msgid "Monitors"
+#~ msgstr "显示器"
+
 #~ msgid "Number of Actions"
 #~ msgstr "动作的序列号"
 
@@ -996,6 +965,34 @@ msgstr "维护请求搜索"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "打开设备菜单"
+
+#~ msgid "Phones"
+#~ msgstr "电话"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "文档信息发送使用邮件服务器规则。\n"
+#~ "- 所有人：所有人都允许\n"
+#~ "- 业务伙伴：仅认证的业务伙伴\n"
+#~ "- 关注者：仅关注相关文档者\n"
+
+#~ msgid "Samsung Monitor 15\""
+#~ msgstr "三星显示器1515\""
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "该应用可以让员工用来追踪设备。创建一些笔记本电脑，打印机或者手机并\n"
+#~ "且给每个设备链接到某一员工或者某一部门。你将能够管理到这些设备的分配\n"
+#~ "问题追踪和设备维护"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "未读消息计数器"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-05-16 11:53+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -181,16 +181,6 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
-msgstr ""
-
-#. module: project
-#: model:mail.template,body_html:project.mail_template_data_project_task
-msgid ""
-"\n"
-"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
-"<p>Thank you for your enquiry.<br /></p>\n"
-"<p>If you have any questions, please let us know.</p>\n"
-"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1222,11 +1212,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr ""
-
-#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr ""
@@ -1242,7 +1227,6 @@ msgstr "Odustani"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
-#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Otkazano"
@@ -1733,7 +1717,6 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
-#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Završeno"
@@ -2180,7 +2163,6 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
-#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "U tijeku"
@@ -2509,11 +2491,6 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2555,11 +2532,6 @@ msgstr "Bez ocjene gostiju"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Normalni"
-
-#. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_0
-msgid "Not validated"
-msgstr "Nije potvrđeno"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2950,21 +2922,11 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
-msgstr ""
-
-#. module: project
-#: model:mail.template,subject:project.mail_template_data_project_task
-msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -3660,7 +3622,6 @@ msgstr "Raspored radnih sati za prilagođavanje izvještaja Gantt dijagramom"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
-#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Za napraviti"
@@ -3728,11 +3689,6 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
-msgstr ""
-
-#. module: project
-#: model:project.task.type,legend_priority:project.project_stage_0
-msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -4094,6 +4050,9 @@ msgstr ""
 #~ msgid "Messages and communication history"
 #~ msgstr "Poruke i povijest"
 
+#~ msgid "Not validated"
+#~ msgstr "Nije potvrđeno"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Broj akcija"
 
@@ -4106,6 +4065,17 @@ msgstr ""
 #~ msgid "Open Project Menu"
 #~ msgstr "Otvori izbornik projekata"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
+#~ "-svatko:svatko može objaviti poruku\n"
+#~ "-partneri: samo autentificirani partner\n"
+#~ "-pratitelji: samo pratitelji srodne dokumentacije\n"
+
 #~ msgid "Project Time Unit"
 #~ msgstr "Jedinica vremena na projektu"
 
@@ -4117,6 +4087,16 @@ msgstr ""
 
 #~ msgid "Task's Work on Tasks"
 #~ msgstr "Rad na zadatku"
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Ovo će postavitijedinicu mjere korištenu u projektima i zadacima.\n"
+#~ "Ukoliko koristite raspored povezan na projekte (project_timesheet "
+#~ "module), ne zaboravite postaviti ispravnu jedinicu mjere na vašim "
+#~ "zaposlenicima."
 
 #~ msgid "Type of Account"
 #~ msgstr "Vrsta konta"

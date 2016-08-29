@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
 "PO-Revision-Date: 2016-06-24 04:54+0000\n"
 "Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -182,16 +182,6 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
-msgstr ""
-
-#. module: project
-#: model:mail.template,body_html:project.mail_template_data_project_task
-msgid ""
-"\n"
-"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
-"<p>Thank you for your enquiry.<br /></p>\n"
-"<p>If you have any questions, please let us know.</p>\n"
-"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1474,11 +1464,6 @@ msgstr ""
 "berkolaborasi, atau mengapa mengatur proyek Anda dengan peran salah."
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr "Buzz atau set seperti yang dilakukan"
-
-#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Tanggung-jawab"
@@ -1494,7 +1479,6 @@ msgstr "Batalkan"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
-#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Dibatalkan"
@@ -2005,7 +1989,6 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
-#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "selesai"
@@ -2487,7 +2470,6 @@ msgstr "Meningkatkan kerjasama dengan pelanggan"
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
-#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Dalam Proses"
@@ -2861,11 +2843,6 @@ msgid "Name"
 msgstr "Nama"
 
 #. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr "Butuh bantuan fungsional atau teknis"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2907,11 +2884,6 @@ msgstr "Tidak ada nilai pelanggan"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_0
-msgid "Not validated"
-msgstr "Tidak divalidasi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -3328,22 +3300,12 @@ msgid "Ready to be displayed, published or sent"
 msgstr "Siap untuk ditampilkan, diterbitkan atau dikirim"
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr "Siap untuk membuka kembali"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "Alasan untuk pembatalan telah didokumentasikan"
-
-#. module: project
-#: model:mail.template,subject:project.mail_template_data_project_task
-msgid "Reception of ${object.name}"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -4079,7 +4041,6 @@ msgstr "Jadwal kerja untuk menyesuaikan laporan diagram gantt"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
-#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Yang harus dilakukan .."
@@ -4152,12 +4113,6 @@ msgid ""
 msgstr ""
 "Menggunakan pertemuan terpisah untuk memecahkan masalah-masalah besar atau "
 "isu-isu yang tidak penting bagi seluruh tim."
-
-#. module: project
-#: model:project.task.type,legend_priority:project.project_stage_0
-msgid "Use the priority for tasks related to gold customers"
-msgstr ""
-"Menggunakan prioritas untuk tugas-tugas yang terkait dengan pelanggan emas"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4522,8 +4477,23 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ msgid "&times;"
 #~ msgstr "&times;"
 
+#~ msgid ""
+#~ "<strong>Follow only what you need</strong><br/>\n"
+#~ "                                    The simplest way to use notifications "
+#~ "is to follow a whole Project: you will then receive all the selected "
+#~ "notifications for all the Project's new and existing and new Tasks or "
+#~ "Issues."
+#~ msgstr ""
+#~ "<strong>Ikuti hanya apa yang Anda butuhkan</strong><br/>Cara termudah "
+#~ "untuk menggunakan pemberitahuan adalah mengikuti seluruh proyek: Anda "
+#~ "akan menerima semua pemberitahuan yang dipilih untuk semua proyek baru "
+#~ "dan tugas-tugas yang ada dan baru atau masalah."
+
 #~ msgid "Action Needed"
 #~ msgstr "Tindakan diperlukan"
+
+#~ msgid "Buzz or set as done"
+#~ msgstr "Buzz atau set seperti yang dilakukan"
 
 #~ msgid "Check this field if this project manages timesheets"
 #~ msgstr "Periksa bidang ini jika proyek ini mengelola timesheets"
@@ -4567,6 +4537,12 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ msgid "Messages and communication history"
 #~ msgstr "Pesan dan riwayat komunikasi"
 
+#~ msgid "Need functional or technical help"
+#~ msgstr "Butuh bantuan fungsional atau teknis"
+
+#~ msgid "Not validated"
+#~ msgstr "Tidak divalidasi"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Jumlah tindakan"
 
@@ -4579,8 +4555,23 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ msgid "Open Project Menu"
 #~ msgstr "Proyek terbuka Menu"
 
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
+#~ "mailgateway.\n"
+#~ "-Semua orang: setiap orang dapat memposting\n"
+#~ " - mitra: hanya dikonfirmasi mitra  \n"
+#~ " - pengikut: hanya pengikut dokumen terkait\n"
+
 #~ msgid "Project Time Unit"
 #~ msgstr "Satuan Waktu Proyek"
+
+#~ msgid "Ready to reopen"
+#~ msgstr "Siap untuk membuka kembali"
 
 #~ msgid "Record timesheet lines per tasks"
 #~ msgstr "Catatan absen baris per kegiatan"
@@ -4603,6 +4594,17 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ "menghapus cara baik.\n"
 #~ "-Ini akan menginstal modul project_timesheet."
 
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "Ini akan menetapkan satuan ukuran yang digunakan dalam proyek-proyek dan "
+#~ "kegiatan.\n"
+#~ "Jika Anda menggunakan absen yang terkait dengan proyek-proyek "
+#~ "(project_timesheet modul), jangan lupa untuk men-setup tepat satuan "
+#~ "ukuran Anda karyawan."
+
 #~ msgid "Timesheets on Project"
 #~ msgstr "Timesheets pada proyek"
 
@@ -4612,8 +4614,15 @@ msgstr "Anda terdaftar di langkah sebelumnya"
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Pesan yang belum dibaca Counter"
 
+#~ msgid "Use the priority for tasks related to gold customers"
+#~ msgstr ""
+#~ "Menggunakan prioritas untuk tugas-tugas yang terkait dengan pelanggan emas"
+
 #~ msgid "Website Messages"
 #~ msgstr "Pesan situs"
 
 #~ msgid "Website communication history"
 #~ msgstr "Sejarah komunikasi situs"
+
+#~ msgid "You can save your reports to for easy reuse later"
+#~ msgstr "Anda dapat menyimpan laporan untuk mudah digunakan kembali kemudian"

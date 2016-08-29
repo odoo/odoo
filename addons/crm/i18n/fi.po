@@ -1,4 +1,3 @@
-# #-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * crm
@@ -8,31 +7,18 @@
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
-# #-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * crm
-#
-# Translators:
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-15 13:36+0000\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-24 07:25+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm
@@ -245,19 +231,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> näytä esimerkit</i>"
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid ""
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
-"since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object."
-"description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1220,18 +1193,6 @@ msgid "Call"
 msgstr "Soitto"
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr "Soita demosta"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr "Soita demosta"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1800,11 +1761,6 @@ msgid "Download the"
 msgstr "Lataa"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr "Liidiehdotukset"
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr ""
@@ -1993,18 +1949,6 @@ msgstr "Valmis"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "Laskostettu myyntiputken näkymässä"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr "Seurantatarjous"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
-msgstr "Seurantatarjous"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2475,11 +2419,6 @@ msgid "Leads by Source"
 msgstr "Liidit lähteittäin"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Liidit USA:sta"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Minulle vastuutetut liidit."
@@ -2596,12 +2535,6 @@ msgstr "Häviämisen syyt"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Matala"
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
-msgstr "Tee tarjous"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3448,12 +3381,6 @@ msgid "Relation field"
 msgstr "Yhdistämiskenttä"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr "Muistutus käyttäjälle"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 #, fuzzy
 msgid ""
@@ -3600,8 +3527,10 @@ msgid ""
 "                            all these fields in common. (not one of the "
 "fields)."
 msgstr ""
-"Valitse kentät joilla duplikaatteja etsitään. Jos valitset useamman kentän, "
-"Odoo etsii vain tietueet, joilla kaikki valitut kentät ovat samoja."
+"Valitse kentät, joilla duplikaatteja etsitään. \n"
+"Jos valitset useamman kentän, Odoo etsii vain tietueet, \n"
+"joilla kaikki valitut kentät ovat samoja. \n"
+"(ei vain yksi valituista kentistä)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -3614,20 +3543,15 @@ msgid ""
 "                                You can remove contacts from this list to "
 "avoid merging them."
 msgstr ""
-"Listalla olevat kontaktit yhdistetään. Kaikki dokumentit ja tiedot "
-"kiinnitetään vastaanottajaan. Voit poistaa kontakteja listalta, jolloin "
-"niitä ei yhdistetä."
+"Listalla olevat kontaktit yhdistetään. \n"
+"Kaikki dokumentit ja tiedot kiinnitetään \n"
+"vastaanottavaan kontaktiin. Voit poistaa \n"
+"kontakteja listalta, jolloin niitä ei yhdistetä."
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Selection"
 msgstr "Valinta"
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr "Lähetä tarjous"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3641,11 +3565,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Järjestysluku"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
-msgstr "Aseta tiimi myyntiosastolle"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3798,13 +3717,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_state_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "State"
-msgstr ""
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Osavaltio/Maakunta\n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Valtio"
+msgstr "Osavaltio/Maakunta"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_street
@@ -4690,17 +4604,38 @@ msgstr ""
 #~ msgid "Both"
 #~ msgstr "Molemmat"
 
+#~ msgid "Call for Demo"
+#~ msgstr "Soita demosta"
+
+#~ msgid "Call for a demo"
+#~ msgstr "Soita demosta"
+
+#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
+#~ msgstr "Napsauta lisätäksesi uusi vaihe myyntiputkeen."
+
 #~ msgid "Date of the last message posted on the record."
 #~ msgstr "Viimeisen viestin päivämäärä"
+
+#~ msgid "Deduplicate Contact"
+#~ msgstr "Yhdistä päällekkäinen kontakti"
 
 #~ msgid "Done"
 #~ msgstr "Valmis"
 
+#~ msgid "Draft Leads"
+#~ msgstr "Liidiehdotukset"
+
 #~ msgid "Follow-up"
 #~ msgstr "Seuranta"
 
+#~ msgid "Follow-up Quote"
+#~ msgstr "Seurantatarjous"
+
 #~ msgid "Follow-up call"
 #~ msgstr "Seurantasoitto"
+
+#~ msgid "Follow-up quote"
+#~ msgstr "Seurantatarjous"
 
 #~ msgid "Followers"
 #~ msgstr "Seuraajat"
@@ -4729,8 +4664,14 @@ msgstr ""
 #~ msgid "Is Follower"
 #~ msgstr "on seuraaja"
 
+#~ msgid "Last Activity"
+#~ msgstr "Viimeisin toimenpide"
+
 #~ msgid "Last Message Date"
 #~ msgstr "Viimeinen viestipvm"
+
+#~ msgid "Leads from USA"
+#~ msgstr "Liidit USA:sta"
 
 #~ msgid ""
 #~ "Link between stages and sales teams. When set, this limitate the current "
@@ -4738,6 +4679,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Yhdistä vaiheet  ja myyntitiimit. Kun tämä on asetettu, niin rajoittaa "
 #~ "nykyvaiheen valituille myyntitiimeille."
+
+#~ msgid "Make Quote"
+#~ msgstr "Tee tarjous"
+
+#~ msgid "Mark As Lost"
+#~ msgstr "Merkitse hävityksi"
 
 #~ msgid "Messages"
 #~ msgstr "Viestit"
@@ -4775,11 +4722,30 @@ msgstr ""
 #~ msgid "Qualification"
 #~ msgstr "Valinta"
 
+#~ msgid ""
+#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+#~ "object.partner_id.name or object.contact_name}"
+#~ msgstr ""
+#~ "Muistutus liidistä: ${object.id} kumppanilta ${object.partner_id != False "
+#~ "and object.partner_id.name or object.contact_name}"
+
+#~ msgid "Reminder to User"
+#~ msgstr "Muistutus käyttäjälle"
+
 #~ msgid "Sales Tags"
 #~ msgstr "Myyntitunnisteet"
 
 #~ msgid "Select Stages for this Sales Team"
 #~ msgstr "Valitse vaiheet tälle myyntitiimille"
+
+#~ msgid "Send a quotation"
+#~ msgstr "Lähetä tarjous"
+
+#~ msgid "Set team to Sales Department"
+#~ msgstr "Aseta tiimi myyntiosastolle"
+
+#~ msgid "Teams"
+#~ msgstr "Tiimit"
 
 #~ msgid ""
 #~ "This field is used to distinguish stages related to Leads from stages "
@@ -4804,6 +4770,13 @@ msgstr ""
 #~ msgstr ""
 #~ "Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan "
 #~ "nimi"
+
+#~ msgid ""
+#~ "This stage is folded in the kanban view whenthere are no records in that "
+#~ "stage to display."
+#~ msgstr ""
+#~ "Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään "
+#~ "näytettävää tietuetta."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Lukemattomien viestien laskuri"

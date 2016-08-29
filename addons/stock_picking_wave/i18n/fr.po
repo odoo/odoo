@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-29 12:00+0000\n"
 "PO-Revision-Date: 2016-01-08 22:13+0000\n"
 "Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -113,27 +113,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate"
-msgstr "Crème glacée au chocolat"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-#, fuzzy
-msgid "Ice Cream Chocolate with sticks"
-msgstr "Crème glacée au chocolat"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
-msgid "Ice Cream Vanilla"
-msgstr "Crème glacée à la vanille"
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "En cours"
@@ -181,7 +160,7 @@ msgstr "Utilisateur responsable pour cette vague "
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9536
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -204,7 +183,7 @@ msgid "Picking Waves not finished"
 msgstr "Vagues de prélèvements non terminé"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9536
 msgid "Picking wave associated to this picking"
 msgstr "Vague de prélèvement associé à ce prélèvement"
 
@@ -250,18 +229,6 @@ msgstr ""
 "leur disponibilité avant de passer le statut de cette vague à terminé."
 
 #. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_dry_specu
-#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos"
-msgstr "Speculoos"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_dry_specu
-#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos - A belgian speciality"
-msgstr "Speculoos - Une spécialité belge"
-
-#. module: stock_picking_wave
 #: model:mail.message.subtype,description:stock_picking_wave.mt_wave_state
 #: model:mail.message.subtype,name:stock_picking_wave.mt_wave_state
 msgid "Stage Changed"
@@ -281,7 +248,6 @@ msgstr "Vagues de prélèvements de stock"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
-#, fuzzy
 msgid ""
 "The goal of the picking waves is to group operations that may\n"
 "                (needs to) be done together in order to increase their "
@@ -291,12 +257,6 @@ msgid ""
 "                help the timing management of operations (tasks to be done "
 "at 1pm)."
 msgstr ""
-"L'objectif de la vague de cueillette est de grouper les opérations qui "
-"peuvent\n"
-"être fait ensemble pour augmenter leur efficacité.\n"
-"Il peut également être utile d'attribuer une tâche (une personne = une "
-"cueillette ) pour\n"
-"aider à la gestion du calendrier des opérations."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
@@ -334,6 +294,15 @@ msgstr "Vague"
 #~ msgid "Followers (Partners)"
 #~ msgstr "Abonnés (Partenaires)"
 
+#~ msgid "Ice Cream Chocolate"
+#~ msgstr "Crème glacée au chocolat"
+
+#~ msgid "Ice Cream Chocolate with stucks"
+#~ msgstr "Crème glacée au chocolat"
+
+#~ msgid "Ice Cream Vanilla"
+#~ msgstr "Crème glacée à la vanille"
+
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Si coché, de nouveaux messages demandent votre attention."
 
@@ -361,6 +330,28 @@ msgstr "Vague"
 #~ msgid "Number of unread messages"
 #~ msgstr "Nombre de messages non lus"
 
+#~ msgid "Speculoos"
+#~ msgstr "Speculoos"
+
+#~ msgid "Speculoos - A belgian speciality"
+#~ msgstr "Speculoos - Une spécialité belge"
+
+#~ msgid ""
+#~ "The Goal of the picking waves is to group operations that may \n"
+#~ "                (needs to) be done together in order to increase their "
+#~ "efficiency.\n"
+#~ "                It may also be useful to assign jobs (one person = one "
+#~ "wave) or\n"
+#~ "                help the timing management of operations (tasks to be "
+#~ "done at 1pm)."
+#~ msgstr ""
+#~ "L'objectif de la vague de cueillette est de grouper les opérations qui "
+#~ "peuvent\n"
+#~ "être fait ensemble pour augmenter leur efficacité.\n"
+#~ "Il peut également être utile d'attribuer une tâche (une personne = une "
+#~ "cueillette ) pour\n"
+#~ "aider à la gestion du calendrier des opérations."
+
 #~ msgid "Unread Messages"
 #~ msgstr "Messages non lus"
 
@@ -372,3 +363,6 @@ msgstr "Vague"
 
 #~ msgid "Website communication history"
 #~ msgstr "Historique de communication du site web"
+
+#~ msgid "Print"
+#~ msgstr "Imprimer"

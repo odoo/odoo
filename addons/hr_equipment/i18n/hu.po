@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-29 12:00+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -49,12 +49,6 @@ msgid ""
 msgstr ""
 "Egy Python szótár aminak a kiértékelésével alapértékeket biztosít, ha ehhez "
 "az álnévhez új rekordokat hoz létre."
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
-msgid "Acer Laptop"
-msgstr "Acer Laptop"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -411,17 +405,6 @@ msgid "Group by..."
 msgstr "Csoportosítás..."
 
 #. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
-msgid "HP Inkjet printer"
-msgstr "HP tintasugaras nyomtató"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
-msgid "HP Laptop"
-msgstr "HP Laptop"
-
-#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Magas"
@@ -561,11 +544,6 @@ msgid "Model"
 msgstr "Model"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
-msgid "Monitors"
-msgstr "Monitorok"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Eszközeim"
@@ -635,13 +613,7 @@ msgstr ""
 "(például: projekt (parent_model) és folyamat (model))"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
-msgid "Phones"
-msgstr "Telefonok"
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -649,11 +621,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó "
-"üzenetek kiküldéséhez.\n"
-"- mindenki: mindenki tud üzenni\n"
-"- ügyfelek: csak a hitelesített partnerek\n"
-"- követők: csak az idevonatkozó dokumentum követői\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -725,13 +692,6 @@ msgstr "Igénylés visszaállítás"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Felelős"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
-msgid "Samsung Monitor 15\""
-msgstr "Samsung Monitor 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -871,7 +831,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -879,12 +838,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"Ez az alkalmazás segít a munkavállalók eszközeinek nyomon követéséhez.\n"
-"                Hozzon létre egy pár laptopot, printert vagy telefont és "
-"fűzze össze mindegyik eszközt\n"
-"                egy munkavállalóval vagy osztállyal. Kezelheti a kiírás "
-"helyét, reklamációs és egyéb ügyeket\n"
-"                és az eszközök karbantartását."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -972,6 +925,9 @@ msgstr "Karbantartási igény"
 msgid "maintenance Request Search"
 msgstr "Karbantartási igény keresés"
 
+#~ msgid "Acer Laptop"
+#~ msgstr "Acer Laptop"
+
 #~ msgid "Action Needed"
 #~ msgstr "Művelet szükséges"
 
@@ -986,6 +942,12 @@ msgstr "Karbantartási igény keresés"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Követők (Partnerek)"
+
+#~ msgid "HP Inkjet printer"
+#~ msgstr "HP tintasugaras nyomtató"
+
+#~ msgid "HP Laptop"
+#~ msgstr "HP Laptop"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
@@ -1005,6 +967,9 @@ msgstr "Karbantartási igény keresés"
 #~ msgid "Messages and communication history"
 #~ msgstr "Üzenetek és kommunikáció történet"
 
+#~ msgid "Monitors"
+#~ msgstr "Monitorok"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Műveletek száma"
 
@@ -1016,6 +981,38 @@ msgstr "Karbantartási igény keresés"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "Eszközök menü megnyitása"
+
+#~ msgid "Phones"
+#~ msgstr "Telefonok"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra "
+#~ "vonatkozó üzenetek kiküldéséhez.\n"
+#~ "- mindenki: mindenki tud üzenni\n"
+#~ "- ügyfelek: csak a hitelesített partnerek\n"
+#~ "- követők: csak az idevonatkozó dokumentum követői\n"
+
+#~ msgid "Samsung Monitor 15\""
+#~ msgstr "Samsung Monitor 15\""
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "Ez az alkalmazás segít a munkavállalók eszközeinek nyomon követéséhez.\n"
+#~ "                Hozzon létre egy pár laptopot, printert vagy telefont és "
+#~ "fűzze össze mindegyik eszközt\n"
+#~ "                egy munkavállalóval vagy osztállyal. Kezelheti a kiírás "
+#~ "helyét, reklamációs és egyéb ügyeket\n"
+#~ "                és az eszközök karbantartását."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Olvasatlan üzenetek számlálója"

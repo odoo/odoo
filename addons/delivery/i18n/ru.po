@@ -3,15 +3,16 @@
 # * delivery
 #
 # Translators:
+# Andrey Samorukov <andrey.samorukov@me.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-01 18:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"PO-Revision-Date: 2016-08-19 17:45+0000\n"
+"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -462,7 +463,7 @@ msgstr "Способы доставки"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "Правила тарификации доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
@@ -526,6 +527,9 @@ msgid ""
 "attached\n"
 "                to each method."
 msgstr ""
+"Каждый перевозчик( например UPS) может иметь несколько методов доставки\n"
+"(например UPS Express, UPS Standard) с набором правил тарификации,\n"
+"привязанному к каждому методу доставки."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -591,6 +595,8 @@ msgstr "Политика выставления Счет-фактур Расхо
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Заполните это поле, если вы планируете выставить счет на отгрузку основанный "
+"на комплектовании."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -647,7 +653,7 @@ msgstr "Бесплатно стоимость доставки"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
-msgstr ""
+msgstr "Бесплатно, если общая сумма заказа больше, чем"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -662,6 +668,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
 msgstr ""
+"Обеспечивает порядок следования при расчете стоимости доставки перевозчиком."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -812,7 +819,7 @@ msgstr "Оценка запасов"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr ""
+msgstr "Отгрузочная счет-фактура по доставке"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -832,12 +839,12 @@ msgstr "Подписчик"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Является доставкой"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "Является вариантом продукта"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
@@ -1000,13 +1007,13 @@ msgstr "Сведения о службе доставки"
 #: code:addons/delivery/models/sale_order.py:63
 #, python-format
 msgid "No carrier matching."
-msgstr ""
+msgstr "Нет соответствующего перевозчика"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:72
 #, python-format
 msgid "No carrier set for this order."
-msgstr ""
+msgstr "Нет установленного перевозчика для этого заказа."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
@@ -1017,12 +1024,6 @@ msgstr "Нормальная стоимость"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Нормальная цена — Общая цена"
-
-#. module: delivery
-#: model:delivery.carrier,name:delivery.normal_delivery_carrier
-#: model:product.product,name:delivery.normal_delivery_carrier_product_product
-msgid "Normal Delivery Charges"
-msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1260,6 +1261,13 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"Количество продукции которое планируется получить.\n"
+"В контексте с одним складским местом хранения, это включает в себя товары "
+"прибывающие в это место, или любой из его дочерних.\n"
+"В контексте одного склада, это включает в себя товары прибывающие в место "
+"хранения этого склада, или любого из его дочерних.\n"
+"В противном случае, это включает в себя товары, прибывающие на любые места "
+"хранения с типом \"внутренний\"."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1272,6 +1280,13 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Количество продукции которое планируется отгрузить.\n"
+"В контексте с одним складским местом хранения, это включает в себя товары "
+"отгружаемые из этого места, или любого из его дочерних.\n"
+"В контексте одного склада, это включает в себя товары отгружаемые из места "
+"хранения этого склада, или любого из его дочерних.\n"
+"В противном случае, это включает в себя товары, отгружаемые из любых мест "
+"хранения с типом \"внутренний\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1354,6 +1369,8 @@ msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "carrier(s) criteria."
 msgstr ""
+"Выбранный продукт в методе доставки на соответствует какому-либо критерию "
+"доставки перевозчика(ов)."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1508,12 +1525,6 @@ msgid "Template Name"
 msgstr "Название шаблона"
 
 #. module: delivery
-#: model:delivery.carrier,name:delivery.delivery_carrier
-#: model:product.product,name:delivery.delivery_carrier_product_product
-msgid "The Poste"
-msgstr "Почта"
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
 "The average delay in days between the confirmation of the customer order and "
@@ -1543,7 +1554,7 @@ msgstr "Объём в метрах куб."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Вес содержимого в кг, не включая упаковку, и пр."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1553,6 +1564,9 @@ msgid ""
 "the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Эти методы позволяют автоматически рассчитывать стоимость доставки\n"
+"в соответсвии с вашими настройками; в заказе на продажу ( на основании\n"
+"предложения) или счете-фактуре (на основании заказов на поставку)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
@@ -1611,6 +1625,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
+"Это место хранения будет использоваться, вместо места хранения по умолчанию, "
+"как исходное место хранения для движений созданных производственными "
+"заказами."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
@@ -1618,6 +1635,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
 msgstr ""
+"Это место хранения будет использоваться, вместо места хранения по умолчанию, "
+"как исходное место хранения для движений созданных при поставках."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
@@ -1625,6 +1644,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
+"Это место хранения будет использоваться, вместо места хранения по умолчанию, "
+"как исходное место хранения для движений созданных при проведении "
+"инвентаризации."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1693,6 +1715,8 @@ msgstr "Тип события"
 msgid ""
 "Uncheck this box to disable package shipping while validating Delivery Orders"
 msgstr ""
+"Снимите флажок для запрета отгрузки пакета пока подтверждаются заказы на "
+"доставку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
@@ -1911,6 +1935,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Ваш метод доставки не переадресован на вебсайт перевозчика для отслеживания "
+"этого заказа."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
@@ -1935,11 +1961,30 @@ msgstr " например UPS Express"
 msgid "unknown"
 msgstr "неизвестен"
 
+#~ msgid "Carrier Information"
+#~ msgstr "Сведения о службе доставки"
+
 #~ msgid "Carrier Tracking Ref"
 #~ msgstr "Отслеживание доставки перевозчиком"
 
 #~ msgid "Gross Weight"
 #~ msgstr "Вес брутто"
 
+#~ msgid "Messages and communication history"
+#~ msgstr "Сообщения и история общения"
+
+#~ msgid "Normal Delivery Charges"
+#~ msgstr "Обычная стоимость доставки"
+
+#~ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
+#~ msgstr ""
+#~ "Груз отправлен перевозчику %s для экспедирования с номером отслеживания %s"
+
 #~ msgid "Status"
 #~ msgstr "Статус"
+
+#~ msgid "The Poste"
+#~ msgstr "Почта"
+
+#~ msgid "Vendor"
+#~ msgstr "Вендор"

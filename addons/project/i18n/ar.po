@@ -1,35 +1,23 @@
-# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project
 #
 # Translators:
+# AMAAL RU <Fabu1410@yahoo.com>, 2016
 # aymen rahmani <aymen.isims@gmail.com>, 2016
-# mohammed albasha <m.albasha.ma@gmail.com>, 2016
-# #-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * project
-#
-# Translators:
-# mohammed albasha <m.albasha.ma@gmail.com>, 2016
-#, fuzzy
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-23 18:20+0000\n"
-"Last-Translator: mohammed albasha <m.albasha.ma@gmail.com>\n"
+"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"PO-Revision-Date: 2016-08-17 06:33+0000\n"
+"Last-Translator: AMAAL RU <Fabu1410@yahoo.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
@@ -194,16 +182,6 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
-msgstr ""
-
-#. module: project
-#: model:mail.template,body_html:project.mail_template_data_project_task
-msgid ""
-"\n"
-"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
-"<p>Thank you for your enquiry.<br /></p>\n"
-"<p>If you have any questions, please let us know.</p>\n"
-"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1206,11 +1184,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr ""
-
-#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "حسب المسئول"
@@ -1226,7 +1199,6 @@ msgstr "إلغاء"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
-#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "ملغي"
@@ -1716,7 +1688,6 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
-#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "منتهي"
@@ -1859,7 +1830,7 @@ msgstr "معلومات إضافية"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Extra features"
-msgstr ""
+msgstr "مميزات اضافيه"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2156,7 +2127,6 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
-#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "قيد التقدم"
@@ -2485,11 +2455,6 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr "تحتاج مساعدة تقنية و عملية "
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2531,11 +2496,6 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "طبيعي"
-
-#. module: project
-#: model:project.task.type,legend_blocked:project.project_stage_0
-msgid "Not validated"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2915,21 +2875,11 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
-msgstr ""
-
-#. module: project
-#: model:mail.template,subject:project.mail_template_data_project_task
-msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -3616,7 +3566,6 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
-#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "في انتظار التنفيذ"
@@ -3684,11 +3633,6 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
-msgstr ""
-
-#. module: project
-#: model:project.task.type,legend_priority:project.project_stage_0
-msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -4051,6 +3995,9 @@ msgstr ""
 #~ msgid "Messages and communication history"
 #~ msgstr "الرسائل و سجل التواصل"
 
+#~ msgid "Need functional or technical help"
+#~ msgstr "تحتاج مساعدة تقنية و عملية "
+
 #~ msgid "Number of Actions"
 #~ msgstr "عدد الاجراءات"
 
@@ -4068,6 +4015,15 @@ msgstr ""
 
 #~ msgid "Task's Work on Tasks"
 #~ msgstr "الأعمال المنجزة في المهام"
+
+#~ msgid ""
+#~ "This will set the unit of measure used in projects and tasks.\n"
+#~ "If you use the timesheet linked to projects (project_timesheet module), "
+#~ "don't forget to setup the right unit of measure in your employees."
+#~ msgstr ""
+#~ "ستعين هذه وحدة القياس المستخدمة في المشروعات والمهام.\n"
+#~ "اذا استخدمت سجل الدوام المتصل بالمشاريع(وحدة سجل الدوام_للمشروع), لا تنسى "
+#~ "بضبط الوحدة الصحيحة للقياس في الموظفين الخاصين بك."
 
 #~ msgid "Type of Account"
 #~ msgstr "نوع الحساب"

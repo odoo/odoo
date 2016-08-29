@@ -12,22 +12,18 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Timo Koukkari <timo.koukkari@seamk.fi>, 2015
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-15 14:00+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"PO-Revision-Date: 2016-08-29 07:58+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base
@@ -556,8 +552,8 @@ msgstr ""
 "Sallii kirjanpitotapahtumien peruuttamisen.\n"
 "=====================================\n"
 "\n"
-"Moduuli lisää \"Salli vientien peruuttaminen\"-kentän päiväkirjoille. Jos "
-"tämä on valittuna, käyttäjä pystyy peruuttamaan vientejä ja laskuja.\n"
+"Moduuli lisää \"Salli vientien peruuttaminen\"-kentän päiväkirjoille. \n"
+"Jos tämä on valittuna, käyttäjä pystyy peruuttamaan vientejä ja laskuja.\n"
 "    "
 
 #. module: base
@@ -1307,8 +1303,8 @@ msgstr ""
 "avaimen salt-arvon käytön ja avaimen kryptauksen useilla tuhansilla "
 "salauskierroksilla.\n"
 "\n"
-"Kaikki salasaat tullaan salaamaan heti kun moduuli asennetaan. Tämä voi "
-"kestää joitain minuutteja jos käyttäjiä on tuhansia.\n"
+"Kaikki salasanat tullaan salaamaan heti kun moduuli asennetaan. Tämä voi "
+"kestää joitain minuutteja, jos käyttäjiä on tuhansia.\n"
 "\n"
 "Vanhat versiot salatuista salasanoista päivitetään automaattisesti "
 "tämänhetkistä skeemaa vastaavaksi, jos käytössä oli aiemmin heikompi "
@@ -2488,7 +2484,12 @@ msgid ""
 "necessary accounting entries when necessary.\n"
 msgstr ""
 "\n"
-"Suomennos tähän kiitos\n"
+"Tuotteiden laajennus. Tämä moduuli lisää:\n"
+"  * Laskee standardihinnan tuotteen osaluettelon perusteella. Laskenta "
+"tapahtuu tuotevariantilla olevan painikkeen avulla, käyttäen osaluettelon ja "
+"työpisteiden materiaaleja laskennassa.\n"
+"Moduuli osaa myös luoda tarvittavat kirjanpidon tapahtumat silloin kun se on "
+"tarpeellista.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -4396,7 +4397,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr "%y - Vuosi ilman vuosisataa [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1082
+#: code:addons/base/ir/ir_model.py:1083
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -5299,8 +5300,8 @@ msgstr ""
 "Maan hallinnoillinen aluejako. Esim.  liittovaltio, departementti, kanttoni"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:619 code:addons/base/ir/ir_model.py:682
-#: code:addons/base/ir/ir_model.py:1201
+#: code:addons/base/ir/ir_model.py:619 code:addons/base/ir/ir_model.py:683
+#: code:addons/base/ir/ir_model.py:1202
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Pääkäyttäjän käyttöoikeudet tarvitaan moduulin poistamiseksi"
@@ -5482,7 +5483,7 @@ msgstr ""
 "Näytetään oletusravoisesti tulosteiden ylätunnisteen oikeassa yläkulmassa."
 
 #. module: base
-#: code:addons/base/res/res_users.py:711
+#: code:addons/base/res/res_users.py:710
 #: model:ir.model,name:base.model_ir_module_category
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
@@ -6079,11 +6080,6 @@ msgstr "Siltaava moduuli maksun vastaanottajien ja verkkosivun välille"
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
 msgstr "Brittiläinen Intian valtameren alue"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_6
-msgid "Bronze"
-msgstr "Pronssi"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -6771,11 +6767,6 @@ msgid "Company"
 msgstr "Yritys"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_17
-msgid "Company Contact"
-msgstr "Yrityksen kontakti"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
 msgid "Company Name"
 msgstr "Yrityksen nimi"
@@ -6818,11 +6809,6 @@ msgstr "Täydellinen ID"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
 msgid "Complete Name"
 msgstr "Täydellinen nimi"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_9
-msgid "Components Buyer"
-msgstr "Komponenttien ostaja"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
@@ -6964,11 +6950,6 @@ msgstr "Rajoitetyyppi"
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
 msgstr "Samannimiset rajoitteet ovat yksilöiviä per moduuli."
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_8
-msgid "Consultancy Services"
-msgstr "Konsultointipalvelut"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
@@ -7226,7 +7207,7 @@ msgid ""
 "Create and manage the companies that will be managed by Odoo from here. "
 "Shops or subsidiaries can be created and maintained from here."
 msgstr ""
-"Luo ja hallitse tästä yrityksiä joita hallinnoidaan Odoon kautta. "
+"Luo ja hallitse tästä yrityksiä, joita hallinnoidaan Odoon kautta. "
 "Toimipisteet ja tytäryhtiöt voidaan luoda ja hallita täällä."
 
 #. module: base
@@ -7479,6 +7460,7 @@ msgstr "Valuuttatunnus (ISO 4217)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
+#: model:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
 msgstr "Valuuttakurssi"
 
@@ -7656,8 +7638,8 @@ msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
 "type incoherence in a previous request"
 msgstr ""
-"Tietokannan \"fetch\"-funktiosta puuttuu ids ({}) ja sillä on ylimääräinen "
-"ids ({}). Tämä voi johtua tyyppien epäyhtenäisyydestä edellisessä kutsussa"
+"Tietokannan hae-funktiosta puuttuu ids ({}) ja sillä on ylimääräinen ids "
+"({}). Tämä voi johtua tyyppien epäyhtenäisyydestä edellisessä kutsussa."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_res_id
@@ -8075,7 +8057,7 @@ msgstr "Näytä"
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_display_name
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -8105,11 +8087,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_13
-msgid "Distributor"
-msgstr "Jakelija"
-
-#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Djibouti"
@@ -8126,7 +8103,7 @@ msgid "Document Management"
 msgstr "Budjettien hallinta"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:848 code:addons/base/ir/ir_model.py:851
+#: code:addons/base/ir/ir_model.py:849 code:addons/base/ir/ir_model.py:852
 #, python-format
 msgid "Document model"
 msgstr ""
@@ -8300,7 +8277,6 @@ msgstr "Sähköpostiasetukset"
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
 #: model:ir.model.fields,field_description:base.field_res_users_employee
 #: model:res.groups,name:base.group_user
-#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
 msgstr "Työntekijä"
 
@@ -8391,6 +8367,12 @@ msgstr ""
 #, python-format
 msgid "Error details:"
 msgstr "Virheen tiedot:"
+
+#. module: base
+#: code:addons/models.py:1357
+#, python-format
+msgid "Error while validating constraint"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ee
@@ -9231,11 +9213,6 @@ msgid "Go to the configuration panel"
 msgstr "Mene asetusvalikkoon"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_4
-msgid "Gold"
-msgstr "Kulta"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
 msgid "Google Analytics"
 msgstr "Google Analytics"
@@ -9446,7 +9423,7 @@ msgstr "Rautapuolen ajuri vaaoille"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
-msgstr "Rautapuolen ajuri ESC/POS "
+msgstr "Rautapuolen ajuri ESC/POS -tulostimille ja kassalippaille"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_scale
@@ -9809,11 +9786,6 @@ msgid "ISO code"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_7
-msgid "IT Services"
-msgstr "IT-palvelut"
-
-#. module: base
 #: model:res.country,name:base.is
 msgid "Iceland"
 msgstr "Islanti"
@@ -10047,7 +10019,7 @@ msgstr "Saapuvat siirtymät"
 #. module: base
 #: constraint:ir.actions.server:0
 msgid "Incorrect Write Record Expression"
-msgstr "Virheellinen tietueenkirjoituslause"
+msgstr "Virheellinen lauseke tietueen tallentamiselle"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_index
@@ -11308,11 +11280,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_14
-msgid "Manufacturer"
-msgstr "Valmistaja"
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
@@ -12251,13 +12218,8 @@ msgid ""
 "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
 "get the required padding size."
 msgstr ""
-"Odoo lisää automaattisesti nollia \"Seuraavan numeron\" vasemmalle puolelle, "
+"Odoo lisää automaattisesti nollia 'Seuraavan numeron' vasemmalle puolelle, "
 "jotta numerosta saadaan oikean mittainen."
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_12
-msgid "Office Supplies"
-msgstr ""
 
 #. module: base
 #: model:res.groups,name:base.group_hr_user
@@ -12323,7 +12285,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event's Tickets"
-msgstr "Tapahtuman liput verkossa"
+msgstr "Tapahtuman liput sivustolla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event
@@ -12338,7 +12300,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_quote
 msgid "Online Proposals"
-msgstr "Ehdotukset verkossa"
+msgstr "Online-tarjoukset"
 
 #. module: base
 #: code:addons/base/res/res_config.py:516
@@ -12370,7 +12332,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:848
+#: code:addons/base/ir/ir_model.py:849
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -12459,7 +12421,7 @@ msgid "Original View"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:725 code:addons/base/res/res_users.py:890
+#: code:addons/base/res/res_users.py:724 code:addons/base/res/res_users.py:889
 #, python-format
 msgid "Other"
 msgstr ""
@@ -12666,7 +12628,6 @@ msgstr "Parserin luokka"
 #: model:ir.model,name:base.model_res_partner
 #: model:ir.model.fields,field_description:base.field_res_company_partner_id
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
-#: model:res.partner.category,name:base.res_partner_category_0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
 msgstr "Kumppani"
@@ -12695,7 +12656,7 @@ msgstr "Kumppanien tunnisteet"
 #: model:ir.ui.view,arch_db:base.view_partner_title_form
 #: model:ir.ui.view,arch_db:base.view_partner_title_tree
 msgid "Partner Titles"
-msgstr ""
+msgstr "Kumppanien tittelit"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_partner_id
@@ -12866,7 +12827,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:851
+#: code:addons/base/ir/ir_model.py:852
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -13144,11 +13105,6 @@ msgid "Propose to install a theme on website installation"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_2
-msgid "Prospect"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_write_expression
 msgid ""
 "Provide an expression that, applied on the current record, gives the field "
@@ -13413,7 +13369,7 @@ msgstr ""
 #. module: base
 #: constraint:ir.actions.server:0
 msgid "Recursion found in child server actions"
-msgstr "Palvelintoimintojen alatoiminnoista löyty rekursiota"
+msgstr "Palvelintoimintojen alatoiminnoista löytyi rekursiota"
 
 #. module: base
 #: code:addons/models.py:4168
@@ -13676,11 +13632,6 @@ msgstr "Estä"
 #: model:ir.model.fields,field_description:base.field_ir_act_window_multi
 msgid "Restrict to lists"
 msgstr "Rajoita listoihin"
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_16
-msgid "Retailer"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.re
@@ -14063,7 +14014,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_action_id
 msgid "Select the client action that has to be executed."
-msgstr "Valitse käytettävä asiaspäätteen toiminto"
+msgstr "Valitse käytettävä asiakaspäätteen toiminto"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_wkf_transition_id
@@ -14198,11 +14149,6 @@ msgid "Server Actions"
 msgstr "Palvelintoiminnot"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_11
-msgid "Services"
-msgstr ""
-
-#. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
 msgstr ""
@@ -14311,11 +14257,6 @@ msgid "Signup"
 msgstr "Rekisteröityminen"
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_5
-msgid "Silver"
-msgstr "Hopea"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
 msgstr "Helpot alennukset kassapäätteellä"
@@ -14411,25 +14352,25 @@ msgid "Sometimes called BIC or Swift."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:323 code:addons/base/ir/ir_model.py:842
+#: code:addons/base/ir/ir_attachment.py:323 code:addons/base/ir/ir_model.py:843
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:844
+#: code:addons/base/ir/ir_model.py:845
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:845
+#: code:addons/base/ir/ir_model.py:846
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:843
+#: code:addons/base/ir/ir_model.py:844
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr ""
@@ -14534,7 +14475,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr "Sponsorit, seurannat, agenda, tapahtumien uutiset"
+msgstr "Sponsorit, tilat, ohjelma, tapahtumien uutiset"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_sir
@@ -14983,7 +14924,7 @@ msgstr "Testi-API"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Test Connection"
-msgstr ""
+msgstr "Testaa yhteyttä"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -15119,7 +15060,7 @@ msgid ""
 msgstr ""
 "Automaattisia toimintoja käytetään auttamaan uuden Odoo-instanssin "
 "konfiguroinnissa.  Ne käynnistetään uusien moduulien asennuksen aikana, "
-"mutta voit uudelleen käynnistäö joitakin automaattisia toimintoja "
+"mutta voit uudelleen käynnistää joitakin automaattisia toimintoja "
 "manuaalisesti tästä valikosta."
 
 #. module: base
@@ -15548,7 +15489,7 @@ msgstr "Aikavyöhyke"
 #: model:ir.model.fields,field_description:base.field_res_partner_tz_offset
 #: model:ir.model.fields,field_description:base.field_res_users_tz_offset
 msgid "Timezone offset"
-msgstr ""
+msgstr "Aikavyöhykkeen aikaero"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tip
@@ -15560,7 +15501,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_title_name
 #: model:ir.model.fields,field_description:base.field_res_users_title
 msgid "Title"
-msgstr "Otsikko"
+msgstr "Titteli"
 
 #. module: base
 #: sql_constraint:res.partner.title:0
@@ -16298,11 +16239,6 @@ msgid "Vehicle, leasing, insurances, costs"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_1
-msgid "Vendor"
-msgstr "Toimittaja"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -16732,11 +16668,6 @@ msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
 msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_15
-msgid "Wholesaler"
-msgstr "Tukkukauppa"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_window
@@ -17795,10 +17726,105 @@ msgstr "Ahvenanmaa"
 #~ msgid ""
 #~ "\n"
 #~ "\n"
+#~ "Base module for Hungarian localization\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists :\n"
+#~ "\n"
+#~ " - Generic Hungarian chart of accounts\n"
+#~ " - Hungarian taxes\n"
+#~ " - Hungarian Bank information\n"
+#~ " \n"
+#~ " "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Perusmoduuli Unkarin lokalisoinnille\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "Tämä moduuli sisältää:\n"
+#~ "\n"
+#~ "-yleiskäyttöisen Unkarin tilikartan\n"
+#~ "- Unkarin verotuksen\n"
+#~ "- Unkarin pankkiyhteystietoja"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
 #~ "[object with reference: %s - %s]"
 #~ msgstr ""
 #~ "\n"
 #~ " [objekti viitteellä: %s - %s]"
+
+#~ msgid ""
+#~ "\n"
+#~ "Base Module for Ethiopian Localization\n"
+#~ "======================================\n"
+#~ "\n"
+#~ "This is the latest Ethiopian OpenERP localization and consists of:\n"
+#~ "    - Chart of Accounts\n"
+#~ "    - VAT tax structure\n"
+#~ "    - Withholding tax structure\n"
+#~ "    - Regional State listings\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Perusmoduuli Etiopian lokalisoinnille\n"
+#~ "================================"
+
+#~ msgid ""
+#~ "\n"
+#~ "Base module for the Brazilian localization\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "This module consists in:\n"
+#~ "\n"
+#~ " - Generic Brazilian chart of accounts\n"
+#~ " - Brazilian taxes such as:\n"
+#~ "\n"
+#~ "        - IPI\n"
+#~ "        - ICMS\n"
+#~ "        - PIS\n"
+#~ "        - COFINS\n"
+#~ "        - ISS\n"
+#~ "        - IR\n"
+#~ "        - IRPJ\n"
+#~ "        - CSLL\n"
+#~ "\n"
+#~ "The field tax_discount has also been added in the account.tax.template "
+#~ "and \n"
+#~ "account.tax objects to allow the proper computation of some Brazilian "
+#~ "VATs \n"
+#~ "such as ICMS. The chart of account creation wizard has been extended to \n"
+#~ "propagate those new data properly.\n"
+#~ "\n"
+#~ "It's important to note however that this module lack many implementations "
+#~ "to \n"
+#~ "use OpenERP properly in Brazil. Those implementations (such as the "
+#~ "electronic \n"
+#~ "fiscal Invoicing which is already operational) are brought by more than "
+#~ "15 \n"
+#~ "additional modules of the Brazilian Launchpad localization project \n"
+#~ "https://launchpad.net/openerp.pt-br-localiz and their dependencies in "
+#~ "the \n"
+#~ "extra addons branch. Those modules aim at not breaking with the "
+#~ "remarkable \n"
+#~ "OpenERP modularity, this is why they are numerous but small. One of the \n"
+#~ "reasons for maintaining those modules apart is that Brazilian "
+#~ "Localization \n"
+#~ "leaders need commit rights agility to complete the localization as "
+#~ "companies \n"
+#~ "fund the remaining legal requirements (such as soon fiscal ledgers, \n"
+#~ "accounting SPED, fiscal SPED and PAF ECF that are still missing as "
+#~ "September \n"
+#~ "2011). Those modules are also strictly licensed under AGPL V3 and today "
+#~ "don't \n"
+#~ "come with any additional paid permission for online use of 'private "
+#~ "modules'.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Perusmoduuli Brasilian lokalisoinneille\n"
+#~ "==================================\n"
 
 #~ msgid ""
 #~ "\n"
@@ -17814,6 +17840,51 @@ msgstr "Ahvenanmaa"
 
 #~ msgid ""
 #~ "\n"
+#~ "Indian Accounting: Chart of Account.\n"
+#~ "====================================\n"
+#~ "\n"
+#~ "Indian accounting chart and localization.\n"
+#~ "\n"
+#~ "OpenERP allows to manage Indian Accounting by providing Two Formats Of "
+#~ "Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian "
+#~ "Chart Of Accounts - Schedule VI.\n"
+#~ "\n"
+#~ "Note: The Schedule VI has been revised by MCA and is applicable for all "
+#~ "Balance Sheet made after\n"
+#~ "31st March, 2011. The Format has done away with earlier two options of "
+#~ "format of Balance\n"
+#~ "Sheet, now only Vertical format has been permitted Which is Supported By "
+#~ "OpenERP.\n"
+#~ "  "
+#~ msgstr ""
+#~ "\n"
+#~ "Intian taloushallinto: tilikartta."
+
+#~ msgid ""
+#~ "\n"
+#~ "Integrate google document to OpenERP record.\n"
+#~ "============================================\n"
+#~ "\n"
+#~ "This module allows you to integrate google documents to any of your "
+#~ "OpenERP record quickly and easily using OAuth 2.0 for Installed "
+#~ "Applications,\n"
+#~ "You can configure your google Authorization Code from Settings > "
+#~ "Configuration > General Settings by clicking on \"Generate Google "
+#~ "Authorization Code\"\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Yhdistä Google Documents ja Odoo tietueet toisiinsa.\n"
+#~ "===============================================\n"
+#~ "\n"
+#~ "Tämän moduulin avulla voit helposti ja nopeasti liittää Google Dokumentit "
+#~ "mihin tahansa Odoo tietueeseen käyttäen Googlen 'OAuth 2.0 for Installed "
+#~ "Applications' valtuutusmenetelmää.\n"
+#~ "Voit asettaa oman Google tunnistautumiskoodisi täältä: Asetukset "
+#~ ">Konfigurointi >Yleiset asetukset > ja valitsemalla \"Luo Google "
+#~ "tunnistuskoodi\"\n"
+
+#~ msgid ""
+#~ "\n"
 #~ "Menu for Marketing.\n"
 #~ "===================\n"
 #~ "\n"
@@ -17826,6 +17897,226 @@ msgstr "Ahvenanmaa"
 #~ "\n"
 #~ "Sisältää asennusohjelman markkinointiin liittyville moduuleille.\n"
 #~ "    "
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Blog\n"
+#~ "============\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Blogi\n"
+#~ "=============="
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Contact Form\n"
+#~ "====================\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Yhteydenottolomake\n"
+#~ "==========================="
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Sale Quote Roller\n"
+#~ "=========================\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "Odoo myyntitarjouksen loppurivit\n"
+#~ "=============================\n"
+#~ "\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web Calendar view.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Web-kalenterinäkymä.\n"
+#~ "==========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web kanban view.\n"
+#~ "========================\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Web kanban näkymä.\n"
+#~ "==========================\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "OpenERP Web to edit views.\n"
+#~ "==========================\n"
+#~ "\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP Web - muokkaa näkymiä.\n"
+#~ "==============================\n"
+#~ "\n"
+#~ "        "
+
+#~ msgid ""
+#~ "\n"
+#~ "Partners geolocalization\n"
+#~ "========================\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Kumppanien maantieteellinen sijainti\n"
+#~ "================================"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Belgium in "
+#~ "OpenERP.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "After installing this module, the Configuration wizard for accounting is "
+#~ "launched.\n"
+#~ "    * We have the account templates which can be helpful to generate "
+#~ "Charts of Accounts.\n"
+#~ "    * On that particular wizard, you will be asked to pass the name of "
+#~ "the company,\n"
+#~ "      the chart template to follow, the no. of digits to generate, the "
+#~ "code for your\n"
+#~ "      account and bank account, currency to create journals.\n"
+#~ "\n"
+#~ "Thus, the pure copy of Chart Template is generated.\n"
+#~ "\n"
+#~ "Wizards provided by this module:\n"
+#~ "--------------------------------\n"
+#~ "    * Partner VAT Intra: Enlist the partners with their related VAT and "
+#~ "invoiced\n"
+#~ "      amounts. Prepares an XML file format.\n"
+#~ "      \n"
+#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+#~ "Statements/Partner VAT Intra\n"
+#~ "    * Periodical VAT Declaration: Prepares an XML file for Vat "
+#~ "Declaration of\n"
+#~ "      the Main company of the User currently Logged in.\n"
+#~ "      \n"
+#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+#~ "Statements/Periodical VAT Declaration\n"
+#~ "    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
+#~ "Vat\n"
+#~ "      Declaration of the Main company of the User currently Logged in "
+#~ "Based on\n"
+#~ "      Fiscal year.\n"
+#~ "      \n"
+#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+#~ "Statements/Annual Listing Of VAT-Subjected Customers\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Belgian tilikartan perusmoduuli."
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the base module to manage the accounting chart for Ecuador in "
+#~ "OpenERP.\n"
+#~ "==============================================================================\n"
+#~ "\n"
+#~ "Accounting chart and localization for Ecuador.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Ecuadorin tilikartan perusmoduuli"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the latest UK OpenERP localisation necessary to run OpenERP "
+#~ "accounting for UK SME's with:\n"
+#~ "=================================================================================================\n"
+#~ "    - a CT600-ready chart of accounts\n"
+#~ "    - VAT100-ready tax structure\n"
+#~ "    - InfoLogic UK counties listing\n"
+#~ "    - a few other adaptations"
+#~ msgstr ""
+#~ "\n"
+#~ "Iso-Britannian (UK) taloushallinnon lokalisointimoduli"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the module to manage the Accounting Chart, VAT structure, Fiscal "
+#~ "Position and Tax Mapping.\n"
+#~ "It also adds the Registration Number for Romania in OpenERP.\n"
+#~ "================================================================================================================\n"
+#~ "\n"
+#~ "Romanian accounting chart and localization.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Romanian taloushallinnon perusmoduli"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the module to manage the accounting chart and taxes for Poland in "
+#~ "OpenERP.\n"
+#~ "==================================================================================\n"
+#~ "\n"
+#~ "To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów "
+#~ "podatkowych i\n"
+#~ "rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży "
+#~ "towarów\n"
+#~ "zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+#~ "\n"
+#~ "Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+#~ "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Puolan taloushallinnon perusmoduli"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the module to manage the accounting chart for France in OpenERP.\n"
+#~ "========================================================================\n"
+#~ "\n"
+#~ "This module applies to companies based in France mainland. It doesn't "
+#~ "apply to\n"
+#~ "companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, "
+#~ "Mayotte).\n"
+#~ "\n"
+#~ "This localisation module creates the VAT taxes of type 'tax included' for "
+#~ "purchases\n"
+#~ "(it is notably required when you use the module 'hr_expense'). Beware "
+#~ "that these\n"
+#~ "'tax included' VAT taxes are not managed by the fiscal positions provided "
+#~ "by this\n"
+#~ "module (because it is complex to manage both 'tax excluded' and 'tax "
+#~ "included'\n"
+#~ "scenarios in fiscal positions).\n"
+#~ "\n"
+#~ "This localisation module doesn't properly handle the scenario when a "
+#~ "France-mainland\n"
+#~ "company sells services to a company based in the DOMs. We could manage it "
+#~ "in the\n"
+#~ "fiscal positions, but it would require to differentiate between 'product' "
+#~ "VAT taxes\n"
+#~ "and 'service' VAT taxes. We consider that it is too 'heavy' to have this "
+#~ "by default\n"
+#~ "in l10n_fr; companies that sell services to DOM-based companies should "
+#~ "update the\n"
+#~ "configuration of their taxes and fiscal positions manually.\n"
+#~ "\n"
+#~ "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ranskan tilikarttamoduuli\n"
 
 #~ msgid ""
 #~ "\n"
@@ -17871,6 +18162,20 @@ msgstr "Ahvenanmaa"
 
 #~ msgid ""
 #~ "\n"
+#~ "This is the module to manage the accounting chart for Vietnam in "
+#~ "OpenERP.\n"
+#~ "=========================================================================\n"
+#~ "\n"
+#~ "This module applies to companies based in Vietnamese Accounting Standard "
+#~ "(VAS).\n"
+#~ "\n"
+#~ "**Credits:** General Solutions.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Vietnamin tilikartan moduuli\n"
+
+#~ msgid ""
+#~ "\n"
 #~ "This module adds claim menu and features to your portal if claim and "
 #~ "portal are installed.\n"
 #~ "==========================================================================================\n"
@@ -17882,11 +18187,89 @@ msgstr "Ahvenanmaa"
 #~ "=======================================================================\n"
 #~ "    "
 
+#~ msgid ""
+#~ "\n"
+#~ "This module implements a timesheet system.\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "Each employee can encode and track their time spent on the different "
+#~ "projects.\n"
+#~ "A project is an analytic account and the time spent on a project "
+#~ "generates costs on\n"
+#~ "the analytic account.\n"
+#~ "\n"
+#~ "Lots of reporting on time and employee tracking are provided.\n"
+#~ "\n"
+#~ "It is completely integrated with the cost accounting module. It allows "
+#~ "you to set\n"
+#~ "up a management by affair.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Tämä moduuli asentaa tuntikorttijärjestelmän.\n"
+#~ "==========================================\n"
+#~ "\n"
+#~ "Jokainen työntekjiä voi kirjata ajankäyttönsä ja seurata tätä "
+#~ "projekteittain.\n"
+#~ "Projekti on analyyttinen till ja projekti synnyttää kustannuksia "
+#~ "analyyttiselle tilille.\n"
+#~ "\n"
+#~ "Sisältää seurantaan paljon erilaisia aika- ja työntekijäraportteja.\n"
+#~ "\n"
+#~ "Moduuli on täysin integroitu ksutannuslaskentamoduulin kanssa. Sallii \n"
+#~ "hallinnan määrittämisen asiaryhmittäin.\n"
+#~ "    "
+
+#~ msgid "%B - Full month name."
+#~ msgstr "%B - Kuukauden koko nimi."
+
+#~ msgid "%H - Hour (24-hour clock) [00,23]."
+#~ msgstr "%H - tuntia (24 tunnin kello) [00,23]."
+
+#~ msgid "%I - Hour (12-hour clock) [01,12]."
+#~ msgstr "%I - tuntia (12-tunnin kello) [01,12]."
+
+#~ msgid "%M - Minute [00,59]."
+#~ msgstr "%M - minuutti [00,59]."
+
+#~ msgid "%S - Seconds [00,61]."
+#~ msgstr "%S - sekunnit [00,61]."
+
+#~ msgid "%Y - Year with century."
+#~ msgstr "%Y - vuosi vuosisadan kanssa"
+
+#~ msgid "%d - Day of the month [01,31]."
+#~ msgstr "%d - kuukauden päiväys [01,31]."
+
+#~ msgid "%j - Day of the year [001,366]."
+#~ msgstr "%j - Vuoden päivä [001,366]."
+
+#~ msgid "%m - Month number [01,12]."
+#~ msgstr "%m - kuukauden numero [01,12]."
+
+#~ msgid "%p - Equivalent of either AM or PM."
+#~ msgstr "%p - Vastaa joko merkintää AM tai PM."
+
+#~ msgid "%w - Weekday number [0(Sunday),6]."
+#~ msgstr "%w - viikonpäivän numero 0(Sunnuntai),6]."
+
+#~ msgid "%y - Year without century [00,99]."
+#~ msgstr "%y - Vuosi ilman vuosisataa [00,99]."
+
+#~ msgid "2.  %a ,%A         ==> Fri, Friday"
+#~ msgstr "2. %a, %A = Pe, Perjantai"
+
 #~ msgid "Account Report"
 #~ msgstr "Tiliraportti"
 
 #~ msgid "Account Reports"
 #~ msgstr "Kirjanpitoraportit"
+
+#~ msgid "Accounting Reports"
+#~ msgstr "Kirjanpitoraportit"
+
+#~ msgid "Address Format"
+#~ msgstr "Osoitteen muotoilu"
 
 #~ msgid "Albanian / Shqip"
 #~ msgstr "Albanian / Shqip"
@@ -17921,11 +18304,21 @@ msgstr "Ahvenanmaa"
 #~ msgid "Bosnian / bosanski jezik"
 #~ msgstr "Bosnia / bosanski jezik"
 
+#~ msgid "Bronze"
+#~ msgstr "Pronssi"
+
 #~ msgid "Bulgarian / български език"
 #~ msgstr "Bulgaria / български език"
 
 #~ msgid "Catalan / Català"
 #~ msgstr "Katalaani / Català"
+
+#~ msgid ""
+#~ "Check this to define the report footer manually.  Otherwise it will be "
+#~ "filled in automatically."
+#~ msgstr ""
+#~ "Valitse tämä määriytelläksesi raportin alatunnisteen manuaalisesti. "
+#~ "Muutoin alatunniste täytetään automaattisesti."
 
 #~ msgid "Chinese (CN) / 简体中文"
 #~ msgstr "Kiina (CN) / 简体中文"
@@ -17942,8 +18335,23 @@ msgstr "Ahvenanmaa"
 #~ msgid "Claims Management"
 #~ msgstr "Palautteenhallinta"
 
+#~ msgid "Company Contact"
+#~ msgstr "Yrityksen kontakti"
+
+#~ msgid "Company Registry"
+#~ msgstr "Y-tunnus"
+
+#~ msgid "Components Buyer"
+#~ msgstr "Komponenttien ostaja"
+
+#~ msgid "Consultancy Services"
+#~ msgstr "Konsultointipalvelut"
+
 #~ msgid "Croatian / hrvatski jezik"
 #~ msgstr "Kroatia / hrvatski jezik"
+
+#~ msgid "Custom Footer"
+#~ msgstr "Mukautettu alatunniste"
 
 #~ msgid "Customer Relationship Management"
 #~ msgstr "Asiakkuuden hallinta"
@@ -17956,6 +18364,9 @@ msgstr "Ahvenanmaa"
 
 #~ msgid "Digital Signatures"
 #~ msgstr "Digitaaliset allekirjoitukset"
+
+#~ msgid "Distributor"
+#~ msgstr "Jakelija"
 
 #~ msgid "Dutch (BE) / Nederlands (BE)"
 #~ msgstr "Hollanti (BE) / Nederlands (BE)"
@@ -17993,8 +18404,17 @@ msgstr "Ahvenanmaa"
 #~ msgid "Georgian / ქართული ენა"
 #~ msgstr "Georgia / ქართული ენა"
 
+#~ msgid "Gold"
+#~ msgstr "Kulta"
+
+#~ msgid "Hardware Drivers"
+#~ msgstr "Laiteajurit"
+
 #~ msgid "Hindi / हिंदी"
 #~ msgstr "Hindi / हिंदी"
+
+#~ msgid "IT Services"
+#~ msgstr "IT-palvelut"
 
 #~ msgid "Inventory Control"
 #~ msgstr "Varastonhallinta"
@@ -18017,6 +18437,12 @@ msgstr "Ahvenanmaa"
 #~ msgid "Leaves Gantt"
 #~ msgstr "Poissaolojen Gantt"
 
+#~ msgid "Logo"
+#~ msgstr "Logo"
+
+#~ msgid "Manufacturer"
+#~ msgstr "Valmistaja"
+
 #~ msgid "Mass Mailing Themes"
 #~ msgstr "Massapostituksen teemat"
 
@@ -18024,8 +18450,11 @@ msgstr "Ahvenanmaa"
 #~ "Module loading %s failed: file %s could not be processed:\n"
 #~ " %s"
 #~ msgstr ""
-#~ "Moduulin lataamien %s epäonnistui: tiedostoa %s ei voitu prosessoida:\n"
+#~ "Moduulin lataaminen %s epäonnistui: tiedostoa %s ei voitu prosessoida:\n"
 #~ "%s"
+
+#~ msgid "OpenERP Web Diagram"
+#~ msgstr "OpenERP web kaavio"
 
 #~ msgid "Partner Tag"
 #~ msgstr "Kumppanin tunniste"
@@ -18047,6 +18476,9 @@ msgstr "Ahvenanmaa"
 
 #~ msgid "Send Professional Quotations"
 #~ msgstr "Lähetä ammattimaisia tarjouksia"
+
+#~ msgid "Silver"
+#~ msgstr "Hopea"
 
 #~ msgid "Stock Management"
 #~ msgstr "Varaston hallinta"
@@ -18079,8 +18511,14 @@ msgstr "Ahvenanmaa"
 #~ msgstr ""
 #~ "Tuntematon pääte. Päätteen pitää olla .csv, .po, tai .tgz (saatiin .%s)."
 
+#~ msgid "Vendor"
+#~ msgstr "Toimittaja"
+
 #~ msgid "Warehouse Management Barcode Scanning"
 #~ msgstr "Varastonhallinta viivakoodien skannaus"
+
+#~ msgid "Wholesaler"
+#~ msgstr "Tukkukauppa"
 
 #~ msgid "account_online_sync"
 #~ msgstr "account_online_sync"

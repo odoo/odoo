@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-29 12:00+0000\n"
 "PO-Revision-Date: 2016-01-13 15:01+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -49,12 +49,6 @@ msgid ""
 msgstr ""
 "Een Python bibliotheek dat zal worden gebruikt om standaardwaarden te bieden "
 "bij het maken van nieuwe records voor deze alias."
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
-msgid "Acer Laptop"
-msgstr "Acer Laptop"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -412,17 +406,6 @@ msgid "Group by..."
 msgstr "Groepeer op..."
 
 #. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
-msgid "HP Inkjet printer"
-msgstr "HP Inkjet printer"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
-msgid "HP Laptop"
-msgstr "HP Laptop"
-
-#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Hoog"
@@ -562,11 +545,6 @@ msgid "Model"
 msgstr "Model"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
-msgid "Monitors"
-msgstr "Monitoren"
-
-#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Mijn apparatuur"
@@ -637,13 +615,7 @@ msgstr ""
 "(bijvoorbeeld: project (parent_model) en taak (model))"
 
 #. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
-msgid "Phones"
-msgstr "Telefonen"
-
-#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -651,11 +623,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Beleid om een bericht te versturen bij een document door gebruik te maken "
-"van de mail gateway.\n"
-"-iedereen: iedereen mag versturen\n"
-"-relaties: alleen geautoriseerde relaties\n"
-"-volgers: allen volgers van een bijbehorend document\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -727,13 +694,6 @@ msgstr "Reset aanvraag"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Verantwoordelijke"
-
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
-msgid "Samsung Monitor 15\""
-msgstr "Samsung Monitor 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -875,7 +835,6 @@ msgstr ""
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
-#, fuzzy
 msgid ""
 "This application helps you to track equipments used by employees.\n"
 "                Create some laptop, printer or phone and link each equipment "
@@ -883,11 +842,6 @@ msgid ""
 "                You will manage allocations, issues and maintenance of "
 "equipment."
 msgstr ""
-"Deze toepassing helpt u om de apparatuur van werknemers te beheren. Maak "
-"laptops,\n"
-"printers en telefoons aan en koppel de apparatuur aan een werknemer of een "
-"afdeling.\n"
-"U kunt toekenningen, problemen en onderhoud van de apparatuur beheren."
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
@@ -973,6 +927,9 @@ msgstr "Onderhoudsopdracht"
 msgid "maintenance Request Search"
 msgstr "Zoek onderhoudsopdracht"
 
+#~ msgid "Acer Laptop"
+#~ msgstr "Acer Laptop"
+
 #~ msgid "Action Needed"
 #~ msgstr "Vereist actie"
 
@@ -987,6 +944,12 @@ msgstr "Zoek onderhoudsopdracht"
 
 #~ msgid "Followers (Partners)"
 #~ msgstr "Volgers (Partners)"
+
+#~ msgid "HP Inkjet printer"
+#~ msgstr "HP Inkjet printer"
+
+#~ msgid "HP Laptop"
+#~ msgstr "HP Laptop"
 
 #~ msgid "If checked new messages require your attention."
 #~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
@@ -1009,6 +972,9 @@ msgstr "Zoek onderhoudsopdracht"
 #~ msgid "Messages and communication history"
 #~ msgstr "Berichten en communicatie historie"
 
+#~ msgid "Monitors"
+#~ msgstr "Monitoren"
+
 #~ msgid "Number of Actions"
 #~ msgstr "Aantal acties"
 
@@ -1020,6 +986,37 @@ msgstr "Zoek onderhoudsopdracht"
 
 #~ msgid "Open Equipments Menu"
 #~ msgstr "Open menu apparatuur"
+
+#~ msgid "Phones"
+#~ msgstr "Telefonen"
+
+#~ msgid ""
+#~ "Policy to post a message on the document using the mailgateway.\n"
+#~ "- everyone: everyone can post\n"
+#~ "- partners: only authenticated partners\n"
+#~ "- followers: only followers of the related document\n"
+#~ msgstr ""
+#~ "Beleid om een bericht te versturen bij een document door gebruik te maken "
+#~ "van de mail gateway.\n"
+#~ "-iedereen: iedereen mag versturen\n"
+#~ "-relaties: alleen geautoriseerde relaties\n"
+#~ "-volgers: allen volgers van een bijbehorend document\n"
+
+#~ msgid "Samsung Monitor 15\""
+#~ msgstr "Samsung Monitor 15\""
+
+#~ msgid ""
+#~ "This application helps you to track equipments used by employees.\n"
+#~ "                Create some laptop, printer or phone and link each "
+#~ "equipment to an employee or departement.\n"
+#~ "                You will manage allocations, issues and mainteannce of "
+#~ "equipment."
+#~ msgstr ""
+#~ "Deze toepassing helpt u om de apparatuur van werknemers te beheren. Maak "
+#~ "laptops,\n"
+#~ "printers en telefoons aan en koppel de apparatuur aan een werknemer of "
+#~ "een afdeling.\n"
+#~ "U kunt toekenningen, problemen en onderhoud van de apparatuur beheren."
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Teller ongelezen berichten"
