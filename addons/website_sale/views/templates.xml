@@ -1535,6 +1535,9 @@
         <t t-if="tx_ids and state == 'done'">
             <p>Your payment has been received.</p>
         </t>
+        <t t-if="tx_ids and state == 'authorized'">
+            <p>Your payment has been authorized.</p>
+        </t>
         <t t-if="tx_ids and state == 'cancel'">
             <p>The payment seems to have been canceled.</p>
         </t>
@@ -1547,7 +1550,7 @@
                 </div>
             </t>
         </t>
-        <t t-if="tx_ids and state not in ['done', 'cancel', 'pending']">
+        <t t-if="tx_ids and state not in ['done', 'cancel', 'pending', 'authorized']">
             <p>Your transaction is waiting confirmation.</p>
         </t>
     </template>
