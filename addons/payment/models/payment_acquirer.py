@@ -4,6 +4,7 @@ import logging
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import float_round, image_resize_images
 from odoo.addons.base.module import module
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -14,11 +15,6 @@ def _partner_format_address(address1=False, address2=False):
 
 def _partner_split_name(partner_name):
     return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
-
-
-class ValidationError(ValueError):
-    """ Used for value error when validating transaction data coming from acquirers. """
-    pass
 
 
 class PaymentAcquirer(models.Model):
