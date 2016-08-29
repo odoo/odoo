@@ -103,9 +103,9 @@
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
                             <t t-if="(compute_currency(product.lst_price)  - product.price ) &gt; 0.1">
-                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(request.website.get_product_price(product, public=True))" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
-                            <span t-esc="request.website.get_product_price(product)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                            <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             <span itemprop="price" style="display:none;" t-esc="product.price" />
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                         </b>
@@ -125,7 +125,7 @@
 
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
         <xpath expr="//div[@class='product_price']" position="inside">
-            <input name="product_id" t-att-value="product.product_variant_ids[0].id" type="hidden" />
+            <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
             <t t-if="len(product.product_variant_ids) == 1">
                 <a class="btn btn-default btn-xs a-submit">
                     <span class="fa fa-shopping-cart" />
@@ -445,7 +445,7 @@
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product" t-if="product.product_variant_ids">
                                     <t t-placeholder="select">
-                                        <input type="hidden" class="product_id" name="product_id" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'" />
+                                        <input type="hidden" class="product_id" name="product_id" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'" />
                                         <t t-call="website_sale.variants">
                                             <t t-set="ul_class" t-value="'nav-stacked'" />
                                         </t>
@@ -565,9 +565,9 @@
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
           <h4 class="oe_price_h4 css_editable_mode_hidden">
               <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
-                t-esc="compute_currency(request.website.get_product_price(product, public=True))" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}"
+                t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}"
               />
-              <b class="oe_price" style="white-space: nowrap;" t-esc="request.website.get_product_price(product)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+              <b class="oe_price" style="white-space: nowrap;" t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
               <span itemprop="price" style="display:none;" t-esc="product.price"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
@@ -584,7 +584,7 @@
 
     <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
       <xpath expr="//t[@t-placeholder='select']" position="replace">
-        <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
+        <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_id.id"/>
         <t t-call="website_sale.variants">
           <t t-set="ul_class" t-value="'nav-stacked'"/>
         </t>
@@ -859,7 +859,7 @@
                         </td>
                         <td class="text-center" id="td-price" name="price">
                             <t t-if="(compute_currency(line.product_id.lst_price)  - line.price_reduce ) &gt; 0.1">
-                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(website.get_product_price(line.product_id, public=True))" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(line.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
                             <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
                             <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
