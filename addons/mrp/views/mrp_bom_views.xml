@@ -17,8 +17,8 @@
                         </div>
                     <group>
                         <group>
-                            <field name="product_tmpl_id"/>
-                            <field name="product_id" groups="product.group_product_variant"/>
+                            <field name="product_tmpl_id" context="{'default_type': 'product'}"/>
+                            <field name="product_id" groups="product.group_product_variant" context="{'default_type': 'product'}"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
@@ -41,7 +41,7 @@
                             <field name="bom_line_ids" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id"/>
+                                    <field name="product_id" context="{'default_type': 'product'}"/>
                                     <field name="has_attachments" invisible="1"/>
                                     <button name="action_see_attachments" type="object" icon="fa-files-o" attrs="{'invisible': [('has_attachments', '=', False)]}"/>
                                     <button name="action_see_attachments" type="object" icon="fa-file" attrs="{'invisible': [('has_attachments', '=', True)]}"/>
