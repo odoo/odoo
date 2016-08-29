@@ -5,58 +5,49 @@ import base64
 import contextlib
 import cStringIO
 
-from openerp import tools
-from openerp.osv import fields,osv
-from openerp.tools.translate import _
-from openerp.tools.misc import get_iso_codes
+from odoo import api, fields, models, tools, _
 
 NEW_LANG_KEY = '__new__'
 
-class base_language_export(osv.osv_memory):
+class BaseLanguageExport(models.TransientModel):
     _name = "base.language.export"
 
-    def _get_languages(self, cr, uid, context):
-        lang_obj = self.pool.get('res.lang')
-        ids = lang_obj.search(cr, uid, [('translatable', '=', True)])
-        langs = lang_obj.browse(cr, uid, ids)
-        return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + [(lang.code, lang.name) for lang in langs]
+    @api.model
+    def _get_languages(self):
+        langs = self.env['res.lang'].search([('translatable', '=', True)])
+        return [(NEW_LANG_KEY, _('New Language (Empty translation template)'))] + \
+               [(lang.code, lang.name) for lang in langs]
    
-    _columns = {
-            'name': fields.char('File Name', readonly=True),
-            'lang': fields.selection(_get_languages, 'Language', required=True), 
-            'format': fields.selection([('csv','CSV File'),
-                                        ('po','PO File'),
-                                        ('tgz', 'TGZ Archive')], 'File Format', required=True),
-            'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Apps To Export', domain=[('state','=','installed')]),
-            'data': fields.binary('File', readonly=True),
-            'state': fields.selection([('choose', 'choose'),   # choose language
-                                       ('get', 'get')])        # get the file
-    }
-    _defaults = { 
-        'state': 'choose',
-        'lang': NEW_LANG_KEY,
-        'format': 'csv',
-    }
+    name = fields.Char('File Name', readonly=True)
+    lang = fields.Selection(_get_languages, string='Language', required=True, default=NEW_LANG_KEY)
+    format = fields.Selection([('csv','CSV File'), ('po','PO File'), ('tgz', 'TGZ Archive')],
+                              string='File Format', required=True, default='csv')
+    modules = fields.Many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id',
+                               string='Apps To Export', domain=[('state','=','installed')])
+    data = fields.Binary('File', readonly=True)
+    state = fields.Selection([('choose', 'choose'), ('get', 'get')], # choose language or get the file
+                             default='choose')
 
-    def act_getfile(self, cr, uid, ids, context=None):
-        this = self.browse(cr, uid, ids, context=context)[0]
+    @api.multi
+    def act_getfile(self):
+        this = self[0]
         lang = this.lang if this.lang != NEW_LANG_KEY else False
-        mods = sorted(map(lambda m: m.name, this.modules)) or ['all']
+        mods = sorted(this.mapped('modules.name')) or ['all']
 
         with contextlib.closing(cStringIO.StringIO()) as buf:
-            tools.trans_export(lang, mods, buf, this.format, cr)
+            tools.trans_export(lang, mods, buf, this.format, self._cr)
             out = base64.encodestring(buf.getvalue())
 
         filename = 'new'
         if lang:
-            filename = get_iso_codes(lang)
+            filename = tools.get_iso_codes(lang)
         elif len(mods) == 1:
             filename = mods[0]
         extension = this.format
         if not lang and extension == 'po':
             extension = 'pot'
         name = "%s.%s" % (filename, extension)
-        this.write({ 'state': 'get', 'data': out, 'name': name })
+        this.write({'state': 'get', 'data': out, 'name': name})
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'base.language.export',

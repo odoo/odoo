@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import functools
 import unittest
 
-from openerp.tools.func import compose
-from openerp.tools import frozendict
+from odoo.tools import frozendict
+from odoo.tools.func import compose
+
 
 class TestCompose(unittest.TestCase):
     def test_basic(self):
         str_add = compose(str, lambda a, b: a + b)
-        self.assertEqual(
-            str_add(1, 2),
-            "3")
+        self.assertEqual(str_add(1, 2), "3")
 
     def test_decorator(self):
         """ ensure compose() can be partially applied as a decorator
@@ -20,6 +21,7 @@ class TestCompose(unittest.TestCase):
             return a * b
 
         self.assertEqual(mul(5, 42), u"210")
+
 
 class TestFrozendict(unittest.TestCase):
     def test_frozendict_immutable(self):

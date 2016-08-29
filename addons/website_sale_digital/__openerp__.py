@@ -2,6 +2,7 @@
 {
     'name': 'Website Sale Digital - Sell digital products',
     'version': '0.1',
+    'category': 'Website',
     'description': """
 Sell digital product using attachments to virtual products
 """,
@@ -15,6 +16,6 @@ Sell digital product using attachments to virtual products
         'views/website_sale_digital_view.xml',
     ],
     'demo': [
-        'demo.xml',
+        'data/product_demo.xml',
     ],
 }

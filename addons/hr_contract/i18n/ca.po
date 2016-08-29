@@ -1,26 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_contract
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-30 11:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-06 09:43+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction
-msgid "Action Needed"
-msgstr "Cal fer alguna acció"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_base_action_rule
@@ -35,22 +30,17 @@ msgstr "Avantatges"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr ""
+msgstr "Complements..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
 msgid "Basic Salary of the employee"
-msgstr ""
+msgstr "Salari base del treballador"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Vehicle de la companyia"
-
-#. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-msgid "Contract"
-msgstr "Contracte"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
@@ -60,7 +50,7 @@ msgstr "Referència contracte"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5307
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -128,11 +118,6 @@ msgid "Current Employee"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Data de l'últim missatge enviat al registre."
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr "Departament"
@@ -156,6 +141,12 @@ msgid "Employee"
 msgstr "Empleat"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_hr_contract
+#, fuzzy
+msgid "Employee Contract"
+msgstr "Contracte"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "Data final"
@@ -163,28 +154,13 @@ msgstr "Data final"
 #. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! Contract start-date must be less than contract end-date."
-msgstr ""
+msgstr "Error! La data d'inici del contracte ha de ser anterior a la de final."
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
 msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_follower_ids
-msgid "Followers"
-msgstr "Seguidors"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Followers (Canals)"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Seguidors (Socis)"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
@@ -209,28 +185,13 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
 msgid "Home-Work Dist."
-msgstr ""
+msgstr "Distancia casa-treball"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Si està marcat hi ha missatges nous pendents."
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "Missatges Importants "
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -241,11 +202,6 @@ msgstr "En quilòmetres."
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Information"
 msgstr "Informació"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_is_follower
-msgid "Is Follower"
-msgstr "És seguidor"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
@@ -261,11 +217,6 @@ msgstr "Feina"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
 msgid "Job Title"
 msgstr "Títul del treball"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_last_post
-msgid "Last Message Date"
-msgstr "Data Últim Missatge"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
@@ -293,22 +244,12 @@ msgstr "Darrer contracte de l'empleat."
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
-msgstr ""
+msgstr "Examen mèdic"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
 msgid "Medical Examination Date"
 msgstr "Data de l'examen mèdic"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_ids
-msgid "Messages"
-msgstr "Missatges"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_ids
-msgid "Messages and communication history"
-msgstr "Historial de missatges i comunicació"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -322,24 +263,9 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Nombre d'accions"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
 msgstr "Número de fills"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Nombre de missatges que requereixen una atenció"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Nombre de missatges no llegits"
 
 #. module: hr_contract
 #: model:ir.filters,name:hr_contract.contract_open
@@ -359,7 +285,7 @@ msgstr "En procés"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary and Advantages"
-msgstr ""
+msgstr "Salari i complements"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -397,7 +323,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
-msgstr ""
+msgstr "Per renovar"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
@@ -407,7 +333,7 @@ msgstr "Data de finalització"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Trial Period Duration"
-msgstr ""
+msgstr "Duració del període de prova"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_start
@@ -415,49 +341,34 @@ msgid "Trial Start Date"
 msgstr "Data d'inici"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Unread Messages"
 msgstr "Missatges pendents de llegir"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Comptador de missatges no llegits"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
-msgstr ""
+msgstr "Utilitzar el calendari de treball del empleat"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use the user's working schedule."
-msgstr ""
+msgstr "Utilitzar el calendari de treball de l'usuari"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
-msgstr ""
+msgstr "Data d'expiració de visat"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
 msgid "Visa No"
-msgstr ""
+msgstr "Número de visat"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
 msgid "Wage"
 msgstr "Salari"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_website_message_ids
-msgid "Website Messages"
-msgstr "Missatges de la pàgina web"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicacions de la pàgina web"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -467,9 +378,60 @@ msgstr "Permís de treball"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
-msgstr ""
+msgstr "Número de permís de treball"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "Planificació de treball"
+
+#~ msgid "Action Needed"
+#~ msgstr "Cal fer alguna acció"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data de l'últim missatge enviat al registre."
+
+#~ msgid "Followers"
+#~ msgstr "Seguidors"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Followers (Canals)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidors (Socis)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Si està marcat hi ha missatges nous pendents."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
+
+#~ msgid "Is Follower"
+#~ msgstr "És seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data Últim Missatge"
+
+#~ msgid "Messages"
+#~ msgstr "Missatges"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Historial de missatges i comunicació"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Nombre d'accions"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Nombre de missatges que requereixen una atenció"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Nombre de missatges no llegits"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Comptador de missatges no llegits"
+
+#~ msgid "Website Messages"
+#~ msgstr "Missatges de la pàgina web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historial de comunicacions de la pàgina web"

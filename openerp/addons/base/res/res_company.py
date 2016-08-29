@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 class Company(models.Model):
     _name = "res.company"
     _description = 'Companies'
-    _order = 'name'
+    _order = 'sequence, name'
 
     _header = """
 <header>
@@ -125,7 +125,7 @@ class Company(models.Model):
     rml_header1 = fields.Char(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     rml_header2 = fields.Text(string='RML Internal Header', required=True, default=_header2)
     rml_header3 = fields.Text(string='RML Internal Header for Landscape Reports', required=True, default=_header3)
-    rml_footer = fields.Text(string='Report Footer', help="Footer text displayed at the bottom of all reports.")
+    rml_footer = fields.Text(string='Custom Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     rml_footer_readonly = fields.Text(related='rml_footer', string='Report Footer', readonly=True)
     custom_footer = fields.Boolean(help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
     font = fields.Many2one('res.font', string="Font", default=lambda self: self._get_font(),
@@ -152,6 +152,7 @@ class Company(models.Model):
     vat = fields.Char(related='partner_id.vat', string="Tax ID")
     company_registry = fields.Char()
     rml_paper_format = fields.Selection([('a4', 'A4'), ('us_letter', 'US Letter')], string="Paper Format", required=True, default='a4', oldname='paper_format')
+    sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
@@ -314,7 +315,16 @@ class Company(models.Model):
         if not vals.get('name') or vals.get('partner_id'):
             self.clear_caches()
             return super(Company, self).create(vals)
-        partner = self.env['res.partner'].create({'name': vals['name'], 'is_company': True, 'image': vals.get('logo'), 'customer': False})
+        partner = self.env['res.partner'].create({
+            'name': vals['name'],
+            'is_company': True,
+            'image': vals.get('logo'),
+            'customer': False,
+            'email': vals.get('email'),
+            'phone': vals.get('phone'),
+            'website': vals.get('website'),
+            'vat': vals.get('vat'),
+        })
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)

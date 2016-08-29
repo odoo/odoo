@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Planner',
-    'category': 'Planner',
+    'category': 'Extra Tools',
     'summary': 'Help to configure application',
     'version': '1.0',
     'description': """Application Planner""",

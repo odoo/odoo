@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import UserError, ValidationError
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -29,8 +29,7 @@ class PosSession(models.Model):
         'pos.config', string='Point of Sale',
         help="The physical point of sale you will use.",
         required=True,
-        index=True,
-        domain="[('state', '=', 'active')]")
+        index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -89,10 +88,26 @@ class PosSession(models.Model):
         string='Available Payment Methods')
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
     statement_ids = fields.One2many('account.bank.statement', 'pos_session_id', string='Bank Statement', readonly=True)
+    picking_count = fields.Integer(compute='_compute_picking_count')
 
     _sql_constraints = [('uniq_name', 'unique(name)', _("The name of this POS Session must be unique !"))]
 
-    @api.depends('cash_control', 'cash_journal_id', 'config_id.cash_control')
+    @api.multi
+    def _compute_picking_count(self):
+        for pos in self:
+            pickings = pos.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
+            pos.picking_count = len(pickings.ids)
+
+    @api.multi
+    def action_stock_picking(self):
+        pickings = self.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
+        action_picking = self.env.ref('stock.action_picking_tree_ready')
+        action = action_picking.read()[0]
+        action['context'] = {}
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
+
+    @api.depends('config_id.cash_control')
     def _compute_cash_all(self):
         for session in self:
             session.cash_journal_id = session.cash_register_id = session.cash_control = False
@@ -109,12 +124,12 @@ class PosSession(models.Model):
     def _check_unicity(self):
         # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
         if self.search_count([('state', 'not in', ('closed', 'closing_control')), ('user_id', '=', self.user_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions with the same responsible!"))
+            raise ValidationError(_("You cannot create two active sessions with the same responsible!"))
 
     @api.constrains('config_id')
     def _check_pos_config(self):
         if self.search_count([('state', '!=', 'closed'), ('config_id', '=', self.config_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions related to the same point of sale!"))
+            raise ValidationError(_("You cannot create two active sessions related to the same point of sale!"))
 
     @api.model
     def create(self, values):
@@ -143,22 +158,32 @@ class PosSession(models.Model):
                     journals = Journal.with_context(ctx).search([('journal_user', '=', True)])
             journals.sudo().write({'journal_user': True})
             pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
-        statements = [(0, 0, {
-            'journal_id': journal.id,
-            'user_id': self.env.uid,
-            'company_id': pos_config.company_id.id
-        }) for journal in pos_config.journal_ids]
+
+        pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
+
+        statements = []
+        ABS = self.env['account.bank.statement']
+        uid = SUPERUSER_ID if self.env.user.has_group('point_of_sale.group_pos_user') else self.env.user.id
+        for journal in pos_config.journal_ids:
+            # set the journal_id which should be used by
+            # account.bank.statement to set the opening balance of the
+            # newly created bank statement
+            ctx['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            st_values = {
+                'journal_id': journal.id,
+                'user_id': self.env.user.id,
+                'name': pos_name
+            }
+
+            statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
+
         values.update({
-            'name': self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session'),
-            'statement_ids': statements,
+            'name': pos_name,
+            'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
-        # set the journal_id which should be used by
-        # account.bank.statement to set the opening balance of the newly created bank statement
-        if pos_config.cash_control:
-            for journal in pos_config.journal_ids.filtered(lambda j: j.type == 'cash'):
-                ctx.update({'journal_id': journal.id})
-        return super(PosSession, self.with_context(ctx)).create(values)
+
+        return super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
 
     @api.multi
     def unlink(self):

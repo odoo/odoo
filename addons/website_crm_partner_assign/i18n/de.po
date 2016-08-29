@@ -1,21 +1,35 @@
+# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_crm_partner_assign
-# 
+#
 # Translators:
 # Ralf Hilgenstock <rh@dialoge.info>, 2015
+# #-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_partner_assign
+#
+# Translators:
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Wolfgang Taferner, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-24 19:38+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-05-30 18:36+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
+"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm_partner_assign
@@ -87,21 +101,6 @@ msgid "Search"
 msgstr "Suche"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_website_url
-msgid "The full URL to access the document through the website."
-msgstr "Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
-msgid "Visible in Website"
-msgstr "Sichtbar in Webseite"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_url
-msgid "Website URL"
-msgstr "Webseite URL"
-
-#. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
 msgid "World Map"
 msgstr "Weltkarte"
@@ -120,3 +119,577 @@ msgstr "Referenz(en)"
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
 msgid "res.partner.grade"
 msgstr "res.partner.grade"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr ""
+#~ "Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
+
+#~ msgid "Visible in Website"
+#~ msgstr "Sichtbar in Webseite"
+
+#~ msgid "Website URL"
+#~ msgstr "Webseite URL"
+
+#~ msgid ""
+#~ "\n"
+#~ "            \n"
+#~ "<p>Hello,</p>\n"
+#~ "\n"
+#~ "\n"
+#~ "<p>We have been contacted by those prospects that are in your region. "
+#~ "Thus, the following leads have been assigned to ${ctx['partner_id'].name}:"
+#~ "</p>\n"
+#~ "\n"
+#~ "<ol>\n"
+#~ "% for lead in ctx['partner_leads']:\n"
+#~ "     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject "
+#~ "Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name "
+#~ "or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id."
+#~ "country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or "
+#~ "'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+#~ "% endfor\n"
+#~ "</ol>\n"
+#~ "\n"
+#~ "% if ctx.get('partner_in_portal'):\n"
+#~ "<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner "
+#~ "Portal</a> to get details. On each lead are two buttons on the top left "
+#~ "corner that you should press after having contacted the lead: \"I'm "
+#~ "interested\" & \"I'm not interested\".</p>\n"
+#~ "% else:\n"
+#~ "<p>\n"
+#~ "    You do not have yet a portal access to our database. Please contact \n"
+#~ "    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
+#~ "'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
+#~ "ctx['partner_id'].user_id.email) or 'us'}.\n"
+#~ "</p>\n"
+#~ "% endif\n"
+#~ "<p>The lead will be sent to another partner if you do not contact the "
+#~ "lead before 20 days.</p>\n"
+#~ "\n"
+#~ "<p>Thanks,</p>\n"
+#~ "\n"
+#~ "<pre>\n"
+#~ "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | "
+#~ "safe or ''}\n"
+#~ "</pre>\n"
+#~ "% if not ctx['partner_id'].user_id:\n"
+#~ "PS: It looks like you do not have an account manager assigned to you, "
+#~ "please contact us.\n"
+#~ "% endif\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "            \n"
+#~ "<p>Hallo,</p>\n"
+#~ "\n"
+#~ "\n"
+#~ "<p>Wir sind durch Interessenten Ihrer Region angesprochen worden. Daher "
+#~ "wurden die folgenen Interessenten übertragen an ${ctx['partner_id'].name}:"
+#~ "</p>\n"
+#~ "\n"
+#~ "<ol>\n"
+#~ "% for lead in ctx['partner_leads']:\n"
+#~ "     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or "
+#~ "'Unbestimmter Betreff'}</a>, ${lead.lead_id.partner_name or lead.lead_id."
+#~ "contact_name or 'Ansprechpartner nicht festgelegt'}, ${lead.lead_id."
+#~ "country_id and lead.lead_id.country_id.name or 'Land nicht festgelegt' }, "
+#~ "${lead.lead_id.email_from or 'Email nicht festgelegt'}, ${lead.lead_id."
+#~ "phone or ''} </li></br>\n"
+#~ "% endfor\n"
+#~ "</ol>\n"
+#~ "\n"
+#~ "% if ctx.get('partner_in_portal'):\n"
+#~ "<p>Schauen Sie bitte in Ihr <a href=\"${object."
+#~ "get_portal_url()}\">Partner Portal</a> für Einzelheiten. Zu jedem Lead "
+#~ "sind in der linken oberen Ecke zwei Schaltflächen, die Sie nutzen sollten "
+#~ "nachdem Sie mit dem Lead Kontakt aufgenommen haben: \"Ich bin interessiert"
+#~ "\" & \"Ich bin nicht interessiert\".</p>\n"
+#~ "% else:\n"
+#~ "<p>\n"
+#~ "    Sie haben noch keinen Zugang zu unserem Portal. Bitte sprechen Sie \n"
+#~ "    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
+#~ "'Ihren Benutzerverwalter %s (%s)' % (ctx['partner_id'].user_id.name,"
+#~ "ctx['partner_id'].user_id.email) or 'uns'} an.\n"
+#~ "</p>\n"
+#~ "% endif\n"
+#~ "<p>Der Lead wird einem anderen Partner übermittelt, wenn Sie diesen nicht "
+#~ "innerhalb von 20 Tagen ansprechen.</p>\n"
+#~ "\n"
+#~ "<p>Vielen Dank,</p>\n"
+#~ "\n"
+#~ "<pre>\n"
+#~ "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | "
+#~ "safe or ''}\n"
+#~ "</pre>\n"
+#~ "% if not ctx['partner_id'].user_id:\n"
+#~ "P.S.: Es sieht so aus, als wäre Ihnen kein Benutzerverwalter zugeordnet, "
+#~ "sprechen Sie uns bitte an.\n"
+#~ "% endif\n"
+#~ "            "
+
+#~ msgid "# of Cases"
+#~ msgstr "Fälle"
+
+#~ msgid "# of Opportunity"
+#~ msgstr "# der Verkaufschancen"
+
+#~ msgid "<p>I am interested by this lead.</p>"
+#~ msgstr "<p>Ich bin an diesem Lead interessiert.</p>"
+
+#~ msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
+#~ msgstr ""
+#~ "<p>Ich bin nicht an diesem Interessent interessiert und habe diesen "
+#~ "kontaktiert.</p>"
+
+#~ msgid ""
+#~ "<p>I am not interested by this lead. I have not contacted the lead.</p>"
+#~ msgstr ""
+#~ "<p>Ich bin nicht an dem Lead interessiert. Ich habe den Lead nicht "
+#~ "angeschrieben.</p>"
+
+#~ msgid ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+#~ "=',0)]}\">N </span>\n"
+#~ "                                <span class=\"oe_grey\" attrs="
+#~ "\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+#~ msgstr ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
+#~ "=',0)]}\">N </span>\n"
+#~ "                                <span class=\"oe_grey\" attrs="
+#~ "\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
+
+#~ msgid ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+#~ "=',0)]}\">E </span>\n"
+#~ "                                <span class=\"oe_grey\" attrs="
+#~ "\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+#~ "                                <span class=\"oe_grey\">) </span>"
+#~ msgstr ""
+#~ "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
+#~ "=',0)]}\">O </span>\n"
+#~ "                                <span class=\"oe_grey\" attrs="
+#~ "\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+#~ "                                <span class=\"oe_grey\">) </span>"
+
+#~ msgid "Activation"
+#~ msgstr "Aktivierung"
+
+#~ msgid "Active"
+#~ msgstr "Aktiv"
+
+#~ msgid "Assign Date"
+#~ msgstr "Datum festlegen"
+
+#~ msgid "Assign Month"
+#~ msgstr "Monat festlegen"
+
+#~ msgid "Assign salesman of assigned partner"
+#~ msgstr "Verweisen Sie den Verkäufer einem zugewiesenem Partner"
+
+#~ msgid "Assignation Date"
+#~ msgstr "Zuweisungsdatum"
+
+#~ msgid "Assigned"
+#~ msgstr "Datum Zuweisung"
+
+#~ msgid "Assigned Opportunities"
+#~ msgstr "Zugewiesene Verkaufschancen"
+
+#~ msgid "Assigned Partner"
+#~ msgstr "Zugewiesener Partner"
+
+#~ msgid "Automatic Assignation"
+#~ msgstr "Automatische Zuweisung"
+
+#~ msgid "Automatically sanitized HTML contents"
+#~ msgstr "Automatisch bereinigter HTML-Inhalt"
+
+#~ msgid "Avg Probability"
+#~ msgstr "Durch. Wahrscheinl."
+
+#~ msgid "Avg. of Probability"
+#~ msgstr "Mittlere Wahrscheinlichkeit"
+
+#~ msgid "CRM Lead Report"
+#~ msgstr "Auswertung Interessenten"
+
+#~ msgid "CRM Partner Report"
+#~ msgstr "CRM Partnerbericht"
+
+#~ msgid "Cancel"
+#~ msgstr "Abbrechen"
+
+#~ msgid "Categorization"
+#~ msgstr "Kategorisierung"
+
+#~ msgid "Close Date"
+#~ msgstr "Datum Beendigung"
+
+#~ msgid "Comment"
+#~ msgstr "Kommentar"
+
+#~ msgid "Communication"
+#~ msgstr "Kommunikation"
+
+#~ msgid "Company"
+#~ msgstr "Unternehmen"
+
+#~ msgid "Confirm"
+#~ msgstr "Bestätigen"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakt"
+
+#~ msgid "Contents"
+#~ msgstr "Inhalte"
+
+#~ msgid "Country"
+#~ msgstr "Land"
+
+#~ msgid "Create Date"
+#~ msgstr "Datum Erstellung"
+
+#~ msgid "Created by"
+#~ msgstr "Angelegt von"
+
+#~ msgid "Created on"
+#~ msgstr "Angelegt am"
+
+#~ msgid "Customer"
+#~ msgstr "Kunde"
+
+#~ msgid "Customer Name"
+#~ msgstr "Kundenname"
+
+#~ msgid "Date Partnership"
+#~ msgstr "Beginn Partnerschaft"
+
+#~ msgid "Date Review"
+#~ msgstr "Bewertungsdatum"
+
+#~ msgid "Delay to Assign"
+#~ msgstr "Verzug bei Zuweisung"
+
+#~ msgid "Delay to Close"
+#~ msgstr "Zeit bis zur Beendigung"
+
+#~ msgid "Details"
+#~ msgstr "Details"
+
+#~ msgid "Did you contact the lead?"
+#~ msgstr "Haben Sie diesen Lead kontaktiert?"
+
+#~ msgid "Display Name"
+#~ msgstr "Anzeigename"
+
+#~ msgid "Do you have contacted the customer?"
+#~ msgstr "Haben Sie den Kunden kontaktiert?"
+
+#~ msgid "Email Template"
+#~ msgstr "Vorlage der E-Mail"
+
+#~ msgid "Expected Revenues"
+#~ msgstr "Erwarteter Umsatz"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Erweiterter Filter..."
+
+#~ msgid "Forward Leads To"
+#~ msgstr "Leitet Leads weiter an"
+
+#~ msgid "Forward selected leads to"
+#~ msgstr "Leitet ausgewählte Leads an"
+
+#~ msgid "Forward to Partner"
+#~ msgstr "Weiter zu Partner"
+
+#~ msgid "Fwd: Lead: ${ctx['partner_id'].name}"
+#~ msgstr "WL: Lead: ${ctx['partner_id'].name}"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Längengrad"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Längengrad"
+
+#~ msgid "Geolocation"
+#~ msgstr "Geo-Standort"
+
+#~ msgid ""
+#~ "Gives the probability to assign a lead to this partner. (0 means no "
+#~ "assignation.)"
+#~ msgstr "Ermöglicht automatische Zuweisung von Interessenten zu Partnern"
+
+#~ msgid "Grade"
+#~ msgstr "Einstufung"
+
+#~ msgid "Group By"
+#~ msgstr "Gruppiere nach"
+
+#~ msgid "High"
+#~ msgstr "Hoch"
+
+#~ msgid "I'm interested"
+#~ msgstr "Ich bin interessiert"
+
+#~ msgid "I'm not interested"
+#~ msgstr "Ich bin nicht interessiert"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Implementation References"
+#~ msgstr "Implementierungsreferenzen"
+
+#~ msgid "Implemented by"
+#~ msgstr "Implementiert durch"
+
+#~ msgid "Interested by this lead"
+#~ msgstr "Interessiert an diesem Link"
+
+#~ msgid "Invoice Account Date"
+#~ msgstr "Rechnungsbuchdatum"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Zuletzt geändert am"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Zuletzt aktualisiert durch"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Zuletzt aktualisiert am"
+
+#~ msgid "Last date this case was forwarded/assigned to a partner"
+#~ msgstr "Letztes Datum wenn dieser Fall einem Partner zugewiesen wurde"
+
+#~ msgid "Latest Partner Review"
+#~ msgstr "Letzte Partnerbewertung"
+
+#~ msgid "Lead"
+#~ msgstr "Interessent"
+
+#~ msgid "Lead  Single Links"
+#~ msgstr "Lead einfache Links"
+
+#~ msgid "Lead Assign"
+#~ msgstr "Interessent zuweisen"
+
+#~ msgid "Lead Feedback"
+#~ msgstr "Lead Rückmeldung"
+
+#~ msgid "Lead Location"
+#~ msgstr "Standort des Interessenten"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Interessent / Chance"
+
+#~ msgid "Leads"
+#~ msgstr "Interessenten"
+
+#~ msgid "Leads & Opportunities"
+#~ msgstr "Interessenten und Chancen"
+
+#~ msgid "Leads Analysis"
+#~ msgstr "Statistik Verkaufskontakte"
+
+#~ msgid "Level"
+#~ msgstr "Ebene"
+
+#~ msgid "Level Name"
+#~ msgstr "Stufenbezeichnung"
+
+#~ msgid "Level Weight"
+#~ msgstr "Stufengewichtung"
+
+#~ msgid "Low"
+#~ msgstr "Niedrig"
+
+#~ msgid "Max Probability"
+#~ msgstr "Max. Wahrscheinl."
+
+#~ msgid "My Assigned Partners"
+#~ msgstr "Mir zugewiesenen Partner"
+
+#~ msgid "Name"
+#~ msgstr "Bezeichnung"
+
+#~ msgid "Next Partner Review"
+#~ msgstr "Nächste Partnerbewertung"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Number of Days to close the case"
+#~ msgstr "Anzahl Tage bis Beendigung"
+
+#~ msgid "Number of Days to open the case"
+#~ msgstr "Zahl Tage bis Eröffn."
+
+#~ msgid ""
+#~ "Once the lead is processed, it will be in your \"Opportunities\" menu."
+#~ msgstr "Ist der Lead erst bearbeitet, erscheint er in Ihrem 'Chancen'-Menü."
+
+#~ msgid "Opening Date"
+#~ msgstr "Eröffnungsdatum"
+
+#~ msgid "Opp. Assignment Analysis"
+#~ msgstr "Statistik Chancenzuweisung"
+
+#~ msgid "Opportunities"
+#~ msgstr "Verkaufschancen"
+
+#~ msgid "Opportunities Assignment Analysis"
+#~ msgstr "Statistik Kontaktzuweisung"
+
+#~ msgid "Opportunity"
+#~ msgstr "Chance"
+
+#~ msgid "Overpassed Deadline"
+#~ msgstr "Fristüberschreitung"
+
+#~ msgid "Partner Activation"
+#~ msgstr "Aktivierung Partner"
+
+#~ msgid "Partner Activations"
+#~ msgstr "Partnerschafts-Aktivierung"
+
+#~ msgid "Partner Assignation"
+#~ msgstr "Partner-Zuordnung"
+
+#~ msgid "Partner Level"
+#~ msgstr "Partner-Level"
+
+#~ msgid "Partner Location"
+#~ msgstr "Partner Standort"
+
+#~ msgid "Partner Name"
+#~ msgstr "Partner Name"
+
+#~ msgid "Partner Review"
+#~ msgstr "Partner-Bewertung"
+
+#~ msgid "Partner assigned Analysis"
+#~ msgstr "Partnerzuteilungs-Analyse"
+
+#~ msgid "Partner this case has been forwarded/assigned to."
+#~ msgstr "Partner, dem der Fall zugewiesen wurde."
+
+#~ msgid "Partnership Analysis"
+#~ msgstr "Partneranalyse"
+
+#~ msgid "Partnership Date"
+#~ msgstr "Beginn Partnerschaft"
+
+#~ msgid "Partnerships"
+#~ msgstr "Partnerschaften"
+
+#~ msgid "Planned Revenue"
+#~ msgstr "Geplanter Umsatz"
+
+#~ msgid "Priority"
+#~ msgstr "Priorität"
+
+#~ msgid "Probable Revenue"
+#~ msgstr "Geplanter Umsatz"
+
+#~ msgid "Sales Team"
+#~ msgstr "Verkaufsteam"
+
+#~ msgid "Salesperson"
+#~ msgstr "Verkäufer"
+
+#~ msgid "Send"
+#~ msgstr "Senden"
+
+#~ msgid "Send Email"
+#~ msgstr "E-Mail versenden"
+
+#~ msgid "Send Mail"
+#~ msgstr "E-Mail senden"
+
+#~ msgid "Sequence"
+#~ msgstr "Reihenfolge"
+
+#~ msgid "Set an email address for the partner %s"
+#~ msgstr "Setzen Sie eine Email-Anschrift für den Partner %s"
+
+#~ msgid "Set an email address for the partner(s): %s"
+#~ msgstr "Setzen Sie eine Email-Anschrift für Partner: %s"
+
+#~ msgid "Stage"
+#~ msgstr "Stufe"
+
+#~ msgid "Subject"
+#~ msgstr "Betreff"
+
+#~ msgid "The CRM Channel Interested Action is missing"
+#~ msgstr "Der CRM-Kanal Interessierte an Aktion fehlt"
+
+#~ msgid "The Forward Email Template is not in the database"
+#~ msgstr "Die Weiterleitungs-Email-Vorlage ist nicht in der Datenbank"
+
+#~ msgid "The Portal group cannot be found"
+#~ msgstr "Die Portal-Gruppe wurde nicht gefunden "
+
+#~ msgid "The lead has been contacted"
+#~ msgstr "Der Lead wurde kontaktiert"
+
+#~ msgid "To Recycle"
+#~ msgstr "Wiederzuverwenden"
+
+#~ msgid "Turnover"
+#~ msgstr "Überschuss"
+
+#~ msgid "Type"
+#~ msgstr "Typ"
+
+#~ msgid "Type is used to separate Leads and Opportunities"
+#~ msgstr ""
+#~ "Typ wird zur Unterscheidung von Interessenten und Chancen verwendet."
+
+#~ msgid "User"
+#~ msgstr "Benutzer"
+
+#~ msgid "Very High"
+#~ msgstr "Sehr hoch"
+
+#~ msgid "What are the elements that have led to this decision?"
+#~ msgstr "Was sind die Gründe, die zu dieser Entscheidung geführt haben?"
+
+#~ msgid "What is the next action? When? What is the expected revenue?"
+#~ msgstr ""
+#~ "Was ist die nächste Aktion? Wann findet sie statt? Was ist der erwartete "
+#~ "Umsatz?"
+
+#~ msgid "Why aren't you interested by this lead?"
+#~ msgstr "Warum sind Sie nicht an dem Lead interessiert?"
+
+#~ msgid "You must contact the lead before saying that you are interested"
+#~ msgstr ""
+#~ "Sie müssen den Lead kontaktieren bevor Sie auswählen, dass Sie sich für "
+#~ "ihn interessieren."
+
+#~ msgid "a single partner: manual selection of partner"
+#~ msgstr "ein einzelner Partner: Manuelle Auswahl des Partners"
+
+#~ msgid "crm.lead.assignation"
+#~ msgstr "crm.lead.assignation"
+
+#~ msgid "crm.lead.channel.interested"
+#~ msgstr "crm.lead.channel.interested"
+
+#~ msgid "crm.lead.forward.to.partner"
+#~ msgstr "crm.lead.forward.to.partner"
+
+#~ msgid "e.g. Gold Partner"
+#~ msgstr "z. B. Gold Partner"
+
+#~ msgid "res.partner.activation"
+#~ msgstr "res.partner.activation"
+
+#~ msgid ""
+#~ "several partners: automatic assignation, using GPS coordinates and "
+#~ "partner's grades"
+#~ msgstr ""
+#~ "mehrere Partner: Automatische Zuweisung, über GPS-Koordinaten und Partner-"
+#~ "Einstufung"

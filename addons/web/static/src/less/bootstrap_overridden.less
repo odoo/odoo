@@ -1,0 +1,103 @@
+// ------------------------------------------------------------------
+// Bootstrap variables
+// ------------------------------------------------------------------
+
+//== Grid
+@grid-gutter-width: @odoo-horizontal-padding*2;
+
+//== Colors
+@brand-primary: @odoo-brand-primary;
+
+//== Titles
+@font-size-h1: @odoo-font-size-base + 13px;
+@font-size-h2: @odoo-font-size-base + 7px;
+@font-size-h3: @odoo-font-size-base + 3px;
+@font-size-h4: @odoo-font-size-base + 2px;
+@font-size-h5: @odoo-font-size-base + 1px;
+@font-size-h6: @odoo-font-size-base;
+
+//== Scaffolding
+@body-bg: @odoo-brand-secondary;
+@text-color: @odoo-main-text-color;
+@link-color: @odoo-brand-optional;
+@link-hover-decoration: none;
+
+//== Typography
+@font-family-sans-serif: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+@font-size-base: @odoo-font-size-base;
+@headings-font-weight: bold;
+
+//== Components
+@component-active-bg: @gray-lighter;
+@component-active-color: @odoo-brand-optional;
+
+//== Badges
+@badge-bg: @odoo-brand-optional;
+@badge-color: white;
+@badge-line-height: @line-height-base;
+@badge-font-weight: normal;
+
+//== Breadcrumbs
+@breadcrumb-active-color: #777777;
+@breadcrumb-bg: @odoo-control-panel-background-color;
+@breadcrumb-color: #777777;
+@breadcrumb-padding-horizontal: 0;
+@breadcrumb-padding-vertical: 0;
+
+//== Buttons
+@btn-default-bg: white;
+@btn-default-border: #cccccc;
+@btn-default-color: @odoo-main-text-color;
+@btn-primary-bg: @odoo-brand-optional;
+@btn-primary-border: @odoo-brand-optional;
+@btn-primary-color: white;
+
+//== Modals
+@modal-sm: 300px;
+@modal-md: 650px;
+@modal-lg: 980px;
+@modal-inner-padding: @odoo-horizontal-padding;
+@modal-title-padding: @odoo-horizontal-padding;
+
+//== Navs
+@nav-link-padding: 10px 15px;
+@nav-pills-border-radius: 0;
+@nav-pills-active-link-hover-color: white;
+@nav-pills-active-link-hover-bg: @odoo-brand-optional;
+@nav-tabs-active-link-hover-bg: white;
+
+//== Navbar
+@navbar-height: @odoo-navbar-height - 2;
+@navbar-margin-bottom: 0;
+@navbar-inverse-bg: #222222;
+@navbar-inverse-link-color: #9d9d9d;
+@navbar-inverse-link-hover-bg: #222222;
+@navbar-inverse-toggle-hover-bg: #222222;
+@navbar-border-radius: 0;
+
+//== Tables
+@table-bg-accent: #efeff8; // FIXME: expose
+
+
+// ------------------------------------------------------------------
+// Bootstrap components rules (non exposed features variables)
+// ------------------------------------------------------------------
+
+//== Badges
+.badge {
+    margin: 1px 2px 1px 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+//== Buttons
+.btn-icon {
+  .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+}
+
+//== Printing improvements
+@media print {
+    .table-responsive {
+        overflow-x: initial;
+    }
+}

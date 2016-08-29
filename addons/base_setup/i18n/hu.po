@@ -3,16 +3,17 @@
 # * base_setup
 # 
 # Translators:
-# Kris Krnacs, 2015-2016
 # Oregional <geza.nagy@oregional.hu>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-02-12 10:42+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,21 +28,34 @@ msgstr "Ügyfélportál aktiválása"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_share
 msgid "Allow documents sharing"
-msgstr "Dokumentumok megoszásának engedélyezése"
+msgstr "Dokumentumok megosztásának engedélyezése"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allow multi currencies"
+msgstr "Többféle valuta engedélyezése"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Engedélyezze felhasználók számára a naptárak szinkronizálását Google naptárral"
+msgstr ""
+"Engedélyezze felhasználók számára a naptárak szinkronizálását Google "
+"naptárral"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "Engedélyezze felhasználók számára az adatok betöltését CSV/XLS/XLSX/ODS fájlokból"
+msgstr ""
+"Engedélyezze felhasználók számára adatok betöltését CSV/XLS/XLSX/ODS "
+"fájlokból"
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
 msgstr "Alkalmaz"
 
@@ -57,20 +71,8 @@ msgstr "Azonosítás"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Mégse"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Ügyfél"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Értékesítés beállításai"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -80,38 +82,22 @@ msgstr "Kimenő e-mail szerverek beállítása"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Configure your company data"
-msgstr "A vállalata részleteinek beállítása"
+msgstr "A vállalata adatainak beállítása"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr "Készítette"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Vevő"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Donor"
+msgstr "Megjelenített név"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -145,21 +131,9 @@ msgid "Google Integration"
 msgstr "Google integráció"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Vendég"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "Vevő megszólítása"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -173,24 +147,18 @@ msgstr "Belső vállalat"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítette"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve"
+msgstr "Utoljára frissítve "
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
@@ -198,14 +166,9 @@ msgid "Manage Inter Company"
 msgstr "Belső vállalat kezelés"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
-msgstr "Többes válallkozás kezelése"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Tag"
+msgstr "Több vállalkozás kezelése"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -214,20 +177,17 @@ msgstr "Többszintű vállalkozás"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Multi Currencies"
+msgstr "Többféle pénznem"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "Once installed, you can configure your API credentials for \"Google "
 "calendar\""
-msgstr "Telepítése után beállíthatóak az API interfész engedélyek a \"Google naptár\" alkalmazáshoz"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Páciens"
+msgstr ""
+"Telepítése után beállíthatóak az API interfész engedélyek a \"Google "
+"naptár\" alkalmazáshoz"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -250,22 +210,15 @@ msgid ""
 "Share your partners to all companies defined in your instance.\n"
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr "Ossza meg partnereit az összes meghatározott vállalata között.\n * Bejelölt: Partnerek láthatóak mindegyik vállalata részéről, még akkor is, ha a vállalat a partnerként definiált.\n * Nem bejelölt: Mindegyik vállalat csak a saját partnereit látja  (partnerek, melyek a vállalathoz kapcsoltak). Partnerek, melyek egyik vállalathoz sem tartoznak azok az összes vállalat számára láthatóak."
+msgstr ""
+"Ossza meg partnereit az összes meghatározott vállalata között.\n"
+" * Bejelölt: Partnerek láthatóak mindegyik vállalata részéről, még akkor is, ha a vállalat a partnerként definiált.\n"
+" * Nem bejelölt: Mindegyik vállalat csak a saját partnereit látja  (partnerek, melyek a vállalathoz kapcsoltak). Partnerek, melyek egyik vállalathoz sem tartoznak azok az összes vállalat számára láthatóak."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Shared resources"
 msgstr "Megosztott erőforrások "
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Terminológia meghatározása"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Bérlő"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
@@ -282,17 +235,14 @@ msgstr "Ez előkészíti a google_docs modult."
 msgid ""
 "This installs the module inter_company_rules.\n"
 " Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr "Ez a inter_company_rules modult telepíti. \n Állítsa be a vállalati szabályokat az automatikus VM - Vevői Megrendelés / BM -Szállítói Megrendelés létrehozásához ha az egyik vállalat értékesít/vásárol a másik vállalatától."
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Használjon másik szót amivel kifejezi \"Vevő\""
+msgstr ""
+"Ez a inter_company_rules modult telepíti. \n"
+" Állítsa be a vállalati szabályokat az automatikus VM - Vevői Megrendelés / BM -Szállítói Megrendelés létrehozásához ha az egyik vállalat értékesít/vásárol a másik vállalatától."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
-msgstr "Használjon külső azonosító tartalomkezelőt, lépjen be mint Google ... felhasználó"
+msgid "Use external authentication providers (OAuth)"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -302,40 +252,32 @@ msgid ""
 "                                    able to signup to get all his documents,\n"
 "                                    read your company news, check his projects,\n"
 "                                    etc."
-msgstr "Ha egy dokumentumot küld egy Vevőhöz\n                                    (árajánlat, számla), a Vevő feliratkozhat\n                                    a dokumentumainak eléréséhez,\n                                    a vállalati új hírek elolvasásához, projektek ellenőrzéséhez,\n                                    stb."
+msgstr ""
+"Ha egy dokumentumot küld egy Vevőhöz\n"
+"                                    (árajánlat, számla), a Vevő feliratkozhat\n"
+"                                    a dokumentumainak eléréséhez,\n"
+"                                    a vállalati új hírek elolvasásához, projektek ellenőrzéséhez,\n"
+"                                    stb."
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_light_multi_company
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
 "Work in multi-company environments, with appropriate security access between"
 " companies."
-msgstr "Több vállalkozásos környezetben, a vállalatok közti megfelelő biztonsági hozzáférésekkel."
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr "Használhatja ezt a varázslót a vevők nyelvezetének megváltoztatásához a teljes alkalmazásra vonatkozólag."
+msgstr ""
+"Több vállalkozásos környezetben, a vállalatok közti megfelelő biztonsági "
+"hozzáférésekkel."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
-msgstr "Több lehetőséget fog találni a vállalata részleteinél: a fejléc és lábjegyzet címek, határidő túllépés szöveges üzenete, stb."
+msgstr ""
+"Több lehetőséget fog találni a vállalata részleteinél: a fejléc és "
+"lábjegyzet címek, határidő túllépés szöveges üzenete, stb."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"

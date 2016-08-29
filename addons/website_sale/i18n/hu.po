@@ -3,15 +3,19 @@
 # * website_sale
 # 
 # Translators:
-# Kris Krnacs, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Zsofia Biro <zsbiro1205@gmail.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-01-05 16:39+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,13 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ", go in the 'Sales' tab"
+#: model:ir.ui.view,arch_db:website_sale.payment
+msgid "(extra fees apply)"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ", go the 'Sales' tab"
+msgid ", go to the 'Sales' tab"
 msgstr ""
 
 #. module: website_sale
@@ -34,16 +38,11 @@ msgid ", go to the 'Variants' tab"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "-- Create a new address --"
-msgstr "-- Új cím létrehozás --"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "30-day money-back guarantee<br/>\n"
-"                    Free Shipping in U.S.<br/>\n"
-"                    Buy now, get in 2 days"
+"              Free Shipping in U.S.<br/>\n"
+"              Buy now, get in 2 days"
 msgstr ""
 
 #. module: website_sale
@@ -68,6 +67,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address_kanban
+msgid "<i class=\"fa fa-check\"/> Ship to this address"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "<i class=\"fa fa-cog\"/> Configure Transfer Details"
 msgstr ""
@@ -83,6 +87,11 @@ msgid "<i class=\"fa fa-envelope-o\"/> Email Our Website Expert"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.checkout
+msgid "<i class=\"fa fa-plus-square\" aria-hidden=\"true\"/> Add an address"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-print\"/> Print"
 msgstr ""
@@ -91,7 +100,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.header
 msgid ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
-"              My cart"
+"                    My cart"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send o_default_snippet_text\">Send</span>\n"
+"                                <span id=\"o_website_form_result\" class=\"text-danger ml8\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -112,24 +133,16 @@ msgid "<span class=\"col-xs-6 text-right text-muted\">Subtotal:</span>"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment
-msgid "<span class=\"fa fa-arrow-right\"/> Change Address"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "<span class=\"fa fa-arrow-right\"/> change"
+#: model:ir.ui.view,arch_db:website_sale.product
+msgid ""
+"<span class=\"fa fa-check\"/>\n"
+"                                <span>In Stock</span>"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
 msgstr "<span class=\"fa fa-comment-o\"/>  Weboldal élő társalgás be"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -155,8 +168,14 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.continue_shopping
 msgid ""
-"<span class=\"fa fa-long-arrow-left\"/> <span class=\"hidden-xs\">Continue "
-"Shopping</span><span class=\"visible-xs-inline\">Continue</span>"
+"<span class=\"fa fa-long-arrow-left\"/>\n"
+"                <span class=\"hidden-xs\">Continue Shopping</span>\n"
+"                <span class=\"visible-xs-inline\">Continue</span>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "<span class=\"fa fa-long-arrow-left\"/> Back"
 msgstr ""
 
 #. module: website_sale
@@ -167,8 +186,9 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid ""
-"<span class=\"hidden-xs\">Process Checkout</span><span class=\"visible-xs-"
-"inline\">Checkout</span> <span class=\"fa fa-long-arrow-right\"/>"
+"<span class=\"hidden-xs\">Process Checkout</span>\n"
+"                                <span class=\"visible-xs-inline\">Checkout</span>\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -237,7 +257,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-sitemap\"/><strong> "
-"Importation</strong><br/>by using a CSV file</span>"
+"Import</strong><br/>by using a CSV file</span>"
 msgstr ""
 
 #. module: website_sale
@@ -255,14 +275,14 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"text-danger\">* </span>Field 2"
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "<span>Next </span><span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "<strong>Add to Cart</strong>"
-msgstr ""
+msgstr "<strong>Kosárba helyez</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -305,7 +325,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Contact us now:</strong><br/>"
-msgstr "<strong>Most lépjen velünk kapocslatba:</strong><br/>"
+msgstr "<strong>Lépjen velünk kapcsolatba most:</strong><br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -461,10 +481,25 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info
+msgid "A document to provide ?"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_orders_abandonned_orders
+msgid "Abandonned Orders"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.action_abandonned_orders_ecommerce
+msgid "Abandonned eCommerce Orders"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
-msgstr "Termékek kiegészítői"
+msgstr "Kiegészítő termékek"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -482,6 +517,11 @@ msgid "Activate the payment options you want to use"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_delivery
+msgid "Add Delivery Costs to Online Sales"
+msgstr "Szállítási költséget ad az online értékesítésekhez"
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "Add as many variants as you need from 3 different types: radio buttons, "
@@ -491,7 +531,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Add to Cart"
-msgstr "Bávásárlókocsiba"
+msgstr "Hozzáadás a bávásárlókocsihoz"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.option_collapse_products_categories
@@ -503,6 +543,13 @@ msgstr "Összes termék"
 #: model:ir.model.fields,help:website_sale.field_website_pricelist_selectable
 msgid "Allow the end user to choose this price list"
 msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:34
+#, python-format
+msgid "Amount"
+msgstr "Összeg"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_alternative_product_ids
@@ -522,13 +569,27 @@ msgid "Apply"
 msgstr "Alkalmaz"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_availability
+#: model:ir.model.fields,field_description:website_sale.field_product_template_availability
+msgid "Availability"
+msgstr "Elérhetőség"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_availability_warning
+#: model:ir.model.fields,field_description:website_sale.field_product_template_availability_warning
+msgid "Availability Warning"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_available_in_pos
 msgid "Available in the Point of Sale"
 msgstr "Elérhető az értékesítési pontban"
 
 #. module: website_sale
-#: model:product.pricelist,name:website_sale.list_benelux
-msgid "Benelux Pricelist"
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:24
+#, python-format
+msgid "Best Sellers"
 msgstr ""
 
 #. module: website_sale
@@ -539,8 +600,8 @@ msgstr "Számlázási adatok:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Billing Information"
-msgstr "Számla információ"
+msgid "Billing Address"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -558,6 +619,11 @@ msgid "Cart Quantity"
 msgstr "Bevásárló kocsi mennyiség"
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_catalog
+msgid "Catalog"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
@@ -565,29 +631,17 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:59
-#, python-format
-msgid "Change the price"
-msgstr "Ár megváltoztatása"
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr "Jelölje be, ha a terméket mérlegelni kell a beépített hardveres mérleggel"
+msgstr ""
+"Jelölje be, ha a terméket mérlegelni kell a beépített hardveres mérleggel"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési Pontban"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_purchase_requisition
-msgid ""
-"Check this box to generate Call for Tenders instead of generating requests "
-"for quotation from procurement."
-msgstr "Jelölje be a négyzetet árajánlat tender generálásához az igények alapján történő árajánlat kérések generálása helyett."
+msgstr ""
+"Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési Pontban"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -596,68 +650,42 @@ msgstr "Al kategóriák"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:72
-#, python-format
-msgid "Choose an image"
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:73
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:37
 #, python-format
 msgid "Choose an image from the library."
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:39
-#, python-format
-msgid "Choose name"
-msgstr "Vállasszon nevet"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas Pricelist"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "City"
 msgstr "Város"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:25
-#, python-format
-msgid "Click here to add a new product."
-msgstr "Kattintson egy új termék hozzáadáshoz."
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:67
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:33
 #, python-format
 msgid "Click here to set an image describing your product."
 msgstr "Kattintson ide a termék leíró kép beállításához."
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:47
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:42
+#, python-format
+msgid "Click on <b>Save</b> to add the image to the product description."
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:23
 #, python-format
 msgid "Click on <em>Continue</em> to create the product."
 msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:106
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:57
 #, python-format
-msgid "Click on <em>Publish</em> your product so your customers can see it."
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:84
-#, python-format
-msgid "Click on <em>Save</em> to add the image to the product description."
+msgid "Click on this button so your customers can see it."
 msgstr ""
 
 #. module: website_sale
@@ -666,19 +694,12 @@ msgid "Click to define a new category."
 msgstr "Kattintson egy új kategória meghatározásához."
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:112
-#, python-format
-msgid "Close Tutorial"
-msgstr "Oktató bezárása"
-
-#. module: website_sale
 #: selection:product.attribute,type:0
 msgid "Color"
 msgstr "Szín"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "Cég neve"
 
@@ -699,6 +720,11 @@ msgstr "Jóváhagy <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
+msgid "Confirm Order"
+msgstr "Rendelés visszaigazolása"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm Order <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
@@ -713,29 +739,8 @@ msgid "Confirmed"
 msgstr "Jóváhagyott"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:110
-#, python-format
-msgid "Congratulations"
-msgstr "Gratulálunk"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:111
-#, python-format
-msgid "Congratulations! You just created and published your first product."
-msgstr "Gratulálunk! Ebben a pillanatban létrehozta és közzétette az első termékét. "
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:53
-#: model:ir.ui.view,arch_db:website_sale.extra_info
-#, python-format
-msgid "Continue"
-msgstr "Folytatás"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.model,name:website_sale.model_res_country
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "Country"
 msgstr "Ország"
 
@@ -750,7 +755,7 @@ msgid "Country Groups"
 msgstr "Országcsoportok"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "Country..."
 msgstr "Ország..."
 
@@ -758,34 +763,6 @@ msgstr "Ország..."
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Coupon Code"
 msgstr "Kupon kód"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:46
-#, python-format
-msgid "Create Product"
-msgstr "Termék létrehozás"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:31
-#, python-format
-msgid "Create a new product"
-msgstr "Új termék létrehozása"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:14
-#, python-format
-msgid "Create a product"
-msgstr "Termék létrehozása"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:24
-#, python-format
-msgid "Create your first product"
-msgstr "Hozza létre első termékét"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_create_uid
@@ -814,7 +791,7 @@ msgstr "DHL integráció"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_currency_id
 msgid "Default Currency"
-msgstr "alapértelmezett pénznem"
+msgstr "Alapértelmezett pénznem"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id
@@ -824,7 +801,7 @@ msgstr "Alapértelmezett árlista"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "Default Sales Team"
-msgstr ""
+msgstr "Alapértelmezett értékesítő csapat"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
@@ -846,36 +823,35 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_quote_description
 msgid "Description for the quote"
-msgstr ""
+msgstr "Leírás az árajánlathoz"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_description
 msgid "Description for the website"
-msgstr ""
+msgstr "Leírás a weboldalhoz"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template_website_sequence
 msgid "Determine the display order in the Website E-commerce"
 msgstr ""
+"Megjelenített értékek sorrendjének meghatározása a weboldal e-értékesítésben"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_style_display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
+
+#. module: website_sale
+#: selection:product.template,availability:0
+msgid "Display Nothing"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:90
-#, python-format
-msgid "Drag & Drop a block"
-msgstr "Fogd & Vidd egy blokkot"
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:91
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:47
 #, python-format
 msgid "Drag this website block and drop it in your page."
 msgstr ""
@@ -887,9 +863,14 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:60
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:27
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address_kanban
+msgid "Edit this address"
 msgstr ""
 
 #. module: website_sale
@@ -901,13 +882,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:40
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
 #, python-format
 msgid "Enter a name for your new product"
 msgstr ""
@@ -924,7 +905,18 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: constraint:product.public.category:0
+#: model:ir.model.fields,help:website_sale.field_product_product_split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/product.py:57
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Hiba! Nem tud ismétlődő kategóriát létrehozni."
 
@@ -960,13 +952,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "Export the 3 products you have already created by checking them and choosing"
-" 'Export' from the 'More' menu"
+" 'Export' from the 'Action' menu"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
-msgid "Extra Info"
-msgstr "Extra információ"
+msgid "Extra Info<span class=\"chevron\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -979,31 +971,6 @@ msgid "Fedex integration"
 msgstr "Fedex integráció"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "Field 1"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "Field 3"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "Field not custom"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "Field not required"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "Field required"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "Focus on adding content and improving the pages for your best-selling "
@@ -1013,6 +980,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Free and easy to setup"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+msgid "From Website"
 msgstr ""
 
 #. module: website_sale
@@ -1031,12 +1003,17 @@ msgid "Go to the"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_hs_code
+msgid "HS Code"
+msgstr "HS Kód"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_html_class
 msgid "HTML Classes"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_attribute_value_color
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute_value_html_color
 msgid "HTML Color Index"
 msgstr ""
 
@@ -1056,7 +1033,7 @@ msgid "Here are <strong>some pros and cons</strong> to help you decide:"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_attribute_value_color
+#: model:ir.model.fields,help:website_sale.field_product_attribute_value_html_color
 msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color on the website if the attibute type is 'Color'."
@@ -1070,9 +1047,9 @@ msgstr "Rejtett"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11237
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11497
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1101,6 +1078,11 @@ msgid "Import Your Products"
 msgstr ""
 
 #. module: website_sale
+#: selection:product.template,availability:0
+msgid "In Stock"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "In order to take money from customers, you need a way of accepting payments.<br/>\n"
@@ -1121,13 +1103,19 @@ msgid "Increase your chances to make a sale by displaying suggested products."
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:559
+#: code:addons/website_sale/controllers/main.py:462
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Érvénytelen Email! Kérem adjon meg valós e-mail címeket"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:73
+#: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
+#: model:ir.ui.menu,name:website_sale.menu_orders_invoices
+msgid "Invoices"
+msgstr "Számlák"
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:86
 #, python-format
 msgid "It is forbidden to modify a sale order which is not in draft status"
 msgstr ""
@@ -1154,21 +1142,31 @@ msgstr "Utoljára frissítve ekkor"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner_last_website_so_id
 msgid "Last Online Sale Order"
-msgstr ""
+msgstr "Utolsó online Vásárlói megrendelés"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_style_write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_style_write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info
+msgid "Let us your remark..."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
+msgid "Manage Deliveries"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
@@ -1181,7 +1179,10 @@ msgid ""
 "Medium-sized image of the category. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "A kategória közepes méretű képe. Automatikusan át lesz méretezve 128x128px-es képpé, az arányok megtartásával. Használja ezt a mezőt az űrlap nézetben és egyes kanban nézetekben."
+msgstr ""
+"A kategória közepes méretű képe. Automatikusan át lesz méretezve 128x128px-"
+"es képpé, az arányok megtartásával. Használja ezt a mezőt az űrlap nézetben "
+"és egyes kanban nézetekben."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
@@ -1189,47 +1190,30 @@ msgid "Merchant Connectors"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_line_warn_msg
-msgid "Message for Purchase Order Line"
-msgstr "Üzenet a szállítói megrendelés sorról"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_sale_line_warn_msg
-msgid "Message for Sales Order Line"
-msgstr "Üzenet a vevői megrendelés sorára"
+#: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
+msgid "More Info"
+msgstr "További információ"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale.js:14
+#: code:addons/website_sale/static/src/js/website_sale.js:15
 #, python-format
 msgid "My Cart"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category_complete_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_name
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "Name"
 msgstr "Név"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Name (Shipping)"
-msgstr ""
-
-#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:957
+#: code:addons/website_sale/controllers/main.py:899
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
 msgid "New Product"
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:51
-#, python-format
-msgid "New product created"
 msgstr ""
 
 #. module: website_sale
@@ -1256,8 +1240,7 @@ msgstr "Ok"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid ""
-"Odoo offers an importation service to handle the whole process for you!"
+msgid "Odoo offers an import service to handle the whole process for you!"
 msgstr ""
 
 #. module: website_sale
@@ -1276,9 +1259,9 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:98
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:52
 #, python-format
-msgid "Once you click on <em>Save</em>, your product is updated."
+msgid "Once you click on <b>Save</b>, your product is updated."
 msgstr ""
 
 #. module: website_sale
@@ -1289,7 +1272,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Order"
-msgstr "Átutalási megbízás"
+msgstr "Rendelés"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_website_order_line
@@ -1304,6 +1287,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_orders
+#: model:ir.ui.menu,name:website_sale.menu_orders_orders
+msgid "Orders"
+msgstr "Megrendelések"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
 msgid "Parent Category"
 msgstr "Szülő kategória"
@@ -1314,10 +1303,11 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:769
+#: code:addons/website_sale/controllers/main.py:711
+#: code:addons/website_sale/controllers/main.py:770
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Fizessen most"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
@@ -1325,14 +1315,14 @@ msgid "Pay Now <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.extra_info_option
-msgid "Payment"
-msgstr "Kifizetés"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr "Fizetést kézhezvevő"
+msgstr "Fizetést lebonyolító"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
+msgid "Payment Acquirers"
+msgstr "Fizetés kézhezvevői"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -1350,17 +1340,13 @@ msgid "Payment Methods"
 msgstr "Fizetési módok"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "Fizetési tranzakció"
-
-#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info_option
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Payment<span class=\"chevron\"/>"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Telefon"
 
@@ -1372,13 +1358,13 @@ msgstr "Értékesítési pont kategória"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Policies"
-msgstr ""
+msgstr "Irányelvek"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Price"
-msgstr "Érték"
+msgstr "Ár"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_website_pricelist_ids
@@ -1397,14 +1383,22 @@ msgid "Pricelist Name"
 msgstr "Árlista név"
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
+msgid "Pricelists"
+msgstr "Árlisták"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_requisition
 msgid "Procurement"
 msgstr "Beszerzés"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:32
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
+#, python-format
 msgid "Product"
 msgstr "Termék"
 
@@ -1425,8 +1419,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
-msgid "Product Product Categories"
-msgstr "Termék termékkategóriái"
+msgid "Product Public Categories"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -1442,7 +1436,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.product
 #: model:ir.ui.view,arch_db:website_sale.product_price
 msgid "Product not available"
-msgstr ""
+msgstr "Termék nem elérhető"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
@@ -1450,6 +1444,8 @@ msgid "Product not found!"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.product_template_action
+#: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Products"
@@ -1466,31 +1462,15 @@ msgid "Products list view"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_project_id
-msgid "Project"
-msgstr "Projekt"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Promote"
 msgstr "Közzététel"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:105
-#, python-format
-msgid "Publish your product"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_rating_rating_website_published
+#: model:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 msgid "Published"
 msgstr "Közzétett"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_line_warn
-msgid "Purchase Order Line"
-msgstr "Szállítói megrendelés sor"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -1520,6 +1500,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:33
+#, python-format
+msgid "Qty Sold"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Qty:"
 msgstr ""
@@ -1544,9 +1531,23 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_rating_rating
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_ids
-#: model:ir.model.fields,field_description:website_sale.field_product_template_rating_ids
 msgid "Rating"
-msgstr "Becslés"
+msgstr "Értékelés"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_value
+msgid "Rating Last Value"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_rating_count
+msgid "Rating count"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product_rating_last_value
+msgid "Rating value: 0=Unhappy, 10=Happy"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1569,6 +1570,13 @@ msgid "Sale"
 msgstr "Értékesítés"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:8
+#, python-format
+msgid "Sales"
+msgstr "Értékesítések"
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Sales / Settings"
 msgstr ""
@@ -1576,14 +1584,10 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Vevői megrendelés"
+msgstr "Vásárlói megrendelés"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_sale_line_warn
-msgid "Sales Order Line"
-msgstr "Vásárlói megrendelés sor"
-
-#. module: website_sale
+#: model:ir.model,name:website_sale.model_crm_team
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_salesteam_id
 #: model:ir.model.fields,field_description:website_sale.field_website_salesteam_id
 msgid "Sales Team"
@@ -1596,23 +1600,9 @@ msgid "Salesperson"
 msgstr "Értékesítő"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:83
-#, python-format
-msgid "Save"
-msgstr "Mentés"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Save and import the modified CSV file from the 'More' menu of the"
 msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:97
-#, python-format
-msgid "Save your modifications"
-msgstr "Módosításai mentése"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -1626,10 +1616,10 @@ msgstr "Kiválaszt"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:32
+#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:15
 #, python-format
 msgid ""
-"Select <em>New Product</em> to create it and manage its properties to boost "
+"Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
 
@@ -1639,18 +1629,14 @@ msgid "Select a product from the"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_selectable
-msgid "Selectable"
-msgstr "választható"
+#: model:ir.ui.view,arch_db:website_sale.address_kanban
+msgid "Select this address"
+msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_purchase_line_warn
-#: model:ir.model.fields,help:website_sale.field_product_product_sale_line_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr "A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az üzenethez és leblokkolja a folyamatot. Az üzenetet a következő mezőbe kell beírni."
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_selectable
+msgid "Selectable"
+msgstr "Választható"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1663,9 +1649,7 @@ msgid "Sell More"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_sequence
 msgid "Sequence"
 msgstr "Sorszám"
 
@@ -1676,31 +1660,20 @@ msgid "Ship To:"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-#: model:ir.ui.view,arch_db:website_sale.confirmation
-#: model:ir.ui.view,arch_db:website_sale.payment
-msgid "Ship to the same address"
+#: model:ir.ui.view,arch_db:website_sale.wizard_checkout
+msgid "Shipping &amp;"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
 #: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Shipping"
-msgstr "Szállítás"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.wizard_checkout
-msgid "Shipping &amp;"
+msgid "Shipping Address"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "Shipping Connectors"
 msgstr "Szállítási csatlakozók"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Shipping Information"
-msgstr "Szállítási információ"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
@@ -1711,7 +1684,7 @@ msgstr "Üzlet"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shop - Checkout"
-msgstr ""
+msgstr "Vásárlás - kasszához"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -1729,9 +1702,9 @@ msgid "Shopping Cart"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Sign in"
-msgstr "Bejelentkezés"
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Sign Up"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1754,20 +1727,13 @@ msgstr "Méret"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_size_x
 msgid "Size X"
-msgstr ""
+msgstr "Méret X"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_size_y
 msgid "Size Y"
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
-#, python-format
-msgid "Skip It"
-msgstr "Kihagy"
+msgstr "Méret Y"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_small
@@ -1780,7 +1746,10 @@ msgid ""
 "Small-sized image of the category. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "Ennek a kategóriának a kisméretű képe. Automatikusan át lesz méretezve 64x64px-es képpé, megtartva a képarányt. Használja ezt a mezőt bárhol, ahol kis képre van szükség."
+msgstr ""
+"Ennek a kategóriának a kisméretű képe. Automatikusan át lesz méretezve "
+"64x64px-es képpé, megtartva a képarányt. Használja ezt a mezőt bárhol, ahol "
+"kis képre van szükség."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1788,10 +1757,10 @@ msgid "Some customers prefer to pay this way"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:581
+#: code:addons/website_sale/controllers/main.py:473
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Egyes szükséges mezők üresek."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
@@ -1804,26 +1773,24 @@ msgid "Split Method"
 msgstr "Szétválasztási mód"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:19
-#, python-format
-msgid "Start Tutorial"
-msgstr "Bemutató indítása"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "State / Province"
+#: model:ir.model.fields,help:website_sale.field_product_product_hs_code
+msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "State / Province"
+msgstr "Állam / Megye"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province..."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Street"
-msgstr "Utca"
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Street <span class=\"hidden-xs\"> and Number</span>"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_name
@@ -1835,33 +1802,53 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_style_ids
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Styles"
-msgstr ""
+msgstr "Stílusok"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Subtotal"
-msgstr "Nettó érték"
+msgstr "Részösszeg"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Subtotal:"
+msgstr "Részösszeg:"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.suggested_products_list
+msgid "Suggested Accessories:"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_alternative_product_ids
 msgid "Suggested Products"
-msgstr ""
+msgstr "Javasolt termékek"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.recommended_products
-msgid "Suggested alternatives:"
+msgid "Suggested Products:"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.suggested_products_list
-msgid "Suggested products:"
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "TIN / VAT"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Taxes:"
+msgstr "Adók:"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_temando
+msgid "Temando integration"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr ""
+msgstr "Köszönjük megrendelését."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1872,13 +1859,20 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
-#: model:ir.model.fields,help:website_sale.field_product_template_website_url
 msgid "The full URL to access the document through the website."
-msgstr "A teljes URL elérési út a weboldalon keresztüli belépéshez a szerver eléréséhez."
+msgstr ""
+"A teljes elérési út/URL  a dokumentum weboldalon keresztüli eléréséhez."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "The payment seems to have been canceled."
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:26
+#, python-format
+msgid "There is no recent online sale."
 msgstr ""
 
 #. module: website_sale
@@ -1894,10 +1888,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:52
-#, python-format
-msgid "This page contains all the information related to the new product."
+#: model:ir.model.fields,help:website_sale.field_product_product_availability
+#: model:ir.model.fields,help:website_sale.field_product_template_availability
+msgid ""
+"This field is used to display a availability banner with a message on the "
+"ecommerce"
 msgstr ""
 
 #. module: website_sale
@@ -1910,11 +1905,13 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_template_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
 msgstr ""
+"A hasonló termékek kategóriák szerint csoportosítsa az e-értékesítéshez."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "A hasonló termékek kategóriák szerint csoportosítsa az értékesítési pontban."
+msgstr ""
+"A hasonló termékek kategóriák szerint csoportosítsa az értékesítési pontban."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_to_weight
@@ -1964,15 +1961,18 @@ msgid "Unit Price"
 msgstr "Egységár"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:66
-#, python-format
-msgid "Update image"
+#: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
+msgid "Unpaid Orders"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
+msgid "Unpaid eCommerce Orders"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
-msgid "Use the <i>'Content'</i> top menu to create a new product."
+msgid "Use the <i>'New Page'</i> top menu to create your first product."
 msgstr ""
 
 #. module: website_sale
@@ -1983,30 +1983,24 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "VAT Number"
-msgstr "ADÓ szám"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment
-msgid "Validate Order"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_published
 msgid "Visible in Website"
 msgstr "Látható a weboldalon"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_rating_rating_website_published
 msgid "Visible on the website as a comment"
-msgstr "Hozzászólásként látható a honlapon"
+msgstr "Hozzászólásként látható a weboldalon"
+
+#. module: website_sale
+#: selection:product.template,availability:0
+msgid "Warning"
+msgstr "Figyelmeztetés"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2018,7 +2012,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_website_id
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Website"
-msgstr "Honlap"
+msgstr "Weboldal"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2050,13 +2044,14 @@ msgid "Website Pricelist"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:344
+#: code:addons/website_sale/models/sale_order.py:409
 #, python-format
 msgid "Website Pricelist for %s"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
+#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model:ir.ui.menu,name:website_sale.menu_product_public_category
 msgid "Website Product Categories"
 msgstr ""
@@ -2066,11 +2061,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product_public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_public_categ_ids
 msgid "Website Product Category"
-msgstr ""
+msgstr "Weboldal termék kategória"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Website Public Categories"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_sequence
+msgid "Website Sequence"
 msgstr ""
 
 #. module: website_sale
@@ -2080,36 +2081,32 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_url
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_url
 msgid "Website URL"
 msgstr "Honlap URL"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_description
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category_website_meta_description
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_meta_description
 msgid "Website meta description"
 msgstr "Honlap meta leírás"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_keywords
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category_website_meta_keywords
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_meta_keywords
 msgid "Website meta keywords"
 msgstr "Honlap meta kulcsszavai"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_title
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category_website_meta_title
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_meta_title
 msgid "Website meta title"
 msgstr "Honlap meta cím"
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:17
-#, python-format
-msgid "Welcome to your shop"
+#: model:ir.model.fields,field_description:website_sale.field_crm_team_website_ids
+msgid "Websites"
+msgstr "Honlapok"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_crm_team_website_ids
+msgid "Websites using this sales team"
 msgstr ""
 
 #. module: website_sale
@@ -2125,63 +2122,77 @@ msgid "You can setup 3 types of <strong>payment methods in Odoo:</strong>"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.actions.act_window,help:website_sale.action_abandonned_orders_ecommerce
+msgid "You don't have any cancelled order from the website."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.act_window,help:website_sale.action_orders_ecommerce
+msgid "You don't have any confirmed order from the website."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
+msgid "You don't have any unpaid order from the website."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "You have to reconcile the payment manually"
 msgstr ""
 
 #. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:18
-#, python-format
-msgid ""
-"You successfully installed the e-commerce. This guide will help you to "
-"create your product and promote your sales."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
+#: model:ir.ui.view,arch_db:website_sale.address
 msgid "Your Address"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Your Name"
-msgstr "Az Ön neve"
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"Your Address \n"
+"                                        <small> or </small>"
+msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "Your Order"
 msgstr "Megrendelése"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.extra_info
+msgid "Your Reference"
+msgstr "Partner hivatkozása"
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
-msgstr ""
+msgstr "Az Ön kosara üres!"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your order has been confirmed, thank you for your loyalty."
-msgstr ""
+msgstr "Megrendelését visszaigazoltuk, köszönjük hűségét."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your payment has been received."
-msgstr ""
+msgstr "Átutalva, utalása megérkezett."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your transaction is waiting a manual confirmation."
-msgstr ""
+msgstr "A tranzakció kézi megerősítésre vár."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.order_state_message
 msgid "Your transaction is waiting confirmation."
-msgstr ""
+msgstr "A tranzakció megerősítésre vár."
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "Zip / Postal Code"
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Zip Code"
 msgstr ""
 
 #. module: website_sale
@@ -2197,12 +2208,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_comment
 msgid "comment"
-msgstr ""
+msgstr "megjegyzés"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_comment
 msgid "comments"
-msgstr ""
+msgstr "megjegyzések"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_ebay
@@ -2210,9 +2221,15 @@ msgid "eBay connector"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
 msgid "eCommerce"
 msgstr "E-kereskedelem"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
+msgid "eCommerce Orders"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2223,11 +2240,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "of the Sales module"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "or"
-msgstr "vagy"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
@@ -2245,11 +2257,6 @@ msgid "product.style"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.checkout
-msgid "select..."
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "using one or several of the strategies above"
 msgstr ""
@@ -2257,7 +2264,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_config_settings
 msgid "website.config.settings"
-msgstr ""
+msgstr "website.config.settings"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -2267,7 +2274,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "☑ 30-days money-back guarantee"
-msgstr ""
+msgstr "☑ 30 napos pénzvisszafizetési garancia"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

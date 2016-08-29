@@ -60,7 +60,7 @@ var Dialog = Widget.extend({
         this.$footer = this.$modal.find(".modal-footer");
 
         this.set_buttons(options.buttons);
-        
+
         this.$modal.on('hidden.bs.modal', _.bind(this.destroy, this));
     },
 
@@ -94,7 +94,7 @@ var Dialog = Widget.extend({
             self.$footer.append($b);
         });
     },
-    
+
     set_title: function(title, subtitle) {
         this.title = title || "";
         if (subtitle !== undefined) {
@@ -122,7 +122,7 @@ var Dialog = Widget.extend({
             self.$modal.modal('show');
             self._opened.resolve();
         });
-        
+
         return self;
     },
 
@@ -130,12 +130,12 @@ var Dialog = Widget.extend({
         this.$modal.modal('hide');
     },
 
-    destroy: function() {
+    destroy: function(reason) {
         if (this.isDestroyed()) {
             return;
         }
 
-        this.trigger("closed");
+        this.trigger("closed", reason);
 
         this._super();
 
@@ -144,7 +144,7 @@ var Dialog = Widget.extend({
         this.$modal.remove();
 
         setTimeout(function () { // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
-            var modals = $('body > .modal');
+            var modals = $('body > .modal').filter(':visible');
             if(modals.length) {
                 modals.last().focus();
                 $('body').addClass('modal-open');

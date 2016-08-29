@@ -5,7 +5,6 @@
     'name': 'Documentation',
     'category': 'Website',
     'summary': 'Forum, Documentation',
-    'version': '1.0',
     'description': """
 Documentation based on question and pertinent answers of Forum
         """,
@@ -21,5 +20,4 @@ Documentation based on question and pertinent answers of Forum
     'demo': [
         'data/doc_demo.xml',
     ],
-    'installable': True,
 }

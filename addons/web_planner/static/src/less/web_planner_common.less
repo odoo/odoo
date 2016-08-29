@@ -28,31 +28,22 @@
 }
 
 /**************** MENU PROGRESS BAR ****************/
+@planner-height: 13px;
+@planner-margin: floor((@odoo-navbar-height - 2 - @planner-height)/2);
 .o_planner_systray {
     > .progress {
         display: none;
         width: 70px;
-        height: 13px;
+        height: @planner-height;
         cursor: pointer;
 
-        // enterprise
-        margin-top: 16px;
-        margin-bottom: -16px;
+        margin-top: @planner-margin;
+        margin-bottom: -@planner-margin;
         margin-right: 10px;
         margin-left: 10px;
 
         > .progress-bar {
             background-color: #21b799;
-        }
-    }
-}
-
-// community
-#oe_main_menu_navbar:not(.o_main_navbar) {
-    .o_planner_systray {
-        > .progress {
-            margin-top: 10px;
-            margin-bottom: -10px;
         }
     }
 }

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'test-limits',
     'version': '0.1',
     'category': 'Tests',
     'description': """A module with dummy methods.""",
-    'maintainer': 'OpenERP SA',
     'depends': ['base'],
     'data': ['ir.model.access.csv'],
     'installable': True,

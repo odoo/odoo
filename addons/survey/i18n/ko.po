@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-01-25 08:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: survey
@@ -22,15 +22,15 @@ msgstr ""
 msgid ""
 "\n"
 "                \n"
-"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-"                    <p>Hello,</p>\n"
-"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
-"                    <p>Thanks for your participation!</p>\n"
-"                </div>\n"
+"<p>Hello,</p>\n"
+"<p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
+"background-color:#a24689; text-align:center; text-decoration:none; color:"
+"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
-msgstr "\n                \n                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n                    <p>안녕하십니까.</p>\n                    <p>귀하의 소중한 의견을 청취하고자 설문 조사를 진행하고 있습니다.</p>\n                    <p><a href=\"__URL__\">설문 조사를 시작하기 위해 여기를 클릭해 주십시오.</a></p>\n                    <p>참여해 주셔서 감사합니다!</p>\n                </div>\n                \n            "
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -38,8 +38,7 @@ msgid "#Questions"
 msgstr "#질문"
 
 #. module: survey
-#: code:addons/survey/survey.py:229 code:addons/survey/survey.py:525
-#: code:addons/survey/survey.py:647
+#: code:addons/survey/survey.py:231
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (사본)"
@@ -135,9 +134,9 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All "
-"surveys</span><span class=\"label label-primary only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-primary only_right_radius filter-finished"
+"\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
@@ -163,16 +162,17 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All "
-"surveys</span><span class=\"label label-default only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-default only_right_radius filter-finished"
+"\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
+"pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
@@ -225,13 +225,9 @@ msgid "About your Odoo usage"
 msgstr "Odoo 사용에 대해서"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_active_domain
-msgid "Active domain"
+#: model:ir.model.fields,field_description:survey.field_survey_survey_active
+#, fuzzy
+msgid "Active"
 msgstr "활성 도메인"
 
 #. module: survey
@@ -239,7 +235,9 @@ msgstr "활성 도메인"
 msgid ""
 "Add list of email of recipients (will not converted in partner), separated "
 "by commas, semicolons or newline..."
-msgstr "받는 사람(파트너에 변환되지 않습니다)의 이메일 목록 추가하기. 쉼표, 세미콜론 또는 줄 바꿈으로 구분합니다"
+msgstr ""
+"받는 사람(파트너에 변환되지 않습니다)의 이메일 목록 추가하기. 쉼표, 세미콜론 "
+"또는 줄 바꿈으로 구분합니다"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -295,13 +293,6 @@ msgid "Answers"
 msgstr "응답"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_no_auto_thread
-msgid ""
-"Answers do not go in the original document discussion thread. This has an "
-"impact on the generated message-id."
-msgstr ""
-
-#. module: survey
 #: model:survey.question,question:survey.feedback_1_1
 msgid "Are you using Odoo on a daily basis?"
 msgstr "Odoo를 매일 사용하십니까?"
@@ -310,28 +301,6 @@ msgstr "Odoo를 매일 사용하십니까?"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "첨부 파일"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_id
-msgid "Author"
-msgstr "작성자"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_author_id
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
-msgstr "메시지의 작성자. 설정되지 않았을 경우 email_from에 모든 파트너와 일치하지 않은 이메일 주소를 포함할 수 있습니다."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_avatar
-msgid "Author's avatar"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_body
-msgid "Automatically sanitized HTML contents"
-msgstr "HTML 내용 중 불건전한 내용을 자동으로 제거함"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -347,16 +316,6 @@ msgstr "고객 관리"
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Cancel"
 msgstr "취소"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_channel_ids
-msgid "Channels"
-msgstr "채널"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_child_ids
-msgid "Child Messages"
-msgstr "하위 메시지"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -405,7 +364,6 @@ msgstr "컬러 색인"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_comments
-#: selection:survey.mail.compose.message,message_type:0
 msgid "Comment"
 msgstr "의견"
 
@@ -437,11 +395,6 @@ msgid "Compose Email"
 msgstr "메일 작성"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_composition_mode
-msgid "Composition mode"
-msgstr "작성 모드"
-
-#. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "환경 설정"
@@ -457,15 +410,11 @@ msgid "Constraints"
 msgstr "제약 사항"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_body
-msgid "Contents"
-msgstr "내용"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid ""
-"Copy and paste the HTML code below to add this web link to any webpage."
-msgstr "웹페이지에 해당 웹 링크를 추가하려면 아래 HTML 코드를 복사해서 붙여넣으십시오."
+msgid "Copy and paste the HTML code below to add this web link to any webpage."
+msgstr ""
+"웹페이지에 해당 웹 링크를 추가하려면 아래 HTML 코드를 복사해서 붙여넣으십시"
+"오."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -507,12 +456,6 @@ msgid "Creation Date"
 msgstr "작성 날짜"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_starred
-msgid "Current user has a starred notification linked to this message"
-msgstr "현재 사용자에게 이 메시지와 연결된 할 일로 표시된 알림이 있습니다."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
 msgstr "날짜"
@@ -533,11 +476,6 @@ msgid "Date by which the person can open the survey and submit answers"
 msgstr "설문 조사를 열고 답변을 제출할 수 있는 시간"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_deadline
 msgid "Deadline"
 msgstr "마감 시한"
@@ -545,9 +483,11 @@ msgstr "마감 시한"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the"
-" field is empty, the invitation is still valid."
-msgstr "이 설문 조사에 응답할 수 있는 초대장의 마감일이 아직 유효합니다. 필드가 비어있는 경우, 초대장은 여전히 유효합니다."
+"Deadline to which the invitation to respond for this survey is valid. If the "
+"field is empty, the invitation is still valid."
+msgstr ""
+"이 설문 조사에 응답할 수 있는 초대장의 마감일이 아직 유효합니다. 필드가 비어"
+"있는 경우, 초대장은 여전히 유효합니다."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -651,7 +591,6 @@ msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
-#: selection:survey.mail.compose.message,message_type:0
 msgid "Email"
 msgstr "이메일"
 
@@ -659,13 +598,6 @@ msgstr "이메일"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_email_template_id
 msgid "Email Template"
 msgstr "이메일 서식"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_email_from
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found and replaces the author_id field in the chatter."
-msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -694,11 +626,6 @@ msgid "Extra modules proposed are relevant"
 msgstr "추가 모듈 제안이 필요합니다."
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred_partner_ids
-msgid "Favorited By"
-msgstr ""
-
-#. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
 msgstr "재무 관리"
@@ -707,21 +634,6 @@ msgstr "재무 관리"
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
 msgid "Folded in kanban view"
 msgstr "칸반 화면 접기"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_follower_ids
-msgid "Followers"
-msgstr "팔로워"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -739,11 +651,6 @@ msgid "Free Text answer"
 msgstr "자유글 답변"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_email_from
-msgid "From"
-msgstr "시작일"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
@@ -758,7 +665,8 @@ msgstr "당신이 Odoo에 기여하고자 하는 계획이나 방법은 무엇�
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
-msgid "Human Ressources"
+#, fuzzy
+msgid "Human Resources"
 msgstr "인사 관리"
 
 #. module: survey
@@ -829,16 +737,6 @@ msgid "Identification token"
 msgstr "식별 토큰"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_unread
-msgid "If checked new messages require your attention."
-msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_users_can_go_back
 msgid "If checked, users can go back to previous pages."
 msgstr "선택하면 사용자는 이전 페이지로 돌아갈 수 있습니다."
@@ -849,7 +747,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "마감하면 사람들이 이 컬럼의 설문 조사에 응답할 수 없습니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:631
+#: code:addons/survey/survey.py:624
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -863,8 +761,8 @@ msgstr "마감하면 사람들이 이 컬럼의 설문 조사에 응답할 수 �
 #: model:survey.question,comments_message:survey.feedback_3_2
 #: model:survey.question,comments_message:survey.feedback_3_3
 #: model:survey.question,comments_message:survey.feedback_4_1
-#, python-format
-msgid "If other, precise:"
+#, fuzzy, python-format
+msgid "If other, please specify:"
 msgstr "다른 경우의 정밀도 :"
 
 #. module: survey
@@ -883,11 +781,6 @@ msgid "In progress"
 msgstr "진행 중"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_parent_id
-msgid "Initial thread message."
-msgstr "초기 스레드 메시지."
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
 msgid "Input must be an email"
 msgstr "이메일을 입력해야 합니다."
@@ -896,11 +789,6 @@ msgstr "이메일을 입력해야 합니다."
 #: model:ir.ui.view,arch_db:survey.survey_tree
 msgid "Invitations sent"
 msgstr "초대장 전송"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_is_follower
-msgid "Is Follower"
-msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -947,11 +835,6 @@ msgstr "이름표 실행 순서"
 #: model:ir.ui.menu,name:survey.menu_survey_label_form1
 msgid "Labels"
 msgstr "이름표"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_last_post
-msgid "Last Message Date"
-msgstr "최근 메시지 날짜"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label___last_update
@@ -1003,11 +886,6 @@ msgstr "링크"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_multi_email
 msgid "List of emails"
 msgstr "이메일 목록"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_is_log
-msgid "Log an Internal Note"
-msgstr "내부 메모 기록"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_auth_required
@@ -1072,38 +950,6 @@ msgid "Maximum value"
 msgstr "최대값"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_record_name
-msgid "Message Record Name"
-msgstr "메시지 레코드 이름"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_message_type
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr "메시지 유형 : 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용자 댓글과 같은 기타 메시지에 대한 의견"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_message_id
-msgid "Message unique identifier"
-msgstr "메시지 고유 식별자"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_id
-msgid "Message-Id"
-msgstr "Message-Id"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_ids
-msgid "Messages"
-msgstr "메시지"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_ids
-msgid "Messages and communication history"
-msgstr "메시지 및 대화 기록"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_min_date
 msgid "Minimum Date"
 msgstr "최소 날짜"
@@ -1144,18 +990,6 @@ msgid "Name"
 msgstr "이름"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_record_name
-msgid "Name get of the related document."
-msgstr "관련 문서의 가져온 이름"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction_partner_ids
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "New"
 msgstr "신규"
@@ -1164,11 +998,6 @@ msgstr "신규"
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Next page"
 msgstr "다음 페이지"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_no_auto_thread
-msgid "No threading for answers"
-msgstr "답변에 대한 스레드가 없음"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1201,24 +1030,9 @@ msgid "Not started yet"
 msgstr "아직 시작안함"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_notify
-msgid "Notify followers"
-msgstr "팔로워에게 알림"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_notify
-msgid "Notify followers of the document (mass post only)"
-msgstr "문서의 팔로워에게 알림 (공개글만)"
-
-#. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Number"
 msgstr "번호"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_column_nb
@@ -1232,11 +1046,6 @@ msgid "Number of completed surveys"
 msgstr "완료된 설문 조사 수"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_sent_survey
 msgid "Number of sent surveys"
 msgstr "보낸 설문 조사 수"
@@ -1245,11 +1054,6 @@ msgstr "보낸 설문 조사 수"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_start_survey
 msgid "Number of started surveys"
 msgstr "시작된 설문 조사 수"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1278,20 +1082,10 @@ msgid "One email at least is incorrect: %s"
 msgstr "적어도 하나 이상의 이메일이 잘못되었습니다 : %s"
 
 #. module: survey
-#: model:ir.actions.client,name:survey.action_client_survey_menu
-msgid "Open Survey Menu"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
 msgstr "선택 사항"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_mail_server_id
-msgid "Outgoing mail server"
-msgstr "보내는 메일 서버"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_page_id
@@ -1321,11 +1115,6 @@ msgid "Pages"
 msgstr "페이지"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_parent_id
-msgid "Parent Message"
-msgstr "상위 메시지"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
@@ -1349,7 +1138,7 @@ msgid "Permanent"
 msgstr "영구"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:196
+#: code:addons/survey/wizard/survey_email_compose_message.py:199
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "적어도 한 명 이상의 수신자를 입력하십시오."
@@ -1463,28 +1252,6 @@ msgstr "퀴즈 방법"
 #: selection:survey.question,display_mode:0
 msgid "Radio Buttons"
 msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_res_id
-msgid "Related Document ID"
-msgstr "관련 문서 ID"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_model
-msgid "Related Document Model"
-msgstr "관련 문서 모델"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_reply_to
-msgid ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
-msgstr "회신 이메일 주소. reply_to를 설정하면 자동 스레드 생성을 무시합니다."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_reply_to
-msgid "Reply-To"
-msgstr "회신 주소"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_result_url
@@ -1656,14 +1423,6 @@ msgid "Skipped"
 msgstr "건너뛰기"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_author_avatar
-msgid ""
-"Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "연락처를 나타내는 작은 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자동으로 64x64픽셀 이미지로 크기가 조정됩니다. 어디서나 작은 이미지가 필요할 때는 이 필드를 이용합니다."
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid ""
 "Something went wrong while contacting survey server. <strong class=\"text-"
@@ -1683,11 +1442,6 @@ msgid "Stage"
 msgstr "단계"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred
-msgid "Starred"
-msgstr "할 일로 표시"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_init
 msgid "Start Survey"
 msgstr "설문 조사 시작"
@@ -1703,11 +1457,6 @@ msgid "Status"
 msgstr "상태"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_subject
-msgid "Subject"
-msgstr "제목"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Subject..."
 msgstr "제목..."
@@ -1716,11 +1465,6 @@ msgstr "제목..."
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Submit survey"
 msgstr "설문 조사 제출"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_subtype_id
-msgid "Subtype"
-msgstr "하위유형"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_suggested
@@ -1827,11 +1571,6 @@ msgid "Surveys"
 msgstr "설문 조사"
 
 #. module: survey
-#: selection:survey.mail.compose.message,message_type:0
-msgid "System notification"
-msgstr "시스템 알림"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
@@ -1883,7 +1622,7 @@ msgid "The answer must be in the right type"
 msgstr "오른쪽 유형의 답변이어야 합니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:629
+#: code:addons/survey/survey.py:622
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1902,12 +1641,14 @@ msgid "The answer you entered has an invalid format."
 msgstr "입력한 답변 형식이 잘못되었습니다."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:171
+#: code:addons/survey/wizard/survey_email_compose_message.py:174
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__"
-" is automaticaly converted into the special url of the survey."
-msgstr "'__URL__'.                     __URL__을 포함하지 않은 문자 내용은 자동으로 설문조사의 특별한 URL로 변환됩니다."
+"The content of the text don't contain '__URL__'.                     __URL__ "
+"is automaticaly converted into the special url of the survey."
+msgstr ""
+"'__URL__'.                     __URL__을 포함하지 않은 문자 내용은 자동으로 "
+"설문조사의 특별한 URL로 변환됩니다."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_1
@@ -1952,7 +1693,8 @@ msgstr "메뉴가 너무 많습니다. 이해하기가 복잡합니다."
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
+"These questions relate to the ergonomy and ease of use of Odoo. Try to "
+"remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
 
@@ -1972,21 +1714,19 @@ msgid "They help new users to understand Odoo"
 msgstr "새로운 사용자가 Odoo를 이해하는데 도움이 됩니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:685 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "이 답변은 이메일 주소여야 합니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:727
-#: code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "이것은 날짜/시간이 아닙니다"
 
 #. module: survey
-#: code:addons/survey/survey.py:704
-#: code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "이것은 숫자가 아닙니다"
@@ -1996,7 +1736,9 @@ msgstr "이것은 숫자가 아닙니다"
 msgid ""
 "This list of emails of recipients will not converted in contacts. Emails "
 "separated by commas, semicolons or newline."
-msgstr "받는 사람의 이메일 목록이 연락처로 변환되지 않습니다. 쉼표, 세미콜론 또는 개행 문자로 구분된 이메일."
+msgstr ""
+"받는 사람의 이메일 목록이 연락처로 변환되지 않습니다. 쉼표, 세미콜론 또는 개"
+"행 문자로 구분된 이메일."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -2004,7 +1746,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "이 메시지는 설문 조사가 완료되면 표시됩니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:628
+#: code:addons/survey/survey.py:621
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -2071,19 +1813,6 @@ msgid "Totally disagree"
 msgstr "전적으로 동의하지 않음"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_tracking_value_ids
-msgid ""
-"Tracked values are stored in a separate model. This field allow to "
-"reconstructthe tracking and to generate statistics on the model."
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_tracking_value_ids
-msgid "Tracking values"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_type
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
 msgstr "유형"
@@ -2104,22 +1833,6 @@ msgid "Types of answers"
 msgstr "답변 유형"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread
-msgid "Unread Messages"
-msgstr "읽지 않은 메시지"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_use_active_domain
-msgid "Use active domain"
-msgstr "활성화된 도메인 사용"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_template_id
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Use template"
 msgstr "서식 사용"
@@ -2127,8 +1840,7 @@ msgstr "서식 사용"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add             additional explanations about your "
-"question"
+"Use this field to add             additional explanations about your question"
 msgstr "이 필드를 사용하여 귀하의 질문에 대한 추가 설명 추가"
 
 #. module: survey
@@ -2221,7 +1933,9 @@ msgstr "사용자 그룹에 대해 어떻게 생각하십니까?"
 msgid ""
 "What do you think about the process views of Odoo, available in the web "
 "client ?"
-msgstr "당신은 웹 클라이언트에서 사용할 수 있는 Odoo의 프로세스 화면에 대해 어떻게 생각하십니까?"
+msgstr ""
+"당신은 웹 클라이언트에서 사용할 수 있는 Odoo의 프로세스 화면에 대해 어떻게 생"
+"각하십니까?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_4
@@ -2233,11 +1947,6 @@ msgstr "메뉴 구조에 대해 어떻게 생각하십니까?"
 #: model:survey.question,question:survey.feedback_4_1
 msgid "Where do you develop your new features?"
 msgstr "어디에서 새로운 기능을 개발하십니까?"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_is_log
-msgid "Whether the message is an internal note (comment mode only)"
-msgstr "메시지가 내부용 노트인지 여부 (의견 모드에만 해당)"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_2
@@ -2253,7 +1962,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x\"/>"
+"                                            <i class=\"fa fa-calendar fa-2x"
+"\"/>"
 msgstr ""
 
 #. module: survey
@@ -2282,20 +1992,24 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to"
-" your audience. People can answer once per invitation, and whenever they "
-"want with the public web link (in this case, the \"Public in website\" "
-"setting must be enabled)."
-msgstr "설문조사용 공개 웹 링크를 공유하거나 고객에게 개인 초대장을 보낼 수 있습니다. 사람들은 초대장별로 한 번씩 응답할 수 있습니다. 그리고 언제라도 공개 웹 링크와 함께 할 수 있습니다(이 경우는 \"웹사이트 공개\" 설정이 되어 있어야 합니다)."
+"You can share your survey web public link and/or send private invitations to "
+"your audience. People can answer once per invitation, and whenever they want "
+"with the public web link (in this case, the \"Public in website\" setting "
+"must be enabled)."
+msgstr ""
+"설문조사용 공개 웹 링크를 공유하거나 고객에게 개인 초대장을 보낼 수 있습니"
+"다. 사람들은 초대장별로 한 번씩 응답할 수 있습니다. 그리고 언제라도 공개 웹 "
+"링크와 함께 할 수 있습니다(이 경우는 \"웹사이트 공개\" 설정이 되어 있어야 합"
+"니다)."
 
 #. module: survey
-#: code:addons/survey/survey.py:422
+#: code:addons/survey/survey.py:424
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "질문이 없는 설문 조사 초대장은 보낼 수 없습니다."
 
 #. module: survey
-#: code:addons/survey/survey.py:427
+#: code:addons/survey/survey.py:429
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "마감된 설문 조사 초대장은 보낼 수 없습니다."
@@ -2317,8 +2031,8 @@ msgstr "로그인"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
-msgid "on"
-msgstr "작성일"
+msgid "of"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2336,3 +2050,169 @@ msgstr "귀하의 답변 검토"
 #, python-format
 msgid "try to create and fill survey"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "                \n"
+#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
+#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+#~ "                    <p>Hello,</p>\n"
+#~ "                    <p>We are conducting a survey, and your response "
+#~ "would be appreciated.</p>\n"
+#~ "                    <p><a href=\"__URL__\">Please, click here to start "
+#~ "survey</a></p>\n"
+#~ "                    <p>Thanks for your participation!</p>\n"
+#~ "                </div>\n"
+#~ "                \n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                \n"
+#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
+#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+#~ "                    <p>안녕하십니까.</p>\n"
+#~ "                    <p>귀하의 소중한 의견을 청취하고자 설문 조사를 진행하"
+#~ "고 있습니다.</p>\n"
+#~ "                    <p><a href=\"__URL__\">설문 조사를 시작하기 위해 여기"
+#~ "를 클릭해 주십시오.</a></p>\n"
+#~ "                    <p>참여해 주셔서 감사합니다!</p>\n"
+#~ "                </div>\n"
+#~ "                \n"
+#~ "            "
+
+#~ msgid "Author"
+#~ msgstr "작성자"
+
+#~ msgid ""
+#~ "Author of the message. If not set, email_from may hold an email address "
+#~ "that did not match any partner."
+#~ msgstr ""
+#~ "메시지의 작성자. 설정되지 않았을 경우 email_from에 모든 파트너와 일치하지 "
+#~ "않은 이메일 주소를 포함할 수 있습니다."
+
+#~ msgid "Automatically sanitized HTML contents"
+#~ msgstr "HTML 내용 중 불건전한 내용을 자동으로 제거함"
+
+#~ msgid "Channels"
+#~ msgstr "채널"
+
+#~ msgid "Child Messages"
+#~ msgstr "하위 메시지"
+
+#~ msgid "Composition mode"
+#~ msgstr "작성 모드"
+
+#~ msgid "Contents"
+#~ msgstr "내용"
+
+#~ msgid "Current user has a starred notification linked to this message"
+#~ msgstr "현재 사용자에게 이 메시지와 연결된 할 일로 표시된 알림이 있습니다."
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
+
+#~ msgid "Followers"
+#~ msgstr "팔로워"
+
+#~ msgid "From"
+#~ msgstr "시작일"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
+
+#~ msgid "Initial thread message."
+#~ msgstr "초기 스레드 메시지."
+
+#~ msgid "Last Message Date"
+#~ msgstr "최근 메시지 날짜"
+
+#~ msgid "Log an Internal Note"
+#~ msgstr "내부 메모 기록"
+
+#~ msgid "Message Record Name"
+#~ msgstr "메시지 레코드 이름"
+
+#~ msgid ""
+#~ "Message type: email for email message, notification for system message, "
+#~ "comment for other messages such as user replies"
+#~ msgstr ""
+#~ "메시지 유형 : 이메일 메시지를 위한 이메일, 시스템 메시지를 위한 알림, 사용"
+#~ "자 댓글과 같은 기타 메시지에 대한 의견"
+
+#~ msgid "Message unique identifier"
+#~ msgstr "메시지 고유 식별자"
+
+#~ msgid "Message-Id"
+#~ msgstr "Message-Id"
+
+#~ msgid "Messages"
+#~ msgstr "메시지"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "메시지 및 대화 기록"
+
+#~ msgid "Name get of the related document."
+#~ msgstr "관련 문서의 가져온 이름"
+
+#~ msgid "No threading for answers"
+#~ msgstr "답변에 대한 스레드가 없음"
+
+#~ msgid "Notify followers"
+#~ msgstr "팔로워에게 알림"
+
+#~ msgid "Notify followers of the document (mass post only)"
+#~ msgstr "문서의 팔로워에게 알림 (공개글만)"
+
+#~ msgid "Outgoing mail server"
+#~ msgstr "보내는 메일 서버"
+
+#~ msgid "Parent Message"
+#~ msgstr "상위 메시지"
+
+#~ msgid "Related Document ID"
+#~ msgstr "관련 문서 ID"
+
+#~ msgid "Related Document Model"
+#~ msgstr "관련 문서 모델"
+
+#~ msgid ""
+#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
+#~ "creation."
+#~ msgstr ""
+#~ "회신 이메일 주소. reply_to를 설정하면 자동 스레드 생성을 무시합니다."
+
+#~ msgid "Reply-To"
+#~ msgstr "회신 주소"
+
+#~ msgid ""
+#~ "Small-sized image of this contact. It is automatically resized as a "
+#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
+#~ "small image is required."
+#~ msgstr ""
+#~ "연락처를 나타내는 작은 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자"
+#~ "동으로 64x64픽셀 이미지로 크기가 조정됩니다. 어디서나 작은 이미지가 필요"
+#~ "할 때는 이 필드를 이용합니다."
+
+#~ msgid "Starred"
+#~ msgstr "할 일로 표시"
+
+#~ msgid "Subject"
+#~ msgstr "제목"
+
+#~ msgid "Subtype"
+#~ msgstr "하위유형"
+
+#~ msgid "System notification"
+#~ msgstr "시스템 알림"
+
+#~ msgid "Unread Messages"
+#~ msgstr "읽지 않은 메시지"
+
+#~ msgid "Use active domain"
+#~ msgstr "활성화된 도메인 사용"
+
+#~ msgid "Whether the message is an internal note (comment mode only)"
+#~ msgstr "메시지가 내부용 노트인지 여부 (의견 모드에만 해당)"
+
+#~ msgid "on"
+#~ msgstr "작성일"

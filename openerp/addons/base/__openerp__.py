@@ -72,11 +72,7 @@ The kernel of Odoo, needed for all installation.
         'res/res_partner_demo.yml',
         'res/res_partner_image_demo.xml',
     ],
-    'test': [
-        'tests/base_test.yml',
-        'tests/test_osv_expression.yml',
-        'tests/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
-    ],
+    'test': [],
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',

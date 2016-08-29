@@ -3,7 +3,7 @@
 {
     'name': 'Events Sales',
     'version': '1.1',
-    'category': 'Tools',
+    'category': 'Marketing',
     'website': 'https://www.odoo.com/page/events',
     'description': """
 Creating registration with sale orders.
@@ -20,16 +20,15 @@ this event.
 """,
     'depends': ['event', 'sale'],
     'data': [
-        'views/event.xml',
-        'views/product.xml',
-        'views/sale_order.xml',
-        'event_sale_data.xml',
+        'views/event_views.xml',
+        'views/product_views.xml',
+        'views/sale_order_views.xml',
+        'data/event_sale_data.xml',
         'report/event_event_templates.xml',
         'security/ir.model.access.csv',
         'wizard/event_edit_registration.xml',
     ],
-    'demo': ['event_demo.xml'],
-    'test': ['test/confirm.yml'],
+    'demo': ['data/event_demo.xml'],
     'installable': True,
     'auto_install': True
 }

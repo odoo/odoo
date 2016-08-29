@@ -23,17 +23,16 @@ This module manages:
 * Voucher Receipt [Sales & Purchase]
 * Voucher Payment [Customer & Vendors]
     """,
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'sequence': 20,
     'website' : 'https://www.odoo.com/page/billing',
     'depends' : ['account'],
     'demo' : [],
     'data' : [
         'security/ir.model.access.csv',
-        'account_voucher_view.xml',
-        'voucher_sales_purchase_view.xml',
+        'views/account_voucher_views.xml',
         'security/account_voucher_security.xml',
-        'account_voucher_data.xml',
+        'data/account_voucher_data.xml',
     ],
     'test' : [
         'test/account_voucher_users.yml',

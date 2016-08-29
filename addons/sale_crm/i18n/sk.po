@@ -1,27 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-11 16:07+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_claim_count
-msgid "# Claims"
-msgstr "# Nároky"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
@@ -53,17 +48,20 @@ msgstr "<span class=\"o_stat_text\"> Cenová ponuka(y) </span>"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "Člen, s ktorým sa chcete spojiť svoje členstvo. To zváži stav členstva pridruženého člena."
+msgstr ""
+"Člen, s ktorým sa chcete spojiť svoje členstvo. To zváži stav členstva "
+"pridruženého člena."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+#, fuzzy
+msgid "Activation"
+msgstr "Cenová ponuka"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Pridružený člen"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_campaign_id
-msgid "Campaign"
-msgstr "Kampaň"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
@@ -106,19 +104,26 @@ msgid "Free Member"
 msgstr "Bezplatný člen"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Geo zemepisná šírka"
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_localization
-msgid "Geo Localization Date"
-msgstr "Dátum geolokalizácie"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Geo zemepisná dĺžka"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -132,10 +137,24 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr "To indikuje stav členstva.\n-Nečlen: Partner, ktorý nepožiadal o akékoľvek členstvo.\n-Zrušený člen: Člen, ktorý zrušil svoje členstvo.\n-Bývalý člen: Člen, ktorého dátum členstva vypršal.\n-Čakajúci člen: Člen, ktorý požiadal o členstvo a ktorého faktúra bude vytvorená.\n-Vyfaktúrovaný člen: Člen, ktorého faktúra bola vytvorená.\n-Platiaci člen: Člen, ktorý zaplatil členský poplatok."
+msgstr ""
+"To indikuje stav členstva.\n"
+"-Nečlen: Partner, ktorý nepožiadal o akékoľvek členstvo.\n"
+"-Zrušený člen: Člen, ktorý zrušil svoje členstvo.\n"
+"-Bývalý člen: Člen, ktorého dátum členstva vypršal.\n"
+"-Čakajúci člen: Člen, ktorý požiadal o členstvo a ktorého faktúra bude "
+"vytvorená.\n"
+"-Vyfaktúrovaný člen: Člen, ktorého faktúra bola vytvorená.\n"
+"-Platiaci člen: Člen, ktorý zaplatil členský poplatok."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -143,14 +162,19 @@ msgid "Lead/Opportunity"
 msgstr "Iniciatíva/Príležitosť"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "Prihláste sa do chatter-u, z ktorého pochádza príležitosť objednávky"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_medium_id
-msgid "Medium"
-msgstr "Stredné"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -178,6 +202,11 @@ msgid "New Quotation"
 msgstr "Nová cenová ponuka"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Počet cenových ponúk"
@@ -191,6 +220,12 @@ msgstr "Príležitosť"
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
 msgstr "Objednávky"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+#, fuzzy
+msgid "Partnership Date"
+msgstr "Dátum zrušenia členstva"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
@@ -219,11 +254,6 @@ msgid "Select if you want to give free membership."
 msgstr "Vyberte ak chcete dať bezplatné členstvo."
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_source_id
-msgid "Source"
-msgstr "Výraz"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
 msgstr "Súčet objednávok"
@@ -244,37 +274,22 @@ msgid "The price negotiated by the partner"
 msgstr "Cena vyjednaná partnerom"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Jedná sa o názov, ktorý vám pomôže sledovať snahu vašich rôznych kampaní. Príklad: Fall_Drive, Christmas_Special"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Ide o metódu dodávky. Príklad: Pohľadnice, email, alebo bannerová reklama"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_sale_order_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Toto je zdroj odkazu. Príklad: vyhľadávaci prostriedok, iná doména, alebo názov emailového zoznamu"
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr "Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia tovaru ktorý posielate tomuto partnerovi"
+msgstr ""
+"Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia "
+"tovaru ktorý posielate tomuto partnerovi"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
-msgstr "Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia tovaru ktorý obdržíte od súčasného partnera"
+msgstr ""
+"Táto lokácia skladu bude použitá namiesto predvolenej, ako cieľová lokácia "
+"tovaru ktorý obdržíte od súčasného partnera"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -285,3 +300,42 @@ msgstr "Používatelia"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Lokácia predajcu"
+
+#~ msgid "# Claims"
+#~ msgstr "# Nároky"
+
+#~ msgid "Campaign"
+#~ msgstr "Kampaň"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Geo zemepisná šírka"
+
+#~ msgid "Geo Localization Date"
+#~ msgstr "Dátum geolokalizácie"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Geo zemepisná dĺžka"
+
+#~ msgid "Medium"
+#~ msgstr "Stredné"
+
+#~ msgid "Source"
+#~ msgstr "Výraz"
+
+#~ msgid ""
+#~ "This is a name that helps you keep track of your different campaign "
+#~ "efforts Ex: Fall_Drive, Christmas_Special"
+#~ msgstr ""
+#~ "Jedná sa o názov, ktorý vám pomôže sledovať snahu vašich rôznych kampaní. "
+#~ "Príklad: Fall_Drive, Christmas_Special"
+
+#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+#~ msgstr ""
+#~ "Ide o metódu dodávky. Príklad: Pohľadnice, email, alebo bannerová reklama"
+
+#~ msgid ""
+#~ "This is the source of the link Ex: Search Engine, another domain, or name "
+#~ "of email list"
+#~ msgstr ""
+#~ "Toto je zdroj odkazu. Príklad: vyhľadávaci prostriedok, iná doména, alebo "
+#~ "názov emailového zoznamu"

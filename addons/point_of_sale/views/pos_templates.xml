@@ -23,6 +23,13 @@
 
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
 
+        <script type="text/javascript">
+            var odoo = {
+                csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                session_info: <t t-raw="session_info"/>,
+            };
+        </script>
+
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="web.assets_backend" t-css="false"/>
         <t t-call-assets="web_editor.summernote" t-css="false"/>
@@ -31,12 +38,12 @@
 
         <script type="text/javascript" id="loading-script" t-raw="init">
             odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.WebClient');
+                var WebClient = require('web.AbstractWebClient');
                 var web_client = new WebClient();
 
                 web_client._title_changed = function() {};
                 web_client.show_application = function() {
-                    web_client.action_manager.do_action("pos.ui");
+                    return web_client.action_manager.do_action("pos.ui");
                 };
 
                 $(function () {
@@ -45,22 +52,10 @@
                 });
                 return web_client;
             });
-
-            odoo.define('web.csrf', function (require) {
-                var token = "<t t-esc="request.csrf_token(None)"/>";
-                require('web.core').csrf_token = token;
-                require('qweb').default_dict.csrf_token = token;
-            });
         </script>
     </head>
     <body>
-        <div class='openerp openerp_webclient_container'>
-            <table class='oe_webclient'>
-                <tr>
-                    <td class='oe_application' />
-                </tr>
-            </table>
-        </div>
+        <div class="o_main_content"/>
     </body>
 </html>
 </template>

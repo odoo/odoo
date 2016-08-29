@@ -12,7 +12,7 @@ Organize Your Tracks
 
 Add a talk proposal form on your events to allow visitors to submit talks and speakers. Organize the validation process of every talk, and schedule easily.
 
-OpenERP's unique frontend and backend integration makes organization and publication so easy. Easily design beautiful speaker biographies and talks description.
+Odoo's unique frontend and backend integration makes organization and publication so easy. Easily design beautiful speaker biographies and talks description.
 
 Agenda and List of Talks
 ------------------------
@@ -28,7 +28,7 @@ Manage Sponsors
 
 Add sponsors to your events and publish sponsors per level (e.g. bronze, silver, gold) on the bottom of every page of the event.
 
-Sell sponsorship packages online through the OpenERP eCommerce for a full sales cycle integration.
+Sell sponsorship packages online through the Odoo eCommerce for a full sales cycle integration.
 
 Communicate Efficiently
 -----------------------

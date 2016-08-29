@@ -38,25 +38,22 @@ Izvori podataka:
  https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar
 
 """,
-    "version": "12.2",
+    "version": "13.0",
     "author": "OpenERP Croatian Community",
-    "category": 'Localization/Account Charts',
+    'category': 'Localization',
     "website": "https://code.launchpad.net/openobject-croatia",
 
     'depends': [
         'account',
     ],
     'data': [
-        'data/account_chart_template.xml',
+        'data/l10n_hr_chart_data.xml',
         'data/account.account.type.csv',
         'data/account.account.template.csv',
-        'data/account_chart_tag.xml',
+        'data/account_chart_tag_data.xml',
         'data/account.tax.template.csv',
-        'data/fiscal_position_template.xml',
-        'data/account_chart_template.yml',
+        'data/account_tax_fiscal_position_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    "demo": [],
-    'test': [],
     "active": False,
-    "installable": True,
 }

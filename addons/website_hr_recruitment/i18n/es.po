@@ -3,20 +3,29 @@
 # * website_hr_recruitment
 # 
 # Translators:
-# Roberto Lizana <robertolizana@trey.es>, 2015
+# Roberto Lizana <robertolizana@trey.es>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-27 23:51+0000\n"
-"Last-Translator: Roberto Lizana <robertolizana@trey.es>\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Submit</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.job_countries
@@ -53,7 +62,9 @@ msgstr "Solicitar trabajo"
 msgid ""
 "Click on \"Content\" to define a new job offer or \"Help\" for more "
 "informations."
-msgstr "Pulse en \"Contenido\" para definir un nuevo trabajo o en \"Ayuda\" para más información."
+msgstr ""
+"Pulse en \"Contenido\" para definir un nuevo trabajo o en \"Ayuda\" para más"
+" información."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
@@ -92,10 +103,13 @@ msgid ""
 "Join us, we offer you an extraordinary chance to learn, to\n"
 "                                    develop and to be part of an exciting experience and\n"
 "                                    team."
-msgstr "Únase a nosotros. Le ofrecemos una extraordinaria oportunidad para aprende, desarrollar y ser parte de una excitante experiencia y un equipo consolidado."
+msgstr ""
+"Únase a nosotros. Le ofrecemos una extraordinaria oportunidad para aprende, "
+"desarrollar y ser parte de una excitante experiencia y un equipo "
+"consolidado."
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:69
+#: code:addons/website_hr_recruitment/controllers/main.py:72
 #: model:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
 #, python-format
 msgid "New Job Offer"
@@ -132,19 +146,9 @@ msgid "Source of Applicants"
 msgstr "Origen de los solicitantes"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Submit"
-msgstr "Enviar"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid "Thank you!"
 msgstr "¡Gracias!"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job_website_url
-msgid "The full URL to access the document through the website."
-msgstr "La URL completa para acceder al documento a través de la web."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -157,39 +161,14 @@ msgid "Url Parameters"
 msgstr "Parametros de la URL"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_published
-msgid "Visible in Website"
-msgstr "Visible en el sitio web"
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Formulario de reclutamiento del sitio web"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_url
-msgid "Website URL"
-msgstr "URL del sitio web"
-
-#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_description
 msgid "Website description"
 msgstr "Descripción del sitio web"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_description
-msgid "Website meta description"
-msgstr "Meta descripción del sitio web"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Meta palabras clave del sitio web"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_title
-msgid "Website meta title"
-msgstr "Meta título del sitio web"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -199,7 +178,12 @@ msgid ""
 "                                    Odoo is fully open source, super easy, full featured\n"
 "                                    (3000+ apps) and its online offer is 3 times cheaper than\n"
 "                                    traditional competitors like SAP and Ms Dynamics."
-msgstr "Con un pequeño equipo de gente talentosa, lanzamos el software de gestión empresarial más disruptivo del mundo. Odoo es completamente código abierto, súper sencillo, con todas las funciones (+3000 aplicaciones) y su oferta en líneas es 3 veces más barata que los competidores tradicionales como SAP y MS Dynamics."
+msgstr ""
+"Con un pequeño equipo de gente talentosa, lanzamos el software de gestión "
+"empresarial más disruptivo del mundo. Odoo es completamente código abierto, "
+"súper sencillo, con todas las funciones (+3000 aplicaciones) y su oferta en "
+"líneas es 3 veces más barata que los competidores tradicionales como SAP y "
+"MS Dynamics."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -221,17 +205,13 @@ msgstr "Su número de teléfono "
 msgid ""
 "Your job application has been successfully registered,\n"
 "                        we will get back to you soon."
-msgstr "Su solicitud de trabajo ha sido registrada. Le contactaremos en breve."
+msgstr ""
+"Su solicitud de trabajo ha sido registrada. Le contactaremos en breve."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "here"
 msgstr "aquí"
-
-#. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "not published"
-msgstr "no publicado"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -242,3 +222,8 @@ msgstr "puesto(s) disponible(s)"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "to contact us"
 msgstr "para contactarnos"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "unpublished"
+msgstr ""

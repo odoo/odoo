@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import itertools
 import logging
 import math
 import re
 import uuid
+
+from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
-from openerp import _
-from openerp import api, fields, models
-from openerp import http
-from openerp import modules
-from openerp import tools
-from openerp import SUPERUSER_ID
-from openerp.addons.website.models.website import slug
-from openerp.exceptions import UserError
+from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -30,13 +26,14 @@ class Forum(models.Model):
     _description = 'Forum'
     _inherit = ['mail.thread', 'website.seo.metadata']
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         """ Add forum uuid for user email validation.
 
         TDE TODO: move me somewhere else, auto_init ? """
-        forum_uuids = self.pool['ir.config_parameter'].search(cr, SUPERUSER_ID, [('key', '=', 'website_forum.uuid')])
+        forum_uuids = self.env['ir.config_parameter'].search([('key', '=', 'website_forum.uuid')])
         if not forum_uuids:
-            self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
+            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
 
     @api.model
     def _get_default_faq(self):
@@ -139,7 +136,7 @@ class Forum(models.Model):
         if (self.default_post_type == 'question' and not self.allow_question) \
                 or (self.default_post_type == 'discussion' and not self.allow_discussion) \
                 or (self.default_post_type == 'link' and not self.allow_link):
-            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
+            raise ValidationError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
 
     @api.one
     def _compute_count_posts_waiting_validation(self):
@@ -218,20 +215,20 @@ class Post(models.Model):
     )
 
     # history
-    create_date = fields.Datetime('Asked on', select=True, readonly=True)
-    create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
-    write_date = fields.Datetime('Update on', select=True, readonly=True)
+    create_date = fields.Datetime('Asked on', index=True, readonly=True)
+    create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
+    write_date = fields.Datetime('Update on', index=True, readonly=True)
     bump_date = fields.Datetime('Bumped on', readonly=True,
                                 help="Technical field allowing to bump a question. Writing on this field will trigger "
                                      "a write on write_date and therefore bump the post. Directly writing on write_date "
                                      "is currently not supported and this field is a workaround.")
-    write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
+    write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
     user_vote = fields.Integer('My Vote', compute='_get_user_vote')
-    vote_count = fields.Integer('Votes', compute='_get_vote_count', store=True)
+    vote_count = fields.Integer('Total Votes', compute='_get_vote_count', store=True)
 
     # favorite
     favourite_ids = fields.Many2many('res.users', string='Favourite')
@@ -253,7 +250,7 @@ class Post(models.Model):
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', select=1)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True)
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access
@@ -414,7 +411,7 @@ class Post(models.Model):
         if (self.post_type == 'question' and not self.forum_id.allow_question) \
                 or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
-            raise UserError(_('This forum does not allow %s') % self.post_type)
+            raise ValidationError(_('This forum does not allow %s') % self.post_type)
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
@@ -492,7 +489,8 @@ class Post(models.Model):
                     post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * mult)
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
         if 'tag_ids' in vals:
-            if any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
+            tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
+            if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
         if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals.keys()) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
@@ -559,7 +557,14 @@ class Post(models.Model):
             if post.closed_reason_id in (reason_offensive, reason_spam):
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
                              post.create_uid)
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged * -1)
+
+                karma = post.forum_id.karma_gen_answer_flagged
+                if post.closed_reason_id == reason_spam:
+                    # If first post, increase the karma to add
+                    count_post = post.search_count([('parent_id', '=', False), ('forum_id', '=', post.forum_id.id), ('create_uid', '=', post.create_uid.id)])
+                    if count_post == 1:
+                        karma *= 10
+                post.create_uid.sudo().add_karma(karma * -1)
 
         self.sudo().write({'state': 'active'})
 
@@ -574,7 +579,13 @@ class Post(models.Model):
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
                              post.create_uid)
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged)
+                karma = post.forum_id.karma_gen_answer_flagged
+                if reason_id == reason_spam:
+                    # If first post, increase the karma to remove
+                    count_post = post.search_count([('parent_id', '=', False), ('forum_id', '=', post.forum_id.id), ('create_uid', '=', post.create_uid.id)])
+                    if count_post == 1:
+                        karma *= 10
+                post.create_uid.sudo().add_karma(karma)
 
         self.write({
             'state': 'close',
@@ -683,13 +694,14 @@ class Post(models.Model):
                 Vote.create({'post_id': post_id, 'vote': new_vote})
         return {'vote_count': self.vote_count, 'user_vote': new_vote}
 
-    @api.one
+    @api.multi
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
         using the post create_uid as the comment's author. """
+        self.ensure_one()
         if not self.parent_id:
-            return False
+            return self.env['mail.message']
 
         # karma-based action check: use the post field that computed own/all value
         if not self.can_comment_convert:
@@ -704,7 +716,7 @@ class Post(models.Model):
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = self.browse(question.id).with_context(mail_create_nosubscribe=True).message_post(**values)
+        new_message = question.with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
@@ -789,22 +801,14 @@ class Post(models.Model):
             res[category]['button_access'] = {'url': access_action, 'title': '%s %s' % (_('View'), self.post_type)}
         return res
 
-    @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, message_type='notification', subtype=None, context=None, **kwargs):
-        if thread_id and message_type == 'comment':  # user comments have a restriction on karma
-            if isinstance(thread_id, (list, tuple)):
-                post_id = thread_id[0]
-            else:
-                post_id = thread_id
-            post = self.browse(cr, uid, post_id, context=context)
-            # TDE FIXME: trigger browse because otherwise the function field is not compted - check with RCO
-            tmp1, tmp2 = post.karma_comment, post.can_comment
-            user = self.pool['res.users'].browse(cr, uid, uid)
-            tmp3 = user.karma
-            # TDE END FIXME
-            if not post.can_comment:
+    @api.multi
+    def message_post(self, message_type='notification', subtype=None, **kwargs):
+        if self.ids and message_type == 'comment':  # user comments have a restriction on karma
+            self.ensure_one()
+            if not self.can_comment:
                 raise KarmaError('Not enough karma to comment')
-        return super(Post, self).message_post(cr, uid, thread_id, message_type=message_type, subtype=subtype, context=context, **kwargs)
+            kwargs['record_name'] = kwargs.get('record_name') or self.parent_id and self.parent_id.name
+        return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
 
 
 class PostReason(models.Model):
@@ -823,7 +827,7 @@ class Vote(models.Model):
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
-    create_date = fields.Datetime('Create Date', select=True, readonly=True)
+    create_date = fields.Datetime('Create Date', index=True, readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True)
 
@@ -907,3 +911,12 @@ class Tags(models.Model):
         if self.env.user.karma < forum.karma_tag_create:
             raise KarmaError(_('Not enough karma to create a new Tag'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)
+
+class Message(models.Model):
+    _name = 'mail.message'
+    _inherit = ['mail.message']
+
+    @api.multi
+    def _is_accessible(self):
+        res = super(Message, self)._is_accessible()
+        return self.model == 'forum.post' or res

@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 import logging
+import psycopg2
 import threading
 
 from email.utils import formataddr
 
-import psycopg2
-
-from openerp import _, api, fields, models
-from openerp import tools
-from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models
+from odoo import tools
+from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -112,24 +112,15 @@ class MailMail(models.Model):
             ids = self.search(filters).ids
         res = None
         try:
-            # Force auto-commit - this is meant to be called by
-            # the scheduler, and we can't allow rolling back the status
-            # of previously sent emails! Does not auto_commit if in
-            # testing mode
-            if (not self.pool._init or getattr(threading.currentThread(), 'testing', False)):
-                res = self.browse(ids).send(auto_commit=False)
-            else:
-                res = self.browse(ids).send(auto_commit=True)
+            # auto-commit except in testing mode
+            auto_commit = not getattr(threading.currentThread(), 'testing', False)
+            res = self.browse(ids).send(auto_commit=auto_commit)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
 
-    @api.cr_uid_context
-    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
-        return True
-
     @api.multi
-    def _postprocess_sent_message_v9(self, mail_sent=True):
+    def _postprocess_sent_message(self, mail_sent=True):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -138,10 +129,6 @@ class MailMail(models.Model):
         :param browse_record mail: the mail that was just sent
         :return: True
         """
-        # Compat mode until v9
-        for mail in self:
-            self._postprocess_sent_message(mail, mail_sent=mail_sent)
-
         if mail_sent:
             self.sudo().filtered(lambda self: self.auto_delete).unlink()
         return True
@@ -240,7 +227,7 @@ class MailMail(models.Model):
                         headers['Return-Path'] = '%s-%d@%s' % (bounce_alias, mail.id, catchall_domain)
                 if mail.headers:
                     try:
-                        headers.update(eval(mail.headers))
+                        headers.update(safe_eval(mail.headers))
                     except Exception:
                         pass
 
@@ -291,7 +278,7 @@ class MailMail(models.Model):
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
-                mail._postprocess_sent_message_v9(mail_sent=mail_sent)
+                mail._postprocess_sent_message(mail_sent=mail_sent)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
@@ -309,7 +296,7 @@ class MailMail(models.Model):
                 failure_reason = tools.ustr(e)
                 _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
                 mail.write({'state': 'exception', 'failure_reason': failure_reason})
-                mail._postprocess_sent_message_v9(mail_sent=False)
+                mail._postprocess_sent_message(mail_sent=False)
                 if raise_exception:
                     if isinstance(e, AssertionError):
                         # get the args of the original error, wrap into a value and throw a MailDeliveryException

@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import os
-import time
-import werkzeug
 import subprocess
-from os import listdir
+import werkzeug
 
-import openerp
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+import odoo
+from odoo import http
 
 _logger = logging.getLogger(__name__)
 
@@ -55,7 +53,7 @@ index_template = """
         Wi-Fi can be configured by visiting the <a href='/wifi'>Wi-Fi configuration page</a>.
         </p>
         <p>
-        The PosBox software installed on this posbox is <b>version 13</b>,
+        The PosBox software installed on this posbox is <b>version 14</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>
@@ -67,7 +65,7 @@ index_template = """
 """
 
 
-class PosboxHomepage(openerp.addons.web.controllers.main.Home):
+class PosboxHomepage(odoo.addons.web.controllers.main.Home):
     @http.route('/', type='http', auth='none', website=True)
     def index(self):
         #return request.render('hw_posbox_homepage.index',mimetype='text/html')

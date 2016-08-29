@@ -18,12 +18,11 @@ import threading
 from operator import itemgetter
 from os.path import join as opj
 
-
 import openerp
 import openerp.tools as tools
 import openerp.release as release
-from openerp import SUPERUSER_ID
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp import SUPERUSER_ID, api
+from openerp.tools.safe_eval import safe_eval
 
 MANIFEST = '__openerp__.py'
 README = ['README.rst', 'README.md', 'README.txt']
@@ -233,9 +232,16 @@ def get_resource_from_path(path):
     :rtype: tuple
     :return: tuple(module_name, relative_path, os_relative_path) if possible, else None
     """
-    resource = [path.replace(adpath, '') for adpath in ad_paths if path.startswith(adpath)]
+    resource = False
+    for adpath in ad_paths:
+        # force trailing separator
+        adpath = os.path.join(adpath, "")
+        if os.path.commonprefix([adpath, path]) == adpath:
+            resource = path.replace(adpath, "", 1)
+            break
+
     if resource:
-        relative = resource[0].split(os.path.sep)
+        relative = resource.split(os.path.sep)
         if not relative[0]:
             relative.pop(0)
         module = relative.pop(0)
@@ -311,7 +317,7 @@ def load_information_from_description_file(module, mod_path=None):
 
             f = tools.file_open(terp_file)
             try:
-                info.update(eval(f.read()))
+                info.update(safe_eval(f.read()))
             finally:
                 f.close()
 
@@ -333,34 +339,6 @@ def load_information_from_description_file(module, mod_path=None):
     #      for 6.0
     _logger.debug('module %s: no %s file found.', module, MANIFEST)
     return {}
-
-def init_models(models, cr, context):
-    """ Initialize a list of models.
-
-    Call methods ``_auto_init``, ``init``, and ``_auto_end`` on each model to
-    create or update the database tables supporting the models.
-
-    The context may contain the following items:
-     - ``module``: the name of the module being installed/updated, if any;
-     - ``update_custom_fields``: whether custom fields should be updated.
-
-    """
-    if 'module' in context:
-        _logger.info('module %s: creating or updating database tables', context['module'])
-    context = dict(context, todo=[])
-    models = [model.browse(cr, SUPERUSER_ID, [], context) for model in models]
-    for model in models:
-        model._auto_init()
-        model.init()
-        cr.commit()
-    for model in models:
-        model._auto_end()
-        cr.commit()
-    for _, func, args in sorted(context['todo'], key=itemgetter(0)):
-        func(cr, *args)
-    if models:
-        models[0].recompute()
-    cr.commit()
 
 def load_openerp_module(module_name):
     """ Load an OpenERP module, if not already loaded.

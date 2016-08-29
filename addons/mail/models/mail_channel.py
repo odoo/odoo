@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from email.utils import formataddr
 
+import re
 import uuid
 
-from openerp import _, api, fields, models, modules, tools
-from openerp.exceptions import UserError
-from openerp.osv import expression
-
+from odoo import _, api, fields, models, modules, tools
+from odoo.exceptions import UserError
+from odoo.osv import expression
+from odoo.tools import ormcache
+from odoo.tools.safe_eval import safe_eval
 
 
 class ChannelPartner(models.Model):
@@ -44,7 +47,7 @@ class Channel(models.Model):
         ('channel', 'Channel')],
         'Channel Type', default='channel')
     description = fields.Text('Description')
-    uuid = fields.Char('UUID', size=50, select=True, default=lambda self: '%s' % uuid.uuid4())
+    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: '%s' % uuid.uuid4())
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
@@ -69,13 +72,11 @@ class Channel(models.Model):
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Photo", default=_get_default_image, attachment=True,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium-sized photo',
-        compute='_get_image', inverse='_set_image_medium', store=True, attachment=True,
+    image_medium = fields.Binary('Medium-sized photo', attachment=True,
         help="Medium-sized photo of the group. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Small-sized photo',
-        compute='_get_image', inverse='_set_image_small', store=True, attachment=True,
+    image_small = fields.Binary('Small-sized photo', attachment=True,
         help="Small-sized photo of the group. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
@@ -100,20 +101,9 @@ class Channel(models.Model):
         for record in self:
             record.is_member = record in membership_ids
 
-    @api.one
-    @api.depends('image')
-    def _get_image(self):
-        self.image_medium = tools.image_resize_image_medium(self.image)
-        self.image_small = tools.image_resize_image_small(self.image)
-
-    def _set_image_medium(self):
-        self.image = tools.image_resize_image_big(self.image_medium)
-
-    def _set_image_small(self):
-        self.image = tools.image_resize_image_big(self.image_small)
-
     @api.model
     def create(self, vals):
+        tools.image_resize_images(vals)
         # Create channel and alias
         channel = super(Channel, self.with_context(
             alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
@@ -147,6 +137,7 @@ class Channel(models.Model):
 
     @api.multi
     def write(self, vals):
+        tools.image_resize_images(vals)
         result = super(Channel, self).write(vals)
         if vals.get('group_ids'):
             self._subscribe_users()
@@ -193,7 +184,7 @@ class Channel(models.Model):
         headers = {}
         if res.get('headers'):
             try:
-                headers.update(eval(res['headers']))
+                headers.update(safe_eval(res['headers']))
             except Exception:
                 pass
         headers['Precedence'] = 'list'
@@ -225,10 +216,14 @@ class Channel(models.Model):
     def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
         # auto pin 'direct_message' channel partner
         self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
-        # apply shortcode (text only) subsitution
-        body = self.env['mail.shortcode'].apply_shortcode(body, shortcode_type='text')
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
         return message
+
+    @api.model_cr
+    def init(self):
+        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
+        if not self._cr.fetchone():
+            self._cr.execute('CREATE INDEX mail_channel_partner_seen_message_id_idx ON mail_channel_partner (channel_id,partner_id,seen_message_id)')
 
     #------------------------------------------------------
     # Instant Messaging API
@@ -587,3 +582,85 @@ class Channel(models.Model):
             del(channel['message_id'])
             channel['last_message'] = message
         return channels_preview.values()
+
+    #------------------------------------------------------
+    # Commands
+    #------------------------------------------------------
+    @api.model
+    @ormcache()
+    def get_mention_commands(self):
+        """ Returns the allowed commands in channels """
+        commands = []
+        for n in dir(self):
+            match = re.search('^_define_command_(.+?)$', n)
+            if match:
+                command = getattr(self, n)()
+                command['name'] = match.group(1)
+                commands.append(command)
+        return commands
+
+    @api.multi
+    def execute_command(self, command='', **kwargs):
+        """ Executes a given command """
+        self.ensure_one()
+        command_callback = getattr(self, '_execute_command_' + command, False)
+        if command_callback:
+            command_callback(**kwargs)
+
+    def _send_transient_message(self, partner_to, content):
+        """ Notifies partner_to that a message (not stored in DB) has been
+            written in this channel """
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_to.id), {
+            'body': "<span class='o_mail_notification'>" + content + "</span>",
+            'channel_ids': [self.id],
+            'info': 'transient_message',
+        })
+
+    def _define_command_help(self):
+        return {'help': _("Show an helper message")}
+
+    def _execute_command_help(self, **kwargs):
+        partner = self.env.user.partner_id
+        if self.channel_type == 'channel':
+            msg = _("You are in channel <b>#%s</b>.") % self.name
+            if self.public == 'private':
+                msg += _(" This channel is private. People must be invited to join it.")
+        else:
+            channel_partners = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
+            msg = _("You are in a private conversation with <b>@%s</b>.") % channel_partners[0].partner_id.name
+        msg += _("""<br><br>
+            You can mention someone by typing <b>@username</b>, this will grab its attention.<br>
+            You can mention a channel by typing <b>#channel</b>.<br>
+            You can execute a command by typing <b>/command</b>.<br>
+            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>""")
+
+        self._send_transient_message(partner, msg)
+
+    def _define_command_leave(self):
+        return {'help': _("Leave this channel")}
+
+    def _execute_command_leave(self, **kwargs):
+        if self.channel_type == 'channel':
+            self.action_unfollow()
+        else:
+            self.channel_pin(self.uuid, False)
+
+    def _define_command_who(self):
+        return {
+            'channel_types': ['channel', 'chat'],
+            'help': _("List users in the current channel")
+        }
+
+    def _execute_command_who(self, **kwargs):
+        partner = self.env.user.partner_id
+        members = [
+            '<a href="#" data-oe-id='+str(p.id)+' data-oe-model="res.partner">@'+p.name+'</a>'
+            for p in self.channel_partner_ids[:30] if p != partner
+        ]
+        if len(members) == 0:
+            msg = _("You are alone in this channel.")
+        else:
+            dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
+            msg = _("Users in this channel: %s %s and you.") % (", ".join(members), dots)
+
+        self._send_transient_message(partner, msg)

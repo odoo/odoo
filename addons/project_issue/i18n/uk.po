@@ -1,27 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-# 
+#
 # Translators:
-# Bogdan, 2015-2016
+# Bohdan Lisnenko, 2015-2016
+# Bohdan Lisnenko, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-02-13 15:19+0000\n"
-"Last-Translator: Bogdan\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-05-16 13:39+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
 msgid "# Emails"
-msgstr ""
+msgstr "К-сть листів"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
@@ -34,7 +42,7 @@ msgid "# of Issues"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:212
+#: code:addons/project_issue/project_issue.py:215
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копія)"
@@ -42,7 +50,7 @@ msgstr "%s (копія)"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Category:</b>"
-msgstr ""
+msgstr "<b>Категорія:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
@@ -60,13 +68,9 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
 msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
-msgid "Action Needed"
-msgstr "Необхідна дія"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -81,7 +85,7 @@ msgstr "Додайте внутрішню примітку..."
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analytic Account"
+msgstr "Аналітичний рахунок"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -124,12 +128,12 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Заблоковано"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "По відповідальних"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
@@ -141,7 +145,7 @@ msgstr "Канал"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
+msgstr "Встановіть прапорець тут, щоб керувати діями клієнта в цьому проекті"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
@@ -150,8 +154,13 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
+#, fuzzy
 msgid "Closed"
-msgstr "Closed"
+msgstr ""
+"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Завершено\n"
+"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Closed"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
@@ -206,16 +215,16 @@ msgid "Creation Date"
 msgstr "Дата створення"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:367
+#: code:addons/project_issue/project_issue.py:384
 #, python-format
 msgid "Customer"
 msgstr "Клієнт"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:369
+#: code:addons/project_issue/project_issue.py:386
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Email клієнта"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
@@ -225,7 +234,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
 msgid "Date"
-msgstr "Date"
+msgstr "Дата"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_closed
@@ -236,11 +245,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
 msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Дата останнього повідомлення по запису."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
@@ -255,12 +259,12 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
 msgid "Days to Assign"
-msgstr ""
+msgstr "днів для призначення"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
 msgid "Days to Close"
-msgstr ""
+msgstr "Днів для закриття"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_deadline
@@ -280,7 +284,7 @@ msgstr "Вилучити"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Description"
-msgstr "Description"
+msgstr "Опис"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
@@ -296,7 +300,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -329,34 +333,18 @@ msgid "Feature description"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
-msgid "Followers"
-msgstr "Підписники"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Підписники (Канали)"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Підписники (Партнери)"
-
-#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
 msgstr "Групувати за"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Високий"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:345
+#: code:addons/project_issue/project_issue.py:362
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -368,26 +356,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
-msgid "Is Follower"
-msgstr "Стежить"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue"
-msgstr ""
+msgstr "Скарга"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
@@ -439,8 +412,9 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-msgid "Issue ready for next sStage"
-msgstr ""
+#, fuzzy
+msgid "Issue ready for next stage"
+msgstr "Готово для наступної стадії"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -450,6 +424,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: model:ir.ui.menu,name:project_issue.portal_services_issues
@@ -470,22 +445,22 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Опис блокованого канбану"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Опис канбану у процесі"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "Ста канбану"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Опис дійсного канбану"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -495,12 +470,7 @@ msgstr "Остання дія"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Last Message"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
-msgid "Last Message Date"
-msgstr "Дата останнього повідомлення"
+msgstr "Останнє повідомлення"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
@@ -512,7 +482,7 @@ msgstr "Остання модифікація"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_last_stage_update
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Остання зміна стану"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
@@ -520,20 +490,9 @@ msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: project_issue
-#: selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Низький"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_ids
-msgid "Messages"
-msgstr "Повідомлення"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_ids
-msgid "Messages and communication history"
-msgstr "Повідомлення та історія бесіди"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -547,10 +506,10 @@ msgid "New"
 msgstr "Новий"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:347
+#: code:addons/project_issue/project_issue.py:364
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "Нова скарга"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -558,21 +517,16 @@ msgid "Next Action"
 msgstr "Наступна дія"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:390
+#: code:addons/project_issue/project_issue.py:413
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Без теми"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
-msgstr "Нормальний"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Кількість дій"
+msgstr "Звичайний"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -585,26 +539,16 @@ msgid "Number of Days to open the project issue."
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Кількість повідомлень, які потебують дії"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Кількість непрочитаних повідомлень"
-
-#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "Партнер"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:480
+#: code:addons/project_issue/project_issue.py:530
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want"
-" to delete."
+"Please remove existing issues in the project linked to the accounts you want "
+"to delete."
 msgstr ""
 
 #. module: project_issue
@@ -615,7 +559,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Priority"
-msgstr "Пріоритет"
+msgstr "Приорітет"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_description
@@ -632,7 +576,6 @@ msgid "Project"
 msgstr "Проект"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -647,7 +590,7 @@ msgstr ""
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Готово для наступної стадії"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
@@ -677,18 +620,18 @@ msgstr "Пошук можливий"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Stage"
-msgstr ""
+msgstr "Стадія"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "стадію змінено"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Стадію змінено"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_tag_ids
@@ -703,11 +646,18 @@ msgid "Task"
 msgstr "Завдання"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+#, fuzzy
+msgid "Task Stage"
+msgstr "Стадія"
+
+#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, customer\n"
+"                    like internal requests, software development bugs, "
+"customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -749,16 +699,10 @@ msgid "Unassigned"
 msgstr "Непризначено"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Непрочитані повідомлення"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Кількість непрочитаних повідомлень"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -786,16 +730,6 @@ msgid "Watchers Emails"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
-msgid "Website Messages"
-msgstr "Повідомлення з веб-сайту"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_website_message_ids
-msgid "Website communication history"
-msgstr "Історія бесіди на веб-сайті"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
 msgstr ""
@@ -820,12 +754,70 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:260
+#: code:addons/project_issue/project_issue.py:263
 #, python-format
 msgid "issues"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#, fuzzy
+msgid "project issue"
+msgstr "Проект"
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Необхідна дія"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Дата останнього повідомлення по запису."
+
+#~ msgid "Followers"
+#~ msgstr "Підписники"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Підписники (Канали)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Підписники (Партнери)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr ""
+#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#~ msgid "Is Follower"
+#~ msgstr "Стежить"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Дата останнього повідомлення"
+
+#~ msgid "Messages"
+#~ msgstr "Повідомлення"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Повідомлення та історія бесіди"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Кількість дій"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Кількість повідомлень, які потебують дії"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Website Messages"
+#~ msgstr "Повідомлення з веб-сайту"
+
+#~ msgid "Website communication history"
+#~ msgstr "Історія бесіди на веб-сайті"

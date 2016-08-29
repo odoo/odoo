@@ -84,7 +84,7 @@ var MessagingMenu = Widget.extend({
         var self = this;
 
         // Display spinner while waiting for channels preview
-        this.$channels_preview.html(QWeb.render('mail.chat.Spinner'));
+        this.$channels_preview.html(QWeb.render('Spinner'));
 
         chat_manager.is_ready.then(function () {
             var channels = _.filter(chat_manager.get_channels(), function (channel) {
@@ -110,9 +110,7 @@ var MessagingMenu = Widget.extend({
 
         // Generate last message preview (inline message body and compute date to display)
         _.each(channels_preview, function (channel) {
-            channel.last_message_preview =
-                channel.last_message.displayed_author + ': ' +
-                chat_manager.get_message_body_preview(channel.last_message.body);
+            channel.last_message_preview = chat_manager.get_message_body_preview(channel.last_message.body);
             if (channel.last_message.date.isSame(new Date(), 'd')) {  // today
                 channel.last_message_date = channel.last_message.date.format('LT');
             } else {

@@ -1,22 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_hr_recruitment
-# 
+#
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-10-08 16:12+0000\n"
 "Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Submit</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.job_countries
@@ -53,7 +62,9 @@ msgstr "Применить вакансию"
 msgid ""
 "Click on \"Content\" to define a new job offer or \"Help\" for more "
 "informations."
-msgstr "Нажмите на \"Содержание\", чтобы определить новое предложение работы, или \"Помощь\" для более подробной информации."
+msgstr ""
+"Нажмите на \"Содержание\", чтобы определить новое предложение работы, или "
+"\"Помощь\" для более подробной информации."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
@@ -90,12 +101,17 @@ msgstr "Присоединяйтесь к нам и помогайте разр�
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "Join us, we offer you an extraordinary chance to learn, to\n"
-"                                    develop and to be part of an exciting experience and\n"
+"                                    develop and to be part of an exciting "
+"experience and\n"
 "                                    team."
-msgstr "Присоединяйтесь к нам, мы предлагаем Вам удивительный шанс учиться,\n                                    развиваться и быть частью захватывающего опыта и\n                                    команды."
+msgstr ""
+"Присоединяйтесь к нам, мы предлагаем Вам удивительный шанс учиться,\n"
+"                                    развиваться и быть частью захватывающего "
+"опыта и\n"
+"                                    команды."
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:69
+#: code:addons/website_hr_recruitment/controllers/main.py:74
 #: model:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
 #, python-format
 msgid "New Job Offer"
@@ -132,19 +148,9 @@ msgid "Source of Applicants"
 msgstr "Источник соискателей"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Submit"
-msgstr "Подтвердить"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid "Thank you!"
 msgstr "Спасибо!"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job_website_url
-msgid "The full URL to access the document through the website."
-msgstr "Полный URL, чтобы получить доступ к документу через веб-сайт."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -157,19 +163,9 @@ msgid "Url Parameters"
 msgstr "Параметры Url"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_published
-msgid "Visible in Website"
-msgstr "Видимый на веб-сайте"
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Форма подбора кадров на веб-сайте"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_url
-msgid "Website URL"
-msgstr "URL веб-сайта"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_description
@@ -177,29 +173,27 @@ msgid "Website description"
 msgstr "Описание веб-сайта"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_description
-msgid "Website meta description"
-msgstr "Мета описание сайта"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Мета-ключевые слова сайта"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_title
-msgid "Website meta title"
-msgstr "Мета заголовок сайта"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "With a small team of smart people, we released the most\n"
-"                                    disruptive enterprise management software in the world.\n"
-"                                    Odoo is fully open source, super easy, full featured\n"
-"                                    (3000+ apps) and its online offer is 3 times cheaper than\n"
-"                                    traditional competitors like SAP and Ms Dynamics."
-msgstr "С небольшой командой подготовленных людей мы выпустили самое\n                                    подрывное ПО по управлению предприятием в мире.\n                                    Odoo - совершенно бесплатный источник, супер легкий, многофункциональный\n                                    (3000+ приложений), и его онлайн-предложение в 3 раза дешевле, чем\n                                    традиционные конкуренты, как SAP и Ms Dynamics."
+"                                    disruptive enterprise management "
+"software in the world.\n"
+"                                    Odoo is fully open source, super easy, "
+"full featured\n"
+"                                    (3000+ apps) and its online offer is 3 "
+"times cheaper than\n"
+"                                    traditional competitors like SAP and Ms "
+"Dynamics."
+msgstr ""
+"С небольшой командой подготовленных людей мы выпустили самое\n"
+"                                    подрывное ПО по управлению предприятием "
+"в мире.\n"
+"                                    Odoo - совершенно бесплатный источник, "
+"супер легкий, многофункциональный\n"
+"                                    (3000+ приложений), и его онлайн-"
+"предложение в 3 раза дешевле, чем\n"
+"                                    традиционные конкуренты, как SAP и Ms "
+"Dynamics."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -221,7 +215,9 @@ msgstr "Ваш номер телефона"
 msgid ""
 "Your job application has been successfully registered,\n"
 "                        we will get back to you soon."
-msgstr "Ваша заявка о приеме на работу была успешно зарегистрирована,\n                        мы скоро вернемся к вам."
+msgstr ""
+"Ваша заявка о приеме на работу была успешно зарегистрирована,\n"
+"                        мы скоро вернемся к вам."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -242,3 +238,24 @@ msgstr "открытые вакансии"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "to contact us"
 msgstr "связаться с нами"
+
+#~ msgid "Submit"
+#~ msgstr "Подтвердить"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Полный URL, чтобы получить доступ к документу через веб-сайт."
+
+#~ msgid "Visible in Website"
+#~ msgstr "Видимый на веб-сайте"
+
+#~ msgid "Website URL"
+#~ msgstr "URL веб-сайта"
+
+#~ msgid "Website meta description"
+#~ msgstr "Мета описание сайта"
+
+#~ msgid "Website meta keywords"
+#~ msgstr "Мета-ключевые слова сайта"
+
+#~ msgid "Website meta title"
+#~ msgstr "Мета заголовок сайта"

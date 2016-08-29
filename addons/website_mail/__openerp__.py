@@ -9,11 +9,11 @@
     'description': """Glue module holding mail improvements for website.""",
     'depends': ['website', 'mail'],
     'data': [
-        'views/website_mail.xml',
-        'data/mail_channels.xml',
+        'views/website_mail_templates.xml',
+        'data/mail_channel_data.xml',
     ],
     'qweb': [
-        'static/src/xml/website_mail.xml'
+        'static/src/xml/chatter_message.xml'
     ],
     'installable': True,
     'auto_install': True,

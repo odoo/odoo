@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-22 12:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-15 00:35+0000\n"
+"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sale
@@ -29,24 +31,30 @@ msgid "Apply"
 msgstr "適用"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "イベントタイプ"
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 msgid "Attendee"
-msgstr ""
+msgstr "出席者"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
 msgid "Available Seat"
-msgstr ""
+msgstr "空席"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_available
 msgid "Available Seats"
-msgstr ""
+msgstr "空席"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before confirming"
-msgstr ""
+msgstr "予約完了前"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_id
@@ -81,6 +89,11 @@ msgstr "作成者"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
 msgid "Created on"
 msgstr "作成日"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
@@ -134,7 +147,7 @@ msgstr ""
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Subscription"
-msgstr ""
+msgstr "イベント參加"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -202,12 +215,12 @@ msgstr "最終更新日"
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "制限有り"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "最大席数"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_name
@@ -287,7 +300,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "予約席数"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
@@ -303,7 +316,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
 msgid "Sales End"
-msgstr ""
+msgstr "締切日"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -324,8 +337,8 @@ msgstr ""
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
 msgstr ""
 
 #. module: event_sale
@@ -375,7 +388,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr ""
+msgstr "入場券"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id
@@ -386,7 +399,7 @@ msgstr "イベントタイプ"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "予約キャンセル数"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0

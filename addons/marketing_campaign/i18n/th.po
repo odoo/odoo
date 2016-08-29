@@ -1,26 +1,58 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * marketing_campaign
-# 
+#
 # Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-08-25 10:19+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-10 06:53+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr "สวัสดี เรายินดีที่แจ้งให้คุณรู้ว่าคุณได้เข้ามาสู่ส่วนหนึ่งของ Gold Partners"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+#, fuzzy
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr "สวัสดี เรายินดีต้อนรับคุณเป็นส่วนหนึ่งของ Silver Partners"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
 msgid "# of Actions"
-msgstr "จำนวนกิจกรรม"
+msgstr "# ของการดำเนินการ"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -33,7 +65,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "A campaign can have many activities like sending an email, printing\n"
-"            a letter, assigning to a team, etc. These activities are triggered\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
 msgstr ""
@@ -41,7 +74,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
 msgid "Action"
-msgstr "ปฏิบัติ"
+msgstr "การดำเนินการ"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_ids
@@ -95,7 +128,7 @@ msgstr "สิงหาคม"
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Automatic"
-msgstr "Automatic"
+msgstr "โดยอัตโนมัติ"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:478
@@ -108,7 +141,7 @@ msgstr ""
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr "การเปิด option นี้ งานที่ไม่ได้ทำเพราะมีปัจจัยไม่ครบจะถูกแสดงว่า ยกเลิก เท่านั้น จะไม่ถูกลบ"
+msgstr "การเปิดตัวเลือกนี้ งานที่ไม่ได้ทำเพราะมีปัจจัยไม่ครบจะถูกแสดงว่ายกเลิกแทนการลบ"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -252,7 +285,7 @@ msgstr "ประเทศ"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_uid
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_uid
 msgid "Created by"
-msgstr "จัดทำโดย"
+msgstr "สร้างโดย"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_date
@@ -266,7 +299,7 @@ msgstr "สร้างเมื่อ"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Custom Action"
-msgstr "Custom Action"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_last_date
@@ -278,7 +311,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
 msgid "Date this segment was last closed or cancelled."
-msgstr "วันที่ส่วนถูกยกเลิกหรือเสร็จแล้ว"
+msgstr "วันที่ส่วนนี้ถูกปิดหรือยกเลิกเป็นครั้งสุดท้าย"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -297,8 +330,8 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that"
-" already entered the campaign."
+"records which have the same value for the unique field as other records that "
+"already entered the campaign."
 msgstr ""
 
 #. module: marketing_campaign
@@ -309,7 +342,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_display_name
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ชื่อที่ใช้แสดง"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
@@ -341,23 +374,29 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr "อีเมล์"
+msgstr "อีเมล"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:752
 #, python-format
 msgid "Email Preview"
-msgstr "ตัวอย่างอีเมล์"
+msgstr "ตัวอย่างอีเมล"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr "แม่แบบอีเมล์"
+msgstr "แม่แบบอีเมล"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template_preview
+#, fuzzy
+msgid "Email Template Preview"
+msgstr "แม่แบบอีเมล"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
 msgid "Email Templates"
-msgstr "แม่แบบอีเมล์"
+msgstr "แม่แบบอีเมล"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_done
@@ -432,10 +471,12 @@ msgstr "ต้นทุนคงที่"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_fixed_cost
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and"
-" revenue on each campaign activity. Cost and Revenue statistics are included"
-" in Campaign Reporting."
-msgstr "ต้นทุนคงที่ของแคมเปญ คุณสามารถกำหนดต้นทุนและรายได้ในแต่ละกิจกรรมของแคมเปญ ต้นทุนและรายได้จะถูกแสดงในรายงานของแคมเปญ"
+"Fixed cost for running this campaign. You may also specify variable cost and "
+"revenue on each campaign activity. Cost and Revenue statistics are included "
+"in Campaign Reporting."
+msgstr ""
+"ต้นทุนคงที่ของแคมเปญ คุณสามารถกำหนดต้นทุนและรายได้ในแต่ละกิจกรรมของแคมเปญ "
+"ต้นทุนและรายได้จะถูกแสดงในรายงานของแคมเปญ"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -457,24 +498,6 @@ msgid "Group By"
 msgstr "จัดกลุ่มโดย"
 
 #. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle"
-" of our Gold Partners"
-msgstr "สวัสดี เรายินดีที่แจ้งให้คุณรู้ว่าคุณได้เข้ามาสู่ส่วนหนึ่งของ Gold Partners"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr "สวัสดี เรายินดีต้อนรับคุณเป็นส่วนหนึ่งของ Silver Partners"
-
-#. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Hour(s)"
 msgstr "ชั่วโมง"
@@ -492,7 +515,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_id
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_id
 msgid "ID"
-msgstr "รหัส"
+msgstr "ID"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_date
@@ -502,9 +525,9 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to"
-" avoid selecting similar records twice. Similar records are records that "
-"have the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to "
+"avoid selecting similar records twice. Similar records are records that have "
+"the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
@@ -515,7 +538,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Incoming Transitions"
-msgstr "Incoming Transitions"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_run
@@ -525,7 +548,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_type
 msgid "Interval Unit"
-msgstr "Interval Unit"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_nbr
@@ -555,7 +578,7 @@ msgstr "มิถุนายน"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition___last_update
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_last_date
@@ -596,9 +619,14 @@ msgid "Lead Automation"
 msgstr ""
 
 #. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_manager
+msgid "Manager"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 msgid "Manual Mode"
-msgstr "Manual Mode"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -730,29 +758,25 @@ msgstr "ตุลาคม"
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) on\n"
-"            your leads and partners to fullfil the campaign."
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
+"            your leads and partners to fulfill the campaign."
 msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr "เฉพาะที่ถูกสร้างขึ้นหลังจากการซิงค์ครั้งที่แล้ว"
+msgstr "เฉพาะรายการที่ถูกสร้างขึ้นหลังจากการซิงค์ครั้งที่แล้ว"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr "แสดงเฉพาะที่เปลี่ยนแปลงจากการซิงค์ครั้งที่แล้ว (ไม่ซ้ำกัน)"
-
-#. module: marketing_campaign
-#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
-msgid "Open Marketing Menu"
-msgstr "เปิดแคมเปญเมนู"
+msgstr "แสดงเฉพาะที่เปลี่ยนแปลงจากการเชื่อมโยงครั้งสุดท้าย (ไม่ซ้ำกัน)"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Outgoing Transitions"
-msgstr "Outgoing Transitions"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
@@ -796,7 +820,9 @@ msgstr "กระบวนการ"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_condition
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
@@ -894,7 +920,9 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr "ตั้งค่าต้นทุนผันแปร ถ้าคุณสามารถประมาณการต้นทุนผันแปรได้ เมื่อถึงกิจกรรมที่มีต้นทุนนี้ จะถูกคำนวน และแสดงในส่วนของการรายงาน"
+msgstr ""
+"ตั้งค่าต้นทุนผันแปร ถ้าคุณสามารถประมาณการต้นทุนผันแปรได้ เมื่อถึงกิจกรรมที่มีต้นทุนนี้ จะถูกคำนวน "
+"และแสดงในส่วนของการรายงาน"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
@@ -902,7 +930,9 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr "ตั้งรายได้ที่คาดหวัง ถ้าคุณสามารถประมาณการหรือมีเป้าหมายว่าเมื่อแคมเปญมาถึงจุดนี้ ควรมีรายได้เท่าไหร่ คุณจะมีข้อมูลรายได้ในส่วนของการรายงาน"
+msgstr ""
+"ตั้งรายได้ที่คาดหวัง ถ้าคุณสามารถประมาณการหรือมีเป้าหมายว่าเมื่อแคมเปญมาถึงจุดนี้ "
+"ควรมีรายได้เท่าไหร่ คุณจะมีข้อมูลรายได้ในส่วนของการรายงาน"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -940,12 +970,12 @@ msgstr "โหมดซิงค์: ทุกอย่าง"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr "ซิงค์โหมด: ไม่ควรเพิ่มข้อมูลใด ๆ ระหว่างการซิงค์"
+msgstr "โหมดการเชื่อมโยง: ไม่เพิ่มข้อมูลใดๆ หลังการเชื่อมโยง"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr "โหมดซิงค์: เฉพาะจุดที่เปลี่ยนแปลงจากการซิงค์ครั้งที่แล้ว"
+msgstr "โหมดการเชื่อมโยง: เฉพาะรายการที่เปลี่ยนแปลงจากการเชื่อมโยงครั้งล่าสุด"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode
@@ -960,10 +990,14 @@ msgstr "ซิงค์ต้วยตนเอง"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
-"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+"Test - It creates and process all the activities directly (without waiting "
+"for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but "
+"does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to "
+"validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and "
+"reports (be very careful with this mode, you're live!)"
 msgstr ""
 
 #. module: marketing_campaign
@@ -995,7 +1029,7 @@ msgstr ""
 #: code:addons/marketing_campaign/marketing_campaign.py:114
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr "แคมเปญนี้ไม่สามารถกำหนดให้เสร็จแล้วได้ ก่อนที่กิจกรรมย่อยต่าง ๆ จะทำเสร็จก่อน"
+msgstr "แคมเปญนี้ไม่สามารถกำหนดให้เสร็จแล้วได้ ก่อนที่กิจกรรมย่อยต่างๆ จะทำเสร็จก่อน"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:104
@@ -1003,7 +1037,9 @@ msgstr "แคมเปญนี้ไม่สามารถกำหนดใ
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr "แคมเปญไม่สามารถเริ่มได้ เนื่องจากไม่มีกิจกรรมเริ่มต้น ให้ทำการแก้ไขกิจกรรมของแคมเปญนี้และตั้งค่าให้มีกิจกรรมเริ่มต้น"
+msgstr ""
+"แคมเปญไม่สามารถเริ่มได้ เนื่องจากไม่มีกิจกรรมเริ่มต้น "
+"ให้ทำการแก้ไขกิจกรรมของแคมเปญนี้และตั้งค่าให้มีกิจกรรมเริ่มต้น"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:92
@@ -1015,18 +1051,18 @@ msgstr "แคมเปญไม่สามารถเริ่มได้ �
 #: code:addons/marketing_campaign/marketing_campaign.py:777
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr "ขั้นตอนนี้จะไม่มีการส่งอีเมล์และรายงานตัวอย่างการแก้ไข"
+msgstr "ขั้นตอนนี้จะไม่มีการส่งอีเมลและรายงานตัวอย่างการแก้ไข"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "The email to send when this activity is activated"
-msgstr "อีเมล์จะถูกส่งเมื่อมีการเริ่มกิจกรรมนี้"
+msgstr "อีเมลจะถูกส่งเมื่อมีการเริ่มกิจกรรมนี้"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid ""
-"The generated workitems will be linked to the partner related to the record."
-" If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record. "
+"If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
@@ -1046,10 +1082,17 @@ msgstr "รายงานจะถูกสร้างเมื่อกิจ
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save "
+"it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields "
+"of the resource record\n"
 "  "
-msgstr "รูปแบบของการดำเนินการเมื่อมีการทำกิจกรรมนี้ เช่น\n   อีเมล์: ส่งอีเมล์ด้วยรูปแบบข้อความที่กำหนด\n   รายงาน: พิมพ์รายงานที่ได้สร้างไว้ เก็บเข้าไดเรกทอรี่ที่กำหนด\n   การกระทำที่กำหนดเอง: ดำเนินการตามที่มีการกำหนดไว้ เช่น แก้ไขข้อมูลทรัพยากรที่กำหนด\n  "
+msgstr ""
+"รูปแบบของการดำเนินการเมื่อมีการทำกิจกรรมนี้ เช่น\n"
+"   อีเมล์: ส่งอีเมลด้วยรูปแบบข้อความที่กำหนด\n"
+"   รายงาน: พิมพ์รายงานที่ได้สร้างไว้ เก็บเข้าไดเรกทอรี่ที่กำหนด\n"
+"   การกระทำที่กำหนดเอง: ดำเนินการตามที่มีการกำหนดไว้ เช่น แก้ไขข้อมูลทรัพยากรที่กำหนด\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1085,6 +1128,11 @@ msgid "Unique Field"
 msgstr ""
 
 #. module: marketing_campaign
+#: model:res.groups,name:marketing_campaign.group_lead_automation_user
+msgid "User"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "ต้นทุนผันแปร"
@@ -1102,7 +1150,7 @@ msgstr "ยืนยันด้วยตัวเอง"
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 msgid "Workitems"
-msgstr "Workitems"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -1113,3 +1161,6 @@ msgstr "ปี"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#~ msgid "Open Marketing Menu"
+#~ msgstr "เปิดแคมเปญเมนู"

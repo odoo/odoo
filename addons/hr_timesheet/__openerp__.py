@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Time Tracking',
+    'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 23,
@@ -25,6 +25,7 @@ up a management by affair.
         'hr_timesheet_view.xml',
         'project_timesheet_view.xml',
         'report/hr_timesheet_report_view.xml',
+        'report/report_timesheet_templates.xml',
         'hr_timesheet_installer.xml',
         'hr_dashboard.xml',
     ],
@@ -37,5 +38,6 @@ up a management by affair.
         'test/worktask_entry_to_timesheetline_entry.yml',
     ],
     'installable': True,
+    'application': True,
     'auto_install': False,
 }

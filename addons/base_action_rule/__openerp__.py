@@ -4,7 +4,7 @@
 {
     'name': 'Automated Action Rules',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'description': """
 This module allows to implement action rules for any object.
 ============================================================
@@ -17,13 +17,11 @@ trigger an automatic reminder email.
     """,
     'depends': ['base', 'resource', 'mail'],
     'data': [
-        'base_action_rule_data.xml',
-        'base_action_rule_view.xml',
         'security/ir.model.access.csv',
+        'data/base_action_rule_data.xml',
+        'views/base_action_rule_view.xml',
     ],
     'demo': [
-        'base_action_rule_demo.xml',
+        'data/base_action_rule_demo.xml',
     ],
-    'installable': True,
-    'auto_install': False,
 }

@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_attendance
-# 
+#
 # Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-22 12:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-20 08:35+0000\n"
+"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid ""
-"(*) A positive delay means that the employee worked less than recorded.<br/>\n"
+"(*) A positive delay means that the employee worked less than recorded.<br/"
+">\n"
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
 
@@ -81,7 +84,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph_filtered
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "勤怠分析"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
@@ -130,7 +133,7 @@ msgstr "取消"
 #: code:addons/hr_attendance/static/src/js/attendance.js:41
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "クリックしてサインイン: %s"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_config
@@ -268,7 +271,7 @@ msgstr "最終更新日"
 #: code:addons/hr_attendance/static/src/js/attendance.js:39
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "最終サインイン: %s,<br />%s.<br />クリックしてサインアウト。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_max_delay
@@ -357,8 +360,7 @@ msgstr "サインアウト"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_action_desc
-msgid ""
-"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgid "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "サインイン / サインアウトよりも超過した時間の理由を入力して下さい。"
 
 #. module: hr_attendance
@@ -378,16 +380,9 @@ msgid ""
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
 msgstr ""
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "時間記録"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.timesheet_menu_root
-msgid "Timesheets"
-msgstr "タイムシート"
+"時間記録機能は、従業員のサインアウト/サインインを元に勤怠を管理するためのもの"
+"です。\n"
+"Odoo 機能と各デバイスを連携することが可能です。"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -411,3 +406,9 @@ msgstr ""
 #: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
 msgid "report.hr_attendance.report_attendanceerrors"
 msgstr ""
+
+#~ msgid "Time Tracking"
+#~ msgstr "時間記録"
+
+#~ msgid "Timesheets"
+#~ msgstr "タイムシート"

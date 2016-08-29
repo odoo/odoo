@@ -256,6 +256,24 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
         return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
     return return_dict
 
+def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small'):
+    """ Update ``vals`` with image fields resized as expected. """
+    if big_name in vals:
+        vals.update(image_get_resized_images(vals[big_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False))
+    elif medium_name in vals:
+        vals.update(image_get_resized_images(vals[medium_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False))
+    elif small_name in vals:
+        vals.update(image_get_resized_images(vals[small_name],
+                        return_big=True, return_medium=True, return_small=True,
+                        big_name=big_name, medium_name=medium_name, small_name=small_name,
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True))
+
 
 if __name__=="__main__":
     import sys

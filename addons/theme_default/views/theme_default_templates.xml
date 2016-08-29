@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Theme Default Assets Frontend">
+  <xpath expr="link[last()]" position="after">
+    <link rel="stylesheet" href="/theme_default/static/src/less/customize_modal.less"/>
+  </xpath>
+</template>
+
+<template id="customize_modal" inherit_id="website.theme_customize" name="theme_default modal">
+  <xpath expr="div" position="replace">
+    <div id="theme_customize_modal" class="modal fade">
+      <div class="modal-dialog">
+          <div class="modal-content">
+
+              <div class="loading_backdrop"></div>
+              <div class="modal-header text-center">
+                  <button type="button" class="close">×</button>
+                  <!-- <a class="btn btn-primary" href="/web#return_label=Website&amp;action=website.action_module_theme">Click here to change theme</a> -->
+                  <hr style="margin: 20px -10px 10px -10px;"/>
+                  <h4 class="modal-title">Customize this default theme</h4>
+              </div>
+              <div class="modal-body">
+                  <h5 class="modal-h5">LAYOUT</h5>
+                  <table name="layout">
+                      <tr>
+                          <td class=" text-center" width="50%">
+                              <label class=" center-block">
+                                  <div class="text-center" style="background-image: url(/theme_default/static/src/img/theme/layout-full.gif); background-size: 100%; line-height: 40px;">FULL WIDTH</div>
+                                  <input name="layoutvar" type="radio" data-xmlid=""/>
+                              </label>
+                          </td>
+                          <td class=" text-center">
+                              <label class=" center-block">
+                                 <div class="text-center" style="background-image: url(/theme_default/static/src/img/theme/layout-boxed.gif); background-size: 100%; line-height: 40px;">BOXED</div>
+                                  <input name="layoutvar" type="radio" data-xmlid="theme_default.option_layout_boxed"/>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
+
+                  <h5 class="modal-h5">MAIN COLOR</h5>
+                  <table name="color">
+                      <tr>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/theme_default/static/src/img/theme/variant-stone.gif" alt="Stone" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid=""/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/theme_default/static/src/img/theme/variant-emerald.gif" alt="Emerald" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_emerald"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/theme_default/static/src/img/theme/variant-cobalt.gif" alt="Cobalt" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_cobalt"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/theme_default/static/src/img/theme/variant-amethyst.gif" alt="Amethyst" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_amethyst"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/theme_default/static/src/img/theme/variant-ruby.gif" alt="Blue" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_ruby"/>
+                              </label>
+                          </td>
+                          <td>
+                              <label class="chd-color-combi">
+                                  <img src="/theme_default/static/src/img/theme/variant-gold.gif" alt="Gold" class="chd-color-combi-img"/>
+                                  <input name="colorvar" type="radio" data-xmlid="theme_default.option_color_gold"/>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
+
+                  <h5 class="modal-h5">FONTS COMBINATIONS</h5>
+                  <table name="font">
+                      <tr>
+                          <td width="50%">
+                              <label>
+                                  <div>
+                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">Helvetica</span>
+                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >/ Georgia</span>
+                                  </div>
+                                  <input name="theme" type="radio" data-xmlid=""/>
+                              </label>
+                          </td>
+                          <td width="50%">
+                              <label>
+                                  <div>
+                                      <span style="font-family:Georgia, 'Times New Roman', Times, serif; font-size:11px" >Georgia</span>
+                                      <span style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; font-size:11px">/ Helvetica</span>
+                                    <input name="theme" type="radio" data-xmlid="theme_default.option_font"/>
+                                  </div>
+                              </label>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+  </xpath>
+</template>
+
+<template id="colors" name="Colors" inherit_id="website.assets_frontend">
+  <xpath expr="." position="inside">
+    <link rel="stylesheet" href='/theme_default/static/src/less/colors.less'/>
+  </xpath>
+</template>
+
+<!-- Option layout -->
+
+<template id="option_layout_boxed" name="option_layout_boxed" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+      <link href="/theme_default/static/src/less/option_layout_boxed.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<!-- Option color -->
+
+<template id="option_color_stone" name="option_color_stone" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+    <link href="/theme_default/static/src/less/option_color_stone.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_emerald" name="option_color_emerald" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+    <link href="/theme_default/static/src/less/option_color_emerald.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_cobalt" name="option_color_cobalt" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+    <link href="/theme_default/static/src/less/option_color_cobalt.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_amethyst" name="option_color_amethyst" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+    <link href="/theme_default/static/src/less/option_color_amethyst.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_ruby" name="option_color_ruby" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+    <link href="/theme_default/static/src/less/option_color_ruby.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<template id="option_color_gold" name="option_color_gold" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+    <link href="/theme_default/static/src/less/option_color_gold.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+
+<!-- Option font -->
+
+<template id="option_font" name="option_font" inherit_id="website.assets_frontend" active="False" customize_show="False">
+  <xpath expr="." position="inside">
+    <link href="/theme_default/static/src/less/option_font.less" rel="stylesheet" type="text/less"/>
+  </xpath>
+</template>
+</odoo>

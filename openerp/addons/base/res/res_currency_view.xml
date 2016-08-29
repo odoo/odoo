@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_currency_rate_search" model="ir.ui.view">
             <field name="name">res.currency.rate.search</field>
@@ -8,6 +8,18 @@
                 <search string="Currency Rates">
                     <field name="name" string="Date"/>
                 </search>
+            </field>
+        </record>
+
+        <record id="view_currency_rate_form" model="ir.ui.view">
+            <field name="name">res.currency.rate.form</field>
+            <field name="model">res.currency.rate</field>
+            <field name="arch" type="xml">
+                <form string="Currency Rates">
+                    <field name="name"/>
+                    <field name="rate"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </form>
             </field>
         </record>
 
@@ -20,6 +32,28 @@
                     <field name="rate"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_currency_rate_form" model="ir.ui.view">
+            <field name="name">res.currency.rate.form</field>
+            <field name="model">res.currency.rate</field>
+            <field name="arch" type="xml">
+                <form string="Currency Rate">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="rate"/>
+                            </group>
+                            <group>
+                                <field name="currency_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 
@@ -105,8 +139,6 @@
             <field name="context">{'active_test': False}</field>
         </record>
 
-        <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
-
         <record id="action_currency_form_company" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
@@ -114,7 +146,6 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
             <field name="context">{'active_test': False}</field>
-            <field name="target">new</field>
         </record>
 
         <!-- We override the view res_company here because the action wasn't defined before -->
@@ -126,11 +157,11 @@
                 <xpath expr="//field[@id='company_currency']" position="after">
                     <label for="id"/>
                     <p class="text-muted">
-                        Activate <a type="action" name="%(base.action_currency_form_company)d">here</a> a new currency before creating a new company.
+                        Activate <a href="" type="action" name="%(base.action_currency_form_company)d">here</a> a new currency before creating a new company.
                     </p>
                 </xpath>
             </field>
         </record>
 
     </data>
-</openerp>
+</odoo>

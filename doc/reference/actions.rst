@@ -63,8 +63,10 @@ Its fields are:
     search view to load for the action. Defaults to fetching the default
     search view for the model
 ``target`` (optional)
-    whether the views should be open in the main content area (``current``)
-    or in a dialog/popup (``new``). Defaults to ``current``.
+    whether the views should be open in the main content area (``current``),
+    in full screen mode (``fullscreen``) or in a dialog/popup (``new``). Use
+    ``main`` instead of ``current`` to clear the breadcrumbs. Defaults to
+    ``current``.
 ``context`` (optional)
     additional context data to pass to the views
 ``domain`` (optional)
@@ -208,7 +210,7 @@ field:
         <field name="name">Res Partner Server Action</field>
         <field name="model_id" ref="model_res_partner"/>
         <field name="code">
-raise Warning(object.name)
+            raise Warning(object.name)
         </field>
     </record>
 
@@ -415,6 +417,11 @@ Triggers an action implemented entirely in the client.
 ``params`` (optional)
     a Python dictionary of additional data to send to the client, alongside
     the client action tag
+``target`` (optional)
+    whether the client action should be open in the main content area
+    (``current``), in full screen mode (``fullscreen``) or in a dialog/popup
+    (``new``). Use ``main`` instead of ``current`` to clear the breadcrumbs.
+    Defaults to ``current``.
 
 ::
 

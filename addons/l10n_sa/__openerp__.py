@@ -1,10 +1,11 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Saudi Arabia - Accounting',
     'version': '1.1',
     'author': 'DVIT.ME',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Odoo Arabic localization for most arabic countries and Saudi Arabia.
 
@@ -15,14 +16,10 @@ In future this module will include some payroll rules for ME .
     'website': 'http://www.dvit.me',
     'depends': ['account', 'l10n_multilang'],
     'data': [
-        'account.chart.template.xml',
-        'account.account.template.csv',
-        'account_chart_template_after.xml',
-        'account_chart_template.yml',
+        'data/account_chart_template_data.xml',
+        'data/account.account.template.csv',
+        'data/l10n_sa_chart_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
     'post_init_hook': 'load_translations',
 }

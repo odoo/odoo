@@ -247,7 +247,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
             'note': 'alert-info',
             'hint': 'alert-info',
             'tip': 'alert-info',
-            'seealso': 'alert-info',
+            'seealso': 'alert-go_to',
 
             'warning': 'alert-warning',
             'attention': 'alert-warning',
@@ -677,3 +677,15 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
 
     # internal node
     def visit_substitution_definition(self, node): raise nodes.SkipNode
+
+    # without set_translator, add_node doesn't work correctly, so the
+    # serialization of html_domain nodes needs to be embedded here
+    def visit_div(self, node):
+        self.body.append(self.starttag(node, 'div'))
+    def depart_div(self, node):
+        self.body.append(u'</div>\n')
+    def visit_address(self, node):
+        self.body.append(self.starttag(node, 'address'))
+    def depart_address(self, node):
+        self.body.append(u'</address>')
+    # TODO: inline elements

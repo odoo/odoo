@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Sales Management',
+    'name': 'Sales',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'sequence': 15,
     'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
@@ -32,6 +32,8 @@ You can choose flexible invoicing methods:
 * *On Delivery Order*: Invoices are generated from picking (delivery)
 * *Before Delivery*: A Draft invoice is created and must be paid before delivery
 
+With this module you can personnalize the sale order and invoice report with
+categories, subtotals or page-breaks.
 
 The Dashboard for the Sales Manager will include
 ------------------------------------------------
@@ -39,28 +41,30 @@ The Dashboard for the Sales Manager will include
 * Monthly Turnover (Graph)
     """,
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['sales_team','account', 'procurement', 'report'],
+    'depends': ['sales_team', 'account', 'procurement', 'report', 'web_tour'],
     'data': [
-        'wizard/sale_make_invoice_advance.xml',
+        'data/ir_sequence_data.xml',
+        'data/sale_data.xml',
+        'data/sale_tour.xml',
+        'report/sale_report.xml',
+        'data/mail_template_data.xml',
+        'report/sale_report_views.xml',
+        'report/sale_report_templates.xml',
+        'report/invoice_report_templates.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
-        'sale_sequence.xml',
-        'sale_report.xml',
-        'sale_data.xml',
-        'sale_view.xml',
-        'sales_team_view.xml',
-        'res_partner_view.xml',
-        'report/sale_report_view.xml',
-        'data/mail_template_data.xml',
-        'res_config_view.xml',
-        'views/report_saleorder.xml',
-        'views/sale.xml',
-        'sales_team_dashboard.xml',
-        'sale_tip_data.xml',
+        'wizard/sale_make_invoice_advance_views.xml',
+        'views/sale_views.xml',
+        'views/sales_team_views.xml',
+        'views/res_partner_views.xml',
+        'views/sale_config_settings_views.xml',
+        'views/sale_templates.xml',
+        'views/sale_layout_category_view.xml',
     ],
-    'demo': ['sale_demo.xml',
-             'sale_product_demo.xml',
-             ],
+    'demo': [
+        'data/sale_demo.xml',
+        'data/product_product_demo.xml',
+    ],
     'css': ['static/src/css/sale.css'],
     'installable': True,
     'auto_install': False,

@@ -84,7 +84,7 @@
                             </a>
                         </td>
                         <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline" data-extra="overdue">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['closing']['overdue']"/> exp. closing
                                 </t>
@@ -212,7 +212,7 @@
                 <div class="o_welcome_content">
                     <h2>Hi there!</h2>
                     <h4>Great sales journeys start with a clean pipeline.</h4>
-                    <h4>Create a few opportunities to activate your dashboard.</h4>
+                    <h4>Create a few opportunities in it.</h4>
                     <a class="btn btn-primary o_dashboard_action" name="crm.action_your_pipeline">My Pipeline</a>
                 </div>
             </div>

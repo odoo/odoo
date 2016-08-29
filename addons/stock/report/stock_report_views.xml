@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            string="Picking Operations"
+            id="action_report_picking"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="stock.report_picking"
+            file="stock.report_picking_operations"
+        />
+        <report
+            string="Delivery Slip"
+            id="action_report_delivery"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="stock.report_deliveryslip"
+            file="stock.report_deliveryslip"
+        />
+        <report
+            string="Inventory" 
+            id="action_report_inventory" 
+            model="stock.inventory" 
+            report_type="qweb-pdf"
+            name="stock.report_inventory" 
+            file="stock.report_inventory" 
+        />
+        <report id="action_report_quant_package_barcode" model="stock.quant.package" report_type="qweb-pdf" name="stock.report_package_barcode" string="Package BarCode with Contents" file="stock.report_package_barcode"/>
+        <report id="action_report_quant_package_barcode_small" model="stock.quant.package" report_type="qweb-pdf" name="stock.report_package_barcode_small" string="Package BarCode" file="stock.report_package_barcode"/>
+        <report id="action_report_location_barcode" model="stock.location" report_type="qweb-pdf" name="stock.report_location_barcode" string="Location BarCode" file="stock.report_location_barcode"/>
+        <report id="action_report_lot_barcode" model="stock.production.lot" report_type="qweb-pdf" name="stock.report_lot_barcode" string="Lot BarCode" file="stock.report_lot_barcode"/>
+    </data>
+</odoo>

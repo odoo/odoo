@@ -2,7 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import logging
 from odoo import api, fields, models
+from psycopg2 import IntegrityError
+from odoo.tools.translate import _
+_logger = logging.getLogger(__name__)
 
 
 @api.model
@@ -69,7 +73,8 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
 
     @api.multi
     def get_address_fields(self):
-        return {'country_id': re.findall(r'\((.+?)\)', country.address_format) for country in self}
+        self.ensure_one()
+        return re.findall(r'\((.+?)\)', self.address_format)
 
 
 class CountryGroup(models.Model):
@@ -89,6 +94,10 @@ class CountryState(models.Model):
     country_id = fields.Many2one('res.country', string='Country', required=True)
     name = fields.Char(string='State Name', required=True,
                help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
-    code = fields.Char(string='State Code', size=3, help='The state code in max. three chars.', required=True)
+    code = fields.Char(string='State Code', help='The state code.', required=True)
 
     name_search = location_name_search
+
+    _sql_constraints = [
+        ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')
+    ]

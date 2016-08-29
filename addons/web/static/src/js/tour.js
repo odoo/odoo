@@ -2,6 +2,7 @@ odoo.define('web.Tour', function (require) {
 "use strict";
 
 var core = require('web.core');
+var local_storage = require('web.local_storage');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -102,8 +103,6 @@ $.fn.getHandlers = function () {
 };
 
 /////////////////////////////////////////////////
-
-var localStorage = window.localStorage;
 
 var Tour = {
     tours: {},
@@ -373,7 +372,7 @@ var Tour = {
         return $("html").attr("lang") ? "/" + $("html").attr("lang").replace(/-/, '_') : "";
     },
     getState: function () {
-        var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
+        var state = JSON.parse(local_storage.getItem("tour") || 'false') || {};
         if (state) { this.time = state.time; }
         var tour_id,mode,step_id;
         if (!state.id && window.location.href.indexOf("#tutorial.") > -1) {
@@ -413,7 +412,7 @@ var Tour = {
                 + (step && step.waitNot ? "   "+JSON.stringify(step.waitNot) : "")
             + (step ? '\nwaitFor: ' + ((!step.waitFor || $(step.waitFor).size()) ? 'true ' : 'false') : '' )
                 + (step && step.waitFor ? "   "+JSON.stringify(step.waitFor) : "")
-            + (all ? "\nlocalStorage: " + JSON.stringify(localStorage) : '' )
+            + (all ? "\nlocalStorage: " + JSON.stringify(window.localStorage) : '' )
             + (all && !state.log ? '\n\n' + $("body").html() : '' );
         Tour.log(message, true);
     },
@@ -430,7 +429,7 @@ var Tour = {
         return tour_ids;
     },
     saveState: function (tour_id, mode, step_id, number, wait, log) {
-        localStorage.setItem("tour", JSON.stringify({
+        local_storage.setItem("tour", JSON.stringify({
             "id":tour_id,
             "mode":mode,
             "step_id":step_id || 0,
@@ -447,7 +446,7 @@ var Tour = {
                 state.tour.steps[k].busy = false;
             }
         }
-        localStorage.removeItem("tour");
+        local_storage.removeItem("tour");
         clearTimeout(Tour.timer);
         clearTimeout(Tour.testtimer);
         Tour.closePopover();

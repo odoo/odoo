@@ -77,7 +77,7 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
             'publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init'
+            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode'
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
@@ -233,8 +233,9 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option('--dev', dest='dev_mode', action='store_true', my_default=False, help='enable developper mode')
-        group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
+        group.add_option('--dev', dest='dev_mode', type="string",
+                         help="Enable developer mode. Param: List of options separated by comma. "
+                              "Options : all, [pudb|wdb|ipdb|pdb], reload, qweb, werkzeug, xml")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
@@ -272,6 +273,10 @@ class configmanager(object):
                              type="int")
             group.add_option("--limit-time-real", dest="limit_time_real", my_default=120,
                              help="Maximum allowed Real time per request (default 120).",
+                             type="int")
+            group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
+                             help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
+                                  "Set to 0 for no limit. ",
                              type="int")
             group.add_option("--limit-request", dest="limit_request", my_default=8192,
                              help="Maximum number of request to be processed per worker (default 8192).",
@@ -365,7 +370,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database',
+                'log_db_level', 'geoip_database', 'dev_mode'
         ]
 
         for arg in keys:
@@ -384,7 +389,7 @@ class configmanager(object):
         # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
+            'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
@@ -395,7 +400,7 @@ class configmanager(object):
         posix_keys = [
             'workers',
             'limit_memory_hard', 'limit_memory_soft',
-            'limit_time_cpu', 'limit_time_real', 'limit_request',
+            'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron'
         ]
 
         if os.name == 'posix':
@@ -427,10 +432,14 @@ class configmanager(object):
                       for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
-        self.options["demo"] = not opt.without_demo and self.options['init'] or {}
+        self.options['demo'] = (self.options['init']
+                                if not self.options['without_demo'] else {})
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
+
+        dev_split = opt.dev_mode and  map(str.strip, opt.dev_mode.split(',')) or []
+        self.options['dev_mode'] = 'all' in dev_split and dev_split + ['pdb', 'reload', 'qweb', 'werkzeug', 'xml'] or dev_split
 
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path

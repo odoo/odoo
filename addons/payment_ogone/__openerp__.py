@@ -2,15 +2,15 @@
 
 {
     'name': 'Ogone Payment Acquirer',
-    'category': 'Hidden',
+    'category': 'Accounting',
     'summary': 'Payment Acquirer: Ogone Implementation',
     'version': '1.0',
     'description': """Ogone Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/ogone.xml',
-        'views/payment_acquirer.xml',
-        'data/ogone.xml',
+        'views/payment_views.xml',
+        'views/payment_ogone_templates.xml',
+        'data/payment_acquirer_data.xml',
     ],
     'installable': True,
 }

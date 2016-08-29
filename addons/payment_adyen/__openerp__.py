@@ -2,15 +2,15 @@
 
 {
     'name': 'Adyen Payment Acquirer',
-    'category': 'Hidden',
+    'category': 'Accounting',
     'summary': 'Payment Acquirer: Adyen Implementation',
     'version': '1.0',
     'description': """Adyen Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/adyen.xml',
-        'views/payment_acquirer.xml',
-        'data/adyen.xml',
+        'views/payment_views.xml',
+        'views/payment_adyen_templates.xml',
+        'data/payment_acquirer_data.xml',
     ],
     'installable': True,
 }

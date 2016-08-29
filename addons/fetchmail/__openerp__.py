@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name' : 'Email Gateway',
-    'version' : '1.0',
-    'depends' : ['mail'],
-    'category': 'Tools',
+    'name': 'Email Gateway',
+    'version': '1.0',
+    'depends': ['mail'],
+    'category': 'Extra Tools',
     'description': """
 Retrieve incoming email on POP/IMAP servers.
 ============================================
@@ -36,10 +36,10 @@ For more specific needs, you may also assign custom-defined actions
     """,
     'website': 'https://www.odoo.com/page/mailing',
     'data': [
-        'fetchmail_data.xml',
-        'fetchmail_view.xml',
+        'data/fetchmail_data.xml',
         'security/ir.model.access.csv',
-        'fetchmail_installer_view.xml'
+        'views/fetchmail_views.xml',
+        'views/mail_mail_views.xml',
     ],
     'demo': [],
     'installable': True,

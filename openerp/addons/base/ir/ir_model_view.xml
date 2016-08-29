@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- menu_create from model form -->
         <record id="view_model_menu_create" model="ir.ui.view">
@@ -70,8 +69,8 @@
                                                 </group>
                                                 <group>
                                                     <field name="translate"
-                                                        attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                                'invisible': [('ttype','not in',['char','text'])]}"/>
+                                                        attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                                'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                                     <field name="selection"
                                                         attrs="{'required': [('ttype','in',['selection','reference'])],
                                                                 'readonly': [('ttype','not in',['selection','reference'])],
@@ -106,11 +105,11 @@
                                             </group>
                                             <group string="Advanced Properties">
                                                 <field name="serialization_field_id"
-                                                    domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
+                                                    domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"
                                                     attrs="{'readonly': [('state','=','base')]}"/>
                                                 <field name="related"/>
                                                 <field name="depends"/>
-                                                <field name="compute"/>
+                                                <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                             </group>
                                             <h3>How to define a computed field</h3>
                                             <p>Computed fields are defined with the fields
@@ -151,7 +150,7 @@
                                 </form>
                             </field>
                             <button
-                                icon="gtk-justify-fill"
+                                icon="fa-align-justify"
                                 name="%(act_menu_create)d"
                                 string="Create a Menu" type="action"
                                 target="new" />
@@ -195,6 +194,7 @@
             <field name="arch" type="xml">
                 <search string="Model Description">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="Model"/>
+                    <field name="model" filter_domain="[('model','ilike',self)]" string="Technical Name"/>
                     <filter string="Transient" domain="[('transient', '=', True)]"/>
                     <separator/>
                     <filter string="Custom" domain="[('state', '=', 'manual')]"/>
@@ -236,8 +236,8 @@
                                     </group>
                                     <group>
                                         <field name="translate"
-                                            attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                    'invisible': [('ttype','not in',['char','text'])]}"/>
+                                            attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                    'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                         <field name="selection"
                                             attrs="{'required': [('ttype','in',['selection','reference'])],
                                                     'readonly': [('ttype','not in',['selection','reference'])],
@@ -275,8 +275,8 @@
                                         domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
                                         attrs="{'readonly': [('state','=','base')]}"/>
                                     <field name="related"/>
-                                    <field name="depends"/>
-                                    <field name="compute"/>
+                                    <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
+                                    <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                 </group>
                                 <h3>How to define a computed field</h3>
                                 <p>Computed fields are defined with the fields
@@ -562,5 +562,4 @@
         </record>
         <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
 
-    </data>
-</openerp>
+</odoo>

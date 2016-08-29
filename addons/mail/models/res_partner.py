@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import threading
 
-from openerp import _, api, fields, models, tools
-from openerp.osv import expression
+from odoo import _, api, fields, models
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
+
 
 class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
@@ -28,7 +30,7 @@ class Partner(models.Model):
     opt_out = fields.Boolean(
         'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                         "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
-    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels')
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
 
     @api.multi
     def message_get_suggested_recipients(self):
@@ -73,7 +75,7 @@ class Partner(models.Model):
                              tracking_value.get_old_display_value()[0],
                              tracking_value.get_new_display_value()[0]))
 
-        is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
+        is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
         return {
             'signature': signature,
@@ -83,6 +85,8 @@ class Partner(models.Model):
             'record_name': record_name,
             'tracking': tracking,
             'is_discussion': is_discussion,
+            'subtype': message.subtype_id,
+            'is_accessible': message._is_accessible()
         }
 
     @api.model
@@ -92,11 +96,12 @@ class Partner(models.Model):
 
         # custom values
         custom_values = dict()
-        if message.model and message.res_id and self.pool.get(message.model) and hasattr(self.pool[message.model], 'message_get_email_values'):
+        if message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_email_values'):
             custom_values = self.env[message.model].browse(message.res_id).message_get_email_values(message)
 
         mail_values = {
             'mail_message_id': message.id,
+            'mail_server_id': message.mail_server_id.id,
             'auto_delete': self._context.get('mail_auto_delete', True),
             'references': references,
         }
@@ -151,8 +156,8 @@ class Partner(models.Model):
 
         # existing custom notification email
         base_template = None
-        if message.model:
-            base_template = self.env.ref('mail.mail_template_data_notification_email_%s' % message.model.replace('.', '_'), raise_if_not_found=False)
+        if message.model and self._context.get('custom_layout', False):
+            base_template = self.env.ref(self._context['custom_layout'], raise_if_not_found=False)
         if not base_template:
             base_template = self.env.ref('mail.mail_template_data_notification_email_default')
 
@@ -224,6 +229,18 @@ class Partner(models.Model):
                 WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
             return self.env.cr.dictfetchall()[0].get('needaction_count')
         _logger.error('Call to needaction_count without partner_id')
+        return 0
+
+    @api.model
+    def get_starred_count(self):
+        """ compute the number of starred of the current user """
+        if self.env.user.partner_id:
+            self.env.cr.execute("""
+                SELECT count(*) as starred_count
+                FROM mail_message_res_partner_starred_rel R
+                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
+            return self.env.cr.dictfetchall()[0].get('starred_count')
+        _logger.error('Call to starred_count without partner_id')
         return 0
 
     @api.model

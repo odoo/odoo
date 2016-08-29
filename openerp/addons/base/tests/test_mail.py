@@ -1,14 +1,11 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# This test can be run stand-alone with something like:
-# > PYTHONPATH=. python2 openerp/tests/test_misc.py
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import cgi
 import unittest
 
-from openerp.tools import html_sanitize, append_content_to_html, plaintext2html, email_split
-import test_mail_examples
+from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split
+from . import test_mail_examples
 
 
 class TestSanitizer(unittest.TestCase):
@@ -104,16 +101,15 @@ class TestSanitizer(unittest.TestCase):
         for email in emails:
             self.assertIn(cgi.escape(email), html_sanitize(email), 'html_sanitize stripped emails of original html')
 
-    def test_sanitize_escape_emails_cite(self):
+    def test_sanitize_unescape_emails(self):
         not_emails = [
-            '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite">cat</blockquote>']
+            '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite">cat</blockquote>',
+            '<img alt="@github-login" class="avatar" src="/web/image/pi" height="36" width="36">']
         for email in not_emails:
             sanitized = html_sanitize(email)
+            left_part = email.split('>')[0]  # take only left part, as the sanitizer could add data information on node
             self.assertNotIn(cgi.escape(email), sanitized, 'html_sanitize stripped emails of original html')
-            self.assertIn(
-                '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com"',
-                sanitized,
-                'html_sanitize escaped valid address-like')
+            self.assertIn(left_part, sanitized)
 
     def test_style_parsing(self):
         test_data = [
@@ -326,7 +322,3 @@ class TestEmailTools(unittest.TestCase):
         ]
         for text, expected in cases:
             self.assertEqual(email_split(text), expected, 'email_split is broken')
-
-
-if __name__ == '__main__':
-    unittest.main()

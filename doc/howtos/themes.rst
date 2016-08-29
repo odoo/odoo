@@ -175,8 +175,7 @@ Almost every element and option that you create has to be placed inside a ``<tem
 The previous code defines a title, but it will not be displayed
 anywhere because that *template* is not associated with any part of
 the **Odoo default structure**.  In order to do that you can use
-**xpath**, **qWeb** or a combination of both.  Keep reading the
-tutorial to learn to how properly extend it with your own code.
+**xpath**, **qWeb** or a combination of both.
 
 Keep reading the tutorial to learn to how properly extend it with your own code.
 
@@ -615,7 +614,7 @@ The previous code will create the snippet’s content, but we still need to plac
 .. code-block:: xml
 
    <template id="place_into_bar" inherit_id="website.snippets" name="Place into bar">
-     <xpath expr="//div[@id='snippet_structure']" position="inside">
+     <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
        <t t-snippet="theme_tutorial.snippet_testimonial"
           t-thumbnail="/theme_tutorial/static/src/img/ui/snippet_thumb.jpg"/>
      </xpath>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('purchase.group_purchase_user'))]" name="groups_id"/>
+        </record>
+
+        <record id="product.product_product_13" model="product.product">
+            <field name="purchase_requisition">tenders</field>
+        </record>
+
+    <!--Resource: purchase.requisition-->
+
+        <record id="requisition1" model="purchase.requisition">
+            <field name="user_id" ref="base.user_root"/>
+            <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
+        </record>
+
+        <record id="requisition_line1" model="purchase.requisition.line">
+            <field name="requisition_id" ref="requisition1"/>
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_qty">5</field>
+        </record>
+
+        <!--Resource: purchase.order-->
+
+        <record id="rfq1" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="requisition_id" ref="requisition1"/>
+        </record>
+
+        <record id="rfq1_line" model="purchase.order.line">
+            <field name="order_id" ref="rfq1"/>
+            <field name="name">[RAM-SR5] RAM DDR SR5</field>
+            <field name="date_planned" eval="time.strftime('%Y/%m/10')"/>
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">60</field>
+            <field name="product_qty">5</field>
+        </record>
+               
+        <record id="rfq2" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="requisition_id" ref="requisition1"/>
+        </record>
+
+        <record id="rfq2_line" model="purchase.order.line">
+            <field name="order_id" ref="rfq2"/>
+            <field name="name">[RAM-SR5] RAM DDR SR5</field>
+            <field name="date_planned" eval="time.strftime('%Y/%m/15')"/>
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">50</field>
+            <field name="product_qty">3</field>
+        </record>        
+
+
+    </data>
+</odoo>

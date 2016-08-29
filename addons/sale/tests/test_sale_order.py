@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.exceptions import UserError, AccessError
+
+from odoo.exceptions import UserError, AccessError
 
 from test_sale_common import TestSale
 
@@ -40,7 +41,7 @@ class TestSaleOrder(TestSale):
 
         # deliver lines except 'time and material' then invoice again
         for line in so.order_line:
-            line.qty_delivered = 2 if line.product_id.invoice_policy in ['order', 'delivery'] else 0
+            line.qty_delivered = 2 if line.product_id.expense_policy=='no' else 0
         self.assertTrue(so.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
         inv_id = so.action_invoice_create()
         inv = inv_obj.browse(inv_id)

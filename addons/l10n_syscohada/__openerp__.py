@@ -6,9 +6,8 @@
 
 {
     'name' : 'OHADA - Accounting',
-    'version' : '1.0',
     'author' : 'Baamtu Senegal',
-    'category' : 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This module implements the accounting chart for OHADA area.
 ===========================================================
@@ -25,10 +24,8 @@ Countries that use OHADA are the following:
     """,
     'website': 'http://www.baamtu.com',
     'depends' : ['account', 'base_vat'],
-    'demo' : [],
-    'data' : [
-        'l10n_syscohada_data.xml',
-        'account_chart_template.yml',
+    'data': [
+        'data/l10n_syscohada_chart_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'installable': True
 }

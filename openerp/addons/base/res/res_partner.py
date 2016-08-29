@@ -14,35 +14,24 @@ from odoo import api, fields, models, tools, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv.orm import browse_record
 
-ADDRESS_FORMAT_LAYOUTS = {
-    '%(city)s %(state_code)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s" style="width: 50%%"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" style="width: 47%%" options='{"no_open": true}'/>
-            <br/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """,
-    '%(zip)s %(city)s': """
-        <div class="address_format">
-            <field name="zip" placeholder="%(zip)s" style="width: 40%%"/>
-            <field name="city" placeholder="%(city)s" style="width: 57%%"/>
-            <br/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-        </div>
-    """,
-    '%(city)s\n%(state_name)s\n%(zip)s': """
-        <div class="address_format">
-            <field name="city" placeholder="%(city)s"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
-            <field name="zip" placeholder="%(zip)s"/>
-        </div>
-    """
+# Global variables used for the warning fields declared on the res.partner
+# in the following modules : sale, purchase, account, stock 
+WARNING_MESSAGE = [
+                   ('no-message','No Message'),
+                   ('warning','Warning'),
+                   ('block','Blocking Message')
+                   ]
+WARNING_HELP = _('Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.')
+
+
+ADDRESS_FORMAT_CLASSES = {
+    '%(city)s %(state_code)s\n%(zip)s': 'o_city_state',
+    '%(zip)s %(city)s': 'o_zip_city'
 }
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
-
 @api.model
 def _lang_get(self):
     return self.env['res.lang'].get_installed()
@@ -56,17 +45,19 @@ def _tz_get(self):
 class FormatAddress(object):
     @api.model
     def fields_view_get_address(self, arch):
-        fmt = self.env.user.company_id.country_id.address_format or ''
-        for k, v in ADDRESS_FORMAT_LAYOUTS.items():
-            if k in fmt:
+        address_format = self.env.user.company_id.country_id.address_format or ''
+        for format_pattern, format_class in ADDRESS_FORMAT_CLASSES.iteritems():
+            if format_pattern in address_format:
                 doc = etree.fromstring(arch)
-                for node in doc.xpath("//div[@class='address_format']"):
-                    tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
-                    for child in node.xpath("//field"):
-                        if child.attrib.get('modifiers'):
-                            for field in tree.xpath("//field[@name='%s']" % child.attrib.get('name')):
-                                field.attrib['modifiers'] = child.attrib.get('modifiers')
-                    node.getparent().replace(node, tree)
+                for address_node in doc.xpath("//div[@class='o_address_format']"):
+                    # add address format class to address block
+                    address_node.attrib['class'] += ' ' + format_class
+                    if format_class.startswith('o_zip'):
+                        zip_fields = address_node.xpath("//field[@name='zip']")
+                        city_fields = address_node.xpath("//field[@name='city']")
+                        if zip_fields and city_fields:
+                            # move zip field before city field
+                            city_fields[0].addprevious(zip_fields[0])
                 arch = etree.tostring(doc)
                 break
         return arch
@@ -132,6 +123,7 @@ class PartnerTitle(models.Model):
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
 
+    _sql_constraints = [('name_uniq', 'unique (name)', "Title name already exists !")]
 
 class Partner(models.Model, FormatAddress):
     _description = 'Partner'
@@ -145,7 +137,7 @@ class Partner(models.Model, FormatAddress):
         return self.env['res.company']._company_default_get('res.partner')
 
     name = fields.Char(index=True)
-    display_name = fields.Char(compute='_compute_display_name', string='Name', store=True, index=True)
+    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -199,7 +191,6 @@ class Partner(models.Model, FormatAddress):
     phone = fields.Char()
     fax = fields.Char()
     mobile = fields.Char()
-    birthdate = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
     # company_type is only an interface field, do not use it in business logic
@@ -214,26 +205,29 @@ class Partner(models.Model, FormatAddress):
     # technical field used for managing commercial fields
     commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
                                              string='Commercial Entity', store=True)
+    commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
+                                          store=True)
+    company_name = fields.Char('Company Name')
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Image", attachment=True,
         help="This field holds the image used as avatar for this contact, limited to 1024x1024px",)
-    image_medium = fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of this contact. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of this contact. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
+    # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
+    self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
 
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
-    @api.depends('is_company', 'name', 'parent_id.name', 'type')
+    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None)
         names = dict(self.with_context(**diff).name_get())
@@ -250,6 +244,10 @@ class Partner(models.Model, FormatAddress):
         for partner in self:
             partner.contact_address = partner._display_address()
 
+    @api.one
+    def _compute_get_ids(self):
+        self.self = self.id
+
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):
         for partner in self:
@@ -258,19 +256,11 @@ class Partner(models.Model, FormatAddress):
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
 
-    @api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = tools.image_resize_image_medium(rec.image)
-            rec.image_small = tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = tools.image_resize_image_big(rec.image_small)
+    @api.depends('company_name', 'parent_id.is_company', 'commercial_partner_id.name')
+    def _compute_commercial_company_name(self):
+        for partner in self:
+            p = partner.commercial_partner_id
+            partner.commercial_company_name = p.is_company and p.name or partner.company_name
 
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):
@@ -279,8 +269,9 @@ class Partner(models.Model, FormatAddress):
 
         colorize, img_path, image = False, False, False
 
-        if partner_type in ['contact', 'other'] and parent_id:
-            image = self.browse(parent_id).image.decode('base64')
+        if partner_type in ['other'] and parent_id:
+            parent_image = self.browse(parent_id).image
+            image = parent_image and parent_image.decode('base64') or None
 
         if not image and partner_type == 'invoice':
             img_path = get_module_resource('base', 'static/src/img', 'money.png')
@@ -364,11 +355,7 @@ class Partner(models.Model, FormatAddress):
     def onchange_company_type(self):
         self.is_company = (self.company_type == 'company')
 
-    @api.v7
-    def _update_fields_values(self, cr, uid, partner, fields, context=None):
-        return Partner._update_fields_values(partner, fields)
-
-    @api.v8
+    @api.multi
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
         values = {}
@@ -404,11 +391,7 @@ class Partner(models.Model, FormatAddress):
         extended by inheriting classes. """
         return ['vat', 'credit_limit']
 
-    @api.v7
-    def _commercial_sync_from_company(self, cr, uid, partner, context=None):
-        return Partner._commercial_sync_from_company(partner)
-
-    @api.v8
+    @api.multi
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
@@ -417,11 +400,7 @@ class Partner(models.Model, FormatAddress):
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
 
-    @api.v7
-    def _commercial_sync_to_children(self, cr, uid, partner, context=None):
-        return Partner._commercial_sync_to_children(partner)
-
-    @api.v8
+    @api.multi
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """
         commercial_partner = self.commercial_partner_id
@@ -431,11 +410,7 @@ class Partner(models.Model, FormatAddress):
             child._commercial_sync_to_children()
         return sync_children.write(sync_vals)
 
-    @api.v7
-    def _fields_sync(self, cr, uid, partner, values, context=None):
-        return Partner._fields_sync(partner, values)
-
-    @api.v8
+    @api.multi
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
@@ -462,11 +437,7 @@ class Partner(models.Model, FormatAddress):
                 contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
                 contacts.update_address(values)
 
-    @api.v7
-    def _handle_first_contact_creation(self, cr, uid, partner, context=None):
-        return Partner._handle_first_contact_creation(partner)
-
-    @api.v8
+    @api.multi
     def _handle_first_contact_creation(self):
         """ On creation of first contact for a company (or root) that has no address, assume contact address
         was meant to be company address """
@@ -476,8 +447,6 @@ class Partner(models.Model, FormatAddress):
             any(self[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(address_fields)
             parent.update_address(addr_vals)
-            if not parent.is_company:
-                parent.write({'is_company': True})
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
@@ -496,6 +465,8 @@ class Partner(models.Model, FormatAddress):
         # company)
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
+        if vals.get('parent_id'):
+            vals['company_name'] = False
         if vals.get('company_id'):
             company = self.env['res.company'].browse(vals['company_id'])
             for partner in self:
@@ -503,26 +474,45 @@ class Partner(models.Model, FormatAddress):
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
                         raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
+        tools.image_resize_images(vals)
 
         result = super(Partner, self).write(vals)
         for partner in self:
+            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
+                self.env['res.users'].check_access_rights('write')
             partner._fields_sync(vals)
         return result
 
     @api.model
     def create(self, vals):
-        if vals.get('type') and not self._context.get('partner_type'):
-            self = self.with_context(partner_type=vals['type'])
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
+        if vals.get('parent_id'):
+            vals['company_name'] = False
         # compute default image in create, because computing gravatar in the onchange
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
             vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
+        tools.image_resize_images(vals)
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
         return partner
+
+    @api.multi
+    def create_company(self):
+        self.ensure_one()
+        if self.company_name:
+            # Create parent company
+            values = dict(name=self.company_name, is_company=True)
+            values.update(self._update_fields_values(self._address_fields()))
+            new_company = self.create(values)
+            # Set new company as my parent
+            self.write({
+                'parent_id': new_company.id,
+                'child_ids': [(1, partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
+            })
+        return True
 
     @api.multi
     def open_commercial_entity(self):
@@ -551,13 +541,14 @@ class Partner(models.Model, FormatAddress):
     @api.multi
     def name_get(self):
         res = []
-        types_dict = dict(self.fields_get()['type']['selection'])
         for partner in self:
             name = partner.name or ''
-            if partner.parent_id and not partner.is_company:
+
+            if partner.company_name or partner.parent_id:
                 if not name and partner.type in ['invoice', 'delivery', 'other']:
-                    name = types_dict[partner.type]
-                name = "%s, %s" % (partner.parent_name, name)
+                    name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
+                if not partner.is_company:
+                    name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
             if self._context.get('show_address_only'):
                 name = partner._display_address(without_company=True)
             if self._context.get('show_address'):
@@ -669,7 +660,7 @@ class Partner(models.Model, FormatAddress):
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        partners = self.search([('email', '=ilike', email)])
+        partners = self.search([('email', '=ilike', email)], limit=1)
         return partners.id or self.name_create(email)[0]
 
     def _get_gravatar_image(self, email):
@@ -742,11 +733,7 @@ class Partner(models.Model, FormatAddress):
         ''' Return the main partner '''
         return self.env.ref('base.main_partner')
 
-    @api.v7
-    def _display_address(self, cr, uid, address, without_company=False, context=None):
-        return self.browse(cr, uid, address.id, context=context)._display_address(without_company=without_company)
-
-    @api.v8
+    @api.multi
     def _display_address(self, without_company=False):
 
         '''
@@ -767,13 +754,13 @@ class Partner(models.Model, FormatAddress):
             'state_name': self.state_id.name or '',
             'country_code': self.country_id.code or '',
             'country_name': self.country_id.name or '',
-            'company_name': self.parent_name or '',
+            'company_name': self.commercial_company_name or '',
         }
         for field in self._address_fields():
             args[field] = getattr(self, field) or ''
         if without_company:
             args['company_name'] = ''
-        elif self.parent_id:
+        elif self.commercial_company_name:
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
 
@@ -781,5 +768,5 @@ class Partner(models.Model, FormatAddress):
         # field dependencies of method _display_address()
         return self._address_fields() + [
             'country_id.address_format', 'country_id.code', 'country_id.name',
-            'parent_id.name', 'state_id.code', 'state_id.name',
+            'company_name', 'state_id.code', 'state_id.name',
         ]

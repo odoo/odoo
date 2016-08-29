@@ -1,0 +1,2145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="1">
+<!-- Account Types -->
+
+    <record model="account.account.type" id="account_type_other">
+      <field name="name">other</field>
+    </record>
+
+
+<!--
+Cuentas del plan
+-->
+	<record id="cuenta1129003000" model="account.account.template">
+		<field name="name">TRANSFERENCIAS BANCARIAS</field>
+		<field name="code">1129003000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+	</record>
+	<record id="vauxoo_mx_chart_template" model="account.chart.template">
+		<field name="name">Plan de Cuentas para Mexico</field>
+		<field name="bank_account_code_prefix">1113</field>
+		<field name="cash_account_code_prefix">1111</field>
+		<field name="code_digits">6</field>
+		<field name="currency_id" ref="base.MXN"/>
+		<field name="transfer_account_id" ref="cuenta1129003000"/>
+	</record>
+
+	<record id="cuenta1129003000" model="account.account.template">
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+	</record>
+
+<record id="cuenta1115001000" model="account.account.template">
+		<field name="code">1115001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PAPELES COMERCIALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1115002000" model="account.account.template">
+		<field name="code">1115002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVERSIONES TEMPORALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1115003000" model="account.account.template">
+		<field name="code">1115003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVERSIONES EN BONOS M.N.</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1115004000" model="account.account.template">
+		<field name="code">1115004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVERSIONES EN BONOS M.E.</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1121001000" model="account.account.template">
+		<field name="code">1121001000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">EFECTOS POR COBRAR NACIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1122001000" model="account.account.template">
+		<field name="code">1122001000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">CUENTAS POR COBRAR CLIENTES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1122002000" model="account.account.template">
+		<field name="code">1122002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">COBRO ANTICIPO CLIENTES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1122004000" model="account.account.template">
+		<field name="code">1122004000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">CUENTAS POR COBRAR MAYORISTA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1122005000" model="account.account.template">
+		<field name="code">1122005000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">CUENTAS POR COBRAR DETALLISTA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1124001000" model="account.account.template">
+		<field name="code">1124001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PROVISION INCOBRALES NACIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1124002000" model="account.account.template">
+		<field name="code">1124002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PROVINCION INCOBRABLES EXTERIOR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125001000" model="account.account.template">
+		<field name="code">1125001000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">CUENTAS POR COBRAR EMPLEADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125002000" model="account.account.template">
+		<field name="code">1125002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PRESTAMOS PERSONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125003000" model="account.account.template">
+		<field name="code">1125003000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">CUENTAS POR COBRAR SOCIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125004000" model="account.account.template">
+		<field name="code">1125004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VIATICOS VENDEDORES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125006000" model="account.account.template">
+		<field name="code">1125006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VACACIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125007000" model="account.account.template">
+		<field name="code">1125007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">UTILIDADES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125008000" model="account.account.template">
+		<field name="code">1125008000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SEGURO DE VEHICULOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1125009000" model="account.account.template">
+		<field name="code">1125009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ANTICIPO DE NOMINA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1128001000" model="account.account.template">
+		<field name="code">1128001000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">CUENTAS POR COBRAR SOCIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1129001000" model="account.account.template">
+		<field name="code">1129001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ADELANTO A PROVEEDORES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1129002000" model="account.account.template">
+		<field name="code">1129002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ENTES GUBERNAMENTALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1129004000" model="account.account.template">
+		<field name="code">1129004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DEPOSITOS VARIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1129005000" model="account.account.template">
+		<field name="code">1129005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RECLAMO AL SEGURO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1129008000" model="account.account.template">
+		<field name="code">1129008000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CHEQUES DEVUELTOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1129009000" model="account.account.template">
+		<field name="code">1129009000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">DEUDORES DIVERSOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1129010000" model="account.account.template">
+		<field name="code">1129010000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">RECLAMO AL BANCO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1131001000" model="account.account.template">
+		<field name="code">1131001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVENTARIO FINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1131002000" model="account.account.template">
+		<field name="code">1131002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVENTARIOS DE MERCANCIA NACIONAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1131003000" model="account.account.template">
+		<field name="code">1131003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVENTARIOS DE MERCANCIA EXTERIOR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1131009000" model="account.account.template">
+		<field name="code">1131009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVENTARIO MERCANCIA ACTUALIZACION DEL VALOR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1134001000" model="account.account.template">
+		<field name="code">1134001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MERCANCIA EN TRANSITOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1134002000" model="account.account.template">
+		<field name="code">1134002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MERCANCIA EN TRANSITO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1141001000" model="account.account.template">
+		<field name="code">1141001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PUBLICIDAD</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1141002000" model="account.account.template">
+		<field name="code">1141002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SEGURO PREPAGADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1141004000" model="account.account.template">
+		<field name="code">1141004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ALQUILERES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151001000" model="account.account.template">
+		<field name="code">1151001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ISR  DECLARACION ESTIMADAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151002000" model="account.account.template">
+		<field name="code">1151002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ISR  RETENIDO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151003000" model="account.account.template">
+		<field name="code">1151003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">IVA EFECTIVAMENTE PAGADO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151005000" model="account.account.template">
+		<field name="code">1151005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PATENTE  MUNICIPAL ESTIMADA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151006000" model="account.account.template">
+		<field name="code">1151006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">IVA . CREDITO FISCAL IMPORTACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151007000" model="account.account.template">
+		<field name="code">1151007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">IMPUESTO MUNICIPAL PAGADO EN EXCESO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151008000" model="account.account.template">
+		<field name="code">1151008000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">IETU PAGADO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151009000" model="account.account.template">
+		<field name="code">1151009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">ISR PAGADO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1151004000" model="account.account.template">
+		<field name="code">1151004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">IVA ACREDITABLE o PAGADO A PROVEEDORES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1211001000" model="account.account.template">
+		<field name="code">1211001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TERRENO COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1211005000" model="account.account.template">
+		<field name="code">1211005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INMUEBLES COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1211007000" model="account.account.template">
+		<field name="code">1211007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MAQUINARIAS Y EQUIPOS COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1211009000" model="account.account.template">
+		<field name="code">1211009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VEHICULOS COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1211011000" model="account.account.template">
+		<field name="code">1211011000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MUEBLES Y ENSERES COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1211013000" model="account.account.template">
+		<field name="code">1211013000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">LICENCIA Y SOFTWARE COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1212001000" model="account.account.template">
+		<field name="code">1212001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TERRENOS COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1212006000" model="account.account.template">
+		<field name="code">1212006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INMUEBLES COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1212007000" model="account.account.template">
+		<field name="code">1212007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MAQUINARIAS Y EQUIPOS COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1212009000" model="account.account.template">
+		<field name="code">1212009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VEHICULOS COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1212011000" model="account.account.template">
+		<field name="code">1212011000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MUEBLES Y ENSERES COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1212013000" model="account.account.template">
+		<field name="code">1212013000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">LICENCIA Y SOFTWARE COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1212015000" model="account.account.template">
+		<field name="code">1212015000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MEJORAS A PROPIEDAD COSTO ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1221001000" model="account.account.template">
+		<field name="code">1221001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVERSIONES PERMANENTES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1221003000" model="account.account.template">
+		<field name="code">1221003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BONOS TITULOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1221004000" model="account.account.template">
+		<field name="code">1221004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INVERSIONES EN BONOS M.N.</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1251001000" model="account.account.template">
+		<field name="code">1251001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">IMPUESTOS DIFERIDOS ISR </field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1271001000" model="account.account.template">
+		<field name="code">1271001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MARCA DE FABRICA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1271002000" model="account.account.template">
+		<field name="code">1271002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GASTOS DE CONSTITUCION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1271005000" model="account.account.template">
+		<field name="code">1271005000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">OTRAS CUENTAS POR COBRAR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1291001000" model="account.account.template">
+		<field name="code">1291001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DEPOSITOS GARANTIA PROVEEDORES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1291002000" model="account.account.template">
+		<field name="code">1291002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DEPOSITOS GARANTIA BANCOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta1291004000" model="account.account.template">
+		<field name="code">1291004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DEPOSITOS GARANTIA ARRENDAMIENTO LOCAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2111" model="account.account.template">
+		<field name="code">2111</field>
+		<field name="reconcile" eval="False"/>
+		<field name="name">PASIVOS FINANCIEROS A CORTO PLAZO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+</record>
+
+<record id="cuenta2122001000" model="account.account.template">
+		<field name="code">2122001000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">CUENTAS POR PAGAR PROVEEDORES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2122002000" model="account.account.template">
+		<field name="code">2122002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+		<field name="name">TARJETA DE CREDITO X</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2122003000" model="account.account.template">
+		<field name="code">2122003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+		<field name="name">TARJETA DE CREDITO X</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2122005000" model="account.account.template">
+		<field name="code">2122005000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">OTRAS CUENTAS POR PAGAR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2124001000" model="account.account.template">
+		<field name="code">2124001000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">CUENTAS POR PAGAR SOCIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2151001000" model="account.account.template">
+		<field name="code">2151001000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">DIVIDENDO POR PAGAR VIGENTES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2151002000" model="account.account.template">
+		<field name="code">2151002000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_receivable"/>
+		<field name="name">DIVDENDO POR COBRAR NO COBRADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2161005000" model="account.account.template">
+		<field name="code">2161005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">FONDO FIDEICOMISO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2161006000" model="account.account.template">
+		<field name="code">2161006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">FONDO DE AHORRO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2161007000" model="account.account.template">
+		<field name="code">2161007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">APORTES EMPLEADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2171001000" model="account.account.template">
+		<field name="code">2171001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">APORTE EMPRESA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2172001000" model="account.account.template">
+		<field name="code">2172001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RETENCIONES ISR  EMPLEADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2172002000" model="account.account.template">
+		<field name="code">2172002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RETENCIONES ISR  PROVEEDORES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2172003000" model="account.account.template">
+		<field name="code">2172003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">IVA  DEBITO FISCAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2173001000" model="account.account.template">
+		<field name="code">2173001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">EMBARGO DE SUELDO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2173002000" model="account.account.template">
+		<field name="code">2173002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PRESTAMOS SOBRE FIDEICOMISO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2173003000" model="account.account.template">
+		<field name="code">2173003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SINDICATOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175001000" model="account.account.template">
+		<field name="code">2175001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VACACIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175002000" model="account.account.template">
+		<field name="code">2175002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">UTILIDADES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175003000" model="account.account.template">
+		<field name="code">2175003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PRESTACIONES SOCIALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175004000" model="account.account.template">
+		<field name="code">2175004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INTERESES S/PRESTACIONES SOCIALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175005000" model="account.account.template">
+		<field name="code">2175005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BONIFICACION ACCIDENTAL UNICA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175006000" model="account.account.template">
+		<field name="code">2175006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PRIMA POR EFECIENCIA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175008000" model="account.account.template">
+		<field name="code">2175008000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">POLIZA DE SEGURO POR PAGAR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175009000" model="account.account.template">
+		<field name="code">2175009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PUBLICIDAD Y PROPAGANDA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175010000" model="account.account.template">
+		<field name="code">2175010000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">COMISIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175011000" model="account.account.template">
+		<field name="code">2175011000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ALQUILERES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175012000" model="account.account.template">
+		<field name="code">2175012000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TARJETA CORPORATIVA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175013000" model="account.account.template">
+		<field name="code">2175013000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CONDOMINIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175014000" model="account.account.template">
+		<field name="code">2175014000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">IMPUESTOS MUNICIPALES POR PAGAR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175015000" model="account.account.template">
+		<field name="code">2175015000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CONVESION DE COMERCIALIZACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175017000" model="account.account.template">
+		<field name="code">2175017000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">NOMINA POR PAGAR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175018000" model="account.account.template">
+		<field name="code">2175018000</field>
+		<field name="reconcile" eval="True"/>
+		<field name="user_type_id" ref="account.data_account_type_payable"/>
+		<field name="name">IMPUESTOS POR PAGAR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175019000" model="account.account.template">
+		<field name="code">2175019000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PROGRAMA DE ALIMENTACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175020000" model="account.account.template">
+		<field name="code">2175020000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ADELANTO DE CLIENTES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2175021000" model="account.account.template">
+		<field name="code">2175021000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PATENTE INDUSTRIA Y COMERCIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2181001000" model="account.account.template">
+		<field name="code">2181001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RESERVAS OPERATIVAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2181002000" model="account.account.template">
+		<field name="code">2181002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RESERVAS FINANCIERAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2181003000" model="account.account.template">
+		<field name="code">2181003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RESERVAS FISCALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2191001000" model="account.account.template">
+		<field name="code">2191001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ISR  ACUMULADOS GASTOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2191002000" model="account.account.template">
+		<field name="code">2191002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DECLARACION ESTIMADAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2191003000" model="account.account.template">
+		<field name="code">2191003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RAR AJUSTE INICIAL POR INFLACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201111000" model="account.account.template">
+		<field name="code">2201111000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PASIVOS A  CORTO PLAZO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201112000" model="account.account.template">
+		<field name="code">2201112000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">4% IVA RETENIDO FLETES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201113000" model="account.account.template">
+		<field name="code">2201113000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+		<field name="name">ISR RETENIDO SALARIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201114000" model="account.account.template">
+		<field name="code">2201114000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+		<field name="name">ISR RETENIDO ASIMILABLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201115000" model="account.account.template">
+		<field name="code">2201115000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">10% ISR RETENIDO HONORARIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201116000" model="account.account.template">
+		<field name="code">2201116000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">10% ISR RETENIDO ARRENDAMIENTO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201117000" model="account.account.template">
+		<field name="code">2201117000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">10.67%  IVA RETENIDO ARRENDAMIENTO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201118000" model="account.account.template">
+		<field name="code">2201118000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">10.67%  IVA RETENIDO HONORARIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2201119000" model="account.account.template">
+		<field name="code">2201119000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+		<field name="name">1% DE RET CEDULAR ARRENDAMIETOS (GUANAJUATO)</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2202113000" model="account.account.template">
+		<field name="code">2202113000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+		<field name="name">IVA POR TRASLADAR o COBRADO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2511001000" model="account.account.template">
+		<field name="code">2511001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PASIVOS FINANCIEROS A LARGO PLAZO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2521001000" model="account.account.template">
+		<field name="code">2521001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INDEMNIZACIONES SENCILLAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2521002000" model="account.account.template">
+		<field name="code">2521002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INDEMNIZACIONES DOBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2581001000" model="account.account.template">
+		<field name="code">2581001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PASIVOS INTERCOMPAÑIAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta2591001000" model="account.account.template">
+		<field name="code">2591001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">OTROS PASIVOS A LARGO PLAZO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3111001000" model="account.account.template">
+		<field name="code">3111001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CAPITAL SOCIAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3111002000" model="account.account.template">
+		<field name="code">3111002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ACTUALIZACION DEL VALOR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3131001000" model="account.account.template">
+		<field name="code">3131001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ACCIONES EN TESORERIA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3131002000" model="account.account.template">
+		<field name="code">3131002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ACTUALIZACION DE VALOR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3211001000" model="account.account.template">
+		<field name="code">3211001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">UTILIDADES NO DISTRIBUIDAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3211002000" model="account.account.template">
+		<field name="code">3211002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">UTILIDADES DEL EJERCICIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3212003000" model="account.account.template">
+		<field name="code">3212003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">REAJUSTE POR INFLACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3212004000" model="account.account.template">
+		<field name="code">3212004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ACTUALIZACION DEL PATRIMONIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3212005000" model="account.account.template">
+		<field name="code">3212005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">EXCLUSIONES FISCALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3311001000" model="account.account.template">
+		<field name="code">3311001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VALOR ORIGINAL RESERVA LEGAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3311002000" model="account.account.template">
+		<field name="code">3311002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">RESERVA P/FUTURO AUMENTO DE CAPITAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3391001000" model="account.account.template">
+		<field name="code">3391001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VALOR ORIGINAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta3391002000" model="account.account.template">
+		<field name="code">3391002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ACTUALIZACION DEL VALOR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta4111001000" model="account.account.template">
+		<field name="code">4111001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CARTAS DE CREDITOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta4111002000" model="account.account.template">
+		<field name="code">4111002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MERCANCIAS EN CONSIGNACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta4111003000" model="account.account.template">
+		<field name="code">4111003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MERCANCIAS COMPRADAS EN TRANSITO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta4511002000" model="account.account.template">
+		<field name="code">4511002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MERCANCIA EN CONSIGNACION P. COMPRA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta4511003000" model="account.account.template">
+		<field name="code">4511003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MERCANCIA VENDIDAS EN TRANSITO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta5111001000" model="account.account.template">
+		<field name="code">5111001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_revenue"/>
+		<field name="name">VENTAS NACIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta5111002000" model="account.account.template">
+		<field name="code">5111002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VENTAS NACIONALES AL DETAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta5111003000" model="account.account.template">
+		<field name="code">5111003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_other_income"/>
+		<field name="name">VENTAS EXPORTACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta5111004000" model="account.account.template">
+		<field name="code">5111004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VENTAS INMUEBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta5112001000" model="account.account.template">
+		<field name="code">5112001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INGRESOS POR SERVICIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta5114001000" model="account.account.template">
+		<field name="code">5114001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DESCUENTOS EN VENTAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta5114002000" model="account.account.template">
+		<field name="code">5114002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DEVOLUCIONES EN VENTAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta6111001000" model="account.account.template">
+		<field name="code">6111001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_expenses"/>
+		<field name="name">COSTO DE VENTAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111001000" model="account.account.template">
+		<field name="code">7111001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DISTRIBUCION Y REPARTO LOCALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111002000" model="account.account.template">
+		<field name="code">7111002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PROMOCIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111003000" model="account.account.template">
+		<field name="code">7111003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ACTIVIDADES REGIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111004000" model="account.account.template">
+		<field name="code">7111004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">EVENTOS ESPECIALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111005000" model="account.account.template">
+		<field name="code">7111005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MATERIALES PROMOCIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111006000" model="account.account.template">
+		<field name="code">7111006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PUBLICIDAD</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111007000" model="account.account.template">
+		<field name="code">7111007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MEDIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111008000" model="account.account.template">
+		<field name="code">7111008000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PRODUCCION MATERIAL P.O.P.</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111009000" model="account.account.template">
+		<field name="code">7111009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CUENTAS INCOBRABLES NACIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111010000" model="account.account.template">
+		<field name="code">7111010000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TRANSPORTE Y FLETES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7111011000" model="account.account.template">
+		<field name="code">7111011000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PATENTE INDUSTRIA Y COMERCIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131001000" model="account.account.template">
+		<field name="code">7131001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SUELDOS EMPLEADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131002000" model="account.account.template">
+		<field name="code">7131002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SUELDOS DIRECTIVOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131003000" model="account.account.template">
+		<field name="code">7131003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">HORAS EXTRAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131004000" model="account.account.template">
+		<field name="code">7131004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">HORAS EXTRAORDINARIAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131005000" model="account.account.template">
+		<field name="code">7131005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">COMISION AL PERSONAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131006000" model="account.account.template">
+		<field name="code">7131006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TRANSPORTE Y ALIMENTACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131007000" model="account.account.template">
+		<field name="code">7131007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PROGRAMA DE ALIMENTACION EMPLEADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131008000" model="account.account.template">
+		<field name="code">7131008000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BENEFICIOS UNIFORMES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131009000" model="account.account.template">
+		<field name="code">7131009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BENEFICIOS COMEDOR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131010000" model="account.account.template">
+		<field name="code">7131010000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BENEFICIOS SERVICIOS MEDICOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131011000" model="account.account.template">
+		<field name="code">7131011000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BENEFICIOS AYUDAS ESCOLARES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131012000" model="account.account.template">
+		<field name="code">7131012000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BENEFICIOS ADIESTRAMIENTOS-CURSOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131013000" model="account.account.template">
+		<field name="code">7131013000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BENEFICIOS BECAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131016000" model="account.account.template">
+		<field name="code">7131016000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PRESTACIONES SOCIALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131017000" model="account.account.template">
+		<field name="code">7131017000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INTERESES S/PRESTACIONES SOCIALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131018000" model="account.account.template">
+		<field name="code">7131018000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">UTILIDADES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131019000" model="account.account.template">
+		<field name="code">7131019000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VACACIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131020000" model="account.account.template">
+		<field name="code">7131020000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BONO VACACIONAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131021000" model="account.account.template">
+		<field name="code">7131021000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CONTRIBUCIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131025000" model="account.account.template">
+		<field name="code">7131025000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">BONIFICACION UNICA ESPECIAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131030000" model="account.account.template">
+		<field name="code">7131030000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VIATICOS Y GASTOS DE REPRESENTACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131031000" model="account.account.template">
+		<field name="code">7131031000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">HONORARIOS POR PARTIPACION JUNTA DIRECTIVA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131033000" model="account.account.template">
+		<field name="code">7131033000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PRIMA POR RENDIMIENTO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131035000" model="account.account.template">
+		<field name="code">7131035000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GASTOS PERSONAL CONTRATADO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7131036000" model="account.account.template">
+		<field name="code">7131036000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GASTOS PERSONAL TRANSFERIDOSR</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151001000" model="account.account.template">
+		<field name="code">7151001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SUMINISTROS DE EQUIPOS DE OFICINA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151002000" model="account.account.template">
+		<field name="code">7151002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">REPARACIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151003000" model="account.account.template">
+		<field name="code">7151003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MANTENIMIENTOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151004000" model="account.account.template">
+		<field name="code">7151004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MANTENIMIENTO DE VEHICULOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151005000" model="account.account.template">
+		<field name="code">7151005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ARTICULOS DE OFICINA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151006000" model="account.account.template">
+		<field name="code">7151006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">UTILES DE LIMPIEZA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151007000" model="account.account.template">
+		<field name="code">7151007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">HONORARIOS PROFESIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151009000" model="account.account.template">
+		<field name="code">7151009000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SERVICIOS PUBLICOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151010000" model="account.account.template">
+		<field name="code">7151010000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ENERGIA ELECTRICA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151012000" model="account.account.template">
+		<field name="code">7151012000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TELEFONOS Y TELECOMUNICACIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151013000" model="account.account.template">
+		<field name="code">7151013000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">AGUA POTABLE Y REFRIGERIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151014000" model="account.account.template">
+		<field name="code">7151014000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ASEO URBANO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151015000" model="account.account.template">
+		<field name="code">7151015000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PALERIA Y FOTOCOPIADO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151016000" model="account.account.template">
+		<field name="code">7151016000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ASEO Y LIMPIEZA</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151017000" model="account.account.template">
+		<field name="code">7151017000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PASAJES LOCALES Y EXT.DEDUCIBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151018000" model="account.account.template">
+		<field name="code">7151018000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PASAJE EXTERIOR NO DEDUCIBLE</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151019000" model="account.account.template">
+		<field name="code">7151019000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VIATICOS DEDUCIBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151020000" model="account.account.template">
+		<field name="code">7151020000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VIATICOS NO DEDUCIBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151021000" model="account.account.template">
+		<field name="code">7151021000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GASTOS DE REPRESENTACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151022000" model="account.account.template">
+		<field name="code">7151022000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">HOSPEDAJE</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151023000" model="account.account.template">
+		<field name="code">7151023000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">EQUIPOS Y EVENTOS DEPORTIVOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151024000" model="account.account.template">
+		<field name="code">7151024000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CONVENSION  DE COMERCIALIZACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151025000" model="account.account.template">
+		<field name="code">7151025000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">OTROS GASTOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151026000" model="account.account.template">
+		<field name="code">7151026000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ARRENDAMIENTO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151027000" model="account.account.template">
+		<field name="code">7151027000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">AVERIAS-PRODUCTOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151028000" model="account.account.template">
+		<field name="code">7151028000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">AJUSTE DE INVENTARIOS DONADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151029000" model="account.account.template">
+		<field name="code">7151029000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">AJUSTE DE INVENTARIOS OBSOLETOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151030000" model="account.account.template">
+		<field name="code">7151030000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TRAMITES DE SOLVENCIAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151031000" model="account.account.template">
+		<field name="code">7151031000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">CONDOMINIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151032000" model="account.account.template">
+		<field name="code">7151032000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">FLETES Y TRANSPORTES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151033000" model="account.account.template">
+		<field name="code">7151033000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ESTACIONAMINETO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151035000" model="account.account.template">
+		<field name="code">7151035000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">TRAMITES LEGALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151036000" model="account.account.template">
+		<field name="code">7151036000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GASTOS DE SISTEMAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151037000" model="account.account.template">
+		<field name="code">7151037000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">DERECHO DE FRENTE</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151039000" model="account.account.template">
+		<field name="code">7151039000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">COMIDAS, VIAJES Y TRASLADOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151040000" model="account.account.template">
+		<field name="code">7151040000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">COMBUSTIBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151041000" model="account.account.template">
+		<field name="code">7151041000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GASTOS DE ISR </field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151042000" model="account.account.template">
+		<field name="code">7151042000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">REPAROS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151043000" model="account.account.template">
+		<field name="code">7151043000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SEGUROS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151044000" model="account.account.template">
+		<field name="code">7151044000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PARTIDAS NO DEDUCIBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151045000" model="account.account.template">
+		<field name="code">7151045000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SERVICIOS CONTRATADOS A TERCEROS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151046000" model="account.account.template">
+		<field name="code">7151046000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">BONIFICACION UNICA ESPECIAL</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151047000" model="account.account.template">
+		<field name="code">7151047000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_current_assets"/>
+		<field name="name">SERVICIOS DE PUBLICIDAD</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151048000" model="account.account.template">
+		<field name="code">7151048000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">REMANENTES DISTRIBUIBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7151049000" model="account.account.template">
+		<field name="code">7151049000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">ASIMILABLES A SALARIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7161002000" model="account.account.template">
+		<field name="code">7161002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INMUEBLES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7161003000" model="account.account.template">
+		<field name="code">7161003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MAQUINARIAS Y EQUIPOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7161004000" model="account.account.template">
+		<field name="code">7161004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">VEHICULOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7161005000" model="account.account.template">
+		<field name="code">7161005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MUEBLES Y ENSERES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7161006000" model="account.account.template">
+		<field name="code">7161006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">LICENCIA Y SOFTWARE</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7161007000" model="account.account.template">
+		<field name="code">7161007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">MEJORAS A PROPIEDAD</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta7162001000" model="account.account.template">
+		<field name="code">7162001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">SEGUROS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9111001000" model="account.account.template">
+		<field name="code">9111001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INTERESES BANCOS NACIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9111002000" model="account.account.template">
+		<field name="code">9111002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">COMISIONES Y GASTOS BANCARIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9111003000" model="account.account.template">
+		<field name="code">9111003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">COMISIONES TICKET DE ALIMENTACION</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9111004000" model="account.account.template">
+		<field name="code">9111004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INTERESES POR FINANCIAMIENTOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9111099000" model="account.account.template">
+		<field name="code">9111099000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">OTROS EGRESOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113002000" model="account.account.template">
+		<field name="code">9113002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INTERESES S/PRESTACIONES SOCIALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113003000" model="account.account.template">
+		<field name="code">9113003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PERDIDAS EN VENTAS ACTIVOS FIJOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113004000" model="account.account.template">
+		<field name="code">9113004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PERDIDAS EN INVERSIONES DE BONOS P.</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113005000" model="account.account.template">
+		<field name="code">9113005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PERDIDAS EN VENTAS DE INVERSIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113006000" model="account.account.template">
+		<field name="code">9113006000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PERDIDAS EN DIFERENCIAL CAMBIARIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113007000" model="account.account.template">
+		<field name="code">9113007000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">AJUSTE DE AÑOS ANTERIORES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113010000" model="account.account.template">
+		<field name="code">9113010000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">PERDIDA POR ROBO DE INVENTARIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9113012000" model="account.account.template">
+		<field name="code">9113012000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">FLUCTUACION CAMBIARIA NO REALIZADAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9114001000" model="account.account.template">
+		<field name="code">9114001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">IMPUESTOS A LAS TRANSACIONES FINANCIERAS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9211001000" model="account.account.template">
+		<field name="code">9211001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_other_income"/>
+		<field name="name">INTERESES DE BANCOS NACIONALES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9211002000" model="account.account.template">
+		<field name="code">9211002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INTERESES DE BANCOS EXTRANJEROS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9211003000" model="account.account.template">
+		<field name="code">9211003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">OTROS INGRESOS FINANCIEROS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9212001000" model="account.account.template">
+		<field name="code">9212001000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GANANCIAS EN VENTAS DE ACTIVOS FIJOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9212002000" model="account.account.template">
+		<field name="code">9212002000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">GANANCIAS EN VENTAS DE INVERSIONES</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9212003000" model="account.account.template">
+		<field name="code">9212003000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account.data_account_type_other_income"/>
+		<field name="name">GANANCIAS EN DIFERENCIAL CAMBIARIO</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9212004000" model="account.account.template">
+		<field name="code">9212004000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">INTERESES VARIOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+<record id="cuenta9212005000" model="account.account.template">
+		<field name="code">9212005000</field>
+		<field name="reconcile" eval="False"/>
+		<field name="user_type_id" ref="account_type_other"/>
+		<field name="name">OTROS INGRESOS</field>
+		<field name="chart_template_id" ref="vauxoo_mx_chart_template"/>
+</record>
+
+
+<!--
+	 Cuenta Template 
+-->
+     
+	<record id="vauxoo_mx_chart_template" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="cuenta1122001000"/>
+        <field name="property_account_payable_id" ref="cuenta2122001000"/>
+        <field name="property_account_expense_categ_id" ref="cuenta6111001000"/>
+        <field name="property_account_income_categ_id" ref="cuenta5111001000"/>
+        <field name="income_currency_exchange_account_id" ref="cuenta9212003000"/>
+        <field name="expense_currency_exchange_account_id" ref="cuenta9113006000"/>
+	</record>
+   
+  
+</data>
+</odoo>

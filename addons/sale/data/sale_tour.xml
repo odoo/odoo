@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Make the xmlid of menus required by the Sale tour available in webclient -->
+    <record id="sales_team.menu_sales" model="ir.ui.menu">
+        <field name="load_xmlid" eval="True"/>
+    </record>
+    <record id="sales_team.menu_base_partner" model="ir.ui.menu">
+        <field name="load_xmlid" eval="True"/>
+    </record>
+    <record id="base.menu_administration" model="ir.ui.menu">
+        <field name="load_xmlid" eval="True"/>
+    </record>
+</odoo>

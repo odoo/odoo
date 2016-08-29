@@ -3,14 +3,15 @@
 # * auth_oauth
 # 
 # Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-13 06:30+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,35 +19,24 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"<br/>\n"
-"                                    - Ceate a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
-msgstr "<br/>\n                                    - 创建一个新的项目<br/>\n                                    - 进入 Api 权限<br/>\n                                    - 创建一个　oauth client_id<br/>\n                                    - 编辑设置和设置授权重定向的URI和源于你的主机名授权的JavaScript。<br/>\n                                    <br/>\n                                    现在在这里复制 client_id :"
-
-#. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:99
 #, python-format
 msgid "Access Denied"
-msgstr "访问被拒绝"
+msgstr "访问拒绝"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_payable_id
 msgid "Account Payable"
-msgstr "应付账"
+msgstr "应付账款"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
 msgid "Account Receivable"
-msgstr "应收科目"
+msgstr "应收账款"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "允许用户通过google登录"
 
@@ -56,9 +46,14 @@ msgid "Allowed"
 msgstr "允许"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Authentication"
+msgstr "身份验证"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
 msgid "Authentication URL"
-msgstr "身份验证URL"
+msgstr "身份验证网址"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_bank_account_count
@@ -68,12 +63,31 @@ msgstr "银行"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_body
 msgid "Body"
-msgstr "内容"
+msgstr "正文"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
-msgstr "CSS class"
+msgstr "CSS类"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Check that the application type is set on <b>Web Application</b>. \n"
+"                                        Now configure the allowed pages on which you will be redirected."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Click on <b>Create Project</b> and enter the project name and \n"
+"                                        other details."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Click on <b>Use Google APIs</b>"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
@@ -87,15 +101,20 @@ msgid "Companies that refers to partner"
 msgstr "公司是指业务伙伴"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Connect to your Google account and go to"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contracts_count
 msgid "Contracts"
-msgstr "合同"
+msgstr "合约"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_date
@@ -104,8 +123,8 @@ msgstr "创建于"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
-msgstr "币别id"
+msgid "Currency"
+msgstr "币种"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -115,12 +134,24 @@ msgstr "客户付款条款"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
-msgstr "数据URL"
+msgstr "数据网址"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
+msgid "Degree of trust you have in this debtor"
+msgstr "对此债务人的信任度"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Fill in your address, email and the product name (for example odoo) \n"
+"                                        and then save."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -129,18 +160,23 @@ msgstr "财政位置"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
-msgstr "Google APIs 控制台"
+msgid "Google Client ID:"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr "有反核销分录"
+msgstr "有未调节的分录"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+msgid "Invoice"
+msgstr "发票"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -151,7 +187,7 @@ msgstr "发票"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_issued_total
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_journal_item_count
 msgid "Journal Items"
-msgstr "分类账项目"
+msgstr "日记账项目"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
@@ -161,12 +197,12 @@ msgstr "最后修改日"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新人"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最近更新时间"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_last_time_entries_checked
@@ -174,12 +210,17 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr ""
+msgstr "上次这个业务伙伴的发票和付款是匹配的。设置为调节的借方或者未调节的贷方或者你点击\"完成\"按钮"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "最近的发票和付款匹配时间"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "发票消息"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -189,17 +230,17 @@ msgstr "OAuth  访问令牌"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
 msgid "OAuth Provider"
-msgstr "OAuth 提供者"
+msgstr "OAuth 服务商"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 msgid "OAuth Providers"
-msgstr "OAuth 提供者"
+msgstr "OAuth服务商"
 
 #. module: auth_oauth
 #: sql_constraint:res.users:0
 msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID必须是每个提供者（ provider ）唯一的"
+msgstr "OAuth UID必须是每个服务商（ provider ）唯一的"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
@@ -209,7 +250,7 @@ msgstr "OAuth 用户ID"
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr "OAuth2 提供者"
+msgstr "OAuth2服务商"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_users_form
@@ -219,7 +260,22 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
-msgstr "Oauth 提供者user_id"
+msgstr "Oauth服务商user_id"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"On the left side menu, select the sub menu <b>Credentials</b> \n"
+"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
+"                                        the field below."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
@@ -229,17 +285,53 @@ msgstr "应付限额"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
 msgid "Provider name"
-msgstr "提供者名称"
+msgstr "服务商名称"
 
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr "提供者"
+msgstr "服务商"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Return to Top"
+msgstr "回到顶部"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
 msgstr "作用域"
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"选择此“警告“选项，将通知用户此消息。\r\n"
+"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+"消息写入下一个字段。"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Show Tutorial"
+msgstr "显示向导"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
+msgid "Show tutorial"
+msgstr ""
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:97
@@ -251,50 +343,68 @@ msgstr "此数据库不允许注册"
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "替换规则将决定合作伙伴说使用的税和科目"
+msgstr "财政状况将确定用于业务伙伴的税金和科目。"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "自动上次这个业务伙伴的发票和付款完全一致。这个业务伙伴至少有一个反核销的借方和贷方"
+msgstr "自动上次这个业务伙伴的发票和付款完全一致。这个业务伙伴至少有一个未调节的借方和贷方"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Then click on <b>Add Credentials</b> and select the second option \n"
+"                                        (OAuth 2.0 Client ID)."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Then click on <b>Create</b>."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "本科目将替换当前业务伙伴的默认支付科目"
+msgstr "这个科目被用来代替当前业务伙伴的默认的应付科目"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr "本科目将用于替换当前业务伙伴的默认应收款科目"
+msgstr "这个科目被用来替代当前业务伙伴的默认的应收科目"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr "这个付款条款江北用来代替采购订单或者供应商账单中默认的付款条款"
+msgstr "该付款条款江北用来代替采购订单或者供应商账单中默认的付款条款"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr "该付款方式将代替销售记录和客户发票的默认值。"
+msgstr "在销售订单和客户发票上，该付款方式将替换默认付款方式。"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
-msgstr "设置用Google登陆的流程，首先要遵循以下步骤：<br/>\n                                    <br/>\n                                    - 进入"
+"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
+"                                        Copy paste the following link in the box"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"To setup the sign in process with Google, you have to perform \n"
+"                                    the following steps first."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -304,17 +414,17 @@ msgstr "已开票总计"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit
 msgid "Total Payable"
-msgstr "应付款总计"
+msgstr "应付总计"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
 msgid "Total Receivable"
-msgstr "应收款总计"
+msgstr "应收总计"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_credit
 msgid "Total amount this customer owes you."
-msgstr "客户欠款总额总计"
+msgstr "这个客户欠款的总数量"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
@@ -329,12 +439,12 @@ msgstr "用户"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr "传递货币数量的有效字段"
+msgstr "表示货币数量的工具字段"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
 msgid "Validation URL"
-msgstr "验证  URL"
+msgstr "验证网址"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
@@ -352,7 +462,7 @@ msgstr "您无权访问此数据库或者您的邀请已经过期.请申请一�
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_list
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
 msgstr "arch"
 
@@ -367,11 +477,11 @@ msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "例如：1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "https://console.developers.google.com/"
+msgstr "https://console.developers.google.com/"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
-msgid "unknown"
-msgstr "未知的"

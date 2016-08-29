@@ -316,12 +316,12 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
         return dict(defaults, **dict.fromkeys(self.already_installed(), True))
 
     @api.model
-    def fields_get(self, fields=None, write_access=True, attributes=None):
+    def fields_get(self, fields=None, attributes=None):
         """ If an addon is already installed, set it to readonly as
         res.config.installer doesn't handle uninstallations of already
         installed addons
         """
-        fields = super(ResConfigInstaller, self).fields_get(fields, write_access=write_access, attributes=attributes)
+        fields = super(ResConfigInstaller, self).fields_get(fields, attributes=attributes)
 
         for name in self.already_installed():
             if name not in fields:
@@ -436,9 +436,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             ('state', 'in', ['to install', 'installed', 'to upgrade'])])
 
         if modules and not field_value:
-            dep_ids = modules.downstream_dependencies()
-            dep_name = (ModuleSudo.browse(dep_ids) + modules).mapped('shortdesc')
-            message = '\n'.join(dep_name)
+            deps = modules.sudo().downstream_dependencies()
+            dep_names = (deps | modules).mapped('shortdesc')
+            message = '\n'.join(dep_names)
             return {
                 'warning': {
                     'title': _('Warning!'),
@@ -493,6 +493,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # groups: which groups are implied by the group Employee
         for name, groups, implied_group in classified['group']:
             res[name] = all(implied_group in group.implied_ids for group in groups)
+            if self._fields[name].type == 'selection':
+                res[name] = int(res[name])
 
         # modules: which modules are installed/to install
         for name, module in classified['module']:
@@ -510,7 +512,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     @api.multi
     def execute(self):
         self.ensure_one()
-        if not self.env.user._is_admin():
+        if not self.env.user._is_superuser() and not self.env.user.has_group('base.group_system'):
             raise AccessError(_("Only administrators can change the settings"))
 
         self = self.with_context(active_test=False)
@@ -587,7 +589,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         Fetch the path to a specified configuration view and the action id to access it.
 
         :param string menu_xml_id: the xml id of the menuitem where the view is located,
-            structured as follows: module_name.menuitem_xml_id (e.g.: "base.menu_sale_config")
+            structured as follows: module_name.menuitem_xml_id (e.g.: "sales_team.menu_sale_config")
         :return tuple:
             - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
             - t[1]: int or long: id of the menuitem's action
@@ -607,12 +609,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         model_name, field_name = full_field_name.rsplit('.', 1)
         return self.env[model_name].fields_get([field_name])[field_name]['string']
 
-    @api.v7
-    def get_config_warning(self, cr, msg, context=None):
-        recs = self.browse(cr, SUPERUSER_ID, [], context)
-        return ResConfigSettings.get_config_warning(recs, msg)
-
-    @api.v8
+    @api.model_cr_context
     def get_config_warning(self, msg):
         """
         Helper: return a Warning exception with the given message where the %(field:xxx)s
@@ -628,7 +625,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         Example of use:
         ---------------
         from openerp.addons.base.res.res_config import get_warning_config
-        raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:base.menu_sale_config)s."), context=context)
+        raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:sales_team.menu_sale_config)s."), context=context)
 
         This will return an exception containing the following message:
             Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.

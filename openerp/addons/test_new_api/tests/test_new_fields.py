@@ -8,7 +8,7 @@ from openerp.tests import common
 from openerp.tools import mute_logger
 
 
-class TestNewFields(common.TransactionCase):
+class TestFields(common.TransactionCase):
 
     def test_00_basics(self):
         """ test accessing new fields """
@@ -186,6 +186,34 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
+        record = self.env['test_new_api.compute.inverse']
+
+        # create/write on 'foo' should only invoke the compute method
+        record.counts.update(compute=0, inverse=0)
+        record = record.create({'foo': 'Hi'})
+        self.assertEqual(record.foo, 'Hi')
+        self.assertEqual(record.bar, 'Hi')
+        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+
+        record.counts.update(compute=0, inverse=0)
+        record.write({'foo': 'Ho'})
+        self.assertEqual(record.foo, 'Ho')
+        self.assertEqual(record.bar, 'Ho')
+        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+
+        # create/write on 'bar' should only invoke the inverse method
+        record.counts.update(compute=0, inverse=0)
+        record = record.create({'bar': 'Hi'})
+        self.assertEqual(record.foo, 'Hi')
+        self.assertEqual(record.bar, 'Hi')
+        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+
+        record.counts.update(compute=0, inverse=0)
+        record.write({'bar': 'Ho'})
+        self.assertEqual(record.foo, 'Ho')
+        self.assertEqual(record.bar, 'Ho')
+        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -234,6 +262,22 @@ class TestNewFields(common.TransactionCase):
         # same with field setter
         record.number = 2.4999999999999996
         self.assertEqual(record.number, 2.50)
+
+    def test_20_monetary(self):
+        """ test monetary fields """
+        record = self.env['test_new_api.mixed'].create({})
+        self.assertTrue(record.currency_id)
+        self.assertEqual(record.currency_id.rounding, 0.01)
+
+        # the conversion to cache should round the value to 14.700000000000001
+        record.amount = 14.7
+        self.assertNotEqual(record.amount, 14.7)
+        self.assertEqual(record.amount, 14.700000000000001)
+
+        # however when stored to database, it should be serialized as 14.70
+        self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', (record.id,))
+        (amount,) = self.cr.fetchone()
+        self.assertEqual(amount, 14.7)
 
     def test_21_date(self):
         """ test date fields """
@@ -361,6 +405,39 @@ class TestNewFields(common.TransactionCase):
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
 
+    def test_25_related_single(self):
+        """ test related fields with a single field in the path. """
+        record = self.env['test_new_api.related'].create({'name': 'A'})
+        self.assertEqual(record.related_name, record.name)
+        self.assertEqual(record.related_related_name, record.name)
+
+        # check searching on related fields
+        records0 = record.search([('name', '=', 'A')])
+        self.assertIn(record, records0)
+        records1 = record.search([('related_name', '=', 'A')])
+        self.assertEqual(records1, records0)
+        records2 = record.search([('related_related_name', '=', 'A')])
+        self.assertEqual(records2, records0)
+
+        # check writing on related fields
+        record.write({'related_name': 'B'})
+        self.assertEqual(record.name, 'B')
+        record.write({'related_related_name': 'C'})
+        self.assertEqual(record.name, 'C')
+
+    def test_25_related_multi(self):
+        """ test write() on several related fields based on a common computed field. """
+        foo = self.env['test_new_api.foo'].create({'name': 'A', 'value1': 1, 'value2': 2})
+        bar = self.env['test_new_api.bar'].create({'name': 'A'})
+        self.assertEqual(bar.foo, foo)
+        self.assertEqual(bar.value1, 1)
+        self.assertEqual(bar.value2, 2)
+
+        foo.invalidate_cache()
+        bar.write({'value1': 3, 'value2': 4})
+        self.assertEqual(foo.value1, 3)
+        self.assertEqual(foo.value2, 4)
+
     def test_26_inherited(self):
         """ test inherited fields. """
         # a bunch of fields are inherited from res_partner
@@ -369,6 +446,38 @@ class TestNewFields(common.TransactionCase):
             for field in ('is_company', 'name', 'email', 'country_id'):
                 self.assertEqual(getattr(user, field), getattr(partner, field))
                 self.assertEqual(user[field], partner[field])
+
+    def test_27_company_dependent(self):
+        """ test company-dependent fields. """
+        # consider three companies
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A', 'parent_id': company0.id})
+        company2 = self.env['res.company'].create({'name': 'B', 'parent_id': company1.id})
+        # create one user per company
+        user0 = self.env['res.users'].create({'name': 'Foo', 'login': 'foo',
+                                              'company_id': company0.id, 'company_ids': []})
+        user1 = self.env['res.users'].create({'name': 'Bar', 'login': 'bar',
+                                              'company_id': company1.id, 'company_ids': []})
+        user2 = self.env['res.users'].create({'name': 'Baz', 'login': 'baz',
+                                              'company_id': company2.id, 'company_ids': []})
+        # create a default value for the company-dependent field
+        field = self.env['ir.model.fields'].search([('model', '=', 'test_new_api.company'),
+                                                    ('name', '=', 'foo')])
+        self.env['ir.property'].create({'name': 'foo', 'fields_id': field.id,
+                                        'value': 'default', 'type': 'char'})
+
+        # create/modify a record, and check the value for each user
+        record = self.env['test_new_api.company'].create({'foo': 'main'})
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, 'default')
+        self.assertEqual(record.sudo(user2).foo, 'default')
+
+        record.sudo(user1).foo = 'alpha'
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, 'alpha')
+        self.assertEqual(record.sudo(user2).foo, 'default')
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """
@@ -385,20 +494,21 @@ class TestNewFields(common.TransactionCase):
     def test_31_prefetch(self):
         """ test prefetch of records handle AccessError """
         Category = self.env['test_new_api.category']
-        cat_1 = Category.create({'name': 'NOACCESS'}).id
-        cat_2 = Category.create({'name': 'ACCESS', 'parent': cat_1}).id
+        cat1 = Category.create({'name': 'NOACCESS'})
+        cat2 = Category.create({'name': 'ACCESS', 'parent': cat1.id})
+        cats = cat1 + cat2
 
         self.env.clear()
 
-        cat = Category.browse(cat_2)
-        self.assertEqual(cat.name, 'ACCESS')
-        # both categories should be in prefetch ids
-        self.assertSetEqual(self.env.prefetch[Category._name], set([cat_1, cat_2]))
+        cat1, cat2 = cats
+        self.assertEqual(cat2.name, 'ACCESS')
+        # both categories should be ready for prefetching
+        self.assertItemsEqual(cat2._prefetch[Category._name], cats.ids)
         # but due to our (lame) overwrite of `read`, it should not forbid us to read records we have access to
-        self.assertFalse(len(cat.discussions))
-        self.assertEqual(cat.parent.id, cat_1)
+        self.assertFalse(cat2.discussions)
+        self.assertEqual(cat2.parent, cat1)
         with self.assertRaises(AccessError):
-            Category.browse(cat_1).name
+            cat1.name
 
     def test_40_new(self):
         """ test new records. """
@@ -477,6 +587,65 @@ class TestNewFields(common.TransactionCase):
             [('author_partner.name', '=', 'Demo User')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
+    def test_60_x2many_domain(self):
+        """ test the cache consistency of a x2many field with a domain """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = discussion.messages[0]
+        self.assertNotIn(message, discussion.important_messages)
+
+        message.important = True
+        self.assertIn(message, discussion.important_messages)
+
+
+class TestHtmlField(common.TransactionCase):
+
+    def setUp(self):
+        super(TestHtmlField, self).setUp()
+        self.model = self.env['test_new_api.mixed']
+
+    def test_00_sanitize(self):
+        self.assertEqual(self.model._fields['comment1'].sanitize, False)
+        self.assertEqual(self.model._fields['comment2'].sanitize, True)
+        self.assertEqual(self.model._fields['comment2'].strip_classes, False)
+        self.assertEqual(self.model._fields['comment3'].sanitize, True)
+        self.assertEqual(self.model._fields['comment3'].strip_classes, True)
+
+        some_ugly_html = """<p>Oops this should maybe be sanitized
+% if object.some_field and not object.oriented:
+<table>
+    % if object.other_field:
+    <tr style="margin: 0px; border: 10px solid black;">
+        ${object.mako_thing}
+        <td>
+    </tr>
+    <tr class="custom_class">
+        This is some html.
+    </tr>
+    % endif
+    <tr>
+%if object.dummy_field:
+        <p>Youpie</p>
+%endif"""
+
+        record = self.model.create({
+            'comment1': some_ugly_html,
+            'comment2': some_ugly_html,
+            'comment3': some_ugly_html,
+            'comment4': some_ugly_html,
+        })
+
+        self.assertEqual(record.comment1, some_ugly_html, 'Error in HTML field: content was sanitized but field has sanitize=False')
+
+        self.assertIn('<tr class="', record.comment2)
+
+        # sanitize should have closed tags left open in the original html
+        self.assertIn('</table>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('</td>', record.comment3, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('<tr style="', record.comment3, 'Style attr should not have been stripped')
+        # sanitize does not keep classes if asked to
+        self.assertNotIn('<tr class="', record.comment3)
+
+        self.assertNotIn('<tr style="', record.comment4, 'Style attr should have been stripped')
 
 
 class TestMagicFields(common.TransactionCase):

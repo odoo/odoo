@@ -1,32 +1,30 @@
-import openerp.tests.common as common
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class test_menu(common.TransactionCase):
+from odoo.tests.common import TransactionCase
 
-    def setUp(self):
-        super(test_menu,self).setUp()
-        self.Menus = self.registry('ir.ui.menu')
+
+class TestMenu(TransactionCase):
 
     def test_00_menu_deletion(self):
         """Verify that menu deletion works properly when there are child menus, and those
            are indeed made orphans"""
-        cr, uid, Menus = self.cr, self.uid, self.Menus
-
-        # Generic trick necessary for search() calls to avoid hidden menus 
-        ctx = {'ir.ui.menu.full_list': True}
-
-        root_id = Menus.create(cr, uid, {'name': 'Test root'})
-        child1_id = Menus.create(cr, uid, {'name': 'Test child 1', 'parent_id': root_id})
-        child2_id = Menus.create(cr, uid, {'name': 'Test child 2', 'parent_id': root_id})
-        child21_id = Menus.create(cr, uid, {'name': 'Test child 2-1', 'parent_id': child2_id})
-
-        all_ids = [root_id, child1_id, child2_id, child21_id]
+        Menu = self.env['ir.ui.menu']
+        root = Menu.create({'name': 'Test root'})
+        child1 = Menu.create({'name': 'Test child 1', 'parent_id': root.id})
+        child2 = Menu.create({'name': 'Test child 2', 'parent_id': root.id})
+        child21 = Menu.create({'name': 'Test child 2-1', 'parent_id': child2.id})
+        all_ids = [root.id, child1.id, child2.id, child21.id]
 
         # delete and check that direct children are promoted to top-level
         # cfr. explanation in menu.unlink()
-        Menus.unlink(cr, uid, [root_id])
+        root.unlink()
 
-        remaining_ids = Menus.search(cr, uid, [('id', 'in', all_ids)], order="id", context=ctx)
-        self.assertEqual([child1_id, child2_id, child21_id], remaining_ids)
+        # Generic trick necessary for search() calls to avoid hidden menus 
+        Menu = self.env['ir.ui.menu'].with_context({'ir.ui.menu.full_list': True})
 
-        orphan_ids =  Menus.search(cr, uid, [('id', 'in', all_ids), ('parent_id', '=', False)], order="id", context=ctx)
-        self.assertEqual([child1_id, child2_id], orphan_ids)
+        remaining = Menu.search([('id', 'in', all_ids)], order="id")
+        self.assertEqual([child1.id, child2.id, child21.id], remaining.ids)
+
+        orphans =  Menu.search([('id', 'in', all_ids), ('parent_id', '=', False)], order="id")
+        self.assertEqual([child1.id, child2.id], orphans.ids)

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 import dateutil
 import email
+import json
 import lxml
-from lxml import etree
 import logging
 import pytz
 import re
@@ -16,13 +17,12 @@ import xmlrpclib
 from collections import namedtuple
 from email.message import Message
 from email.utils import formataddr
+from lxml import etree
 from werkzeug import url_encode
 
-from openerp import _, api, fields, models
-from openerp import exceptions
-from openerp import tools
-from openerp.addons.mail.models.mail_message import decode
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, exceptions, fields, models, tools
+from odoo.addons.mail.models.mail_message import decode
+from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -300,10 +300,10 @@ class MailThread(models.AbstractModel):
         ).unlink()
         return res
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        context = dict(context or {}, mail_notrack=True)
+    @api.multi
+    def copy_data(self, default=None):
         # avoid tracking multiple temporary changes during copy
-        return super(MailThread, self).copy_data(cr, uid, id, default=default, context=context)
+        return super(MailThread, self.with_context(mail_notrack=True)).copy_data(default=default)
 
     # ------------------------------------------------------
     # Technical methods (to clean / move to controllers ?)
@@ -371,16 +371,9 @@ class MailThread(models.AbstractModel):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='message_ids']"):
                 # the 'Log a note' button is employee only
-                options = eval(node.get('options', '{}'))
+                options = safe_eval(node.get('options', '{}'))
                 is_employee = self.env.user.has_group('base.group_user')
                 options['display_log_button'] = is_employee
-                if is_employee:
-                    Subtype = self.env['mail.message.subtype'].sudo()
-                    # fetch internal subtypes
-                    internal_subtypes = Subtype.search_read([
-                        ('res_model', 'in', [False, self._name]),
-                        ('internal', '=', True)], ['name', 'description', 'sequence'])
-                    options['internal_subtypes'] = internal_subtypes
                 # emoji list
                 options['emoji_list'] = self.env['mail.shortcode'].search([('shortcode_type', '=', 'image')]).read(['source', 'description', 'substitution'])
                 # save options on the node
@@ -493,15 +486,6 @@ class MailThread(models.AbstractModel):
             # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
             if not self._context.get('mail_track_log_only'):
                 subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
-                # compatibility: use the deprecated _track dict
-                if not subtype_xmlid and hasattr(self, '_track'):
-                    for field, track_info in self._track.items():
-                        if field not in changes or subtype_xmlid:
-                            continue
-                        for subtype, method in track_info.items():
-                            if method(self, self._cr, self._uid, record, self._context):
-                                _logger.warning("Model %s still using deprecated _track dict; override _track_subtype method instead" % self._name)
-                                subtype_xmlid = subtype
 
             if subtype_xmlid:
                 subtype_rec = self.env.ref(subtype_xmlid)  # TDE FIXME check for raise if not found
@@ -601,7 +585,7 @@ class MailThread(models.AbstractModel):
             link = '/mail/workflow?%s' % url_encode(params)
         elif link_type == 'method':
             method = kwargs.pop('method')
-            params = dict(base_params, method=method, params=kwargs)
+            params = dict(base_params, method=method, params=json.dumps(kwargs))
             link = '/mail/method?%s' % url_encode(params)
         elif link_type == 'new':
             params = dict(base_params, action_id=kwargs.get('action_id'))
@@ -747,8 +731,11 @@ class MailThread(models.AbstractModel):
                     ('alias_parent_model_id.model', '=', model_name),
                     ('alias_parent_thread_id', 'in', res_ids),
                     ('alias_name', '!=', False)])
-                aliases.update(
-                    dict((alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain)) for alias in mail_aliases))
+                # take only first found alias for each thread_id, to match
+                # order (1 found -> limit=1 for each res_id)
+                for alias in mail_aliases:
+                    if alias.alias_parent_thread_id not in aliases:
+                        aliases[alias.alias_parent_thread_id] = '%s@%s' % (alias.alias_name, alias_domain)
                 doc_names.update(
                     dict((ng_res[0], ng_res[1])
                          for ng_res in self.env[model_name].sudo().browse(aliases.keys()).name_get()))
@@ -776,7 +763,7 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         database_uuid = self.env['ir.config_parameter'].get_param('database.uuid')
         return {'headers': repr({
-            'X-Odoo-Objects': "%s-%s" % (self._model, self.id),
+            'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
             'X-Odoo-db-uuid': database_uuid
         })}
 
@@ -799,8 +786,7 @@ class MailThread(models.AbstractModel):
     def message_capable_models(self):
         """ Used by the plugin addon, based for plugin_outlook and others. """
         ret_dict = {}
-        for model_name in self.pool.obj_list():
-            model = self.pool[model_name]
+        for model_name, model in self.env.iteritems():
             if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
@@ -839,24 +825,29 @@ class MailThread(models.AbstractModel):
         record_set = None
 
         def _create_bounce_email():
-            self.env['mail.mail'].create({
+            bounce_to = decode_header(message, 'Return-Path') or email_from
+            bounce_mail_values = {
                 'body_html': '<div><p>Hello,</p>'
                              '<p>The following email sent to %s cannot be accepted because this is '
                              'a private email address. Only allowed people can contact us at this address.</p></div>'
                              '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
                 'subject': 'Re: %s' % message.get('subject'),
-                'email_to': message.get('from'),
+                'email_to': bounce_to,
                 'auto_delete': True,
-            }).send()
+            }
+            bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
+            if bounce_from:
+                bounce_mail_values['email_from'] = 'MAILER-DAEMON <%s>' % bounce_from
+            self.env['mail.mail'].create(bounce_mail_values).send()
 
         def _warn(message):
             _logger.info('Routing mail with Message-Id %s: route %s: %s',
                          message_id, route, message)
 
         # Wrong model
-        if model and model not in self.pool:
+        if model and model not in self.env:
             if assert_model:
-                assert model in self.pool, 'Routing: unknown target model %s' % model
+                assert model in self.env, 'Routing: unknown target model %s' % model
             _warn('unknown target model %s' % model)
             return ()
 
@@ -1033,7 +1024,7 @@ class MailThread(models.AbstractModel):
             # do not match forwarded emails from another OpenERP system (thread_id collision!)
             if local_hostname == reply_hostname:
                 thread_id, model = reply_thread_id, reply_model
-                if thread_id and model in self.pool:
+                if thread_id and model in self.env:
                     record = self.env[model].browse(thread_id)
                     compat_mail_msg_ids = MailMessage.search([
                         ('message_id', '=', False),
@@ -1097,10 +1088,10 @@ class MailThread(models.AbstractModel):
                         # that send the email has the right to create or modify a new document
                         # Fallback on user_id = uid
                         # Note: recognized partners will be added as followers anyway
-                        # user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        # user_id = self._message_find_user_id(message)
                         user_id = self._uid
                         _logger.info('No matching user_id for the alias %s', alias.alias_name)
-                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
+                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, safe_eval(alias.alias_defaults), user_id, alias)
                     route = self.message_route_verify(
                         message, message_dict, route,
                         update_author=True, assert_model=True, create_fallback=True)
@@ -1140,6 +1131,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def message_route_process(self, message, message_dict, routes):
+        self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
@@ -1167,7 +1159,8 @@ class MailThread(models.AbstractModel):
                 Model = self.env['mail.thread']
             if not hasattr(Model, 'message_post'):
                 Model = self.env['mail.thread'].with_context(thread_model=model)
-            new_msg = Model.browse(thread_id).message_post(subtype='mail.mt_comment', **message_dict)
+            internal = message_dict.pop('internal', False)
+            new_msg = Model.browse(thread_id).message_post(subtype=internal and 'mail.mt_note' or 'mail.mt_comment', **message_dict)
 
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -1471,12 +1464,14 @@ class MailThread(models.AbstractModel):
             parent_ids = self.env['mail.message'].search([('message_id', '=', decode(message['In-Reply-To'].strip()))], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
+                msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         if message.get('References') and 'parent_id' not in msg_dict:
             msg_list = mail_header_msgid_re.findall(decode(message['References']))
             parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in msg_list])], limit=1)
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids.id
+                msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
         return msg_dict
@@ -1671,7 +1666,7 @@ class MailThread(models.AbstractModel):
                     fname = cid_mapping.get(node.get('src').split('cid:')[1], node.get('data-filename', ''))
                     attachment = parameter_attachments.filtered(lambda attachment: attachment.name == fname)
                     if attachment:
-                        node.set('src', '/web/image/%s' % attachment.id)
+                        node.set('src', '/web/image/%s' % attachment.ids[0])
                         postprocessed = True
             if postprocessed:
                 body = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')
@@ -1763,7 +1758,7 @@ class MailThread(models.AbstractModel):
             partner_to_subscribe = partner_ids
             if self._context.get('mail_post_autofollow_partner_ids'):
                 partner_to_subscribe = filter(lambda item: item in self._context.get('mail_post_autofollow_partner_ids'), partner_ids)
-            self.message_subscribe(list(partner_to_subscribe))
+            self.message_subscribe(list(partner_to_subscribe), force=False)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         MailMessage = self.env['mail.message']
@@ -1819,7 +1814,7 @@ class MailThread(models.AbstractModel):
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
                 self.sudo().write({'message_last_post': fields.Datetime.now()})
         if new_message.author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            self.message_subscribe([new_message.author_id.id])
+            self.message_subscribe([new_message.author_id.id], force=False)
         return new_message
 
     @api.multi
@@ -1831,7 +1826,7 @@ class MailThread(models.AbstractModel):
         handle ir ui views. """
         values = kwargs.pop('values', None) or dict()
         try:
-            from openerp.addons.website.models.website import slug
+            from odoo.addons.website.models.website import slug
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id
@@ -1886,10 +1881,7 @@ class MailThread(models.AbstractModel):
             provided, subscribe uid instead. """
         if user_ids is None:
             user_ids = [self._uid]
-        result = self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
-        if user_ids and result:
-            self.pool['ir.ui.menu'].clear_caches()
-        return result
+        return self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
 
     @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
@@ -1930,10 +1922,7 @@ class MailThread(models.AbstractModel):
         if user_ids is None:
             user_ids = [self._uid]
         partner_ids = [user.partner_id.id for user in self.env['res.users'].browse(user_ids)]
-        result = self.message_unsubscribe(partner_ids)
-        if partner_ids and result:
-            self.pool['ir.ui.menu'].clear_caches()
-        return result
+        return self.message_unsubscribe(partner_ids)
 
     @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
@@ -2082,12 +2071,6 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # Thread management
     # ------------------------------------------------------
-
-    @api.multi
-    def message_set_read(self):
-        messages = self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('needaction', '=', True)])
-        messages.write({'needaction_partner_ids': [(3, self.env.user.partner_id.id)]})
-        return messages.ids
 
     @api.multi
     def message_change_thread(self, new_thread):

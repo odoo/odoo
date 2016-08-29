@@ -1,43 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from operator import itemgetter
+from odoo import api, fields, models, _
 
-from openerp import tools
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
 
-class base_language_install(osv.osv_memory):
-    """ Install Language"""
+class BaseLanguageInstall(models.TransientModel):
     _name = "base.language.install"
     _description = "Install Language"
 
-    def _languages(self, cr, uid, context=None):
-        return self.pool['res.lang'].get_available(cr, uid, context=context)
+    @api.model
+    def _get_languages(self):
+        return self.env['res.lang'].get_available()
 
-    _columns = {
-        'lang': fields.selection(_languages, 'Language', required=True),
-        'overwrite': fields.boolean('Overwrite Existing Terms', help="If you check this box, your customized translations will be overwritten and replaced by the official ones."),
-        'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
-    }
+    lang = fields.Selection(_get_languages, string='Language', required=True)
+    overwrite = fields.Boolean('Overwrite Existing Terms',
+                               help="If you check this box, your customized translations will be overwritten and replaced by the official ones.")
+    state = fields.Selection([('init', 'init'), ('done', 'done')],
+                             string='Status', readonly=True, default='init')
 
-    _defaults = {
-        'state': 'init',
-        'overwrite': False
-    }
-
-    def lang_install(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        language_obj = self.browse(cr, uid, ids)[0]
-        lang = language_obj.lang
-        if lang:
-            modobj = self.pool.get('ir.module.module')
-            mids = modobj.search(cr, uid, [('state', '=', 'installed')])
-            if language_obj.overwrite:
-                context = {'overwrite': True}
-            modobj.update_translations(cr, uid, mids, lang, context or {})
-            self.write(cr, uid, ids, {'state': 'done'}, context=context)
+    @api.multi
+    def lang_install(self):
+        this = self[0]
+        this = this.with_context(overwrite=this.overwrite)
+        mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
+        mods.update_translations(this.lang)
+        this.state = 'done'
         return {
             'name': _('Language Pack'),
             'view_type': 'form',
@@ -45,8 +32,8 @@ class base_language_install(osv.osv_memory):
             'view_id': False,
             'res_model': 'base.language.install',
             'domain': [],
-            'context': dict(context, active_ids=ids),
+            'context': dict(self._context, active_ids=self.ids),
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'res_id': ids and ids[0] or False,
+            'res_id': this.id,
         }

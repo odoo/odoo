@@ -1,11 +1,11 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2009  Renato Lima - Akretion
 
 {
     'name': 'Brazilian - Accounting',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Base module for the Brazilian localization
 ==========================================
@@ -45,14 +45,12 @@ come with any additional paid permission for online use of 'private modules'.
 """,
     'author': 'Akretion, Odoo Brasil',
     'website': 'http://openerpbrasil.org',
-    'version': '0.6',
     'depends': ['account'],
     'data': [
-                'data/account_chart_template.xml',
-                'data/account.account.template.csv',
-                'data/account_tax_template.xml',
-                'account_view.xml',
-                'account_chart_template.yml',
+        'data/l10n_br_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/account_tax_template_data.xml',
+        'views/account_view.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'installable': True,
 }

@@ -1,36 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-10-15 04:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
+"sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
 
 #. module: survey
 #: model:mail.template,body_html:survey.email_template_survey
 msgid ""
 "\n"
 "                \n"
-"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-"                    <p>Hello,</p>\n"
-"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
-"                    <p>Thanks for your participation!</p>\n"
-"                </div>\n"
+"<p>Hello,</p>\n"
+"<p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
+"background-color:#a24689; text-align:center; text-decoration:none; color:"
+"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
-msgstr "\n                \n                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n                    <p>Pozdravljeni,</p>\n                    <p>Izvajamo anketo in cenili bi vaš odgovor.</p>\n                    <p><a href=\"__URL__\">Pritisnite semkaj za začetek ankete, prosim</a></p>\n                    <p>Hvala za sodelovanje!</p>\n                </div>\n                \n            "
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -38,8 +40,7 @@ msgid "#Questions"
 msgstr "#vprašanj"
 
 #. module: survey
-#: code:addons/survey/survey.py:229 code:addons/survey/survey.py:525
-#: code:addons/survey/survey.py:647
+#: code:addons/survey/survey.py:231
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -135,9 +136,9 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All "
-"surveys</span><span class=\"label label-primary only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-primary only_right_radius filter-finished"
+"\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
@@ -163,16 +164,17 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All "
-"surveys</span><span class=\"label label-default only_right_radius filter-"
-"finished\">Finished surveys</span>"
+"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-default only_right_radius filter-finished"
+"\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
+"pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
@@ -225,13 +227,9 @@ msgid "About your Odoo usage"
 msgstr "O vaši uporabi Odoo"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction
-msgid "Action Needed"
-msgstr "Potreben je ukrep"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_active_domain
-msgid "Active domain"
+#: model:ir.model.fields,field_description:survey.field_survey_survey_active
+#, fuzzy
+msgid "Active"
 msgstr "Aktivna domena"
 
 #. module: survey
@@ -239,7 +237,9 @@ msgstr "Aktivna domena"
 msgid ""
 "Add list of email of recipients (will not converted in partner), separated "
 "by commas, semicolons or newline..."
-msgstr "Dodajanje seznama e-poštnih naslovov prejemnikov (ki ne bo pretvorjen v partnerja), ločenih z vejicami, podpičji ali vrsticami..."
+msgstr ""
+"Dodajanje seznama e-poštnih naslovov prejemnikov (ki ne bo pretvorjen v "
+"partnerja), ločenih z vejicami, podpičji ali vrsticami..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -295,13 +295,6 @@ msgid "Answers"
 msgstr "Odgovori"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_no_auto_thread
-msgid ""
-"Answers do not go in the original document discussion thread. This has an "
-"impact on the generated message-id."
-msgstr ""
-
-#. module: survey
 #: model:survey.question,question:survey.feedback_1_1
 msgid "Are you using Odoo on a daily basis?"
 msgstr "Uporabljate Odoo vsakodnevno?"
@@ -310,28 +303,6 @@ msgstr "Uporabljate Odoo vsakodnevno?"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "Priponke"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_id
-msgid "Author"
-msgstr "Avtor"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_author_id
-msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
-msgstr "Avtor sporočila. Če ni nastavljen, lahko email_from vsebuje elektronski naslov, ki ni povezan z nobenim partnerjem."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_avatar
-msgid "Author's avatar"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_body
-msgid "Automatically sanitized HTML contents"
-msgstr "Avtomatično urejena HTML vsebina"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -347,16 +318,6 @@ msgstr "CRM"
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Cancel"
 msgstr "Preklic"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_channel_ids
-msgid "Channels"
-msgstr "Kanali"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_child_ids
-msgid "Child Messages"
-msgstr "Podrejeno sporočilo"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -405,7 +366,6 @@ msgstr "Barvni indeks"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_comments
-#: selection:survey.mail.compose.message,message_type:0
 msgid "Comment"
 msgstr "Komentar"
 
@@ -437,11 +397,6 @@ msgid "Compose Email"
 msgstr "Novo sporočilo"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_composition_mode
-msgid "Composition mode"
-msgstr "Način za sestavo"
-
-#. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "Nastavitve"
@@ -457,15 +412,11 @@ msgid "Constraints"
 msgstr "Omejitve"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_body
-msgid "Contents"
-msgstr "Vsebina"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid ""
-"Copy and paste the HTML code below to add this web link to any webpage."
-msgstr "Kopiraj in prilepi spodnjo HTML kodo za dodajanje te povezave na katerokoli spletno stran."
+msgid "Copy and paste the HTML code below to add this web link to any webpage."
+msgstr ""
+"Kopiraj in prilepi spodnjo HTML kodo za dodajanje te povezave na katerokoli "
+"spletno stran."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -507,12 +458,6 @@ msgid "Creation Date"
 msgstr "Datum kreiranja"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_starred
-msgid "Current user has a starred notification linked to this message"
-msgstr "Trenutni uporabnik ima z zvezdico označeno obvestilo, povezano s tem sporočilom"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
 msgstr "Datum"
@@ -533,11 +478,6 @@ msgid "Date by which the person can open the survey and submit answers"
 msgstr "Datum, do katerega lahko oseba odpre anketo in vloži odgovore"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_deadline
 msgid "Deadline"
 msgstr "Rok"
@@ -545,9 +485,11 @@ msgstr "Rok"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the"
-" field is empty, the invitation is still valid."
-msgstr "Rok veljavnosti vprašalnika za to anketo. Če je polje prazno, je vabilo še veljavno."
+"Deadline to which the invitation to respond for this survey is valid. If the "
+"field is empty, the invitation is still valid."
+msgstr ""
+"Rok veljavnosti vprašalnika za to anketo. Če je polje prazno, je vabilo še "
+"veljavno."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -651,7 +593,6 @@ msgstr "Uredi anketo"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
-#: selection:survey.mail.compose.message,message_type:0
 msgid "Email"
 msgstr "E-pošta"
 
@@ -659,13 +600,6 @@ msgstr "E-pošta"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_email_template_id
 msgid "Email Template"
 msgstr "Predloga elektronskega sporočila"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_email_from
-msgid ""
-"Email address of the sender. This field is set when no matching partner is "
-"found and replaces the author_id field in the chatter."
-msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -694,11 +628,6 @@ msgid "Extra modules proposed are relevant"
 msgstr "Predlagani dodatni moduli so relevantni"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred_partner_ids
-msgid "Favorited By"
-msgstr ""
-
-#. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
 msgstr "Upravljanje financ"
@@ -707,21 +636,6 @@ msgstr "Upravljanje financ"
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
 msgid "Folded in kanban view"
 msgstr "Prepognjeno v pogledu Kanban"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_follower_ids
-msgid "Followers"
-msgstr "Sledilci"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sledilci (kanali)"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Sledilci (partnerji)"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -739,11 +653,6 @@ msgid "Free Text answer"
 msgstr "Odgovor kot prosto besedilo"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_email_from
-msgid "From"
-msgstr "Od"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
@@ -758,7 +667,8 @@ msgstr "Kako prispevate ali nameravate prispevati k Odoo?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
-msgid "Human Ressources"
+#, fuzzy
+msgid "Human Resources"
 msgstr "Kadrovska služba"
 
 #. module: survey
@@ -829,16 +739,6 @@ msgid "Identification token"
 msgstr "Identifikacijski žeton"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_users_can_go_back
 msgid "If checked, users can go back to previous pages."
 msgstr "Če je označeno, se lahko uporabniki vračajo na prejšnje strani."
@@ -849,7 +749,7 @@ msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "Če je zaključeno, ne bo mogoče odgovarjati na ankete v tem stolpcu."
 
 #. module: survey
-#: code:addons/survey/survey.py:631
+#: code:addons/survey/survey.py:624
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -863,8 +763,8 @@ msgstr "Če je zaključeno, ne bo mogoče odgovarjati na ankete v tem stolpcu."
 #: model:survey.question,comments_message:survey.feedback_3_2
 #: model:survey.question,comments_message:survey.feedback_3_3
 #: model:survey.question,comments_message:survey.feedback_4_1
-#, python-format
-msgid "If other, precise:"
+#, fuzzy, python-format
+msgid "If other, please specify:"
 msgstr "Če drugo, pojasnite:"
 
 #. module: survey
@@ -883,11 +783,6 @@ msgid "In progress"
 msgstr "V postopku"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_parent_id
-msgid "Initial thread message."
-msgstr "Prvotno sporočilo"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
 msgid "Input must be an email"
 msgstr "Vnos mora biti e-pošta"
@@ -896,11 +791,6 @@ msgstr "Vnos mora biti e-pošta"
 #: model:ir.ui.view,arch_db:survey.survey_tree
 msgid "Invitations sent"
 msgstr "Vabila razposlana"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_is_follower
-msgid "Is Follower"
-msgstr "Je sledilec"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -947,11 +837,6 @@ msgstr "Zaporedje oznak"
 #: model:ir.ui.menu,name:survey.menu_survey_label_form1
 msgid "Labels"
 msgstr "Etikete"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_last_post
-msgid "Last Message Date"
-msgstr "Datum zadnjega sporočila"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label___last_update
@@ -1003,11 +888,6 @@ msgstr "Povezava"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_multi_email
 msgid "List of emails"
 msgstr "Seznam e-pošte"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_is_log
-msgid "Log an Internal Note"
-msgstr "Zapiši interno opombo"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_auth_required
@@ -1072,38 +952,6 @@ msgid "Maximum value"
 msgstr "Maksimalna vrednost"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_record_name
-msgid "Message Record Name"
-msgstr "Naziv zapisa sporočila"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_message_type
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr "Tip sporočila: elektronska pošta za elektronsko sporočilo, zaznamek za sistemsko sporočilo, komentar za ostala sporočila kot npr. uporabnikov odgovor"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_message_id
-msgid "Message unique identifier"
-msgstr "Enoličen identifikator sporočila"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_id
-msgid "Message-Id"
-msgstr "ID sporočila"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_ids
-msgid "Messages"
-msgstr "Sporočila"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_ids
-msgid "Messages and communication history"
-msgstr "Komunikacije in kronologija"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_min_date
 msgid "Minimum Date"
 msgstr "Minimalni datum"
@@ -1144,18 +992,6 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_record_name
-msgid "Name get of the related document."
-msgstr "Ime, pridobljeno iz povezanega dokumenta"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction_partner_ids
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_needaction
-msgid "Need Action"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "New"
 msgstr "Novo"
@@ -1164,11 +1000,6 @@ msgstr "Novo"
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Next page"
 msgstr "Naslednja stran"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_no_auto_thread
-msgid "No threading for answers"
-msgstr "Brez združevanja odgovorov v nize"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1201,24 +1032,9 @@ msgid "Not started yet"
 msgstr "Ne začeto"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_notify
-msgid "Notify followers"
-msgstr "Obvesti sledilce"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_notify
-msgid "Notify followers of the document (mass post only)"
-msgstr "Obvesti sledilce dokumenta (le za masovno pošto)"
-
-#. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Number"
 msgstr "Številka"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Število aktivnosti"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_column_nb
@@ -1232,11 +1048,6 @@ msgid "Number of completed surveys"
 msgstr "Število dokončanih anket"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_sent_survey
 msgid "Number of sent surveys"
 msgstr "Število razposlanih anket"
@@ -1245,11 +1056,6 @@ msgstr "Število razposlanih anket"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_start_survey
 msgid "Number of started surveys"
 msgstr "Število pričetih anket"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_survey_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Število neprebranih sporočil"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1278,20 +1084,10 @@ msgid "One email at least is incorrect: %s"
 msgstr "Vsaj ena e-pošta je nepravilna: %s"
 
 #. module: survey
-#: model:ir.actions.client,name:survey.action_client_survey_menu
-msgid "Open Survey Menu"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
 msgstr "Možnosti"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_mail_server_id
-msgid "Outgoing mail server"
-msgstr "Odhodni SMTP strežnik"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_page_id
@@ -1321,11 +1117,6 @@ msgid "Pages"
 msgstr "Strani"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_parent_id
-msgid "Parent Message"
-msgstr "Nadrejeno sporočilo"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
@@ -1349,7 +1140,7 @@ msgid "Permanent"
 msgstr "Trajno"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:196
+#: code:addons/survey/wizard/survey_email_compose_message.py:199
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "Vnesite vsaj enega veljavnega prejemnika."
@@ -1463,28 +1254,6 @@ msgstr "Način kviza"
 #: selection:survey.question,display_mode:0
 msgid "Radio Buttons"
 msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_res_id
-msgid "Related Document ID"
-msgstr "ID povezanega dokumenta"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_model
-msgid "Related Document Model"
-msgstr "Povezan dokumentni model"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_reply_to
-msgid ""
-"Reply email address. Setting the reply_to bypasses the automatic thread "
-"creation."
-msgstr "E-pošta za odgovor. Nastavitev reply_to obide samodejno ustvarjanje niti."
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_reply_to
-msgid "Reply-To"
-msgstr "Odgovori"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_result_url
@@ -1601,7 +1370,9 @@ msgstr "Pošiljanje javne spletne povezave občinstvu preko e-pošte."
 msgid ""
 "Send private invitation to your audience (only one response per recipient "
 "and per invitation)."
-msgstr "Pošiljanje zasebnih vabil občinstvu (le en odgovor na prejemnika in na vabilo)."
+msgstr ""
+"Pošiljanje zasebnih vabil občinstvu (le en odgovor na prejemnika in na "
+"vabilo)."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -1656,14 +1427,6 @@ msgid "Skipped"
 msgstr "Izpuščeno"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_author_avatar
-msgid ""
-"Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr "Manjša slika slika. Samodejno spremeni velikost na 64px x 64px in ohrani razmerje. Uporabite to polje kjerkoli potrebujete manjšo sliko."
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid ""
 "Something went wrong while contacting survey server. <strong class=\"text-"
@@ -1683,11 +1446,6 @@ msgid "Stage"
 msgstr "Stopnja"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred
-msgid "Starred"
-msgstr "Začeto"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_init
 msgid "Start Survey"
 msgstr "Zagon ankete"
@@ -1703,11 +1461,6 @@ msgid "Status"
 msgstr "Status"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_subject
-msgid "Subject"
-msgstr "Zadeva"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Subject..."
 msgstr "Zadeva..."
@@ -1716,11 +1469,6 @@ msgstr "Zadeva..."
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Submit survey"
 msgstr "Predloži anketo"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_subtype_id
-msgid "Subtype"
-msgstr "Podvrsta"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_suggested
@@ -1827,11 +1575,6 @@ msgid "Surveys"
 msgstr "Ankete"
 
 #. module: survey
-#: selection:survey.mail.compose.message,message_type:0
-msgid "System notification"
-msgstr "Sistemsko sporočilo"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
@@ -1870,7 +1613,8 @@ msgstr "Hvala!"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
 msgid "The 'Usability/Extended View' group helps in daily work"
-msgstr "Skupina 'Razširjeni/uporabnostni prikaz' je koristna pri vsakodnevnem delu"
+msgstr ""
+"Skupina 'Razširjeni/uporabnostni prikaz' je koristna pri vsakodnevnem delu"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_4
@@ -1883,7 +1627,7 @@ msgid "The answer must be in the right type"
 msgstr "Odgovor mora biti pravilnega tipa"
 
 #. module: survey
-#: code:addons/survey/survey.py:629
+#: code:addons/survey/survey.py:622
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1902,12 +1646,14 @@ msgid "The answer you entered has an invalid format."
 msgstr "Vneseni odgovor ni v pravilnem formatu."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:171
+#: code:addons/survey/wizard/survey_email_compose_message.py:174
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__"
-" is automaticaly converted into the special url of the survey."
-msgstr "Vsebina besedila ne vsebuje '__URL__'.                     __URL__ se samodejno pretvori v posebno URL povezavo ankete."
+"The content of the text don't contain '__URL__'.                     __URL__ "
+"is automaticaly converted into the special url of the survey."
+msgstr ""
+"Vsebina besedila ne vsebuje '__URL__'.                     __URL__ se "
+"samodejno pretvori v posebno URL povezavo ankete."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_1
@@ -1952,7 +1698,8 @@ msgstr "Menijev je preveč, razumevanje je prezapleteno"
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
+"These questions relate to the ergonomy and ease of use of Odoo. Try to "
+"remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
 
@@ -1972,21 +1719,19 @@ msgid "They help new users to understand Odoo"
 msgstr "Novim uporabnikom pomagajo pri razumevanju Odoo"
 
 #. module: survey
-#: code:addons/survey/survey.py:685 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Odgovor mora biti e-poštni naslov"
 
 #. module: survey
-#: code:addons/survey/survey.py:727
-#: code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
 #, python-format
 msgid "This is not a date/time"
 msgstr "To ni datum/čas"
 
 #. module: survey
-#: code:addons/survey/survey.py:704
-#: code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
 msgstr "To ni številka"
@@ -1996,7 +1741,9 @@ msgstr "To ni številka"
 msgid ""
 "This list of emails of recipients will not converted in contacts. Emails "
 "separated by commas, semicolons or newline."
-msgstr "Ta seznam e-poštnih prejemnikov ne bo pretvorjen v stike. E-poštni naslovni so ločeni z vejicami, podpičji ali vrsticami."
+msgstr ""
+"Ta seznam e-poštnih prejemnikov ne bo pretvorjen v stike. E-poštni naslovni "
+"so ločeni z vejicami, podpičji ali vrsticami."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -2004,7 +1751,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Sporočilo prikazano, ko se anketa dokonča"
 
 #. module: survey
-#: code:addons/survey/survey.py:628
+#: code:addons/survey/survey.py:621
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -2071,19 +1818,6 @@ msgid "Totally disagree"
 msgstr "Absolutno se ne strinjam"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_tracking_value_ids
-msgid ""
-"Tracked values are stored in a separate model. This field allow to "
-"reconstructthe tracking and to generate statistics on the model."
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_tracking_value_ids
-msgid "Tracking values"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_type
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
 msgstr "Tip"
@@ -2104,22 +1838,6 @@ msgid "Types of answers"
 msgstr "Tipi odgovorov"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread
-msgid "Unread Messages"
-msgstr "Neprebrana sporočila"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Števec neprebranih sporočil"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_use_active_domain
-msgid "Use active domain"
-msgstr "Uporabi aktivno domeno"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_template_id
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Use template"
 msgstr "Uporabi predlogo"
@@ -2127,8 +1845,7 @@ msgstr "Uporabi predlogo"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add             additional explanations about your "
-"question"
+"Use this field to add             additional explanations about your question"
 msgstr "Polje za dodajanje             dodatnih razlag vprašanja"
 
 #. module: survey
@@ -2179,7 +1896,9 @@ msgstr "Uporabniki se lahko vračajo"
 msgid ""
 "Users with a public link will be requested to login before taking part to "
 "the survey"
-msgstr "Uporabniki, ki imajo javno povezavo, se morajo prijaviti preden sodelujejo v anketi"
+msgstr ""
+"Uporabniki, ki imajo javno povezavo, se morajo prijaviti preden sodelujejo v "
+"anketi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_required
@@ -2221,7 +1940,9 @@ msgstr "Kaj menite o uporabniških skupinah?"
 msgid ""
 "What do you think about the process views of Odoo, available in the web "
 "client ?"
-msgstr "Kaj menite o procesnih pogledih, ki so na razpolago v Odoo spletnem odjemalcu?"
+msgstr ""
+"Kaj menite o procesnih pogledih, ki so na razpolago v Odoo spletnem "
+"odjemalcu?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_4
@@ -2233,11 +1954,6 @@ msgstr "Kaj menite o strukturi menijev?"
 #: model:survey.question,question:survey.feedback_4_1
 msgid "Where do you develop your new features?"
 msgstr "Kje razvijate svoje nove funkcije?"
-
-#. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_is_log
-msgid "Whether the message is an internal note (comment mode only)"
-msgstr "Če je sporočilo le interna opomba (le način komentiranja)"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_2
@@ -2253,7 +1969,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x\"/>"
+"                                            <i class=\"fa fa-calendar fa-2x"
+"\"/>"
 msgstr ""
 
 #. module: survey
@@ -2282,20 +1999,24 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to"
-" your audience. People can answer once per invitation, and whenever they "
-"want with the public web link (in this case, the \"Public in website\" "
-"setting must be enabled)."
-msgstr "Javno spletno povezavo ankete lahko souporabljate ali pošljete zasebna vabila svojemu občinstvu. Uporabniki lahko odgovarjajo po enkrat na vabilo in kadarkoli želijo z uporabo javne spletne povezave (v tem primeru mora biti omogočena nastavitev \"Javno na spletni strani\")."
+"You can share your survey web public link and/or send private invitations to "
+"your audience. People can answer once per invitation, and whenever they want "
+"with the public web link (in this case, the \"Public in website\" setting "
+"must be enabled)."
+msgstr ""
+"Javno spletno povezavo ankete lahko souporabljate ali pošljete zasebna "
+"vabila svojemu občinstvu. Uporabniki lahko odgovarjajo po enkrat na vabilo "
+"in kadarkoli želijo z uporabo javne spletne povezave (v tem primeru mora "
+"biti omogočena nastavitev \"Javno na spletni strani\")."
 
 #. module: survey
-#: code:addons/survey/survey.py:422
+#: code:addons/survey/survey.py:424
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Vabila na anketo, ki nima vprašanj, ne morete pošiljati."
 
 #. module: survey
-#: code:addons/survey/survey.py:427
+#: code:addons/survey/survey.py:429
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Vabil za zaključene ankete ne morete pošiljati."
@@ -2317,8 +2038,8 @@ msgstr "prijava"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
-msgid "on"
-msgstr "vklopljeno"
+msgid "of"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2336,3 +2057,197 @@ msgstr "pregled svojih odgovorov"
 #, python-format
 msgid "try to create and fill survey"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "                \n"
+#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
+#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+#~ "                    <p>Hello,</p>\n"
+#~ "                    <p>We are conducting a survey, and your response "
+#~ "would be appreciated.</p>\n"
+#~ "                    <p><a href=\"__URL__\">Please, click here to start "
+#~ "survey</a></p>\n"
+#~ "                    <p>Thanks for your participation!</p>\n"
+#~ "                </div>\n"
+#~ "                \n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                \n"
+#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
+#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+#~ "                    <p>Pozdravljeni,</p>\n"
+#~ "                    <p>Izvajamo anketo in cenili bi vaš odgovor.</p>\n"
+#~ "                    <p><a href=\"__URL__\">Pritisnite semkaj za začetek "
+#~ "ankete, prosim</a></p>\n"
+#~ "                    <p>Hvala za sodelovanje!</p>\n"
+#~ "                </div>\n"
+#~ "                \n"
+#~ "            "
+
+#~ msgid "Action Needed"
+#~ msgstr "Potreben je ukrep"
+
+#~ msgid "Author"
+#~ msgstr "Avtor"
+
+#~ msgid ""
+#~ "Author of the message. If not set, email_from may hold an email address "
+#~ "that did not match any partner."
+#~ msgstr ""
+#~ "Avtor sporočila. Če ni nastavljen, lahko email_from vsebuje elektronski "
+#~ "naslov, ki ni povezan z nobenim partnerjem."
+
+#~ msgid "Automatically sanitized HTML contents"
+#~ msgstr "Avtomatično urejena HTML vsebina"
+
+#~ msgid "Channels"
+#~ msgstr "Kanali"
+
+#~ msgid "Child Messages"
+#~ msgstr "Podrejeno sporočilo"
+
+#~ msgid "Composition mode"
+#~ msgstr "Način za sestavo"
+
+#~ msgid "Contents"
+#~ msgstr "Vsebina"
+
+#~ msgid "Current user has a starred notification linked to this message"
+#~ msgstr ""
+#~ "Trenutni uporabnik ima z zvezdico označeno obvestilo, povezano s tem "
+#~ "sporočilom"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
+
+#~ msgid "Followers"
+#~ msgstr "Sledilci"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Sledilci (kanali)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Sledilci (partnerji)"
+
+#~ msgid "From"
+#~ msgstr "Od"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#~ msgid "Initial thread message."
+#~ msgstr "Prvotno sporočilo"
+
+#~ msgid "Is Follower"
+#~ msgstr "Je sledilec"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Datum zadnjega sporočila"
+
+#~ msgid "Log an Internal Note"
+#~ msgstr "Zapiši interno opombo"
+
+#~ msgid "Message Record Name"
+#~ msgstr "Naziv zapisa sporočila"
+
+#~ msgid ""
+#~ "Message type: email for email message, notification for system message, "
+#~ "comment for other messages such as user replies"
+#~ msgstr ""
+#~ "Tip sporočila: elektronska pošta za elektronsko sporočilo, zaznamek za "
+#~ "sistemsko sporočilo, komentar za ostala sporočila kot npr. uporabnikov "
+#~ "odgovor"
+
+#~ msgid "Message unique identifier"
+#~ msgstr "Enoličen identifikator sporočila"
+
+#~ msgid "Message-Id"
+#~ msgstr "ID sporočila"
+
+#~ msgid "Messages"
+#~ msgstr "Sporočila"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Komunikacije in kronologija"
+
+#~ msgid "Name get of the related document."
+#~ msgstr "Ime, pridobljeno iz povezanega dokumenta"
+
+#~ msgid "No threading for answers"
+#~ msgstr "Brez združevanja odgovorov v nize"
+
+#~ msgid "Notify followers"
+#~ msgstr "Obvesti sledilce"
+
+#~ msgid "Notify followers of the document (mass post only)"
+#~ msgstr "Obvesti sledilce dokumenta (le za masovno pošto)"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Število aktivnosti"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Število neprebranih sporočil"
+
+#~ msgid "Outgoing mail server"
+#~ msgstr "Odhodni SMTP strežnik"
+
+#~ msgid "Parent Message"
+#~ msgstr "Nadrejeno sporočilo"
+
+#~ msgid "Related Document ID"
+#~ msgstr "ID povezanega dokumenta"
+
+#~ msgid "Related Document Model"
+#~ msgstr "Povezan dokumentni model"
+
+#~ msgid ""
+#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
+#~ "creation."
+#~ msgstr ""
+#~ "E-pošta za odgovor. Nastavitev reply_to obide samodejno ustvarjanje niti."
+
+#~ msgid "Reply-To"
+#~ msgstr "Odgovori"
+
+#~ msgid ""
+#~ "Small-sized image of this contact. It is automatically resized as a "
+#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
+#~ "small image is required."
+#~ msgstr ""
+#~ "Manjša slika slika. Samodejno spremeni velikost na 64px x 64px in ohrani "
+#~ "razmerje. Uporabite to polje kjerkoli potrebujete manjšo sliko."
+
+#~ msgid "Starred"
+#~ msgstr "Začeto"
+
+#~ msgid "Subject"
+#~ msgstr "Zadeva"
+
+#~ msgid "Subtype"
+#~ msgstr "Podvrsta"
+
+#~ msgid "System notification"
+#~ msgstr "Sistemsko sporočilo"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprebrana sporočila"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Števec neprebranih sporočil"
+
+#~ msgid "Use active domain"
+#~ msgstr "Uporabi aktivno domeno"
+
+#~ msgid "Whether the message is an internal note (comment mode only)"
+#~ msgstr "Če je sporočilo le interna opomba (le način komentiranja)"
+
+#~ msgid "on"
+#~ msgstr "vklopljeno"

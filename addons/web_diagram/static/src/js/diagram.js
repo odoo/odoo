@@ -18,45 +18,17 @@ var QWeb = core.qweb;
 var DiagramView = View.extend({
     display_name: _lt('Diagram'),
     icon: 'fa-code-fork',
-    view_type: 'diagram',
-    searchable: false,
     multi_record: false,
-    init: function(parent, dataset, view_id, options) {
-        this._super(parent);
-        this.set_default_options(options);
-        this.view_manager = parent;
-        this.dataset = dataset;
-        this.model = this.dataset.model;
-        this.view_id = view_id;
+    searchable: false,
+
+    init: function() {
+        this._super.apply(this, arguments);
         this.domain = this.dataset._domain || [];
         this.context = {};
         this.ids = this.dataset.ids;
-    },
-
-    view_loading: function(r) {
-        if (window.Raphael) {
-            return this.load_diagram(r);
+        if (this.ids && this.ids.length) {
+            this.id = this.ids[this.dataset.index || 0];
         }
-        var self = this;
-        return $.when(
-            ajax.loadJS('/web_diagram/static/lib/js/jquery.mousewheel.js'),
-            ajax.loadJS('/web_diagram/static/lib/js/raphael.js')).then(function () {
-                return self.load_diagram(r);
-            });
-    },
-
-    toTitleCase: function(str) {
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    },
-
-    load_diagram: function(result) {
-        var self = this;
-        if(this.ids && this.ids.length) {
-            this.id = this.ids[self.dataset.index || 0];
-        }
-
-        this.fields_view = result;
-        this.view_id = this.fields_view.view_id;
         this.fields = this.fields_view.fields;
         this.nodes = this.fields_view.arch.children[0];
         this.connectors = this.fields_view.arch.children[1];
@@ -65,19 +37,35 @@ var DiagramView = View.extend({
         this.labels = _.filter(this.fields_view.arch.children, function(label) {
             return label.tag === "label";
         });
+    },
 
-        this.$el.html(QWeb.render("DiagramView", {'widget': self}));
-        this.$el.addClass('o_diagram_view').addClass(this.fields_view.arch.attrs['class']);
+    willStart: function() {
+        if (window.Raphael) {
+            return $.when();
+        }
+        return $.when(
+            ajax.loadJS('/web_diagram/static/lib/js/jquery.mousewheel.js'),
+            ajax.loadJS('/web_diagram/static/lib/js/raphael.js')
+        );
+    },
+    start: function() {
+        var self = this;
+        this.$el.html(QWeb.render("DiagramView", {'widget': this}));
+        this.$el.addClass('o_diagram_view').addClass(this.fields_view.arch.attrs.class);
 
-        _.each(self.labels,function(label){
+        _.each(this.labels,function(label){
             self.$('.o_diagram_header').append($('<span>').html(label.attrs.string));
         });
 
-
+        var diagram_info;
         if(this.id) {
-            self.get_diagram_info();
+            diagram_info = this.get_diagram_info();
         }
-        this.trigger('diagram_view_loaded', result);
+        return $.when(this._super(), diagram_info);
+    },
+
+    toTitleCase: function(str) {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
 
     get_diagram_info: function() {
@@ -112,7 +100,7 @@ var DiagramView = View.extend({
             params.connectors_fields.push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
             params.connectors.push(conn.attrs.name);
         });
-        this.rpc(
+        return this.rpc(
             '/web_diagram/diagram/get_diagram_info',params).done(function(result) {
                 self.draw_diagram(result);
             }
@@ -277,7 +265,7 @@ var DiagramView = View.extend({
         var title = _t('Activity');
         var pop = new form_common.FormViewDialog(self, {
             res_model: self.node,
-            domain: self.dataset.domain,
+            domain: self.domain,
             context: self.context || self.dataset.context,
             title: _t("Create:") + title,
             disable_multiple_selection: true,
@@ -321,7 +309,7 @@ var DiagramView = View.extend({
         var title = _t('Transition');
         var pop = new form_common.FormViewDialog(self, {
             res_model: self.connector,
-            domain: this.dataset.domain,
+            domain: this.domain,
             context: this.context || this.dataset.context,
             title: _t("Create:") + title,
             disable_multiple_selection: true,

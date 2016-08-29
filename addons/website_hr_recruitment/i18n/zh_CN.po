@@ -3,20 +3,33 @@
 # * website_hr_recruitment
 # 
 # Translators:
-# fausthuang, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# fausthuang <faust_huang@hotmail.com>, 2016
+# Talway <9010446@qq.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Joshua Jan <popkar77@gmail.com>, 2016
+# mrshelly <mrshelly@hotmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-12-02 02:01+0000\n"
-"Last-Translator: fausthuang\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Submit</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.job_countries
@@ -46,7 +59,7 @@ msgstr "应用"
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Apply Job"
-msgstr "申请职位"
+msgstr "申请工作"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -63,23 +76,23 @@ msgstr "请继续浏览我们的网站"
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Job Application Form"
-msgstr "职位申请表"
+msgstr "工作申请表"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.detail
 msgid "Job Detail"
-msgstr "职位详情"
+msgstr "工作详情"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_job
 msgid "Job Position"
-msgstr "工作岗位"
+msgstr "职位"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.job_footer_custom
 #: model:website.menu,name:website_hr_recruitment.menu_jobs
 msgid "Jobs"
-msgstr "作业"
+msgstr "工作"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -95,11 +108,11 @@ msgid ""
 msgstr "加入我们，我们为您提供了非同寻常的机会来学习、和发展，这是令人兴奋的经验和团队的一部分。"
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:69
+#: code:addons/website_hr_recruitment/controllers/main.py:72
 #: model:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
 #, python-format
 msgid "New Job Offer"
-msgstr "新职位"
+msgstr "新工作提供"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -132,19 +145,9 @@ msgid "Source of Applicants"
 msgstr "应聘者来源"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Submit"
-msgstr "提交"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid "Thank you!"
 msgstr "谢谢！"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job_website_url
-msgid "The full URL to access the document through the website."
-msgstr "通过网站完整的URL来访问操作服务器。"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -157,39 +160,14 @@ msgid "Url Parameters"
 msgstr "url 参数"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_published
-msgid "Visible in Website"
-msgstr "在网站可见"
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "网站招聘表格"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_url
-msgid "Website URL"
-msgstr "网站地址"
-
-#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_description
 msgid "Website description"
-msgstr "网站描述"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_description
-msgid "Website meta description"
-msgstr "网站meta描述"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "网站meta关键词"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_title
-msgid "Website meta title"
-msgstr "网站meta标题"
+msgstr "网站说明"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -199,7 +177,10 @@ msgid ""
 "                                    Odoo is fully open source, super easy, full featured\n"
 "                                    (3000+ apps) and its online offer is 3 times cheaper than\n"
 "                                    traditional competitors like SAP and Ms Dynamics."
-msgstr "与一群聪明人组成的小团队一起，我们发布了世界上最具破坏性的企业管理软件。             \n                       Odoo 是完全开源、超级简单、功能齐全的（3000 + 应用程序），\n它的在线报价比传统的竞争者，比如 SAP 和 MS Dynamics 便宜 3 倍。"
+msgstr ""
+"与一群聪明人组成的小团队一起，我们发布了世界上最具破坏性的企业管理软件。             \n"
+"                       Odoo 是完全开源、超级简单、功能齐全的（3000 + 应用程序），\n"
+"它的在线报价比传统的竞争者，比如 SAP 和 MS Dynamics 便宜 3 倍。"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -209,7 +190,7 @@ msgstr "您的电子邮件"
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Your Name"
-msgstr "您的姓名"
+msgstr "你的姓名"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -230,11 +211,6 @@ msgstr "这里"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "not published"
-msgstr "未发布的"
-
-#. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "open positions"
 msgstr "开启"
 
@@ -242,3 +218,8 @@ msgstr "开启"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "to contact us"
 msgstr "联系我们"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "unpublished"
+msgstr ""

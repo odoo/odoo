@@ -931,6 +931,8 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 options.keyMap.mac['UP'] = 'up';
 options.keyMap.mac['DOWN'] = 'down';
 
+options.styleTags = ['p', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
+
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
   var dimension = sDim.split('x');
@@ -1062,8 +1064,8 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         }
     }
 
+    var node = dom.node(r.sc);
     var exist = r.sc.childNodes[r.so] || r.sc;
-    var node = dom.node(exist);
     exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
 
     // table: add a tr
@@ -2300,6 +2302,15 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     if(!!(isAirMode ? $popover : $popover.parent()).find('.note-table').length) {
         summernote_table_update(oStyle);
     }
+};
+
+options.onPaste = function (e) {
+    e.preventDefault(); // FIXME this does not work with our custom out-dated summernote.
+    document.execCommand("undo"); // FIXME ... so use this hack until we decide to do something about it.
+
+    var pastedText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+    var formattedText = pastedText.replace(/([^.!?:;])\r?\n/g, "$1").trim(); // Remove linebreaks which are not at the end of a sentence
+    document.execCommand("insertText", false, formattedText);
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

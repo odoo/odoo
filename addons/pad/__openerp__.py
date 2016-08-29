@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Collaborative Pads',
     'version': '2.0',
-    'category': 'Project Management',
+    'category': 'Extra Tools',
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client.
 ===================================================================
@@ -13,12 +15,10 @@ pads (by default, http://etherpad.com/).
     'website': 'https://www.odoo.com/page/notes',
     'depends': ['web'],
     'data': [
-        'res_company.xml',
         'views/pad.xml',
+        'views/res_company.xml',
     ],
-    'demo': ['pad_demo.xml'],
-    'installable': True,
-    'auto_install': False,
+    'demo': ['data/pad_demo.xml'],
     'web': True,
-    'qweb' : ['static/src/xml/*.xml'],
+    'qweb': ['static/src/xml/pad.xml']
 }

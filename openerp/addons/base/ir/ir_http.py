@@ -18,32 +18,32 @@ import werkzeug.routing
 import werkzeug.urls
 import werkzeug.utils
 
-import openerp
-import openerp.exceptions
-import openerp.models
-from openerp import http
-from openerp.http import request, STATIC_CACHE
-from openerp.modules.module import get_resource_path, get_module_path
-from openerp.osv import osv, orm
+import odoo
+from odoo import api, http, models, tools, SUPERUSER_ID
+from odoo.exceptions import AccessDenied, AccessError
+from odoo.http import request, STATIC_CACHE, content_disposition
+from odoo.tools.mimetypes import guess_mimetype
+from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
 
 UID_PLACEHOLDER = object()
+
 
 class ModelConverter(werkzeug.routing.BaseConverter):
 
     def __init__(self, url_map, model=False):
         super(ModelConverter, self).__init__(url_map)
         self.model = model
-        self.regex = '([0-9]+)'
+        self.regex = r'([0-9]+)'
 
     def to_python(self, value):
-        m = re.match(self.regex, value)
-        return request.registry[self.model].browse(
-            request.cr, UID_PLACEHOLDER, int(m.group(1)), context=request.context)
+        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
+        return env[self.model].browse(int(value))
 
     def to_url(self, value):
         return value.id
+
 
 class ModelsConverter(werkzeug.routing.BaseConverter):
 
@@ -51,20 +51,22 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         super(ModelsConverter, self).__init__(url_map)
         self.model = model
         # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
-        self.regex = '([0-9,]+)'
+        self.regex = r'([0-9,]+)'
 
     def to_python(self, value):
-        return request.registry[self.model].browse(request.cr, UID_PLACEHOLDER, [int(i) for i in value.split(',')], context=request.context)
+        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
+        return env[self.model].browse(map(int, value.split(',')))
 
     def to_url(self, value):
-        return ",".join(i.id for i in value)
+        return ",".join(value.ids)
+
 
 class SignedIntConverter(werkzeug.routing.NumberConverter):
     regex = r'-?\d+'
     num_convert = int
 
 
-class ir_http(osv.AbstractModel):
+class IrHttp(models.AbstractModel):
     _name = 'ir.http'
     _description = "HTTP routing"
 
@@ -84,7 +86,7 @@ class ir_http(osv.AbstractModel):
 
     def _auth_method_public(self):
         if not request.session.uid:
-            dummy, request.uid = self.pool['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
+            request.uid = request.env.ref('base.public_user').id
         else:
             request.uid = request.session.uid
 
@@ -96,22 +98,24 @@ class ir_http(osv.AbstractModel):
                     # what if error in security.check()
                     #   -> res_users.check()
                     #   -> res_users.check_credentials()
-                except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
+                except (AccessDenied, http.SessionExpiredException):
                     # All other exceptions mean undetermined status (e.g. connection pool full),
                     # let them bubble up
                     request.session.logout(keep_db=True)
             if request.uid is None:
                 getattr(self, "_auth_method_%s" % auth_method)()
-        except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException, werkzeug.exceptions.HTTPException):
+        except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
             _logger.info("Exception during request Authentication.", exc_info=True)
-            raise openerp.exceptions.AccessDenied()
+            raise AccessDenied()
         return auth_method
 
     def _serve_attachment(self):
+        env = api.Environment(request.cr, SUPERUSER_ID, request.context)
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'name', 'mimetype', 'checksum'], context=request.context)
+        fields = ['__last_update', 'datas', 'name', 'mimetype', 'checksum']
+        attach = env['ir.attachment'].search_read(domain, fields)
         if attach:
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas'] or ''
@@ -123,7 +127,7 @@ class ir_http(osv.AbstractModel):
                 return werkzeug.utils.redirect(name, 301)
 
             response = werkzeug.wrappers.Response()
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
             try:
                 response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
             except ValueError:
@@ -151,11 +155,11 @@ class ir_http(osv.AbstractModel):
                 return attach
 
         # Don't handle exception but use werkeug debugger if server in --dev mode
-        if openerp.tools.config['dev_mode']:
+        if 'werkzeug' in tools.config['dev_mode']:
             raise
         try:
             return request._handle_exception(exception)
-        except openerp.exceptions.AccessDenied:
+        except AccessDenied:
             return werkzeug.exceptions.Forbidden()
 
     def _dispatch(self):
@@ -190,35 +194,31 @@ class ir_http(osv.AbstractModel):
     def _postprocess_args(self, arguments, rule):
         """ post process arg to set uid on browse records """
         for name, arg in arguments.items():
-            if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:
+            if isinstance(arg, models.BaseModel) and arg._uid is UID_PLACEHOLDER:
                 arguments[name] = arg.sudo(request.uid)
-                try:
-                    arg.exists()
-                except openerp.models.MissingError:
+                if not arg.exists():
                     return self._handle_exception(werkzeug.exceptions.NotFound())
 
     def routing_map(self):
         if not hasattr(self, '_routing_map'):
             _logger.info("Generating routing map")
             installed = request.registry._init_modules - {'web'}
-            if openerp.tools.config['test_enable']:
-                installed.add(openerp.modules.module.current_test)
-            mods = [''] + openerp.conf.server_wide_modules + sorted(installed)
-            self._routing_map = http.routing_map(mods, False, converters=self._get_converters())
-
+            if tools.config['test_enable']:
+                installed.add(odoo.modules.module.current_test)
+            mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
+            # Note : when routing map is generated, we put it on the class `type(self)`
+            # to make it available for all instance. Since `env` create an new instance
+            # of the model, each instance will regenared its own routing map and thus
+            # regenerate its EndPoint. The routing map should be static.
+            type(self)._routing_map = http.routing_map(mods, False, converters=self._get_converters())
         return self._routing_map
 
+    def _clear_routing_map(self):
+        if hasattr(self, '_routing_map'):
+            del type(self)._routing_map
+
     def content_disposition(self, filename):
-        filename = openerp.tools.ustr(filename)
-        escaped = urllib2.quote(filename.encode('utf8'))
-        browser = request.httprequest.user_agent.browser
-        version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-        if browser == 'msie' and version < 9:
-            return "attachment; filename=%s" % escaped
-        elif browser == 'safari' and version < 537:
-            return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
-        else:
-            return "attachment; filename*=UTF-8''%s" % escaped
+        return content_disposition(filename)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
         """ Get file, attachment or downloadable content
@@ -255,7 +255,7 @@ class ir_http(osv.AbstractModel):
         # check read access
         try:
             last_update = obj['__last_update']
-        except openerp.exceptions.AccessError:
+        except AccessError:
             return (403, [], None)
 
         status, headers, content = None, [], None
@@ -292,17 +292,21 @@ class ir_http(osv.AbstractModel):
             elif module_resource_path:
                 filename = os.path.basename(module_resource_path)
             else:
-                filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
+                filename = "%s-%s-%s" % (obj._name, obj.id, field)
 
         # mimetype
+        mimetype = 'mimetype' in obj and obj.mimetype or False
         if not mimetype:
-            if 'mimetype' in obj and obj.mimetype and obj.mimetype != 'application/octet-stream':
-                mimetype = obj.mimetype
-            elif filename:
+            if filename:
                 mimetype = mimetypes.guess_type(filename)[0]
+            if not mimetype and getattr(env[model]._fields[field], 'attachment', False):
+                # for binary fields, fetch the ir_attachement for mimetype check
+                attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
+                mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
-                mimetype = default_mimetype
-        headers.append(('Content-Type', mimetype))
+                mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+
+        headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
         etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
@@ -314,7 +318,6 @@ class ir_http(osv.AbstractModel):
         # content-disposition default name
         if download:
             headers.append(('Content-Disposition', self.content_disposition(filename)))
-
         return (status, headers, content)
 
 
@@ -340,5 +343,5 @@ def convert_exception_to(to_type, with_message=False):
             message = str(with_message)
 
         raise to_type, message, tb
-    except to_type, e:
+    except to_type as e:
         return e

@@ -21,13 +21,13 @@ Re-implement openerp's file import system:
 * In a module, so that administrators and users of Odoo who do not
   need or want an online import can avoid it being available to users.
 """,
-    'category': 'Uncategorized',
-    'depends': ['web'],
+    'depends': ['web', 'web_kanban'],
+    'category': 'Extra Tools',
     'installable': True,
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
-        'views/base_import.xml',
+        'views/base_import_templates.xml',
     ],
-    'qweb': ['static/src/xml/import.xml'],
+    'qweb': ['static/src/xml/base_import.xml'],
 }

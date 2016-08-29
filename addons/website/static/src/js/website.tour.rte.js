@@ -2,6 +2,7 @@ odoo.define('website.tour.rte', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');
+var local_storage = require('web.local_storage');
 
 Tour.register({
     id:   'rte_translator',
@@ -27,7 +28,7 @@ Tour.register({
             waitFor:   'html[lang*="fr"]',
             element:   '.js_language_selector a[data-lang="en_US"]',
             onload: function () {
-                localStorage.removeItem('website_translator_nodialog');
+                local_storage.removeItem('website_translator_nodialog');
             }
         },
         {
@@ -110,17 +111,17 @@ Tour.register({
         },
         {
             title:     "translate placeholder",
-            element:   '.modal.web_editor-dialog input:first',
+            element:   '.modal input:first',
             sampleText: 'test french placeholder',
         },
         {
             title:     "close modal",
-            waitFor:   '.web_editor-dialog input:propValue(test french placeholder)',
-            element:   '.web_editor-dialog button',
+            waitFor:   '.modal input:propValue(test french placeholder)',
+            element:   '.modal button',
         },
         {
             title:     "close modal",
-            waitNot:   '.web_editor-dialog',
+            waitNot:   '.modal:visible',
             element:   'button[data-action=save]',
         },
         {

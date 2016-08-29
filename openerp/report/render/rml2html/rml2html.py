@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import sys
-import cStringIO
-from lxml import etree
 import copy
+import cStringIO
+import sys
+
+from lxml import etree
 
 from openerp.report.render.rml2pdf import utils
 

@@ -3,16 +3,15 @@
 # * account_voucher
 # 
 # Translators:
-# fausthuang, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-12-18 04:09+0000\n"
-"Last-Translator: fausthuang\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,28 +25,32 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr "‘草稿’状态被用来标识新生成的但是还没被确认的凭证\n‘形式’状态被用在凭证还没有凭证号的时候\n‘已过账’状态用在创建了凭证，生成了相关的凭证号并且该凭证的会计分录也已经生成的时候\n“取消’状态被用在已经去小的凭证上"
+msgstr ""
+"‘草稿’状态被用来标识新生成的但是还没被确认的凭证\n"
+"‘形式’状态被用在凭证还没有凭证号的时候\n"
+"‘已过账’状态用在创建了凭证，生成了相关的凭证号并且该凭证的会计分录也已经生成的时候\n"
+"“取消’状态被用在已经去小的凭证上"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
 msgid "Account"
-msgstr "科目"
+msgstr "账户"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr "财务日期"
+msgstr "会计日期"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr "会计日期"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "会计凭单"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction
-msgid "Action Needed"
-msgstr "所需行动"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -66,7 +69,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "你确信要取消这个收据？"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "账单日期"
 
@@ -96,7 +101,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:144
+#: code:addons/account_voucher/models/account_voucher.py:165
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "不能删除已经开启或者支付的单据。"
@@ -104,12 +109,12 @@ msgstr "不能删除已经开启或者支付的单据。"
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr "点击创建一个销售收款"
+msgstr "点击创建一个销售收据"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr "点击创建一个采购收货"
+msgstr "点击创建一个采购收据"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -118,10 +123,16 @@ msgid "Company"
 msgstr "公司"
 
 #. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr "日记账相关的公司"
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
@@ -133,7 +144,7 @@ msgstr "创建于"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
 msgid "Currency"
-msgstr "货币"
+msgstr "币种"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -143,16 +154,9 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "日期"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后消息的日期"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
@@ -186,24 +190,9 @@ msgid "Due Date"
 msgstr "截止日期"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
-msgstr "记账条目的生效日期"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_follower_ids
-msgid "Followers"
-msgstr "关注者"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "关注者(频道)"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "关注者（合作伙伴）"
+msgstr "会计分录的生效日期"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
@@ -224,31 +213,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新信息。"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "如果勾选此项，有新消息会提醒你"
-
-#. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
-msgstr "如果我们在税上遇到四舍五入的问题，用这个字段来纠正"
+msgstr "如果我们在税上遇到舍入问题，用这个字段来纠正"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
 msgstr "内部备注"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_is_follower
-msgid "Is Follower"
-msgstr "是否关注者"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -261,18 +235,13 @@ msgstr "分类账"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
 msgid "Journal Entry"
-msgstr "分类账条目"
+msgstr "日记账分录"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr "分类账项目"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_last_post
-msgid "Last Message Date"
-msgstr "最后消息日期"
+msgstr "日记账项目"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
@@ -284,28 +253,18 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新人"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_ids
-msgid "Messages"
-msgstr "消息"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_ids
-msgid "Messages and communication history"
-msgstr "消息和通信历史"
+msgstr "最近更新时间"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
 msgid "Notes"
-msgstr "便签"
+msgstr "备注"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
@@ -313,34 +272,14 @@ msgid "Number"
 msgstr "号码"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_needaction_counter
-msgid "Number of Actions"
-msgstr "动作的序列号"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要动作的消息编号"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未读的消息数量"
-
-#. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
 msgid "Only for tax excluded from price"
 msgstr "仅针对价外税"
 
 #. module: account_voucher
-#: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
-msgid "Open Invoicing Menu"
-msgstr "打开开票菜单"
-
-#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
 msgid "Paid"
-msgstr "已付"
+msgstr "已支付"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
@@ -369,16 +308,16 @@ msgid "Payment Reference"
 msgstr "付款参考"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:180
+#: code:addons/account_voucher/models/account_voucher.py:201
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr "请激活选中分类账的 序列（ sequence  ）。"
+msgstr "请激活选中分类账的 序号（ sequence  ）。"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/models/account_voucher.py:204
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr "请定义分类账序列"
+msgstr "请在日记账中定义序列号"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -393,7 +332,7 @@ msgstr "已登帐"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr "已登帐凭单"
+msgstr "已过账凭单"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -413,7 +352,7 @@ msgstr "采购"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr "采购付款"
+msgstr "采购收据"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
@@ -496,7 +435,7 @@ msgstr "税金"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax amount"
-msgstr "总税金额"
+msgstr "税金金额"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
@@ -511,7 +450,7 @@ msgstr "这张凭单已全部付完"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr "选择的产品相关的利润或费用科目"
+msgstr "被选定产品的相关收入科目或者费用科目"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
@@ -532,7 +471,7 @@ msgstr "总计"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr "总额总计"
+msgstr "金额总计"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
@@ -543,16 +482,6 @@ msgstr "类型"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
 msgid "Unit Price"
 msgstr "单价"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread
-msgid "Unread Messages"
-msgstr "未读消息"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -570,10 +499,10 @@ msgstr "供应商"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr "供应商凭证"
+msgstr "供应商凭单"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:28
+#: code:addons/account_voucher/models/account_voucher.py:97
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -587,7 +516,7 @@ msgstr "凭单"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr "凭单条目"
+msgstr "凭单分录"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
@@ -607,34 +536,24 @@ msgstr "凭单统计"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "凭单条目"
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
+msgstr "凭单分录"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr "当采购收货被确认掉，你也可以同时登记这张采购订单的付款"
+msgstr "当采购收据被确认掉，你也可以同时登记这张采购收据的付款"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr "当销售发货被确认掉，你也可以同时登记这张销售发货的付款"
+msgstr "当销售收据被确认掉，你也可以同时登记这张销售收据的付款"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:345
+#: code:addons/account_voucher/models/account_voucher.py:367
 #, python-format
 msgid "You must first select a partner!"
-msgstr "您必须先选择一个业务伙伴!"
+msgstr "需要先选定业务伙伴"

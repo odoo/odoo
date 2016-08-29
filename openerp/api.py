@@ -45,11 +45,9 @@ __all__ = [
 ]
 
 import logging
-import operator
-
-from inspect import currentframe, getargspec
-from collections import defaultdict, MutableMapping
+from collections import defaultdict, Mapping
 from contextlib import contextmanager
+from inspect import currentframe, getargspec
 from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
@@ -293,10 +291,10 @@ def get_upgrade(method):
             return upgrade
         elif model == 'self':
             return lambda self, *args, **kwargs: self.browse(args[0])
-        else:
+        elif model:
             return lambda self, *args, **kwargs: self.env[model].browse(args[0])
-    else:
-        return lambda self, *args, **kwargs: args[0]
+
+    return lambda self, *args, **kwargs: args[0]
 
 
 def get_aggregate(method):
@@ -309,10 +307,10 @@ def get_aggregate(method):
         model, _, _ = spec
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
-        else:
+        elif model:
             return lambda self, value: sum(value, self.env[model].browse())
-    else:
-        return lambda self, value: value
+
+    return lambda self, value: value
 
 
 def get_context_split(method):
@@ -813,7 +811,7 @@ def expected(decorator, func):
 
 
 
-class Environment(object):
+class Environment(Mapping):
     """ An environment wraps data for ORM records:
 
          - :attr:`cr`, the current database cursor;
@@ -864,13 +862,16 @@ class Environment(object):
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = RegistryManager.get(cr.dbname)
-        self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
-        self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
-        self.computed = defaultdict(set)    # {field: set(id), ...}
-        self.dirty = defaultdict(set)       # {record: set(field_name), ...}
+        self.cache = defaultdict(dict)              # {field: {id: value, ...}, ...}
+        self._protected = defaultdict(frozenset)    # {field: ids, ...}
+        self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
+
+    #
+    # Mapping methods
+    #
 
     def __contains__(self, model_name):
         """ Test whether the given model exists. """
@@ -878,7 +879,7 @@ class Environment(object):
 
     def __getitem__(self, model_name):
         """ Return an empty recordset from the given model. """
-        return self.registry[model_name]._browse(self, ())
+        return self.registry[model_name]._browse((), self)
 
     def __iter__(self):
         """ Return an iterator on model names. """
@@ -887,6 +888,15 @@ class Environment(object):
     def __len__(self):
         """ Return the size of the model registry. """
         return len(self.registry)
+
+    def __eq__(self, other):
+        return self is other
+
+    def __ne__(self, other):
+        return self is not other
+
+    def __hash__(self):
+        return object.__hash__(self)
 
     def __call__(self, cr=None, user=None, context=None):
         """ Return an environment based on ``self`` with modified parameters.
@@ -973,8 +983,7 @@ class Environment(object):
         """ Clear the cache of all environments. """
         for env in list(self.all):
             env.cache.clear()
-            env.prefetch.clear()
-            env.computed.clear()
+            env._protected.clear()
             env.dirty.clear()
 
     def clear(self):
@@ -994,6 +1003,22 @@ class Environment(object):
         except Exception:
             self.clear()
             raise
+
+    def protected(self, field):
+        """ Return the recordset for which ``field`` should not be invalidated or recomputed. """
+        return self[field.model_name].browse(self._protected.get(field, ()))
+
+    @contextmanager
+    def protecting(self, fields, records):
+        """ Prevent the invalidation or recomputation of ``fields`` on ``records``. """
+        saved = {}
+        try:
+            for field in fields:
+                ids = saved[field] = self._protected[field]
+                self._protected[field] = ids.union(records._ids)
+            yield
+        finally:
+            self._protected.update(saved)
 
     def field_todo(self, field):
         """ Return a recordset with all records to recompute for ``field``. """
@@ -1038,6 +1063,8 @@ class Environment(object):
 
     def check_cache(self):
         """ Check the cache consistency. """
+        from openerp.fields import SpecialValue
+
         # make a full copy of the cache, and invalidate it
         cache_dump = dict(
             (field, dict(field_cache))
@@ -1053,9 +1080,11 @@ class Environment(object):
             for record in records:
                 try:
                     cached = field_dump[record.id]
+                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
+                    value = field.convert_to_record(cached, record)
                     fetched = record[field.name]
-                    if fetched != cached:
-                        info = {'cached': cached, 'fetched': fetched}
+                    if fetched != value:
+                        info = {'cached': value, 'fetched': fetched}
                         invalids.append((field, record, info))
                 except (AccessError, MissingError):
                     pass

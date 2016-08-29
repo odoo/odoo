@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': "Define Taxes as Python Code",
     'summary': """
@@ -10,10 +12,10 @@
 
         "Python Code" defines the amount of the tax.
         """,
-    'category': 'Accounting &amp; Finance',
+    'category': 'Accounting',
     'version': '1.0',
     'depends': ['account'],
     'data': [
-        'account_tax_python.xml',
+        'views/account_tax_views.xml',
     ],
 }

@@ -22,14 +22,14 @@ website.TopBar.include({
         'click [data-action="edit"]': 'edit',
     },
     start: function () {
-        var self = this;
         $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]:empty")
             .filter(".oe_not_editable")
             .filter(".oe_no_empty")
             .addClass("oe_empty");
 
-        if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang') === "en_US") {
+        if (location.search.indexOf("enable_editor") >= 0 && $('html').attr('lang').match(/en[-_]US/)) {
             this.$el.addClass('editing_mode');
+            this.delayed_hide();
         }
 
         return this._super.apply(this, arguments);
@@ -39,6 +39,14 @@ website.TopBar.include({
         this.$el.addClass('editing_mode');
         editor.editor_bar = new editor.Class(this);
         editor.editor_bar.prependTo(document.body);
+        $('.o_homepage_editor_welcome_message').remove();
+
+        this.delayed_hide();
+    },
+    delayed_hide: function () {
+        _.delay((function () {
+            this.do_hide();
+        }).bind(this), 800);
     },
 });
 
@@ -117,7 +125,7 @@ widget.LinkDialog.include({
             minimumInputLength: 1,
             placeholder: _t("New or existing page"),
             query: function (q) {
-                if (q.term == last) return;
+                if (q.term === last) return;
                 last = q.term;
                 $.when(
                     self.page_exists(q.term),
@@ -155,11 +163,11 @@ widget.LinkDialog.include({
         }
         return this._super();
     },
-    get_data_buy_url: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_url: function (def, $e, isNewWindow, label, classes, test) {
         var val = $e.val();
         if (val && val.length && $e.hasClass('page')) {
             var data = $e.select2('data');
-            if (!data.create) {
+            if (!data.create || test) {
                 def.resolve(data.id, isNewWindow, label || data.text, classes);
             } else {
                 // Create the page, get the URL back
@@ -170,7 +178,7 @@ widget.LinkDialog.include({
                     });
             }
         } else {
-            def.resolve(val, isNewWindow, label, classes);
+            return this._super.apply(this, arguments);
         }
     },
     changed: function (e) {
@@ -203,6 +211,18 @@ widget.LinkDialog.include({
             context: base.get_context(),
         });
     },
+});
+
+/**
+ * Display a welcome message on the homepage when it is empty and that the user is connected.
+ */
+base.ready().then(function () {
+    if (location.search.indexOf("enable_editor") < 0 && $(".editor_enable").length === 0) {
+        var $wrap = $("#wrapwrap.homepage #wrap");
+        if ($wrap.length && $wrap.html().trim() === "") {
+            $wrap.html(qweb.render("website.homepage_editor_welcome_message"));
+        }
+    }
 });
 
 });

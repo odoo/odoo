@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-12-29 08:18+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-07-20 03:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
+"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
+"vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction
-msgid "Action Needed"
-msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
@@ -74,11 +70,6 @@ msgid "Date done"
 msgstr "Ngày hoàn tất"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Xóa"
@@ -96,21 +87,6 @@ msgid "Folded by Default"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_follower_ids
-msgid "Followers"
-msgstr "Người dõi theo"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Group By"
@@ -121,26 +97,6 @@ msgstr "Group By"
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_last_post
-msgid "Last Message Date"
-msgstr "Ngày thông điệp cuối cùng"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
@@ -170,22 +126,12 @@ msgid "Later"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_ids
-msgid "Messages"
-msgstr "Thông điệp"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_ids
-msgid "Messages and communication history"
-msgstr "Lịch sử trao đổi"
-
-#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Mới"
 
 #. module: note
-#: code:addons/note/note.py:163
+#: code:addons/note/note.py:165
 #, python-format
 msgid "New Note"
 msgstr ""
@@ -224,21 +170,6 @@ msgstr ""
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
 msgstr "Ghi chú"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
@@ -324,21 +255,13 @@ msgid "Tomorrow"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread
-msgid "Unread Messages"
-msgstr "Thông điệp chưa đọc"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
-
-#. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
+"            notes are private; no one else will be able to see them. "
+"However\n"
+"            you can share some notes with other people by inviting "
+"followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
@@ -359,3 +282,33 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
+
+#~ msgid "Followers"
+#~ msgstr "Người dõi theo"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Người theo dõi (Các kênh)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Người theo dõi (Các đối tác)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+
+#~ msgid "Is Follower"
+#~ msgstr "Trở thành người theo dõi"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Ngày thông điệp cuối cùng"
+
+#~ msgid "Messages"
+#~ msgstr "Thông điệp"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Lịch sử trao đổi"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Thông điệp chưa đọc"

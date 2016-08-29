@@ -1,5 +1,4 @@
-<openerp>
-<data>
+<odoo>
 <template id="contact">
     <address t-ignore="true" class="mb0" itemscope="itemscope" itemtype="http://schema.org/Organization">
         <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (fax and 'fax' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
@@ -13,7 +12,7 @@
                 <span itemprop="name" t-esc="object.parent_name"/>
             </t>
             <t t-if="options.get('country_image') and 'country_id' in fields and object.country_id and object.country_id.image">
-                <span t-field="object.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}'/>
+                <span t-field="object.country_id.image" t-options='{"widget": "image", "class": "country_flag"}'/>
             </t>
         </div>
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
@@ -36,5 +35,4 @@
         </div>
     </address>
 </template>
- </data>
-</openerp>
+</odoo>

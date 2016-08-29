@@ -2,78 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from openerp.exceptions import AccessError
 
-##############################################################################
-#
-#    OLD API
-#
-##############################################################################
-from openerp.osv import osv, fields
-
-
-class Alpha(osv.Model):
-    _name = 'test_new_api.alpha'
-    _columns = {
-        'name': fields.char(),
-    }
-
-class Bravo(osv.Model):
-    _name = 'test_new_api.bravo'
-    _columns = {
-        'alpha_id': fields.many2one('test_new_api.alpha'),
-        # a related field with a non-trivial path
-        'alpha_name': fields.related('alpha_id', 'name', type='char'),
-        # a related field with a single field
-        'related_alpha_id': fields.related('alpha_id', type='many2one', obj='test_new_api.alpha'),
-        # a related field with a single field that is also a related field!
-        'related_related_alpha_id': fields.related('related_alpha_id', type='many2one', obj='test_new_api.alpha'),
-    }
-
-
-class TestFunctionCounter(osv.Model):
-    _name = 'test_old_api.function_counter'
-
-    def _compute_cnt(self, cr, uid, ids, fname, arg, context=None):
-        res = {}
-        for cnt in self.browse(cr, uid, ids, context=context):
-            res[cnt.id] = cnt.access and cnt.cnt + 1 or 0
-        return res
-
-    _columns = {
-        'access': fields.datetime('Datetime Field'),
-        'cnt': fields.function(
-            _compute_cnt, type='integer', string='Function Field', store=True),
-    }
-
-
-class TestFunctionNoInfiniteRecursion(osv.Model):
-    _name = 'test_old_api.function_noinfiniterecursion'
-
-    def _compute_f1(self, cr, uid, ids, fname, arg, context=None):
-        res = {}
-        for tf in self.browse(cr, uid, ids, context=context):
-            res[tf.id] = 'create' in tf.f0 and 'create' or 'write'
-        cntobj = self.pool['test_old_api.function_counter']
-        cnt_id = self.pool['ir.model.data'].xmlid_to_res_id(
-            cr, uid, 'test_new_api.c1')
-        cntobj.write(
-            cr, uid, cnt_id, {'access': datetime.datetime.now()},
-            context=context)
-        return res
-
-    _columns = {
-        'f0': fields.char('Char Field'),
-        'f1': fields.function(
-            _compute_f1, type='char', string='Function Field', store=True),
-    }
-
-##############################################################################
-#
-#    NEW API
-#
-##############################################################################
 from openerp import models, fields, api, _
+from openerp.exceptions import AccessError
 
 
 class Category(models.Model):
@@ -117,6 +48,7 @@ class Category(models.Model):
             raise AccessError('Sorry')
         return super(Category, self).read(fields=fields, load=load)
 
+
 class Discussion(models.Model):
     _name = 'test_new_api.discussion'
 
@@ -128,6 +60,11 @@ class Discussion(models.Model):
     participants = fields.Many2many('res.users')
     messages = fields.One2many('test_new_api.message', 'discussion')
     message_concat = fields.Text(string='Message concatenate')
+    important_messages = fields.One2many('test_new_api.message', 'discussion',
+                                         domain=[('important', '=', True)])
+    emails = fields.One2many('test_new_api.emailmessage', 'discussion')
+    important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
+                                       domain=[('important', '=', True)])
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
@@ -148,16 +85,17 @@ class Message(models.Model):
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
-    discussion_name = fields.Char(related='discussion.name')
+    discussion_name = fields.Char(related='discussion.name', string="Discussion Name")
     author_partner = fields.Many2one(
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
+    important = fields.Boolean()
 
     @api.one
     @api.constrains('author', 'discussion')
     def _check_author(self):
         if self.discussion and self.author not in self.discussion.participants:
-            raise ValueError(_("Author must be among the discussion participants."))
+            raise ValidationError(_("Author must be among the discussion participants."))
 
     @api.one
     @api.depends('author.name', 'discussion.name')
@@ -207,6 +145,44 @@ class Message(models.Model):
         return [('author.partner_id', operator, value)]
 
 
+class EmailMessage(models.Model):
+    _name = 'test_new_api.emailmessage'
+    _inherits = {'test_new_api.message': 'message'}
+
+    message = fields.Many2one('test_new_api.message', 'Message',
+                              required=True, ondelete='cascade')
+    email_to = fields.Char('To')
+
+
+class Multi(models.Model):
+    """ Model for testing multiple onchange methods in cascade that modify a
+        one2many field several times.
+    """
+    _name = 'test_new_api.multi'
+
+    name = fields.Char(related='partner.name', readonly=True)
+    partner = fields.Many2one('res.partner')
+    lines = fields.One2many('test_new_api.multi.line', 'multi')
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        for line in self.lines:
+            line.name = self.name
+
+    @api.onchange('partner')
+    def _onchange_partner(self):
+        for line in self.lines:
+            line.partner = self.partner
+
+
+class MultiLine(models.Model):
+    _name = 'test_new_api.multi.line'
+
+    multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
+    name = fields.Char()
+    partner = fields.Many2one('res.partner')
+
+
 class MixedModel(models.Model):
     _name = 'test_new_api.mixed'
 
@@ -216,6 +192,13 @@ class MixedModel(models.Model):
     lang = fields.Selection(string='Language', selection='_get_lang')
     reference = fields.Reference(string='Related Document',
         selection='_reference_models')
+    comment1 = fields.Html(sanitize=False)
+    comment2 = fields.Html(sanitize=True, strip_classes=False)
+    comment3 = fields.Html(sanitize=True, strip_classes=True)
+    comment4 = fields.Html(sanitize=True, strip_style=True)
+
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
+    amount = fields.Monetary()
 
     @api.one
     def _compute_now(self):
@@ -240,3 +223,60 @@ class BoolModel(models.Model):
     bool_true = fields.Boolean('b1', default=True)
     bool_false = fields.Boolean('b2', default=False)
     bool_undefined = fields.Boolean('b3')
+
+
+class Foo(models.Model):
+    _name = 'test_new_api.foo'
+
+    name = fields.Char()
+    value1 = fields.Integer()
+    value2 = fields.Integer()
+
+
+class Bar(models.Model):
+    _name = 'test_new_api.bar'
+
+    name = fields.Char()
+    foo = fields.Many2one('test_new_api.foo', compute='_compute_foo')
+    value1 = fields.Integer(related='foo.value1')
+    value2 = fields.Integer(related='foo.value2')
+
+    @api.depends('name')
+    def _compute_foo(self):
+        for bar in self:
+            bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
+
+
+class Related(models.Model):
+    _name = 'test_new_api.related'
+
+    name = fields.Char()
+    # related fields with a single field
+    related_name = fields.Char(related='name')
+    related_related_name = fields.Char(related='related_name')
+
+
+class ComputeInverse(models.Model):
+    _name = 'test_new_api.compute.inverse'
+
+    counts = {'compute': 0, 'inverse': 0}
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        self.counts['compute'] += 1
+        for record in self:
+            record.bar = record.foo
+
+    def _inverse_bar(self):
+        self.counts['inverse'] += 1
+        for record in self:
+            record.foo = record.bar
+
+
+class CompanyDependent(models.Model):
+    _name = 'test_new_api.company'
+
+    foo = fields.Char(company_dependent=True)

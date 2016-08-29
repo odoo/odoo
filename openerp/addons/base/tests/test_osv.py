@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
-from openerp.osv.query import Query
+
+from odoo.osv.query import Query
 
 
 class QueryTestCase(unittest.TestCase):

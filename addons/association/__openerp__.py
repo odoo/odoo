@@ -5,7 +5,7 @@
 {
     'name': 'Associations Management',
     'version': '0.1',
-    'category': 'Specific Industry Applications',
+    'category': 'Marketing',
     'description': """
 This module is to configure modules related to an association.
 ==============================================================
@@ -14,7 +14,7 @@ It installs the profile for associations to manage events, registrations, member
 membership products (schemes).
     """,
     'depends': ['base_setup', 'membership', 'event'],
-    'data': ['profile_association.xml'],
+    'data': ['views/association_views.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,

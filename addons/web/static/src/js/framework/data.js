@@ -1,15 +1,15 @@
 odoo.define('web.data', function (require) {
 "use strict";
 
-var core = require('web.core');
+var Class = require('web.Class');
+var mixins = require('web.mixins');
 var Model = require('web.Model');
 var session = require('web.session');
+var translation = require('web.translation');
 var pyeval = require('web.pyeval');
 var utils = require('web.utils');
 
-var Class = core.Class;
-var mixins = core.mixins;
-var _t = core._t;
+var _t = translation._t;
 
 /**
  * Serializes the sort criterion array of a dataset into a form which can be
@@ -29,7 +29,7 @@ function serialize_sort(criterion) {
 }
 
 /**
- * Reverse of the serialize_sort function: convert an array of SQL-like sort 
+ * Reverse of the serialize_sort function: convert an array of SQL-like sort
  * descriptors into a list of fields prefixed with '-' if necessary.
  */
 function deserialize_sort(criterion) {
@@ -205,7 +205,7 @@ var Query = Class.extend({
      * Creates a new query with the provided parameter lazy replacing the current
      * query's own.
      *
-     * @param {Boolean} lazy indicates if the read_group should return only the 
+     * @param {Boolean} lazy indicates if the read_group should return only the
      * first level of groupby records, or should return the records grouped by
      * all levels at once (so, it makes only 1 db request).
      * @returns {openerp.web.Query}
@@ -276,11 +276,11 @@ var QueryGroup = Class.extend({
         var group_size = fixed_group[count_key] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
 
-        var value = (grouping_fields.length === 1) 
+        var value = (grouping_fields.length === 1)
                 ? fixed_group[grouping_fields[0]]
                 : _.map(grouping_fields, function (field) { return fixed_group[field]; });
-        var grouped_on = (grouping_fields.length === 1) 
-                ? grouping_fields[0] 
+        var grouped_on = (grouping_fields.length === 1)
+                ? grouping_fields[0]
                 : grouping_fields;
         this.attributes = {
             folded: !!(fixed_group.__fold),
@@ -320,6 +320,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         this.index = null;
         this._sort = [];
         this._model = new Model(model, context);
+        this.orderer = new utils.DropMisordered();
     },
     previous: function () {
         this.index -= 1;
@@ -370,7 +371,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     read_ids: function (ids, fields, options) {
         if (_.isEmpty(ids))
             return $.Deferred().resolve([]);
-            
+
         options = options || {};
         var method = 'read';
         var ids_arg = ids;
@@ -408,10 +409,11 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     read_slice: function (fields, options) {
         var self = this;
         options = options || {};
-        return this._model.query(fields)
+        var query = this._model.query(fields)
                 .limit(options.limit || false)
                 .offset(options.offset || 0)
-                .all().done(function (records) {
+                .all();
+        return this.orderer.add(query).done(function (records) {
             self.ids = _(records).pluck('id');
         });
     },
@@ -523,7 +525,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return this._model.call('name_get', [ids], {context: this.get_context()});
     },
     /**
-     * 
+     *
      * @param {String} name name to perform a search for/on
      * @param {Array} [domain=[]] filters for the objects returned, OpenERP domain
      * @param {String} [operator='ilike'] matching operator to use with the provided name value
@@ -578,7 +580,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return undefined;
     },
     /**
-     * Set the sort criteria on the dataset.  
+     * Set the sort criteria on the dataset.
      *
      * @param {Array} fields_list: list of fields order descriptors, as used by
      * Odoo's ORM (such as 'name desc', 'product_id', 'order_date asc')
@@ -686,7 +688,7 @@ var DataSetSearch = DataSet.extend({
             .limit(options.limit || false);
         q = q.order_by.apply(q, this._sort);
 
-        return q.all().done(function (records) {
+        return this.orderer.add(q.all()).done(function (records) {
             // FIXME: not sure about that one, *could* have discarded count
             q.count().done(function (count) { self._length = count; });
             self.ids = _(records).pluck('id');
@@ -761,19 +763,13 @@ var BufferedDataSet = DataSetStatic.extend({
             _.extend(cached.from_read, options.from_read);
             _.extend(cached.changes, options.changes);
             _.extend(cached.readonly_fields, options.readonly_fields);
-            // discard values from cached.changes that are in cached.from_read
-            _.each(cached.changes, function (v, k) {
-                if (cached.from_read[k] === v) {
-                    delete cached.changes[k];
-                }
-            });
             if (options.to_create !== undefined) cached.to_create = options.to_create;
             if (options.to_delete !== undefined) cached.to_delete = options.to_delete;
         }
         cached.values = _.extend({'id': id}, cached.from_read, cached.changes, cached.readonly_fields);
         return cached;
     },
-    create: function(data, options) {        
+    create: function(data, options) {
         var changes = _.extend({}, this.last_default_get, data);
         var cached = this._update_cache(_.uniqueId(this.virtual_id_prefix), _.extend({'changes': changes, 'to_create': true}, options));
         this.trigger("dataset_changed", data, options);
@@ -820,7 +816,7 @@ var BufferedDataSet = DataSetStatic.extend({
         });
         this.set_ids(_.difference(this.ids, _.pluck(_.filter(this.cache, function (c) {return c.to_delete;}), 'id')));
         this.trigger("dataset_changed", ids, callback, error_callback);
-        return $.async_when({result: true}).done(callback);
+        return utils.async_when({result: true}).done(callback);
     },
     reset_ids: function(ids, options) {
         var self = this;
@@ -833,9 +829,10 @@ var BufferedDataSet = DataSetStatic.extend({
             });
         }
         this.delete_all = false;
-        _.each(_.clone(this.running_reads), function(el) {
-            el.reject();
-        });
+        this.cancel_read();
+    },
+    cancel_read: function () {
+        _.invoke(_.clone(this.running_reads), 'reject');
     },
     read_ids: function (ids, fields, options) {
         // read what is necessary from the server to have ids and the given
@@ -866,7 +863,7 @@ var BufferedDataSet = DataSetStatic.extend({
             // sorting an array where all items are considered equal is a worst-case that
             // will randomize the array with an unstable sort! Therefore we must avoid
             // sorting if there are no sort_fields (i.e. all items are considered equal)
-            // See also: http://ecma262-5.com/ELS5_Section_15.htm#Section_15.4.4.11 
+            // See also: http://ecma262-5.com/ELS5_Section_15.htm#Section_15.4.4.11
             //           http://code.google.com/p/v8/issues/detail?id=90
             if (sort_fields.length) {
                 records.sort(function (a, b) {
@@ -897,11 +894,8 @@ var BufferedDataSet = DataSetStatic.extend({
             });
             var _super = this._super;
             this.mutex.exec(function () {
-                _super.call(self, to_get, fields, options).then(function() {
-                    def.resolve.apply(def, arguments);
-                }, function() {
-                    def.reject.apply(def, arguments);
-                });
+                if (def.state() !== "pending") return;
+                _super.call(self, to_get, fields, options).then(_.bind(def.resolve, def), _.bind(def.reject, def));
                 return def;
             });
             return def.then(function(records) {
@@ -942,11 +936,11 @@ var BufferedDataSet = DataSetStatic.extend({
         this.evict_record(id);
         return this._super(id, signal);
     },
-    alter_ids: function(n_ids) {
+    alter_ids: function(n_ids, options) {
         var dirty = !_.isEqual(this.ids, n_ids);
-        this._super(n_ids);
+        this._super(n_ids, options);
         if (dirty) {
-            this.trigger("dataset_changed", n_ids);
+            this.trigger("dataset_changed", n_ids, options);
         }
     },
 });
@@ -1124,7 +1118,6 @@ function compute_domain (expr, fields) {
     return _.all(stack, _.identity);
 }
 
-
 return {
     Query: Query,
     DataSet: DataSet,
@@ -1135,6 +1128,7 @@ return {
     CompoundContext: CompoundContext,
     CompoundDomain: CompoundDomain,
     compute_domain: compute_domain,
+    noDisplayContent: "<em class=\"text-warning\">" + _t("Unnamed") + "</em>",
 };
 
 });

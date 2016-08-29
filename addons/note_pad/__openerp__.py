@@ -4,7 +4,7 @@
 {
     'name': 'Memos pad',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Productivity',
     'description': """
 This module update memos inside Odoo for using an external pad
 =================================================================
@@ -20,7 +20,7 @@ Use for update your text memo in real time with the following user that you invi
         'note',
     ],
     'data': [
-        'note_pad_view.xml',
+        'views/note_views.xml',
     ],
     'installable': True,
     'application': False,

@@ -1,15 +1,18 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
-from openerp.tools import get_cache_key_counter
+from odoo.tests.common import TransactionCase
+from odoo.tools import get_cache_key_counter
 
-class TestOrmcache(common.TransactionCase):
+
+class TestOrmcache(TransactionCase):
     def test_ormcache(self):
         """ Test the effectiveness of the ormcache() decorator. """
         IMD = self.env['ir.model.data']
         XMLID = 'base.group_no_one'
 
         # retrieve the cache, its key and stat counter
-        cache, key, counter = get_cache_key_counter(IMD.xmlid_lookup, self.cr, self.uid, XMLID)
+        cache, key, counter = get_cache_key_counter(IMD.xmlid_lookup, XMLID)
         hit = counter.hit
         miss = counter.miss
 

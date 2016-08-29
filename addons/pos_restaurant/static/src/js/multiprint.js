@@ -133,9 +133,9 @@ models.Orderline = models.Orderline.extend({
     },
     get_line_diff_hash: function(){
         if (this.get_note()) {
-            return this.get_product().id + '|' + this.get_note();
+            return this.id + '|' + this.get_note();
         } else {
-            return '' + this.get_product().id;
+            return '' + this.id;
         }
     },
 });

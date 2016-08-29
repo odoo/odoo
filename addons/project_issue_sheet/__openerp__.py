@@ -4,7 +4,7 @@
 {
     'name': 'Timesheet on Issues',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Project',
     'description': """
 This module adds the Timesheet support for the Issues/Bugs Management in Project.
 =================================================================================
@@ -17,11 +17,8 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
         'hr_timesheet_sheet',
     ],
     'data': [
-        'project_issue_sheet_view.xml',
+        'views/project_issue_view.xml',
         'security/ir.model.access.csv',
         'security/portal_security.xml',
     ],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
 }

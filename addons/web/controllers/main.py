@@ -1,44 +1,40 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel.messages.pofile
 import base64
 import csv
+import datetime
 import functools
 import glob
+import hashlib
+import imghdr
 import itertools
 import jinja2
+import json
 import logging
 import operator
-import datetime
-import hashlib
 import os
 import re
-import json
 import sys
 import time
+import werkzeug.utils
+import werkzeug.wrappers
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import babel.messages.pofile
-import werkzeug.utils
-import werkzeug.wrappers
-from openerp.api import Environment
 
-try:
-    import xlwt
-except ImportError:
-    xlwt = None
-
-import openerp
-import openerp.modules.registry
-from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
-from openerp.modules import get_resource_path
-from openerp.tools import topological_sort
-from openerp.tools.translate import _
-from openerp.tools import ustr
-from openerp import http
-from openerp.http import request, serialize_exception as _serialize_exception
-from openerp.exceptions import AccessError
+import odoo
+import odoo.modules.registry
+from odoo.api import Environment
+from odoo.modules import get_resource_path
+from odoo.tools import topological_sort
+from odoo.tools.translate import _
+from odoo.tools.misc import str2bool, xlwt
+from odoo import http
+from odoo.http import request, serialize_exception as _serialize_exception, content_disposition
+from odoo.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +43,7 @@ if hasattr(sys, 'frozen'):
     path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
     loader = jinja2.FileSystemLoader(path)
 else:
-    loader = jinja2.PackageLoader('openerp.addons.web', "views")
+    loader = jinja2.PackageLoader('odoo.addons.web', "views")
 
 env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = json.dumps
@@ -56,7 +52,7 @@ env.filters["json"] = json.dumps
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
 
 #----------------------------------------------------------
-# OpenERP Web helpers
+# Odoo Web helpers
 #----------------------------------------------------------
 
 db_list = http.db_list
@@ -162,16 +158,16 @@ def module_installed(environment):
 
 def module_installed_bypass_session(dbname):
     try:
-        registry = openerp.modules.registry.RegistryManager.get(dbname)
+        registry = odoo.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             return module_installed(
-                environment=Environment(cr, openerp.SUPERUSER_ID, {}))
+                environment=Environment(cr, odoo.SUPERUSER_ID, {}))
     except Exception:
         pass
     return {}
 
 def module_boot(db=None):
-    server_wide_modules = openerp.conf.server_wide_modules or ['web']
+    server_wide_modules = odoo.conf.server_wide_modules or ['web']
     serverside = []
     dbside = []
     for i in server_wide_modules:
@@ -244,7 +240,7 @@ def manifest_list(extension, mods=None, db=None, debug=None):
     db: a database name (return all installed modules in that database)
     """
     if debug is not None:
-        _logger.warning("openerp.addons.web.main.manifest_list(): debug parameter is deprecated")
+        _logger.warning("odoo.addons.web.main.manifest_list(): debug parameter is deprecated")
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
     return [wp for _fp, wp in files]
 
@@ -293,12 +289,10 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def load_actions_from_ir_values(key, key2, models, meta):
-    Values = request.session.model('ir.values')
-    actions = Values.get(key, key2, models, meta, request.context)
-
-    return [(id, name, clean_action(action))
-            for id, name, action in actions]
+def load_actions_from_ir_values(action_slot, model, res_id):
+    ir_values = request.session.model('ir.values')
+    actions = ir_values.get_actions(action_slot=action_slot, model=model, res_id=res_id, context=request.context)
+    return [(id, name, clean_action(action)) for id, name, action in actions]
 
 def clean_action(action):
     action.setdefault('flags', {})
@@ -346,7 +340,7 @@ def generate_views(action):
     action['views'] = [(view_id, view_modes[0])]
 
 def fix_view_modes(action):
-    """ For historical reasons, OpenERP has weird dealings in relation to
+    """ For historical reasons, Odoo has weird dealings in relation to
     view_mode and the view_type attribute (on window actions):
 
     * one of the view modes is ``tree``, which stands for both list views
@@ -418,24 +412,13 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
-def content_disposition(filename):
-    return request.registry['ir.http'].content_disposition(filename)
-
-
 def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
     return request.registry['ir.http'].binary_content(
         xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
         download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
-def db_info():
-    version_info = openerp.service.common.exp_version()
-    return {
-        'server_version': version_info.get('server_version'),
-        'server_version_info': version_info.get('server_version_info'),
-    }
-
 #----------------------------------------------------------
-# OpenERP Web web Controllers
+# Odoo Web web Controllers
 #----------------------------------------------------------
 class Home(http.Controller):
 
@@ -453,8 +436,9 @@ class Home(http.Controller):
             return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
         request.uid = request.session.uid
-        menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context)
-        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data, 'db_info': json.dumps(db_info())})
+        context = request.env['ir.http'].webclient_rendering_context()
+
+        return request.render('web.webclient_bootstrap', qcontext=context)
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -469,12 +453,12 @@ class Home(http.Controller):
             return http.redirect_with_hash(redirect)
 
         if not request.uid:
-            request.uid = openerp.SUPERUSER_ID
+            request.uid = odoo.SUPERUSER_ID
 
         values = request.params.copy()
         try:
             values['databases'] = http.db_list()
-        except openerp.exceptions.AccessDenied:
+        except odoo.exceptions.AccessDenied:
             values['databases'] = None
 
         if request.httprequest.method == 'POST':
@@ -486,8 +470,9 @@ class Home(http.Controller):
                     redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
-            values['error'] = "Wrong login/password"
+            values['error'] = _("Wrong login/password")
         return request.render('web.login', values)
+
 
 class WebClient(http.Controller):
 
@@ -501,25 +486,24 @@ class WebClient(http.Controller):
 
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
-        magic_file_finding = [lang.replace("_",'-').lower(), lang.split('_')[0]]
+        magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
         addons_path = http.addons_manifest['web']['addons_path']
-        #load momentjs locale
-        momentjs_locale_file = False
+        # load momentjs locale
         momentjs_locale = ""
         for code in magic_file_finding:
             try:
                 with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
                     momentjs_locale = f.read()
-                #we found a locale matching so we can exit
+                # we found a locale matching so we can exit
                 break
             except IOError:
                 continue
 
-        #return the content of the locale
+        # return the content of the locale
         headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
         return request.make_response(momentjs_locale, headers)
 
-    @http.route('/web/webclient/qweb', type='http', auth="none")
+    @http.route('/web/webclient/qweb', type='http', auth="none", cors="*")
     def qweb(self, mods=None, db=None):
         files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
         last_modified = get_last_modified(files)
@@ -558,46 +542,46 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/translations', type='json', auth="none")
     def translations(self, mods=None, lang=None):
         request.disable_db = False
-        uid = openerp.SUPERUSER_ID
         if mods is None:
-            m = request.registry.get('ir.module.module')
-            mods = [x['name'] for x in m.search_read(request.cr, uid,
-                [('state','=','installed')], ['name'])]
+            mods = [x['name'] for x in request.env['ir.module.module'].sudo().search_read(
+                [('state', '=', 'installed')], ['name'])]
         if lang is None:
             lang = request.context["lang"]
-        res_lang = request.registry.get('res.lang')
-        ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
+        langs = request.env['res.lang'].sudo().search([("code", "=", lang)])
         lang_params = None
-        if ids:
-            lang_params = res_lang.read(request.cr, uid, ids[0],
-                ["name", "direction", "date_format", "time_format", "grouping", "decimal_point", "thousands_sep"])
+        if langs:
+            lang_params = langs.read([
+                "name", "direction", "date_format", "time_format",
+                "grouping", "decimal_point", "thousands_sep"])[0]
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
-        ir_translation = request.registry.get('ir.translation')
         translations_per_module = {}
-        messages = ir_translation.search_read(request.cr, uid, [('module','in',mods),('lang','=',lang),
-                                               ('comments','like','openerp-web'),('value','!=',False),
-                                               ('value','!=','')],
-                                              ['module','src','value','lang'], order='module')
+        messages = request.env['ir.translation'].sudo().search_read([
+            ('module', 'in', mods), ('lang', '=', lang),
+            ('comments', 'like', 'openerp-web'), ('value', '!=', False),
+            ('value', '!=', '')],
+            ['module', 'src', 'value', 'lang'], order='module')
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
-            translations_per_module.setdefault(mod,{'messages':[]})
-            translations_per_module[mod]['messages'].extend({'id': m['src'],
-                                                             'string': m['value']} \
-                                                                for m in msg_group)
+            translations_per_module.setdefault(mod, {'messages': []})
+            translations_per_module[mod]['messages'].extend({
+                'id': m['src'],
+                'string': m['value']}
+                for m in msg_group)
         return {
             'lang_parameters': lang_params,
             'modules': translations_per_module,
-            'multi_lang': len(res_lang.get_installed(request.cr, uid)) > 1,
+            'multi_lang': len(request.env['res.lang'].sudo().get_installed()) > 1,
         }
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
-        return openerp.service.common.exp_version()
+        return odoo.service.common.exp_version()
 
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
+
 
 class Proxy(http.Controller):
 
@@ -620,14 +604,15 @@ class Database(http.Controller):
 
     def _render_template(self, **d):
         d.setdefault('manage',True)
-        d['insecure'] = openerp.tools.config['admin_passwd'] == 'admin'
-        d['list_db'] = openerp.tools.config['list_db']
-        d['langs'] = openerp.service.db.exp_list_lang()
+        d['insecure'] = odoo.tools.config['admin_passwd'] == 'admin'
+        d['list_db'] = odoo.tools.config['list_db']
+        d['langs'] = odoo.service.db.exp_list_lang()
+        d['countries'] = odoo.service.db.exp_list_countries()
         # databases list
         d['databases'] = []
         try:
             d['databases'] = http.db_list()
-        except openerp.exceptions.AccessDenied:
+        except odoo.exceptions.AccessDenied:
             monodb = db_monodb()
             if monodb:
                 d['databases'] = [monodb]
@@ -644,7 +629,9 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
-            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang,  password)
+            # country code could be = "False" which is actually True in python
+            country_code = post.get('country_code') or False
+            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang, password, post.get('login'), country_code)
             request.session.authenticate(name, 'admin', password)
             return http.local_redirect('/web/')
         except Exception, e:
@@ -672,14 +659,14 @@ class Database(http.Controller):
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format = 'zip'):
         try:
-            openerp.service.db.check_super(master_pwd)
+            odoo.service.db.check_super(master_pwd)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
             filename = "%s_%s.%s" % (name, ts, backup_format)
             headers = [
                 ('Content-Type', 'application/octet-stream; charset=binary'),
                 ('Content-Disposition', content_disposition(filename)),
             ]
-            dump_stream = openerp.service.db.dump_db(name, None, backup_format)
+            dump_stream = odoo.service.db.dump_db(name, None, backup_format)
             response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
         except Exception, e:
@@ -691,7 +678,7 @@ class Database(http.Controller):
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
             data = base64.b64encode(backup_file.read())
-            request.session.proxy("db").restore(master_pwd, name, data, copy)
+            request.session.proxy("db").restore(master_pwd, name, data, str2bool(copy))
             return http.local_redirect('/web/database/manager')
         except Exception, e:
             error = "Database restore error: %s" % e
@@ -708,32 +695,17 @@ class Database(http.Controller):
 
 class Session(http.Controller):
 
-    def session_info(self):
-        request.session.ensure_valid()
-        user = request.env.user
-        display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
-        return {
-            "session_id": request.session_id,
-            "uid": request.session.uid,
-            "user_context": request.session.get_context() if request.session.uid else {},
-            "db": request.session.db,
-            "username": request.session.login,
-            "company_id": request.env.user.company_id.id if request.session.uid else None,
-            "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
-            "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
-        }
-
     @http.route('/web/session/get_session_info', type='json', auth="none")
     def get_session_info(self):
+        request.session.check_security()
         request.uid = request.session.uid
         request.disable_db = False
-        return self.session_info()
+        return request.env['ir.http'].session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
         request.session.authenticate(db, login, password)
-
-        return self.session_info()
+        return request.env['ir.http'].session_info()
 
     @http.route('/web/session/change_password', type='json', auth="user")
     def change_password(self, fields):
@@ -761,7 +733,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return module_installed(environment=request.env(user=openerp.SUPERUSER_ID))
+        return module_installed(environment=request.env(user=odoo.SUPERUSER_ID))
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):
@@ -931,15 +903,18 @@ class TreeView(View):
 
     @http.route('/web/treeview/action', type='json', auth="user")
     def action(self, model, id):
-        return load_actions_from_ir_values(
-            'action', 'tree_but_open',[(model, id)],
-            False)
+        return load_actions_from_ir_values('tree_but_open', model, id)
 
 class Binary(http.Controller):
 
     def placeholder(self, image='placeholder.png'):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
+
+    def force_contenttype(self, headers, contenttype='image/png'):
+        dictheaders = dict(headers)
+        dictheaders['Content-Type'] = contenttype
+        return dictheaders.items()
 
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
@@ -998,9 +973,16 @@ class Binary(http.Controller):
                 width = 500
             if height > 500:
                 height = 500
-            content = openerp.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
+            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
+            # resize force png as filetype
+            headers = self.force_contenttype(headers, contenttype='image/png')
 
-        image_base64 = content and base64.b64decode(content) or self.placeholder()
+        if content:
+            image_base64 = base64.b64decode(content)
+        else:
+            image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
+            headers = self.force_contenttype(headers, contenttype='image/png')
+
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
         response.status_code = status
@@ -1064,7 +1046,8 @@ class Binary(http.Controller):
         '/logo.png',
     ], type='http', auth="none", cors="*")
     def company_logo(self, dbname=None, **kw):
-        imgname = 'logo.png'
+        imgname = 'logo'
+        imgext = '.png'
         placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
         uid = None
         if request.session.db:
@@ -1074,14 +1057,14 @@ class Binary(http.Controller):
             dbname = db_monodb()
 
         if not uid:
-            uid = openerp.SUPERUSER_ID
+            uid = odoo.SUPERUSER_ID
 
         if not dbname:
-            response = http.send_file(placeholder(imgname))
+            response = http.send_file(placeholder(imgname + imgext))
         else:
             try:
                 # create an empty registry
-                registry = openerp.modules.registry.Registry(dbname)
+                registry = odoo.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
                     cr.execute("""SELECT c.logo_web, c.write_date
                                     FROM res_users u
@@ -1091,19 +1074,21 @@ class Binary(http.Controller):
                                """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_data = StringIO(str(row[0]).decode('base64'))
-                        response = http.send_file(image_data, filename=imgname, mtime=row[1])
+                        image_base64 = str(row[0]).decode('base64')
+                        image_data = StringIO(image_base64)
+                        imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
+                        response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
                     else:
                         response = http.send_file(placeholder('nologo.png'))
             except Exception:
-                response = http.send_file(placeholder(imgname))
+                response = http.send_file(placeholder(imgname + imgext))
 
         return response
 
 class Action(http.Controller):
 
     @http.route('/web/action/load', type='json', auth="user")
-    def load(self, action_id, do_not_eval=False, additional_context=None):
+    def load(self, action_id, additional_context=None):
         Actions = request.session.model('ir.actions.actions')
         value = False
         try:
@@ -1116,7 +1101,7 @@ class Action(http.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.read([action_id], ['type'], request.context)
+        base_action = Actions.read([action_id], ['type'], context=request.context)
         if base_action:
             ctx = request.context
             action_type = base_action[0]['type']
@@ -1124,7 +1109,7 @@ class Action(http.Controller):
                 ctx.update({'bin_size': True})
             if additional_context:
                 ctx.update(additional_context)
-            action = request.session.model(action_type).read([action_id], False, ctx)
+            action = request.session.model(action_type).read([action_id], False, context=ctx)
             if action:
                 value = clean_action(action[0])
         return value
@@ -1153,8 +1138,8 @@ class Export(http.Controller):
         ]
 
     def fields_get(self, model):
-        Model = request.session.model(model)
-        fields = Model.fields_get(False, request.context)
+        Model = request.env[model]
+        fields = Model.fields_get()
         return fields
 
     @http.route('/web/export/get_fields', type='json', auth="user")
@@ -1173,7 +1158,7 @@ class Export(http.Controller):
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         fields_sequence = sorted(fields.iteritems(),
-            key=lambda field: openerp.tools.ustr(field[1].get('string', '')))
+            key=lambda field: odoo.tools.ustr(field[1].get('string', '')))
 
         records = []
         for field_name, field in fields_sequence:
@@ -1293,7 +1278,7 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def from_data(self, fields, rows):
-        """ Conversion method from OpenERP's export data to whatever the
+        """ Conversion method from Odoo's export data to whatever the
         current export class outputs
 
         :params list fields: a list of fields to export
@@ -1312,7 +1297,7 @@ class ExportFormat(object):
 
         Model = request.session.model(model)
         context = dict(request.context or {}, **params.get('context', {}))
-        ids = ids or Model.search(domain, 0, False, False, context=context)
+        ids = ids or Model.search(domain, offset=0, limit=False, order=False, context=context)
 
         if not request.env[model]._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
@@ -1355,13 +1340,17 @@ class CSVExport(ExportFormat, http.Controller):
         for data in rows:
             row = []
             for d in data:
-                if isinstance(d, basestring):
-                    d = d.replace('\n',' ').replace('\t',' ')
+                if isinstance(d, unicode):
                     try:
                         d = d.encode('utf-8')
                     except UnicodeError:
                         pass
                 if d is False: d = None
+
+                # Spreadsheet apps tend to detect formulas on leading =, + and -
+                if type(d) is str and d.startswith(('=', '-', '+')):
+                    d = "'" + d
+
                 row.append(d)
             writer.writerow(row)
 

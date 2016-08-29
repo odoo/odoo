@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Advanced Events',
-    'category': 'Website',
+    'category': 'Marketing',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
     'website': 'https://www.odoo.com/page/events',
     'version': '1.0',
@@ -20,17 +21,15 @@ Adds support for:
         """,
     'depends': ['website_event'],
     'data': [
-        'data/event_data.xml',
-        'views/website_event.xml',
-        'views/event_backend.xml',
-        'data/event_track_tip_data.xml',
         'security/ir.model.access.csv',
-        'security/event.xml',
+        'security/website_event_track_security.xml',
+        'data/website_event_track_data.xml',
+        'views/website_event_track_templates.xml',
+        'views/website_event_track_views.xml',
+        'views/event_views.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'demo': [
         'data/event_demo.xml',
         'data/website_event_track_demo.xml'
     ],
-    'installable': True,
 }

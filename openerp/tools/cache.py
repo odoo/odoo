@@ -8,6 +8,8 @@ from decorator import decorator
 from inspect import formatargspec, getargspec
 import logging
 
+unsafe_eval = eval
+
 _logger = logging.getLogger(__name__)
 
 
@@ -34,14 +36,14 @@ class ormcache(object):
     signature of the decorated method, and are used to compute a cache key::
 
         @ormcache('model_name', 'mode')
-        def _compute_domain(self, cr, uid, model_name, mode="read"):
+        def _compute_domain(self, model_name, mode="read"):
             ...
 
     For the sake of backward compatibility, the decorator supports the named
     parameter `skiparg`::
 
-        @ormcache(skiparg=3)
-        def _compute_domain(self, cr, uid, model_name, mode="read"):
+        @ormcache(skiparg=1)
+        def _compute_domain(self, model_name, mode="read"):
             ...
     """
     def __init__(self, *args, **kwargs):
@@ -64,7 +66,7 @@ class ormcache(object):
                 code = "lambda %s: (%s,)" % (args, ", ".join(self.args))
             else:
                 code = "lambda %s: ()" % (args,)
-            self.key = eval(code)
+            self.key = unsafe_eval(code)
         else:
             # backward-compatible function that uses self.skiparg
             self.key = lambda *args, **kwargs: args[self.skiparg:]
@@ -117,7 +119,7 @@ class ormcache_context(ormcache):
             code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
         else:
             code = "lambda %s: (%s,)" % (args, keys_expr)
-        self.key = eval(code)
+        self.key = unsafe_eval(code)
 
 
 class ormcache_multi(ormcache):
@@ -141,7 +143,7 @@ class ormcache_multi(ormcache):
         spec = getargspec(self.method)
         args = formatargspec(*spec)[1:-1]
         code_multi = "lambda %s: %s" % (args, self.multi)
-        self.key_multi = eval(code_multi)
+        self.key_multi = unsafe_eval(code_multi)
 
         # self.multi_pos is the position of self.multi in args
         self.multi_pos = spec.args.index(self.multi)

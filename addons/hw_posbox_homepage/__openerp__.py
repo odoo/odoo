@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'PosBox Homepage',
-    'version': '1.0',
-    'category': 'Hardware Drivers',
+    'category': 'Point of Sale',
     'sequence': 6,
     'website': 'https://www.odoo.com/page/point-of-sale',
     'summary': 'A homepage for the PosBox',
@@ -23,5 +21,4 @@ regular openerp interface anymore.
 """,
     'depends': ['hw_proxy'],
     'installable': False,
-    'auto_install': False,
 }

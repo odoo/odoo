@@ -1,32 +1,52 @@
+# #-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
+# Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2015
+# #-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sale
+#
+# Translators:
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-09-07 18:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:170
 #, python-format
 msgid " with ticket %s"
-msgstr ""
+msgstr "cu biletul %s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Aplicați"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Tipul Evenimentului"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -53,7 +73,8 @@ msgstr ""
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Alege un eveniment si va crea automat o inregistrare pentru acest eveniment."
+msgstr ""
+"Alege un eveniment si va crea automat o inregistrare pentru acest eveniment."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
@@ -83,6 +104,11 @@ msgid "Created on"
 msgstr "Creat în"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
@@ -96,14 +122,16 @@ msgstr ""
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Determina daca un produs are nevoie sa creeze automat o inregistrare a evenimentului la confirmarea unei linii a comenzii de vanzare."
+msgstr ""
+"Determina daca un produs are nevoie sa creeze automat o inregistrare a "
+"evenimentului la confirmarea unei linii a comenzii de vanzare."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Afişează nume"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
@@ -183,7 +211,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
@@ -324,9 +352,12 @@ msgstr ""
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Selecteaza tipuri de evenimente astfel incat, atunci cand folosim acest produs in liniile comenzii de vanzare, va filtra doar evenimentele de acest tip."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Selecteaza tipuri de evenimente astfel incat, atunci cand folosim acest "
+"produs in liniile comenzii de vanzare, va filtra doar evenimentele de acest "
+"tip."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

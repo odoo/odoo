@@ -13,10 +13,8 @@ Shows you a list of applications features to install from.
     """,
     'depends': ['base', 'web_kanban'],
     'data': [
-        'security/ir.model.access.csv',
-        'base_setup_views.xml',
-        'res_config_view.xml',
-        'res_partner_view.xml',
+        'views/res_config_views.xml',
+        'views/res_partner_views.xml',
     ],
     'demo': [],
     'installable': True,

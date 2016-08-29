@@ -95,7 +95,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
 
         this.pos = parent;
 
-        this.weighting = false;
+        this.weighing = false;
         this.debug_weight = 0;
         this.use_debug_weight = false;
 

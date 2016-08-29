@@ -76,15 +76,19 @@ The result of applying children views yields the final ``arch``
 Inheritance specs
 -----------------
 
-There are three types of inheritance specs:
+Inheritance specs are comprised of an element locator, to match
+the inherited element in the parent view, and children element that
+will be used to modify the inherited element.
+
+There are three types of element locators for matching a target element:
 
 * An ``xpath`` element with an ``expr`` attribute. ``expr`` is an XPath_
   expression\ [#hasclass]_ applied to the current ``arch``, the first node
   it finds is the match
 * a ``field`` element with a ``name`` attribute, matches the first ``field``
-  with the same ``name``
-* any other element, the first element with the same name and identical
-  attributes (ignoring ``position``) is matched
+  with the same ``name``. All other attributes are ignored during matching
+* any other element: the first element with the same name and identical
+  attributes (ignoring ``position`` and ``version`` attributes) is matched
 
 The inheritance spec may have an optional ``position`` attribute specifying
 how the matched node should be altered:
@@ -92,7 +96,10 @@ how the matched node should be altered:
 ``inside`` (default)
     the content of the inheritance spec is appended to the matched node
 ``replace``
-    the content of the inheritance spec replaces the matched node
+    the content of the inheritance spec replaces the matched node.
+    Any text node containing only `$0` within the contents of the spec will
+    be replaced  by a complete copy of the matched node, effectively wrapping
+    the matched node.
 ``after``
     the content of the inheritance spec is added to the matched node's
     parent, after the matched node
@@ -158,7 +165,8 @@ root can have the following attributes:
     as a string of the form ``yyyy-MM-dd``).
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
-    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    (``font-style: italic``), or any `bootstrap contextual color
+    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
@@ -362,7 +370,7 @@ system. Available semantic components are:
     .. todo:: list of widgets
 
        & options & specific attributes (e.g. widget=statusbar
-       statusbar_visible statusbar_colors clickable)
+       statusbar_visible clickable)
   ``options``
     JSON object specifying configuration option for the field's widget
     (including default widgets)
@@ -501,13 +509,10 @@ The states are shown following the order used in the field (the list in a
 selection field, etc). States that are always visible are specified with the
 attribute ``statusbar_visible``.
 
-``statusbar_colors`` can be used to give a custom color to specific states.
-
 ::
 
     <field name="state" widget="statusbar"
-        statusbar_visible="draft,sent,progress,invoiced,done"
-        statusbar_colors="{'shipping_except':'red','waiting_date':'blue'}"/>
+        statusbar_visible="draft,sent,progress,invoiced,done" />
 
 The Sheet
 '''''''''
@@ -811,7 +816,7 @@ attributes:
 
 ``default_group_by``
   whether the kanban view should be grouped if no grouping is specified via
-  the action or the current research. Should be the name of the field to group
+  the action or the current search. Should be the name of the field to group
   by when no grouping is otherwise specified
 ``default_order``
   cards sorting order used if the user has not already sorted the records (via
@@ -961,7 +966,7 @@ calendar view are:
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
 ``event_open_popup``
-    opens the event in a dialog instead of switching to the form view, enabled
+    opens the event in a dialog instead of switching to the form view, disabled
     by default
 ``quick_add``
     enables quick-event creation on click: only asks the user for a ``name``
@@ -1036,13 +1041,15 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
-``consolidation_label``
+``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used
 ``fold_last_level``
   If a value is set, the last grouping level is folded
 ``round_dnd_dates``
   enables rounding the task's start and end dates to the nearest scale marks
+``drag_resize``
+  resizing of the tasks, default is ``true``
 
 .. ``progress``
     name of a field providing the completion percentage for the record's event,

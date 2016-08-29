@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 
-from openerp.addons.mail.tests.common import TestMail
-from openerp.tools import mute_logger
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools import mute_logger
 
 
 class TestMailTemplate(TestMail):
@@ -52,7 +53,7 @@ class TestMailTemplate(TestMail):
 
         values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.channel', self.group_pigs.id)['value']
         # use _convert_to_cache to return a browse record list from command list or id list for x2many fields
-        values = self.env['mail.compose.message']._convert_to_cache(values)
+        values = composer._convert_to_record(composer._convert_to_cache(values))
         recipients = values['partner_ids']
         attachments = values['attachment_ids']
 

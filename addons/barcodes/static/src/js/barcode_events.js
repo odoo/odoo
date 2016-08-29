@@ -36,7 +36,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         if (match) {
             var barcode = match[1];
 
-            core.bus.trigger('barcode_scanned', barcode);
+            // Send the target in case there are several barcode widgets on the same page (e.g.
+            // registering the lot numbers in a stock picking)
+            core.bus.trigger('barcode_scanned', barcode, this.buffered_key_events[0].target);
 
             // Dispatch a barcode_scanned DOM event to elements that have barcode_events="true" set.
             if (this.buffered_key_events[0].target.getAttribute("barcode_events") === "true")
@@ -126,6 +128,10 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
             return;
         // Don't catch keypresses which could have a UX purpose (like shortcuts)
         if (e.ctrlKey || e.metaKey || e.altKey)
+            return;
+        // Don't catch Return when nothing is buffered. This way users
+        // can still use Return to 'click' on focused buttons or links.
+        if (e.which === 13 && this.buffered_key_events.length === 0)
             return;
         // Don't catch events targeting elements that are editable because we
         // have no way of redispatching 'genuine' key events. Resent events

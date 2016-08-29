@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 import time
-from openerp import api, models
+from odoo import api, models
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class ReportPartnerLedger(models.AbstractModel):
-    _name = 'report.account_extra_reports.report_partnerledger'
+    _name = 'report.account.report_partnerledger'
 
     def _lines(self, data, partner):
         full_account = []
@@ -26,12 +28,16 @@ class ReportPartnerLedger(models.AbstractModel):
         self.env.cr.execute(query, tuple(params))
         res = self.env.cr.dictfetchall()
         sum = 0.0
+        lang_code = self.env.context.get('lang') or 'en_US'
+        lang = self.env['res.lang']
+        lang_id = lang._lang_get(lang_code)
+        date_format = lang_id.date_format
         for r in res:
+            r['date'] = datetime.strptime(r['date'], DEFAULT_SERVER_DATE_FORMAT).strftime(date_format)
             r['displayed_name'] = '-'.join(
-                r['move_name'] not in ['', '/'] and [r['move_name']] or [] +
-                r['ref'] not in ['', '/'] and [r['ref']] or [] +
-                r['name'] not in ['', '/'] and [r['name']] or []
-                )
+                r[field_name] for field_name in ('move_name', 'ref', 'name')
+                if r[field_name] not in (None, '', '/')
+            )
             sum += r['debit'] - r['credit']
             r['progress'] = sum
             full_account.append(r)
@@ -59,8 +65,8 @@ class ReportPartnerLedger(models.AbstractModel):
             result = contemp[0] or 0.0
         return result
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         data['computed'] = {}
 
         obj_partner = self.env['res.partner']
@@ -108,4 +114,4 @@ class ReportPartnerLedger(models.AbstractModel):
             'lines': self._lines,
             'sum_partner': self._sum_partner,
         }
-        return self.env['report'].render('account_extra_reports.report_partnerledger', docargs)
+        return self.env['report'].render('account.report_partnerledger', docargs)

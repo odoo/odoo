@@ -45,8 +45,8 @@ WebsiteBackend.include({
         return this._super().then(function() {
             var leads = self.dashboards_data.leads.leads;
             if (leads && leads.length) {
-                self.lead_fields = Object.keys(self.dashboards_data.leads.leads[0]);
-                self.lead_field = self.lead_fields[0];
+                self.lead_fields = self.dashboards_data.leads.lead_fields;
+                self.lead_field = Object.keys(self.lead_fields)[0];
                 self.compute_percentages();
             }
         });
@@ -55,7 +55,7 @@ WebsiteBackend.include({
     on_field_selection: function(ev) {
         this.lead_field = ev.currentTarget.value;
         this.compute_percentages();
-        this.$('.js_leads_table').replaceWith(QWeb.render("website.LeadsTable", {'widget': this}));
+        this.$('.js_leads_table').replaceWith(QWeb.render("website_crm.LeadsTable", {'widget': this}));
     },
 });
 

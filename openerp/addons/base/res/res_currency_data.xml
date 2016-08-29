@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- Currencies -->
         <record id="USD" model="res.currency">
@@ -121,7 +121,6 @@
             <field name="name">SEK</field>
             <field name="symbol">kr</field>
             <field name="rounding">0.01</field>
-            <field name="position">before</field>
             <field name="active" eval="False"/>
         </record>
 
@@ -212,7 +211,7 @@
 
         <record id="TRY" model="res.currency">
             <field name="name">TRY</field>
-            <field name="symbol">TL</field>
+            <field name="symbol">₺</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>
@@ -518,13 +517,6 @@
             <field name="active" eval="False"/>
         </record>
 
-        <!-- East Timor -->
-        <record id="TPE" model="res.currency">
-            <field name="name">TPE</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-        </record>
-
         <record id="ECS" model="res.currency">
             <field name="name">ECS</field>
             <field name="symbol">S/.</field>
@@ -598,12 +590,6 @@
         <record id="GNF" model="res.currency">
             <field name="name">GNF</field>
             <field name="symbol">FG</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-        </record>
-
-        <record id="GWP" model="res.currency">
-            <field name="name">GWP</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>
@@ -950,13 +936,6 @@
             <field name="active" eval="False"/>
         </record>
 
-        <record id="TRL" model="res.currency">
-            <field name="name">TRL</field>
-            <field name="symbol">TL</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-        </record>
-
         <record id="TND" model="res.currency">
             <field name="name">TND</field>
             <field name="symbol">DT</field>
@@ -992,8 +971,9 @@
             <field name="active" eval="False"/>
         </record>
 
-        <record id="TJR" model="res.currency">
-            <field name="name">TJR</field>
+        <record id="TJS" model="res.currency">
+            <field name="name">TJS</field>
+            <field name="symbol">TJS</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>
@@ -1202,12 +1182,6 @@
             <field name="active" eval="False"/>
         </record>
 
-        <record id="SIT" model="res.currency">
-            <field name="name">SIT</field>
-            <field name="rounding">0.01</field>
-            <field name="active" eval="False"/>
-        </record>
-
         <record id="YUM" model="res.currency">
             <field name="name">YUM</field>
             <field name="symbol">дин.</field>
@@ -1223,4 +1197,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

@@ -40,7 +40,7 @@ Running the server
 
     .. note:: multiprocessing mode is only available on Unix-based systems
 
-    A number of options allow limiting and recyling workers:
+    A number of options allow limiting and recycling workers:
 
     .. option:: --limit-request <limit>
 
@@ -84,9 +84,9 @@ Running the server
 .. option:: --max-cron-threads <count>
 
     number of workers dedicated to cron jobs. Defaults to 2. The workers are
-    threads in multithreading mode and processes in multiprocessing mode.
+    threads in multi-threading mode and processes in multi-processing mode.
 
-    For multiprocessing mode, this is in addition to the HTTP worker
+    For multi-processing mode, this is in addition to the HTTP worker
     processes.
 
 .. option:: -c <config>, --config <config>
@@ -96,7 +96,7 @@ Running the server
 .. option:: -s, --save
 
     saves the server configuration to the current configuration file
-    (:file:`{$HOME}/.openerp_serverrc` by default, overridable using
+    (:file:`{$HOME}/.openerp_serverrc` by default, and can be overridden using
     :option:`-c`)
 
 .. option:: --proxy-mode
@@ -111,11 +111,21 @@ Running the server
 
     runs tests after installing modules
 
-.. option:: --debug
+.. option:: --dev <feature,feature,...,feature>
 
-    when an unexpected error is raised (not a warning or an access error),
-    automatically starts :mod:`python:pdb` before logging and returning the
-    error
+    * ``all``: all the features below are activated
+
+    * ``xml``: read template qweb from xml file directly instead of database.
+      Once a template has been modified in database, it will be not be read from
+      the xml file until the next update/init.
+
+    * ``reload``: restart server when python file are updated (may not be detected
+      depending on the text editor used)
+
+    * ``qweb``: break in the evaluation of qweb template when a node contains ``t-debug='debugger'``
+
+    * ``(i)p(u)db``: start the chosen python debugger in the code when an
+      unexpected error is raised before logging and returning the error.
 
 .. _reference/cmdline/server/database:
 
@@ -187,7 +197,7 @@ logging
 By default, Odoo displays all logging of level_ ``info`` except for workflow
 logging (``warning`` only), and log output is sent to ``stdout``. Various
 options are available to redirect logging to other destinations and to
-customize the amout of logging output
+customize the amount of logging output
 
 .. option:: --logfile <file>
 
@@ -328,7 +338,7 @@ Some conversions don't match the pattern:
   :option:`--log-handler` and :option:`--log-db`) just add content to
   ``log_handler``, use that directly in the configuration file
 * :option:`--smtp` is stored as ``smtp_server``
-* :option:`--database` is stored as ``dbname``
+* :option:`--database` is stored as ``db_name``
 * :option:`--debug` is stored as ``debug_mode`` (a boolean)
 * :option:`--i18n-import` and :option:`--i18n-export` aren't available at all
   from configuration files

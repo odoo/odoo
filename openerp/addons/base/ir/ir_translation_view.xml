@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- Translations -->
         <record id="view_translation_search" model="ir.ui.view">
             <field name="model">ir.translation</field>
@@ -11,10 +10,11 @@
                     <filter name="openerp-web"
                         string="Web-only translations"
                         domain="[('comments', 'like', 'openerp-web')]"/>
-                    <field name="name" operator="="/>
                     <field name="lang"/>
                     <field name="source"/>
                     <field name="value"/>
+                    <field name="name" filter_domain="('|', ('name', '=', self), ('name', 'ilike', self + ','))" string="Model"/>
+                    <field name="res_id" filter_domain="('&amp;', ('name', '=', 'ir.ui.view,arch_db'), ('res_id', '=', self))" string="View ID"/>
                 </search>
             </field>
         </record>
@@ -86,5 +86,4 @@
 
         <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation_app" />
 
-    </data>
-</openerp>
+</odoo>

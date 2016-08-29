@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models
-from openerp.tools import mute_logger
-from openerp.tests import common
-from openerp.exceptions import AccessError
+from odoo import models
+from odoo.tools import mute_logger
+from odoo.tests import common
+from odoo.exceptions import AccessError
 
 
 class TestAPI(common.TransactionCase):
@@ -84,7 +86,7 @@ class TestAPI(common.TransactionCase):
         ids = map(int, partners)
 
         # modify those partners, and check that partners has not changed
-        self.registry('res.partner').write(self.cr, self.uid, ids, {'active': False})
+        partners.write({'active': False})
         self.assertEqual(ids, map(int, partners))
 
         # redo the search, and check that the result is now empty
@@ -94,7 +96,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.models')
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
-        user = self.registry('res.users').browse(self.cr, self.uid, self.uid)
+        user = self.env.user
         self.assertIsRecord(user, 'res.users')
         self.assertIsRecord(user.partner_id, 'res.partner')
         self.assertIsRecordset(user.groups_id, 'res.groups')
@@ -324,29 +326,82 @@ class TestAPI(common.TransactionCase):
         self.env.check_cache()
 
     @mute_logger('openerp.models')
-    def test_60_cache_prefetching(self):
+    def test_60_prefetch(self):
         """ Check the record cache prefetching """
-        self.env.invalidate_all()
+        partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
+        self.assertTrue(len(partners) > 1)
 
-        # all the records of an instance already have an entry in cache
-        partners = self.env['res.partner'].search([])
-        partner_ids = self.env.prefetch['res.partner']
-        self.assertEqual(set(partners.ids), set(partner_ids))
-
-        # countries have not been fetched yet; their cache must be empty
-        countries = self.env['res.country'].browse()
-        self.assertFalse(self.env.prefetch['res.country'])
+        # all the records in partners are ready for prefetching
+        self.assertItemsEqual(partners.ids, partners._prefetch['res.partner'])
 
         # reading ONE partner should fetch them ALL
-        countries |= partners[0].country_id
-        country_cache = self.env.cache[partners._fields['country_id']]
-        self.assertLessEqual(set(partners._ids), set(country_cache))
+        partner = next(p for p in partners)
+        partner.country_id
+        country_id_cache = self.env.cache[type(partners).country_id]
+        self.assertItemsEqual(partners.ids, country_id_cache)
 
-        # read all partners, and check that the cache already contained them
-        country_ids = list(self.env.prefetch['res.country'])
-        for p in partners:
-            countries |= p.country_id
-        self.assertLessEqual(set(countries.ids), set(country_ids))
+        # partners' countries are ready for prefetching
+        country_ids = set(cid for cids in country_id_cache.itervalues() for cid in cids)
+        self.assertTrue(len(country_ids) > 1)
+        self.assertItemsEqual(country_ids, partners._prefetch['res.country'])
+
+        # reading ONE partner country should fetch ALL partners' countries
+        country = next(p.country_id for p in partners if p.country_id)
+        country.name
+        name_cache = self.env.cache[type(country).name]
+        self.assertItemsEqual(country_ids, name_cache)
+
+    @mute_logger('openerp.models')
+    def test_60_prefetch_object(self):
+        """ Check the prefetching model. """
+        partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
+        self.assertTrue(partners)
+
+        def same_prefetch(a, b):
+            self.assertIs(a._prefetch, b._prefetch)
+        def diff_prefetch(a, b):
+            self.assertIsNot(a._prefetch, b._prefetch)
+
+        # the recordset operations below should create new prefetch objects
+        diff_prefetch(partners, partners.browse())
+        diff_prefetch(partners, partners.browse(partners.ids))
+        diff_prefetch(partners, partners[0])
+        diff_prefetch(partners, partners[:10])
+
+        # the recordset operations below should pass the prefetch object
+        same_prefetch(partners, partners.sudo(self.env.ref('base.user_demo')))
+        same_prefetch(partners, partners.with_context(active_test=False))
+        same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch))
+
+        # iterating and reading relational fields should pass the prefetch object
+        self.assertEqual(type(partners).country_id.type, 'many2one')
+        self.assertEqual(type(partners).bank_ids.type, 'one2many')
+        self.assertEqual(type(partners).category_id.type, 'many2many')
+
+        vals0 = {
+            'name': 'Empty relational fields',
+            'country_id': False,
+            'bank_ids': [],
+            'category_id': [],
+        }
+        vals1 = {
+            'name': 'Non-empty relational fields',
+            'country_id': self.ref('base.be'),
+            'bank_ids': [(0, 0, {'acc_number': 'FOO42'})],
+            'category_id': [(4, self.ref('base.res_partner_category_0'))],
+        }
+        partners = partners.create(vals0) + partners.create(vals1)
+        for partner in partners:
+            same_prefetch(partners, partner)
+            same_prefetch(partners, partner.country_id)
+            same_prefetch(partners, partner.bank_ids)
+            same_prefetch(partners, partner.category_id)
+
+        # same with empty recordsets
+        empty = partners.browse()
+        same_prefetch(empty, empty.country_id)
+        same_prefetch(empty, empty.bank_ids)
+        same_prefetch(empty, empty.category_id)
 
     @mute_logger('openerp.models')
     def test_70_one(self):
@@ -462,3 +517,24 @@ class TestAPI(common.TransactionCase):
             ps.mapped('parent_id.name'),
             [p.name for p in parents]
         )
+
+        # map an empty sequence of fields
+        self.assertEqual(ps.mapped(''), ps)
+
+    @mute_logger('openerp.models')
+    def test_80_sorted(self):
+        """ Check sorted on recordsets. """
+        ps = self.env['res.partner'].search([])
+
+        # sort by model order
+        qs = ps[:len(ps) / 2] + ps[len(ps) / 2:]
+        self.assertEqual(qs.sorted().ids, ps.ids)
+
+        # sort by name, with a function or a field name
+        by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name)]
+        self.assertEqual(ps.sorted(lambda p: p.name).ids, by_name_ids)
+        self.assertEqual(ps.sorted('name').ids, by_name_ids)
+
+        # sort by inverse name, with a field name
+        by_name_ids.reverse()
+        self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)

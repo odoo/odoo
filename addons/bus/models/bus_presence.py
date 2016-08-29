@@ -2,11 +2,10 @@
 import datetime
 import time
 
-from openerp import api, fields, models
-from openerp import tools
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-
-from openerp.addons.bus.models.bus import TIMEOUT
+from odoo import api, fields, models
+from odoo import tools
+from odoo.addons.bus.models.bus import TIMEOUT
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 DISCONNECTION_TIMER = TIMEOUT + 5
 AWAY_TIMER = 1800  # 30 minutes

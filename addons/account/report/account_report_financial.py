@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from openerp import api, models
+from odoo import api, models
 
 
 class ReportFinancial(models.AbstractModel):
@@ -112,6 +112,7 @@ class ReportFinancial(models.AbstractModel):
                 continue
 
             if res[report.id].get('account'):
+                sub_lines = []
                 for account_id, value in res[report.id]['account'].items():
                     #if there are accounts to display, we add them to the lines with a level equals to their level in
                     #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
@@ -137,11 +138,12 @@ class ReportFinancial(models.AbstractModel):
                         if not account.company_id.currency_id.is_zero(vals['balance_cmp']):
                             flag = True
                     if flag:
-                        lines.append(vals)
+                        sub_lines.append(vals)
+                lines += sorted(sub_lines, key=lambda sub_line: sub_line['name'])
         return lines
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_id'))
         report_lines = self.get_account_lines(data.get('form'))

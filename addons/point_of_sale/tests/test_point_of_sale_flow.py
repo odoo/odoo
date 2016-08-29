@@ -188,6 +188,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'date': time.strftime('%Y-%m-%d'),
             'journal_id': journal.id,
             'company_id': self.company_id,
+            'name': 'pos session test',
         })
         # I create bank statement line
         account_statement_line = self.AccountBankStatementLine.create({
@@ -209,8 +210,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'debit': 0.0,
         }]
 
-        self.AccountBankStatementLine._model.process_reconciliations(
-            self.env.cr, self.env.uid, [account_statement_line.id], [{'new_aml_dicts': new_aml_dicts}])
+        account_statement_line.process_reconciliations([{'new_aml_dicts': new_aml_dicts}])
 
         # I confirm the bank statement using Confirm button
 

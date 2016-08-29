@@ -15,14 +15,17 @@ condition/math builtins.
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 
-from opcode import HAVE_ARGUMENT, opmap, opname
+from opcode import HAVE_ARGUMENT, opmap
 from psycopg2 import OperationalError
 from types import CodeType
 import logging
+import werkzeug
 
 from .misc import ustr
 
 import openerp
+
+unsafe_eval = eval
 
 __all__ = ['test_expr', 'safe_eval', 'const_eval']
 
@@ -49,7 +52,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
     'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
     'INPLACE_XOR','INPLACE_OR'
-    ] if x in opmap))
+] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
@@ -62,7 +65,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'LOAD_GLOBAL', # Only allows access to restricted globals
-    ] if x in opmap))
+] if x in opmap))
 
 _logger = logging.getLogger(__name__)
 
@@ -180,7 +183,7 @@ def const_eval(expr):
     ValueError: opcode BINARY_ADD not allowed
     """
     c = test_expr(expr, _CONST_OPCODES)
-    return eval(c)
+    return unsafe_eval(c)
 
 def expr_eval(expr):
     """expr_eval(expression) -> value
@@ -201,7 +204,7 @@ def expr_eval(expr):
     ValueError: opcode LOAD_NAME not allowed
     """
     c = test_expr(expr, _EXPR_OPCODES)
-    return eval(c)
+    return unsafe_eval(c)
 
 def _import(name, globals=None, locals=None, fromlist=None, level=-1):
     if globals is None:
@@ -276,7 +279,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     if not nocopy:
         # isinstance() does not work below, we want *exactly* the dict class
         if (globals_dict is not None and type(globals_dict) is not dict) \
-            or (locals_dict is not None and type(locals_dict) is not dict):
+                or (locals_dict is not None and type(locals_dict) is not dict):
             _logger.warning(
                 "Looks like you are trying to pass a dynamic environment, "
                 "you should probably pass nocopy=True to safe_eval().")
@@ -295,7 +298,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         locals_dict.update(_BUILTINS)
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
-        return eval(c, globals_dict, locals_dict)
+        return unsafe_eval(c, globals_dict, locals_dict)
     except openerp.exceptions.except_orm:
         raise
     except openerp.exceptions.Warning:
@@ -306,6 +309,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise
     except openerp.exceptions.AccessError:
         raise
+    except werkzeug.exceptions.HTTPException:
+        raise
+    except openerp.http.AuthenticationError:
+        raise
     except OperationalError:
         # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
         # of serialized transactions work its magic
@@ -315,4 +322,21 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except Exception, e:
         import sys
         exc_info = sys.exc_info()
-        raise ValueError, '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
+        raise ValueError, '%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr), exc_info[2]
+def test_python_expr(expr, mode="eval"):
+    try:
+        test_expr(expr, _SAFE_OPCODES, mode=mode)
+    except (SyntaxError, TypeError, ValueError) as err:
+        if len(err.args) >= 2 and len(err.args[1]) >= 4:
+            error = {
+                'message': err.args[0],
+                'filename': err.args[1][0],
+                'lineno': err.args[1][1],
+                'offset': err.args[1][2],
+                'error_line': err.args[1][3],
+            }
+            msg = "%s : %s at line %d\n%s" % (type(err).__name__, error['message'], error['lineno'], error['error_line'])
+        else:
+            msg = ustr(err)
+        return msg
+    return False

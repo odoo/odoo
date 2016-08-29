@@ -3,7 +3,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import api, fields, models, tools
+from odoo import api, fields, models, tools
 
 
 _INTERVALS = {
@@ -30,7 +30,7 @@ class EventMailScheduler(models.Model):
         ('weeks', 'Week(s)'), ('months', 'Month(s)')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
-        ('after_sub', 'After each subscription'),
+        ('after_sub', 'After each registration'),
         ('before_event', 'Before the event'),
         ('after_event', 'After the event')],
         string='When to Run ', default="before_event", required=True)

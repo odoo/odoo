@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="WebClient.DebugManager.Global">
+    <t t-jquery="li > a[data-action='start_tour']" t-operation="after">
+        <li t-if="manager._is_admin and manager.consume_tours_enabled">
+            <a href="#" data-action="consume_tours">Consume Tours</a>
+        </li>
+    </t>
+</t>
+
+</templates>

@@ -5,7 +5,7 @@
 {
     'name': 'Dates on Sales Order',
     'version': '1.1',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'description': """
 Add additional date information to the sales order.
 ===================================================
@@ -18,9 +18,5 @@ You can add the following additional dates to a sales order:
 """,
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale_stock'],
-    'data': ['sale_order_dates_view.xml'],
-    'demo': [],
-    'test': ['test/requested_date.yml'],
-    'installable': True,
-    'auto_install': False,
+    'data': ['views/sale_order_views.xml'],
 }

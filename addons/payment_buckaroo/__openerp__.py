@@ -2,15 +2,15 @@
 
 {
     'name': 'Buckaroo Payment Acquirer',
-    'category': 'Hidden',
+    'category': 'Accounting',
     'summary': 'Payment Acquirer: Buckaroo Implementation',
     'version': '1.0',
     'description': """Buckaroo Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/buckaroo.xml',
-        'views/payment_acquirer.xml',
-        'data/buckaroo.xml',
+        'views/payment_views.xml',
+        'views/payment_buckaroo_templates.xml',
+        'data/payment_acquirer_data.xml',
     ],
     'installable': True,
 }

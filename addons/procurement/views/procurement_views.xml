@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+        Procurement
+        -->
+
+
+        <record id="procurement_tree_view" model="ir.ui.view">
+            <field name="name">procurement.order.tree</field>
+            <field name="model">procurement.order</field>
+            <field name="arch" type="xml">
+                <tree string="Procurement Lines" decoration-danger="date_planned&lt;current_date and state == 'exception'" decoration-success="state=='confirmed'" decoration-muted="state in ['done','cancel']" decoration-info="state == 'ready'">
+                    <field name="date_planned" widget="date"/>
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom" string="Unit of Measure"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="procurement_form_view" model="ir.ui.view">
+            <field name="name">procurement.order.form</field>
+            <field name="model">procurement.order</field>
+            <field name="arch" type="xml">
+                <form string="Procurement">
+                    <header>
+                        <button name="run" states="confirmed,exception" string="Run Procurement" class="oe_highlight" type="object"/>
+                        <button name="check" states="running" string="Check Procurement" class="oe_highlight" type="object"/>
+                        <button name="cancel" states="exception,confirmed,running" string="Cancel Procurement" type="object"/>
+                        <button name="reset_to_confirmed" states="cancel" string="Reconfirm Procurement" type="object"/>
+                        <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,running,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="do_view_procurements" class="oe_stat_button" icon="fa-bars" string="Group's Procurements" type="object"/>
+                        </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <label for="product_qty"/>
+                            <div>
+                                <div>
+                                    <field name="product_qty" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                </div>
+                            </div>
+                        </group>
+                        <group name="scheduling" string="Scheduling">
+                            <field name="date_planned"/>
+                            <field name="priority"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="name" placeholder="External note..."/>
+                        </page>
+                        <page string="Extra Information">
+                            <group>
+                                <group>
+                                    <field name="origin" placeholder="e.g. SO005"/>
+                                    <field name="group_id" groups="base.group_no_one"/>
+                                </group>
+                                <group>
+                                    <field name="rule_id"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="do_view_procurements" model="ir.actions.act_window">
+            <field name="name">Group's Procurements</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('group_id','=',active_id)]</field>            
+        </record>
+        
+        <record id="procurement_group_form_view" model="ir.ui.view">
+            <field name="name">procurement.group.form</field>
+            <field name="model">procurement.group</field>
+            <field name="arch" type="xml">
+                <form string="Procurement group">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(do_view_procurements)d" string="Procurements" type="action"/>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="move_type"/>
+                        </group>                        
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_procurement_filter" model="ir.ui.view">
+            <field name="name">procurement.order.select</field>
+            <field name="model">procurement.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Procurement">
+                    <field name="origin" string="Procurement"/>
+                    <field name="date_planned"/>
+                    <filter string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
+                    <separator/>
+                    <filter string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', '=', 'confirmed')]" help="Procurement started late" />
+                    <field name="product_id" />
+                    <field name="state" />
+                    <group expand="0" string="Group By">
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="procurement_order_action_exceptions" model="ir.actions.act_window">
+            <field name="name">Procurement Exceptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_exceptions':1}</field>
+            <field name="search_view_id" ref="view_procurement_filter"/>
+            <field name="help" type="html">
+              <p>
+                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).
+              </p><p>
+                Most common exceptions are products to purchase without
+                having a vendor defined on the product, and products to
+                manufacture without having a bill of materials.
+              </p>
+            </field>
+        </record>
+
+        <record id="procurement_action" model="ir.actions.act_window">
+            <field name="name">Procurement Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_procurement_filter"/>
+            <field name="context">{'search_default_current':1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                 Click to create a procurement order.
+              </p>
+              <p>
+                A <b>procurement order</b> is used to record a need for a specific
+                product at a specific location. Procurement orders are usually
+                created automatically from <i>sales orders, pull logistic rules or
+                minimum stock rules.</i>
+              </p>
+              <p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fulfill the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
+        </record>
+
+        <record id="procurement_order_action_product_template_stat" model="ir.actions.act_window">
+            <field name="name">Procurement Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_procurement_filter"/>
+            <field name="context">{'search_default_current':1}</field>
+            <field name="domain">[('product_id.product_tmpl_id.id', '=', active_id)]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                 Click to create a procurement order.  
+              </p>
+              <p>
+                A <b>procurement order</b> is used to record a need for a specific
+                product at a specific location. Procurement orders are usually
+                created automatically from <i>sales orders, pull logistic rules or
+                minimum stock rules.</i>
+              </p>
+              <p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fulfill the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
+        </record>
+
+        <record id="procurement_order_action_product_product_stat" model="ir.actions.act_window">
+            <field name="name">Procurement Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_procurement_filter"/>
+            <field name="context">{'search_default_current':1, 'default_product_id': active_id}</field>
+            <field name="domain">[('product_id.id', '=', active_id)]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                 Click to create a procurement order.  
+              </p>
+              <p>
+                A <b>procurement order</b> is used to record a need for a specific
+                product at a specific location. Procurement orders are usually
+                created automatically from <i>sales orders, pull logistic rules or
+                minimum stock rules.</i>
+              </p>
+              <p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fulfill the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
+        </record>
+
+        <record id="procurement_action5" model="ir.actions.act_window">
+            <field name="name">Procurement Exceptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','exception')]</field>
+        </record>
+
+        <!-- Procurement Rules -->
+
+        <record id="view_procurement_rule_filter" model="ir.ui.view">
+            <field name="name">procurement.rule.select</field>
+            <field name="model">procurement.rule</field>
+            <field name="arch" type="xml">
+                <search string="Search Procurement">
+                    <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_procurement_rule_tree">
+            <field name="name">procurement.rule.tree</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Procurement Rules">
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                    <field name="action"/>
+                    <field name='company_id' groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_procurement_rule_form">
+            <field name="name">procurement.rule.form</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Procurement Rule">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Buy"/></h1>
+                    </div>
+                    <group name="general">
+                        <group>
+                            <field name="action"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
+                        <field name="group_propagation_option"/>
+                        <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="procurement_order_server_action" model="ir.actions.server">
+            <field name="name">Run Procurements</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+if env.context.get('active_model') == 'procurement.order' and env.context.get('active_ids'):
+    model.browse(context['active_ids']).run()</field>
+        </record>
+
+        <record id="run_procurement_order_action" model="ir.values">
+            <field name="model_id" ref="procurement.model_procurement_order" />
+            <field name="name">Run Procurements</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('procurement_order_server_action'))" />
+        </record>
+
+    </data>
+</odoo>

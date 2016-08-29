@@ -4,7 +4,7 @@
     'version': '1.0',
     'sequence': 145,
     'summary': 'Share and Publish Videos, Presentations and Documents',
-    'category': 'website',
+    'category': 'Website',
     'description': """
 Share and Publish Videos, Presentations and Documents'
 ======================================================

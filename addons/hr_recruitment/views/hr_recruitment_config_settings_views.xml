@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_hr_recruitment_configuration" model="ir.ui.view">
             <field name="name">Configure Recruitment</field>
@@ -11,7 +11,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group string="Recruitment">
-                        <field name="module_document" widget="radio"/>
+                        <field name="module_hr_recruitment_survey" widget="radio"/>
                     </group>
                 </form>
             </field>
@@ -24,8 +24,8 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_hr_recruitment_global_settings" name="Settings" 
+        <menuitem id="menu_hr_recruitment_global_settings" name="Settings"
             parent="menu_hr_recruitment_configuration" sequence="0" action="action_hr_recruitment_configuration"
             groups="base.group_system"/>
     </data>
-</openerp>
+</odoo>

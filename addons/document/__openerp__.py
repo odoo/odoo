@@ -3,7 +3,7 @@
 {
     'name': 'Attachments List and Document Indexation',
     'version': '2.1',
-    'category': 'Knowledge Management',
+    'category': 'Document Management',
     'description': """
 Attachments list and document indexation
 ========================================
@@ -12,8 +12,7 @@ Attachments list and document indexation
 """,
     'depends': ['web'],
     'data': [
-        'views/document.xml',
+        'views/document_templates.xml',
     ],
     'installable': True,
-    'auto_install': False,
 }

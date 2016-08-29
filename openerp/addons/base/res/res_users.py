@@ -146,10 +146,11 @@ class Groups(models.Model):
         if 'name' in vals:
             if vals['name'].startswith('-'):
                 raise UserError(_('The name of the group can not start with "-"'))
-        res = super(Groups, self).write(vals)
+        # invalidate caches before updating groups, since the recomputation of
+        # field 'share' depends on method has_group()
         self.env['ir.model.access'].call_cache_clearing_methods()
         self.env['res.users'].has_group.clear_cache(self.env['res.users'])
-        return res
+        return super(Groups, self).write(vals)
 
 
 class ResUsersLog(models.Model):
@@ -174,7 +175,7 @@ class Users(models.Model):
     __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
 
     # User can write on a few of his own fields (but not his groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
+    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
 
@@ -202,16 +203,11 @@ class Users(models.Model):
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest connection')
-    share = fields.Boolean(compute='_compute_share', string='Share User', store=True,
+    share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
-    
-    @api.v7
-    def _get_company(self, cr, uid, context=None, uid2=False):
-        user = self.browse(cr, uid, uid2 or uid, context=context)
-        return Users._get_company(user).id
 
-    @api.v8
+    @api.model
     def _get_company(self):
         return self.env.user.company_id
 
@@ -248,7 +244,7 @@ class Users(models.Model):
                 # will face unexpected 'Access Denied' exceptions.
                 raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
             else:
-                self.password = self.new_password
+                user.password = user.new_password
 
     @api.depends('groups_id')
     def _compute_share(self):
@@ -280,12 +276,7 @@ class Users(models.Model):
         if any(user.company_ids and user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
 
-    @api.v7
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = Users.read(self.browse(cr, uid, ids, context), fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
-    @api.v8
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
             for key in fields:
@@ -362,14 +353,19 @@ class Users(models.Model):
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
             self.env['ir.values'].get_defaults_dict.clear_cache(self.env['ir.values'])
+
         # clear caches linked to the users
-        self.env['ir.model.access'].call_cache_clearing_methods()
-        self.env['ir.rule'].clear_caches()
-        db = self._cr.dbname
-        for id in self.ids:
-            self.__uid_cache[db].pop(id, None)
-        self.context_get.clear_cache(self)
-        self.has_group.clear_cache(self)
+        if 'groups_id' in values:
+            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.rule'].clear_caches()
+            self.has_group.clear_cache(self)
+        if any(key.startswith('context_') or key in ('lang', 'tz') for key in values):
+            self.context_get.clear_cache(self)
+        if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
+            db = self._cr.dbname
+            for id in self.ids:
+                self.__uid_cache[db].pop(id, None)
+
         return res
 
     @api.multi
@@ -510,8 +506,8 @@ class Users(models.Model):
         """
         self.check(self._cr.dbname, self._uid, old_passwd)
         if new_passwd:
-            # do not use self.env.user here, since it has uid=SUPERUSER_ID
-            return self.browse(self._uid).write({'password': new_passwd})
+            # use self.env.user here, because it has uid=SUPERUSER_ID
+            return self.env.user.write({'password': new_passwd})
         raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
 
     @api.multi
@@ -529,11 +525,7 @@ class Users(models.Model):
             'target': 'new',
         }
 
-    @api.v7
-    def has_group(self, cr, uid, group_ext_id):
-        return self._has_group(cr, uid, group_ext_id)
-
-    @api.v8
+    @api.model
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
@@ -563,7 +555,12 @@ class Users(models.Model):
     @api.multi
     def _is_admin(self):
         self.ensure_one()
-        return self.id == SUPERUSER_ID or self.has_group('base.group_erp_manager')
+        return self._is_superuser() or self.has_group('base.group_erp_manager')
+
+    @api.multi
+    def _is_superuser(self):
+        self.ensure_one()
+        return self.id == SUPERUSER_ID
 
     @api.model
     def get_company_currency_id(self):
@@ -608,7 +605,7 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': zip(repeat(4), group.users.ids)}
+                vals = {'users': zip(repeat(4), group.with_context(active_test=False).users.ids)}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
         return res
 
@@ -618,13 +615,12 @@ class UsersImplied(models.Model):
 
     @api.model
     def create(self, values):
-        groups = values.pop('groups_id', None)
-        user = super(UsersImplied, self).create(values)
-        if groups:
-            # delegate addition of groups to add implied groups
-            user.write({'groups_id': groups})
-            self.env['ir.ui.view'].clear_caches()
-        return user
+        if 'groups_id' in values:
+            # complete 'groups_id' with implied groups
+            user = self.new(values)
+            gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+            values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
+        return super(UsersImplied, self).create(values)
 
     @api.multi
     def write(self, values):
@@ -635,7 +631,6 @@ class UsersImplied(models.Model):
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(UsersImplied, self).write(vals)
-            self.env['ir.ui.view'].clear_caches()
         return res
 
 #
@@ -674,8 +669,7 @@ class GroupsView(models.Model):
     @api.multi
     def write(self, values):
         res = super(GroupsView, self).write(values)
-        if 'category_id' in values:
-            self._update_user_groups_view()
+        self._update_user_groups_view()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -831,12 +825,7 @@ class UsersView(models.Model):
         self._add_reified_groups(group_fields, values)
         return values
 
-    @api.v7
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = UsersView.read(self.browse(cr, uid, ids, context), fields, load=load)
-        return result if isinstance(ids, list) else (bool(result) and result[0])
-
-    @api.v8
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         # determine whether reified groups fields are required, and which ones
         fields1 = fields or self.fields_get().keys()
@@ -872,12 +861,12 @@ class UsersView(models.Model):
                 values[f] = selected and selected[-1] or False
 
     @api.model
-    def fields_get(self, allfields=None, write_access=True, attributes=None):
-        res = super(UsersView, self).fields_get(allfields=allfields, write_access=write_access, attributes=attributes)
+    def fields_get(self, allfields=None, attributes=None):
+        res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
         if not self.env.user._is_admin():
             return res
-        for app, kind, gs in self.env['res.groups'].get_groups_by_application():
+        for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]

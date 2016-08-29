@@ -7,7 +7,7 @@
 {
     'name': 'Accounting Consistency Tests',
     'version': '1.0',
-    'category': 'Accounting & Finance',
+    'category': 'Accounting',
     'website': 'https://www.odoo.com/page/accounting',
     'description': """
 Asserts on accounting.
@@ -21,10 +21,10 @@ and print the report from Print button in header area.
     'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
-        'account_test_view.xml',
-        'account_test_report.xml',
-        'account_test_data.xml',
-        'views/report_accounttest.xml',
+        'views/accounting_assert_test_views.xml',
+        'report/accounting_assert_test_reports.xml',
+        'data/accounting_assert_test_data.xml',
+        'report/report_account_test_templates.xml',
     ],
     'active': False,
     'installable': True

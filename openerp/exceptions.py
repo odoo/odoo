@@ -12,7 +12,6 @@ If you consider introducing new exceptions, check out the test_exceptions addon.
 
 import logging
 from inspect import currentframe
-from lxml import etree
 from tools.func import frame_codeinfo
 
 _logger = logging.getLogger(__name__)
@@ -92,12 +91,6 @@ class DeferredException(Exception):
         self.message = msg
         self.traceback = tb
 
-class QWebException(Exception):
-    def __init__(self, message, **kw):
-        super(QWebException, self).__init__(message)
-        self.qweb = dict(kw)
 
-    def pretty_xml(self):
-        if 'node' not in self.qweb:
-            return ''
-        return etree.tostring(self.qweb['node'], pretty_print=True)
+class QWebException(Exception):
+    pass

@@ -1,0 +1,65 @@
+// ------------------------------------------------------------------
+// Checkboxes
+// ------------------------------------------------------------------
+div.o_checkbox {
+    display: inline-block;
+    vertical-align: sub;
+    > input + span {
+        display: none;
+    }
+}
+
+// ------------------------------------------------------------------
+// Inputs and selects
+// ------------------------------------------------------------------
+.o-input() {
+    border: 1px solid @odoo-form-lightsecondary;
+    border-radius: @border-radius-base;
+    padding: 2px 4px;
+    color: #1f1f1f;
+}
+input[type="text"], input[type="password"], input[type="number"], textarea, select {
+    .o-input();
+
+    width: 100%;
+    outline: none;
+    display: block;
+}
+select {
+    background: white;
+}
+
+// ------------------------------------------------------------------
+// Loading
+// ------------------------------------------------------------------
+.o_loading {
+    position: fixed;
+    top: 0;
+    right: 50%;
+    padding: 4px 12px;
+    background-color: @odoo-color-pink;
+    color: white;
+    text-align: center;
+    border-top: none;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+// ------------------------------------------------------------------
+// Planner
+// ------------------------------------------------------------------
+// Because the `web_planner` module has to work with Odoo community and enterprise without
+// code duplication, fine-tune the display of it in the community webclient here
+#PlannerDialog {
+    top: 35px;
+    box-shadow: 0 3px 9px #666666;
+    padding-bottom: 44px;
+}
+
+// ------------------------------------------------------------------
+// User menu in navbar
+// ------------------------------------------------------------------
+#oe_main_menu_navbar .oe_user_menu_placeholder .o_user_menu .oe_topbar_name {
+    .o-text-overflow();
+    max-width: 150px;
+}

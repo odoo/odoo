@@ -50,13 +50,13 @@
                                 <span t-att-style="style" t-esc="account['name']"/>
                             </td>
                             <td class="text-right">
-                                 <span t-att-style="style" t-esc="account['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                 <span t-att-style="style" t-esc="account['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-att-style="style" t-esc="account['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-att-style="style" t-esc="account['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-att-style="style" t-esc="account['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-att-style="style" t-esc="account['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                         </tr>
                     </tbody>

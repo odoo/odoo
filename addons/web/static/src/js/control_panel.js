@@ -31,7 +31,8 @@ return ControlPanelMixin;
 odoo.define('web.ControlPanel', function (require) {
 "use strict";
 
-var core = require('web.core');
+var Bus = require('web.Bus');
+var data = require('web.data');
 var Widget = require('web.Widget');
 
 var ControlPanel = Widget.extend({
@@ -46,7 +47,7 @@ var ControlPanel = Widget.extend({
             this.template = template;
         }
 
-        this.bus = new core.Bus();
+        this.bus = new Bus();
         this.bus.on("update", this, this.update);
     },
     /**
@@ -54,18 +55,21 @@ var ControlPanel = Widget.extend({
      * @return {jQuery.Deferred}
      */
     start: function() {
-        this.$title_col = this.$('.oe-cp-title');
-
         // Exposed jQuery nodesets
         this.nodes = {
-            $breadcrumbs: this.$('.oe-view-title'),
-            $buttons: this.$('.oe-cp-buttons'),
-            $pager: this.$('.oe-cp-pager'),
-            $searchview: this.$('.oe-cp-search-view'),
-            $searchview_buttons: this.$('.oe-search-options'),
-            $sidebar: this.$('.oe-cp-sidebar'),
-            $switch_buttons: this.$('.oe-cp-switch-buttons'),
+            $breadcrumbs: this.$('.breadcrumb'),
+            $buttons: this.$('.o_cp_buttons'),
+            $pager: this.$('.o_cp_pager'),
+            $searchview: this.$('.o_cp_searchview'),
+            $searchview_buttons: this.$('.o_search_options'),
+            $sidebar: this.$('.o_cp_sidebar'),
+            $switch_buttons: this.$('.o_cp_switch_buttons'),
         };
+
+        // Prevent the search dropdowns to close when clicking inside them
+        this.$el.on('click.bs.dropdown', '.oe-search-options .dropdown-menu', function (e) {
+            e.stopPropagation();
+        });
 
         // By default, hide the ControlPanel and remove its contents from the DOM
         this._toggle_visibility(false);
@@ -120,7 +124,7 @@ var ControlPanel = Widget.extend({
 
             // Update the searchview and switch buttons
             this._update_search_view(status.searchview, status.search_view_hidden);
-            if (status.active_view_selector)  {
+            if (status.active_view_selector) {
                 this._update_switch_buttons(status.active_view_selector);
             }
         }
@@ -182,22 +186,26 @@ var ControlPanel = Widget.extend({
      */
     _render_breadcrumbs: function (breadcrumbs) {
         var self = this;
-
         return breadcrumbs.map(function (bc, index) {
-            return make_breadcrumb(bc, index === breadcrumbs.length - 1);
+            return self._render_breadcrumbs_li(bc, index, breadcrumbs.length);
         });
-
-        function make_breadcrumb (bc, is_last) {
-            var $bc = $('<li>')
-                    .append(is_last ? _.escape(bc.title) : $('<a>').text(bc.title))
-                    .toggleClass('active', is_last);
-            if (!is_last) {
-                $bc.click(function () {
-                    self.trigger("on_breadcrumb_click", bc.action, bc.index);
-                });
-            }
-            return $bc;
+    },
+    /**
+     * Private function that renders a breadcrumbs' li Jquery element
+     */
+    _render_breadcrumbs_li: function (bc, index, length) {
+        var self = this;
+        var is_last = (index === length-1);
+        var li_content = bc.title && _.escape(bc.title.trim()) || data.noDisplayContent;
+        var $bc = $('<li>')
+            .append(is_last ? li_content : $('<a>').html(li_content))
+            .toggleClass('active', is_last);
+        if (!is_last) {
+            $bc.click(function () {
+                self.trigger("on_breadcrumb_click", bc.action, bc.index);
+            });
         }
+        return $bc;
     },
     /**
      * Private function that updates the SearchView's visibility and extend the
@@ -211,8 +219,10 @@ var ControlPanel = Widget.extend({
             // have been appended to a jQuery node not in the DOM at SearchView initialization
             searchview.$buttons = this.nodes.$searchview_buttons;
             searchview.toggle_visibility(!is_hidden);
-            this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
         }
+
+        this.nodes.$searchview.toggle(!is_hidden);
+        this.$el.toggleClass('o_breadcrumb_full', !!is_hidden);
     },
 });
 

@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-01-11 17:21+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: sale_stock
@@ -32,7 +32,9 @@ msgstr "Povoliť pridanie nákladov na dopravu"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr "Povoliť nastavenie vlastností výrobnej objednávky na riadok objednávky (pokročilé)"
+msgstr ""
+"Povoliť nastavenie vlastností výrobnej objednávky na riadok objednávky "
+"(pokročilé)"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -85,6 +87,19 @@ msgid "Enable Route on Sales Order Line"
 msgstr "Povoliť trasu na riadkoch predajnej objednávky"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 msgid "Incoterms"
@@ -94,16 +109,21 @@ msgstr "Incoterms"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr "Incoterms sú série predajných podmienok. Používajú sa na rozdelenie transakčných nákladov a zodpovednosti medzi kupujúcim a predávajúcim a odrážajú najmodernejšie dopravné postupy."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
+msgstr ""
+"Incoterms sú série predajných podmienok. Používajú sa na rozdelenie "
+"transakčných nákladov a zodpovednosti medzi kupujúcim a predávajúcim a "
+"odrážajú najmodernejšie dopravné postupy."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "Medzinárodné obchodné podmienky (Incoterms) sú zbierka predefinovaných obchodných podmienok používaných pri medzinárodných transakciách."
+msgstr ""
+"Medzinárodné obchodné podmienky (Incoterms) sú zbierka predefinovaných "
+"obchodných podmienok používaných pri medzinárodných transakciách."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -124,9 +144,12 @@ msgstr "Riadok faktúry"
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
-msgstr "Rezerva pre chyby na dátumy sľúbené zákazníkovi. Produkty budú naplánované na obstarávanie o toľko dní skôr ako skutočný sľúbený dátum, pre vyrovnanie sa s neočakávaným oneskorením v dodávateľskom reťazci."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"Rezerva pre chyby na dátumy sľúbené zákazníkovi. Produkty budú naplánované "
+"na obstarávanie o toľko dní skôr ako skutočný sľúbený dátum, pre vyrovnanie "
+"sa s neočakávaným oneskorením v dodávateľskom reťazci."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -139,7 +162,7 @@ msgid "No shipping costs on sales orders"
 msgstr "Žiadne náklady na dopravu pri objednávkach predaja"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:141
+#: code:addons/sale_stock/sale_stock.py:156
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Nedostatok zásob!"
@@ -156,7 +179,7 @@ msgid "Order Routing"
 msgstr "Smerovanie objednávky"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:152
+#: code:addons/sale_stock/sale_stock.py:167
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Objednané množstvo pokleslo!"
@@ -175,6 +198,12 @@ msgstr "Odbery pridružené k tomuto predaju"
 #: model:ir.model,name:sale_stock.model_procurement_order
 msgid "Procurement"
 msgstr "Obstaranie"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+#, fuzzy
+msgid "Product"
+msgstr "šablona produktu"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
@@ -258,9 +287,9 @@ msgid "Stock Move"
 msgstr "Pohyb na sklade"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:194
-#, python-format
-msgid "This product is packaged by %d . You should sell %d ."
+#: code:addons/sale_stock/sale_stock.py:213
+#, fuzzy, python-format
+msgid "This product is packaged by %s %s. You should sell %s %s."
 msgstr "Tento produkt balil %d . Mali by ste predávať %d ."
 
 #. module: sale_stock
@@ -275,26 +304,30 @@ msgid "Warehouse"
 msgstr "Sklad"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:193
+#: code:addons/sale_stock/sale_stock.py:212
 #, python-format
 msgid "Warning"
 msgstr "Varovanie"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:153
+#: code:addons/sale_stock/sale_stock.py:168
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "Znižujete objednané množstvo! Nezabudnite manuálne aktualizovať dodacie objednávky v prípade potreby."
+msgstr ""
+"Znižujete objednané množstvo! Nezabudnite manuálne aktualizovať dodacie "
+"objednávky v prípade potreby."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:142
+#: code:addons/sale_stock/sale_stock.py:157
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available!\n"
 "The stock on hand is %.2f %s."
-msgstr "Plánujte predať %.2f %s ale iba %.2f %s je dostupné!\nNa sklade je %.2f %s."
+msgstr ""
+"Plánujte predať %.2f %s ale iba %.2f %s je dostupné!\n"
+"Na sklade je %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

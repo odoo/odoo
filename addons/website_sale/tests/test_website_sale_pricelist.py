@@ -1,29 +1,31 @@
-from openerp.tests.common import TransactionCase
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from mock import patch
+from odoo.tests.common import TransactionCase
 
 
 class TestWebsitePriceList(TransactionCase):
 
     # Mock nedded because request.session doesn't exist during test
-    def _get_pricelist_available(self, cr, uid, show_visible=False, context=None):
-        return self.get_pl(context.get('show'), context.get('current_pl'), context.get('country'))
+    def _get_pricelist_available(self, show_visible=False):
+        return self.get_pl(self.args.get('show'), self.args.get('current_pl'), self.args.get('country'))
 
     def setUp(self):
         super(TestWebsitePriceList, self).setUp()
-        self.website = self.registry('website').browse(self.cr, self.uid, 1)
-        self.website.pricelist_id = self.registry('ir.model.data').xmlid_to_res_id(self.cr, self.uid, 'product.list0')
-        self.patcher = patch('openerp.addons.website_sale.models.sale_order.website.get_pricelist_available', wraps=self._get_pricelist_available)
+        self.website = self.env['website'].browse(1)
+        self.website.pricelist_id = self.ref('product.list0')
+        self.patcher = patch('odoo.addons.website_sale.models.sale_order.Website.get_pricelist_available', wraps=self._get_pricelist_available)
         self.mock_get_pricelist_available = self.patcher.start()
 
     def get_pl(self, show, current_pl, country):
-        pl_ids = self.website._get_pl(
+        pls = self.website._get_pl(
             country,
             show,
             self.website.pricelist_id.id,
             current_pl,
             self.website.website_pricelist_ids
         )
-        return self.env['product.pricelist'].browse(pl_ids)
+        return pls
 
     def test_get_pricelist_available_show(self):
         show = True
@@ -57,8 +59,8 @@ class TestWebsitePriceList(TransactionCase):
             self.assertEquals(len(pls), result)
 
     def test_get_pricelist_available_promocode(self):
-        christmas_pl = self.registry('ir.model.data').xmlid_to_res_id(self.cr, self.uid, 'website_sale.list_christmas')
-        context = {
+        christmas_pl = self.ref('website_sale.list_christmas')
+        self.args = {
             'show': True,
             'current_pl': christmas_pl,
         }
@@ -71,8 +73,9 @@ class TestWebsitePriceList(TransactionCase):
         }
 
         for country, result in country_list.items():
-            context['country'] = country
-            available = self.website.with_context(context).is_pricelist_available(christmas_pl)
+            self.args['country'] = country
+            # mock patch method could not pass env context
+            available = self.website.is_pricelist_available(christmas_pl)
             if result:
                 self.assertTrue(available)
             else:

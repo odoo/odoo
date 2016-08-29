@@ -1,89 +1,73 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale
-# 
+#
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+# Manami Hashi <manami@roomsfor.hk>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# 髙木雄介 <yuusuke.takagi@pro-spire.co.jp>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-02-10 10:38+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-07-22 08:31+0000\n"
+"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else "
+"'order confirmation'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions."
+"act_url'\n"
+"% set access_name = is_online and object.template_id and 'Accept and pay %s "
+"online' % doc_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object."
+"get_signup_url()\n"
 "\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p>\n"
+"<p>Thank you for your inquiry.<br />\n"
+"Here is your ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"amounting <strong>${object.amount_total} ${object.pricelist_id.currency_id."
+"name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
 "\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"    <p>\n"
-"        You can view your quotation online:\n"
-"    </p>\n"
-"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
-"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+"<p style=\"margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;\">\n"
+"    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
+"line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
+"none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-"
+"align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
+"background-image: none; background-color: #a24689; border: 1px solid "
+"#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
+"</a>\n"
+"</p>\n"
+"<p>If you have any question, do not hesitate to contact us.</p>\n"
+"<p>Best regards,</p>\n"
 msgstr ""
 
 #. module: sale
@@ -127,7 +111,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
@@ -137,8 +121,12 @@ msgid "(update)"
 msgstr "(更新)"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
+#: model:ir.actions.act_window,help:sale.action_orders_upselling
+msgid ""
+"<i>Example: pre-paid service offers for which the customer have\n"
+"                to buy an extra pack of hours, because he used all his "
+"support\n"
+"                hours.</i>"
 msgstr ""
 
 #. module: sale
@@ -149,27 +137,32 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Term:</strong>"
-msgstr ""
+msgstr "<strong>支払条件:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Salesperson:</strong>"
 msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>販売担当者:</strong>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>営業担当者:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>出荷先:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>税抜合計金額</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>合計</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -179,7 +172,7 @@ msgstr "<strong>お客様参照:</strong>"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "A single sale price per product"
-msgstr ""
+msgstr "製品ごとに単一の販売価格"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -187,14 +180,9 @@ msgid "Account used for deposits"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction
-msgid "Action Needed"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
 msgid "Addresses"
-msgstr ""
+msgstr "アドレス"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -202,7 +190,7 @@ msgid "Addresses in Sales Orders"
 msgstr "受注内のアドレス"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:126
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:139
 #, python-format
 msgid "Advance: %s"
 msgstr ""
@@ -210,25 +198,26 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formula"
-msgstr ""
+msgstr "数式に基づいた高度な価格設定"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow discounts on sales order lines"
-msgstr ""
+msgstr "受注明細での値引を許可"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr ""
+msgstr "「受注」メニューから受注の編集を許可 (「見積」メニューからでなく)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
-"                    Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+"                    Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
 msgstr ""
 
 #. module: sale
@@ -236,11 +225,6 @@ msgstr ""
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr "製品に異なる単位の選択と維持ができます。"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_config_settings_group_analytic_account_for_sales
-msgid "Allows you to specify an analytic account on sales orders."
-msgstr "受注での分析勘定の選択を可能にします。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
@@ -259,19 +243,9 @@ msgid "Analytic Accounting for Sales"
 msgstr "販売の分析会計"
 
 #. module: sale
-#: model:ir.model,name:sale.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "分析行"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
-msgid "Analytic accounting for sales"
-msgstr "販売の分析会計"
-
-#. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "製品ごと"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
@@ -312,12 +286,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a team target"
-msgstr ""
+msgstr "チーム目標設定"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr ""
+msgstr "取引先"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -364,7 +338,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr ""
+msgstr "請求書を作成・表示"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
@@ -412,21 +386,16 @@ msgstr "顧客税"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Customer portal"
-msgstr ""
+msgstr "顧客ポータル"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
 msgid "Date Order"
-msgstr "日付順"
+msgstr "オーダ日"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_last_post
-msgid "Date of the last message posted on the record."
 msgstr ""
 
 #. module: sale
@@ -437,7 +406,7 @@ msgstr "受注作成日"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
 msgid "Default Invoicing"
-msgstr ""
+msgstr "デフォルト請求方法"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
@@ -462,12 +431,12 @@ msgstr "配送済"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "配送済数量"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "配送済数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_shipping_id
@@ -488,12 +457,12 @@ msgstr "この受注の配送先"
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "デポジット"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr ""
+msgstr "デポジット製品"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -504,29 +473,39 @@ msgstr "説明"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Different prices per customer segment"
-msgstr ""
+msgstr "顧客ごとに異なる販売価格"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
+msgid "Disc.(%)"
+msgstr "値引 (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
 msgid "Discount"
-msgstr "割引"
+msgstr "値引"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_discount
 msgid "Discount (%)"
-msgstr "割引（%）"
+msgstr "値引 (%)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
+#, fuzzy
 msgid "Discount on lines"
-msgstr "明細の値引き"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"明細の値引\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"明細の値引き"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
 msgid ""
-"Display 3 fields on sales orders: customer, invoice address, delivery "
-"address"
-msgstr ""
+"Display 3 fields on sales orders: customer, invoice address, delivery address"
+msgstr "受注に3フィールドを表示: 顧客、請求書住所、配送先"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -539,12 +518,18 @@ msgstr "表示名"
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
+msgstr "受注と関連請求書にインコタームズを表示"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr ""
+msgstr "見積と受注にマージンを表示"
+
+#. module: sale
+#: selection:sale.config.settings,module_sale_layout:0
+#, fuzzy
+msgid "Do not personalize sale orders and invoice reports"
+msgstr "受注と請求書にインコタームズを表示"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -552,7 +537,7 @@ msgid "Done"
 msgstr "完了"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:83
 #, python-format
 msgid "Down Payment"
 msgstr ""
@@ -578,7 +563,7 @@ msgid "Down payment (percentage)"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:67
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:80
 #, python-format
 msgid "Down payment of %s%%"
 msgstr ""
@@ -594,19 +579,24 @@ msgid "Email composition wizard"
 msgstr ""
 
 #. module: sale
+#: model:ir.model,name:sale.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
 msgid "Enable customer portal to track orders, delivery and invoices"
-msgstr ""
+msgstr "オーダ、配送、請求を追跡する顧客ポータルを有効化する"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "有効期日"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "拡張フィルタ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -617,23 +607,9 @@ msgstr "会計ポジション"
 #: model:ir.model.fields,help:sale.field_sale_config_settings_sale_pricelist_setting
 msgid ""
 "Fix Price: all price manage from products sale price.\n"
-"Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
+"Different prices per Customer: you can assign price on buying of minimum "
+"quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_follower_ids
-msgid "Followers"
-msgstr "フォロワー"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_partner_ids
-msgid "Followers (Partners)"
 msgstr ""
 
 #. module: sale
@@ -648,6 +624,11 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_weight
+msgid "Gross Weight"
 msgstr ""
 
 #. module: sale
@@ -668,19 +649,9 @@ msgstr "ID"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"If a sale order is done, you cannot modify it manually anymore. However, you"
-" will still be able to invoice or deliver. This is used to freeze the sale "
+"If a sale order is done, you cannot modify it manually anymore. However, you "
+"will still be able to invoice or deliver. This is used to freeze the sale "
 "order."
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_needaction
-msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: sale
@@ -699,7 +670,7 @@ msgid "Invoice"
 msgstr "請求書"
 
 #. module: sale
-#: code:addons/sale/sale.py:785
+#: code:addons/sale/sale.py:840
 #, python-format
 msgid "Invoice %s paid"
 msgstr ""
@@ -748,7 +719,7 @@ msgstr "請求書の状態"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoice Target"
-msgstr ""
+msgstr "請求ターゲット"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
@@ -758,28 +729,23 @@ msgstr "現在の受注の請求先アドレス"
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice based on costs (time and material, expenses)"
-msgstr ""
-
-#. module: sale
-#: selection:product.template,invoice_policy:0
-msgid "Invoice based on time and material"
-msgstr ""
+msgstr "コストに基づき請求 (タイムアンドマテリアル、経費)"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice delivered quantities"
-msgstr ""
+msgstr "配送済数量を請求"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice ordered quantities"
-msgstr ""
+msgstr "受注数量を請求"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
 msgid ""
-"Invoice revenue for the current month. This is the amount the sales team has"
-" invoiced this month. It is used to compute the progression ratio of the "
+"Invoice revenue for the current month. This is the amount the sales team has "
+"invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
 
@@ -801,12 +767,12 @@ msgstr "請求済"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "請求済数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "今月請求済"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -844,8 +810,9 @@ msgstr "請求"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
+#: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "請求方針"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -855,29 +822,19 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr ""
+msgstr "請求・出荷先:"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
 msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
-msgstr ""
+msgstr "請求先と配送先アドレスは常に同じ (例: サービス会社)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "Invoicing/Progression Ratio"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_last_post
-msgid "Last Message Date"
-msgstr ""
+msgstr "請求/進捗率"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -904,7 +861,7 @@ msgstr "最終更新日"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr ""
+msgstr "サブスクリプションと繰返請求を管理"
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -912,24 +869,34 @@ msgid "Manually set quantities on order"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_track_service
+#: model:ir.model.fields,help:sale.field_product_template_track_service
+msgid ""
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sale order validation "
+"and track the work hours."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_validity_date
+msgid ""
+"Manually set the expiration date of your quotation (offer), or it will set "
+"the date automatically based on the template if online quotation is "
+"installed."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
 msgid "Margins"
-msgstr "利鞘"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_ids
-msgid "Messages"
-msgstr "メッセージ"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_ids
-msgid "Messages and communication history"
-msgstr "メッセージと通信履歴"
+msgstr "マージン"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr ""
+msgstr "自分のオーダ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -939,27 +906,33 @@ msgstr "自分の受注明細"
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sale order"
-msgstr ""
+msgstr "確認された受注の修正は許可しない"
+
+#. module: sale
+#: code:addons/sale/sale.py:101
+#, python-format
+msgid "New"
+msgstr "新規"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
+msgstr "新規見積"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr ""
+msgstr "受注明細での値引はなし、グローバルの値引のみ"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr ""
+msgstr "レポートにインコタームズを表示しない"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "製品バリアントなし"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -971,7 +944,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
@@ -985,11 +957,6 @@ msgid "Nothing to Invoice"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
@@ -997,19 +964,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_needaction_counter
-msgid "Number of messages which requires an action"
+#: model:ir.actions.act_window,help:sale.action_orders
+msgid ""
+"Once the quotation is confirmed, it becomes a sales order.\n"
+"                    You'll be able to invoice it and collect payments.\n"
+"                    From the <i>Sales Orders</i> menu, you can track "
+"delivery\n"
+"                    orders or services."
 msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未読メッセージの件数"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr ""
+msgstr "オンライン見積"
 
 #. module: sale
 #. openerp-web
@@ -1019,14 +986,9 @@ msgid "Only Integer Value should be valid."
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.client,name:sale.action_client_sale_menu
-msgid "Open Sale Menu"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
-msgstr "オーダー"
+msgstr "オーダ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1036,7 +998,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
 msgid "Order Date"
-msgstr "オーダー日"
+msgstr "オーダ日"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_order_line
@@ -1048,7 +1010,7 @@ msgstr "受注明細"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Month"
-msgstr ""
+msgstr "オーダ月"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
@@ -1059,21 +1021,31 @@ msgstr "オーダ番号"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
 msgid "Order Reference"
-msgstr "オーダー参照"
+msgstr "オーダ参照"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
 msgid "Order Status"
-msgstr ""
+msgstr "発注ステータス"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr ""
+msgstr "数量"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Quantity"
+msgstr "受注数量"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_invoice_policy
+#: model:ir.model.fields,help:sale.field_product_template_invoice_policy
+msgid ""
+"Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n"
+"Reinvoice Costs: Invoice with some additional charges (product transfer, "
+"labour charges,...)"
 msgstr ""
 
 #. module: sale
@@ -1084,12 +1056,21 @@ msgstr "受注日"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "受注数量"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
+msgstr "アップセル対象受注"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_orders_upselling
+msgid ""
+"Orders to upsell are orders having products with an invoicing\n"
+"                policy based on <i>ordered quantities</i> for which you "
+"have\n"
+"                delivered more than what have been ordered."
 msgstr ""
 
 #. module: sale
@@ -1106,12 +1087,12 @@ msgstr "取引先"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "取引先の国"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "取引先の国"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1119,19 +1100,20 @@ msgid "Payment Term"
 msgstr "支払条件"
 
 #. module: sale
-#: code:addons/sale/sale.py:233
+#: selection:sale.config.settings,module_sale_layout:0
+msgid ""
+"Personnalize the sale orders and invoice report with separators, page-breaks "
+"or subtotals"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:246
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:316
-#, python-format
-msgid "There is no invoicable line."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:654
+#: code:addons/sale/sale.py:703
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1167,7 +1149,7 @@ msgstr "印刷"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Print quotes or send by email"
-msgstr ""
+msgstr "見積を印刷もしくはEメールで送信"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1220,12 +1202,12 @@ msgstr "製品"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "製品の特性 (サイズ・色等) に基づきバリアントを生成"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr ""
+msgstr "全製品につき単位は1つのみ (簡易)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1268,17 +1250,17 @@ msgstr "見積"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr ""
+msgstr "見積書 #"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "見積 / オーダー"
+msgstr "見積 / オーダ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "見積日:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -1293,7 +1275,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation Sent"
-msgstr "提出済見積"
+msgstr "見積提出済"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -1312,19 +1294,26 @@ msgstr "見積送信"
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Quotations"
 msgstr "見積"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr ""
+msgstr "見積と販売"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
 msgstr ""
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
+msgid "Quotations Sent"
+msgstr "見積提出済"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1335,6 +1324,12 @@ msgstr "見積・受注"
 #: model:ir.model.fields,help:sale.field_sale_order_origin
 msgid "Reference of the document that generated this sales order request."
 msgstr "この受注の生成の基となったドキュメント"
+
+#. module: sale
+#: selection:product.template,invoice_policy:0
+#, fuzzy
+msgid "Reinvoice Costs"
+msgstr "請求書の状態"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1356,12 +1351,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "受注明細"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr ""
+msgstr "受注修正"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1369,14 +1364,19 @@ msgid "Sale Price"
 msgstr "販売価格"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_layout
+msgid "Sale Reports Layout"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_company_inherit_form2
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales"
 msgstr "販売"
 
@@ -1397,12 +1397,12 @@ msgstr "販売分析"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "販売完了"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "販売ファネル"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1444,10 +1444,10 @@ msgstr "請求可能な受注明細"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "私の受注オーダーと関係する受注オーダー行"
+msgstr "自分の受注の明細"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Sales Order that haven't yet been confirmed"
 msgstr "未確認状態の受注"
 
@@ -1480,19 +1480,19 @@ msgstr "受注統計"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr "営業チーム"
+msgstr "販売チーム"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Sales to Invoice"
-msgstr ""
+msgstr "請求対象受注"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr ""
+msgstr "見積時にマージンを表示しない"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -1502,7 +1502,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "営業担当者"
+msgstr "販売担当者"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1515,6 +1515,7 @@ msgstr "受注検索"
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
+"デジタル製品を販売 - 顧客ポータルにてダウンロード可能なコンテンツを提供する"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1524,7 +1525,7 @@ msgstr "Eメールで送信"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send online quotations based on templates (advanced)"
-msgstr ""
+msgstr "テンプレートに基づきオンライン見積を送信 (高度)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
@@ -1541,7 +1542,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Done"
-msgstr ""
+msgstr "完了に設定"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1551,12 +1552,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr ""
+msgstr "会社設定にて、デフォルトの取引条件を定義してください。"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sale orders and invoices"
-msgstr ""
+msgstr "受注と請求書にインコタームズを表示"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
@@ -1570,9 +1571,10 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
+#, fuzzy
 msgid ""
-"Some products may be sold/purchased in different unit of measures (advanced)"
-msgstr ""
+"Some products may be sold/purchased in different units of measure (advanced)"
+msgstr "複数の単位を使用 (高度)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1589,7 +1591,7 @@ msgstr "ステータス"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "サブスクリプション"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1622,7 +1624,7 @@ msgid "Terms and conditions"
 msgstr "諸条件"
 
 #. module: sale
-#: code:addons/sale/sale_analytic.py:54
+#: code:addons/sale/sale_analytic.py:56
 #, python-format
 msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
@@ -1636,8 +1638,13 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
+#, fuzzy
 msgid "The analytic account related to a sales order."
-msgstr "受注に紐づく分析アカウント"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"受注に紐づく分析勘定\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"受注に紐づく分析アカウント"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_display_incoterm
@@ -1647,7 +1654,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:124
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:137
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -1655,26 +1662,32 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:122
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:135
 #, python-format
 msgid ""
-"The product used to invoice a down payment should have an invoice policy set"
-" to \"Ordered quantities\". Please update your deposit product to be able to"
-" create a deposit invoice."
+"The product used to invoice a down payment should have an invoice policy set "
+"to \"Ordered quantities\". Please update your deposit product to be able to "
+"create a deposit invoice."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:64
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:77
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:60
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:73
 #, python-format
 msgid ""
-"There is no income account defined for this product: \"%s\". You may have to"
-" install a chart of account from Accounting app, settings menu."
+"There is no income account defined for this product: \"%s\". You may have to "
+"install a chart of account from Accounting app, settings menu."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:330 code:addons/sale/sale.py:334
+#, python-format
+msgid "There is no invoicable line."
 msgstr ""
 
 #. module: sale
@@ -1683,14 +1696,25 @@ msgid "This Year"
 msgstr "今年"
 
 #. module: sale
+#: model:web.tip,description:sale.sale_tip_1
+msgid ""
+"This progress bar shows the stages your quotation will go through.\n"
+"                Use buttons on the left to move forward to the next stages."
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman,"
-" partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr "このレポートは見積と受注オーダー上の分析を実行します。分析は受注高をチェックし別のグループ基準（販売員、パートナ、製品など）により並べ替えます。まだ請求されていない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
+msgstr ""
+"このレポートは見積と受注上の分析を実行します。分析は受注高をチェックし別のグ"
+"ループ基準（販売員、パートナ、製品など）により並べ替えます。まだ請求されてい"
+"ない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場"
+"合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -1714,12 +1738,12 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
-msgid "Timesheets on contract"
+msgid "Timesheets on project"
 msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
@@ -1765,19 +1789,14 @@ msgstr "単位"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-msgid "Unit of Measures"
-msgstr ""
+#, fuzzy
+msgid "Units of Measure"
+msgstr "単位"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_unread
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "未読メッセージ"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未読メッセージカウンター"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
@@ -1785,14 +1804,27 @@ msgid "Untaxed Amount"
 msgstr "税抜金額"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
+msgid "Untaxed Total Price"
+msgstr "税抜合計"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "Upselling"
-msgstr ""
+msgstr "アップセル対象"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
+msgstr ""
+
+#. module: sale
+#: model:web.tip,description:sale.sale_tip_2
+msgid ""
+"Use pivot and graph views to analyze your sales pipeline.\n"
+"                Select measures, filter and group dimensions to get the "
+"perfect report according to your needs."
 msgstr ""
 
 #. module: sale
@@ -1806,13 +1838,8 @@ msgid "VAT:"
 msgstr "消費税："
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_website_message_ids
-msgid "Website communication history"
+#: model:ir.model.fields,field_description:sale.field_sale_report_volume
+msgid "Volume"
 msgstr ""
 
 #. module: sale
@@ -1835,7 +1862,15 @@ msgid "Wrong value entered!"
 msgstr "入力した値が間違っています!"
 
 #. module: sale
-#: code:addons/sale/sale.py:741
+#: code:addons/sale/sale.py:163
+#, python-format
+msgid ""
+"You can not delete a sent quotation or a sales order! Try to cancel it "
+"before."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:797
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"
@@ -1843,22 +1878,29 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:153
-#, python-format
-msgid "You can only delete draft quotations!"
+#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+msgid ""
+"You can select all orders and invoice them in batch, or check\n"
+"                every order and invoice them one by one."
 msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
+msgid "You will find here all orders that are ready to be invoiced."
+msgstr "請求可能な受注明細"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation \n"
-"                to a Sale Order, then create the Invoice and collect the Payment."
+"                to a Sale Order, then create the Invoice and collect the "
+"Payment."
 msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
@@ -1866,9 +1908,10 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model,name:sale.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
+#: model:ir.model,name:sale.model_account_analytic_line
+#, fuzzy
+msgid "account analytic line"
+msgstr "分析行"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1884,3 +1927,57 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "不明"
+
+#~ msgid "Action Needed"
+#~ msgstr "必要なアクション"
+
+#~ msgid "Allows you to specify an analytic account on sales orders."
+#~ msgstr "受注での分析勘定の選択を可能にします。"
+
+#~ msgid "Analytic accounting for sales"
+#~ msgstr "販売の分析会計"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "記録上の最後のメッセージが投稿された日"
+
+#~ msgid "Followers"
+#~ msgstr "フォロワー"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "フォロワー(チャンネル)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "フォロワー(取引先)"
+
+#~ msgid "Invoice based on time and material"
+#~ msgstr "タイムアンドマテリアルで請求"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最終メッセージ日"
+
+#~ msgid "Messages"
+#~ msgstr "メッセージ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "メッセージと通信履歴"
+
+#~ msgid "Number of Actions"
+#~ msgstr "アクションの数"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未読メッセージの件数"
+
+#~ msgid "Unit of Measures"
+#~ msgstr "単位"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未読メッセージカウンター"
+
+#~ msgid "Website Messages"
+#~ msgstr "ウェブサイトメッセージ"
+
+#~ msgid "Website communication history"
+#~ msgstr "ウェブサイトコミュニケーション履歴"
+
+#~ msgid "account.config.settings"
+#~ msgstr "account.config.settings"

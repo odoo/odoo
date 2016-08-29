@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherited_google_view_general_configuration" model="ir.ui.view">
+        <field name="name">General Settings</field>
+        <field name="model">base.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='module_google_drive']" position="after">
+                <div attrs="{'invisible': [('module_google_drive','=',False)]}">
+                    <div class="oe_inline">
+                        <field name="google_drive_uri" widget="url" text="Generate Google Authorization Code" class="oe_inline oe_bold"/>
+                        and paste it here
+                        <field name="google_drive_authorization_code" class="oe_inline" />
+                    </div>
+                    <button type="action" name="%(google_drive.action_google_drive_users_config)d" string="Configure your templates" class="oe_link" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

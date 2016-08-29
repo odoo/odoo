@@ -5,7 +5,7 @@
 {
     'name': 'Portal Sale',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Sales',
     'complexity': 'easy',
     'description': """
 This module adds a Sales menu to your portal as soon as sale and portal are installed.
@@ -27,9 +27,9 @@ by default, you simply need to configure a Paypal account in the Accounting/Invo
     """,
     'depends': ['sale', 'portal', 'payment'],
     'data': [
-        'security/portal_security.xml',
-        'portal_sale_view.xml',
+        'security/portal_sale_security.xml',
         'security/ir.model.access.csv',
+        'views/sale_order_views.xml',
     ],
     'auto_install': True,
     'category': 'Hidden',

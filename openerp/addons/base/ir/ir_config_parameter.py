@@ -5,11 +5,9 @@ Store database-specific configuration parameters
 """
 
 import uuid
-import datetime
 
-from openerp import SUPERUSER_ID
-from openerp.osv import osv, fields
-from openerp.tools import misc, config, ormcache
+from odoo import api, fields, models
+from odoo.tools import config, ormcache
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -17,40 +15,39 @@ A dictionary holding some configuration parameters to be initialized when the da
 _default_parameters = {
     "database.secret": lambda: (str(uuid.uuid4()), ['base.group_erp_manager']),
     "database.uuid": lambda: (str(uuid.uuid1()), []),
-    "database.create_date": lambda: (datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT), ['base.group_user']),
+    "database.create_date": lambda: (fields.Datetime.now(), ['base.group_user']),
     "web.base.url": lambda: ("http://localhost:%s" % config.get('xmlrpc_port'), []),
 }
 
 
-class ir_config_parameter(osv.osv):
+class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
-
     _name = 'ir.config_parameter'
     _rec_name = 'key'
 
-    _columns = {
-        'key': fields.char('Key', required=True, select=1),
-        'value': fields.text('Value', required=True),
-        'group_ids': fields.many2many('res.groups', 'ir_config_parameter_groups_rel', 'icp_id', 'group_id', string='Groups'),
-    }
+    key = fields.Char(required=True, index=True)
+    value = fields.Text(required=True)
+    group_ids = fields.Many2many('res.groups', 'ir_config_parameter_groups_rel', 'icp_id', 'group_id', string='Groups')
 
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
-    def init(self, cr, force=False):
+    @api.model_cr
+    def init(self, force=False):
         """
         Initializes the parameters listed in _default_parameters.
         It overrides existing parameters if force is ``True``.
         """
         for key, func in _default_parameters.iteritems():
             # force=True skips search and always performs the 'if' body (because ids=False)
-            ids = not force and self.search(cr, SUPERUSER_ID, [('key','=',key)])
-            if not ids:
+            params = self.sudo().search([('key', '=', key)])
+            if force or not params:
                 value, groups = func()
-                self.set_param(cr, SUPERUSER_ID, key, value, groups=groups)
+                params.set_param(key, value, groups=groups)
 
-    def get_param(self, cr, uid, key, default=False, context=None):
+    @api.model
+    def get_param(self, key, default=False):
         """Retrieve the value for a given key.
 
         :param string key: The key of the parameter value to retrieve.
@@ -58,19 +55,16 @@ class ir_config_parameter(osv.osv):
         :return: The value of the parameter, or ``default`` if it does not exist.
         :rtype: string
         """
-        result = self._get_param(cr, uid, key)
-        if result is None:
-            return default
-        return result
+        return self._get_param(key) or default
 
-    @ormcache('uid', 'key')
-    def _get_param(self, cr, uid, key):
-        params = self.search_read(cr, uid, [('key', '=', key)], fields=['value'], limit=1)
-        if not params:
-            return None
-        return params[0]['value']
+    @api.model
+    @ormcache('self._uid', 'key')
+    def _get_param(self, key):
+        params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
+        return params[0]['value'] if params else None
 
-    def set_param(self, cr, uid, key, value, groups=(), context=None):
+    @api.model
+    def set_param(self, key, value, groups=()):
         """Sets the value of a parameter.
 
         :param string key: The key of the parameter value to set.
@@ -81,35 +75,36 @@ class ir_config_parameter(osv.osv):
         :rtype: string
         """
         self._get_param.clear_cache(self)
-        ids = self.search(cr, uid, [('key','=',key)], context=context)
+        param = self.search([('key', '=', key)])
 
         gids = []
         for group_xml in groups:
-            res_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, group_xml)
-            if res_id:
-                gids.append((4, res_id))
+            group = self.env.ref(group_xml, raise_if_not_found=False)
+            if group:
+                gids.append((4, group.id))
 
         vals = {'value': value}
         if gids:
             vals.update(group_ids=gids)
-        if ids:
-            param = self.browse(cr, uid, ids[0], context=context)
+        if param:
             old = param.value
             if value is not False and value is not None:
-                self.write(cr, uid, ids, vals, context=context)
+                param.write(vals)
             else:
-                self.unlink(cr, uid, ids, context=context)
+                param.unlink()
             return old
         else:
             vals.update(key=key)
             if value is not False and value is not None:
-                self.create(cr, uid, vals, context=context)
+                self.create(vals)
             return False
 
-    def write(self, cr, uid, ids, vals, context=None):
-        self._get_param.clear_cache(self)
-        return super(ir_config_parameter, self).write(cr, uid, ids, vals, context=context)
+    @api.multi
+    def write(self, vals):
+        self.clear_caches()
+        return super(IrConfigParameter, self).write(vals)
 
-    def unlink(self, cr, uid, ids, context=None):
-        self._get_param.clear_cache(self)
-        return super(ir_config_parameter, self).unlink(cr, uid, ids, context=context)
+    @api.multi
+    def unlink(self):
+        self.clear_caches()
+        return super(IrConfigParameter, self).unlink()

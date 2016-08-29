@@ -7,7 +7,7 @@ import re
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
-from odoo.tools.safe_eval import safe_eval as eval
+from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -69,7 +69,7 @@ class Lang(models.Model):
                     'Provided as the thousand separator in each case.')
         for lang in self:
             try:
-                if not all(isinstance(x, int) for x in eval(lang.grouping)):
+                if not all(isinstance(x, int) for x in safe_eval(lang.grouping)):
                     raise ValidationError(warning)
             except Exception:
                 raise ValidationError(warning)
@@ -163,28 +163,25 @@ class Lang(models.Model):
         if not lang:
             self.load_lang(lang_code)
         IrValues = self.env['ir.values']
-        default_value = IrValues.get('default', False, ['res.partner'])
+        default_value = IrValues.get_defaults('res.partner', condition=False)
         if not default_value:
-            IrValues.set('default', False, 'lang', ['res.partner'], lang_code)
+            IrValues.set_default('res.partner', 'lang', lang_code, condition=False)
             # set language of main company, created directly by db bootstrap SQL
             partner = self.env.user.company_id.partner_id
             if not partner.lang:
                 partner.write({'lang': lang_code})
         return True
 
-    @api.model
-    @api.returns('self', lambda value: value.id)
     @tools.ormcache('code')
-    def _lang_get(self, code):
+    def _lang_get_id(self, code):
         return (self.search([('code', '=', code)]) or
                 self.search([('code', '=', 'en_US')]) or
-                self.search([], limit=1))
+                self.search([], limit=1)).id
 
-    @api.v7
-    def _lang_data_get(self, cr, uid, lang, monetary=False):
-        if isinstance(lang, basestring):
-            lang = self._lang_get(cr, uid, lang)
-        return self.browse(cr, uid, lang)._data_get(monetary)
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def _lang_get(self, code):
+        return self.browse(self._lang_get_id(code))
 
     @tools.ormcache('self.code', 'monetary')
     def _data_get(self, monetary=False):
@@ -237,19 +234,7 @@ class Lang(models.Model):
         self.clear_caches()
         return super(Lang, self).unlink()
 
-    #
-    # IDS: can be a list of IDS or a list of XML_IDS
-    #
-    @api.v7
-    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
-        # Refering the old code, `ids` is expected to have only one value(ID or XML_ID) inside list, hence used ids[0].
-        lang_id = ids[0]
-        if isinstance(lang_id, (str, unicode)):
-            lang_id = self._lang_get(cr, uid, lang_id)
-        lang = self.browse(cr, uid, lang_id, context=context)
-        return Lang.format(lang, percent, value, grouping=grouping, monetary=monetary)
-
-    @api.v8
+    @api.multi
     def format(self, percent, value, grouping=False, monetary=False):
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()
@@ -261,7 +246,7 @@ class Lang(models.Model):
         # floats and decimal ints need special action!
         if grouping:
             lang_grouping, thousands_sep, decimal_point = self._data_get(monetary)
-            eval_lang_grouping = eval(lang_grouping)
+            eval_lang_grouping = safe_eval(lang_grouping)
 
             if percent[-1] in 'eEfFgG':
                 parts = formatted.split('.')

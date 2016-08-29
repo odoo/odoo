@@ -1,62 +1,93 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
+# Deddy ddr <deddy.ddr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-02 23:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-06-24 04:49+0000\n"
+"Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
+"id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_adyen
-msgid "-It installs the module payment_adyen."
+#, fuzzy
+msgid "-This installs the module payment_adyen."
 msgstr "-Ini akan menginstal modul payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_authorize
-msgid "-It installs the module payment_authorize."
-msgstr ""
+#, fuzzy
+msgid "-This installs the module payment_authorize."
+msgstr "-Ini akan menginstal modul payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_buckaroo
-msgid "-It installs the module payment_buckaroo."
+#, fuzzy
+msgid "-This installs the module payment_buckaroo."
 msgstr "-Ini akan menginstal modul payment_buckaroo."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_ogone
-msgid "-It installs the module payment_ogone."
+#, fuzzy
+msgid "-This installs the module payment_ogone."
 msgstr "-Ini akan menginstal modul payment_ogone."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_paypal
-msgid "-It installs the module payment_paypal."
+#, fuzzy
+msgid "-This installs the module payment_paypal."
+msgstr "-Ini akan menginstal modul payment_paypal."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_sips
+#, fuzzy
+msgid "-This installs the module payment_sips."
 msgstr "-Ini akan menginstal modul payment_paypal."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_config_settings_module_payment_transfer
-msgid "-It installs the module payment_transfer."
-msgstr ""
+#, fuzzy
+msgid "-This installs the module payment_transfer."
+msgstr "-Ini akan menginstal modul payment_adyen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
+msgstr "3D Secure HTML"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-danger\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.acquirer_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
@@ -67,7 +98,7 @@ msgstr "Pengakuisisi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Akun Pengakuisisi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
@@ -77,7 +108,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "Referensi Pengakuisisi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_active
@@ -87,7 +118,7 @@ msgstr "Aktif"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Tambahkan Biaya Ekstra"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -117,6 +148,11 @@ msgid "At payment with acquirer confirmation"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
 msgid "Buckaroo"
 msgstr ""
@@ -124,7 +160,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "Pesan Batal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -155,7 +191,7 @@ msgstr "Mengkonfigurasi metode pembayaran mengakuisisi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
 msgid "Count Payment Method"
-msgstr ""
+msgstr "Menghitung Metode Pembayaran"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -184,12 +220,12 @@ msgstr "Tanggal Pembuatan"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Kredensial"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "Credit card(s)"
-msgstr ""
+msgstr "Kartu kredit(s)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
@@ -199,7 +235,7 @@ msgstr "Mata Uang"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Customer Details"
-msgstr ""
+msgstr "Detail Pelanggan"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -221,7 +257,7 @@ msgstr "selesai"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Pesan Selesai"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -251,7 +287,7 @@ msgstr "Gagal!"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
 msgid "Error Message"
-msgstr ""
+msgstr "Pesan Eror"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
@@ -261,12 +297,15 @@ msgstr "Biaya"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "Jumlah biaya; ditetapkan oleh sistem karena tergantung pada pengakuisisi"
+msgstr ""
+"Jumlah biaya; ditetapkan oleh sistem karena tergantung pada pengakuisisi"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "Bidang digunakan untuk menyimpan pesan kesalahan dan/atau validasi untuk informasi"
+msgstr ""
+"Bidang digunakan untuk menyimpan pesan kesalahan dan/atau validasi untuk "
+"informasi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -301,7 +340,7 @@ msgstr "Dikelompokan berdasarkan .."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "Pesan Bantuan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
@@ -425,7 +464,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "No automatic confirmation"
-msgstr ""
+msgstr "Tidak ada konfirmasi otomatis"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
@@ -435,7 +474,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
 msgid "Order Confirmation"
-msgstr ""
+msgstr "Konfirmasi Pesanan"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -485,7 +524,6 @@ msgstr "Transaksi pembayaran"
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
 #: model:ir.actions.act_window,name:payment.payment_transaction_action_child
 #: model:ir.model.fields,field_description:payment.field_payment_method_payment_ids
-#: model:ir.ui.menu,name:payment.finance_pay_tx_menu
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -493,7 +531,6 @@ msgid "Payment Transactions"
 msgstr "Transaksi pembayaran"
 
 #. module: payment
-#: model:ir.ui.menu,name:payment.finance_payment_menu
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_method_form_view
@@ -503,7 +540,7 @@ msgstr "Pembayaran"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_paypal
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -513,7 +550,7 @@ msgstr "Ditunda"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "Pesan Tertunda"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
@@ -558,7 +595,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
-#: model:ir.ui.menu,name:payment.finance_pay_method_menu
 #: model:ir.ui.menu,name:payment.payment_method_menu
 msgid "Saved Payment Data"
 msgstr ""
@@ -574,6 +610,11 @@ msgid "Server To Server"
 msgstr "Server ke Server"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
 msgstr "Gambar berukuran kecil"
@@ -581,9 +622,9 @@ msgstr "Gambar berukuran kecil"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 
 #. module: payment
@@ -621,7 +662,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -699,12 +741,14 @@ msgstr "Mitra: pembeli mitra browse catatan, tidak perlu mengatur"
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values: nilai-nilai yang tertentu tentang pembeli, misalnya berasal dari bentuk pengiriman"
+msgstr ""
+"partner_values: nilai-nilai yang tertentu tentang pembeli, misalnya berasal "
+"dari bentuk pengiriman"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
 msgid "payment.method"
-msgstr ""
+msgstr "payment.method"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -722,11 +766,9 @@ msgid "tx_values: transaction values"
 msgstr "tx_values: nilai-nilai transaksi"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_authorize
-msgid "unknown"
-msgstr "tidak diketahui"
-
-#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "pengguna: rekor Telusuri pengguna saat ini"
+
+#~ msgid "unknown"
+#~ msgstr "tidak diketahui"

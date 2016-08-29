@@ -15,7 +15,6 @@ var _lt = core._lt;
 var SalesTeamDashboardView = KanbanView.extend({
     display_name: _lt('Dashboard'),
     icon: 'fa-dashboard',
-    view_type: "sales_team_dashboard",
     searchview_hidden: true,
     events: {
         'click .o_dashboard_action': 'on_dashboard_action_clicked',
@@ -62,6 +61,10 @@ var SalesTeamDashboardView = KanbanView.extend({
                 additional_context.search_default_this_week = 1;
             } else if (action_extra === 'overdue') {
                 additional_context.search_default_overdue = 1;
+            }
+        } else if (action_name === 'crm.action_your_pipeline') {
+            if (action_extra === 'overdue') {
+                additional_context['search_default_overdue'] = 1;
             }
         } else if (action_name === 'crm.crm_opportunity_report_action_graph') {
             additional_context.search_default_won = 1;

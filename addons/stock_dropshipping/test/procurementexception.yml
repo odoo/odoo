@@ -22,16 +22,16 @@
 -
   I confirm the sales order.
 -
-  !python {model: sale.order}: |
-    self.action_confirm(cr, uid, ref("sale_order_route_dropship01"), context=context)
+  !python {model: sale.order, id: sale_order_route_dropship01}: |
+    self.action_confirm()
 -
   I check there is a procurement in exception that has the procurement group of the sales order created before.
 -
-  !python {model: procurement.order}: |
-    self.run_scheduler(cr, uid)
-    sale_id = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_route_dropship01"))
-    proc_id = self.search(cr, uid, [('group_id.name', '=', sale_id.name), ('state', '=', 'exception')])
-    assert proc_id, 'No Procurement!'
+  !python {model: procurement.order, id: False}: |
+    self.run_scheduler()
+    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
+    procs = self.search([('group_id.name', '=', sale_order.name), ('state', '=', 'exception')])
+    assert procs, 'No Procurement!'
 -
   I set the at least one supplier on the product.
 -
@@ -43,22 +43,22 @@
 -
   I run the Procurement.
 -
-  !python {model: procurement.order}: |
-    sale_id = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_route_dropship01"))
-    proc_id = self.search(cr, uid, [('group_id.name', '=', sale_id.name), ('state', '=', 'exception')])
-    self.run(cr, uid, proc_id)
+  !python {model: procurement.order, id: False}: |
+    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
+    procs = self.search([('group_id.name', '=', sale_order.name), ('state', '=', 'exception')])
+    procs.run()
 -
   I check the status changed there is no procurement order in exception any more from that procurement group
 -
-  !python {model: procurement.order}: |
-    sale_id = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_route_dropship01"))
-    proc_id = self.search(cr, uid, [('group_id.name', '=', sale_id.name), ('state', '=', 'exception')])
-    assert not proc_id, 'Procurement should be in running state'
+  !python {model: procurement.order, id: False}: |
+    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
+    procs = self.search([('group_id.name', '=', sale_order.name), ('state', '=', 'exception')])
+    assert not procs, 'Procurement should be in running state'
 -
   I check a purchase quotation was created.
 -
-  !python {model: procurement.order}: |
-    sale_id = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_route_dropship01"))
-    proc_ids = self.search(cr, uid, [('group_id.name', '=', sale_id.name)])
-    purchase_id = [proc.purchase_line_id.order_id for proc in self.browse(cr, uid, proc_ids) if proc.purchase_line_id]
+  !python {model: procurement.order, id: False}: |
+    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
+    procs = self.search([('group_id.name', '=', sale_order.name)])
+    purchase_id = [proc.purchase_line_id.order_id for proc in procs if proc.purchase_line_id]
     assert purchase_id, 'No Purchase Quotation is created'

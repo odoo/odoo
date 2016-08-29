@@ -4,7 +4,7 @@
 {
     'name': 'Multi Language Chart of Accounts',
     'version': '1.1',
-    'category': 'Hidden/Dependency',
+    'category': 'Localization',
     'description': """
     * Multi language support for Chart of Accounts, Taxes, Tax Codes, Journals,
       Accounting Templates, Analytic Chart of Accounts and Analytic Journals.
@@ -12,9 +12,5 @@
         - Copy translations for COA, Tax, Tax Code and Fiscal Position from
           templates to target objects.
     """,
-    'depends' : ['account'],
-    'data': [],
-    'demo': [],
-    'installable': True,
-    'auto_install': False,
+    'depends': ['account'],
 }

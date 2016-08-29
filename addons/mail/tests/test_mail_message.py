@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestMail
-from openerp.exceptions import AccessError
-from openerp.exceptions import except_orm
-from openerp.tools import mute_logger
+from odoo.addons.mail.tests.common import TestMail
+from odoo.exceptions import AccessError, except_orm
+from odoo.tools import mute_logger
 
 
 class TestMailMessage(TestMail):
@@ -240,14 +240,14 @@ class TestMailMessage(TestMail):
         msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Admin set as starred
-        msg.set_message_starred(True)
+        msg.toggle_message_starred()
         self.assertTrue(msg.starred)
 
         # Employee set as starred
-        msg_emp.set_message_starred(True)
+        msg_emp.toggle_message_starred()
         self.assertTrue(msg_emp.starred)
 
         # Do: Admin unstars msg
-        msg.set_message_starred(False)
+        msg.toggle_message_starred()
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)

@@ -1,56 +1,55 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
+from odoo import api, fields, models
+from odoo.tools import drop_view_if_exists
 
-
-class report_workcenter_load(osv.osv):
-    _name="report.workcenter.load"
-    _description="Work Center Load"
+class WorkCenterLoad(models.Model):
+    _name = "report.workcenter.load"
+    _description = "Work Center Load"
     _auto = False
     _log_access = False
-    _columns = {
-        'name': fields.char('Week', required=True),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
-        'cycle': fields.float('Number of Cycles'),
-        'hour': fields.float('Number of Hours'),
-    }
 
-    def init(self, cr):
-        cr.execute("""
-            create or replace view report_workcenter_load as (
+    name = fields.Char('Week', required=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True)
+    duration = fields.Float('Duration')
+
+    @api.model_cr
+    def init(self):
+        drop_view_if_exists(self._cr, 'report_workcenter_load')
+        self._cr.execute("""
+            create view report_workcenter_load as (
                 SELECT
                     min(wl.id) as id,
-                    to_char(p.date_planned,'YYYY:mm:dd') as name,
-                    SUM(wl.hour) AS hour,
-                    SUM(wl.cycle) AS cycle,
+                    to_char(p.date_planned_start,'YYYY:mm:dd') as name,
+                    SUM(wl.duration_expected) AS duration,
                     wl.workcenter_id as workcenter_id
                 FROM
-                    mrp_production_workcenter_line wl
+                    mrp_workorder wl
                     LEFT JOIN mrp_production p
                         ON p.id = wl.production_id
                 GROUP BY
                     wl.workcenter_id,
-                    to_char(p.date_planned,'YYYY:mm:dd')
+                    to_char(p.date_planned_start,'YYYY:mm:dd')
             )""")
 
 
-
-class report_mrp_inout(osv.osv):
-    _name="report.mrp.inout"
-    _description="Stock value variation"
+class ValueVariation(models.Model):
+    _name = "report.mrp.inout"
+    _description = "Stock value variation"
     _auto = False
     _log_access = False
     _rec_name = 'date'
-    _columns = {
-        'date': fields.char('Week', required=True),
-        'value': fields.float('Stock value', required=True, digits=(16,2)),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-    }
 
-    def init(self, cr):
-        cr.execute("""
-            create or replace view report_mrp_inout as (
+    date = fields.Char('Week', required=True)
+    value = fields.Float('Stock value', required=True, digits=(16, 2))
+    company_id = fields.Many2one('res.company', 'Company', required=True)
+
+    @api.model_cr
+    def init(self):
+        drop_view_if_exists(self._cr, 'report_mrp_inout')
+        self._cr.execute("""
+            create view report_mrp_inout as (
                 select
                     min(sm.id) as id,
                     to_char(sm.date,'YYYY:IW') as date,
@@ -62,7 +61,7 @@ class report_mrp_inout(osv.osv):
                         sm.price_unit * sm.product_qty
                     else
                         0.0
-                    end) as value, 
+                    end) as value,
                     sm.company_id
                 from
                     stock_move sm

@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * subscription
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-10-05 13:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: subscription
@@ -67,7 +68,9 @@ msgstr "Зададена вредност"
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr "Стандардната вредност се зема во предвид за полето кога се генерира нов документ."
+msgstr ""
+"Стандардната вредност се зема во предвид за полето кога се генерира нов "
+"документ."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
@@ -136,14 +139,18 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr "Доколку активното поле е поставено на Грешка, ќе ви овозможи да го сокриете документот за претплата без да го отстраните."
+msgstr ""
+"Доколку активното поле е поставено на Грешка, ќе ви овозможи да го сокриете "
+"документот за претплата без да го отстраните."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr "Доколу активното поле е поставено на Грешка, ќе ви овозможи да ја сокриете претплатата без да ја отстраните."
+msgstr ""
+"Доколу активното поле е поставено на Грешка, ќе ви овозможи да ја сокриете "
+"претплатата без да ја отстраните."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
@@ -153,7 +160,8 @@ msgstr "Внатрешни белешки"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+#, fuzzy
+msgid "Internal Qty"
 msgstr "Количина на интервал"
 
 #. module: subscription
@@ -204,7 +212,8 @@ msgstr "Белешки"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
+#, fuzzy
+msgid "Number of Documents"
 msgstr "Број на документи"
 
 #. module: subscription
@@ -219,12 +228,14 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:88
 #, python-format
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr "Ве молиме назначете друг изворен документ.\nОвој не постои!"
+msgstr ""
+"Ве молиме назначете друг изворен документ.\n"
+"Овој не постои!"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -289,6 +300,12 @@ msgid "Subscription"
 msgstr "Претплата"
 
 #. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+#, fuzzy
+msgid "Subscription Data"
+msgstr "Податоци за претплата"
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_document_id
 #: model:ir.ui.view,arch_db:subscription.document_form
@@ -322,11 +339,6 @@ msgid "Subscriptions"
 msgstr "Претплати"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr "Податоци за претплата"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -336,7 +348,8 @@ msgstr "Корисник"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr "Корисникот може да избере изворен документ на кој ќе сака да креира документи"
+msgstr ""
+"Корисникот може да избере изворен документ на кој ќе сака да креира документи"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -344,7 +357,7 @@ msgid "Weeks"
 msgstr "Недели"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:111
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr "Не можете да избришете активна претплата!"

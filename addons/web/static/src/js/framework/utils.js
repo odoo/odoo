@@ -416,6 +416,45 @@ var DropMisordered = Class.extend({
     },
 });
 
+var DropPrevious = Class.extend({
+    /**
+     * Registers a new deferred and rejects the previous one
+     * @param {$.Deferred} the new deferred
+     * @returns {$.Promise}
+     */
+    add: function (deferred) {
+        if (this.current_def) { this.current_def.reject(); }
+        var res = $.Deferred();
+        deferred.then(res.resolve, res.reject);
+        this.current_def = res;
+        return res.promise();
+    }
+});
+
+/**
+ * Rejects a deferred as soon as a reference deferred is either resolved or rejected
+ * @param {$.Deferred} [target_def] the deferred to potentially reject
+ * @param {$.Deferred} [reference_def] the reference target
+ * @returns {$.Deferred}
+ */
+function reject_after(target_def, reference_def) {
+    var res = $.Deferred();
+    target_def.then(res.resolve, res.reject);
+    reference_def.always(res.reject);
+    return res.promise();
+}
+
+/**
+ * Returns a deferred resolved after 'wait' milliseconds
+ * @param {int} [wait] the delay in ms
+ * @return {$.Deferred}
+ */
+function delay (wait) {
+    var def = $.Deferred();
+    setTimeout(def.resolve, wait);
+    return def;
+}
+
 function swap(array, elem1, elem2) {
     var i1 = array.indexOf(elem1);
     var i2 = array.indexOf(elem2);
@@ -423,6 +462,39 @@ function swap(array, elem1, elem2) {
     array[i1] = elem2;
 }
 
+function toBoolElse (str, elseValues, trueValues, falseValues) {
+    var ret = _.str.toBool(str, trueValues, falseValues);
+    if (_.isUndefined(ret)) {
+        return elseValues;
+    }
+    return ret;
+}
+
+function async_when() {
+    var async = false;
+    var def = $.Deferred();
+    $.when.apply($, arguments).done(function() {
+        var args = arguments;
+        var action = function() {
+            def.resolve.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    }).fail(function() {
+        var args = arguments;
+        var action = function() {
+            def.reject.apply(def, args);
+        };
+        if (async)
+            action();
+        else
+            setTimeout(action, 0);
+    });
+    async = true;
+    return def;
+}
 
 return {
     divmod: divmod,
@@ -449,76 +521,12 @@ return {
     assert: assert,
     xor: xor,
     DropMisordered: DropMisordered,
+    DropPrevious: DropPrevious,
+    reject_after: reject_after,
+    delay: delay,
     swap: swap,
-};
-
-});
-
-odoo.define('web.dom_utils', function (require) {
-"use strict";
-
-var core = require('web.core');
-
-// TO DO: move this into new file dom_utils.js
-/**
- * Autoresize a $textarea node, by recomputing its height when necessary
- * @param {number} [options.min_height] by default, 50.
- * @param {Widget} [options.parent] if set, autoresize will listen to some extra
- * events to decide when to resize itself.  This is useful for widgets that are
- * not in the dom when the autoresize is declared.
- */
-function autoresize ($textarea, options) {
-    options = options || {};
-
-    var $fixed_text_area;
-    var min_height = (options && options.min_height) || 50;
-    if (!$fixed_text_area) {
-        $fixed_text_area = $('<textarea disabled>').css({
-            position: 'absolute',
-            opacity: 0,
-            height: 10,
-            top: -10000,
-            left: -10000,
-        });
-        $fixed_text_area.addClass($textarea[0].className);
-        $fixed_text_area.insertAfter($textarea);
-    }
-
-    var style = window.getComputedStyle($textarea[0], null);
-    if (style.resize === 'vertical') {
-        $textarea[0].style.resize = 'none';
-    } else if (style.resize === 'both') {
-        $textarea[0].style.resize = 'horizontal';
-    }
-    resize();
-    if ($textarea.__auto_resized) {
-        return;
-    }
-    $textarea.__auto_resized = true;
-
-    $textarea.on('input focus', resize);
-    if (options.parent) {
-        core.bus.on('DOM_updated', options.parent, resize);
-        core.bus.on('view_shown', options.parent, resize);
-    }
-
-    function resize () {
-        var heightOffset;
-        var style = window.getComputedStyle($textarea[0], null);
-        if (style.boxSizing === 'content-box') {
-            heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
-        } else {
-            heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-        }
-        $fixed_text_area.width($textarea.width());
-        $fixed_text_area.val($textarea.val());
-        var height = $fixed_text_area[0].scrollHeight;
-        $textarea.css({height: Math.max(height + heightOffset, min_height)});
-    }
-}
-
-return {
-    autoresize: autoresize,
+    toBoolElse: toBoolElse,
+    async_when: async_when,
 };
 
 });

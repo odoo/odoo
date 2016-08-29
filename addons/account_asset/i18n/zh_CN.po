@@ -3,20 +3,15 @@
 # * account_asset
 # 
 # Translators:
-# Connie Xiao <connie.xiao@elico-corp.com>, 2015
-# fausthuang, 2015
-# jeffery chen fan <jeffery9@gmail.com>, 2015
-# zhining wu <wzn63@21cn.com>, 2015
-# 卓忆科技 <zhanghao@jointd.com>, 2015
-# 陈欢 <404551458@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 09:26+0000\n"
-"PO-Revision-Date: 2016-01-16 08:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,10 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:350
+#: code:addons/account_asset/models/account_asset.py:375
 #, python-format
 msgid " (copy)"
 msgstr " (副本)"
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:509
+#, python-format
+msgid " (grouped)"
+msgstr " (分组)"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -42,7 +43,7 @@ msgstr "# 折旧行"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr "# 分期付款明细"
+msgstr "# 分期明细"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -52,21 +53,39 @@ msgstr "会计日期"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move
 msgid "Account Entry"
-msgstr "科目分录"
+msgstr "会计分录"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction
-msgid "Action Needed"
-msgstr "所需动作"
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
+msgid "Account used in the depreciation entries, to decrease the asset value."
+msgstr ""
+
+#. module: account_asset
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
+msgid ""
+"Account used in the periodical entries, to record a part of the asset as "
+"expense."
+msgstr ""
+
+#. module: account_asset
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
+msgid ""
+"Account used to record the purchase of the asset at its original price."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_active
 msgid "Active"
-msgstr "有效"
+msgstr "活跃"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Additional Options"
+msgstr "额外选项"
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:566
 #, python-format
 msgid "Amount"
 msgstr "总额"
@@ -88,7 +107,6 @@ msgstr "分析账户"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_asset_id
-#: model:ir.model.fields,field_description:account_asset.field_account_move_asset_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_asset_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -98,7 +116,6 @@ msgstr "资产"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Asset Account"
 msgstr "资产科目"
@@ -113,7 +130,7 @@ msgstr "资产类别"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Asset Durations to Modify"
-msgstr "要修改的资产周期"
+msgstr "要修改的资产时长"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
@@ -157,10 +174,10 @@ msgid "Asset category"
 msgstr "资产类别"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:238
+#: code:addons/account_asset/models/account_asset.py:262
 #, python-format
 msgid "Asset created"
-msgstr "资产生成"
+msgstr "资产创建"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -168,7 +185,7 @@ msgid "Asset depreciation line"
 msgstr "资产折旧行"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:271
+#: code:addons/account_asset/models/account_asset.py:295
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr "资产出售或处置.  凭证待确认."
@@ -176,7 +193,7 @@ msgstr "资产出售或处置.  凭证待确认."
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr "资产/收益 确认"
+msgstr "资产/收入识别"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -195,6 +212,11 @@ msgstr "资产"
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets Analysis"
 msgstr "资产分析"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
+msgid "Assets Depreciation Lines"
+msgstr "资产折旧行"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -222,6 +244,11 @@ msgid "Assets in running state"
 msgstr "处于运行状态的资产"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
+msgid "Auto-confirm Assets"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Cancel"
@@ -247,13 +274,21 @@ msgid ""
 msgstr "如果你像让这类固定资产在开发票之后自动确认为“运行”状态，勾选这里。"
 
 #. module: account_asset
+#: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
+msgid "Check this if you want to group the generated entries by categories."
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr "选择计算折旧账目数量的方法。\n  * 线形：按照资产总值/折旧账目数量计算\n  * 递减：按照资产残值 X 递减率计算"
+msgstr ""
+"选择计算折旧账目数量的方法。\n"
+"  * 线形：按照资产总值/折旧账目数量计算\n"
+"  * 递减：按照资产残值 X 递减率计算"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
@@ -262,7 +297,10 @@ msgid ""
 "Choose the method to use to compute the dates and number of depreciation lines.\n"
 "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr "选择用于计算折旧行的日期和次数的方法。\n折旧次数：设定折旧次数和两次折旧之间的间隔时间\n截止日期：设定两次折旧的间隔时间和折旧的截止日期"
+msgstr ""
+"选择用于计算折旧行的日期和次数的方法。\n"
+"折旧次数：设定折旧次数和两次折旧之间的间隔时间\n"
+"截止日期：设定两次折旧的间隔时间和折旧的截止日期"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -311,16 +349,16 @@ msgid "Confirm"
 msgstr "确认"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:18
+#: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Asset Moves"
-msgstr "新建固定资产会计凭证"
+msgstr "创建的资产凭证"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:20
+#: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Revenue Moves"
-msgstr "创建收入凭证"
+msgstr "创建的收入分录"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_uid
@@ -329,7 +367,7 @@ msgstr "创建收入凭证"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_create_uid
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_date
@@ -338,7 +376,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_create_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建于"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_depreciated_value
@@ -346,11 +384,11 @@ msgid "Cumulative Depreciation"
 msgstr "累计折旧"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/models/account_asset.py:566
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
-msgstr "货币"
+msgstr "币种"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -381,7 +419,7 @@ msgstr "资产日期"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Date of asset purchase"
-msgstr "资产采购日期"
+msgstr "资产采购的日期"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -389,25 +427,20 @@ msgid "Date of depreciation"
 msgstr "折旧日期"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后消息的日期"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
-msgstr "递延收益科目"
+msgstr "递延收入科目"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
-msgstr "递延收益类型"
+msgstr "递延收入类型"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Deferred Revenues"
-msgstr "递延收益"
+msgstr "递延收入"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -427,10 +460,9 @@ msgid "Depreciation"
 msgstr "折旧"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Depreciation Account"
-msgstr "折旧科目"
+msgid "Depreciation Asset Account"
+msgstr "折旧资产科目"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -444,9 +476,24 @@ msgid "Depreciation Date"
 msgstr "折旧日期"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+msgid "Depreciation Entries: Asset Account"
+msgstr "折旧分录: 资产科目"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
+msgid "Depreciation Entries: Expense Account"
+msgstr "折旧分录: 费用科目"
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "折旧分录"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Depreciation Expense Account"
+msgstr "折旧费用科目"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -475,16 +522,16 @@ msgid "Depreciation Name"
 msgstr "折旧说明"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
+#: code:addons/account_asset/wizard/asset_modify.py:85
 #, python-format
 msgid "Depreciation board modified"
 msgstr "折旧修改"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/models/account_asset.py:569
 #, python-format
 msgid "Depreciation line posted."
-msgstr "折旧行登帐"
+msgstr "折旧行已过账"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_display_name
@@ -497,19 +544,19 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:274
+#: code:addons/account_asset/models/account_asset.py:298
 #, python-format
 msgid "Disposal Move"
-msgstr "处置"
+msgstr "处置凭证"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:277
+#: code:addons/account_asset/models/account_asset.py:301
 #, python-format
 msgid "Disposal Moves"
-msgstr "处置"
+msgstr "处置凭证"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/models/account_asset.py:548
 #, python-format
 msgid "Document closed."
 msgstr "文档关闭"
@@ -534,34 +581,9 @@ msgid "Ending date"
 msgstr "结束日期"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_account_move_ids
-msgid "Entries"
-msgstr "分录"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Every"
-msgstr "每"
-
-#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Extended Filters..."
-msgstr "扩展过滤器..."
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_follower_ids
-msgid "Followers"
-msgstr "关注者"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "关注者 ( 频道 )"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "关注者 ( 合作伙伴 )"
+msgstr "扩展筛选..."
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
@@ -573,7 +595,7 @@ msgstr "从这报表, 你可以看到所有的折旧. 这个搜索工具也可�
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Generate Assets Entries"
-msgstr "创建资产分录"
+msgstr "生成资产分录"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -583,17 +605,17 @@ msgstr "生成分录"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_gross_value
 msgid "Gross Amount"
-msgstr "总额"
+msgstr "毛金额"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value
 msgid "Gross Value"
-msgstr "总值"
+msgstr "毛值"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Gross value of asset"
-msgstr "资产的总价"
+msgstr "资产的毛值"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -607,6 +629,11 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
+msgid "Group Journal Entries"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_id
@@ -615,21 +642,6 @@ msgstr "分组..."
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_id
 msgid "ID"
 msgstr "ID"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread
-msgid "If checked new messages require your attention."
-msgstr "查看是否有需要留意的新信息。"
-
-#. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "如果勾选此项，有新消息会提醒你"
-
-#. module: account_asset
-#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
-msgid "Income Account"
-msgstr "收入科目"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_prorata
@@ -659,11 +671,6 @@ msgid "Invoice Line"
 msgstr "发票行"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_is_follower
-msgid "Is Follower"
-msgstr "是否关注者"
-
-#. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
 msgstr "折旧后资产的剩余价值金额"
@@ -679,16 +686,11 @@ msgid "Journal"
 msgstr "分类账"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:376
+#: code:addons/account_asset/models/account_asset.py:409
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
 msgstr "分类账分录"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_last_post
-msgid "Last Message Date"
-msgstr "最后消息日期"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset___last_update
@@ -725,9 +727,9 @@ msgid "Linear"
 msgstr "线性"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_ids
-msgid "Messages"
-msgstr "消息"
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
+msgid "Linked"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -749,7 +751,7 @@ msgstr "修改折旧"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Month"
-msgstr "月份"
+msgstr "月"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_mrr
@@ -767,41 +769,31 @@ msgid "Note"
 msgstr "笔记"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of Actions"
-msgstr "动作的序列号"
-
-#. module: account_asset
 #: selection:account.asset.asset,method_time:0
 #: selection:account.asset.category,method_time:0
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_number
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method_number
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_method_number
 msgid "Number of Depreciations"
-msgstr "折旧次数"
+msgstr "折旧数量"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr "凭证编号"
+msgstr "分录数量"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
 msgid "Number of Months in a Period"
-msgstr "在一个周期内的月数"
+msgstr "在一个期间内的月数"
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要动作的消息编号"
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "One Entry Every"
+msgstr ""
 
 #. module: account_asset
-#: model:ir.model.fields,help:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未读的消息数量"
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/models/account_asset.py:568
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -823,17 +815,12 @@ msgstr "周期"
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 msgid "Post Depreciation Lines"
-msgstr "登帐折旧明细"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
-msgid "Post Journal Entries"
-msgstr "登录分类账分录"
+msgstr "过账折旧明细"
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:24
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
+#: code:addons/account_asset/static/src/js/account_asset.js:28
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_posted_check
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_move_check
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 #, python-format
@@ -843,12 +830,12 @@ msgstr "已登帐"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_posted_value
 msgid "Posted Amount"
-msgstr "已登帐金额"
+msgstr "已过账金额"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Posted depreciation lines"
-msgstr "已登帐折旧明细"
+msgstr "已过账折旧明细"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_product_template
@@ -862,7 +849,7 @@ msgid "Prorata Temporis"
 msgstr "即时按比例分配"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:316
+#: code:addons/account_asset/models/account_asset.py:341
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -890,24 +877,29 @@ msgid "Reason"
 msgstr "原因"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Recognition Account"
+msgstr "识别科目"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
-msgstr "确认收入科目"
+msgstr "识别收入科目"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_code
 msgid "Reference"
-msgstr "引用"
+msgstr "参考"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Residual"
-msgstr "残值"
+msgstr "残留"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value_residual
 msgid "Residual Value"
-msgstr "剩余价值"
+msgstr "残余价值"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -928,7 +920,7 @@ msgstr "销售"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "残值"
+msgstr "剩余价值"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -982,7 +974,7 @@ msgstr "被折旧资产的折旧数量"
 msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
-msgstr "这个向导是将已选择月的分期付款/折旧过账.<br/>在资产/收益确认的期间内, 这将为所有的分期付款创建相应的分类账凭证."
+msgstr "这个向导是将已选择月的分期付款/折旧过账.<br/>在资产/收益确认的期间内, 这将为所有的分期付款创建相应的日记账分录."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -991,6 +983,7 @@ msgid "Time Method"
 msgstr "计时方法"
 
 #. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
 msgstr "时间方式基于"
@@ -1004,7 +997,7 @@ msgstr "类型"
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:24
+#: code:addons/account_asset/static/src/js/account_asset.js:28
 #, python-format
 msgid "Unposted"
 msgstr "未过账"
@@ -1012,17 +1005,7 @@ msgstr "未过账"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
 msgid "Unposted Amount"
-msgstr "未登帐总额"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread
-msgid "Unread Messages"
-msgstr "未读消息"
-
-#. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未读消息计数器"
+msgstr "未过账总额"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -1037,7 +1020,10 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr "资产创建后，其状态为“草稿”。\n若资产被确认，其状态变为“运行”，并且其折旧账目可以计入会计科目。\n当资产折旧期结束后，可以手工关闭。若最后折旧账目已经发生，该资产自动转至关闭状态。"
+msgstr ""
+"资产创建后，其状态为“草稿”。\n"
+"若资产被确认，其状态变为“运行”，并且其折旧账目可以计入会计科目。\n"
+"当资产折旧期结束后，可以手工关闭。若最后折旧账目已经发生，该资产自动转至关闭状态。"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1045,25 +1031,25 @@ msgid "Year"
 msgstr "年"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:100
+#: code:addons/account_asset/models/account_asset.py:106
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr "在 %s 状态, 你不能删除文档."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:102
+#: code:addons/account_asset/models/account_asset.py:109
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "您不能删除包含已过账分录的文档"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/models/account_asset.py:577
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "你不能删除已过账折旧项."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/models/account_asset.py:579
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "你不能删除已过账的分期付款明细."

@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import os
-from openerp import api, fields, models, _
+
+from odoo import api, fields, models
+
 
 class IrModuleModule(models.Model):
     _name = "ir.module.module"
@@ -46,6 +51,6 @@ class IrModuleModule(models.Model):
 
         next_action = self.button_immediate_install() # Then install the new chosen one
         if next_action.get('tag') == 'reload' and not next_action.get('params', {}).get('menu_id'):
-            next_action = self.env.ref('website.action_website_tutorial').read()[0]
+            next_action = self.env.ref('website.action_website').read()[0]
 
         return next_action

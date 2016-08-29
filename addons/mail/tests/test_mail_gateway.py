@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email.utils import formataddr
-
-from .common import TestMail
-from openerp.tools import mute_logger
 import socket
+
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools import mute_logger
+
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -429,8 +430,8 @@ class TestMailgateway(TestMail):
                          'message_process: incoming email on Partners alias should send a bounce email')
         self.assertIn('New Frogs', self._mails[0].get('subject'),
                       'message_process: bounce email on Partners alias should contain the original subject')
-        self.assertIn(formataddr(('Sylvie Lelitre', 'test.sylvie.lelitre@agrolait.com')), self._mails[0].get('email_to'),
-                      'message_process: bounce email on Partners alias should have original email sender as recipient')
+        self.assertIn('whatever-2a840@postmaster.twitter.com', self._mails[0].get('email_to'),
+                      'message_process: bounce email on Partners alias should go to Return-Path address')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
     def test_message_process_alias_followers_bounce(self):

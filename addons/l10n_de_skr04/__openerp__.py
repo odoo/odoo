@@ -55,10 +55,10 @@
 
 {
     'name': 'Deutschland SKR04 - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR04.
 ==============================================================================
@@ -66,11 +66,9 @@ Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR04.
 German accounting chart and localization.
     """,
     'depends': ['l10n_de'],
-    'demo': [],
     'data': [
-        'account_chart.xml',
-        'account_tax_fiscal_position.xml',
-        'account.chart.template.yml',
+        'data/l10n_de_skr04_chart_data.xml',
+        'data/account_tax_fiscal_position_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'installable': True,
 }

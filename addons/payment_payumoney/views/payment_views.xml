@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_acquirer_form_payumoney" model="ir.ui.view">
+        <field name="name">payment.acquirer.form.inherit</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='after'>
+                <group attrs="{'invisible': [('provider', '!=', 'payumoney')]}">
+                    <field name="payumoney_merchant_key"/>
+                    <field name="payumoney_merchant_salt" password="True"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

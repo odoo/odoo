@@ -1,7 +1,7 @@
 {
     'name': 'Barcodes',
     'version': '2.0',
-    'category': 'Hidden/Dependency',
+    'category': 'Extra Tools',
     'summary': 'Barcodes Scanning and Parsing',
     'description': """
 This module adds support for barcode scanning and parsing.
@@ -27,9 +27,9 @@ It provides the following features:
     'depends': ['web'],
     'data': [
         'data/barcodes_data.xml',
-        'barcodes_view.xml',
+        'views/barcodes_view.xml',
         'security/ir.model.access.csv',
-        'views/templates.xml',
+        'views/barcodes_templates.xml',
     ],
     'installable': True,
     'auto_install': False,

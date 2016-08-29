@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp
-
-import interface
-import print_xml
-import print_fnc
-import custom
-import render
-import int_to_text
-
-import report_sxw
-
-import printscreen
+from openerp import api
+from . import custom
+from . import int_to_text
+from . import interface
+from . import print_fnc
+from . import print_xml
+from . import printscreen
+from . import render
+from . import report_sxw
 
 def render_report(cr, uid, ids, name, data, context=None):
     """
     Helper to call ``ir.actions.report.xml.render_report()``.
     """
-    registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
-    return registry['ir.actions.report.xml'].render_report(cr, uid, ids, name, data, context)
+    env = api.Environment(cr, uid, context or {})
+    return env['ir.actions.report.xml'].render_report(ids, name, data)

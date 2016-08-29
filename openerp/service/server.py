@@ -55,7 +55,8 @@ SLEEP_INTERVAL = 60     # 1 min
 def memory_info(process):
     """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
     get_memory_info """
-    return (getattr(process, 'memory_info', None) or process.get_memory_info)()
+    pmem = (getattr(process, 'memory_info', None) or process.get_memory_info)()
+    return (pmem.rss, pmem.vms)
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -382,10 +383,14 @@ class PreforkServer(CommonServer):
     """
     def __init__(self, app):
         # config
-        self.address = (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
+        self.address = config['xmlrpc'] and \
+            (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
+        self.cron_timeout = config['limit_time_real_cron'] or None
+        if self.cron_timeout == -1:
+            self.cron_timeout = self.timeout
         # working vars
         self.beat = 4
         self.app = app
@@ -508,7 +513,10 @@ class PreforkServer(CommonServer):
         for (pid, worker) in self.workers.items():
             if worker.watchdog_timeout is not None and \
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
-                _logger.error("Worker (%s) timeout", pid)
+                _logger.error("%s (%s) timeout after %ss",
+                              worker.__class__.__name__,
+                              pid,
+                              worker.watchdog_timeout)
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
@@ -557,12 +565,13 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
-        # listen to socket
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.setblocking(0)
-        self.socket.bind(self.address)
-        self.socket.listen(8 * self.population)
+        if self.address:
+            # listen to socket
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.socket.setblocking(0)
+            self.socket.bind(self.address)
+            self.socket.listen(8 * self.population)
 
     def stop(self, graceful=True):
         if self.long_polling_pid is not None:
@@ -586,7 +595,8 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping forcefully")
         for pid in self.workers.keys():
             self.worker_kill(pid, signal.SIGTERM)
-        self.socket.close()
+        if self.socket:
+            self.socket.close()
 
     def run(self, preload, stop):
         self.start()
@@ -689,11 +699,13 @@ class Worker(object):
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
-        # Prevent fd inherientence close_on_exec
-        flags = fcntl.fcntl(self.multi.socket, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
-        fcntl.fcntl(self.multi.socket, fcntl.F_SETFD, flags)
-        # reset blocking status
-        self.multi.socket.setblocking(0)
+        if self.multi.socket:
+            # Prevent fd inheritance: close_on_exec
+            flags = fcntl.fcntl(self.multi.socket, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
+            fcntl.fcntl(self.multi.socket, fcntl.F_SETFD, flags)
+            # reset blocking status
+            self.multi.socket.setblocking(0)
+
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, signal.SIG_DFL)
         signal.signal(signal.SIGCHLD, signal.SIG_DFL)
@@ -722,6 +734,7 @@ class WorkerHTTP(Worker):
     """ HTTP Request workers """
     def process_request(self, client, addr):
         client.setblocking(1)
+        client.settimeout(0.5)
         client.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         # Prevent fd inherientence close_on_exec
         flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
@@ -758,6 +771,7 @@ class WorkerCron(Worker):
         # The variable db_index is keeping track of the next database to
         # process.
         self.db_index = 0
+        self.watchdog_timeout = multi.cron_timeout  # Use a distinct value for CRON Worker
 
     def sleep(self):
         # Really sleep once all the databases have been processed.
@@ -811,7 +825,8 @@ class WorkerCron(Worker):
     def start(self):
         os.nice(10)     # mommy always told me to be nice with others...
         Worker.start(self)
-        self.multi.socket.close()
+        if self.multi.socket:
+            self.multi.socket.close()
 
 #----------------------------------------------------------
 # start/stop public api
@@ -912,12 +927,13 @@ def start(preload=None, stop=False):
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
     watcher = None
-    if config['dev_mode']:
+    if 'reload' in config['dev_mode']:
         if watchdog:
             watcher = FSWatcher()
             watcher.start()
         else:
             _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
+    if 'werkzeug' in config['dev_mode']:
         server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)

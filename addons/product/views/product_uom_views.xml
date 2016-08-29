@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_uom_tree_view" model="ir.ui.view">
+        <field name="name">product.uom.tree</field>
+        <field name="model">product.uom</field>
+        <field name="arch" type="xml">
+            <tree string="Units of Measure">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="uom_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_uom_form_view" model="ir.ui.view">
+        <field name="name">product.uom.form</field>
+        <field name="model">product.uom</field>
+        <field name="arch" type="xml">
+            <form string="Units of Measure">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="category_id"/>
+                        <field name="uom_type"/>
+                        <field name="factor"
+                            digits="[42,5]"
+                            attrs="{'invisible':[('uom_type','!=','smaller')],
+                                    'readonly':[('uom_type','=','bigger')]}"/>
+                        <field name="factor_inv"
+                            digits="[42,5]"
+                            attrs="{'invisible':[('uom_type','!=','bigger')],
+                                    'readonly':[('uom_type','!=','bigger')]}"/>
+                        <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey" colspan="2">
+                            e.g: 1 * (reference unit) = ratio * (this unit)
+                        </p>
+                        <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey" colspan="2">
+                            e.g: 1 * (this unit) = ratio * (reference unit)
+                        </p>
+                    </group>
+                    <group>
+                        <field name="active"/>
+                        <field name="rounding" digits="[42, 5]"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="product_uom_form_action" model="ir.actions.act_window">
+        <field name="name">Units of Measure</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.uom</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="product_uom_tree_view"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new unit of measure.
+          </p><p>
+            You must define a conversion rate between several Units of
+            Measure within the same category.
+          </p>
+        </field>
+    </record>
+
+    <record id="product_uom_categ_form_view" model="ir.ui.view">
+        <field name="name">product.uom.categ.form</field>
+        <field name="model">product.uom.categ</field>
+        <field name="arch" type="xml">
+            <form string="Units of Measure categories">
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="product_uom_categ_form_action" model="ir.actions.act_window">
+        <field name="name">Unit of Measure Categories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.uom.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new unit of measure category.
+          </p><p>
+            Units of measure belonging to the same category can be
+            converted between each others. For example, in the category
+            <i>'Time'</i>, you will have the following units of measure:
+            Hours, Days.
+          </p>
+        </field>
+    </record>
+</odoo>

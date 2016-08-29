@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2011 Noviat nv/sa (www.noviat.be). All rights reserved.
@@ -8,7 +8,7 @@
     'version': '1.2',
     'author': 'Noviat',
     'website': 'https://www.odoo.com/page/accounting',
-    'category' : 'Localization',
+    'category': 'Localization',
     'description': """
     
 Belgian localization for in- and outgoing invoices (prereq to account_coda):
@@ -31,11 +31,8 @@ generated if no algorithm is specified on the Partner record.
 
     """,
     'depends': ['account'],
-    'demo': [],
     'data' : [
-        'partner_view.xml',
-        'account_invoice_view.xml',        
+        'views/res_partner_view.xml',
+        'views/account_invoice_view.xml',        
     ],
-    'auto_install': False,
-    'installable': True,
 }

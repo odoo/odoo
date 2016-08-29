@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2008-2008 凯源吕鑫 lvxin@gmail.com   <basic chart data>
@@ -9,7 +9,7 @@
 {
     'name': '中国会计科目表',
     'version': '1.8',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',
@@ -24,9 +24,8 @@
     """,
     'depends': ['base', 'account'],
     'data': [
-        'base_data.xml',
-        'account_chart_type.xml',
+        'data/res_country_state_data.xml',
+        'data/account_account_type_data.xml',
     ],
     'license': 'GPL-3',
-    'installable': True,
 }

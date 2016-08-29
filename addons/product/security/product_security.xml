@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="0">
 
     <record id="group_sale_pricelist" model="res.groups">
@@ -19,11 +19,6 @@
 
     <record id="group_uom" model="res.groups">
         <field name="name">Manage Multiple Units of Measure</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
-    <record id="group_uos" context="{'noadmin':True}" model="res.groups">
-        <field name="name">Manage Secondary Unit of Measure</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
@@ -75,4 +70,4 @@
     </record>
 
 </data>
-</openerp>
+</odoo>

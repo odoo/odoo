@@ -27,7 +27,7 @@ def validate(*view_types):
 
 @validate('form')
 def valid_page_in_book(arch):
-    """A `page` node must be below a `book` node."""
+    """A `page` node must be below a `notebook` node."""
     return not arch.xpath('//page[not(ancestor::notebook)]')
 
 

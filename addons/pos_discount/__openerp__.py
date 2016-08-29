@@ -18,13 +18,12 @@ sale discount to a customer.
 """,
     'depends': ['point_of_sale'],
     'data': [
-        'views/views.xml',
-        'views/templates.xml'
+        'views/pos_discount_views.xml',
+        'views/pos_discount_templates.xml'
     ],
     'qweb': [
-        'static/src/xml/discount.xml',
+        'static/src/xml/discount_templates.xml',
     ],
     'installable': True,
     'website': 'https://www.odoo.com/page/point-of-sale',
-    'auto_install': False,
 }

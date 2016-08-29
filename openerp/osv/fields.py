@@ -86,8 +86,6 @@ class _column(object):
         'translate',
         'select',
         'manual',
-        'write',
-        'read',
         'selectable',
         'group_operator',
         'groups',               # CSV list of ext IDs of groups
@@ -120,8 +118,6 @@ class _column(object):
         args['translate'] = translate
         args['select'] = select
         args['manual'] = manual
-        args['write'] = args.get('write', False)
-        args['read'] = args.get('read', False)
         args['selectable'] = args.get('selectable', True)
         args['group_operator'] = args.get('group_operator', None)
         args['groups'] = args.get('groups', None)
@@ -408,9 +404,15 @@ class float(_column):
     def digits_change(self, cr):
         pass
 
+def _symbol_set_monetary(val):
+    try:
+        return val.float_repr()         # see float_precision.float_repr()
+    except Exception:
+        return __builtin__.float(val or 0.0)
+
 class monetary(_column):
     _type = 'monetary'
-    _symbol_set = ('%s', lambda x: __builtin__.float(x or 0.0))
+    _symbol_set = ('%s', _symbol_set_monetary)
     _symbol_get = lambda self,x: x or 0.0
 
     def to_field_args(self):
@@ -642,20 +644,21 @@ class binary(_column):
             ('res_field', '=', name),
             ('res_id', '=', id),
         ])
-        if value:
-            if att:
-                att.write({'datas': value})
+        with att.env.norecompute():
+            if value:
+                if att:
+                    att.write({'datas': value})
+                else:
+                    att.create({
+                        'name': name,
+                        'res_model': obj._name,
+                        'res_field': name,
+                        'res_id': id,
+                        'type': 'binary',
+                        'datas': value,
+                    })
             else:
-                att.create({
-                    'name': name,
-                    'res_model': obj._name,
-                    'res_field': name,
-                    'res_id': id,
-                    'type': 'binary',
-                    'datas': value,
-                })
-        else:
-            att.unlink()
+                att.unlink()
         return []
 
 class selection(_column):
@@ -946,6 +949,7 @@ class many2many(_column):
         args['relation'] = self._rel
         args['column1'] = self._id1
         args['column2'] = self._id2
+        args['auto_join'] = self._auto_join
         args['limit'] = self._limit
         return args
 
@@ -1765,26 +1769,26 @@ class property(function):
         ir_property.set_multi(cr, uid, prop_name, obj._name, {id: value}, context=context)
         return True
 
-    def _property_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
+    def _property_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         ir_property = obj.pool['ir.property']
 
-        res = {id: {} for id in ids}
-        for prop_name in prop_names:
-            field = obj._fields[prop_name]
-            values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
-            if field.type == 'many2one':
-                # name_get the non-null values as SUPERUSER_ID
-                vals = sum(set(filter(None, values.itervalues())),
-                           obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
-                vals_name = dict(vals.sudo().name_get()) if vals else {}
-                for id, value in values.iteritems():
-                    ng = False
-                    if value and value.id in vals_name:
-                        ng = value.id, vals_name[value.id]
-                    res[id][prop_name] = ng
-            else:
-                for id, value in values.iteritems():
-                    res[id][prop_name] = value
+        res = dict.fromkeys(ids, False)
+
+        field = obj._fields[prop_name]
+        values = ir_property.get_multi(cr, uid, prop_name, obj._name, ids, context=context)
+        if field.type == 'many2one':
+            # name_get the non-null values as SUPERUSER_ID
+            vals = sum(set(filter(None, values.itervalues())),
+                       obj.pool[field.comodel_name].browse(cr, uid, [], context=context))
+            vals_name = dict(vals.sudo().name_get()) if vals else {}
+            for id, value in values.iteritems():
+                ng = False
+                if value and value.id in vals_name:
+                    ng = value.id, vals_name[value.id]
+                res[id] = ng
+        else:
+            for id, value in values.iteritems():
+                res[id] = value
 
         return res
 
@@ -1797,7 +1801,6 @@ class property(function):
             fnct=self._property_read,
             fnct_inv=self._property_write,
             fnct_search=self._property_search,
-            multi='properties',
             **args
         )
 

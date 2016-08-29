@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * membership
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-22 12:38+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
-"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: membership
@@ -37,7 +38,9 @@ msgstr "# Чекање"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "Член со кој сакате да го поврзете членството. Ќе се смета состојбата на членството на здружениот член."
+msgstr ""
+"Член со кој сакате да го поврзете членството. Ќе се смета состојбата на "
+"членството на здружениот член."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -75,12 +78,6 @@ msgstr "Здружен член"
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
 msgstr "Поврзан партнер"
-
-#. module: membership
-#: model:product.product,name:membership.membership_2
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Основно членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -226,7 +223,8 @@ msgstr "Завршен месец на членство"
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr "Грешка ! Крајниот датум не може да биде поставен пред претходниот датум."
+msgstr ""
+"Грешка ! Крајниот датум не може да биде поставен пред претходниот датум."
 
 #. module: membership
 #: constraint:res.partner:0
@@ -260,12 +258,6 @@ msgstr "Од"
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "From Month"
 msgstr "Од месец"
-
-#. module: membership
-#: model:product.product,name:membership.membership_0
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Gold Membership"
-msgstr "Златно членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -326,22 +318,45 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr "Го индицира статусот на членството.\n-Не е член: Партнер кој не аплицирал за членство.\n-Откажан член: Член што го откажал неговото членство.\n-Стар член: Член чиј што датум на членство истекол.\n-Член на чекање: Член којшто аплицирал за членство и чија што фактура ќе се креира.\n-Фактуриран член: Член чија што фактура е креирана.\n-Член што плаќа: Член што ја платил таксата за членство."
+msgstr ""
+"Го индицира статусот на членството.\n"
+"-Не е член: Партнер кој не аплицирал за членство.\n"
+"-Откажан член: Член што го откажал неговото членство.\n"
+"-Стар член: Член чиј што датум на членство истекол.\n"
+"-Член на чекање: Член којшто аплицирал за членство и чија што фактура ќе се "
+"креира.\n"
+"-Фактуриран член: Член чија што фактура е креирана.\n"
+"-Член што плаќа: Член што ја платил таксата за членство."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any membership.\n"
-"                        -Cancelled Member: A member who has cancelled his membership.\n"
-"                        -Old Member: A member whose membership date has expired.\n"
-"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been created.\n"
-"                        -Paid Member: A member who has paid the membership amount."
-msgstr "Ја покажува состојбата на членството.\n                    -Не е член: Партнер кој не аплицирал за членство.\n                    -Откажан член: Член кој го откажал своето членство.\n                    -Стар член: Член чиј датум на членство е истечен.\n                    -Член на чекање: Член кој аплицирал за членство и чија фактура ќе биде креирана\n                    -Фактуриран член: Член чија фактура е креирана.\n                    -Платен член: Член кој ја платил членарината."
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+"Ја покажува состојбата на членството.\n"
+"                    -Не е член: Партнер кој не аплицирал за членство.\n"
+"                    -Откажан член: Член кој го откажал своето членство.\n"
+"                    -Стар член: Член чиј датум на членство е истечен.\n"
+"                    -Член на чекање: Член кој аплицирал за членство и чија "
+"фактура ќе биде креирана\n"
+"                    -Фактуриран член: Член чија фактура е креирана.\n"
+"                    -Платен член: Член кој ја платил членарината."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -501,7 +516,8 @@ msgstr "Ништо/Откажано/Старо/Се чека"
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of Membership, etc."
+"                 Current Membership Status, Discussions and History of "
+"Membership, etc."
 msgstr ""
 
 #. module: membership
@@ -574,12 +590,6 @@ msgid "Select if you want to give free membership."
 msgstr "Означете доколку сакате да дадетебесплатно членство."
 
 #. module: membership
-#: model:product.product,name:membership.membership_1
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Сребрено членство"
-
-#. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
 msgid "Start Date"
 msgstr "Почетен датум"
@@ -640,3 +650,12 @@ msgstr "Член на чекање"
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
 msgstr ""
+
+#~ msgid "Basic Membership"
+#~ msgstr "Основно членство"
+
+#~ msgid "Gold Membership"
+#~ msgstr "Златно членство"
+
+#~ msgid "Silver Membership"
+#~ msgstr "Сребрено членство"

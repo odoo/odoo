@@ -54,7 +54,7 @@ var FormatChar = AbstractField.extend({
         this.format_descriptor = _.extend({}, this.field, {'widget': this.$node.attr('widget')});
     },
     renderElement: function() {
-        this.$el.text(instance.web.format_value(this.field.raw_value, this.format_descriptor));
+        this.$el.text(formats.format_value(this.field.raw_value, this.format_descriptor));
     }
 });
 
@@ -139,7 +139,7 @@ var KanbanSelection = AbstractField.extend({
 
         var current_state = _.find(this.states, function(state) {
             return state.name === self.get('value');
-        });
+        }) || {state_class: ''};
 
         self.$el = $(QWeb.render("KanbanSelection", {
             current_state_class: current_state.state_class,

@@ -5,14 +5,29 @@ import uuid
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
+class AccountCashboxLine(models.Model):
+    _inherit = 'account.cashbox.line'
+
+    default_pos_id = fields.Many2one('pos.config', string='This cashbox line is used by default when opening or closing a balance for this point of sale')
+
+class AccountBankStmtCashWizard(models.Model):
+    _inherit = 'account.bank.statement.cashbox'
+    
+    @api.model
+    def default_get(self, fields):
+        vals = super(AccountBankStmtCashWizard, self).default_get(fields)
+        config_id = self.env.context.get('default_pos_id')
+        if config_id:
+            lines = self.env['account.cashbox.line'].search([('default_pos_id', '=', config_id)])
+            if self.env.context.get('balance', False) == 'start':
+                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
+            else:
+                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
+        return vals
+
 class PosConfig(models.Model):
     _name = 'pos.config'
-
-    POS_CONFIG_STATE = [
-        ('active', 'Active'),
-        ('inactive', 'Inactive'),
-        ('deprecated', 'Deprecated')
-    ]
 
     def _default_sale_journal(self):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
@@ -72,7 +87,7 @@ class PosConfig(models.Model):
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt")
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty')
-    state = fields.Selection(POS_CONFIG_STATE, string='Status', required=True, readonly=True, copy=False, default=POS_CONFIG_STATE[0][0])
+    active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid.uuid4()),
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
@@ -98,6 +113,7 @@ class PosConfig(models.Model):
         help="The product used to encode the customer tip. Leave empty if you do not accept tips.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
+    default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
     def _compute_currency(self):
@@ -197,18 +213,6 @@ class PosConfig(models.Model):
         for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id):
             pos_config.sequence_id.unlink()
         return super(PosConfig, self).unlink()
-
-    @api.multi
-    def set_active(self):
-        self.write({'state': 'active'})
-
-    @api.multi
-    def set_inactive(self):
-        self.write({'state': 'inactive'})
-
-    @api.multi
-    def set_deprecate(self):
-        self.write({'state': 'deprecated'})
 
     # Methods to open the POS
     @api.multi

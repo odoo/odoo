@@ -15,7 +15,7 @@
          </t>
          <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
              <div class="o_composer_input">
-                 <textarea tabindex="2" placeholder="Write something..."/>
+                 <textarea class="o_composer_text_field" tabindex="2" placeholder="Write something..."/>
              </div>
              <t t-if="!widget.extended">
                  <div class="btn-group o_composer_buttons">
@@ -46,21 +46,40 @@
         </t>
     </t>
 
-    <t t-name="mail.ChatComposer.MentionSuggestions">
+    <t t-name="mail.AbstractMentionSuggestions">
         <ul class="dropdown-menu" aria-labelledby="dropdownMailMentionMenu">
-            <t t-set="show_divider" t-value="false"/>
-            <t t-foreach="suggestions" t-as="group">
-                <t t-foreach="group" t-as="suggestion">
-                    <li t-if="show_divider &amp;&amp; (suggestion_index === 0)" class="divider"/>
-                    <t t-set="show_divider" t-value="true"/>
-                    <li class="o_mention_proposition" t-att-data-id="suggestion.id">
-                        <a href="#">
-                            <t t-esc="suggestion.name"/> <t t-if="suggestion.email">(<t t-esc="suggestion.email"/>)</t>
-                        </a>
-                    </li>
-                </t>
+            <t t-foreach="suggestions" t-as="suggestion">
+                <li t-if="suggestion.divider" class="divider"/>
+                <li t-if="!suggestion.divider" class="o_mention_proposition" t-att-data-id="suggestion.id">
+                    <a href="#"/>
+                </li>
             </t>
         </ul>
+    </t>
+    <t t-name="mail.MentionPartnerSuggestions" t-extend="mail.AbstractMentionSuggestions">
+        <t t-jquery=".o_mention_proposition a" t-operation="append">
+            <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
+            <t t-if="suggestion.email">
+                <span class="o_mention_info">(<t t-esc="suggestion.email"/>)</span>
+            </t>
+        </t>
+    </t>
+    <t t-name="mail.MentionChannelSuggestions" t-extend="mail.AbstractMentionSuggestions">
+        <t t-jquery=".o_mention_proposition a" t-operation="append">
+            <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
+        </t>
+    </t>
+    <t t-name="mail.MentionCannedResponseSuggestions" t-extend="mail.AbstractMentionSuggestions">
+        <t t-jquery=".o_mention_proposition a" t-operation="append">
+            <span class="o_mention_name"><t t-esc="suggestion.source"/></span>
+            <span class="o_mention_info"><t t-esc="suggestion.substitution"/></span>
+        </t>
+    </t>
+    <t t-name="mail.MentionCommandSuggestions" t-extend="mail.AbstractMentionSuggestions">
+        <t t-jquery=".o_mention_proposition a" t-operation="append">
+            <span class="o_mention_name">/<t t-esc="suggestion.name"/></span>
+            <span class="o_mention_info"><t t-esc="suggestion.help"/></span>
+        </t>
     </t>
 
 </templates>

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
         <!-- 
@@ -6,16 +6,19 @@
         -->
 
         <record id="account_asset_category_fixedassets_test0" model="account.asset.category">
-            <field name="account_depreciation_id" ref="a_expense"/>
+            <field name="account_depreciation_id" ref="xfa"/>
+            <field name="account_depreciation_expense_id" ref="a_expense"/>
             <field name="account_asset_id" ref="xfa"/>
             <field name="journal_id" ref="expenses_journal"/>
             <field name="name">Hardware - 3 Years</field>
             <field name="method_number">3</field>
             <field name="method_period">12</field>
+            <field name="open_asset">True</field>
         </record>
 
         <record id="account_asset_category_fixedassets_test1" model="account.asset.category">
-            <field name="account_depreciation_id" ref="a_expense"/>
+            <field name="account_depreciation_id" ref="xfa"/>
+            <field name="account_depreciation_expense_id" ref="a_expense"/>
             <field name="account_asset_id" ref="xfa"/>
             <field name="journal_id" ref="expenses_journal"/>
             <field name="name">Cars - 5 Years</field>
@@ -59,45 +62,5 @@
         </record>
 
 
-        <!--
-            Assets Tests
-        -->
-        <!--
-        <record id="data_fiscalyear_plus1" model="account.fiscalyear">
-            <field ref="base.main_company" name="company_id"/>
-            <field eval="'%s-01-01' %(datetime.now().year+1)" name="date_start"/>
-            <field eval="'%s-12-31' %(datetime.now().year+1)" name="date_stop"/>
-            <field name="name" eval="'Fiscal Year X %s' %(datetime.now().year+1)"/>
-            <field name="code" eval="'FY%s' %(datetime.now().year+1)"/>
-        </record>
-        <record id="data_fiscalyear_plus2" model="account.fiscalyear">
-            <field ref="base.main_company" name="company_id"/>
-            <field eval="'%s-01-01' %(datetime.now().year+2)" name="date_start"/>
-            <field eval="'%s-12-31' %(datetime.now().year+2)" name="date_stop"/>
-            <field name="name" eval="'Fiscal Year X %s' %(datetime.now().year+2)"/>
-            <field name="code" eval="'FY%s' %(datetime.now().year+2)"/>
-        </record>
-        <record id="data_fiscalyear_plus3" model="account.fiscalyear">
-            <field ref="base.main_company" name="company_id"/>
-            <field eval="'%s-01-01' %(datetime.now().year+3)" name="date_start"/>
-            <field eval="'%s-12-31' %(datetime.now().year+3)" name="date_stop"/>
-            <field name="name" eval="'Fiscal Year X %s' %(datetime.now().year+3)"/>
-            <field name="code" eval="'FY%s' %(datetime.now().year+3)"/>
-        </record>
-        <record id="data_fiscalyear_plus4" model="account.fiscalyear">
-            <field ref="base.main_company" name="company_id"/>
-            <field eval="'%s-01-01' %(datetime.now().year+4)" name="date_start"/>
-            <field eval="'%s-12-31' %(datetime.now().year+4)" name="date_stop"/>
-            <field name="name" eval="'Fiscal Year X %s' %(datetime.now().year+4)"/>
-            <field name="code" eval="'FY%s' %(datetime.now().year+4)"/>
-        </record>
-        <record id="data_fiscalyear_plus5" model="account.fiscalyear">
-            <field ref="base.main_company" name="company_id"/>
-            <field eval="'%s-01-01' %(datetime.now().year+5)" name="date_start"/>
-            <field eval="'%s-12-31' %(datetime.now().year+5)" name="date_stop"/>
-            <field name="name" eval="'Fiscal Year X %s' %(datetime.now().year+5)"/>
-            <field name="code" eval="'FY%s' %(datetime.now().year+5)"/>
-        </record>
-        -->
     </data>
 </odoo>

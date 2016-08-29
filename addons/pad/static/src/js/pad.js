@@ -84,6 +84,9 @@ var FieldPad = form_common.AbstractField.extend(form_common.ReinitializeWidgetMi
             }
         });
     },
+    is_false: function() {
+        return false;
+    }
 });
 
 core.form_widget_registry.add('pad', FieldPad);

@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
+import pytz
+
+from datetime import datetime
 from psycopg2 import IntegrityError
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
-from openerp.addons.base.ir.ir_qweb import nl2br
+
+from odoo import http
+from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
+from odoo.addons.base.ir.ir_qweb.fields import nl2br
+
 
 class WebsiteForm(http.Controller):
 
@@ -19,7 +26,7 @@ class WebsiteForm(http.Controller):
             return json.dumps(False)
 
         try:
-            data = self.extract_data(model_record, ** kwargs)
+            data = self.extract_data(model_record, request.params)
         # If we encounter an issue while extracting data
         except ValidationError, e:
             # I couldn't find a cleaner way to pass data to an exception
@@ -60,6 +67,17 @@ class WebsiteForm(http.Controller):
     def boolean(self, field_label, field_input):
         return bool(field_input)
 
+    def date(self, field_label, field_input):
+        lang = request.env['ir.qweb.field'].user_lang()
+        return datetime.strptime(field_input, lang.date_format).strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+    def datetime(self, field_label, field_input):
+        lang = request.env['ir.qweb.field'].user_lang()
+        strftime_format = (u"%s %s" % (lang.date_format, lang.time_format))
+        user_tz = pytz.timezone(request.context.get('tz') or request.env.user.tz or 'UTC')
+        dt = user_tz.localize(datetime.strptime(field_input, strftime_format)).astimezone(pytz.utc)
+        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
     def binary(self, field_label, field_input):
         return base64.b64encode(field_input.read())
 
@@ -73,7 +91,8 @@ class WebsiteForm(http.Controller):
         'char': identity,
         'text': identity,
         'html': identity,
-        'datetime': identity,
+        'date': date,
+        'datetime': datetime,
         'many2one': integer,
         'one2many': one2many,
         'many2many':many2many,
@@ -86,7 +105,7 @@ class WebsiteForm(http.Controller):
 
 
     # Extract all data sent by the form and sort its on several properties
-    def extract_data(self, model, **kwargs):
+    def extract_data(self, model, values):
 
         data = {
             'record': {},        # Values to create record
@@ -97,7 +116,8 @@ class WebsiteForm(http.Controller):
         authorized_fields = model.sudo()._get_form_writable_fields()
         error_fields = []
 
-        for field_name, field_value in kwargs.items():
+
+        for field_name, field_value in values.items():
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
@@ -200,7 +220,7 @@ class WebsiteForm(http.Controller):
         # If some attachments didn't match a field on the model,
         # we create a mail.message to link them to the record
         if orphan_attachment_ids:
-            if model.name != 'mail.mail':
+            if model.model != 'mail.mail':
                 values = {
                     'body': _('<p>Attached files : </p>'),
                     'model': model.model,

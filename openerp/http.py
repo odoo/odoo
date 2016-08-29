@@ -20,6 +20,7 @@ import sys
 import threading
 import time
 import traceback
+import urllib2
 import urlparse
 import warnings
 from zlib import adler32
@@ -140,8 +141,11 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
     url = path
     if not query:
         query = {}
-    if forward_debug and request and request.debug:
-        query['debug'] = None
+    if request and request.debug:
+        if forward_debug:
+            query['debug'] = ''
+        else:
+            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
@@ -156,6 +160,7 @@ def redirect_with_hash(url, code=303):
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
+    url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 class WebRequest(object):
@@ -206,7 +211,7 @@ class WebRequest(object):
         to a database.
         """
         if not self.db:
-            return RuntimeError('request not bound to a database')
+            raise RuntimeError('request not bound to a database')
         return openerp.api.Environment(self.cr, self.uid, self.context)
 
     @lazy_property
@@ -242,7 +247,7 @@ class WebRequest(object):
         # can not be a lazy_property because manual rollback in _call_function
         # if already set (?)
         if not self.db:
-            return RuntimeError('request not bound to a database')
+            raise RuntimeError('request not bound to a database')
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
@@ -769,9 +774,9 @@ class HttpRequest(WebRequest):
 
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
-        params = self.httprequest.args.to_dict()
-        params.update(self.httprequest.form.to_dict())
-        params.update(self.httprequest.files.to_dict())
+        params = collections.OrderedDict(self.httprequest.args)
+        params.update(self.httprequest.form)
+        params.update(self.httprequest.files)
         params.pop('session_id', None)
         self.params = params
 
@@ -1378,6 +1383,8 @@ def session_gc(session_store):
 mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
+# Add potentially missing (detected on windows) svg mime types
+mimetypes.add_type('image/svg+xml', '.svg')
 
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
@@ -1429,9 +1436,8 @@ class Response(werkzeug.wrappers.Response):
         view_obj = request.registry["ir.ui.view"]
         uid = self.uid or request.uid or openerp.SUPERUSER_ID
         self.qcontext['request'] = request
-        return view_obj.render(
-            request.cr, uid, self.template, self.qcontext,
-            context=request.context)
+        return view_obj.render_template(request.cr, uid, self.template,
+                                        self.qcontext, context=request.context)
 
     def flatten(self):
         """ Forces the rendering of the response's template, sets the result
@@ -1614,6 +1620,7 @@ class Root(object):
         try:
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
+            httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
@@ -1802,6 +1809,18 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             if rv.status_code == 304:
                 rv.headers.pop('x-sendfile', None)
     return rv
+
+def content_disposition(filename):
+    filename = openerp.tools.ustr(filename)
+    escaped = urllib2.quote(filename.encode('utf8'))
+    browser = request.httprequest.user_agent.browser
+    version = int((request.httprequest.user_agent.version or '0').split('.')[0])
+    if browser == 'msie' and version < 9:
+        return "attachment; filename=%s" % escaped
+    elif browser == 'safari' and version < 537:
+        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
+    else:
+        return "attachment; filename*=UTF-8''%s" % escaped
 
 #----------------------------------------------------------
 # RPC controller

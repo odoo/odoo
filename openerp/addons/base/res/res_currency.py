@@ -18,7 +18,7 @@ class Currency(models.Model):
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
-    symbol = fields.Char(help="Currency sign, to be used when printing amounts.")
+    symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
     rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=(12, 6),
                         help='The rate of the currency to the currency of rate 1.')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
@@ -36,7 +36,7 @@ class Currency(models.Model):
     @api.multi
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Datetime.now()
-        company_id = self._context.get('company_id') or self.env.user._get_company().id
+        company_id = self._context.get('company_id') or self.env['res.users']._get_company().id
         # the subquery selects the last rate before 'date' for the given currency/company
         query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
@@ -48,7 +48,7 @@ class Currency(models.Model):
         self._cr.execute(query, (date, company_id, tuple(self.ids)))
         currency_rates = dict(self._cr.fetchall())
         for currency in self:
-            currency.rate = currency_rates.get(currency.id, 1.0)
+            currency.rate = currency_rates.get(currency.id) or 1.0
 
     @api.multi
     @api.depends('rounding')
@@ -79,16 +79,6 @@ class Currency(models.Model):
         return [(currency.id, tools.ustr(currency.name)) for currency in self]
 
     @api.multi
-    def copy(self, default=None):
-        self.ensure_one()
-        default = dict(default or {}, name=_("%s (copy)") % self.name)
-        return super(Currency, self).copy(default=default)
-
-    @api.v7
-    def round(self, cr, uid, currency, amount):
-        return Currency.round(currency, amount)
-
-    @api.v8
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
 
@@ -102,11 +92,7 @@ class Currency(models.Model):
         #self.ensure_one()
         return tools.float_round(amount, precision_rounding=self.rounding)
 
-    @api.v7
-    def compare_amounts(self, cr, uid, currency, amount1, amount2):
-        return Currency.compare_amounts(currency, amount1, amount2)
-
-    @api.v8
+    @api.multi
     def compare_amounts(self, amount1, amount2):
         """Compare ``amount1`` and ``amount2`` after rounding them according to the
            given currency's precision..
@@ -129,11 +115,7 @@ class Currency(models.Model):
         """
         return tools.float_compare(amount1, amount2, precision_rounding=self.rounding)
 
-    @api.v7
-    def is_zero(self, cr, uid, currency, amount):
-        return Currency.is_zero(currency, amount)
-
-    @api.v8
+    @api.multi
     def is_zero(self, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to current currency's rounding rules.
@@ -163,22 +145,10 @@ class Currency(models.Model):
             amount = to_currency.round(from_amount * rate) if round else from_amount * rate
         return amount
 
-    @api.v7
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
-                round=True, context=None):
-        context = context or {}
-        if not from_currency_id:
-            from_currency_id = to_currency_id
-        if not to_currency_id:
-            to_currency_id = from_currency_id
-        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
-        from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
-        to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
-        return self._compute(cr, uid, from_currency, to_currency, from_amount, round, context)
-
-    @api.v8
+    @api.multi
     def compute(self, from_amount, to_currency, round=True):
         """ Convert `from_amount` from currency `self` to `to_currency`. """
+        self, to_currency = self or to_currency, to_currency or self
         assert self, "compute from unknown currency"
         assert to_currency, "compute to unknown currency"
         # apply conversion rate
@@ -220,7 +190,7 @@ class Currency(models.Model):
                 (SELECT name FROM res_currency_rate r2
                  WHERE r2.name > r.name AND
                        r2.currency_id = r.currency_id AND
-                       (r2.company_id is null  or r2.company_id = r.company_id)
+                       (r2.company_id is null or r2.company_id = c.id)
                  ORDER BY r2.name ASC
                  LIMIT 1) AS date_end
             FROM res_currency_rate r
@@ -233,10 +203,12 @@ class CurrencyRate(models.Model):
     _description = "Currency Rate"
     _order = "name desc"
 
-    name = fields.Datetime(string='Date', required=True, index=True, default=fields.Date.today() + ' 00:00:00')
+    name = fields.Datetime(string='Date', required=True, index=True,
+                           default=lambda self: fields.Date.today() + ' 00:00:00')
     rate = fields.Float(digits=(12, 6), help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    company_id = fields.Many2one('res.company', string='Company')
+    company_id = fields.Many2one('res.company', string='Company',
+                                 default=lambda self: self.env.user._get_company())
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):

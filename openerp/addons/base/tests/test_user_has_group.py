@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
-import openerp.tests
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class TestHasGroup(openerp.tests.TransactionCase):
+from odoo.tests.common import TransactionCase
+
+
+class TestHasGroup(TransactionCase):
     def setUp(self):
         super(TestHasGroup, self).setUp()
 

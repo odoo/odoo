@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="stock_scrap_search_view" model="ir.ui.view">
+            <field name="name">stock.scrap.search</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <search string="Search Scrap">
+                    <field name="product_id"/>
+                    <field name="location_id"/>
+                    <field name="scrap_location_id"/>
+                    <field name="create_date"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Location" domain="[]" context="{'group_by':'location_id'}"/>
+                        <filter string="Scrap Location" domain="[]" context="{'group_by':'scrap_location_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="stock_scrap_form_view" model="ir.ui.view">
+            <field name="name">stock.scrap.form</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="action_get_stock_picking"
+                                    string="Stock Operation" type="object"
+                                    attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
+                            <field name="picking_id" invisible="1"/>
+                            <button class="oe_stat_button" name="action_get_stock_move"
+                                    string="Inventory Move" type="object"
+                                    attrs="{'invisible':[('move_id','=',False)]}" icon="fa-arrows-v"/>
+                            <field name="move_id" invisible="1"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" nolabel="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_id"/>
+                                <label for="scrap_qty"/>
+                                <div class="o_row">
+                                    <field name="scrap_qty"/>
+                                    <field name="product_uom_id" groups="stock.product_group_uom"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="lot_id" attrs="{'invisible': [('tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
+                                <field name="tracking" invisible="1"/>
+                                <field name="package_id" groups="stock.group_tracking_lot"/>
+                                <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="origin"/>
+                                <field name="date_expected"/>
+                                <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_scrap_tree_view" model="ir.ui.view">
+            <field name="name">stock.scrap.tree</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="state == 'draft'">
+                    <field name="name"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="product_id"/>
+                    <field name="scrap_qty"/>
+                    <field name="product_uom_id" groups="stock.product_group_uom"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_stock_scrap">
+            <field name="name">Scrap</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.scrap</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to scrap products.
+              </p><p>
+                Products you scrap will be removed from the stock and moved to a specific scrap location, for reporting purposes.
+              </p>
+            </field>
+        </record>
+
+        <record id="stock_scrap_form_view2" model="ir.ui.view">
+            <field name="name">stock.scrap.form2</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <group>
+                        <group>
+                            <field name="state" invisible="1"/>
+                            <field name="product_id" domain="[('id', 'in', context.get('product_ids', []))]"/>
+                            <label for="scrap_qty"/>
+                            <div class="o_row">
+                                <field name="scrap_qty"/>
+                                <field name="product_uom_id" groups="stock.product_group_uom"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
+                            <field name="tracking" invisible="1"/>
+                            <field name="lot_id" attrs="{'invisible': [('tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
+                            <field name="package_id" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_done" string="Done" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    <menuitem
+        id="menu_stock_scrap"
+        name="Scrap"
+        parent="menu_stock_inventory_control"
+        action="action_stock_scrap"
+        sequence="99"/>
+
+</odoo>

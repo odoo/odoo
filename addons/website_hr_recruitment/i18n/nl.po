@@ -3,20 +3,29 @@
 # * website_hr_recruitment
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-13 12:39+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Submit</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.job_countries
@@ -53,7 +62,9 @@ msgstr "Solliciteer"
 msgid ""
 "Click on \"Content\" to define a new job offer or \"Help\" for more "
 "informations."
-msgstr "Klik op \"Content\" om een nieuwe vacature te definiëren of \"Help\" voor meer instructies."
+msgstr ""
+"Klik op \"Content\" om een nieuwe vacature te definiëren of \"Help\" voor "
+"meer instructies."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
@@ -92,10 +103,13 @@ msgid ""
 "Join us, we offer you an extraordinary chance to learn, to\n"
 "                                    develop and to be part of an exciting experience and\n"
 "                                    team."
-msgstr "Doe met ons mee. Wij bieden u de mogelijkheid om,\n                                    mee te ontwikkelen en een onderdeel te zijn van een fantastisch\n                                    team."
+msgstr ""
+"Doe met ons mee. Wij bieden u de mogelijkheid om,\n"
+"                                    mee te ontwikkelen en een onderdeel te zijn van een fantastisch\n"
+"                                    team."
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:69
+#: code:addons/website_hr_recruitment/controllers/main.py:72
 #: model:ir.ui.view,arch_db:website_hr_recruitment.content_new_job_offer
 #, python-format
 msgid "New Job Offer"
@@ -132,19 +146,9 @@ msgid "Source of Applicants"
 msgstr "Bron van aanvragers"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Submit"
-msgstr "Verstuur"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
 msgid "Thank you!"
 msgstr "Dank u!"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job_website_url
-msgid "The full URL to access the document through the website."
-msgstr "De volledige URL om het document te kunnen raadplegen via de website."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -157,39 +161,14 @@ msgid "Url Parameters"
 msgstr "Url Parameters"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_published
-msgid "Visible in Website"
-msgstr "Zichtbaar in website"
-
-#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Website recruitment formulier"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_url
-msgid "Website URL"
-msgstr "Website URL"
-
-#. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_description
 msgid "Website description"
 msgstr "Website omschrijving"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_description
-msgid "Website meta description"
-msgstr "Website meta omschrijving"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Website meta trefwoorden"
-
-#. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_meta_title
-msgid "Website meta title"
-msgstr "Website meta titel"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -199,7 +178,12 @@ msgid ""
 "                                    Odoo is fully open source, super easy, full featured\n"
 "                                    (3000+ apps) and its online offer is 3 times cheaper than\n"
 "                                    traditional competitors like SAP and Ms Dynamics."
-msgstr "Met een klein team met fantastische collega's, hebben we de beste\n                                    bedrijfssoftware in de wereld ontwikkeld.\n                                    Odoo is geheel open source, super simpel, met veel mogelijkheden\n                                    (3000+ apps) en de online versie is 3x goedkoper dan de traditionele\n                                    partijen, zoals SAP en MS Dynamics."
+msgstr ""
+"Met een klein team met fantastische collega's, hebben we de beste\n"
+"                                    bedrijfssoftware in de wereld ontwikkeld.\n"
+"                                    Odoo is geheel open source, super simpel, met veel mogelijkheden\n"
+"                                    (3000+ apps) en de online versie is 3x goedkoper dan de traditionele\n"
+"                                    partijen, zoals SAP en MS Dynamics."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -221,17 +205,14 @@ msgstr "Uw telefoonnummer"
 msgid ""
 "Your job application has been successfully registered,\n"
 "                        we will get back to you soon."
-msgstr "Uw sollicitatie is succesvol ontvangen,\n                        wij zullen binnenkort contact met u opnemen."
+msgstr ""
+"Uw sollicitatie is succesvol ontvangen,\n"
+"                        wij zullen binnenkort contact met u opnemen."
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "here"
 msgstr "hier"
-
-#. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "not published"
-msgstr "niet gepubliceerd"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -242,3 +223,8 @@ msgstr "open posities"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "to contact us"
 msgstr "contact met ons opnemen"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "unpublished"
+msgstr "Niet gepubliceerd"

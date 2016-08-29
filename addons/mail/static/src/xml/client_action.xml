@@ -26,6 +26,8 @@
             <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_starred') ? 'o_active': ''}"
                  data-channel-id="channel_starred">
                 <span class="o_channel_name"> <i class="fa fa-star-o"/> Starred </span>
+                <t t-set="counter" t-value="starred_counter"/>
+                <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
 
             <t t-set="channel_type" t-value="'public'"/>
@@ -130,7 +132,7 @@
         <div>
             <button type="button" class="btn btn-primary btn-sm o_mail_toggle_channels visible-xs-inline" title="Toggle Channels">Channels</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" title="Invite people">Invite</button>
-            <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_unstar_all" title="Unstar all messages">Unstar all</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe" title="Unsubscribe from channel">Unsubscribe</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" title="Open channel settings">Settings</button>

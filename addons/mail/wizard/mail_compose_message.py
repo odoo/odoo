@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import re
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo.tools.safe_eval import safe_eval
 
 
 # main mako-like expression pattern
@@ -65,8 +65,7 @@ class MailComposer(models.TransientModel):
         result['model'] = result.get('model', self._context.get('active_model'))
         result['res_id'] = result.get('res_id', self._context.get('active_id'))
         result['parent_id'] = result.get('parent_id', self._context.get('message_id'))
-
-        if not result['model'] or not result['model'] in self.pool or not hasattr(self.env[result['model']], 'message_post'):
+        if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
             result['no_auto_thread'] = True
 
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
@@ -121,7 +120,7 @@ class MailComposer(models.TransientModel):
     auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     template_id = fields.Many2one(
-        'mail.template', 'Use template', select=True,
+        'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
@@ -221,7 +220,7 @@ class MailComposer(models.TransientModel):
             if wizard.template_id:
                 # template user_signature is added when generating body_html
                 # mass mailing: use template auto_delete value -> note, for emails mass mailing only
-                Mail = Mail.with_context(mail_notify_user_signature=False, mail_server_id=wizard.template_id.mail_server_id.id)
+                Mail = Mail.with_context(mail_notify_user_signature=False)
                 ActiveModel = ActiveModel.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete)
             if not hasattr(ActiveModel, 'message_post'):
                 ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
@@ -231,7 +230,7 @@ class MailComposer(models.TransientModel):
                 ActiveModel = ActiveModel.with_context(mail_notify_force_send=False, mail_create_nosubscribe=True)
             # wizard works in batch mode: [res_id] or active_ids or active_domain
             if mass_mode and wizard.use_active_domain and wizard.model:
-                res_ids = self.env[wizard.model].search(eval(wizard.active_domain)).ids
+                res_ids = self.env[wizard.model].search(safe_eval(wizard.active_domain)).ids
             elif mass_mode and wizard.model and self._context.get('active_ids'):
                 res_ids = self._context['active_ids']
             else:
@@ -294,6 +293,7 @@ class MailComposer(models.TransientModel):
                 'email_from': self.email_from,
                 'record_name': self.record_name,
                 'no_auto_thread': self.no_auto_thread,
+                'mail_server_id': self.mail_server_id.id,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
@@ -398,7 +398,7 @@ class MailComposer(models.TransientModel):
         # ORM handle the assignation of command list on new onchange (api.v8),
         # this force the complete replacement of x2many field with
         # command and is compatible with onchange api.v7
-        values = self._convert_to_write(self._convert_to_cache(values))
+        values = self._convert_to_write(values)
 
         return {'value': values}
 

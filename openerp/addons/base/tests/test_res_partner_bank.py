@@ -3,7 +3,8 @@
 
 # Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
+
 
 class TestResPartnerBank(TransactionCase):
     """Tests acc_number
