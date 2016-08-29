@@ -27,7 +27,7 @@ var dom = $.summernote.core.dom;
 var range = $.summernote.core.range;
 var eventHandler = $.summernote.eventHandler;
 var renderer = $.summernote.renderer;
-var options = $.summernote.options;
+// var options = $.summernote.options;
 
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
@@ -96,11 +96,11 @@ renderer.tplPopovers = function (lang, options) {
     //////////////// image popover
 
     // add center button for images
-    var $centerbutton = $(tplIconButton('fa fa-align-center', {
-            title: _t('Center'),
-            event: 'floatMe',
-            value: 'center'
-        })).insertAfter($imagePopover.find('[data-event="floatMe"][data-value="left"]'));
+    $(tplIconButton('fa fa-align-center', {
+        title: _t('Center'),
+        event: 'floatMe',
+        value: 'center'
+    })).insertAfter($imagePopover.find('[data-event="floatMe"][data-value="left"]'));
     $imagePopover.find('button[data-event="removeMedia"]').parent().remove();
     $imagePopover.find('button[data-event="floatMe"][data-value="none"]').remove();
 
@@ -114,18 +114,18 @@ renderer.tplPopovers = function (lang, options) {
         '<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
         '<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
     ];
-    var $button = $(tplIconButton('fa fa-plus-square-o', {
-            title: _t('Padding'),
-            dropdown: tplDropdown(dropdown_content)
-        })).appendTo($padding);
+    $(tplIconButton('fa fa-plus-square-o', {
+        title: _t('Padding'),
+        dropdown: tplDropdown(dropdown_content)
+    })).appendTo($padding);
 
     // circle, boxed... options became toggled
     $imagePopover.find('[data-event="imageShape"]:not([data-value])').remove();
     var $button = $(tplIconButton('fa fa-sun-o', {
-            title: _t('Shadow'),
-            event: 'imageShape',
-            value: 'shadow'
-        })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
+        title: _t('Shadow'),
+        event: 'imageShape',
+        value: 'shadow'
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
 
     // add spin for fa
     var $spin = $('<div class="btn-group hidden only_fa"/>').insertAfter($button.parent());
@@ -344,7 +344,7 @@ eventHandler.modules.editor.resize = function ($editable, sValue) {
     if (width) {
         width = width[2]/100;
     }
-    $target.css('width', (width != sValue && sValue != "auto") ? (sValue * 100) + '%' : '');
+    $target.css('width', (width !== sValue && sValue !== "auto") ? (sValue * 100) + '%' : '');
 };
 eventHandler.modules.editor.resizefa = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
@@ -613,22 +613,23 @@ function summernote_mousedown (event) {
     rte.history.splitNext();
 
     var $editable = $(event.target).closest(".o_editable, .note-editor");
+    var r;
 
-    if (!!document.documentMode) {
+    if (document.documentMode) {
         summernote_ie_fix(event, function (node) { return node.tagName === "DIV" || node.tagName === "IMG" || (node.dataset && node.dataset.oeModel); });
     } else if (last_div && event.target !== last_div) {
         if (last_div.tagName === "A") {
             summernote_ie_fix(event, function (node) { return node.dataset && node.dataset.oeModel; });
         } else if ($editable.length) {
             if (summernote_ie_fix(event, function (node) { return node.tagName === "A"; })) {
-                var r = range.create();
+                r = range.create();
                 r.select();
             }
         }
     }
 
     // restore range if range lost after clicking on non-editable area
-    var r = range.create();
+    r = range.create();
     var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
     var r_editable = editables.has((r||{}).sc);
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
@@ -763,7 +764,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
             var $nodes = $('[data-oe-model], [data-oe-translation-id]')
-                .filter(function () { return this != $node[0];});
+                .filter(function () { return this !== $node[0];});
 
             if ($node.data('oe-model')) {
                 $nodes = $nodes.filter('[data-oe-model="'+$node.data('oe-model')+'"]')
@@ -780,13 +781,13 @@ eventHandler.attach = function (oLayoutInfo, options) {
 
             if ($node.data('oe-type') === "many2one") {
                 $nodes = $nodes.add($('[data-oe-model]')
-                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter(function () { return this !== $node[0] && nodes.indexOf(this) === -1; })
                     .filter('[data-oe-many2one-model="'+$node.data('oe-many2one-model')+'"]')
                     .filter('[data-oe-many2one-id="'+$node.data('oe-many2one-id')+'"]')
                     .filter('[data-oe-type="many2one"]'));
 
                 $nodes = $nodes.add($('[data-oe-model]')
-                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter(function () { return this !== $node[0] && nodes.indexOf(this) === -1; })
                     .filter('[data-oe-model="'+$node.data('oe-many2one-model')+'"]')
                     .filter('[data-oe-id="'+$node.data('oe-many2one-id')+'"]')
                     .filter('[data-oe-field="name"]'));
