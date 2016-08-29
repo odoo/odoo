@@ -23,7 +23,9 @@ var FieldPad = form_common.AbstractField.extend(form_common.ReinitializeWidgetMi
         var self = this;
         this.$('.oe_pad_switch').click(function() {
             self.$el.toggleClass('oe_pad_fullscreen');
-            self.$el.find('.oe_pad_switch').toggleClass('fa-expand fa-compress');
+            var pad_switch = self.$el.find('.oe_pad_switch').toggleClass('fa-arrows-alt fa-compress');
+            var title = pad_switch.hasClass('fa-compress') ? _t('Exit full screen') : _t('Full screen');
+            pad_switch.attr('title', title);
             self.view.$el.find('.oe_chatter').toggle();
             $('#oe_main_menu_navbar').toggle();
         });
