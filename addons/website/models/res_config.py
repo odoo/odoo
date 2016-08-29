@@ -33,11 +33,9 @@ class WebsiteConfigSettings(models.TransientModel):
     module_website_form_editor = fields.Boolean("Form builde = create and customize forms")
     module_website_version = fields.Boolean("A/B testing and versioning")
     favicon = fields.Binary('Favicon', related='website_id.favicon')
-
-
-class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
-
+    
+    # Set as global config parameter since methods using it are not website-aware. To be changed
+    # when multi-website is implemented 
     google_maps_api_key = fields.Char(string='Google Maps API Key')
 
     def set_google_maps_api_key(self):

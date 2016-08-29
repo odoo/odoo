@@ -13,7 +13,7 @@ Odoo Website CMS
 ===================
 
         """,
-    'depends': ['web', 'web_editor', 'web_planner', 'base_setup'],
+    'depends': ['web', 'web_editor', 'web_planner'],
     'installable': True,
     'data': [
         'data/website_data.xml',

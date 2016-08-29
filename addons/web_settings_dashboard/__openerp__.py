@@ -20,7 +20,7 @@ Odoo dashboard
         'views/dashboard_views.xml',
         'views/dashboard_templates.xml',
     ],
-    'depends': ['web_planner', 'base_setup'],
+    'depends': ['web_planner'],
     'qweb': ['static/src/xml/dashboard.xml'],
     'auto_install': True,
 }
