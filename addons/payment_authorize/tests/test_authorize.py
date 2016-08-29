@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import time
 import urlparse
+import unittest
 from lxml import objectify
 
 import odoo
@@ -23,6 +24,8 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         self.currency_usd = self.env['res.currency'].search([('name', '=', 'USD')], limit=1)[0]
         # get the authorize account
         self.authorize = self.env.ref('payment.payment_acquirer_authorize')
+        # Be sure to be in 'capture' mode
+        self.authorize.auto_confirm = 'confirm_so'
 
 
 @odoo.tests.common.at_install(True)
@@ -97,7 +100,7 @@ class AuthorizeForm(AuthorizeCommon):
                 'Authorize: wrong value for input %s: received %s instead of %s' % (values[1], values[2], form_values[values[1]])
             )
 
-    @mute_logger('openerp.addons.payment_authorize.models.payment', 'ValidationError')
+    @mute_logger('odoo.addons.payment_authorize.models.payment', 'ValidationError')
     def test_20_authorize_form_management(self):
         # be sure not to do stupid thing
         self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
@@ -120,7 +123,7 @@ class AuthorizeForm(AuthorizeCommon):
             'x_cvv2_resp_code': u'',
             'x_description': u'',
             'x_duty': u'0.00',
-            'x_email': u'norbert.buyer@exampl',
+            'x_email': u'norbert.buyer@example.com',
             'x_fax': u'',
             'x_first_name': u'Norbert',
             'x_freight': u'0.00',
@@ -174,3 +177,77 @@ class AuthorizeForm(AuthorizeCommon):
         self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
         self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
+
+    @unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
+    def test_30_authorize_s2s(self):
+        # be sure not to do stupid thing
+        authorize = self.authorize
+        self.assertEqual(authorize.environment, 'test', 'test without test environment')
+
+        # add credential
+        # FIXME: put this test in master-nightly on odoo/odoo + create sandbox account
+        authorize.write({
+            'authorize_transaction_key': '',
+            'authorize_login': '',
+        })
+        self.assertTrue(authorize.authorize_test_credentials, 'Authorize.net: s2s authentication failed')
+
+        # create payment meethod
+        payment_token = self.env['payment.token'].create({
+            'acquirer_id': authorize.id,
+            'partner_id': self.buyer_id,
+            'cc_number': '4111 1111 1111 1111',
+            'cc_expiry': '02 / 26',
+            'cc_brand': 'visa',
+            'cc_cvc': '111',
+            'cc_holder_name': 'test',
+        })
+
+        # create normal s2s transaction
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_ref_%s' % odoo.fields.Date.today(),
+            'payment_token_id': payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'done',)
+
+        # switch to 'authorize only'
+        # create authorize only s2s transaction & capture it
+        self.authorize.auto_confirm = 'authorize'
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_%s' % int(time.time()),
+            'payment_token_id': payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'authorized')
+        transaction.action_capture()
+        self.assertEqual(transaction.state, 'done')
+
+        # create authorize only s2s transaction & void it
+        self.authorize.auto_confirm = 'authorize'
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_%s' % int(time.time()),
+            'payment_token_id': payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'authorized')
+        transaction.action_void()
+        self.assertEqual(transaction.state, 'cancel')
