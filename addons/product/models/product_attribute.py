@@ -74,6 +74,10 @@ class ProductAttributevalue(models.Model):
             raise UserError(_('The operation cannot be completed:\nYou are trying to delete an attribute value with a reference on a product variant.'))
         return super(ProductAttributevalue, self).unlink()
 
+    @api.multi
+    def _variant_name(self, variable_attributes):
+        return ", ".join([v.name for v in self if v.attribute_id in variable_attributes])
+
 
 class ProductAttributePrice(models.Model):
     _name = "product.attribute.price"
