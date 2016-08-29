@@ -1233,14 +1233,14 @@ class BaseModel(object):
     @api.model
     def _get_default_form_view(self):
         """ Generates a default single-line form view using all fields
-        of the current model except the m2m and o2m ones.
+        of the current model.
 
         :returns: a form view as an lxml document
         :rtype: etree._Element
         """
         group = E.group(col="4")
         for fname, field in self._fields.iteritems():
-            if field.automatic or field.type in ('one2many', 'many2many'):
+            if field.automatic:
                 continue
             group.append(E.field(name=fname))
             if field.type == 'text':
