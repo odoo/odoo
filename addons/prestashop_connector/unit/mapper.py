@@ -367,7 +367,7 @@ class SaleOrderMapper(PrestashopImportMapper):
 
         children = []
         for child_record in child_records:
-            adapter = self.get_connector_unit_for_model(GenericAdapter,
+            adapter = self.unit_for(GenericAdapter,
                                                         model_name)
             detail_record = adapter.read(child_record['id'])
 
@@ -384,7 +384,7 @@ class SaleOrderMapper(PrestashopImportMapper):
     def _get_discounts_lines(self, record):
         if record['total_discounts'] == '0.00':
             return []
-        adapter = self.get_connector_unit_for_model(
+        adapter = self.unit_for(
             GenericAdapter, 'prestashop.sale.order.line.discount')
         discount_ids = adapter.search({'filter[id_order]': record['id']})
         discount_mappers = []
@@ -512,7 +512,7 @@ class SaleOrderMapper(PrestashopImportMapper):
                 order_line_ids,
                 sess.context
             )
-        onchange = self.get_connector_unit_for_model(SaleOrderOnChange)
+        onchange = self.unit_for(SaleOrderOnChange)
         order_line_ids = []
         if 'prestashop_order_line_ids' in result:
             order_line_ids = result['prestashop_order_line_ids']
@@ -669,16 +669,16 @@ class SupplierInfoMapper(PrestashopImportMapper):
 
     @mapping
     def name(self, record):
-        binder = self.get_connector_unit_for_model(Binder, 'prestashop.supplier')
+        binder = self.unit_for(Binder, 'prestashop.supplier')
         partner_id = binder.to_openerp(record['id_supplier'], unwrap=True)
         return {'name': partner_id}
 
     @mapping
     def product_id(self, record):
         if record['id_product_attribute'] != '0':
-            binder = self.get_connector_unit_for_model(Binder, 'prestashop.product.combination')
+            binder = self.unit_for(Binder, 'prestashop.product.combination')
             return {'product_id': binder.to_openerp(record['id_product_attribute'], unwrap=True)}
-        binder = self.get_connector_unit_for_model(Binder, 'prestashop.product.product')
+        binder = self.unit_for(Binder, 'prestashop.product.product')
         return {'product_id': binder.to_openerp(record['id_product'], unwrap=True)}
 
     @mapping
@@ -736,7 +736,7 @@ class MailMessageMapper(PrestashopImportMapper):
 
     @mapping
     def object_ref(self, record):
-        binder = self.get_connector_unit_for_model(
+        binder = self.unit_for(
             Binder, 'prestashop.sale.order'
         )
         order_id = binder.to_openerp(record['id_order'], unwrap=True)
@@ -748,7 +748,7 @@ class MailMessageMapper(PrestashopImportMapper):
     @mapping
     def author_id(self, record):
         if record['id_customer'] != '0':
-            binder = self.get_connector_unit_for_model(Binder, 'prestashop.res.partner')
+            binder = self.unit_for(Binder, 'prestashop.res.partner')
             partner_id = binder.to_openerp(record['id_customer'], unwrap=True)
             return {'author_id': partner_id}
         return {}

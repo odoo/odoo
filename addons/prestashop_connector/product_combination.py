@@ -54,7 +54,7 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
             'product_option_values', {}).get('product_option_value', [])
         if not isinstance(option_values, list):
             option_values = [option_values]
-        backend_adapter = self.get_connector_unit_for_model(
+        backend_adapter = self.unit_for(
             BackendAdapter,
             'prestashop.product.combination.option.value'
         )
@@ -129,7 +129,7 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
 
     # def import_bundle(self):
     #     record = self.prestashop_record
-    #     product_adapter = self.get_connector_unit_for_model(
+    #     product_adapter = self.unit_for(
     #         GenericAdapter, 'prestashop.product.product'
     #     )
     #     main_product = product_adapter.read(record['id_product'])

@@ -52,10 +52,6 @@ class prestashop_product_combination(orm.Model):
             help="Last computed quantity to send on Prestashop."
         ),
         'reference': fields.char('Original reference'),
-        # 'prestashop_bundle_id': fields.many2one(
-        #     'prestashop.combination.mrp.bom',
-        #     'Prestashop bundle',
-        # ),
     }
 
     def recompute_prestashop_qty(self, cr, uid, ids, context=None):
@@ -125,29 +121,3 @@ class prestashop_product_combination_option_value(orm.Model):
             ondelete='cascade'
         ),
     }
-
-
-# class mrp_bom(orm.Model):
-#     _inherit = 'mrp.bom'
-
-#     _columns = {
-#         'prestashop_combintaion_bind_ids': fields.one2many(
-#             'prestashop.combination_mrp.bom',
-#             'openerp_id',
-#             string='PrestaShop Bindings'
-#         ),
-#     }
-
-# class prestashop_combination_mrp_bom(orm.Model):
-#     _name = 'prestashop.combination.mrp.bom'
-#     _inherit = 'prestashop.binding'
-#     _inherits = {'mrp.bom': 'openerp_id'}
-
-#     _columns = {
-#         'openerp_id': fields.many2one(
-#             'mrp.bom',
-#             string='Openerp BOM',
-#             required=True,
-#             ondelete='cascade'
-#         ),
-#     }

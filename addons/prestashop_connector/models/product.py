@@ -5,19 +5,6 @@ from openerp.addons.connector.session import ConnectorSession
 
 from ..unit.import_synchronizer import import_record
 
-
-class product_category(orm.Model):
-    _inherit = 'product.category'
-
-    _columns = {
-        'prestashop_bind_ids': fields.one2many(
-            'prestashop.product.category',
-            'openerp_id',
-            string="PrestaShop Bindings"
-        ),
-    }
-
-
 class prestashop_product_category(orm.Model):
     _name = 'prestashop.product.category'
     _inherit = 'prestashop.binding'
@@ -45,34 +32,6 @@ class prestashop_product_category(orm.Model):
         'meta_keywords': fields.char('Meta keywords', translate=True),
         'meta_title': fields.char('Meta title', translate=True),
     }
-
-
-# class product_image(orm.Model):
-#     _inherit = 'product.images'
-
-#     _columns = {
-#         'prestashop_bind_ids': fields.one2many(
-#             'prestashop.product.image',
-#             'openerp_id',
-#             string='PrestaShop Bindings'
-#         ),
-#     }
-
-
-# class prestashop_product_image(orm.Model):
-#     _name = 'prestashop.product.image'
-#     _inherit = 'prestashop.binding'
-#     _inherits = {'product.images': 'openerp_id'}
-
-#     _columns = {
-#         'openerp_id': fields.many2one(
-#             'product.images',
-#             string='Product image',
-#             required=True,
-#             ondelete='cascade'
-#         )
-#     }
-
 
 class product_product(orm.Model):
     _inherit = 'product.product'
@@ -157,10 +116,6 @@ class prestashop_product_product(orm.Model):
             string='Combinations'
         ),
         'reference': fields.char('Original reference'),
-        # 'prestashop_bundle_id': fields.many2one(
-        #     'prestashop.mrp.bom',
-        #     'Prestashop bundle',
-        # ),
     }
 
     _sql_constraints = [
@@ -193,56 +148,3 @@ class prestashop_product_product(orm.Model):
             cr, uid, product.id, [stock_field], context=location_ctx
         )
         return product_stk[stock_field]
-
-
-# class mrp_bom(orm.Model):
-#     _inherit = 'mrp.bom'
-
-#     _columns = {
-#         'prestashop_bind_ids': fields.one2many(
-#             'prestashop.mrp.bom',
-#             'openerp_id',
-#             string='PrestaShop Bindings'
-#         ),
-#     }
-
-# class prestashop_mrp_bom(orm.Model):
-#     _name = 'prestashop.mrp.bom'
-#     _inherit = 'prestashop.binding'
-#     _inherits = {'mrp.bom': 'openerp_id'}
-
-#     _columns = {
-#         'openerp_id': fields.many2one(
-#             'mrp.bom',
-#             string='Openerp BOM',
-#             required=True,
-#             ondelete='cascade'
-#         ),
-#     }
-
-
-class product_pricelist(orm.Model):
-    _inherit = 'product.pricelist'
-
-    _columns = {
-        'prestashop_groups_bind_ids': fields.one2many(
-            'prestashop.groups.pricelist',
-            'openerp_id',
-            string='Prestashop user groups'
-        ),
-    }
-
-
-class prestashop_groups_pricelist(orm.Model):
-    _name = 'prestashop.groups.pricelist'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.pricelist': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one(
-            'product.pricelist',
-            string='Openerp Pricelist',
-            required=True,
-            ondelete='cascade'
-        ),
-    }

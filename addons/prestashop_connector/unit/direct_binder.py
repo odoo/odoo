@@ -31,7 +31,7 @@ class DirectBinder(ConnectorUnit):
         erp_rec_name = sess.pool[erp_model_name]._rec_name
         erp_ids = sess.search(erp_model_name, [])
         erp_list_dict = sess.read(erp_model_name, erp_ids, [])
-        adapter = self.get_connector_unit_for_model(BackendAdapter)
+        adapter = self.unit_for(BackendAdapter)
         # Get the IDS from PS
         ps_ids = adapter.search()
         if not ps_ids:

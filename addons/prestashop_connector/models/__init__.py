@@ -3,7 +3,7 @@ import prestashop_model
 import connector
 # import delivery
 import partner
-# import product
+import product
 # import product_combination
 # import sale
 import setting

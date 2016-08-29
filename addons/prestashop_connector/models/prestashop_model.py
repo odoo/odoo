@@ -153,14 +153,6 @@ class prestashop_backend(orm.Model):
             import_products.delay(session, backend_record.id, since_date, priority=10)
         return True
 
-    # def import_carriers(self, cr, uid, ids, context=None):
-    #     if not hasattr(ids, '__iter__'):
-    #         ids = [ids]
-    #     session = ConnectorSession(cr, uid, context=context)
-    #     for backend_id in ids:
-    #         import_carriers.delay(session, backend_id, priority=10)
-    #     return True
-
     def update_product_stock_qty(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
@@ -210,17 +202,6 @@ class prestashop_backend(orm.Model):
             import_refunds.delay(session, backend_record.id, since_date)
         return True
 
-    def import_suppliers(self, cr, uid, ids, context=None):
-        if not hasattr(ids, '__iter__'):
-            ids = [ids]
-        session = ConnectorSession(cr, uid, context=context)
-        for backend_record in self.browse(cr, uid, ids, context=context):
-            since_date = self._date_as_user_tz(
-                cr, uid, backend_record.import_suppliers_since
-            )
-            import_suppliers.delay(session, backend_record.id, since_date)
-        return True
-
     def _scheduler_launch(self, cr, uid, callback, domain=None,
                           context=None):
         if domain is None:
@@ -245,10 +226,6 @@ class prestashop_backend(orm.Model):
     def _scheduler_import_products(self, cr, uid, domain=None, context=None):
         self._scheduler_launch(cr, uid, self.import_products, domain=domain,
                                context=context)
-
-    # def _scheduler_import_carriers(self, cr, uid, domain=None, context=None):
-    #     self._scheduler_launch(cr, uid, self.import_carriers, domain=domain,
-    #                            context=context)
 
     def _scheduler_import_payment_methods(self, cr, uid, domain=None, context=None):
         self._scheduler_launch(cr, uid, self.import_payment_methods,

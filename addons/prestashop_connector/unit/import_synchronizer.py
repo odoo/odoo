@@ -309,15 +309,6 @@ class DelayedBatchImport(BatchImportSynchronizer):
 class ResPartnerRecordImport(PrestashopImportSynchronizer):
     _model_name = 'prestashop.res.partner'
 
-    #def _import_dependencies(self):
-    #    groups = self.prestashop_record.get('associations', {})\
-    #        .get('groups', {}).get('group', [])
-    #    if not isinstance(groups, list):
-    #        groups = [groups]
-    #    for group in groups:
-    #        self._check_dependency(group['id'],
-    #                               'prestashop.res.partner.category')
-
     def _after_import(self, erp_id):
         binder = self.binder_for(self._model_name)
         ps_id = binder.to_backend(erp_id)
@@ -428,7 +419,7 @@ class SaleImportRule(ConnectorUnit):
                                        'The import will be retried later.')
 
     def _get_paid_amount(self, record):
-        payment_adapter = self.get_connector_unit_for_model(
+        payment_adapter = self.unit_for(
             GenericAdapter,
             '__not_exist_prestashop.payment'
         )
@@ -521,7 +512,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
                 pass
 
     def _check_refunds(self, id_customer, id_order):
-        backend_adapter = self.get_connector_unit_for_model(
+        backend_adapter = self.unit_for(
             GenericAdapter, 'prestashop.refund'
         )
         filters = {'filter[id_customer]': id_customer}
@@ -536,7 +527,7 @@ class SaleOrderImport(PrestashopImportSynchronizer):
         """ Return True if the import can be skipped """
         if self._get_openerp_id():
             return True
-        rules = self.get_connector_unit_for_model(SaleImportRule)
+        rules = self.unit_for(SaleImportRule)
         return rules.check(self.prestashop_record)
 
 
@@ -717,108 +708,7 @@ class ProductRecordImport(TranslatableRecordImport):
         ],
     }
 
-    def _after_import(self, erp_id):
-        self.import_combinations()
-        # self.import_images()
-        # self.import_default_image()
-        # self.import_bundle()
-        self.import_supplierinfo(erp_id)
-
-    # def import_bundle(self):
-    #     record = self._get_prestashop_data()
-    #     bundle = record.get('associations', {}).get('product_bundle', {})
-    #     if 'products' not in bundle:
-    #         return
-    #     import_record(
-    #         self.session,
-    #         'prestashop.mrp.bom',
-    #         self.backend_record.id,
-    #         record['id']
-    #     )
-
-    def import_combinations(self):
-        prestashop_record = self._get_prestashop_data()
-        associations = prestashop_record.get('associations', {})
-
-        combinations = associations.get('combinations', {}).get(
-            'combinations', [])
-        if not isinstance(combinations, list):
-            combinations = [combinations]
-        for combination in combinations:
-            import_record(
-                self.session,
-                'prestashop.product.combination',
-                self.backend_record.id,
-                combination['id']
-            )
-
-    # def import_images(self):
-    #     prestashop_record = self._get_prestashop_data()
-    #     associations = prestashop_record.get('associations', {})
-    #     images = associations.get('images', {}).get('image', {})
-    #     if not isinstance(images, list):
-    #         images = [images]
-    #     for image in images:
-    #         if image.get('id'):
-    #             import_product_image.delay(
-    #                 self.session,
-    #                 'prestashop.product.image',
-    #                 self.backend_record.id,
-    #                 prestashop_record['id'],
-    #                 image['id'],
-    #                 priority=10,
-    #             )
-
-    def import_supplierinfo(self, erp_id):
-        ps_id = self._get_prestashop_data()['id']
-        filters = {
-            'filter[id_product]': ps_id,
-            'filter[id_product_attribute]': 0
-        }
-        import_batch(
-            self.session,
-            'prestashop.product.supplierinfo',
-            self.backend_record.id,
-            filters=filters
-        )
-        product = self.env['prestashop.product.product'].browse(erp_id)
-        ps_supplierinfo_ids = self.session.search(
-            'prestashop.product.supplierinfo',
-            [('product_id', '=', product.openerp_id.id)]
-        )
-        ps_supplierinfos = self.env['prestashop.product.supplierinfo'].browse(ps_supplierinfo_ids)
-        for ps_supplierinfo in ps_supplierinfos:
-            try:
-                ps_supplierinfo.resync()
-            except PrestaShopWebServiceError:
-                ps_supplierinfo.openerp_id.unlink()
-
-    # def import_default_image(self):
-    #     record = self._get_prestashop_data()
-    #     if record['id_default_image']['value'] == '':
-    #         return
-    #     adapter = self.get_connector_unit_for_model(
-    #         PrestaShopCRUDAdapter,
-    #         'prestashop.product.image'
-    #     )
-    #     binder = self.binder_for()
-    #     product_id = binder.to_openerp(record['id'])
-    #     try:
-    #         image = adapter.read(record['id'],
-    #                              record['id_default_image']['value'])
-    #         self.session.write(
-    #             'prestashop.product.product',
-    #             [product_id],
-    #             {"image": image['content']}
-    #         )
-    #     except PrestaShopWebServiceError:
-    #         pass
-    #     except IOError:
-    #         pass
-
     def _import_dependencies(self):
-        self._import_default_category()
-        self._import_categories()
         self._import_attribute_set()
 
     def _import_attribute_set(self):
@@ -850,32 +740,31 @@ class ProductRecordImport(TranslatableRecordImport):
         attribute_set_id = self.session.create('attribute.set', attribute_set)
         self.prestashop_record['attribute_set_id'] = attribute_set_id
 
+    def _after_import(self, erp_id):
+        self.import_combinations()
+
+    def import_combinations(self):
+        prestashop_record = self._get_prestashop_data()
+        associations = prestashop_record.get('associations', {})
+
+        combinations = associations.get('combinations', {}).get(
+            'combinations', [])
+        if not isinstance(combinations, list):
+            combinations = [combinations]
+        for combination in combinations:
+            import_record(
+                self.session,
+                'prestashop.product.combination',
+                self.backend_record.id,
+                combination['id']
+            )
+
     def get_product_model_id(self):
         ids = self.session.search('ir.model', [
             ('model', '=', 'product.product')]
         )
         assert len(ids) == 1
         return ids[0]
-
-    def _import_default_category(self):
-        record = self.prestashop_record
-        if int(record['id_category_default']):
-            try:
-                self._check_dependency(record['id_category_default'],
-                                       'prestashop.product.category')
-            except PrestaShopWebServiceError:
-                pass
-
-    def _import_categories(self):
-        record = self.prestashop_record
-        associations = record.get('associations', {})
-        categories = associations.get('categories', {}).get('category', [])
-        if not isinstance(categories, list):
-            categories = [categories]
-        for category in categories:
-            self._check_dependency(category['id'],
-                                   'prestashop.product.category')
-
 
 @prestashop
 class SaleOrderStateImport(TranslatableRecordImport):
@@ -1019,13 +908,6 @@ def import_products(session, backend_id, since_date):
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
         filters = {'date': '1', 'filter[date_upd]': '>[%s]' % (date_str)}
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-    import_batch(
-        session,
-        'prestashop.product.category',
-        backend_id,
-        filters,
-        priority=15
-    )
     import_batch(
         session,
         'prestashop.product.product',
