@@ -96,11 +96,18 @@ var RunningTourActionHelper = core.Class.extend({
         };
     },
     _click: function (values) {
-        var href = values.$element.attr("href");
-        if (href && href.length && href[0] !== "#" && values.$element.is("a") && href !== "javascript:void(0)") {
-            window.location.href = href;
-        } else {
-            values.$element.trigger("mouseenter").mousedown().mouseup().click().trigger("mouseleave");
+        trigger_mouse_event(values.$element, "mouseover");
+        values.$element.trigger("mouseenter");
+        trigger_mouse_event(values.$element, "mousedown");
+        trigger_mouse_event(values.$element, "mouseup");
+        trigger_mouse_event(values.$element, "click");
+        trigger_mouse_event(values.$element, "mouseout");
+        values.$element.trigger("mouseleave");
+
+        function trigger_mouse_event($element, type) {
+            var e = document.createEvent("MouseEvents");
+            e.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
+            $element[0].dispatchEvent(e);
         }
     },
     _text: function (values, text) {
