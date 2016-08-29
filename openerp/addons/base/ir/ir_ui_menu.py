@@ -25,6 +25,7 @@ class IrUiMenu(models.Model):
         self.pool['ir.model.access'].register_cache_clearing_method(self._name, 'clear_caches')
 
     name = fields.Char(string='Menu', required=True, translate=True)
+    active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
