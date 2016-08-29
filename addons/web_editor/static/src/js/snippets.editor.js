@@ -1122,22 +1122,29 @@ data.Editor = Class.extend({
             if ($el.data("editor") !== this) {
                 styles = _.filter(styles, function (option) { return !option.preventChildPropagation; });
             }
+
+            var count = 0;
             _.each(_.sortBy(styles, "__order").reverse(), function (style) {
-                do_action(style, $el);
+                if (do_action(style, $el)) {
+                    count++;
+                }
             });
+            $el.toggleClass("hidden", count === 0);
         }).bind(this));
 
         // Activate the overlay
-        $style_button.toggleClass("hidden", $ul.children(":not(.dropdown-header):not(.divider):not(.hidden)").length === 0);
+        $style_button.toggleClass("hidden", $ul.children(":not(.divider):not(.hidden)").length === 0);
         this.$overlay.toggleClass("oe_active", !!focus);
 
         function _do_action_focus(style, $dest) {
             style.$el.insertAfter($dest);
             style.on_focus();
+            return (style.$el.length > 0);
         }
         function _do_action_blur(style, $dest) {
             style.$el.detach();
             style.on_blur();
+            return false;
         }
     },
 });
