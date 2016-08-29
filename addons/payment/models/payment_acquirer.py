@@ -71,6 +71,7 @@ class PaymentAcquirer(models.Model):
         help="Make this payment acquirer available (Customer invoices, etc.)")
     auto_confirm = fields.Selection([
         ('none', 'No automatic confirmation'),
+        ('authorize', 'Authorize the amount and confirm the SO on acquirer confirmation'),
         ('confirm_so', 'Confirm the SO on acquirer confirmation'),
         ('generate_and_pay_invoice', 'On acquirer confirmation, confirm the SO, generate the invoice and pay it')],
         string='Order Confirmation', default='confirm_so', required=True)
@@ -374,6 +375,7 @@ class PaymentTransaction(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending'),
+        ('authorized', 'Authorized'),
         ('done', 'Done'),
         ('error', 'Error'),
         ('cancel', 'Canceled')], 'Status',
@@ -559,13 +561,38 @@ class PaymentTransaction(models.Model):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
+    def s2s_capture_transaction(self, **kwargs):
+        custom_method_name = '%s_s2s_capture_transaction' % self.acquirer_id.provider
+        if hasattr(self, custom_method_name):
+            return getattr(self, custom_method_name)(**kwargs)
+
+    @api.multi
+    def s2s_void_transaction(self, **kwargs):
+        custom_method_name = '%s_s2s_void_transaction' % self.acquirer_id.provider
+        if hasattr(self, custom_method_name):
+            return getattr(self, custom_method_name)(**kwargs)
+
+    @api.multi
     def s2s_get_tx_status(self):
         """ Get the tx status. """
         invalid_param_method_name = '_%s_s2s_get_tx_status' % self.acquirer_id.provider
         if hasattr(self, invalid_param_method_name):
             return getattr(self, invalid_param_method_name)()
-
         return True
+
+    @api.multi
+    def action_capture(self):
+        if any(self.mapped(lambda tx: tx.state != 'authorized')):
+            raise ValidationError('Only transactions in the Authorized status can be captured.')
+        for tx in self:
+            tx.s2s_capture_transaction()
+
+    @api.multi
+    def action_void(self):
+        if any(self.mapped(lambda tx: tx.state != 'authorized')):
+            raise ValidationError('Only transactions in the Authorized status can be voided.')
+        for tx in self:
+            tx.s2s_void_transaction()
 
 
 class PaymentToken(models.Model):

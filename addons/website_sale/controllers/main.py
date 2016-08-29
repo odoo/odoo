@@ -748,7 +748,8 @@ class WebsiteSale(http.Controller):
                 tx.partner_id == tx.sale_order_id.partner_id):
             try:
                 s2s_result = tx.s2s_do_transaction()
-                if not s2s_result or tx.state != 'done':
+                valid_state = 'authorized' if tx.acquirer_id.auto_confirm == 'authorize' else 'done'
+                if not s2s_result or tx.state != valid_state:
                     return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
                 return dict(success=True, url='/shop/payment/validate')
             except Exception, e:
@@ -884,7 +885,7 @@ class WebsiteSale(http.Controller):
         if not order or (order.amount_total and not tx):
             return request.redirect('/shop')
 
-        if (not order.amount_total and not tx) or tx.state in ['pending', 'done']:
+        if (not order.amount_total and not tx) or tx.state in ['pending', 'done', 'authorized']:
             if (not order.amount_total and not tx):
                 # Orders are confirmed by payment transactions, but there is none for free orders,
                 # (e.g. free events), so confirm immediately
