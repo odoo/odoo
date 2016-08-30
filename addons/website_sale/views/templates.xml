@@ -1334,14 +1334,29 @@
                         <div class="col-lg-5 col-sm-6">
                             <h4>Payment Method:</h4>
                             <ul class="list-unstyled">
-                                <li t-foreach="acquirers or []" t-as="acquirer">
-                                    <label t-if="acquirer.button">
-                                        <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
-                                        <img class="media-object" style="width: 60px; display: inline-block;" t-att-title="acquirer.name" t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)" />
-                                        <span t-field="acquirer.name" />
-                                        <span t-if="acquirer.fees_active">(extra fees apply)</span>
-                                    </label>
-                                </li>
+                                <t t-foreach="acquirers or []" t-as="acquirer">
+                                    <li>
+                                        <label t-if="acquirer.button">
+                                            <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
+                                            <img class="media-object" style="width: 60px; display: inline-block;" t-att-title="acquirer.name" t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)" />
+                                            <span t-field="acquirer.name" />
+                                            <span t-if="acquirer.fees_active">(extra fees apply)</span>
+                                        </label>
+                                    </li>
+
+
+                                    <div class="list-group" style='display:none;' t-if='acquirer.tokens' t-att-data-acquirer="acquirer.id">
+                                        <a href="#" class="list-group-item disabled btn_payment_token" t-att-data-acquirer="acquirer.id">
+                                            <span class="fa fa-cc-visa"/> <b>Registered Cards</b>
+                                        </a>
+                                        <t t-foreach='acquirer.tokens' t-as='token'>
+                                            <button type="button" class="list-group-item btn_payment_token" t-att-data-acquirer="acquirer.id" t-att-data-token='token.id'>
+                                                <span class="fa fa-credit-card"></span>&amp;nbsp;  <t t-esc="token.name" />
+                                            </button>
+                                        </t>
+                                    </div>
+
+                                </t>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-sm-3">
@@ -1604,6 +1619,70 @@
                 </div>
             </t>
         </t>
+    </template>
+
+    <template id="payment_token_form">
+        <form method='POST' action="/shop/payment/transaction_token">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input type="hidden" name="tx_id" t-att-value="tx.id"/>
+        </form>
+    </template>
+ 
+    <template id="payment_token_form_confirm">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Shop - Confirm payment</t>
+            <div id="wrap">
+                <div class="container oe_website_sale">
+                    <t t-call="website_sale.wizard_checkout">
+                        <t t-set="step" t-value="40" />
+                    </t>
+                    <h1 class="mb32">Confirm <em t-field="tx.sale_order_id.name" /> Payment</h1>
+                    <div class="row">
+                        <div class="col-lg-8 col-sm-9">
+                            <div class='row'>
+                                <div class='col-sm-4 well'>
+                                    <div class="h4 text-center">Summary</div>
+                                    <t t-call="website_sale.total">
+                                        <t t-set='website_sale_order' t-value='tx.sale_order_id'/>
+                                    </t>
+                                </div>
+                                <div class="oe_pay_token col-sm-8">
+                                  <div class="panel panel-info">
+                                    <div class="panel-body">
+                                        <div class='js_token_load' style='display:none;'>Transaction processing ...</div>
+                                        <div class='js_token_load'>
+                                            <p class="text-center">
+                                                <i class="fa fa-3x fa-credit-card text-muted" aria-hidden="true"></i><br/>
+                                                Are you sure you want to pay with this card: <br/>
+                                                <b><t t-esc='tx.payment_token_id.short_name'/></b>
+                                            </p>
+
+                                            <div class='mt16 text-center'>
+                                                <form action="/shop/payment/transaction_token/confirm" method='POST'>
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                    <input type='hidden' name='tx' t-att-value='tx.id'/>
+                                                    <a class="btn btn-success btn-md js_btn_valid_tx">Yes, pay with this card</a>
+                                                    <a href='/shop/payment' class="btn btn-danger btn-md">No, choose another method</a>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted">
+                            <t t-call='website_sale.bill_to'>
+                                <t t-set="order" t-value= "tx.sale_order_id"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure" />
+            </div>
+        </t>
+
+
     </template>
 
     <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">

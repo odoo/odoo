@@ -729,12 +729,41 @@ class WebsiteSale(http.Controller):
                     }
                 )
                 acquirer.button = acquirer_button
+                acquirer.tokens = request.env['payment.token'].search([('acquirer_id', '=', acquirer.id)])
                 values['acquirers'].append(acquirer)
 
         return request.render("website_sale.payment", values)
 
+    @http.route(['/shop/payment/transaction_token/confirm'], type='json', auth="public", website=True)
+    def payment_transaction_token_confirm(self, tx, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(int(tx))
+        if (tx and request.website.sale_get_transaction() and
+                tx.id == request.website.sale_get_transaction().id and
+                tx.payment_token_id and
+                tx.partner_id == tx.sale_order_id.partner_id):
+            try:
+                s2s_result = tx.s2s_do_transaction()
+                if not s2s_result or tx.state != 'done':
+                    return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
+                return dict(success=True, url='/shop/payment/validate')
+            except Exception, e:
+                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (tx.id, str(e)))
+                return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
+        return dict(success=False, error='Tx missmatch')
+
+    @http.route(['/shop/payment/transaction_token'], type='http', methods=['POST'], auth="public", website=True)
+    def payment_transaction_token(self, tx_id, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(int(tx_id))
+        if (tx and request.website.sale_get_transaction() and
+                tx.id == request.website.sale_get_transaction().id and
+                tx.payment_token_id and
+                tx.partner_id == tx.sale_order_id.partner_id):
+            return request.render("website_sale.payment_token_form_confirm", dict(tx=tx))
+        else:
+            return request.redirect("/shop/payment?error=no_token_or_missmatch_tx")
+
     @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id):
+    def payment_transaction(self, acquirer_id, token=None):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -756,10 +785,13 @@ class WebsiteSale(http.Controller):
         if tx:
             if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
                 tx = False
+            elif token and tx.payment_token_id and token != tx.payment_token_id.id:
+                # new or distinct token
+                tx = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
                 tx.write(dict(Transaction.on_change_partner_id(order.partner_id.id).get('value', {}), amount=order.amount_total))
         if not tx:
-            tx = Transaction.create({
+            tx_values = {
                 'acquirer_id': acquirer_id,
                 'type': 'form',
                 'amount': order.amount_total,
@@ -768,7 +800,11 @@ class WebsiteSale(http.Controller):
                 'partner_country_id': order.partner_id.country_id.id,
                 'reference': Transaction.get_next_reference(order.name),
                 'sale_order_id': order.id,
-            })
+            }
+            if token and request.env['payment.token'].sudo().browse(int(token)).partner_id == order.partner_id:
+                tx_values['payment_token_id'] = token
+
+            tx = Transaction.create(tx_values)
             request.session['sale_transaction_id'] = tx.id
 
         # update quotation
@@ -776,6 +812,8 @@ class WebsiteSale(http.Controller):
             'payment_acquirer_id': acquirer_id,
             'payment_tx_id': request.session['sale_transaction_id']
         })
+        if token:
+            return request.env.ref('website_sale.payment_token_form').render(dict(tx=tx), engine='ir.qweb')
 
         return tx.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
             tx.reference,

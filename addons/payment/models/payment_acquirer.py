@@ -577,6 +577,7 @@ class PaymentToken(models.Model):
     _order = 'partner_id'
 
     name = fields.Char('Name', help='Name of the payment token')
+    short_name = fields.Char('Short name', compute='_compute_short_name')
     partner_id = fields.Many2one('res.partner', 'Partner', required=True)
     acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer Account', required=True)
     acquirer_ref = fields.Char('Acquirer Ref.', required=True)
@@ -595,3 +596,9 @@ class PaymentToken(models.Model):
                 values.update(getattr(self, custom_method_name)(values))
 
         return super(PaymentToken, self).create(values)
+
+    @api.multi
+    @api.depends('name')
+    def _compute_short_name(self):
+        for token in self:
+            token.short_name = token.name.replace('XXXXXXXXXXXX', '***')
