@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, api, models
+from openerp import api, models
 
 
 class Issue(models.Model):
@@ -19,3 +19,19 @@ class Issue(models.Model):
             'target': 'self',
             'res_id': self.id,
         }
+
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        """ Override the mail.thread method to handle project users and officers
+        recipients. Indeed those will have specific action in their notification
+        emails: creating tasks, assigning it. """
+        group_project_user_id = self.env.ref('project.group_project_user').id
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_project_user_id in recipient.user_ids[0].groups_id.ids:
+                group_data['group_project_user'] |= recipient
+            elif recipient.user_ids and all(recipient.user_ids.mapped('share')):
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
+        return super(Issue, self)._notification_group_recipients(message, recipients, done_ids, group_data)
