@@ -724,7 +724,7 @@
     <div data-js='background_position'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="background_position_li" data-background_position="background_position">
-            <a tabindex="-1" href="#"><i class="fa fa-cog"/>Background Image Sizing</a>
+            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
         </li>
     </div>
 
@@ -740,7 +740,7 @@
 
     <div data-js='gallery' data-selector=".o_gallery">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Mode</a>
+            <a tabindex="-2" href="#"><i class="fa fa-magic"/>Mode</a>
             <ul class="dropdown-menu">
                 <li data-mode="nomode"><a href="#">Float</a></li>
                 <li data-mode="masonry"><a href="#">Masonry</a></li>
@@ -749,7 +749,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Slideshow speed</a>
+            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
             <ul class="dropdown-menu">
                  <li data-interval="1000"><a href="#">1s</a></li>
                  <li data-interval="2000"><a href="#">2s</a></li>
@@ -760,7 +760,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Columns</a>
+            <a tabindex="-2" href="#"><i class="fa fa-th"/>Columns</a>
             <ul class="dropdown-menu">
                 <li data-columns="1"><a href="#">1</a></li>
                 <li data-columns="2"><a href="#">2</a></li>
@@ -771,7 +771,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Images spacing</a>
+            <a tabindex="-2" href="#"><i class="fa fa-arrows-h"/>Images spacing</a>
 
             <ul class="dropdown-menu">
                 <li data-select_class="o_spc-none"><a href="#">None</a></li>
@@ -781,7 +781,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-           <a tabindex="-2" href="#">Styling</a>
+           <a tabindex="-2" href="#"><i class="fa fa-paint-brush"/>Styling</a>
            <ul class="dropdown-menu">
                <li data-styling=""><a href="#">Square</a></li>
                <li data-styling="img-rounded"><a href="#">Rounded corners</a></li>
@@ -790,13 +790,14 @@
                <li data-styling="shadow"><a href="#">Shadows</a></li>
            </ul>
         </li>
-       <li data-images_add="true"><a href="#">Add images</a></li>
-       <li data-images_rm="true"><a href="#">Remove all images</a></li>
+       <li class="separator"></li>
+       <li data-images_add="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
+       <li data-images_rm="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
     </div>
 
     <div data-js='gallery_img' data-selector=".o_gallery img">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Re-order</a>
+            <a tabindex="-2" href="#"><i class="fa fa-refresh"/>Re-order</a>
             <ul class="dropdown-menu">
                 <li data-position="first"><a href="#">Move to first</a></li>
                 <li data-position="prev"><a href="#">Move to previous</a></li>
@@ -804,13 +805,13 @@
                 <li data-position="last"><a href="#">Move to last</a></li>
             </ul>
         </li>
-        <li data-remove="remove"><a href="#">Remove from gallery</a></li>
+        <li data-remove="remove"><a href="#"><i class="fa fa-trash-o"/>Remove from gallery</a></li>
     </div>
 
     <div data-js='carousel'
         data-selector=":not(.o_gallery > .container) > .carousel">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Slideshow speed</a>
+            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
             <ul class="dropdown-menu">
                  <li data-interval="1000"><a href="#">1s</a></li>
                  <li data-interval="2000"><a href="#">2s</a></li>
@@ -852,7 +853,7 @@
 
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Margin</a>
+            <a tabindex="-2" href="#"><i class="fa fa-expand"/>Margin</a>
             <ul class="dropdown-menu">
                 <li data-select_class="o_margin_xl"><a href="#">Extra-Large</a></li>
                 <li data-select_class="o_margin_l"><a href="#">Large</a></li>
@@ -865,7 +866,7 @@
 
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Float</a>
+            <a tabindex="-2" href="#"><i class="fa fa-magnet"/>Float</a>
             <ul class="dropdown-menu">
                 <li data-select_class="pull-left" data-only="click"><a href="#">Left</a></li>
                 <li data-select_class="pull-right" data-only="click"><a href="#">Right</a></li>
@@ -876,7 +877,7 @@
     <div data-js='parallax'
         data-selector=".parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Scroll Speed</a>
+            <a tabindex="-1" href="#"><i class="fa fa-clock-o"/>Scroll Speed</a>
             <ul class="dropdown-menu" name="parallax-scroll">
                 <li data-scroll="0"><a href="#">Static</a></li>
                 <li data-scroll="0.3"><a href="#">Very Slow</a></li>
