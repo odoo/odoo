@@ -123,11 +123,18 @@ class project_issue(osv.Model):
         return res
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
+        values = {}
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
-                return {'value': {'partner_id': project.partner_id.id, 'email_from': project.partner_id.email}}
-        return {}
+                values['partner_id'] = project.partner_id.id
+                values['email_from'] = project.partner_id.email
+            values['stage_id'] = self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
+        else:
+            values['partner_id'] = False
+            values['email_from'] = False
+            values['stage_id'] = False
+        return {'value': values}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
