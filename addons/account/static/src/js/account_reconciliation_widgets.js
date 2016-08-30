@@ -76,7 +76,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         this.formatCurrencies; // Method that formats the currency ; loaded from the server
         this.model_res_users = new Model("res.users");
         this.model_tax = new Model("account.tax");
-        this.model_presets = new Model("account.operation.template");
+        this.model_presets = new Model("account.reconcile.model");
         this.max_move_lines_displayed = 5;
         // Number of reconciliations loaded initially and by clicking 'show more'
         this.num_reconciliations_fetched_in_batch = 10;
@@ -277,7 +277,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     presetConfigCreateClickHandler: function(e) {
         e.preventDefault();
         var self = this;
-        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+        return self.rpc("/web/action/load", {action_id: "account.action_account_reconcile_model"}).then(function(result) {
             result.views = [[false, "form"], [false, "list"]];
             return self.do_action(result);
         });
@@ -286,7 +286,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     presetConfigEditClickHandler: function(e) {
         e.preventDefault();
         var self = this;
-        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+        return self.rpc("/web/action/load", {action_id: "account.action_account_reconcile_model"}).then(function(result) {
             result.views = [[false, "list"], [false, "form"]];
             return self.do_action(result);
         });

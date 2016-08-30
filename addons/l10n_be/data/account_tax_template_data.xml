@@ -344,6 +344,19 @@
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_85')])]"/>
         </record>
+         <record id="attn_TVA-21-inclus-dans-prix" model="account.tax.template">
+            <field name="sequence">12</field>
+            <field name="description">21% Services - TTC</field>
+            <field name="name">21% TVA</field>
+            <field name="refund_account_id" ref="a411059"/>
+            <field name="account_id" ref="a411059"/>
+            <field name="price_include" eval="1"/>
+            <field name="amount">21</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">none</field>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+        </record>
         <record id="attn_VAT-IN-V82-21-S" model="account.tax.template">
             <field name="sequence">210</field>
             <field name="description">21%</field>

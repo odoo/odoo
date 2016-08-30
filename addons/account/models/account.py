@@ -758,8 +758,8 @@ class AccountTax(models.Model):
             return incl_tax.compute_all(price)['total_excluded']
         return price
 
-class AccountOperationTemplate(models.Model):
-    _name = "account.operation.template"
+class AccountReconcileModel(models.Model):
+    _name = "account.reconcile.model"
     _description = "Preset to create journal entries during a invoices and payments matching"
 
     name = fields.Char(string='Button Label', required=True)
