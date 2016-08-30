@@ -221,6 +221,8 @@ class Website(models.Model):
                 website = self.search([], limit=1)
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
+        if not isocountry and self.env.user != request.website.user_id and partner.country_id:
+            isocountry = partner.country_id.code
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
