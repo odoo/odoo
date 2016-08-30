@@ -6,12 +6,22 @@ from odoo import fields, models, tools
 
 class ProjectTaskHistoryCumulative(models.Model):
     _name = 'project.task.history.cumulative'
-    _inherit = 'project.task.history'
     _auto = False
 
     end_date = fields.Date(string='End Date')
     nbr_tasks = fields.Integer(string='# of Tasks', readonly=True)
     project_id = fields.Many2one('project.project', string='Project')
+    task_id = fields.Many2one('project.task', string='Task', ondelete='cascade', required=True, index=True)
+    type_id = fields.Many2one('project.task.type', string='Stage')
+    kanban_state = fields.Selection([
+        ('normal', 'Normal'),
+        ('blocked', 'Blocked'),
+        ('done', 'Ready for next stage')
+        ], string='Kanban State')
+    date = fields.Date(string='Date', index=True, default=fields.Date.context_today)
+    remaining_hours = fields.Float(string='Remaining Time', digits=(16, 2))
+    planned_hours = fields.Float(string='Planned Time', digits=(16, 2))
+    user_id = fields.Many2one('res.users', string='Responsible')
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
