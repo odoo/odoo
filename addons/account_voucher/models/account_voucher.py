@@ -148,7 +148,6 @@ class AccountVoucher(models.Model):
 
     @api.multi
     def action_cancel_draft(self):
-        self.create_workflow()
         self.write({'state': 'draft'})
 
     @api.multi
