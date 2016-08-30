@@ -9,7 +9,7 @@ class ProjectTaskHistoryCumulative(models.Model):
     _inherit = 'project.task.history'
     _auto = False
 
-    end_date = fields.Date(string='End Date')
+    end_date = fields.Date(string='End Date', compute=None, readonly=True)
     nbr_tasks = fields.Integer(string='# of Tasks', readonly=True)
     project_id = fields.Many2one('project.project', string='Project')
 
