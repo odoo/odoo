@@ -35,8 +35,14 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
     def ogone_s2s_create(self, **post):
-        request.env['payment.acquirer'].browse(int(post.get('acquirer_id'))).s2s_process(post)
-        return werkzeug.utils.redirect(post.get('return_url', '/'))
+        error = ''
+        acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
+        try:
+            acq.s2s_process(post)
+        except Exception, e:
+            # synthax error: 'CHECK ERROR: |Not a valid date\n\n50001111: None'
+            error = e.message.splitlines()[0].split('|')[-1] or ''
+        return werkzeug.utils.redirect(post.get('return_url', '/') + (error and '#error=%s' % werkzeug.url_quote(error) or ''))
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
     def feedback(self, **kwargs):
