@@ -28,7 +28,7 @@
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="30" groups="product.group_uom"/>
         <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
         <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="7" groups="base.group_no_one"/>
-        <menuitem id="sales_team.menu_sale_config_sales" name="Configuration" parent="sales_team.menu_base_partner" sequence="100"/>
+        <menuitem id="sales_team.menu_sale_config_sales" name="Configuration" parent="sales_team.menu_base_partner" sequence="100" groups="account.group_account_user"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="sales_team.menu_sale_config" groups="product.group_sale_pricelist" sequence="3"/>
         <menuitem action="product.product_pricelist_action2" id="menu_product_pricelist_action2" parent="menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
 
@@ -620,13 +620,13 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="sale" position="inside">
-                    <separator string="Invoicing Policy" colspan="4"/>
+                <page name="invoicing" position="inside">
+                    <separator string="Invoicing Policy"/>
                     <group>
                         <field name="invoice_policy" widget="radio"/>
                         <field name="track_service" widget="radio" invisible="True"/>
                     </group>
-                </group>
+                </page>
             </field>
         </record>
 
