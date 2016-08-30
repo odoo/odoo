@@ -364,7 +364,7 @@ class QWeb(object):
     def format(self, value, formating, *args, **kwargs):
         format = getattr(self, '_format_func_%s' % formating, None)
         if not format:
-            raise "Unknown format '%s'" % (formating,)
+            raise ValueError("Unknown format '%s'" % (formating,))
         return format(value, *args, **kwargs)
 
     # compute helpers
