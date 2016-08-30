@@ -213,6 +213,8 @@ class website(orm.Model):
             website = self.browse(cr, uid, website_id, context=context)
         isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+        if not isocountry and uid != request.website.user_id.id and partner.country_id:
+            isocountry = partner.country_id.code
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pl_ids = self._get_pl_partner_order(cr, uid, isocountry, show_visible,
