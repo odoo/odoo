@@ -74,7 +74,6 @@ class MakeProcurement(models.TransientModel):
                 'location_id': wizard.warehouse_id.lot_stock_id.id,
                 'company_id': wizard.warehouse_id.company_id.id,
                 'route_ids': [(6, 0, wizard.route_ids.ids)]})
-            procurement.signal_workflow('button_confirm')
         return {
             'view_type': 'form',
             'view_mode': 'tree,form',
