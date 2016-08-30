@@ -84,7 +84,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         if (group_bys.length == 0) {
             group_bys = ["_pseudo_group_by"];
             _.each(tasks, function(el) {
-                el._pseudo_group_by = "Gantt View";
+                el._pseudo_group_by = _t("Gantt View");
             });
             this.fields._pseudo_group_by = {type: "string"};
         }
