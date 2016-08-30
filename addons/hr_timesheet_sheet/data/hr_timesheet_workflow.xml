@@ -51,12 +51,12 @@
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_done"/>
             <field name="signal">done</field>
-            <field name="group_id" ref="base.group_hr_user"/>
+            <field name="group_id" ref="hr_timesheet.group_timesheet_manager"/>
         </record>
         <record id="t3" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">cancel</field>
-            <field name="group_id" ref="base.group_hr_user"/>
+            <field name="group_id" ref="hr_timesheet.group_timesheet_manager"/>
         </record>
 </odoo>

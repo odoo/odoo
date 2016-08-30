@@ -15,19 +15,12 @@ class TestHrHolidaysBase(common.TransactionCase):
         group_employee_id = self.ref('base.group_user')
 
         # Test users to use through the various tests
-        self.user_hruser_id = Users.create({
-            'name': 'Armande HrUser',
-            'login': 'Armande',
-            'alias_name': 'armande',
-            'email': 'armande.hruser@example.com',
-            'groups_id': [(6, 0, [group_employee_id, self.ref('base.group_hr_user')])]
-        }).id
-        self.user_hrmanager_id = Users.create({
+        self.user_leavemanager_id = Users.create({
             'name': 'Bastien HrManager',
             'login': 'bastien',
             'alias_name': 'bastien',
             'email': 'bastien.hrmanager@example.com',
-            'groups_id': [(6, 0, [group_employee_id, self.ref('base.group_hr_manager')])]
+            'groups_id': [(6, 0, [group_employee_id, self.ref('hr_holidays.group_leave_manager')])]
         }).id
         self.user_employee_id = Users.create({
             'name': 'David Employee',
@@ -42,7 +35,7 @@ class TestHrHolidaysBase(common.TransactionCase):
             'name': 'David Employee',
             'user_id': self.user_employee_id,
         }).id
-        self.employee_hruser_id = self.env['hr.employee'].create({
-            'name': 'Armande HrUser',
-            'user_id': self.user_hruser_id,
+        self.employee_hrmanager_id = self.env['hr.employee'].create({
+            'name': 'Bastien HrManager',
+            'user_id': self.user_leavemanager_id,
         }).id

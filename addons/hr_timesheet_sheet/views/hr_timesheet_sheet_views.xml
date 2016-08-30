@@ -58,9 +58,9 @@
                 <form string="Timesheet">
                 <header>
                     <button name="button_confirm" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
-                    <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="done" states="confirm" string="Approve" type="workflow" groups="hr_timesheet.group_timesheet_manager" class="oe_highlight"/>
                     <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" />
-                    <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user" />
+                    <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="hr_timesheet.group_timesheet_manager" />
                     <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
                 </header>
                 <sheet>
@@ -190,7 +190,7 @@
         <menuitem id="menu_hr_to_approve" name="To Approve" parent="hr_timesheet.timesheet_menu_root" sequence="7"/>
 
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="menu_hr_to_approve"
-             sequence="11" groups="base.group_hr_user"/>
+             sequence="11" groups="hr_timesheet.group_timesheet_manager"/>
 
 
         <!--
@@ -263,7 +263,7 @@
                         type="action"
                         class="oe_stat_button"
                         icon="fa-clock-o"
-                        groups="base.group_hr_manager">
+                        groups="hr_timesheet.group_timesheet_manager">
                         <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
                     </button>
                 </div>

@@ -1,22 +1,22 @@
 -
-  Create a user as 'HR Recruitment Officer'
+  Create a user as 'HR Recruitment Manager'
 -
-  !record {model: res.users, id: res_users_hr_recruitment_officer, view: False}:
+  !record {model: res.users, id: res_users_hr_recruitment_manager, view: False}:
     company_id: base.main_company
-    name: HR Recruitment Officer
+    name: HR Recruitment Manager
     login: hrro
     email: hrofcr@yourcompany.com
 -
-  I added groups for HR Recruitment Officer.
+  I added groups for HR Recruitment Manager.
 -
-  !record {model: res.users, id: res_users_hr_recruitment_officer}:
+  !record {model: res.users, id: res_users_hr_recruitment_manager}:
     groups_id:
-      - base.group_hr_user
+      - hr_recruitment.group_recruitment_manager
 -
-  In Order to test process of Recruitment so giving HR officer's rights,
+  In Order to test process of Recruitment so giving HR Manager's rights,
 -
   !context
-    uid: 'res_users_hr_recruitment_officer'
+    uid: 'res_users_hr_recruitment_manager'
 -
   An applicant is interested in the job position. So he sends a resume by email.
 -

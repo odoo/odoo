@@ -27,19 +27,19 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             self.assertEqual(holiday_status.virtual_remaining_leaves, vrl,
                              'hr_holidays: wrong type days computation')
 
-        # HrUser creates some holiday statuses -> crash because only HrManagers should do this
+        # Employee creates some holiday statuses -> crash because only LeaveManagers should do this
         with self.assertRaises(AccessError):
-            HolidaysStatus.sudo(self.user_hruser_id).create({
+            HolidaysStatus.sudo(self.user_employee_id).create({
                 'name': 'UserCheats',
                 'limit': True,
             })
 
-        # HrManager creates some holiday statuses
-        HolidayStatusManagerGroup = HolidaysStatus.sudo(self.user_hrmanager_id)
+        # LeaveManager creates some holiday statuses
+        HolidayStatusManagerGroup = HolidaysStatus.sudo(self.user_leavemanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
             'limit': True,
-            'categ_id': self.env['calendar.event.type'].sudo(self.user_hrmanager_id).create({'name': 'NotLimitedMeetingType'}).id
+            'categ_id': self.env['calendar.event.type'].sudo(self.user_leavemanager_id).create({'name': 'NotLimitedMeetingType'}).id
         })
         self.holidays_status_1 = HolidayStatusManagerGroup.create({
             'name': 'NotLimited',
@@ -60,7 +60,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         with self.assertRaises(ValidationError):
             HolidaysEmployeeGroup.create({
                 'name': 'Hol10',
-                'employee_id': self.employee_hruser_id,
+                'employee_id': self.employee_hrmanager_id,
                 'holiday_status_id': self.holidays_status_1.id,
                 'date_from': (datetime.today() - relativedelta(days=1)),
                 'date_to': datetime.today(),
@@ -77,14 +77,14 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_to': datetime.today(),
             'number_of_days_temp': 1,
         })
-        hol1_user_group = hol1_employee_group.sudo(self.user_hruser_id)
+        hol1_user_group = hol1_employee_group.sudo(self.user_leavemanager_id)
         self.assertEqual(hol1_user_group.state, 'confirm', 'hr_holidays: newly created leave request should be in confirm state')
 
         # Employee validates its leave request -> should not work
         hol1_employee_group.signal_workflow('validate')
         self.assertEqual(hol1_user_group.state, 'confirm', 'hr_holidays: employee should not be able to validate its own leave request')
 
-        # HrUser validates the employee leave request
+        # LeaveManager validates the employee leave request
         hol1_user_group.signal_workflow('validate')
         self.assertEqual(hol1_user_group.state, 'validate', 'hr_holidays: validates leave request should be in validate state')
 
@@ -117,15 +117,15 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # Clean transaction
         Holidays.search([('name', 'in', ['Hol21', 'Hol22'])]).unlink()
 
-        # HrUser allocates some leaves to the employee
-        aloc1_user_group = Holidays.sudo(self.user_hruser_id).create({
+        # LeaveManager allocates some leaves to the employee
+        aloc1_user_group = Holidays.sudo(self.user_leavemanager_id).create({
             'name': 'Days for limited category',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_2.id,
             'type': 'add',
             'number_of_days_temp': 2,
         })
-        # HrUser validates the allocation request
+        # LeaveManager validates the allocation request
         aloc1_user_group.signal_workflow('validate')
         aloc1_user_group.signal_workflow('second_validate')
         # Checks Employee has effectively some days left
@@ -141,41 +141,41 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_to': (datetime.today() + relativedelta(days=3)),
             'number_of_days_temp': 1,
         })
-        hol2_user_group = hol2.sudo(self.user_hruser_id)
+        hol2_user_group = hol2.sudo(self.user_leavemanager_id)
         # Check left days: - 1 virtual remaining day
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
 
-        # HrUser validates the first step
+        # LeaveManager validates the first step
         hol2_user_group.signal_workflow('validate')
         self.assertEqual(hol2.state, 'validate1',
                          'hr_holidays: first validation should lead to validate1 state')
 
-        # HrUser validates the second step
+        # LeaveManager validates the second step
         hol2_user_group.signal_workflow('second_validate')
         self.assertEqual(hol2.state, 'validate',
                          'hr_holidays: second validation should lead to validate state')
         # Check left days: - 1 day taken
         _check_holidays_status(hol_status_2_employee_group, 2.0, 1.0, 1.0, 1.0)
 
-        # HrManager finds an error: he refuses the leave request
-        hol2.sudo(self.user_hrmanager_id).signal_workflow('refuse')
+        # LeaveManager finds an error: he refuses the leave request
+        hol2.sudo(self.user_leavemanager_id).signal_workflow('refuse')
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: refuse should lead to refuse state')
         # Check left days: 2 days left again
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
 
-        # Annoyed, HrUser tries to fix its error and tries to reset the leave request -> does not work, only HrManager
-        hol2_user_group.signal_workflow('reset')
+        # Annoyed, Employee tries to fix its error and tries to reset the leave request -> does not work, only LeaveManager
+        hol2.signal_workflow('reset')
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: hr_user should not be able to reset a refused leave request')
 
-        # HrManager resets the request
-        hol2_manager_group = hol2.sudo(self.user_hrmanager_id)
+        # LeaveManager resets the request
+        hol2_manager_group = hol2.sudo(self.user_leavemanager_id)
         hol2_manager_group.signal_workflow('reset')
         self.assertEqual(hol2.state, 'draft',
                          'hr_holidays: resetting should lead to draft state')
 
-        # HrManager changes the date and put too much days -> crash when confirming
+        # LeaveManager changes the date and put too much days -> crash when confirming
         hol2_manager_group.write({
             'date_from': (datetime.today() + relativedelta(days=4)).strftime('%Y-%m-%d %H:%M'),
             'date_to': (datetime.today() + relativedelta(days=7)),

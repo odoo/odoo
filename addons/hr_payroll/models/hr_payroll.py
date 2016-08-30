@@ -841,7 +841,7 @@ class HrEmployee(models.Model):
     _description = 'Employee'
 
     slip_ids = fields.One2many('hr.payslip', 'employee_id', string='Payslips', readonly=True)
-    payslip_count = fields.Integer(compute='_compute_payslip_count', string='Payslips', groups="base.group_hr_user")
+    payslip_count = fields.Integer(compute='_compute_payslip_count', string='Payslips', groups="hr_payroll.group_payroll_manager")
 
     @api.multi
     def _compute_payslip_count(self):
