@@ -17,7 +17,7 @@ class IrHttp(models.AbstractModel):
         token = request.params['token']
         dbname = request.params['db']
 
-        registry = odoo.modules.registry.RegistryManager.get(dbname)
+        registry = odoo.registry(dbname)
         error_message = False
         with registry.cursor() as cr:
             env = Environment(cr, SUPERUSER_ID, {})

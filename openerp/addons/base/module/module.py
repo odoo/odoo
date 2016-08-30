@@ -480,7 +480,7 @@ class Module(models.Model):
 
         self._cr.commit()
         api.Environment.reset()
-        modules.registry.RegistryManager.new(self._cr.dbname, update_module=True)
+        modules.registry.Registry.new(self._cr.dbname, update_module=True)
 
         self._cr.commit()
         env = api.Environment(self._cr, self._uid, self._context)

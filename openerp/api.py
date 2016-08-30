@@ -731,7 +731,7 @@ class Environment(Mapping):
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
-        self.registry = RegistryManager.get(cr.dbname)
+        self.registry = Registry(cr.dbname)
         self.cache = defaultdict(dict)              # {field: {id: value, ...}, ...}
         self._protected = defaultdict(frozenset)    # {field: ids, ...}
         self.dirty = defaultdict(set)               # {record: set(field_name), ...}
@@ -996,4 +996,4 @@ class Environments(object):
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
 from openerp.exceptions import UserError, AccessError, MissingError
-from openerp.modules.registry import RegistryManager
+from openerp.modules.registry import Registry

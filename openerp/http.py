@@ -1447,7 +1447,7 @@ class Root(object):
             with request:
                 db = request.session.db
                 if db:
-                    openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+                    openerp.registry(db).check_signaling()
                     try:
                         with openerp.tools.mute_logger('openerp.sql_db'):
                             ir_http = request.registry['ir.http']
@@ -1466,7 +1466,7 @@ class Root(object):
                             result = _dispatch_nodb()
                     else:
                         result = ir_http._dispatch()
-                        openerp.modules.registry.RegistryManager.signal_caches_change(db)
+                        ir_http.pool.signal_caches_change()
                 else:
                     result = _dispatch_nodb()
 

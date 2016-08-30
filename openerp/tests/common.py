@@ -26,7 +26,6 @@ import werkzeug
 
 import openerp
 from openerp import api
-from openerp.modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
 
@@ -139,7 +138,7 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
-        self.registry = RegistryManager.get(get_db_name())
+        self.registry = openerp.registry(get_db_name())
         #: current transaction's cursor
         self.cr = self.cursor()
         self.uid = openerp.SUPERUSER_ID
@@ -173,7 +172,7 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.registry = RegistryManager.get(get_db_name())
+        cls.registry = openerp.registry(get_db_name())
         cls.cr = cls.registry.cursor()
         cls.uid = openerp.SUPERUSER_ID
         cls.env = api.Environment(cls.cr, cls.uid, {})

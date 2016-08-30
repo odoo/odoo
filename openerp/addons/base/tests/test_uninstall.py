@@ -8,7 +8,7 @@ import unittest
 
 from openerp import api, registry, SUPERUSER_ID
 from openerp.tests import common
-from openerp.modules.registry import RegistryManager
+from openerp.modules.registry import Registry
 
 
 @contextmanager
@@ -37,7 +37,7 @@ class TestUninstall(unittest.TestCase):
             module = env['ir.module.module'].search([('name', '=', MODULE)])
             assert len(module) == 1
             module.button_install()
-        RegistryManager.new(common.get_db_name(), update_module=True)
+        Registry.new(common.get_db_name(), update_module=True)
 
         with environment() as env:
             self.assertIn('test_uninstall.model', env.registry)
@@ -50,7 +50,7 @@ class TestUninstall(unittest.TestCase):
             module = env['ir.module.module'].search([('name', '=', MODULE)])
             assert len(module) == 1
             module.button_uninstall()
-        RegistryManager.new(common.get_db_name(), update_module=True)
+        Registry.new(common.get_db_name(), update_module=True)
 
         with environment() as env:
             self.assertNotIn('test_uninstall.model', env.registry)

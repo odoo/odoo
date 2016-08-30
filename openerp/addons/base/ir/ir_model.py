@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.modules.registry import RegistryManager
+from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -121,8 +121,8 @@ class IrModel(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             self._cr.commit()  # must be committed before reloading registry in new cursor
             api.Environment.reset()
-            RegistryManager.new(self._cr.dbname)
-            RegistryManager.signal_registry_change(self._cr.dbname)
+            registry = Registry.new(self._cr.dbname)
+            registry.signal_registry_change()
 
         return res
 
@@ -150,7 +150,7 @@ class IrModel(models.Model):
             self.pool.setup_models(self._cr, partial=(not self.pool.ready))
             # update database schema
             self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
-            RegistryManager.signal_registry_change(self._cr.dbname)
+            self.pool.signal_registry_change()
         return res
 
     @api.model
@@ -409,8 +409,8 @@ class IrModelFields(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             self._cr.commit()
             api.Environment.reset()
-            RegistryManager.new(self._cr.dbname)
-            RegistryManager.signal_registry_change(self._cr.dbname)
+            registry = Registry.new(self._cr.dbname)
+            registry.signal_registry_change()
 
         return res
 
@@ -444,7 +444,7 @@ class IrModelFields(models.Model):
                 self.pool.setup_models(self._cr, partial=(not self.pool.ready))
                 # update database schema
                 self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
-                RegistryManager.signal_registry_change(self._cr.dbname)
+                self.pool.signal_registry_change()
 
         return res
 
@@ -528,7 +528,7 @@ class IrModelFields(models.Model):
             self.pool.init_models(self._cr, patched_models, dict(self._context, update_custom_fields=True))
 
         if column_rename or patched_models:
-            RegistryManager.signal_registry_change(self._cr.dbname)
+            self.pool.signal_registry_change()
 
         return res
 

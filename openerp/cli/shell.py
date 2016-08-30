@@ -48,7 +48,7 @@ class Shell(Command):
         }
         with openerp.api.Environment.manage():
             if dbname:
-                registry = openerp.modules.registry.RegistryManager.get(dbname)
+                registry = openerp.registry(dbname)
                 with registry.cursor() as cr:
                     uid = openerp.SUPERUSER_ID
                     ctx = openerp.api.Environment(cr, uid, {})['res.users'].context_get()

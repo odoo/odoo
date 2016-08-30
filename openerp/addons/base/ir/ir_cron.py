@@ -105,7 +105,10 @@ class ir_cron(models.Model):
         """
         try:
             args = str2tuple(args)
-            odoo.modules.registry.RegistryManager.check_registry_signaling(self._cr.dbname)
+            if self.pool != self.pool.check_signaling():
+                # the registry has changed, reload self in the new registry
+                self.env.reset()
+                self = self.env()[self._name]
             if model_name in self.env:
                 model = self.env[model_name]
                 if hasattr(model, method_name):
@@ -117,7 +120,7 @@ class ir_cron(models.Model):
                     if _logger.isEnabledFor(logging.DEBUG):
                         end_time = time.time()
                         _logger.debug('%.3fs (%s, %s)', end_time - start_time, model_name, method_name)
-                    odoo.modules.registry.RegistryManager.signal_caches_change(self._cr.dbname)
+                    self.pool.signal_caches_change()
                 else:
                     _logger.warning("Method '%s.%s' does not exist.", model_name, method_name)
             else:

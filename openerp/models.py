@@ -570,7 +570,7 @@ class BaseModel(object):
 
         # link the class to the registry, and update the registry
         ModelClass.pool = pool
-        pool.add(ModelClass._name, ModelClass)
+        pool[name] = ModelClass
 
         # backward compatibility: instantiate the model, and initialize it
         model = object.__new__(ModelClass)
@@ -1661,7 +1661,7 @@ class BaseModel(object):
         """
         try:
             cls.pool.cache.clear()
-            cls.pool._any_cache_cleared = True
+            cls.pool.cache_cleared = True
         except AttributeError:
             pass
 

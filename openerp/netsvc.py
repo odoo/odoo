@@ -47,7 +47,7 @@ def LocalService(name):
         else:
             dbname = getattr(threading.currentThread(), 'dbname', None)
             if dbname:
-                registry = openerp.modules.registry.RegistryManager.get(dbname)
+                registry = openerp.registry(dbname)
                 with registry.cursor() as cr:
                     return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 

@@ -160,7 +160,7 @@ def module_installed(environment):
 
 def module_installed_bypass_session(dbname):
     try:
-        registry = odoo.modules.registry.RegistryManager.get(dbname)
+        registry = odoo.registry(dbname)
         with registry.cursor() as cr:
             return module_installed(
                 environment=Environment(cr, odoo.SUPERUSER_ID, {}))
