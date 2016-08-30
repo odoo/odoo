@@ -15,4 +15,4 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
     module_sale_ebay = fields.Boolean("eBay connector")
-    group_website_multiimage = fields.Boolean('Multi Image', implied_group='website_sale.group_website_multi_image')
+    group_website_multiimage = fields.Boolean('Multi Image', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
