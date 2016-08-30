@@ -260,6 +260,9 @@ var ImageDialog = Widget.extend({
         'change input.url': "change_input",
         'keyup input.url': "change_input",
         'click .existing-attachments [data-src]': 'select_existing',
+        'dblclick .existing-attachments [data-src]': function () {
+            this.getParent().save();
+        },
         'click .o_existing_attachment_remove': 'try_remove',
         'keydown.dismiss.bs.modal': function () {},
     }),
@@ -305,7 +308,7 @@ var ImageDialog = Widget.extend({
     },
     push: function (attachment) {
         if (this.options.select_images) {
-            var img = _.select(this.images, function (v) { return v.id == attachment.id;});
+            var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
                 this.images.splice(this.images.indexOf(img[0]),1);
             }
@@ -622,6 +625,9 @@ var fontIconsDialog = Widget.extend({
             this.$('#fa-icon').val(e.target.getAttribute('data-id'));
             $(".font-icons-icon").removeClass("o_selected");
             $(e.target).addClass("o_selected");
+        },
+        'dblclick .font-icons-icon': function () {
+            this.getParent().save();
         },
         'keydown.dismiss.bs.modal': function () {},
     }),
