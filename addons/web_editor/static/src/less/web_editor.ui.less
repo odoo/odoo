@@ -287,6 +287,8 @@ html[lang] > body.editor_enable{
         // OVERLAY OPTIONS
         > .oe_overlay_options {
             .o-position-absolute(@bottom: 0, @left: 0);
+            width: 250px; // the parent oe_overlay has a width equal to the snippet width, the 250px is there to force the options to stay on one line without overriding bootstrap .btn-group
+            text-align: left;
 
             > .btn-group {
                 white-space: nowrap;
