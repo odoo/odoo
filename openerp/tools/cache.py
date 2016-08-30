@@ -94,7 +94,7 @@ class ormcache(object):
         """ Clear the registry cache """
         d, key0, _ = self.lru(model)
         d.clear()
-        model.pool._any_cache_cleared = True
+        model.pool.cache_cleared = True
 
 
 class ormcache_context(ormcache):
@@ -196,13 +196,13 @@ class dummy_cache(object):
 
 def log_ormcache_stats(sig=None, frame=None):
     """ Log statistics of ormcache usage by database, model, and method. """
-    from openerp.modules.registry import RegistryManager
+    from openerp.modules.registry import Registry
     import threading
 
     me = threading.currentThread()
     me_dbname = me.dbname
     entries = defaultdict(int)
-    for dbname, reg in RegistryManager.registries.iteritems():
+    for dbname, reg in Registry.registries.iteritems():
         for key in reg.cache.iterkeys():
             entries[(dbname,) + key[:2]] += 1
     for key, count in sorted(entries.items()):

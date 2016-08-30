@@ -36,7 +36,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import openerp
-from openerp.modules.registry import RegistryManager
+from openerp.modules.registry import Registry
 from openerp.release import nt_service_name
 import openerp.tools.config as config
 from openerp.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
@@ -213,7 +213,7 @@ class ThreadedServer(CommonServer):
     def cron_thread(self, number):
         while True:
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
-            registries = openerp.modules.registry.RegistryManager.registries
+            registries = openerp.modules.registry.Registry.registries
             _logger.debug('cron%d polling for jobs', number)
             for db_name, registry in registries.iteritems():
                 while registry.ready:
@@ -301,7 +301,7 @@ class ThreadedServer(CommonServer):
                     time.sleep(0.05)
 
         _logger.debug('--')
-        openerp.modules.registry.RegistryManager.delete_all()
+        openerp.modules.registry.Registry.delete_all()
         logging.shutdown()
 
     def run(self, preload=None, stop=False):
@@ -723,7 +723,7 @@ class Worker(object):
                 self.process_work()
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
-                         len(openerp.modules.registry.RegistryManager.registries))
+                         len(openerp.modules.registry.Registry.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
@@ -801,7 +801,7 @@ class WorkerCron(Worker):
 
             import openerp.addons.base as base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
-            openerp.modules.registry.RegistryManager.delete(db_name)
+            openerp.modules.registry.Registry.delete(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
@@ -897,7 +897,7 @@ def preload_registries(dbnames):
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
-            registry = RegistryManager.new(dbname, update_module=update_module)
+            registry = Registry.new(dbname, update_module=update_module)
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)

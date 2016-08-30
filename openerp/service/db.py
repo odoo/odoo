@@ -41,13 +41,12 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
     try:
         db = openerp.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
-            # TODO this should be removed as it is done by RegistryManager.new().
+            # TODO this should be removed as it is done by Registry.new().
             openerp.modules.db.initialize(cr)
             openerp.tools.config['load_language'] = lang
             cr.commit()
 
-        registry = openerp.modules.registry.RegistryManager.new(
-            db_name, demo, None, update_module=True)
+        registry = openerp.modules.registry.Registry.new(db_name, demo, None, update_module=True)
 
         with closing(db.cursor()) as cr:
             env = openerp.api.Environment(cr, SUPERUSER_ID, {})
@@ -103,7 +102,7 @@ def exp_duplicate_database(db_original_name, db_name):
         _drop_conn(cr, db_original_name)
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
 
-    registry = openerp.modules.registry.RegistryManager.new(db_name)
+    registry = openerp.modules.registry.Registry.new(db_name)
     with registry.cursor() as cr:
         # if it's a copy of a database, force generation of a new dbuuid
         env = openerp.api.Environment(cr, SUPERUSER_ID, {})
@@ -134,7 +133,7 @@ def _drop_conn(cr, db_name):
 def exp_drop(db_name):
     if db_name not in list_dbs(True):
         return False
-    openerp.modules.registry.RegistryManager.delete(db_name)
+    openerp.modules.registry.Registry.delete(db_name)
     openerp.sql_db.close_db(db_name)
 
     db = openerp.sql_db.db_connect('postgres')
@@ -256,7 +255,7 @@ def restore_db(db, dump_file, copy=False):
         if openerp.tools.exec_pg_command(pg_cmd, *pg_args):
             raise Exception("Couldn't restore database")
 
-        registry = openerp.modules.registry.RegistryManager.new(db)
+        registry = openerp.modules.registry.Registry.new(db)
         with registry.cursor() as cr:
             env = openerp.api.Environment(cr, SUPERUSER_ID, {})
             if copy:
@@ -276,7 +275,7 @@ def restore_db(db, dump_file, copy=False):
     _logger.info('RESTORE DB: %s', db)
 
 def exp_rename(old_name, new_name):
-    openerp.modules.registry.RegistryManager.delete(old_name)
+    openerp.modules.registry.Registry.delete(old_name)
     openerp.sql_db.close_db(old_name)
 
     db = openerp.sql_db.db_connect('postgres')
@@ -305,7 +304,7 @@ def exp_migrate_databases(databases):
     for db in databases:
         _logger.info('migrate database %s', db)
         openerp.tools.config['update']['base'] = True
-        openerp.modules.registry.RegistryManager.new(db, force_demo=False, update_module=True)
+        openerp.modules.registry.Registry.new(db, force_demo=False, update_module=True)
     return True
 
 #----------------------------------------------------------

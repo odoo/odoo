@@ -5,7 +5,6 @@ import logging
 from reportlab.pdfbase import ttfonts
 
 from odoo import api, fields, models
-from odoo.modules.registry import RegistryManager
 from odoo.report.render.rml2pdf import customfonts
 
 """This module allows the mapping of some system-available TTF fonts to
@@ -92,7 +91,7 @@ class ResFont(models.Model):
         # Remove inexistent fonts
         self.search([('name', 'not in', existing_font_names), ('path', '!=', '/dev/null')]).unlink()
 
-        RegistryManager.signal_caches_change(self._cr.dbname)
+        self.pool.signal_caches_change()
         return self._sync()
 
     def _sync(self):

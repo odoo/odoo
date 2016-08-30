@@ -33,10 +33,10 @@ def dispatch(method, params):
     if method not in ['execute', 'execute_kw', 'exec_workflow']:
         raise NameError("Method not available %s" % method)
     security.check(db,uid,passwd)
-    openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+    registry = openerp.registry(db).check_signaling()
     fn = globals()[method]
     res = fn(db, uid, *params)
-    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+    registry.signal_caches_change()
     return res
 
 def check(f):

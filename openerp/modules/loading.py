@@ -50,7 +50,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             else:
                 cr.rollback()
                 # avoid keeping stale xml_id, etc. in cache
-                openerp.modules.registry.RegistryManager.clear_caches(cr.dbname)
+                openerp.registry(cr.dbname).clear_caches()
 
 
     def _get_files_of_kind(kind):
@@ -258,7 +258,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 tools.config["demo"]['all'] = 1
 
         # This is a brand new registry, just created in
-        # openerp.modules.registry.RegistryManager.new().
+        # openerp.modules.registry.Registry.new().
         registry = openerp.registry(cr.dbname)
         env = api.Environment(cr, SUPERUSER_ID, {})
 
@@ -389,7 +389,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 api.Environment.reset()
-                return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
+                return openerp.modules.registry.Registry.new(cr.dbname, force_demo, status, update_module)
 
         # STEP 6: verify custom views on every model
         if update_module:

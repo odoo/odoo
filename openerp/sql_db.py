@@ -682,7 +682,7 @@ def db_connect(to, allow_uri=False):
     return Connection(_Pool, db, info)
 
 def close_db(db_name):
-    """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
+    """ You might want to call openerp.modules.registry.Registry.delete(db_name) along this function."""
     global _Pool
     if _Pool:
         _Pool.close_all(connection_info_for(db_name)[1])

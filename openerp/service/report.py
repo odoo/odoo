@@ -30,10 +30,10 @@ def dispatch(method, params):
     if method not in ['report', 'report_get', 'render_report']:
         raise KeyError("Method not supported %s" % method)
     security.check(db,uid,passwd)
-    openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+    registry = openerp.registry(db).check_signaling()
     fn = globals()['exp_' + method]
     res = fn(db, uid, *params)
-    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+    registry.signal_caches_change()
     return res
 
 def exp_render_report(db, uid, object, ids, datas=None, context=None):

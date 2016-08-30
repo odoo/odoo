@@ -95,7 +95,7 @@ def export_translation():
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
 
     with open(config["translate_out"], "w") as buf:
-        registry = openerp.modules.registry.RegistryManager.new(dbname)
+        registry = openerp.modules.registry.Registry.new(dbname)
         with openerp.api.Environment.manage():
             with registry.cursor() as cr:
                 openerp.tools.trans_export(config["language"],
@@ -108,7 +108,7 @@ def import_translation():
     context = {'overwrite': config["overwrite_existing_translations"]}
     dbname = config['db_name']
 
-    registry = openerp.modules.registry.RegistryManager.new(dbname)
+    registry = openerp.modules.registry.Registry.new(dbname)
     with openerp.api.Environment.manage():
         with registry.cursor() as cr:
             openerp.tools.trans_load(
