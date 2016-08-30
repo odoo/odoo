@@ -1262,6 +1262,9 @@ class AccountMoveLine(models.Model):
     def _query_get(self, domain=None):
         context = dict(self._context or {})
         domain = domain and safe_eval(str(domain)) or []
+        if context.get('cash_basis'):
+            initial_domain = domain
+            domain = []
 
         date_field = 'date'
         if context.get('aged_balance'):
@@ -1301,12 +1304,33 @@ class AccountMoveLine(models.Model):
         if context.get('analytic_account_ids'):
             domain += [('analytic_account_id', 'in', context['analytic_account_ids'].ids)]
 
+        if context.get('cash_basis'):
+            search_domain = domain.append(initial_domain)
+            amls = self.search(search_domain)
+            for aml in amls:
+                if aml.invoice_id:
+                    amls = amls - aml
+
+            possible_amls = self.env['account.invoice'].search(initial_domain).mapped('payment_ids').mapped('move_line_ids')
+            if possible_amls:
+                extra_domain = domain
+                extra_domain.append(('id', 'in', possible_amls.ids))
+                extra_amls = self.search(extra_domain)
+
+                amls = amls | extra_amls
+
+            if amls:
+                domain = [('id', 'in', amls.ids)]
+            else:
+                domain = [False]
+
         where_clause = ""
         where_clause_params = []
         tables = ''
         if domain:
             query = self._where_calc(domain)
             tables, where_clause, where_clause_params = query.get_sql()
+
         return tables, where_clause, where_clause_params
 
     @api.multi
