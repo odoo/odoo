@@ -395,7 +395,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-7 col-md-7 col-lg-7">
+                        <div class="col-sm-7">
                             <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name'}" groups="!website_sale.group_website_multi_image"/>
                             <t groups="website_sale.group_website_multi_image">
                                 <t t-set="variant_img" t-value="product.product_variant_ids[0].image_variant"/>
@@ -403,10 +403,10 @@
                                 <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
                                   <div class="carousel-outer">
                                     <div class="carousel-inner">
-                                        <div class="item active" itemprop="image" t-field="product.product_variant_ids[0].image" t-field-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name'}"/>
-                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-field-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name'}"/>
+                                        <div class="item active" itemprop="image" t-field="product.product_variant_ids[0].image" t-options='{"widget": "image", "class": "product_detail_img js_variant_img", "alt-field": "name"}'/>
+                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}'/>
                                         <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
-                                            <div class="item" t-field="pimg.image" t-field-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name'}"/>
+                                            <div class="item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}'/>
                                         </t>
                                     </div>
 
@@ -438,7 +438,7 @@
                                 </div>
                             </t>
                         </div>
-                        <div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1" id="product_details">
+                        <div class="col-sm-5 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)" />
                             <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="product.product_variant_ids.ids" method="POST">
@@ -1249,7 +1249,6 @@
             </div>
         </t>
     </template>
-
     <template id="payment">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Select Payment Method</t>
@@ -1274,7 +1273,8 @@
                             <table class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                                 <thead>
                                     <tr>
-                                        <th colspan="2" width="80">Product</th>
+                                        <th width="80">Product</th>
+                                        <th></th>
                                         <th width="120">Quantity</th>
                                         <th width="100" class='text-center'>Price</th>
                                     </tr>
@@ -1313,20 +1313,8 @@
                             <div class="oe_structure" />
                         </div>
                         <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
-                            <div class="panel panel-info">
-                              <div class="panel-heading">Bill To:</div>
-                              <div class="panel-body">
-                                <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
-                              </div>
-                            </div>                            
-                            <t t-if="website_sale_order and not website_sale_order.only_services">
-                                <div class="panel panel-info">
-                                    <div class="panel-heading">Ship To:</div>
-                                    <div class="panel-body">
-                                            <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact', 'fields': ['address', 'name', 'phone']}" />
-                                        
-                                    </div>
-                                </div>
+                            <t t-call='website_sale.bill_to'>
+                                <t t-set="order" t-value= "order"/>
                             </t>
                         </div>
                     </div>
@@ -1409,7 +1397,7 @@
                     </t>
                     <h1 class="mb32">Order <em t-field="order.name" /> Confirmed</h1>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-lg-8 col-sm-9">
                             <div class="thanks_msg">
                                 <h2>Thank you for your order.
                                           <a class="btn btn-primary pull-right" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print
@@ -1511,20 +1499,9 @@
                                 <t t-call="website_sale.payment_confirmation_status" />
                             </div>
                         </div>
-                        <div class="col-md-3 col-md-offset-1 text-muted">
-                            <div class="panel panel-info">
-                              <div class="panel-heading">Bill To:</div>
-                              <div class="panel-body">
-                                <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
-                              </div>
-                            </div>
-                            <t t-if="not order.only_services">
-                                <div class="panel panel-info">
-                                  <div class="panel-heading">Ship To:</div>
-                                  <div class="panel-body">
-                                    <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
-                                  </div>
-                                </div>
+                        <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted">
+                            <t t-call='website_sale.bill_to'>
+                                <t t-set="order" t-value= "order"/>
                             </t>
                         </div>
                     </div>
@@ -1683,6 +1660,23 @@
         </t>
 
 
+    </template>
+
+    <template id='website_sale.bill_to' name="Bill to">
+        <div class="panel panel-info">
+          <div class="panel-heading">Bill To:</div>
+          <div class="panel-body">
+            <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
+          </div>
+        </div>
+        <t t-if="not order.only_services">
+            <div class="panel panel-info">
+              <div class="panel-heading">Ship To:</div>
+              <div class="panel-body">
+                <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
+              </div>
+            </div>
+        </t>
     </template>
 
     <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
