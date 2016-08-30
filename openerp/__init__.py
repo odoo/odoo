@@ -58,7 +58,6 @@ import loglevels
 import modules
 import netsvc
 import osv
-import pooler
 import release
 import report
 import service

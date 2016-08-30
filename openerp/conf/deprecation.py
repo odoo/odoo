@@ -34,8 +34,3 @@ allow_local_service = True
 # See comments for allow_local_service above.
 # Introduced around 2013.03.
 allow_report_int_registration = True
-
-# If True, the functions in openerp.pooler can be used.
-# Introduced around 2013.03 (actually they are deprecated since much longer
-# but no warning was dispayed in the logs).
-openerp_pooler = True
