@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import argparse
 import code
 import os
 import signal
@@ -63,3 +64,24 @@ class Shell(Command):
         self.init(args)
         self.shell(openerp.tools.config['db_name'])
         return 0
+
+class IPShell(Shell):
+    """Start Odoo in an IPython shell or kernel"""
+    def console(self, local_vars):
+        import IPython
+        if self.kernel:
+            IPython.start_kernel(argv=[], user_ns=local_vars)
+        else:
+            IPython.start_ipython(argv=[], user_ns=local_vars)
+
+    def init(self, cmdargs):
+        parser = argparse.ArgumentParser(
+            prog="%s ipshell" % sys.argv[0].split(os.path.sep)[-1],
+            description=self.__doc__
+        )
+        parser.add_argument('--kernel', action='store_true',
+            help='Start a kernel instance')
+        args, unknown_cmdargs = parser.parse_known_args(cmdargs)
+        self.kernel = args.kernel
+
+        super(IPShell, self).init(unknown_cmdargs)
