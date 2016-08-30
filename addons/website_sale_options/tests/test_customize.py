@@ -2,9 +2,10 @@
 
 import odoo.tests
 
-
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
+
+    post_install = True
+    at_install = False
+
     def test_01_admin_shop_customize_tour(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('shop_customize', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.shop_customize", login="admin")
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_customize')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_customize.ready", login="admin")
