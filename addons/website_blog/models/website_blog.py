@@ -95,11 +95,17 @@ class BlogPost(models.Model):
         return res
 
     def _default_content(self):
-        return '''  <div class="container">
-                        <section class="mt16 mb16">
+        return '''
+            <section class="s_text_block">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 mb16 mt16">
                             <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
-                        </section>
-                    </div> '''
+                        </div>
+                    </div>
+                </div>
+            </section>
+        '''
 
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)

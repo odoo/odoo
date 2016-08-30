@@ -40,7 +40,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Click on <b>Save</b> to set the picture as cover."),
         position: "top",
     }, {
-        trigger: ".blog_content section.mt16",
+        trigger: ".blog_content .s_text_block",
         content: _t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs."),
         position: "top",
         run: function (actions) {
