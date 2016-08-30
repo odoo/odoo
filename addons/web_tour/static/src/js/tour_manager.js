@@ -194,7 +194,7 @@ return core.Class.extend({
         this.tours = {};
         this.consumed_tours = consumed_tours || [];
         this.running_tour = local_storage.getItem(get_running_key());
-        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 300;
+        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 10;
         this.TourModel = new Model('web_tour.tour');
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
