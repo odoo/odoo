@@ -1,15 +1,3 @@
-'''
-A product combination is a product with different attributes in prestashop.
-In prestashop, we can sell a product or a combination of a product with some
-attributes.
-
-For example, for the iPod product we can found in demo data, it has some
-combinations with different colors and different storage size.
-
-We map that in OpenERP to a product.product with an attribute.set defined for
-the main product.
-'''
-
 from openerp.osv import fields, orm
 
 from openerp.addons.connector.session import ConnectorSession
@@ -67,57 +55,3 @@ class prestashop_product_combination(orm.Model):
 
     def _prestashop_qty(self, cr, uid, product, context=None):
         return product.qty_available
-
-
-class attribute_attribute(orm.Model):
-    _inherit = 'attribute.attribute'
-
-    _columns = {
-        'prestashop_bind_ids': fields.one2many(
-            'prestashop.product.combination.option',
-            'openerp_id',
-            string='PrestaShop Bindings (combinations)'
-        ),
-    }
-
-
-class prestashop_product_combination_option(orm.Model):
-    _name = 'prestashop.product.combination.option'
-    _inherit = 'prestashop.binding'
-    _inherits = {'attribute.attribute': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one(
-            'attribute.attribute',
-            string='Attribute',
-            required=True,
-            ondelete='cascade'
-        ),
-    }
-
-
-class attribute_option(orm.Model):
-    _inherit = 'attribute.option'
-
-    _columns = {
-        'prestashop_bind_ids': fields.one2many(
-            'prestashop.product.combination.option.value',
-            'openerp_id',
-            string='PrestaShop Bindings'
-        ),
-    }
-
-
-class prestashop_product_combination_option_value(orm.Model):
-    _name = 'prestashop.product.combination.option.value'
-    _inherit = 'prestashop.binding'
-    _inherits = {'attribute.option': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one(
-            'attribute.option',
-            string='Attribute',
-            required=True,
-            ondelete='cascade'
-        ),
-    }

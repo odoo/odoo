@@ -29,7 +29,6 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.account.tax',
         'prestashop.account.tax.group',
         'prestashop.product.category',
-        # 'prestashop.product.image',
         'prestashop.product.product',
         'prestashop.product.combination',
         'prestashop.product.combination.option',

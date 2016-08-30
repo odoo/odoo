@@ -5,6 +5,19 @@ from openerp.addons.connector.session import ConnectorSession
 
 from ..unit.import_synchronizer import import_record
 
+
+class product_category(orm.Model):
+    _inherit = 'product.category'
+
+    _columns = {
+        'prestashop_bind_ids': fields.one2many(
+            'prestashop.product.category',
+            'openerp_id',
+            string="PrestaShop Bindings"
+        ),
+    }
+
+
 class prestashop_product_category(orm.Model):
     _name = 'prestashop.product.category'
     _inherit = 'prestashop.binding'
@@ -148,3 +161,29 @@ class prestashop_product_product(orm.Model):
             cr, uid, product.id, [stock_field], context=location_ctx
         )
         return product_stk[stock_field]
+
+class product_pricelist(orm.Model):
+    _inherit = 'product.pricelist'
+
+    _columns = {
+        'prestashop_groups_bind_ids': fields.one2many(
+            'prestashop.groups.pricelist',
+            'openerp_id',
+            string='Prestashop user groups'
+        ),
+    }
+
+
+class prestashop_groups_pricelist(orm.Model):
+    _name = 'prestashop.groups.pricelist'
+    _inherit = 'prestashop.binding'
+    _inherits = {'product.pricelist': 'openerp_id'}
+
+    _columns = {
+        'openerp_id': fields.many2one(
+            'product.pricelist',
+            string='Openerp Pricelist',
+            required=True,
+            ondelete='cascade'
+        ),
+    }

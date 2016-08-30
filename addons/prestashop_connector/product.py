@@ -77,37 +77,7 @@ class ProductCategoryMapper(PrestashopImportMapper):
         if record['date_upd'] == '0000-00-00 00:00:00':
             return {'date_upd': datetime.datetime.now()}
         return {'date_upd': record['date_upd']}
-
-
-# Product image connector parts
-# @prestashop
-# class ProductImageMapper(PrestashopImportMapper):
-#     _model_name = 'prestashop.product.image'
-
-#     direct = [
-#         ('content', 'file'),
-#     ]
-
-#     @mapping
-#     def product_id(self, record):
-#         return {'product_id': self.get_openerp_id(
-#             'prestashop.product.product',
-#             record['id_product']
-#         )}
-
-#     @mapping
-#     def name(self, record):
-#         return {'name': record['id_product']+'_'+record['id_image']}
-
-#     @mapping
-#     def backend_id(self, record):
-#         return {'backend_id': self.backend_record.id}
-
-#     @mapping
-#     def extension(self, record):
-#         return {"extension": mimetypes.guess_extension(record['type'])}
-
-
+        
 ########  product  ########
 @prestashop
 class ProductMapper(PrestashopImportMapper):

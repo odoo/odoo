@@ -1,15 +1,3 @@
-'''
-A product combination is a product with different attributes in prestashop.
-In prestashop, we can sell a product or a combination of a product with some
-attributes.
-
-For example, for the iPod product we can found in demo data, it has some
-combinations with different colors and different storage size.
-
-We map that in OpenERP to a product.product with an attribute.set defined for
-the main product.
-'''
-
 from unidecode import unidecode
 import json
 
@@ -332,11 +320,9 @@ class ProductCombinationOptionRecordImport(PrestashopImportSynchronizer):
             )
 
     def run(self, ext_id):
-        # looking for an attribute.attribute with the same name
         self.prestashop_id = ext_id
         self.prestashop_record = self._get_prestashop_data()
         field_name = self.mapper.name(self.prestashop_record)['name']
-        attribute_ids = self.session.search('attribute.attribute', [('name', '=', field_name)])
         if len(attribute_ids) == 0:
             # if we don't find it, we create a prestashop_product_combination
             super(ProductCombinationOptionRecordImport, self).run(ext_id)

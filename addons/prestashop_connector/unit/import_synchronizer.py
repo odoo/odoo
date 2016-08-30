@@ -902,7 +902,7 @@ def import_orders_since(session, backend_id, since_date=None):
 
 
 @job
-def import_products(session, backend_id, since_date):
+def import_products(session, model_name, backend_id, since_date):
     filters = None
     if since_date:
         date_str = since_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -910,10 +910,9 @@ def import_products(session, backend_id, since_date):
     now_fmt = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
     import_batch(
         session,
-        'prestashop.product.product',
+        model_name,
         backend_id,
         filters,
-        priority=15
     )
     session.pool.get('prestashop.backend').write(
         session.cr,

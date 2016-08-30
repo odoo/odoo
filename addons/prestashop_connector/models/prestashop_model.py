@@ -150,7 +150,7 @@ class prestashop_backend(orm.Model):
             since_date = self._date_as_user_tz(
                 cr, uid, backend_record.import_products_since
             )
-            import_products.delay(session, backend_record.id, since_date, priority=10)
+            import_products(session, 'prestashop.product.product', backend_record.id, since_date)
         return True
 
     def update_product_stock_qty(self, cr, uid, ids, context=None):
