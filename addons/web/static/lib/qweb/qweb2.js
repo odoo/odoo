@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var QWeb2 = {
     expressions_cache: { },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,else,call,set,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
@@ -471,7 +471,7 @@ QWeb2.Engine = (function() {
 })();
 
 QWeb2.Element = (function() {
-    function Element(engine, node) {
+    function Element(engine, node, parent) {
         this.engine = engine;
         this.node = node;
         this.tag = node.tagName;
@@ -479,6 +479,7 @@ QWeb2.Element = (function() {
         this.actions_done = [];
         this.attributes = {};
         this.children = [];
+        this.parent = parent;
         this._top = [];
         this._bottom = [];
         this._indent = 1;
@@ -487,7 +488,7 @@ QWeb2.Element = (function() {
         var childs = this.node.childNodes;
         if (childs) {
             for (var i = 0, ilen = childs.length; i < ilen; i++) {
-                this.children.push(new QWeb2.Element(this.engine, childs[i]));
+                this.children.push(new QWeb2.Element(this.engine, childs[i], this));
             }
         }
         var attrs = this.node.attributes;
@@ -514,9 +515,10 @@ QWeb2.Element = (function() {
 
     QWeb2.tools.extend(Element.prototype, {
         compile : function() {
+            this._compile();
             var r = [],
                 instring = false,
-                lines = this._compile().split('\n');
+                lines = this._compile_lines().split('\n');
             for (var i = 0, ilen = lines.length; i < ilen; i++) {
                 var m, line = lines[i];
                 if (m = line.match(/^(\s*)\/\/@string=(.*)/)) {
@@ -550,12 +552,19 @@ QWeb2.Element = (function() {
                 case 1:
                     this.compile_element();
             }
-            var r = this._top.join('');
             if (this.process_children) {
                 for (var i = 0, ilen = this.children.length; i < ilen; i++) {
                     var child = this.children[i];
                     child._indent = this._indent;
-                    r += child._compile();
+                    child._compile();
+                }
+            }
+        },
+        _compile_lines : function() {
+            var r = this._top.join('');
+            if (this.process_children) {
+                for (var i = 0, ilen = this.children.length; i < ilen; i++) {
+                    r += this.children[i]._compile_lines();
                 }
             }
             r += this._bottom.join('');
@@ -701,6 +710,20 @@ QWeb2.Element = (function() {
         },
         compile_action_if : function(value) {
             this.top("if (" + (this.format_expression(value)) + ") {");
+            this.bottom("}");
+            this.indent();
+        },
+        compile_action_else : function() {
+            var index = this.parent.children.indexOf(this);
+            var previous = this.parent.children[--index];
+            if (!previous['if']) {
+                if (this.parent.children[--index].actions['if'] && previous.node.nodeType === previous.node.TEXT_NODE && previous.node.textContent.match(/[^\S]/)) {
+                    previous._top = [];
+                } else {
+                    this.engine.tools.exception("t-else may not be preceded by something other than a t-if", previous.node);
+                }
+            }
+            this.top("else {");
             this.bottom("}");
             this.indent();
         },
