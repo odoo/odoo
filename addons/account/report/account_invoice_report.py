@@ -32,7 +32,7 @@ class AccountInvoiceReport(models.Model):
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_qty = fields.Float(string='Product Quantity', readonly=True)
     uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Term', oldname='payment_term', readonly=True)
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
