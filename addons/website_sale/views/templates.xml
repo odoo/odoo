@@ -1323,35 +1323,45 @@
                             <h4>Payment Method:</h4>
                             <ul class="list-unstyled">
                                 <t t-foreach="acquirers or []" t-as="acquirer">
-                                    <li>
-                                        <label t-if="acquirer.button">
-                                            <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
-                                            <img class="media-object" style="width: 60px; display: inline-block;" t-att-title="acquirer.name" t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)" />
-                                            <span t-field="acquirer.name" />
-                                            <span t-if="acquirer.fees_active">(extra fees apply)</span>
-                                        </label>
-                                    </li>
-
-
-                                    <div class="list-group" style='display:none;' t-if='acquirer.tokens' t-att-data-acquirer="acquirer.id">
-                                        <a href="#" class="list-group-item disabled btn_payment_token" t-att-data-acquirer="acquirer.id">
-                                            <span class="fa fa-cc-visa"/> <b>Registered Cards</b>
-                                        </a>
-                                        <t t-foreach='acquirer.tokens' t-as='token'>
-                                            <button type="button" class="list-group-item btn_payment_token" t-att-data-acquirer="acquirer.id" t-att-data-token='token.id'>
-                                                <span class="fa fa-credit-card"></span>&amp;nbsp;  <t t-esc="token.name" />
-                                            </button>
-                                        </t>
-                                    </div>
-
+                                  <li>
+                                    <label t-if="acquirer.button">
+                                        <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
+                                        <img class="media-object" style="width: 60px; display: inline-block;" t-att-title="acquirer.name" t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)" />
+                                        <span t-field="acquirer.name" />
+                                        <span t-if="acquirer.fees_active">(processing fees apply)</span>
+                                    </label>
+                                  </li>
                                 </t>
+                                <li t-if="[acq for acq in acquirers if acq.registration_view_template_id]">
+                                    <label>
+                                        <input type="radio" name="acquirer" />
+                                        <span class='fa fa-2x fa-credit-card'/>
+                                        Saved Cards
+                                    </label>
+
+                                    <div class="list-group">
+                                        <t t-foreach='tokens' t-as='token'>
+                                            <a class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
+                                                <span class="js_radio fa fa-circle-o"></span>&amp;nbsp; 
+                                                <t t-esc="token.name" />
+                                                <t t-if="len(set(tokens.mapped('acquirer_id')))>1">
+                                                    (<t t-esc='token.acquirer_id.name'/>)
+                                                </t>
+                                                <span t-if="token.acquirer_id.fees_active">(processing fees apply)</span>
+                                            </a>
+                                        </t>
+                                        <a href="/my/payment_method?redirect=/shop/payment" class="list-group-item" >
+                                            <span class="fa fa-plus-square"/> <b>New card</b>
+                                        </a>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-sm-3">
                             <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
                                 <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
                                     <div t-raw="acquirer.button" />
-                                    <div t-field="acquirer.pre_msg" />
+                                    <div class="pre_msg" t-field="acquirer.pre_msg" />
                                 </div>
                             </t>
                         </div>
@@ -1622,6 +1632,7 @@
                                     <t t-call="website_sale.total">
                                         <t t-set='website_sale_order' t-value='tx.sale_order_id'/>
                                     </t>
+                                    <i class='text-danger' t-if="tx.acquirer_id.fees_active">! Some processing fees will be applied</i>
                                 </div>
                                 <div class="oe_pay_token col-sm-8">
                                   <div class="panel panel-info">

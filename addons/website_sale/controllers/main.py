@@ -729,8 +729,9 @@ class WebsiteSale(http.Controller):
                     }
                 )
                 acquirer.button = acquirer_button
-                acquirer.tokens = request.env['payment.token'].search([('acquirer_id', '=', acquirer.id)])
                 values['acquirers'].append(acquirer)
+
+                values['tokens'] = request.env['payment.token'].search([('partner_id', '=', order.partner_id.id), ('acquirer_id', 'in', acquirers.ids)])
 
         return request.render("website_sale.payment", values)
 

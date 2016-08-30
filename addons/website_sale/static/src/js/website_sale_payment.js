@@ -13,20 +13,30 @@ $(document).ready(function () {
 
     // When choosing an acquirer, display its Pay Now button
     var $payment = $("#payment_method");
-    $payment.on("click", "input[name='acquirer'], button.btn_payment_token", function (ev) {
+    $payment.on("click", "input[name='acquirer'], a.btn_payment_token", function (ev) {
+            var ico_off = 'fa-circle-o';
+            var ico_on = 'fa-dot-circle-o';
+
             var payment_id = $(ev.currentTarget).val() || $(this).data('acquirer');
+            var token = $(ev.currentTarget).data('token') || '';
+
+            $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).attr('data-token', token);
+            $("div.js_payment a.list-group-item").removeClass("list-group-item-info");
+            $('span.js_radio').switchClass(ico_on, ico_off, 0);
+            if (token) {
+              $("div.oe_sale_acquirer_button div.pre_msg").hide();
+              $(ev.currentTarget).find('span.js_radio').switchClass(ico_off, ico_on, 0);
+              $(ev.currentTarget).parents('li').find('input').prop("checked", true);
+              $(ev.currentTarget).addClass("list-group-item-info");
+            }
+            else{
+              $("div.oe_sale_acquirer_button div.pre_msg").show();
+            }
             $("div.oe_sale_acquirer_button[data-id]", $payment).addClass("hidden");
             $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
 
-            // show token
-            $("div.list-group[data-acquirer!='"+payment_id+"']", $payment).hide();
-            $("div.list-group[data-acquirer='"+payment_id+"']", $payment).show();
-
-            var token = $(ev.currentTarget).data('token') || '';
-            $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).attr('data-token', token);
-
-        })
-        .find("input[name='acquirer']:checked").click();
+    })
+    .find("input[name='acquirer']:checked").click();
 
     // When clicking on payment button: create the tx using json then continue to the acquirer
     $payment.on("click", 'button[type="submit"], button[name="submit"]', function (ev) {
