@@ -22,12 +22,3 @@ class AccountInvoice(models.Model):
             action='/mail/view',
             model=self._name,
             res_id=self.id)[self.partner_id.id]
-
-    @api.multi
-    def get_formview_action(self):
-        # NOTE : if this method is call as sudo, the only to determine if the user is portal is to check the uid from context
-        # This was introduced with https://github.com/odoo/odoo/commit/f5fedbcb18a57ee9aeab952f3ff95f692f7a863c, and should be better fixed.
-        uid = self.env.context.get('uid', self.env.user.id)
-        if self.env['res.users'].sudo().browse(uid).share:
-            return self.env['ir.actions.act_window'].for_xml_id('portal_sale', 'portal_action_invoices')
-        return super(AccountInvoice, self).get_formview_action()

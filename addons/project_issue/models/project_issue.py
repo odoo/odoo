@@ -259,6 +259,8 @@ class ProjectIssue(models.Model):
                 group_data['group_project_user'] |= recipient
             elif not recipient.user_ids:
                 group_data['partner'] |= recipient
+            elif all(recipient.user_ids.mapped('share')):
+                group_data['partner'] |= recipient
             else:
                 group_data['user'] |= recipient
             done_ids.add(recipient.id)
