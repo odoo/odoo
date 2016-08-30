@@ -1,15 +1,16 @@
 odoo.define('point_of_sale.Tour', function (require) {
     "use strict";
 
-    var Tour = require('web.Tour');
+    var tour = require("web_tour.tour");
 
     function add_product_to_order(product_name) {
         return [{
-            title: 'buy ' + product_name,
-            element: '.product-list .product-name:contains("' + product_name + '")',
+            content: 'buy ' + product_name,
+            trigger: '.product-list .product-name:contains("' + product_name + '")',
         }, {
-            title: 'the ' + product_name + ' have been added to the order',
-            waitFor: '.order .product-name:contains("' + product_name + '")',
+            content: 'the ' + product_name + ' have been added to the order',
+            trigger: '.order .product-name:contains("' + product_name + '")',
+            run: function () {}, // it's a check
         }];
     }
 
@@ -18,8 +19,8 @@ odoo.define('point_of_sale.Tour', function (require) {
         for (i = 0; i < amount_str.length; ++i) {
             current_char = amount_str[i];
             steps.push({
-                title: 'press ' + current_char + ' on payment keypad',
-                element: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
+                content: 'press ' + current_char + ' on payment keypad',
+                trigger: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
             });
         }
 
@@ -36,43 +37,44 @@ odoo.define('point_of_sale.Tour', function (require) {
 
     function verify_order_total(total_str) {
         return [{
-            title: 'order total contains ' + total_str,
-            waitFor: '.order .total .value:contains("' + total_str + '")',
+            content: 'order total contains ' + total_str,
+            trigger: '.order .total .value:contains("' + total_str + '")',
+            run: function () {}, // it's a check
         }];
     }
 
     function goto_payment_screen_and_select_payment_method() {
         return [{
-            title: "go to payment screen",
-            element: '.button.pay',
+            content: "go to payment screen",
+            trigger: '.button.pay',
         }, {
-            title: "pay with cash",
-            element: '.paymentmethod:contains("Cash")',
+            content: "pay with cash",
+            trigger: '.paymentmethod:contains("Cash")',
         }];
     }
 
     function finish_order() {
         return [{
-            title: "validate the order",
-            element: '.button.next:visible',
+            content: "validate the order",
+            trigger: '.button.next:visible',
         }, {
-            title: "verify that the order is being sent to the backend",
-            waitFor: ".js_connecting:visible",
+            content: "verify that the order is being sent to the backend",
+            trigger: ".js_connecting:visible",
+            run: function () {}, // it's a check
         }, {
-            title: "verify that the order has been succesfully sent to the backend",
-            waitFor: ".js_connected:visible",
+            content: "verify that the order has been succesfully sent to the backend",
+            trigger: ".js_connected:visible",
+            run: function () {}, // it's a check
         }, {
-            title: "next order",
-            element: '.button.next:visible',
+            content: "next order",
+            trigger: '.button.next:visible',
         }];
     }
 
     var steps = [{
-            title: 'wait for loading screen',
-            waitFor: '.loader'
-        }, {
-            title: 'waiting for loading to finish',
-            waitFor: '.loader:hidden',
+            content: 'waiting for loading to finish',
+            trigger: '.o_main_content:has(.loader:hidden)',
+            run: function () {}, // it's a check
         }];
 
     steps = steps.concat(add_product_to_order('Peaches'));
@@ -84,11 +86,13 @@ odoo.define('point_of_sale.Tour', function (require) {
     steps = steps.concat(generate_payment_screen_keypad_steps("12.20"));
 
     steps = steps.concat([{
-        title: "verify tendered",
-        waitFor: '.col-tendered:contains("12.20")',
+        content: "verify tendered",
+        trigger: '.col-tendered:contains("12.20")',
+        run: function () {}, // it's a check
     }, {
-        title: "verify change",
-        waitFor: '.col-change:contains("2.00")',
+        content: "verify change",
+        trigger: '.col-change:contains("2.00")',
+        run: function () {}, // it's a check
     }]);
 
     steps = steps.concat(finish_order());
@@ -102,18 +106,13 @@ odoo.define('point_of_sale.Tour', function (require) {
     steps = steps.concat(finish_order());
 
     steps = steps.concat([{
-        title: "close the Point of Sale frontend",
-        element: ".header-button",
+        content: "close the Point of Sale frontend",
+        trigger: ".header-button",
     }, {
-        title: "confirm closing the frontend",
-        element: ".header-button",
+        content: "confirm closing the frontend",
+        trigger: ".header-button",
     }]);
 
-    Tour.register({
-        id: 'pos_basic_order',
-        name: 'Complete a basic order trough the Front-End',
-        path: '/pos/web',
-        steps: steps,
-    });
+    tour.register('pos_basic_order', { test: true, url: '/pos/web' }, steps);
 
 });
