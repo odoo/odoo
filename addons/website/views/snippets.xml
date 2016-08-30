@@ -690,17 +690,6 @@
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
-    <div data-js='blog-style'
-        data-selector="section:not(.carousel):not(.parallax):not(.o_gallery)">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-book"/>Style</a>
-            <ul class="dropdown-menu">
-                <li data-toggle_class="para_large"><a href="#">Bigger Text</a></li>
-                <li data-toggle_class="readable"><a href="#">Narrow</a></li>
-            </ul>
-        </li>
-    </div>
-
     <div data-js='background'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
         <li class="dropdown-submenu">
