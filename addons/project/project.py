@@ -399,11 +399,16 @@ class task(osv.osv):
 
     @api.cr_uid_ids_context
     def onchange_project(self, cr, uid, id, project_id, context=None):
+        values = {}
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
-                return {'value': {'partner_id': project.partner_id.id}}
-        return {}
+                    values['partner_id'] = project.partner_id.id
+            values['stage_id'] = self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
+        else:
+            values['stage_id'] = False
+            values['partner_id'] = False
+        return {'value': values}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
         vals = {}
