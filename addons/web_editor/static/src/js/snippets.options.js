@@ -402,7 +402,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.bg_siz = self.$target.css('background-size').split(' ');
 
             this.modal = new Dialog(null, {
-                title: _t("Background Image Options"),
+                title: _t("Background Image Sizing"),
                 $content: $(qweb.render('web_editor.dialog.background_position')),
                 buttons: [
                     {text: _t("Ok"), classes: "btn-primary", close: true, click: _.bind(this.save, this)},
