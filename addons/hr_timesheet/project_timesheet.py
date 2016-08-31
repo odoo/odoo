@@ -60,3 +60,14 @@ class Task(models.Model):
     subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
 
     _constraints = [(osv.osv._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
+
+    @api.multi
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+        new_child_ids = []
+        if 'child_ids' not in default:
+            for child in self.child_ids:
+                new_child_ids.append(child.copy().id)
+            default['child_ids'] = [(6, 0, new_child_ids)]
+        return super(Task, self).copy(default)
