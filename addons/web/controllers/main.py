@@ -653,8 +653,8 @@ class Database(http.Controller):
         try:
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
-            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang, password, post.get('login'), country_code)
-            request.session.authenticate(name, 'admin', password)
+            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code)
+            request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
         except Exception, e:
             error = "Database creation error: %s" % e
