@@ -21,11 +21,18 @@ class test_guess_mimetype(unittest.TestCase):
 
     def test_default_mimetype_empty(self):
         mimetype = guess_mimetype('')
-        self.assertEqual(mimetype, 'application/octet-stream')
+        # odoo implementation returns application/octet-stream by default
+        # if available, python-magic returns application/x-empty
+        self.assertIn(mimetype, ('application/octet-stream', 'application/x-empty'))
 
     def test_default_mimetype(self):
         mimetype = guess_mimetype('', default='test')
-        self.assertEqual(mimetype, 'test')
+        # if available, python-magic returns application/x-empty
+        self.assertIn(mimetype, ('test', 'application/x-empty'))
+
+    def test_mimetype_octet_stream(self):
+        mimetype = guess_mimetype('\0')
+        self.assertEqual(mimetype, 'application/octet-stream')
 
     def test_mimetype_png(self):
         content = base64.b64decode(PNG)
@@ -35,7 +42,8 @@ class test_guess_mimetype(unittest.TestCase):
     def test_mimetype_bmp(self):
         content = base64.b64decode(BMP)
         mimetype = guess_mimetype(content, default='test')
-        self.assertEqual(mimetype, 'image/bmp')
+        # mimetype should match image/bmp, image/x-ms-bmp, ...
+        self.assertRegexpMatches(mimetype, r'image/.*\bbmp')
 
     def test_mimetype_jpg(self):
         content = base64.b64decode(JPG)

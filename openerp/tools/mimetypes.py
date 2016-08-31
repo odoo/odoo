@@ -153,9 +153,9 @@ else:
 
     # magic from pypi https://pypi.python.org/pypi/python-magic/
     if hasattr(magic,'from_buffer'):
-        guess_mimetype = lambda bin_data: magic.from_buffer(bin_data, mime=True)
+        guess_mimetype = lambda bin_data, default=None: magic.from_buffer(bin_data, mime=True)
     # magic from file(1) https://packages.debian.org/squeeze/python-magic
     elif hasattr(magic,'open'):
         ms = magic.open(magic.MAGIC_MIME_TYPE)
         ms.load()
-        guess_mimetype = ms.buffer
+        guess_mimetype = lambda bin_data, default=None: ms.buffer(bin_data)
