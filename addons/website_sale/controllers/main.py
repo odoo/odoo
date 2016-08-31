@@ -617,6 +617,10 @@ class WebsiteSale(http.Controller):
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             return request.redirect('/shop/address')
 
+        for f in self._get_mandatory_billing_fields():
+            if not order.partner_id[f]:
+                return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+
         values = self.checkout_values(**post)
 
         # Avoid useless rendering if called in ajax
