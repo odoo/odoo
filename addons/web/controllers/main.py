@@ -695,6 +695,15 @@ class Database(http.Controller):
             error = "Master password update error: %s" % e
             return self._render_template(error=error)
 
+    @http.route('/web/database/list', type='json', auth='none')
+    def list(self):
+        """
+        Used by Mobile application for listing database
+        :return: List of databases
+        :rtype: list
+        """
+        return http.db_list()
+
 class Session(http.Controller):
 
     @http.route('/web/session/get_session_info', type='json', auth="none")
