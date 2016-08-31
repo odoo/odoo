@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import pytz
+import datetime
 import logging
 
 from collections import defaultdict
@@ -206,6 +208,7 @@ class Users(models.Model):
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
 
     @api.model
     def _get_company(self):
@@ -256,6 +259,11 @@ class Users(models.Model):
         companies_count = self._companies_count()
         for user in self:
             user.companies_count = companies_count
+
+    @api.depends('tz')
+    def _compute_tz_offset(self):
+        for user in self:
+            user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
 
     @api.onchange('login')
     def on_change_login(self):
