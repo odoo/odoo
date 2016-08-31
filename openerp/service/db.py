@@ -346,7 +346,7 @@ def list_dbs(force=False):
 def exp_list(document=False):
     if not openerp.tools.config['list_db']:
         raise openerp.exceptions.AccessDenied()
-    return list_dbs()
+    return openerp.http.db_list()
 
 def exp_list_lang():
     return openerp.tools.scan_languages()
