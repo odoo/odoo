@@ -810,6 +810,17 @@ class Post(models.Model):
             kwargs['record_name'] = kwargs.get('record_name') or self.parent_id and self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
 
+    @api.multi
+    def message_get_message_notify_values(self, message, message_values):
+        """ Override to avoid keeping all notified recipients of a comment.
+        We avoid tracking needaction on post comments. Only emails should be
+        sufficient. """
+        if message.message_type == 'comment':
+            return {
+                'needaction_partner_ids': [],
+            }
+        return {}
+
 
 class PostReason(models.Model):
     _name = "forum.post.reason"
