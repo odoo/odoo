@@ -457,7 +457,8 @@ class stock_quant(osv.osv):
         if ops:
             restrict_lot_id = lot_id
             location = ops.location_id
-            domain += [('owner_id', '=', ops.owner_id.id)]
+            if ops.owner_id:
+                domain += [('owner_id', '=', ops.owner_id.id)]
             if ops.package_id and not ops.product_id:
                 domain += [('package_id', 'child_of', ops.package_id.id)]
             elif ops.package_id and ops.product_id:
@@ -468,7 +469,8 @@ class stock_quant(osv.osv):
         else:
             restrict_lot_id = move.restrict_lot_id.id
             location = move.location_id
-            domain += [('owner_id', '=', move.restrict_partner_id.id)]
+            if move.restrict_partner_id:
+                domain += [('owner_id', '=', move.restrict_partner_id.id)]
             domain += [('location_id', 'child_of', move.location_id.id)]
         if context.get('force_company'): 
             domain += [('company_id', '=', context.get('force_company'))]
