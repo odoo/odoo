@@ -13,7 +13,7 @@ import pytz
 import xmlrpclib
 
 from openerp.sql_db import LazyCursor
-from openerp.tools import float_precision, float_round, frozendict, html_sanitize, ustr, OrderedSet
+from openerp.tools import float_precision, float_round, frozendict, html_sanitize, inflect, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from openerp.tools.translate import html_translate
@@ -455,7 +455,11 @@ class Field(object):
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
-            self.string = name.replace('_', ' ').capitalize()
+            inf_engine = inflect.engine()
+            self.string = (
+                inf_engine.plural(name[:-4]) if name.endswith('_ids') else
+                name[:-3] if name.endswith('_id') else name
+            ).replace('_', ' ').title()
 
         self._setup_default(model, name)
 
@@ -1248,7 +1252,7 @@ class _String(Field):
             return self.translate(callback, value)
         else:
             return value
-    
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
