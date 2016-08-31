@@ -106,7 +106,6 @@ class SaleConfiguration(models.TransientModel):
         ], "Sale Order Modification")
     module_sale_contract = fields.Boolean("Manage subscriptions and recurring invoicing")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
-    module_website_portal = fields.Boolean("Enable customer portal to track orders, delivery and invoices")
 
     @api.multi
     def set_sale_defaults(self):
