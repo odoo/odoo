@@ -70,27 +70,33 @@ class IrHttp(models.AbstractModel):
     _name = 'ir.http'
     _description = "HTTP routing"
 
-    def _get_converters(self):
+    @classmethod
+    def _get_converters(cls):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
-    def _find_handler(self, return_rule=False):
-        return self.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
+    @classmethod
+    def _find_handler(cls, return_rule=False):
+        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
 
-    def _auth_method_user(self):
+    @classmethod
+    def _auth_method_user(cls):
         request.uid = request.session.uid
         if not request.uid:
             raise http.SessionExpiredException("Session expired")
 
-    def _auth_method_none(self):
+    @classmethod
+    def _auth_method_none(cls):
         request.uid = None
 
-    def _auth_method_public(self):
+    @classmethod
+    def _auth_method_public(cls):
         if not request.session.uid:
             request.uid = request.env.ref('base.public_user').id
         else:
             request.uid = request.session.uid
 
-    def _authenticate(self, auth_method='user'):
+    @classmethod
+    def _authenticate(cls, auth_method='user'):
         try:
             if request.session.uid:
                 try:
@@ -103,7 +109,7 @@ class IrHttp(models.AbstractModel):
                     # let them bubble up
                     request.session.logout(keep_db=True)
             if request.uid is None:
-                getattr(self, "_auth_method_%s" % auth_method)()
+                getattr(cls, "_auth_method_%s" % auth_method)()
         except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
@@ -111,7 +117,8 @@ class IrHttp(models.AbstractModel):
             raise AccessDenied()
         return auth_method
 
-    def _serve_attachment(self):
+    @classmethod
+    def _serve_attachment(cls):
         env = api.Environment(request.cr, SUPERUSER_ID, request.context)
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
         fields = ['__last_update', 'datas', 'name', 'mimetype', 'checksum']
@@ -144,13 +151,14 @@ class IrHttp(models.AbstractModel):
             response.data = datas.decode('base64')
             return response
 
-    def _handle_exception(self, exception):
+    @classmethod
+    def _handle_exception(cls, exception):
         # If handle_exception returns something different than None, it will be used as a response
 
         # This is done first as the attachment path may
         # not match any HTTP controller
         if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
-            attach = self._serve_attachment()
+            attach = cls._serve_attachment()
             if attach:
                 return attach
 
@@ -162,21 +170,22 @@ class IrHttp(models.AbstractModel):
         except AccessDenied:
             return werkzeug.exceptions.Forbidden()
 
-    def _dispatch(self):
+    @classmethod
+    def _dispatch(cls):
         # locate the controller method
         try:
-            rule, arguments = self._find_handler(return_rule=True)
+            rule, arguments = cls._find_handler(return_rule=True)
             func = rule.endpoint
         except werkzeug.exceptions.NotFound, e:
-            return self._handle_exception(e)
+            return cls._handle_exception(e)
 
         # check authentication level
         try:
-            auth_method = self._authenticate(func.routing["auth"])
+            auth_method = cls._authenticate(func.routing["auth"])
         except Exception as e:
-            return self._handle_exception(e)
+            return cls._handle_exception(e)
 
-        processing = self._postprocess_args(arguments, rule)
+        processing = cls._postprocess_args(arguments, rule)
         if processing:
             return processing
 
@@ -187,40 +196,45 @@ class IrHttp(models.AbstractModel):
             if isinstance(result, Exception):
                 raise result
         except Exception, e:
-            return self._handle_exception(e)
+            return cls._handle_exception(e)
 
         return result
 
-    def _postprocess_args(self, arguments, rule):
+    @classmethod
+    def _postprocess_args(cls, arguments, rule):
         """ post process arg to set uid on browse records """
         for name, arg in arguments.items():
             if isinstance(arg, models.BaseModel) and arg._uid is UID_PLACEHOLDER:
                 arguments[name] = arg.sudo(request.uid)
                 if not arg.exists():
-                    return self._handle_exception(werkzeug.exceptions.NotFound())
+                    return cls._handle_exception(werkzeug.exceptions.NotFound())
 
-    def routing_map(self):
-        if not hasattr(self, '_routing_map'):
+    @classmethod
+    def routing_map(cls):
+        if not hasattr(cls, '_routing_map'):
             _logger.info("Generating routing map")
             installed = request.registry._init_modules - {'web'}
             if tools.config['test_enable']:
                 installed.add(odoo.modules.module.current_test)
             mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
-            # Note : when routing map is generated, we put it on the class `type(self)`
+            # Note : when routing map is generated, we put it on the class `cls`
             # to make it available for all instance. Since `env` create an new instance
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
-            type(self)._routing_map = http.routing_map(mods, False, converters=self._get_converters())
-        return self._routing_map
+            cls._routing_map = http.routing_map(mods, False, converters=cls._get_converters())
+        return cls._routing_map
 
-    def _clear_routing_map(self):
-        if hasattr(self, '_routing_map'):
-            del type(self)._routing_map
+    @classmethod
+    def _clear_routing_map(cls):
+        if hasattr(cls, '_routing_map'):
+            del cls._routing_map
 
-    def content_disposition(self, filename):
+    @classmethod
+    def content_disposition(cls, filename):
         return content_disposition(filename)
 
-    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+    @classmethod
+    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
         """ Get file, attachment or downloadable content
 
         If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
@@ -317,7 +331,7 @@ class IrHttp(models.AbstractModel):
 
         # content-disposition default name
         if download:
-            headers.append(('Content-Disposition', self.content_disposition(filename)))
+            headers.append(('Content-Disposition', cls.content_disposition(filename)))
         return (status, headers, content)
 
 

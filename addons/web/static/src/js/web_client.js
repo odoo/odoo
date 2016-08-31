@@ -67,9 +67,9 @@ return AbstractWebClient.extend({
     logo_edit: function(ev) {
         var self = this;
         ev.preventDefault();
-        self.alive(new Model("res.users").get_func("read")(session.uid, ["company_id"])).then(function(res) {
+        self.alive(new Model("res.users").call("read", [[session.uid], ["company_id"]])).then(function(data) {
             self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
-                result.res_id = res.company_id[0];
+                result.res_id = data[0].company_id[0];
                 result.target = "new";
                 result.views = [[false, 'form']];
                 result.flags = {
@@ -94,7 +94,8 @@ return AbstractWebClient.extend({
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action === "login") {
             self.menu.is_bound.done(function() {
-                new Model("res.users").call("read", [session.uid, ["action_id"]]).done(function(data) {
+                new Model("res.users").call("read", [[session.uid], ["action_id"]]).done(function(result) {
+                    var data = result[0];
                     if(data.action_id) {
                         self.action_manager.do_action(data.action_id[0]);
                         self.menu.open_action(data.action_id[0]);

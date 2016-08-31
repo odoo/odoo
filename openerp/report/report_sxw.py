@@ -18,8 +18,8 @@ import openerp.tools as tools
 from . import common
 from . import preprocess
 from .interface import report_rml
+from openerp import fields
 from openerp.exceptions import AccessError
-from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
@@ -177,7 +177,7 @@ class rml_parse(object):
             else:
                 d = res_digits(self.cr)[1]
         elif (hasattr(obj, '_field') and\
-                isinstance(obj._field, (float_field, function_field)) and\
+                obj._field.type == 'float' and\
                 obj._field.digits):
                 d = obj._field.digits[1]
                 if not d and d is not 0:
@@ -220,9 +220,8 @@ class rml_parse(object):
                 date = datetime(*value.timetuple()[:6])
             if date_time:
                 # Convert datetime values to the expected client/context timezone
-                date = datetime_field.context_timestamp(self.cr, self.uid,
-                                                        timestamp=date,
-                                                        context=self.localcontext)
+                record = self.env['base'].with_context(self.localcontext)
+                date = fields.Datetime.context_timestamp(record, date)
             return date.strftime(date_format.encode('utf-8'))
 
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
@@ -332,7 +331,6 @@ class report_sxw(report_rml, preprocess.report):
         if self.internal_header:
             context.update(internal_header=self.internal_header)
 
-        # skip osv.fields.sanitize_binary_value() because we want the raw bytes in all cases
         context.update(bin_raw=True)
         env = openerp.api.Environment(cr, uid, context)
         env['res.font'].sudo().font_scan(lazy=True)
@@ -471,7 +469,6 @@ class report_sxw(report_rml, preprocess.report):
             # if binary content was passed as unicode, we must
             # re-encode it as a 8-bit string using the pass-through
             # 'latin1' encoding, to restore the original byte values.
-            # See also osv.fields.sanitize_binary_value()
             binary_report_content = report_xml.report_sxw_content.encode("latin1")
 
         sxw_io = StringIO.StringIO(binary_report_content)

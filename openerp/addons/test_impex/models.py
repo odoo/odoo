@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 
 def selection_fn(model):
-    return list(enumerate(["Corge", "Grault", "Wheee", "Moog"]))
+    return [(str(key), val) for key, val in enumerate(["Corge", "Grault", "Wheee", "Moog"])]
 
 def compute_fn(records):
     for record in records:
@@ -25,8 +25,7 @@ MODELS = [
     ('datetime', fields.Datetime()),
     ('text', fields.Text()),
     ('selection', fields.Selection([(1, "Foo"), (2, "Bar"), (3, "Qux"), (4, '')])),
-    # here use size=-1 to store the values as integers instead of strings
-    ('selection.function', fields.Selection(selection_fn, size=-1)),
+    ('selection.function', fields.Selection(selection_fn)),
     # just relate to an integer
     ('many2one', fields.Many2one('export.integer')),
     ('one2many', fields.One2many('export.one2many.child', 'parent_id')),
