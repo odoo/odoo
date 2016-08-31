@@ -777,8 +777,14 @@ class Message(models.Model):
         if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
             partners = partners - self_sudo.author_id
 
-        # update message
-        self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})
+        # update message, with maybe custom values
+        message_values = {
+            'channel_ids': [(6, 0, channels.ids)],
+            'needaction_partner_ids': [(6, 0, partners.ids)]
+        }
+        if self.model and self.res_id and hasattr(self.env[self.model], 'message_get_message_notify_values'):
+            message_values.update(self.env[self.model].browse(self.res_id).message_get_message_notify_values(self, message_values))
+        self.write(message_values)
 
         # notify partners and channels
         partners._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
