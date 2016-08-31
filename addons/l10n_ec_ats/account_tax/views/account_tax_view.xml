@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_tax_form_inherited" model="ir.ui.view">
+            <field name="name">account.tax.form.inherited</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='advanced_booleans']" position="replace">
+                    <group name="advanced_booleans">
+                        <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                        <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                        <field name="x_codigo_retencion"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
