@@ -163,13 +163,14 @@ class AccountInvoice(models.Model):
                                 #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
                                 taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
                                 price_unit = taxes.with_context(round=False).compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
+                            price_before = line.get('price', 0.0)
                             line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
                             diff_res.append({
                                 'type': 'src',
                                 'name': i_line.name[:64],
                                 'price_unit': round(price_unit - valuation_price_unit, product_prec),
                                 'quantity': line['quantity'],
-                                'price': round((price_unit - valuation_price_unit) * line['quantity'], account_prec),
+                                'price': round(price_before - line.get('price', 0.0), account_prec),
                                 'account_id': acc,
                                 'product_id': line['product_id'],
                                 'uom_id': line['uom_id'],
