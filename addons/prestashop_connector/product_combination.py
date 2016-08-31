@@ -14,7 +14,7 @@ from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 from openerp.addons.connector.unit.mapper import mapping
 from openerp.osv.orm import browse_record_list
 
-from openerp.addons.product.product import check_ean
+# from openerp.addons.product.product import check_ean
 
 from .product import ProductInventoryExport
 
@@ -114,23 +114,6 @@ class ProductCombinationRecordImport(PrestashopImportSynchronizer):
                 ps_supplierinfo.resync()
             except PrestaShopWebServiceError:
                 ps_supplierinfo.openerp_id.unlink()
-
-    # def import_bundle(self):
-    #     record = self.prestashop_record
-    #     product_adapter = self.unit_for(
-    #         GenericAdapter, 'prestashop.product.product'
-    #     )
-    #     main_product = product_adapter.read(record['id_product'])
-
-    #     bundle = main_product.get('associations', {}).get('product_bundle', {})
-    #     if 'products' not in bundle:
-    #         return
-    #     import_record(
-    #         self.session,
-    #         'prestashop.combination.mrp.bom',
-    #         self.backend_record.id,
-    #         record['id']
-    #     )
 
 
 @prestashop
@@ -276,14 +259,6 @@ class ProductCombinationMapper(PrestashopImportMapper):
             current_code = '%s_%d' % (code, i)
         return {'default_code': current_code}
 
-    ##@mapping
-    ##def active(self, record):
-    ##    return {'always_available': bool(int(record['active']))}
-
-    ##@mapping
-    ##def sale_ok(self, record):
-    ##    return {'sale_ok': record['available_for_order'] == '1'}
-
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
@@ -292,8 +267,8 @@ class ProductCombinationMapper(PrestashopImportMapper):
     def ean13(self, record):
         if record['ean13'] in ['', '0']:
             return {}
-        if check_ean(record['ean13']):
-            return {'ean13': record['ean13']}
+        # if check_ean(record['ean13']):
+        #     return {'ean13': record['ean13']}
         return {}
 
 

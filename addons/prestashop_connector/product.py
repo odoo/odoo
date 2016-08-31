@@ -32,52 +32,6 @@ except ImportError, e:
     from xml.etree import ElementTree
 
 
-##########  product category ##########
-@prestashop
-class ProductCategoryMapper(PrestashopImportMapper):
-    _model_name = 'prestashop.product.category'
-
-    direct = [
-        ('position', 'sequence'),
-        ('description', 'description'),
-        ('link_rewrite', 'link_rewrite'),
-        ('meta_description', 'meta_description'),
-        ('meta_keywords', 'meta_keywords'),
-        ('meta_title', 'meta_title'),
-        ('id_shop_default', 'default_shop_id'),
-    ]
-
-    @mapping
-    def name(self, record):
-        if record['name'] is None:
-            return {'name': ''}
-        return {'name': record['name']}
-
-    @mapping
-    def backend_id(self, record):
-        return {'backend_id': self.backend_record.id}
-
-    @mapping
-    def parent_id(self, record):
-        if record['id_parent'] == '0':
-            return {}
-        return {'parent_id': self.get_openerp_id(
-            'prestashop.product.category',
-            record['id_parent']
-        )}
-
-    @mapping
-    def data_add(self, record):
-        if record['date_add'] == '0000-00-00 00:00:00':
-            return {'date_add': datetime.datetime.now()}
-        return {'date_add': record['date_add']}
-
-    @mapping
-    def data_upd(self, record):
-        if record['date_upd'] == '0000-00-00 00:00:00':
-            return {'date_upd': datetime.datetime.now()}
-        return {'date_upd': record['date_upd']}
-        
 ########  product  ########
 @prestashop
 class ProductMapper(PrestashopImportMapper):
@@ -117,12 +71,6 @@ class ProductMapper(PrestashopImportMapper):
             'combinations', {}).get('combinations', [])
         return len(combinations) != 0
 
-    @mapping
-    def attribute_set_id(self, record):
-        if self.has_combinations(record) and 'attribute_set_id' in record:
-            return {'attribute_set_id': record['attribute_set_id']}
-        return {}
-
     def _product_code_exists(self, code):
         model = self.session.pool.get('product.product')
         product_ids = model.search(self.session.cr, SUPERUSER_ID, [
@@ -148,6 +96,10 @@ class ProductMapper(PrestashopImportMapper):
         return {'default_code': current_code}
 
     @mapping
+    def product_brand_id(self, record):
+        return {'product_brand_id': record['product_brand_id']}
+
+    @mapping
     def active(self, record):
         return {'always_available': bool(int(record['active']))}
 
@@ -155,8 +107,7 @@ class ProductMapper(PrestashopImportMapper):
     def sale_ok(self, record):
         # if this product has combinations, we do not want to sell this product,
         # but its combinations (so sale_ok = False in that case).
-        sale_ok = (record['available_for_order'] == '1'
-                   and not self.has_combinations(record))
+        sale_ok = (record['available_for_order'] == '1')
         return {'sale_ok': sale_ok}
 
     @mapping
@@ -165,43 +116,7 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def categ_id(self, record):
-        if not int(record['id_category_default']):
-            return
-        category_id = self.get_openerp_id(
-            'prestashop.product.category',
-            record['id_category_default']
-        )
-        if category_id is not None:
-            return {'categ_id': category_id}
-
-        categories = record['associations'].get('categories', {}).get(
-            'category', [])
-        if not isinstance(categories, list):
-            categories = [categories]
-        if not categories:
-            return
-        category_id = self.get_openerp_id(
-            'prestashop.product.category',
-            categories[0]['id']
-        )
-        return {'categ_id': category_id}
-
-
-    @mapping
-    def categ_ids(self, record):
-        categories = record['associations'].get('categories', {}).get(
-            'category', [])
-        if not isinstance(categories, list):
-            categories = [categories]
-        product_categories = []
-        for category in categories:
-            category_id = self.get_openerp_id(
-                'prestashop.product.category',
-                category['id']
-            )
-            product_categories.append(category_id)
-
-        return {'categ_ids': [(6, 0, product_categories)]}
+        return {'categ_id': self.backend_record.unrealized_product_category_id.id}
 
     @mapping
     def backend_id(self, record):
@@ -221,20 +136,7 @@ class ProductMapper(PrestashopImportMapper):
 
     @mapping
     def taxes_id(self, record):
-        if record['id_tax_rules_group'] == '0':
-            return {}
-        tax_group_id = self.get_openerp_id(
-            'prestashop.account.tax.group',
-            record['id_tax_rules_group']
-        )
-        tax_group_model = self.session.pool.get('account.tax.group')
-        tax_ids = tax_group_model.read(
-            self.session.cr,
-            self.session.uid,
-            tax_group_id,
-            ['tax_ids']
-        )
-        return {"taxes_id": [(6, 0, tax_ids['tax_ids'])]}
+        return {"taxes_id": self.backend_record.tax_out_id.id}
 
     @mapping
     def type(self, record):

@@ -155,45 +155,9 @@ class PartnerImportMapper(PrestashopImportMapper):
             name += record['lastname']
         return {'name': name}
 
-    #@mapping
-    #def groups(self, record):
-    #    groups = record.get('associations', {}).get('groups', {}).get('group', [])
-    #    if not isinstance(groups, list):
-    #        groups = [groups]
-    #    partner_categories = []
-    #    for group in groups:
-    #        binder = self.binder_for(
-    #            'prestashop.res.partner.category'
-    #        )
-    #        category_id = binder.to_openerp(group['id'])
-    #        partner_categories.append(category_id)
-
-    #    return {'group_ids': [(6, 0, partner_categories)]}
-
     @mapping
     def backend_id(self, record):
         return {'backend_id': self.backend_record.id}
-
-    #@mapping
-    #def lang(self, record):
-    #    binder = self.binder_for('prestashop.res.lang')
-    #    erp_lang_id = None
-    #    if record.get('id_lang'):
-    #        erp_lang_id = binder.to_openerp(record['id_lang'])
-    #    if erp_lang_id is None:
-    #        data_obj = self.session.pool.get('ir.model.data')
-    #        erp_lang_id = data_obj.get_object_reference(
-    #            self.session.cr,
-    #            self.session.uid,
-    #            'base',
-    #            'lang_en')[1]
-    #    model = self.environment.session.pool.get('prestashop.res.lang')
-    #    erp_lang = model.read(
-    #        self.session.cr,
-    #        self.session.uid,
-    #        erp_lang_id,
-    #    )
-    #    return {'lang': erp_lang['code']}
 
     @mapping
     def customer(self, record):
@@ -261,21 +225,7 @@ class AddressImportMapper(PrestashopImportMapper):
             'prestashop.res.partner',
             record['id_customer']
         )
-        if record['vat_number']:
-            vat_number = record['vat_number'].replace('.', '').replace(' ', '')
-            if self._check_vat(vat_number):
-                self.session.write(
-                    'res.partner',
-                    [parent_id],
-                    {'vat': vat_number}
-                )
-            else:
-                add_checkpoint(
-                    self.session,
-                    'res.partner',
-                    parent_id,
-                    self.backend_record.id
-                )
+        
         return {'parent_id': parent_id}
 
     def _check_vat(self, vat):
@@ -789,3 +739,41 @@ class ProductPricelistMapper(PrestashopImportMapper):
             'items_id': [(0, 0, item)],
         }
         return {'version_id': [(0, 0, version)]}
+
+@prestashop
+class ProductAttributeMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.product.attribute'
+
+    @mapping
+    def name(self, record):
+        return {'name':record['name']['language']['value']}
+    
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+@prestashop
+class ProductAttributeValueMapper(PrestashopImportMapper):
+    _model_name = 'prestashop.product.attribute.value'
+    
+    direct = [
+        ('position', 'sequence'),
+    ]
+    
+    @mapping
+    def name(self, record):
+        return {'name':record['name']['language']['value']}
+    
+    @mapping
+    def backend_id(self, record):
+        return {'backend_id': self.backend_record.id}
+
+    @mapping
+    def attribute_id(self, record):
+        attribute_id = self.get_openerp_id(
+            'prestashop.product.attribute',
+            record['id_attribute_group']
+        )
+        
+        return {'attribute_id': attribute_id}
+        

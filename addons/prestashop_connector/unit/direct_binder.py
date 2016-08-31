@@ -29,73 +29,77 @@ class DirectBinder(ConnectorUnit):
         sess = self.session
         erp_model_name = self.model._inherits.iterkeys().next()
         erp_rec_name = sess.pool[erp_model_name]._rec_name
-        erp_ids = sess.search(erp_model_name, [])
-        erp_list_dict = sess.read(erp_model_name, erp_ids, [])
-        adapter = self.unit_for(BackendAdapter)
-        # Get the IDS from PS
-        ps_ids = adapter.search()
-        if not ps_ids:
-            raise osv.except_osv(
-                _('Error :'),
-                _('Failed to query %s via PS webservice')
-                % adapter.prestashop_model
-            )
+        erp_ids = self.env[erp_model_name].search([])
 
-        binder = self.binder_for()
-        # Loop on all PS IDs
-        for ps_id in ps_ids:
-            # Check if the PS ID is already mapped to an OE ID
-            erp_id = binder.to_openerp(ps_id)
-            if erp_id:
-                # Do nothing for the PS IDs that are already mapped
-                _logger.debug(
-                    "[%s] PS ID %s is already mapped to OERP ID %s"
-                    % (self.model._description, ps_id, erp_id)
+        for erp_id in erp_ids:
+            erp_list_dict = self.env[erp_model_name].browse(erp_id.id)
+            adapter = self.unit_for(BackendAdapter)
+            # Get the IDS from PS
+            ps_ids = adapter.search()
+            if not ps_ids:
+                raise osv.except_osv(
+                    _('Error :'),
+                    _('Failed to query %s via PS webservice')
+                    % adapter.prestashop_model
                 )
-                nr_ps_already_mapped += 1
-            else:
-                # PS IDs not mapped => I try to match between the PS ID and
-                # the OE ID. First, I read field in PS
-                ps_dict = adapter.read(ps_id)
-                mapping_found = False
-                # Loop on OE IDs
-                for erp_dict in erp_list_dict:
-                    # Search for a match
-                    erp_val = erp_dict[self._erp_field]
-                    ps_val = ps_dict[self._ps_field]
-                    if self._compare_function(
-                            ps_val,
-                            erp_val,
-                            ps_dict,
-                            erp_dict):
-                        # it matches, so I write the external ID
-                        data = {
-                            'openerp_id': erp_dict['id'],
-                            'backend_id': self.backend_record.id,
-                        }
-                        for oe_field, ps_field in self._copy_fields:
-                            data[oe_field] = erp_dict[ps_field]
-                        ps_erp_id = sess.create(self._model_name, data)
-                        binder.bind(ps_id, ps_erp_id)
-                        _logger.debug(
-                            "[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)"
-                            % (self.model._description,
-                               ps_dict['name'],  # not hardcode if needed
-                               ps_dict[self._ps_field],
-                               erp_dict[erp_rec_name],
-                               erp_dict[self._erp_field]))
-                        nr_ps_mapped += 1
-                        mapping_found = True
-                        break
-                if not mapping_found:
-                    # if it doesn't match, I just print a warning
-                    _logger.warning(
-                        "[%s] PS '%s' (%s) was not mapped to any OERP entry"
-                        % (self.model._description,
-                           ps_dict['name'],
-                           ps_dict[self._ps_field]))
 
-                    nr_ps_not_mapped += 1
+            binder = self.binder_for()
+            # Loop on all PS IDs
+            for ps_id in ps_ids:
+                # Check if the PS ID is already mapped to an OE ID
+                erp_id = binder.to_openerp(ps_id)
+                if erp_id:
+                    # Do nothing for the PS IDs that are already mapped
+                    _logger.debug(
+                        "[%s] PS ID %s is already mapped to OERP ID %s"
+                        % (self.model._description, ps_id, erp_id)
+                    )
+                    nr_ps_already_mapped += 1
+                else:
+                    # PS IDs not mapped => I try to match between the PS ID and
+                    # the OE ID. First, I read field in PS
+                    ps_dict = adapter.read(ps_id)
+                    mapping_found = False
+                    # Loop on OE IDs
+                    for erp_dict in erp_list_dict:
+                        # Search for a match
+                        erp_val = erp_dict[self._erp_field]
+                        ps_val = ps_dict[self._ps_field]
+                        if self._compare_function(
+                                ps_val,
+                                erp_val,
+                                ps_dict,
+                                erp_dict):
+                            # it matches, so I write the external ID
+                            data = {
+                                'openerp_id': erp_dict['id'],
+                                'backend_id': self.backend_record.id,
+                            }
+                            for oe_field, ps_field in self._copy_fields:
+                                data[oe_field] = erp_dict[ps_field]
+                            ps_erp_id = self.env[self._model_name].with_context(sess.context).create(data)
+                            binder.bind(ps_id, ps_erp_id)
+                            _logger.debug(
+                                "[%s] Mapping PS '%s' (%s) to OERP '%s' (%s)"
+                                % (self.model._description,
+                                   ps_dict['name'],  # not hardcode if needed
+                                   ps_dict[self._ps_field],
+                                   erp_dict[erp_rec_name],
+                                   erp_dict[self._erp_field]))
+                            nr_ps_mapped += 1
+                            mapping_found = True
+                            break
+                    if not mapping_found:
+                        # if it doesn't match, I just print a warning
+                        _logger.warning(
+                            "[%s] PS '%s' (%s) was not mapped to any OERP entry"
+                            % (self.model._description,
+                               ps_dict['name'],
+                               ps_dict[self._ps_field]))
+
+                        nr_ps_not_mapped += 1
+
+        
 
         _logger.info(
             "[%s] Synchro between OERP and PS successfull"

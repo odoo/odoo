@@ -16,6 +16,7 @@ from openerp.addons.connector.exception import FailedJobError
 from openerp.addons.connector.exception import NothingToDoJob
 from backend_adapter import PrestaShopCRUDAdapter
 from openerp.addons.connector.connector import Binder
+from openerp.addons.connector.unit.backend_adapter import BackendAdapter
 
 from prestapyt import PrestaShopWebServiceError
 from ..connector import add_checkpoint
@@ -181,7 +182,7 @@ class BatchImportSynchronizer(Importer):
     items to import, then it can either import them directly or delay
     the import of each item separately.
     """
-    page_size = 1000
+    page_size = 100
 
     def run(self, filters=None,**kwargs):
         """ Run the synchronization """
@@ -194,11 +195,11 @@ class BatchImportSynchronizer(Importer):
         filters['limit'] = '%d,%d' % (
             page_number * self.page_size, self.page_size)
         record_ids = self._run_page(filters,**kwargs)
-        while len(record_ids) == self.page_size:
-            page_number += 1
-            filters['limit'] = '%d,%d' % (
-                page_number * self.page_size, self.page_size)
-            record_ids = self._run_page(filters,**kwargs)
+        #while len(record_ids) == self.page_size:
+        #    page_number += 1
+        #    filters['limit'] = '%d,%d' % (
+        #        page_number * self.page_size, self.page_size)
+        #    record_ids = self._run_page(filters,**kwargs)
 
     def _run_page(self, filters,**kwargs):
         record_ids = self.backend_adapter.search(filters)
@@ -242,7 +243,7 @@ class PaymentMethodsImportSynchronizer(BatchImportSynchronizer):
         )
 
     def _import_record(self, record):
-        ids = self.session.search('payment.method', [
+        ids = self.env['payment.method'].search([
             ('name', '=', record['payment']),
             ('company_id', '=', self.backend_record.company_id.id),
         ])
@@ -285,13 +286,14 @@ class DelayedBatchImport(BatchImportSynchronizer):
         'prestashop.res.partner.category',
         'prestashop.res.partner',
         'prestashop.address',
-        'prestashop.product.category',
         'prestashop.product.product',
         'prestashop.sale.order',
         'prestashop.refund',
         'prestashop.supplier',
         'prestashop.product.supplierinfo',
         'prestashop.mail.message',
+        'prestashop.product.attribute',
+        'prestashop.product.attribute.value'
     ]
 
     def _import_record(self, record, **kwargs):
@@ -304,6 +306,20 @@ class DelayedBatchImport(BatchImportSynchronizer):
             **kwargs
         )
 
+@prestashop
+class ProductAttributeImport(PrestashopImportSynchronizer):
+    _model_name = 'prestashop.product.attribute'
+
+    def _after_import(self, erp_id):
+        binder = self.binder_for(self._model_name)
+        ps_id = binder.to_backend(erp_id)
+        import_batch.delay(
+            self.session,
+            'prestashop.product.attribute.value',
+            self.backend_record.id,
+            filters={'filter[id_attribute_group]': '[%d]' % (ps_id)},
+            priority=10,
+        )
 
 @prestashop
 class ResPartnerRecordImport(PrestashopImportSynchronizer):
@@ -328,6 +344,7 @@ class SimpleRecordImport(PrestashopImportSynchronizer):
         'prestashop.shop.group',
         'prestashop.shop',
         'prestashop.address',
+        'prestashop.product.attribute.value',
         'prestashop.account.tax.group',
     ]
 
@@ -397,7 +414,6 @@ class SupplierInfoImport(PrestashopImportSynchronizer):
         except PrestaShopWebServiceError:
             raise NothingToDoJob('Error fetching a dependency')
 
-
 @prestashop
 class SaleImportRule(ConnectorUnit):
     _model_name = ['prestashop.sale.order']
@@ -448,8 +464,7 @@ class SaleImportRule(ConnectorUnit):
         """
         session = self.session
         payment_method = record['payment']
-        method_ids = session.search('payment.method',
-                                    [('name', '=', payment_method)])
+        method_ids = session.env['payment.method'].search([('name', '=', payment_method)])
         if not method_ids:
             raise FailedJobError(
                 "The configuration is missing for the Payment Method '%s'.\n\n"
@@ -545,7 +560,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         erp_language_id = language_binder.to_openerp(prestashop_id)
         if erp_language_id is None:
             return None
-        model = self.environment.session.pool.get('prestashop.res.lang')
+        model = self.connector_env.session.pool.get('prestashop.res.lang')
         erp_lang = model.read(
             self.session.cr,
             self.session.uid,
@@ -555,7 +570,7 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
 
     def find_each_language(self, record):
         languages = {}
-        for field in self._translatable_fields[self.environment.model_name]:
+        for field in self._translatable_fields[self.connector_env.model_name]:
             # TODO FIXME in prestapyt
             if not isinstance(record[field]['language'], list):
                 record[field]['language'] = [record[field]['language']]
@@ -570,10 +585,10 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
     def _split_per_language(self, record):
         splitted_record = {}
         languages = self.find_each_language(record)
-        model_name = self.environment.model_name
+        model_name = self.connector_env.model_name
         for language_id, language_code in languages.items():
             splitted_record[language_code] = record.copy()
-            for field in self._translatable_fields[model_name]:
+            for field in self._translatable_fields[self.connector_env.model_name]:
                 for language in record[field]['language']:
                     current_id = language['attrs']['id']
                     current_value = language['value']
@@ -582,16 +597,23 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
                         break
         return splitted_record
 
-    def run(self, prestashop_id):
+    def run(self, prestashop_id, force=False):
         """ Run the synchronization
 
         :param prestashop_id: identifier of the record on Prestashop
         """
         self.prestashop_id = prestashop_id
         self.prestashop_record = self._get_prestashop_data()
+
         skip = self._has_to_skip()
         if skip:
             return skip
+
+        binding = self._get_binding()
+
+        if not force and self._is_uptodate(binding):
+            return _('Already up-to-date.')
+        self._before_import()
 
         # import the missing linked resources
         self._import_dependencies()
@@ -599,25 +621,32 @@ class TranslatableRecordImport(PrestashopImportSynchronizer):
         # split prestashop data for every lang
         splitted_record = self._split_per_language(self.prestashop_record)
 
-        erp_id = None
-
         if self._default_language in splitted_record:
-            erp_id = self._run_record(
+            binding = self._run_record(
                 splitted_record[self._default_language],
                 self._default_language
             )
             del splitted_record[self._default_language]
 
         for lang_code, prestashop_record in splitted_record.items():
-            erp_id = self._run_record(
+            binding = self._run_record(
                 prestashop_record,
                 lang_code,
-                erp_id
+                binding
             )
 
-        self.binder.bind(self.prestashop_id, erp_id)
+        map_record = self._map_data()
 
-        self._after_import(erp_id)
+        if binding:
+            record = self._update_data(map_record)
+            self._update(binding, record)
+        else:
+            record = self._create_data(map_record)
+            binding = self._create(record)
+
+        self.binder.bind(self.prestashop_id, binding)
+
+        self._after_import(binding)
 
     def _run_record(self, prestashop_record, lang_code, erp_id=None):
         mapped = self.mapper.map_record(prestashop_record)
@@ -709,7 +738,25 @@ class ProductRecordImport(TranslatableRecordImport):
     }
 
     def _import_dependencies(self):
-        self._import_attribute_set()
+        self._import_product_brand()
+
+    def _import_product_brand(self):
+        record = self.prestashop_record
+        
+        manufacturer_name = record['manufacturer_name']['value']
+        if not manufacturer_name:
+            return
+        
+        product_brand = self.env['product.brand'].search([('name','=',manufacturer_name.strip())])
+        product_brand_id = product_brand.id
+
+        if not product_brand:
+            product_brand_set = {
+                'name': manufacturer_name.strip(),
+            }
+            product_brand_id = product_brand.with_context(self.session.context).create(product_brand_set)
+            
+        self.prestashop_record['product_brand_id'] = product_brand_id
 
     def _import_attribute_set(self):
         record = self.prestashop_record
@@ -719,26 +766,56 @@ class ProductRecordImport(TranslatableRecordImport):
         if len(combinations) == 0:
             return
 
-        splitted_record = self._split_per_language(self.prestashop_record)
-        if self._default_language in splitted_record:
-            name = splitted_record[self._default_language]['name']
-        else:
-            name = splitted_record.values()[0]['name']
+        for attribute in combinations:
+            combination_adapter = self.unit_for(
+                BackendAdapter,
+                'prestashop.product.combination'
+            )
 
-        product_model_id = self.get_product_model_id()
-        attribute_group = {
-            'model_id': product_model_id,
-            'name': 'Combinations options',
-            'sequence': 0,
-            'attribute_ids': [],
-        }
-        attribute_set = {
-            'model_id': product_model_id,
-            'name': name + ' Options',
-            'attribute_group_ids': [(0, 0,  attribute_group)],
-        }
-        attribute_set_id = self.session.create('attribute.set', attribute_set)
-        self.prestashop_record['attribute_set_id'] = attribute_set_id
+            record_combination = combination_adapter.read(attribute['id'])
+
+            if not record_combination:
+                continue
+
+            option_values = record.get('associations', {}).get('product_option_values', {})
+            option_values = option_values.get('product_option_values', [])
+            if not isinstance(option_values, list):
+                option_values = [option_values]
+        
+            option_adapter = self.unit_for(
+                BackendAdapter,
+                'prestashop.product.combination.option.value'
+            )
+            
+            for option_value in option_values:
+                option_value = option_adapter.read(option_value['id'])
+                id_attribute_group = option_value['id_attribute_group']
+
+                attribute_adapter = self.unit_for(BackendAdapter, 'prestashop.product.combination.option')
+                attribute = attribute_adapter.read(id_attribute_group)
+
+                product_attribute = self.env['product.attribute'].search([('name','=',attribute['name']['language']['value'].strip())])
+                product_attribute_id = product_attribute.id
+
+                if not product_attribute:
+                    product_attribute_set = {
+                        'name': attribute['name']['language']['value'].strip(),
+                    }
+                    product_attribute_id = product_attribute.with_context(self.session.context).create(product_attribute_set).id
+
+                product_attribute_value = self.env['product.attribute.value'].search([
+                    ('attribute_id','=',product_attribute_id),
+                    ('name','=',option_value['name']['language']['value'].strip())
+                ])
+
+                if not product_attribute_value:
+                    product_attribute_value_set = {
+                        'name': option_value['name']['language']['value'].strip(),
+                        'attribute_id': product_attribute_id,
+                    }
+                    product_attribute_value_id = product_attribute_value.with_context(self.session.context).create(product_attribute_value_set)
+
+        return True
 
     def _after_import(self, erp_id):
         self.import_combinations()
@@ -760,9 +837,7 @@ class ProductRecordImport(TranslatableRecordImport):
             )
 
     def get_product_model_id(self):
-        ids = self.session.search('ir.model', [
-            ('model', '=', 'product.product')]
-        )
+        ids = self.env['ir.model'].search([('model', '=', 'product.product')])
         assert len(ids) == 1
         return ids[0]
 
@@ -778,8 +853,6 @@ class SaleOrderStateImport(TranslatableRecordImport):
             'name',
         ],
     }
-
-
 
 @prestashop
 class SaleOrderLineRecordImport(PrestashopImportSynchronizer):
@@ -827,7 +900,6 @@ class ProductPricelistImport(TranslatableRecordImport):
             prestashop_record, lang_code, erp_id=erp_id
         )
 
-
 @job(default_channel='root')
 def import_batch(session, model_name, backend_id, filters=None,**kwargs):
     """ Prepare a batch import of records from Prestashop """
@@ -843,7 +915,11 @@ def import_record(session, model_name, backend_id, prestashop_id, force=False):
     importer.run(prestashop_id, force=force)
 
 @job
-def import_customers_since(session, moodel_name, backend_id, since_date=None):
+def import_product_attribute(session, model_name, backend_id):
+    import_batch(session, model_name, backend_id, None)
+
+@job
+def import_customers_since(session, model_name, backend_id, since_date=None):
     """ Prepare the import of partners modified on Prestashop """
 
     filters = None
@@ -855,7 +931,7 @@ def import_customers_since(session, moodel_name, backend_id, since_date=None):
     #    session, 'prestashop.res.partner.category', backend_id, filters
     #)
     import_batch(
-        session, moodel_name, backend_id, filters
+        session, model_name, backend_id, filters
     )
 
     session.pool.get('prestashop.backend').write(

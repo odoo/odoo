@@ -15,7 +15,7 @@ from ..unit.import_synchronizer import (
     import_orders_since,
     import_products,
     import_refunds,
-    # import_carriers,
+    import_product_attribute,
     import_suppliers,
     import_record,
     export_product_quantities,
@@ -76,6 +76,7 @@ class prestashop_backend(orm.Model):
         'property_account_receivable_id': fields.many2one('account.account', 'Account Receivable', select=1, required=True),
         'property_account_payable_id': fields.many2one('account.account', 'Account Payable', select=1, required=True),
         'unrealized_product_category_id': fields.many2one('product.category', 'Unrealized Product Category', select=1, required=True),
+        'tax_out_id': fields.many2one('account.tax', 'Tax Out', select=1, required=True),
     }
 
     _defaults = {
@@ -88,11 +89,12 @@ class prestashop_backend(orm.Model):
         session = ConnectorSession(cr, uid, context=context)
         for backend_id in ids:
             for model in ('prestashop.shop.group',
-                          'prestashop.shop'):
+                          'prestashop.shop',):
                 # import directly, do not delay because this
                 # is a fast operation, a direct return is fine
                 # and it is simpler to import them sequentially
                 import_batch(session, model, backend_id)
+            
         return True
 
     def synchronize_basedata(self, cr, uid, ids, context=None):
@@ -102,16 +104,13 @@ class prestashop_backend(orm.Model):
         for backend_id in ids:
             for model_name in [
                 'prestashop.res.lang',
-                'prestashop.res.country',
-                'prestashop.res.currency',
-                'prestashop.account.tax',
             ]:
                 env = get_environment(session, model_name, backend_id)
                 directBinder = env.get_connector_unit(DirectBinder)
                 directBinder.run()
 
-            import_batch(session, 'prestashop.account.tax.group', backend_id)
-            import_batch(session, 'prestashop.sale.order.state', backend_id)
+            import_product_attribute(session, 'prestashop.product.attribute', backend_id)
+            #import_batch(session, 'prestashop.sale.order.state', backend_id)
         return True
 
     def _date_as_user_tz(self, cr, uid, dtstr):
@@ -124,6 +123,19 @@ class prestashop_backend(orm.Model):
         dt = pytz.utc.localize(dt)
         dt = dt.astimezone(timezone)
         return dt
+    
+    def import_product_attribute(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        session = ConnectorSession(cr, uid, context=context)
+        for backend_record in self.browse(cr, uid, ids, context=context):
+            import_product_attribute(
+                session,
+                'prestashop.product.attribute',
+                backend_record.id,
+            )
+
+        return True
 
     def import_customers_since(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):

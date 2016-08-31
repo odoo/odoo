@@ -26,7 +26,6 @@
         'product', 
         'sale', 
         'product_brand',
-        'prestashop_connector'
     ],
 
     'data': [

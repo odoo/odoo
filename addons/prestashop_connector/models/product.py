@@ -1,51 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import fields, orm
 
-from openerp.addons.connector.session import ConnectorSession
-
-from ..unit.import_synchronizer import import_record
-
-
-class product_category(orm.Model):
-    _inherit = 'product.category'
-
-    _columns = {
-        'prestashop_bind_ids': fields.one2many(
-            'prestashop.product.category',
-            'openerp_id',
-            string="PrestaShop Bindings"
-        ),
-    }
-
-
-class prestashop_product_category(orm.Model):
-    _name = 'prestashop.product.category'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.category': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one(
-            'product.category',
-            string='Product Category',
-            required=True,
-            ondelete='cascade'
-        ),
-        'default_shop_id': fields.many2one('prestashop.shop'),
-        'date_add': fields.datetime(
-            'Created At (on PrestaShop)',
-            readonly=True
-        ),
-        'date_upd': fields.datetime(
-            'Updated At (on PrestaShop)',
-            readonly=True
-        ),
-        'description': fields.char('Description', translate=True),
-        'link_rewrite': fields.char('Friendly URL', translate=True),
-        'meta_description': fields.char('Meta description', translate=True),
-        'meta_keywords': fields.char('Meta keywords', translate=True),
-        'meta_title': fields.char('Meta title', translate=True),
-    }
-
 class product_product(orm.Model):
     _inherit = 'product.product'
 
@@ -73,8 +28,7 @@ class product_product(orm.Model):
             for prestashop_combination in prestashop_combinations:
                 prestashop_combination.recompute_prestashop_qty()
         return True
-
-
+    
 class prestashop_product_product(orm.Model):
     _name = 'prestashop.product.product'
     _inherit = 'prestashop.binding'
@@ -87,8 +41,6 @@ class prestashop_product_product(orm.Model):
             required=True,
             ondelete='cascade'
         ),
-        # TODO FIXME what name give to field present in
-        # prestashop_product_product and product_product
         'always_available': fields.boolean(
             'Active',
             help='if check, this object is always available'),
@@ -162,28 +114,7 @@ class prestashop_product_product(orm.Model):
         )
         return product_stk[stock_field]
 
-class product_pricelist(orm.Model):
-    _inherit = 'product.pricelist'
-
-    _columns = {
-        'prestashop_groups_bind_ids': fields.one2many(
-            'prestashop.groups.pricelist',
-            'openerp_id',
-            string='Prestashop user groups'
-        ),
-    }
-
-
-class prestashop_groups_pricelist(orm.Model):
-    _name = 'prestashop.groups.pricelist'
+class prestashop_product_attribute(orm.Model):
+    _name='prestashop.product.attribute'
     _inherit = 'prestashop.binding'
-    _inherits = {'product.pricelist': 'openerp_id'}
-
-    _columns = {
-        'openerp_id': fields.many2one(
-            'product.pricelist',
-            string='Openerp Pricelist',
-            required=True,
-            ondelete='cascade'
-        ),
-    }
+    _inherits = {'product.attribute': 'openerp_id'}

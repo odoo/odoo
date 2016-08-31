@@ -2,7 +2,7 @@
 
 import backend
 import connector
-import product
+# import product
 # import product_combination
 import sale
 # import delivery

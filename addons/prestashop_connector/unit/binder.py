@@ -35,14 +35,13 @@ class PrestashopModelBinder(PrestashopBinder):
         'prestashop.product.combination.option.value',
         'prestashop.sale.order',
         'prestashop.sale.order.state',
-        # 'prestashop.delivery.carrier',
         'prestashop.refund',
         'prestashop.supplier',
         'prestashop.product.supplierinfo',
         'prestashop.mail.message',
-        # 'prestashop.mrp.bom',
-        # 'prestashop.combination.mrp.bom',
         'prestashop.groups.pricelist',
+        'prestashop.product.attribute',
+        'prestashop.product.attribute.value'
     ]
 
     def to_openerp(self, external_id, unwrap=False, browse=False):
