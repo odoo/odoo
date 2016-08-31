@@ -31,11 +31,11 @@
                             <field name="id" invisible="1"/>
                             <field name="name"/>
                             <field name="model" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="transient" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="state" attrs="{'readonly': [('id', '!=', False)]}"/>
-                            <field name="modules"/>
+                            <field name="state" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
+                            <field name="modules" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <notebook>
@@ -47,15 +47,19 @@
                                     <field name="ttype"/>
                                     <field name="required"/>
                                     <field name="readonly"/>
-                                    <field name="index"/>
-                                    <field name="state"/>
+                                    <field name="index" groups="base.group_no_one"/>
+                                    <field name="state" groups="base.group_no_one"/>
                                 </tree>
                                 <form string="Fields Description">
                                     <group>
-                                        <field name="name"/>
-                                        <field name="field_description"/>
-                                        <field name="help"/>
-                                        <field name="ttype"/>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="field_description"/>
+                                        </group>
+                                        <group>
+                                            <field name="ttype"/>
+                                            <field name="help"/>
+                                        </group>
                                     </group>
                                     <notebook>
                                         <page name="base" string="Properties">
@@ -63,47 +67,47 @@
                                                 <group>
                                                     <field name="required"/>
                                                     <field name="readonly"/>
-                                                    <field name="store"/>
-                                                    <field name="index"/>
-                                                    <field name="copy"/>
+                                                    <field name="store" groups="base.group_no_one"/>
+                                                    <field name="index" groups="base.group_no_one"/>
+                                                    <field name="copy" groups="base.group_no_one"/>
                                                 </group>
                                                 <group>
                                                     <field name="translate"
                                                         attrs="{'readonly': [('ttype','not in',['char','text','html'])],
                                                                 'invisible': [('ttype','not in',['char','text','html'])]}"/>
-                                                    <field name="selection"
+                                                    <field name="selection" placeholder="[('blue', 'Blue'),('yellow', 'Yellow')]"
                                                         attrs="{'required': [('ttype','in',['selection','reference'])],
                                                                 'readonly': [('ttype','not in',['selection','reference'])],
                                                                 'invisible': [('ttype','not in',['selection','reference'])]}"/>
-                                                    <field name="size"
+                                                    <field name="size" groups="base.group_no_one"
                                                         attrs="{'readonly': [('ttype','not in',['char','reference'])],
                                                                 'invisible': [('ttype','not in',['char','reference'])]}"/>
                                                     <field name="relation"
                                                         attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                                 'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                                 'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
-                                                    <field name="on_delete"
+                                                    <field name="on_delete" groups="base.group_no_one"
                                                         attrs="{'readonly': [('ttype','!=','many2one')],
                                                                 'invisible': [('ttype','!=','many2one')]}"/>
                                                     <field name="relation_field"
                                                         attrs="{'required': [('ttype','=','one2many')],
                                                                 'readonly': [('ttype','!=','one2many')],
                                                                 'invisible': [('ttype','!=','one2many')]}"/>
-                                                    <field name="relation_table"
+                                                    <field name="relation_table" groups="base.group_no_one"
                                                         attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                                 'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                                    <field name="column1"
+                                                    <field name="column1" groups="base.group_no_one"
                                                         attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                                 'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                                    <field name="column2"
+                                                    <field name="column2" groups="base.group_no_one"
                                                         attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                                 'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                                    <field name="domain"
+                                                    <field name="domain" groups="base.group_no_one"
                                                         attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                                 'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
                                                 </group>
                                             </group>
-                                            <group string="Advanced Properties">
+                                            <group string="Advanced Properties" groups="base.group_no_one">
                                                 <field name="serialization_field_id"
                                                     domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"
                                                     attrs="{'readonly': [('state','=','base')]}"/>
@@ -111,36 +115,38 @@
                                                 <field name="depends"/>
                                                 <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                             </group>
-                                            <h3>How to define a computed field</h3>
-                                            <p>Computed fields are defined with the fields
-                                            <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
-                                            <p>The field <strong>Dependencies</strong> lists the fields that
-                                            the current field depends on. It is a comma-separated list of
-                                            field names, like <code>name, size</code>. You can also refer to
-                                            fields accessible through other relational fields, for instance
-                                            <code>partner_id.company_id.name</code>.</p>
-                                            <p>The field <strong>Compute</strong> is the Python code to
-                                            compute the value of the field on a set of records. The value of
-                                            the field must be assigned to each record with a dictionary-like
-                                            assignment.</p>
-                                            <pre>
+                                            <div groups="base.group_no_one">
+                                                <h3>How to define a computed field</h3>
+                                                <p>Computed fields are defined with the fields
+                                                <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
+                                                <p>The field <strong>Dependencies</strong> lists the fields that
+                                                the current field depends on. It is a comma-separated list of
+                                                field names, like <code>name, size</code>. You can also refer to
+                                                fields accessible through other relational fields, for instance
+                                                <code>partner_id.company_id.name</code>.</p>
+                                                <p>The field <strong>Compute</strong> is the Python code to
+                                                compute the value of the field on a set of records. The value of
+                                                the field must be assigned to each record with a dictionary-like
+                                                assignment.</p>
+                                                <pre>
     for record in self:
         record['size'] = len(record.name)
 </pre>
-                                            <p>The only predefined variables are</p>
-                                            <ul>
-                                                <li><code>self</code> (the set of records to compute)</li>
-                                                <li><code>datetime</code> (Python module)</li>
-                                                <li><code>dateutil</code> (Python module)</li>
-                                                <li><code>time</code> (Python module)</li>
-                                            </ul>
-                                            <p>Other features are accessible through <code>self</code>, like
-                                            <code>self.env</code>, etc.</p>
+                                                <p>The only predefined variables are</p>
+                                                <ul>
+                                                    <li><code>self</code> (the set of records to compute)</li>
+                                                    <li><code>datetime</code> (Python module)</li>
+                                                    <li><code>dateutil</code> (Python module)</li>
+                                                    <li><code>time</code> (Python module)</li>
+                                                </ul>
+                                                <p>Other features are accessible through <code>self</code>, like
+                                                <code>self.env</code>, etc.</p>
+                                            </div>
                                         </page>
-                                        <page name="groups" string="Groups">
+                                        <page name="groups" string="Access Rights">
                                             <field name="groups"/>
                                         </page>
-                                        <page name="misc" string="Miscellaneous">
+                                        <page name="misc" string="Miscellaneous" groups="base.group_no_one">
                                             <group>
                                                 <field name="state"/>
                                                 <field name="modules"/>
@@ -149,7 +155,7 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <button
+                            <button groups="base.group_no_one"
                                 icon="fa-align-justify"
                                 name="%(act_menu_create)d"
                                 string="Create a Menu" type="action"
@@ -167,10 +173,10 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Notes">
+                        <page string="Notes" groups="base.group_no_one">
                             <field name="info"/>
                         </page>
-                        <page string="Views">
+                        <page string="Views" groups="base.group_no_one">
                             <field name="view_ids"/>
                         </page>
                     </notebook>
@@ -218,11 +224,15 @@
                 <form string="Fields">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
-                            <field name="field_description"/>
-                            <field name="help"/>
-                            <field name="ttype"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="field_description"/>
+                                <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                            </group>
+                            <group>
+                                <field name="ttype"/>
+                                <field name="help"/>
+                            </group>
                         </group>
                         <notebook>
                             <page name="base" string="Properties">
@@ -230,47 +240,47 @@
                                     <group>
                                         <field name="required"/>
                                         <field name="readonly"/>
-                                        <field name="store"/>
-                                        <field name="index"/>
-                                        <field name="copy"/>
+                                        <field name="store" groups="base.group_no_one"/>
+                                        <field name="index" groups="base.group_no_one"/>
+                                        <field name="copy" groups="base.group_no_one"/>
                                     </group>
                                     <group>
                                         <field name="translate"
                                             attrs="{'readonly': [('ttype','not in',['char','text','html'])],
                                                     'invisible': [('ttype','not in',['char','text','html'])]}"/>
-                                        <field name="selection"
+                                        <field name="selection" placeholder="[('blue', 'Blue'),('yellow', 'Yellow')]"
                                             attrs="{'required': [('ttype','in',['selection','reference'])],
                                                     'readonly': [('ttype','not in',['selection','reference'])],
                                                     'invisible': [('ttype','not in',['selection','reference'])]}"/>
-                                        <field name="size"
+                                        <field name="size" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','not in',['char','reference'])],
                                                     'invisible': [('ttype','not in',['char','reference'])]}"/>
                                         <field name="relation"
                                             attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                     'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
-                                        <field name="on_delete"
+                                        <field name="on_delete" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','!=','many2one')],
                                                     'invisible': [('ttype','!=','many2one')]}"/>
                                         <field name="relation_field"
                                             attrs="{'required': [('ttype','=','one2many')],
                                                     'readonly': [('ttype','!=','one2many')],
                                                     'invisible': [('ttype','!=','one2many')]}"/>
-                                        <field name="relation_table"
+                                        <field name="relation_table" groups="base.group_no_one"
                                             attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                     'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                        <field name="column1"
+                                        <field name="column1" groups="base.group_no_one"
                                             attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                     'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                        <field name="column2"
+                                        <field name="column2" groups="base.group_no_one"
                                             attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                     'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                        <field name="domain"
+                                        <field name="domain" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
                                     </group>
                                 </group>
-                                <group string="Advanced Properties">
+                                <group string="Advanced Properties" groups="base.group_no_one">
                                     <field name="serialization_field_id"
                                         domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
                                         attrs="{'readonly': [('state','=','base')]}"/>
@@ -278,36 +288,38 @@
                                     <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
                                     <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                 </group>
-                                <h3>How to define a computed field</h3>
-                                <p>Computed fields are defined with the fields
-                                <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
-                                <p>The field <strong>Dependencies</strong> lists the fields that
-                                the current field depends on. It is a comma-separated list of
-                                field names, like <code>name, size</code>. You can also refer to
-                                fields accessible through other relational fields, for instance
-                                <code>partner_id.company_id.name</code>.</p>
-                                <p>The field <strong>Compute</strong> is the Python code to
-                                compute the value of the field on a set of records. The value of
-                                the field must be assigned to each record with a dictionary-like
-                                assignment.</p>
-                                <pre>
+                                <div groups="base.group_no_one">
+                                    <h3>How to define a computed field</h3>
+                                    <p>Computed fields are defined with the fields
+                                    <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
+                                    <p>The field <strong>Dependencies</strong> lists the fields that
+                                    the current field depends on. It is a comma-separated list of
+                                    field names, like <code>name, size</code>. You can also refer to
+                                    fields accessible through other relational fields, for instance
+                                    <code>partner_id.company_id.name</code>.</p>
+                                    <p>The field <strong>Compute</strong> is the Python code to
+                                    compute the value of the field on a set of records. The value of
+                                    the field must be assigned to each record with a dictionary-like
+                                    assignment.</p>
+                                    <pre>
     for record in self:
         record['size'] = len(record.name)
 </pre>
-                                <p>The only predefined variables are</p>
-                                <ul>
-                                    <li><code>self</code> (the set of records to compute)</li>
-                                    <li><code>datetime</code> (Python module)</li>
-                                    <li><code>dateutil</code> (Python module)</li>
-                                    <li><code>time</code> (Python module)</li>
-                                </ul>
-                                <p>Other features are accessible through <code>self</code>, like
-                                <code>self.env</code>, etc.</p>
+                                    <p>The only predefined variables are</p>
+                                    <ul>
+                                        <li><code>self</code> (the set of records to compute)</li>
+                                        <li><code>datetime</code> (Python module)</li>
+                                        <li><code>dateutil</code> (Python module)</li>
+                                        <li><code>time</code> (Python module)</li>
+                                    </ul>
+                                    <p>Other features are accessible through <code>self</code>, like
+                                    <code>self.env</code>, etc.</p>
+                                </div>
                             </page>
-                            <page name="groups" string="Groups">
+                            <page name="groups" string="Access Rights">
                                 <field name="groups"/>
                             </page>
-                            <page name="misc" string="Miscellaneous">
+                            <page name="misc" string="Miscellaneous" groups="base.group_no_one">
                                 <group>
                                     <field name="state"/>
                                     <field name="modules"/>

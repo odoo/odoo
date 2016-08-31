@@ -12,14 +12,14 @@
                             <field name="type"/>
                             <field name="model"/>
                             <field name="priority"/>
+                            <field name="active"/>
                         </group>
-                        <group>
+                        <group groups="base.group_no_one">
                             <field name="field_parent"/>
                             <field name="inherit_id"/>
                             <field name="mode"/>
                             <field name="model_data_id"/>
                             <field name="xml_id"/>
-                            <field name="active"/>
                         </group>
                     </group>
                     <notebook>
@@ -28,7 +28,7 @@
                                 string="Edit Translations" class="oe_link oe_right"/>
                             <field name="arch_base" widget="ace" options="{'mode': 'xml'}"/>
                         </page>
-                        <page string="Groups">
+                        <page string="Access Rights">
                             <field name="groups_id"/>
                         </page>
                         <page name="inherit_children" string="Inherited Views">
@@ -49,11 +49,11 @@
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
                 <tree string="Views">
-                    <field name="priority" string="Sequence"/>
+                    <field name="priority" string="Sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
-                    <field name="xml_id"/>
+                    <field name="xml_id" groups="base.group_no_one"/>
                     <field name="inherit_id"/>
                 </tree>
             </field>
