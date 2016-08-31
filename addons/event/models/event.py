@@ -427,12 +427,11 @@ class EventRegistration(models.Model):
         self.ensure_one()
         today = fields.Datetime.from_string(fields.Datetime.now())
         event_date = fields.Datetime.from_string(self.event_begin_date)
-
-        if today.month == event_date.month:
+        if (event_date.date() - today.date()).days == 1:
+            return _('Tomorrow')
+        elif today.month == event_date.month:
             if event_date.day == today.day:
                 return _('Today')
-            elif event_date.day - today.day == 1:
-                return _('Tomorrow')
             elif event_date.isocalendar()[1] == today.isocalendar()[1]:
                 return _('This week')
             else:
