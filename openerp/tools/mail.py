@@ -220,6 +220,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace('%20', ' ')
         cleaned = cleaned.replace('%5B', '[')
         cleaned = cleaned.replace('%5D', ']')
+        cleaned = cleaned.replace('%7C', '|')
         cleaned = cleaned.replace('&lt;%', '<%')
         cleaned = cleaned.replace('%&gt;', '%>')
     except etree.ParserError, e:
