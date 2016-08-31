@@ -318,7 +318,8 @@ class IrModelFields(models.Model):
     @api.one
     @api.constrains('relation_table')
     def _check_relation_table(self):
-        models.check_pg_name(self.relation_table)
+        if self.relation_table:
+            models.check_pg_name(self.relation_table)
 
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):
