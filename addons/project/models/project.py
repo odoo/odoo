@@ -137,6 +137,11 @@ class Project(models.Model):
         if project:
             project.write({'active': True})
 
+        cover_image = self.env.ref('project.msg_task_data_14_attach', False)
+        cover_task = self.env.ref('project.project_task_data_14', False)
+        if cover_image and cover_task:
+            cover_task.write({'displayed_image_id': cover_image.id})
+
         # Change the help message on the action (no more activate project)
         action = self.env.ref('project.open_view_project_all', False)
         action_data = None
