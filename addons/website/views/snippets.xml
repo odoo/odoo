@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="s_cover" name="Cover">
-    <section class="s_text_block_image_fw oe_img_bg" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 50%">
+    <section class="s_text_block_image_fw oe_img_bg oe_custom_bg" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 100%">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mt64 mb64 bg-white">
-                    <h2>Headline</h2>
-                    <h4 class="text-primary">With a great subtitle</h4>
+                <div class="col-md-6 mt64 mb64 bg-black-25">
+                    <h2 style="font-size:62px">Headline</h2>
+                    <h4 class="text-muted">With a great subtitle</h4>
                     <p>Write one or two paragraphs describing your product, services or a specific feature. To be successful your content needs to be useful to your readers.</p>
                 </div>
             </div>
@@ -21,13 +21,13 @@
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         </ol>
         <div class="carousel-inner">
-            <div class="item oe_img_bg active" style="background-image: url(/web/image/website.s_background_image_05); background-position: 50% 50%">
+            <div class="item oe_img_bg active bg-alpha">
                 <div class="container">
                     <div class="row content">
-                        <div class="carousel-content col-md-4 col-md-offset-1 mt96 mb96">
+                        <div class="carousel-content col-md-4 col-md-offset-1 mt128 mb96">
                             <h2>Your Banner Title</h2>
                             <h4>Click to customize this text</h4>
-                            <p><a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a></p>
+                            <p><a href="/page/website.contactus" class="btn btn-warning btn-large">Contact us</a></p>
                         </div>
                         <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs mt48">
                             <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Banner Odoo Image"/>
@@ -195,8 +195,8 @@
     <section class="s_three_columns">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mt16">
-                    <img class="img img-rounded img-responsive" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
+                <div class="col-md-4 mt32 mb48">
+                    <img class="img img-responsive" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
                     <h4 class="mt16">Feature One</h4>
                     <p>
                         Adapt these three columns to fit you design need.
@@ -204,8 +204,8 @@
                         column and use the top icons to perform your action.
                     </p>
                 </div>
-                <div class="col-md-4 mt16">
-                    <img class="img img-rounded img-responsive" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
+                <div class="col-md-4 mt32 mb48">
+                    <img class="img img-responsive" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
                     <h4 class="mt16">Feature Two</h4>
                     <p>
                         To add a fourth column, reduce the size of these
@@ -214,8 +214,8 @@
                         one as a copy.
                     </p>
                 </div>
-                <div class="col-md-4 mt16">
-                    <img class="img img-rounded img-responsive" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
+                <div class="col-md-4 mt32 mb48">
+                    <img class="img img-responsive" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
                     <h4 class="mt16">Feature Three</h4>
                     <p>
                         Delete the above image or replace it with a picture
@@ -235,16 +235,6 @@
             services here, write about solutions.
         </p>
     </div>
-</template>
-
-<template id="s_quote" name="Quote">
-    <blockquote class="s_quote">
-        <p>
-            Write a quote here from one of your customers. Quotes are a
-            great way to build confidence in your products or services.
-        </p>
-        <p><small>Author of this quote</small></p>
-    </blockquote>
 </template>
 
 <template id="s_panel" name="Panel">
@@ -373,11 +363,11 @@
     </section>
 </template>
 
-<template id="s_button" name="Button">
-    <section class="jumbotron s_button">
+<template id="s_button" name="Call to Action">
+    <section class="jumbotron s_button bg-gray-lighter">
         <div class="container">
             <div class="row">
-                <div class="col-md-9 text-muted">
+                <div class="col-md-9">
                     <p class="mb0">
                         <strong>50,000+ companies run Odoo to grow their businesses.</strong>
                     </p><p class="mb0">
@@ -386,8 +376,8 @@
                 </div>
                 <div class="col-md-3">
                     <a href="/page/website.contactus" class="btn btn-primary btn-lg pull-right mt8">
-                        <i class="fa fa-arrow-right"></i>
                         Contact Us Now
+                        <i class="fa fa-chevron-right"></i>
                     </a>
                 </div>
             </div>
@@ -460,47 +450,25 @@
 <template id="s_references" name="References">
     <section class="s_references">
         <div class="container">
-            <h1 class="text-center">Our References</h1>
-            <h3 class="text-center text-muted">More than 500 happy customers.</h3>
-
-            <div class="row">
-                <div class="col-md-4 col-xs-12 col-md-offset-1 mt16 mb32">
-                    <blockquote>
-                        <p>
-                            Write a quote here from one of your customers. Quotes are a
-                            great way to build confidence in your products or services.
-                        </p>
-                        <small>Author of this quote</small>
-                    </blockquote>
-                </div>
-                <div class="col-md-4 col-xs-12 col-md-offset-2 mt16 mb32">
-                    <blockquote>
-                        <p>
-                            Odoo provides essential platform for our project management.
-                            Things are better organized and more visible with it.
-                        </p>
-                        <small>John Doe, CEO</small>
-                    </blockquote>
-                </div>
-            </div>
+            <h2 class="text-center">Our References</h2>
             <div class="row">
                 <div class="col-md-2 col-sm-4 col-xs-6">
-                  <img src="/logo.png" class="img img-responsive img-thumbnail" alt="Logo"/>
+                  <img src="/web/image/website.s_reference_demo_image_1" class="img img-responsive " alt="Demo Logo"/>
                 </div>
                 <div class="col-md-2 col-sm-4 col-xs-6">
-                  <img src="/logo.png" class="img img-responsive img-thumbnail" alt="Logo"/>
+                  <img src="/web/image/website.s_reference_demo_image_2" class="img img-responsive " alt="Demo Logo"/>
                 </div>
                 <div class="col-md-2 col-sm-4 col-xs-6">
-                  <img src="/logo.png" class="img img-responsive img-thumbnail" alt="Logo"/>
+                  <img src="/web/image/website.s_reference_demo_image_3" class="img img-responsive " alt="Demo Logo"/>
                 </div>
                 <div class="col-md-2 col-sm-4 col-xs-6">
-                  <img src="/logo.png" class="img img-responsive img-thumbnail" alt="Logo"/>
+                  <img src="/web/image/website.s_reference_demo_image_4" class="img img-responsive " alt="Demo Logo"/>
                 </div>
                 <div class="col-md-2 col-sm-4 col-xs-6">
-                  <img src="/logo.png" class="img img-responsive img-thumbnail" alt="Logo"/>
+                  <img src="/web/image/website.s_reference_demo_image_5" class="img img-responsive " alt="Demo Logo"/>
                 </div>
                 <div class="col-md-2 col-sm-4 col-xs-6">
-                  <img src="/logo.png" class="img img-responsive img-thumbnail" alt="Logo"/>
+                  <img src="/web/image/website.s_reference_demo_image_6" class="img img-responsive " alt="Demo Logo"/>
                 </div>
             </div>
         </div>
@@ -511,45 +479,45 @@
     <section class="s_feature_grid">
         <div class="container">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-5 col-md-offset-1">
                     <div class="col-md-12 mt16 mb16">
-                        <h2>List of Features</h2>
-                        <h4 class="text-muted">Add a great slogan</h4>
+                        <h3 class="mb0">List of Features</h3>
+                        <h5 class="text-muted mb16">Add a great slogan</h5>
                     </div>
                     <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-3x fa-comment pull-left mb16"></span>
-                        <h3 class="mt0 mb0">Change Icons</h3>
-                        <p>Click on the icon to adapt it to your feature</p>
+                        <span style="min-width: 45px" class="fa fa-2x fa-comment pull-left mb16"></span>
+                        <h4 class="mt0 mb0">Change Icons</h4>
+                        <p>Click on the icon to adapt it to your feature</p><br/>
                     </div>
                     <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-3x fa-columns pull-left mb16"></span>
-                        <h3 class="mt0 mb0">Duplicate</h3>
-                        <p>Duplicate blocks to add more features.</p>
+                        <span style="min-width: 45px" class="fa fa-2x fa-columns pull-left mb16"></span>
+                        <h4 class="mt0 mb0">Duplicate</h4>
+                        <p>Duplicate blocks to add more features.</p><br/>
                     </div>
                     <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-3x fa-user pull-left mb16"></span>
-                        <h3 class="mt0 mb0">Delete Blocks</h3>
-                        <p class="text-muted">Select and delete blocks to remove some features.</p>
+                        <span style="min-width: 45px" class="fa fa-2x fa-user pull-left mb16"></span>
+                        <h4 class="mt0 mb0">Delete Blocks</h4>
+                        <p>Select and delete blocks to remove some features.</p><br/>
                     </div>
                 </div>
-                <div class="col-md-5 col-md-offset-2">
+                <div class="col-md-5">
                     <div class="col-md-12 mt16 mb16">
-                        <h2>Second List</h2>
-                        <h4 class="text-muted">Add a great slogan</h4>
+                        <h3 class="mb0">Second List</h3>
+                        <h5 class="text-muted mb16">Add a great slogan</h5>
                     </div>
                     <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-3x fa-magic pull-left mb16"></span>
-                        <h3 class="mt0 mb0">Great Value</h3>
+                        <span style="min-width: 45px" class="fa fa-2x fa-magic pull-left mb16"></span>
+                        <h4 class="mt0 mb0">Great Value</h4>
                         <p>Tell features the visitor would like to know, not what you'd like to say.</p>
                     </div>
                     <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-3x fa-bolt pull-left mb16"></span>
-                        <h3 class="mt0 mb0">Change Background</h3>
+                        <span style="min-width: 45px" class="fa fa-2x fa-bolt pull-left mb16"></span>
+                        <h4 class="mt0 mb0">Change Background</h4>
                         <p>From the main container, you can change the background to highlight features.</p>
                     </div>
                     <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-3x fa-picture-o pull-left mb16"></span>
-                        <h3 class="mt0 mb0">Sample images</h3>
+                        <span style="min-width: 45px" class="fa fa-2x fa-picture-o pull-left mb16"></span>
+                        <h4 class="mt0 mb0">Sample images</h4>
                         <p>All these icons are licensed under creative commons so that you can use them.</p>
                     </div>
                 </div>
@@ -649,7 +617,6 @@
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
-                    <t t-snippet="website.s_quote" t-thumbnail="/website/static/src/img/blocks/block_quote.png"/>
                     <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
                     <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>

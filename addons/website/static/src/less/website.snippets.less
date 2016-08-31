@@ -375,19 +375,19 @@ div.carousel .container {
 
 // Parallax Theme
 div.carousel {
-    .carousel-indicators {
-        li { border: 1px solid grey; }
-        .active { background-color: grey; }
+    .carousel-indicators li {
+        box-shadow: 0 0 0 1px grey;
+        &:hover:not(.active) {
+            background-color: @color-white-50;
+        }
     }
     span.carousel-img img,
     div.carousel-content {
         max-height: 95%;
         padding: 10px;
     }
-    div.carousel-content {
-        background-color: black;
-        color: white;
-        background: rgba(0, 0, 0, 0.3);
+    .carousel-control {
+        cursor: pointer;
     }
 }
 
