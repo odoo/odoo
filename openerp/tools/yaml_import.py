@@ -500,7 +500,8 @@ class YamlInterpreter(object):
         return {
             key: val
             for key, val in record_dict.iteritems()
-            if (key in model._columns or key in model._inherit_fields or model._fields[key].inverse)
+            for field in [model._fields[key].base_field]
+            if field.store or field.inverse
         }
 
     def process_ref(self, node, field=None):
@@ -587,7 +588,7 @@ class YamlInterpreter(object):
         python, statements = node.items()[0]
         assert python.model or python.id, "!python node must have attribute `model` or `id`"
         if python.id is None:
-            record = self.env[python.model]._model
+            record = self.env[python.model]
         elif isinstance(python.id, basestring):
             record = self.get_record(python.id)
         else:
@@ -597,7 +598,7 @@ class YamlInterpreter(object):
         statements = "\n" * python.first_line + statements.replace("\r\n", "\n")
         code_context = {
             'self': record,
-            'model': record._model,
+            'model': record,
             'cr': self.cr,
             'uid': self.uid,
             'log': self._log,
@@ -677,14 +678,13 @@ class YamlInterpreter(object):
         function, params = node.items()[0]
         if self.isnoupdate(function) and self.mode != 'init':
             return
-        model = self.env[function.model]._model
+        model = self.env[function.model]
         if function.eval:
             args = self.process_eval(function.eval)
         else:
             args = self._eval_params(function.model, params)
-        method = function.name
         # this one still depends on the old API
-        getattr(model, method)(self.cr, self.uid, *args)
+        return openerp.api.call_kw(model, function.name, args, {})
 
     def _set_group_values(self, node, values):
         if node.groups:

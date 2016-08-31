@@ -34,13 +34,13 @@
                             <strong>Printing date:</strong><br/>
                             <span t-esc="time.strftime('%Y-%m-%d')"/>
                         </div>
-                        <div class="col-xs-3" t-if="'sale_ref' in o._columns.keys()">
+                        <div class="col-xs-3" t-if="'sale_ref' in o">
                             <strong>Partner Ref:</strong><br/>
-                            <span t-esc="'sale_ref' in o._columns.keys() and o.sale_ref"/>
+                            <span t-esc="'sale_ref' in o and o.sale_ref"/>
                         </div>
-                        <div class="col-xs-3" t-if="'sale_name' in o._columns.keys()">
+                        <div class="col-xs-3" t-if="'sale_name' in o">
                             <strong>SO Number:</strong><br/>
-                            <span t-esc="'sale_name' in o._columns.keys() and o.sale_name"/>
+                            <span t-esc="'sale_name' in o and o.sale_name"/>
                         </div>
                     </div>
 

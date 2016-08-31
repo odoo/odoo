@@ -14,7 +14,7 @@ class MailMessage(models.Model):
     def default_get(self, fields_list):
         defaults = super(MailMessage, self).default_get(fields_list)
 
-        # Note: explicitly implemented in default_get() instead of _defaults,
+        # Note: explicitly implemented in default_get() instead of field default,
         # to avoid setting to True for all existing messages during upgrades.
         # TODO: this default should probably be dynamic according to the model
         # on which the messages are attached, thus moved to create().

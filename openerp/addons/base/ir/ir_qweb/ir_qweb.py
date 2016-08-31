@@ -250,7 +250,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         field_options['type'] = field_options.get('widget', field.type)
         inherit_branding = options.get('inherit_branding', options.get('inherit_branding_auto') and record.check_access_rights('write', False))
         field_options['inherit_branding'] = inherit_branding
-        translate = options.get('edit_translations') and options.get('translatable') and getattr(field, 'translate', False)
+        translate = options.get('edit_translations') and options.get('translatable') and field.translate
         field_options['translate'] = translate
 
         # field converter

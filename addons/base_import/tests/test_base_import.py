@@ -172,7 +172,7 @@ class TestMatchHeadersMultiple(TransactionCase):
 
     def test_mixed(self):
         self.assertEqual(
-            self.registry('base_import.import')._match_headers(
+            self.env['base_import.import']._match_headers(
                 iter(['foo bar baz qux/corge'.split()]),
                 [
                     {'name': 'bar', 'string': 'Bar'},

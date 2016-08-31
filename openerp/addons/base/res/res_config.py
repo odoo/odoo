@@ -554,10 +554,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         if action:
             return action
 
-        # After the uninstall/install calls, the self.pool is no longer valid.
-        # So we reach into the RegistryManager directly.
-        ResConfig = registry(self._cr.dbname)['res.config']
-        config = ResConfig.browse(self._cr, self._uid, [], self._context).next() or {}
+        if to_install or to_uninstall_modules:
+            # After the uninstall/install calls, the registry and environments
+            # are no longer valid. So we reset the environment.
+            self.env.reset()
+            self = self.env()[self._name]
+        config = self.env['res.config'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 

@@ -141,7 +141,7 @@ class HrEmployee(models.Model):
         if column_name not in ["barcode", "pin"]:
             super(HrEmployee, self)._init_column(column_name)
         else:
-            default_compute = self._defaults.get(column_name)
+            default_compute = self._fields[column_name].default
 
             query = 'SELECT id FROM "%s" WHERE "%s" is NULL' % (
                 self._table, column_name)

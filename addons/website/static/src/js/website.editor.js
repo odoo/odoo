@@ -95,11 +95,8 @@ website.TopBarCustomize = Widget.extend({
         return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'ir.ui.view',
             method: 'toggle',
-            args: [],
-            kwargs: {
-                ids: [parseInt(view_id, 10)],
-                context: base.get_context(),
-            }
+            args: [[parseInt(view_id, 10)]],
+            kwargs: {context: base.get_context()}
         }).then(function () {
             window.location.reload();
         });

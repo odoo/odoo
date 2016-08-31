@@ -67,8 +67,6 @@ class test_inherits(common.TransactionCase):
         # the extra values are added, both in the field and the column
         self.assertEqual(mother._fields['state'].selection,
                          [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
-        self.assertEqual(mother._columns['state'].selection,
-                         [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
 
     def test_50_search_one2many(self):
         """ check search on one2many field based on inherited many2one field. """

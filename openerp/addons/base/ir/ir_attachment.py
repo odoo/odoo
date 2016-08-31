@@ -234,7 +234,7 @@ class IrAttachment(models.Model):
     file_size = fields.Integer('File Size', readonly=True)
     checksum = fields.Char("Checksum/SHA1", size=40, index=True, readonly=True)
     mimetype = fields.Char('Mime Type', readonly=True)
-    index_content = fields.Text('Indexed Content', readonly=True, _prefetch=False)
+    index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
     @api.model_cr_context
     def _auto_init(self):
