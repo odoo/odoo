@@ -4,7 +4,7 @@
 
         <record id="payment.payment_acquirer_transfer" model="payment.acquirer">
             <field name="name">Wire Transfer</field>
-            <field name="image" type="base64" file="payment_transfer/static/description/icon.png"/>
+            <field name="image" type="base64" file="payment_transfer/static/src/img/transfer_icon.png"/>
             <field name="provider">transfer</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="view_template_id" ref="transfer_acquirer_button"/>
