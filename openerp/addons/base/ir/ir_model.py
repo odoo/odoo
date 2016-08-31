@@ -42,7 +42,8 @@ class IrModel(models.Model):
     name = fields.Char(string='Model Description', translate=True, required=True)
     model = fields.Char(default='x_', required=True, index=True)
     info = fields.Text(string='Information')
-    field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True)
+    field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
+        default=lambda self: [(0, 0, {'name': 'x_name', 'field_description': 'Name', 'ttype': 'char'})])
     inherited_model_ids = fields.Many2many('ir.model', compute='_inherited_models', string="Inherited models",
                                            help="The list of models that extends the current model.")
     state = fields.Selection([('manual', 'Custom Object'), ('base', 'Base Object')], string='Type', default='manual', readonly=True)
@@ -152,6 +153,15 @@ class IrModel(models.Model):
             self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
             self.pool.signal_registry_change()
         return res
+
+    @api.model
+    def name_create(self, name):
+        """ Infer the model from the name. E.g.: 'My New Model' should become 'x_my_new_model'. """
+        vals = {
+            'name': name,
+            'model': 'x_' + '_'.join(name.lower().split(' ')),
+        }
+        return self.create(vals).name_get()[0]
 
     @api.model
     def _instanciate(self, model_data):
@@ -396,6 +406,9 @@ class IrModelFields(models.Model):
 
     @api.multi
     def unlink(self):
+        if not self:
+            return True
+
         # Prevent manual deletion of module columns
         if not self._context.get(MODULE_UNINSTALL_FLAG) and \
                 any(field.state != 'manual' for field in self):
