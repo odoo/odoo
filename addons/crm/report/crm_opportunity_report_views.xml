@@ -152,7 +152,7 @@
              <field name="res_model">crm.opportunity.report</field>
              <field name="view_type">form</field>
              <field name="view_mode">pivot,graph</field>
-             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
+             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True, 'search_default_archived': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
