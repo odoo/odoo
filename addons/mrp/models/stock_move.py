@@ -72,6 +72,7 @@ class StockMove(models.Model):
         'Quantity', compute='_qty_done_compute', inverse='_qty_done_set',
         digits=dp.get_precision('Product Unit of Measure'))
     move_lot_ids = fields.One2many('stock.move.lots', 'move_id', string='Lots')
+    active_move_lot_ids = fields.One2many('stock.move.lots', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
     unit_factor = fields.Float('Unit Factor')
     is_done = fields.Boolean(
@@ -93,7 +94,7 @@ class StockMove(models.Model):
     def _qty_done_compute(self):
         for move in self:
             if move.has_tracking != 'none':
-                move.quantity_done = sum(move.move_lot_ids.mapped('quantity_done'))
+                move.quantity_done = sum(move.move_lot_ids.filtered(lambda x: x.done_wo).mapped('quantity_done')) #TODO: change with active_move_lot_ids?
             else:
                 move.quantity_done = move.quantity_done_store
 
@@ -170,6 +171,7 @@ class StockMove(models.Model):
         moves = self._filter_closed_moves()
         quant_obj = self.env['stock.quant']
         moves_todo = self.env['stock.move']
+        moves_to_unreserve = self.env['stock.move']
         uom_obj = self.env['product.uom']
         for move in moves:
             rounding = move.product_uom.rounding
@@ -188,6 +190,8 @@ class StockMove(models.Model):
                 # Need to do some kind of conversion here
                 qty_split = uom_obj._compute_qty(move.product_uom.id, move.product_uom_qty - move.quantity_done, move.product_id.uom_id.id)
                 new_move = move.split(qty_split)
+                # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
+                move.move_lot_ids.filtered(lambda x: not x.done_wo).write({'move_id': new_move})
                 self.browse(new_move).quantity_done = 0.0
             main_domain = [('qty', '>', 0)]
             preferred_domain = [('reservation_id', '=', move.id)]
@@ -203,10 +207,11 @@ class StockMove(models.Model):
                         qty = uom_obj._compute_qty(move.product_uom.id, movelot.quantity_done, move.product_id.uom_id.id)
                         quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id, domain=main_domain, preferred_domain_list=preferred_domain_list)
                         self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
-            move.quants_unreserve()
+            moves_to_unreserve |= move
             # Next move in production order
             if move.move_dest_id:
                 move.move_dest_id.action_assign()
+        moves_to_unreserve.quants_unreserve()
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         return moves_todo
 
