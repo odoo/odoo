@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="invoice_supplier_form_inherited" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page" position="after">
+                    <page name="inf_tributaria_fac" string="Comp. de Venta">
+                        <group>
+                            <group>
+                                <field name="x_tipo_sustento" required="True"/>
+                                <field name="x_tipo_comprobante" required="True"/>
+                                <field name="x_fac_clave_acceso"/>
+                                <field name="x_fac_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_fac_establecimiento" required="True"/>
+                                <field name="x_fac_punto_emision" required="True"/>
+                                <field name="x_fac_secuencial" required="True"/>
+                                <field name="x_fac_autorizacion" required="True"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="inf_tributaria_ret" string="Comp. de Retención">
+                        <group>
+                            <group>
+                                <field name="x_ret_clave_acceso"/>
+                                <field name="x_ret_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_ret_fecha_emision" required="True"/>
+                                <field name="x_ret_establecimiento" required="True"/>
+                                <field name="x_ret_punto_emision" required="True"/>
+                                <field name="x_ret_secuencial" required="True"/>
+                                <field name="x_ret_autorizacion" required="True"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_form_inherited" model="ir.ui.view">
+            <field name="name">account.invoice.form.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page" position="after">
+                    <page name="inf_tributaria_fac" string="Comp. de Venta">
+                        <group>
+                            <group>
+                                <field name="x_tipo_comprobante" required="True"/>
+                                <field name="x_fac_clave_acceso"/>
+                                <field name="x_fac_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_fac_establecimiento" required="True"/>
+                                <field name="x_fac_punto_emision" required="True"/>
+                                <field name="x_fac_secuencial" required="True"/>
+                                <field name="x_fac_autorizacion" required="True"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="inf_tributaria_ret" string="Comp. de Retención">
+                        <group>
+                            <group>
+                                <field name="x_ret_clave_acceso"/>
+                                <field name="x_ret_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_ret_fecha_emision"/>
+                                <field name="x_ret_establecimiento"/>
+                                <field name="x_ret_punto_emision"/>
+                                <field name="x_ret_secuencial"/>
+                                <field name="x_ret_autorizacion"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
