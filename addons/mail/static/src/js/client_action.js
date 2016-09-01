@@ -650,6 +650,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             context: "{'default_no_auto_thread': False, 'active_model': 'mail.message'}",
         });
     },
+    destroy: function() {
+        this.$buttons.off().destroy();
+        this._super.apply(this, arguments);
+    },
 });
 
 

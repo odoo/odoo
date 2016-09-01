@@ -413,6 +413,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         }
         this.active_view.controller.do_load_state(state, warm);
     },
+    destroy: function () {
+        if (this.control_elements) {
+            if (this.control_elements.$switch_buttons) {
+                this.control_elements.$switch_buttons.off();
+            }
+        }
+        return this._super.apply(this, arguments);
+    },
 });
 
 return ViewManager;
