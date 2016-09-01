@@ -133,11 +133,13 @@
 </template>
 
 <template id="s_title" name="Title">
-    <section class="s_title">
-        <div class="container">
-            <h1 class="text-center">Your Website Title</h1>
-            <h3 class="text-center text-muted">And a great subtitle too</h3>
-        </div>
+    <section class="s_title container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Your Website Title</h1>
+                    <h3 class="text-center text-muted">And a great subtitle too</h3>
+                </div>
+            </div>
     </section>
 </template>
 
@@ -611,18 +613,6 @@
                 </div>
             </div>
 
-            <div id="snippet_content" class="o_panel">
-                <div class="o_panel_header">
-                    <i class="fa fa-indent"/> Inner content
-                </div>
-                <div class="o_panel_body">
-                    <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
-                    <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
-                    <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
-                    <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
-                </div>
-            </div>
-
             <div id="snippet_feature" class="o_panel">
                 <div class="o_panel_header">
                     <i class="fa fa-diamond"/> Feature
@@ -646,6 +636,19 @@
                     <t t-snippet="website.s_parallax_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
                 </div>
             </div>
+
+            <div id="snippet_content" class="o_panel">
+                <div class="o_panel_header">
+                    <i class="fa fa-indent"/> Inner content
+                </div>
+                <div class="o_panel_body">
+                    <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
+                    <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
+                    <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
+                    <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
+                </div>
+            </div>
+
         </div>
     </xpath>
 
