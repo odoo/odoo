@@ -46,10 +46,6 @@ class SaleConfiguration(models.TransientModel):
         ], "Incoterms",
         implied_group='sale.group_display_incoterm',
         help="The printed reports will display the incoterms for the sales orders and the related invoices")
-    module_product_visible_discount = fields.Selection([
-        (0, 'No discount policy on sales order line'),
-        (1, 'Allow discount policy on sales order line')
-        ], "Discount Policy")
     module_sale_margin = fields.Selection([
         (0, 'Salespeople do not need to view margins when quoting'),
         (1, 'Display margins on quotations and sales orders')
