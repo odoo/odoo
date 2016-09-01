@@ -41,7 +41,6 @@ Dashboard for CRM will include:
         'web_tour',
     ],
     'data': [
-        'data/tour_data.xml',
         'data/crm_activity_data.xml',
         'data/crm_data.xml',
         'data/crm_stage_data.xml',
