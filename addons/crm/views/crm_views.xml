@@ -34,4 +34,12 @@
             sequence="0"
             groups="sales_team.group_sale_manager"/>
 
+        <!-- Make the xmlid of menus required by the CRM tour available in webclient -->
+        <record id="sales_team.menu_base_partner" model="ir.ui.menu">
+            <field name="load_xmlid" eval="True"/>
+        </record>
+        <record id="base.menu_administration" model="ir.ui.menu">
+            <field name="load_xmlid" eval="True"/>
+        </record>
+
 </odoo>
