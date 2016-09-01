@@ -125,7 +125,6 @@ class HrExpense(models.Model):
             'date_maturity': line.get('date_maturity'),
             'partner_id': partner_id,
             'name': line['name'][:64],
-            'date': self.sheet_id.accounting_date,
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and - line['price'],
             'account_id': line['account_id'],
