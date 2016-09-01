@@ -430,7 +430,7 @@ var RTE = Widget.extend({
         // remove multi edition
         if ($el.data('oe-model')) {
             var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression');
-            if (this.__saved[key]) return true;
+            if (this.__saved[key]) return $.when();
             this.__saved[key] = true;
         }
         var markup = this.getEscapedElement($el).prop('outerHTML');
