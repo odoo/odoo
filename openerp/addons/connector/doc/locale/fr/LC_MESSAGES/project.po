@@ -1,0 +1,777 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Connector\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-15 22:28+0300\n"
+"PO-Revision-Date: 2015-05-05 11:48+0100\n"
+"Last-Translator: Guewen Baconnier <guewen.baconnier@camptocamp.com>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: ../../project/changes.rst:5
+msgid "Changes"
+msgstr "Changements"
+
+#: ../../../CHANGES.rst:2
+msgid "3.0.0 (2015-04-01)"
+msgstr "3.0.0 (2015-04-01)"
+
+#: ../../../CHANGES.rst:4
+msgid "/!\\ Backwards incompatible changes inside."
+msgstr "Attention : changements non rétro-compatibles dans cette version."
+
+#: ../../../CHANGES.rst:6
+msgid ""
+"Add ``openerp.api.Environment`` in ``Session`` It is accessible in ``self."
+"env`` in ``Session`` and all ``ConnectorUnit`` instances. Also in "
+"``ConnectorUnit``, ``model`` returns the current (new api!) model:"
+msgstr ""
+"Ajout de ``openerp.api.Environment`` dans ``Session`` Accessible via ``self."
+"env`` dans ``Session`` et toutes les instances ``ConnectorUnit``. Également "
+"dans ``ConnectorUnit``, ``model`` renvoie le modèle en cours (nouvelle "
+"API!) :"
+
+#: ../../../CHANGES.rst:20
+msgid "Deprecate the CRUD methods in ``Session``"
+msgstr "Dépréciation des méthodes CRUD dans ``Session``"
+
+#: ../../../CHANGES.rst:32
+msgid ""
+"``Environment.set_lang()`` is removed. It was modifying the context in place "
+"which is not possible with the new frozendict context. It should be done "
+"with:"
+msgstr ""
+"``Environment.set_lang()`` est supprimé. Il modifiait le contexte sur place "
+"ce qui n'est pas possible avec les nouveaux context en frozendict. Doit être "
+"fait avec:"
+
+#: ../../../CHANGES.rst:41
+msgid "Add an argument on the Binders methods to return a browse record"
+msgstr ""
+"Ajout d'un argument sur les méthodes des Binders pour renvoyer un `browse "
+"record`"
+
+#: ../../../CHANGES.rst:47
+msgid ""
+"Shorten ``ConnectorUnit.get_binder_for_model`` to ``ConnectorUnit."
+"binder_for``"
+msgstr ""
+"Renommage de ``ConnectorUnit.get_binder_for_model`` vers ``ConnectorUnit."
+"binder_for``"
+
+#: ../../../CHANGES.rst:49
+msgid ""
+"Shorten ``ConnectorUnit.get_connector_unit_for_model`` to ``ConnectorUnit."
+"unit_for``"
+msgstr ""
+"Renommage de ``ConnectorUnit.get_connector_unit_for_model`` vers "
+"``ConnectorUnit.unit_for``"
+
+#: ../../../CHANGES.rst:51
+msgid ""
+"Renamed ``Environment`` to ``ConnectorEnvironment`` to avoid confusion with "
+"``openerp.api.Environment``"
+msgstr ""
+"Renommage d'``Environment`` vers ``ConnectorEnvironment`` pour éviter la "
+"confusion avec ``openerp.api.Environment``"
+
+#: ../../../CHANGES.rst:53
+msgid ""
+"Renamed the class attribute ``ConnectorUnit.model_name`` to ``ConnectorUnit."
+"for_model_name``."
+msgstr ""
+"Renommage de l'attribut de classe ``ConnectorUnit.model_name`` vers "
+"``ConnectorUnit.for_model_name``."
+
+#: ../../../CHANGES.rst:55
+msgid ""
+"Added ``_base_binder``, ``_base_mapper``, ``_base_backend_adapter`` in the "
+"synchronizers (Importer, Exporter) so it is no longer required to override "
+"the ``binder``, ``mapper``, ``backend_adapter`` property methods"
+msgstr ""
+"Ajout de ``_base_binder``, ``_base_mapper``, ``_base_backend_adapter`` dans "
+"les synchroniseurs (Importer, Exporter) donc ce n'est plus nécessaire pour "
+"surcharger les méthodes property ``binder``, ``mapper``, ``backend_adapter``"
+
+#: ../../../CHANGES.rst:59
+msgid ""
+"``Session.change_context()`` now supports the same argument/keyword "
+"arguments semantics than ``openerp.model.BaseModel.with_context()``."
+msgstr ""
+"``Session.change_context()`` prend maintenant en charge la même sémantique "
+"d'arguments que ``openerp.model.BaseModel.with_context()``."
+
+#: ../../../CHANGES.rst:62
+msgid "Renamed ``ExportSynchronizer`` to ``Exporter``"
+msgstr "Renommage de ``ExportSynchronizer`` vers ``Exporter``"
+
+#: ../../../CHANGES.rst:63
+msgid "Renamed ``ImportSynchronizer`` to ``Importer``"
+msgstr "Renommage de ``ImportSynchronizer`` vers ``Importer``"
+
+#: ../../../CHANGES.rst:64
+msgid "Renamed ``DeleteSynchronizer`` to ``Deleter``"
+msgstr "Renommage de ``DeleteSynchronizer`` vers ``Deleter``"
+
+#: ../../../CHANGES.rst:65
+msgid "``Session.commit`` do not commit when tests are running"
+msgstr "``Session.commit`` ne commite pas pendant les tests"
+
+#: ../../../CHANGES.rst:66
+msgid "Cleaned the methods that have been deprecated in version 2.x"
+msgstr "Nettoyage des méthodes dépréciées en version 2.x"
+
+#: ../../../CHANGES.rst:70
+msgid "2.2.0 (2014-05-26)"
+msgstr "2.2.0 (2014-05-26)"
+
+#: ../../../CHANGES.rst:72
+msgid ""
+"Job arguments can now contain unicode strings (thanks to Stéphane Bidoul) "
+"lp:1288187"
+msgstr ""
+"Les arguments d'un Job peuvent maintenant contenir des chaînes unicode "
+"(merci à Stéphane Bidoul) lp:1288187"
+
+#: ../../../CHANGES.rst:73
+msgid "List view of the jobs improved"
+msgstr "Amélioration de la vue en liste des jobs"
+
+#: ../../../CHANGES.rst:74
+msgid ""
+"Jobs now support multicompany (thanks to Laurent Mignon) https://lists."
+"launchpad.net/openerp-connector-community/msg00253.html)"
+msgstr ""
+"Les jobs fonctionnement maintenant en multi-sociétés (merci à Laurent "
+"Mignon) https://lists.launchpad.net/openerp-connector-community/msg00253."
+"html)"
+
+#: ../../../CHANGES.rst:75
+msgid ""
+"An action can be assigned to a job.  The action is called with a button on "
+"the job and could be something like open a form view or an url."
+msgstr ""
+"Une action peut être affectée à un job.  L'action est appelée via un bouton "
+"sur le job et peut appeler une ouverture de formulaire ou une URL."
+
+#: ../../../CHANGES.rst:78
+msgid "2.1.1 (2014-02-06)"
+msgstr "2.1.1 (2014-02-06)"
+
+#: ../../../CHANGES.rst:80
+msgid ""
+"A user can be blocked because he has no access to the model queue.job when a "
+"job has been delayed. The creation of a job is low level and should not be "
+"restrained by the accesses of the user. (lp:1276182)"
+msgstr ""
+"Un utilisateur peut être bloqué s'il n'a pas accès au modèle queue.job quand "
+"un job a été retardé. La création d'un job est à bas niveau et ne devrait "
+"pas être contrainte par les accès de l'utilisateur. (lp:1276182)"
+
+#: ../../../CHANGES.rst:85
+msgid "2.1.0 (2014-01-15 - warning: breaks compatibility)"
+msgstr "2.1.0 (2014-01-15 - attention : rupture de compatibilité)"
+
+#: ../../../CHANGES.rst:87
+msgid ""
+"Add a new optional keyword argument 'description' to the delay() function of "
+"a job.  If given, the description is used as name of the queue.job record "
+"stored in OpenERP and displayed in the list of jobs."
+msgstr ""
+"Ajout d'un nouvel argument nommé 'description' pour la fonction delay() d'un "
+"job.  Si fournie, la description est utilisée comme nom pour "
+"l'enregistrement ``queue.job`` stocké dans OpenERP et affiché dans la liste "
+"des jobs."
+
+#: ../../../CHANGES.rst:90
+msgid ""
+"Fix: assignment of jobs to workers respect the priority of the jobs "
+"(lp:1252681)"
+msgstr ""
+"Correction: l'affectation des jobs aux workers respecte la priorité des jobs "
+"(lp:1252681)"
+
+#: ../../../CHANGES.rst:91
+msgid ""
+"Pass a new parameter to listeners of 'on_record_create' ( vals:  field "
+"values of the new record, e.g {'field_name': field_value, ...})"
+msgstr ""
+"Passage d'un nouveau paramètre aux abonnés à 'on_record_create' ( vals:  "
+"valeurs du champ du nouvel enregistrement, par ex : {'field_name': "
+"field_value, ...})"
+
+#: ../../../CHANGES.rst:93
+msgid ""
+"Replace the list of updated fields passed to listeners of 'on_record_write' "
+"by a dictionary of updated field values e.g {'field_name': field_value, ...}"
+msgstr ""
+"Remplacement de la liste des champs modifiés transmis aux abonnés à "
+"'on_record_write' par un dictionnaire des valeurs des champs modifiés. Par "
+"ex : {'field_name': field_value, ...}"
+
+#: ../../../CHANGES.rst:95
+msgid ""
+"Add the possibility to use 'Modifiers' functions in the 'direct "
+"mappings' (details in the documentation of the Mapper class)"
+msgstr ""
+"Ajout de la possibilité d'utiliser des fonctions 'Modificatrices' dans les "
+"'mappings directs' (détails dans la documentation de la classe Mapper)"
+
+#: ../../../CHANGES.rst:97
+msgid ""
+"When a job a delayed, the job's UUID is returned by the delay() function"
+msgstr ""
+"Quand un job est retardé, le UUID du job est renvoyé par la fonction delay()"
+
+#: ../../../CHANGES.rst:98
+msgid ""
+"Refactoring of mappers. Much details here: https://code.launchpad.net/"
+"~openerp-connector-core-editors/openerp-connector/7.0-connector-mapper-"
+"refactor/+merge/194485"
+msgstr ""
+"Refactorisation des mappers. Plus de détails ici : https://code.launchpad."
+"net/~openerp-connector-core-editors/openerp-connector/7.0-connector-mapper-"
+"refactor/+merge/194485"
+
+#: ../../../CHANGES.rst:102
+msgid "2.0.1 (2013-09-12)"
+msgstr "2.0.1 (2013-09-12)"
+
+#: ../../../CHANGES.rst:104
+msgid ""
+"Developers of addons do no longer need to create an AbstractModel with a "
+"_name 'name_of_the_module.installed', instead, they just have to call "
+"connector.connector.install_in_connector() lp:1196859"
+msgstr ""
+"Les développeurs d'addons n'ont plus besoin de créer un AbstractModel avec "
+"un _name 'nom_module.installed', ils doivent simplement appeler ``connector."
+"connector.install_in_connector()`` lp:1196859"
+
+#: ../../../CHANGES.rst:106
+msgid ""
+"Added a script `openerp-connector-worker` to start processes for Jobs "
+"Workers when running OpenERP is multiprocessing"
+msgstr ""
+"Ajout d'un script `openerp-connector-worker` pour lancer les processus des "
+"workers de jobs en fonctionnement multi-processus d'OpenERP"
+
+#: ../../../CHANGES.rst:108
+msgid ""
+"Fix: do no fail to start when OpenERP has access to a not-OpenERP database "
+"(lp:1233388)"
+msgstr ""
+"Correction : n'échoue pas au démarrage quand OpenERP a accès à une base de "
+"données non-OpenERP (lp:1233388)"
+
+#: ../../../CHANGES.rst:112
+msgid "2.0.0"
+msgstr "2.0.0"
+
+#: ../../../CHANGES.rst:114
+msgid "First release"
+msgstr "Première version"
+
+#: ../../project/contribute.rst:5
+msgid "Contribute"
+msgstr "Contribuer"
+
+#: ../../project/contribute.rst:7
+msgid "We accept with pleasure all type of contributions:"
+msgstr "Nous acceptons avec plaisir tous types de contributions :"
+
+#: ../../project/contribute.rst:9
+msgid "bug reports"
+msgstr "Signalement d'anomalies"
+
+#: ../../project/contribute.rst:10
+msgid "merge proposals"
+msgstr "Propositions de corrections"
+
+#: ../../project/contribute.rst:11
+msgid "ideas"
+msgstr "idées"
+
+#: ../../project/contribute.rst:12
+msgid "translations"
+msgstr "traductions"
+
+#: ../../project/contribute.rst:13
+msgid "..."
+msgstr "..."
+
+#: ../../project/contribute.rst:15
+msgid ""
+"Have a look on the :ref:`Magento Connector Developer's Guide "
+"<connectormagento:contribute>` which is more complete, most of the "
+"information is the same."
+msgstr ""
+"Jetez un œil au :ref:`Guide du développeur du Connecteur Magento "
+"<connectormagento:contribute>` qui est plus complet, la plupart des "
+"informations sont les mêmes."
+
+#: ../../project/contribute.rst:19
+msgid "The GitHub project is: https://github.com/OCA/connector"
+msgstr "Le projet GitHub est : https://github.com/OCA/connector"
+
+#: ../../project/contribute.rst:23
+msgid "Want to start a new connector"
+msgstr "Démarrer un nouveau connecteur"
+
+#: ../../project/contribute.rst:25
+msgid ""
+"If you want to start a new connector based on the framework, a sane approach "
+"is to read this documentation, especially :ref:`concepts` and :ref:"
+"`bootstrap-connector`."
+msgstr ""
+"Si vous voulez fabriquer un nouveau connecteur basé sur le framework, "
+"l'approche conseillée est de lire cette documentation, en particulier les :"
+"ref:`concepts` et :ref:`bootstrap-connector`."
+
+#: ../../project/contribute.rst:33
+msgid ""
+"If the connector belongs to the e-commerce domain, you may want to reuse the "
+"pieces of the `E-Commerce Connector`_ module."
+msgstr ""
+"Si le connecteur est dans le domaine e-commerce, vous devriez réutiliser les "
+"composants du module `E-Commerce Connector`_."
+
+#: ../../project/contribute.rst:39
+msgid "Naming conventions"
+msgstr "Conventions de nommage"
+
+#: ../../project/contribute.rst:41
+msgid "The naming conventions for the new projects are the following:"
+msgstr ""
+"Les conventions de nommage pour les nouveaux projets sont les suivantes :"
+
+#: ../../project/contribute.rst:43
+msgid "Name of the project if it is in the OCA:"
+msgstr "Nom du projet s'il est dans l'OCA :"
+
+#: ../../project/contribute.rst:45
+msgid "connector-xxx"
+msgstr "connector-xxx"
+
+#: ../../project/contribute.rst:48
+msgid "connector_xxx"
+msgstr "connector_xxx"
+
+#: ../../project/contribute.rst:53
+msgid "Example:"
+msgstr "Exemple :"
+
+#: ../../project/contribute.rst:51
+msgid "https://github.com/OCA/connector-magento"
+msgstr "https://github.com/OCA/connector-magento"
+
+#: ../../project/contribute.rst:53
+msgid "``connector_magento``"
+msgstr "``connector_magento``"
+
+#: ../../project/contribute.rst:55
+msgid ""
+"Actually, the Magento and Prestashop connectors do not respect this "
+"convention for historical reasons (magentoerpconnect, prestashoperpconnect). "
+"New projects should ideally respect it."
+msgstr ""
+"En réalité les connecteurs Magento et Prestashop ne respectent pas cette "
+"convention pour des raisons historiques (magentoerpconnect, "
+"prestashoperpconnect). Les nouveaux projets devraient idéalement la "
+"respecter."
+
+#: ../../project/contributors.rst:5
+msgid "Contributors"
+msgstr "Contributeurs"
+
+#: ../../project/contributors.rst:7
+msgid "List of contributors:"
+msgstr "Liste des contributeurs :"
+
+#: ../../../AUTHORS:1
+msgid "Guewen Baconnier at Camptocamp"
+msgstr "Guewen Baconnier chez Camptocamp"
+
+#: ../../../AUTHORS:2
+msgid "Alexandre Fayolle at Camptocamp"
+msgstr "Alexandre Fayolle chez Camptocamp"
+
+#: ../../../AUTHORS:3
+msgid "Benoit Guillot at Akretion"
+msgstr "Benoit Guillot chez Akretion"
+
+#: ../../../AUTHORS:4
+msgid "Nicolas Bessi at Camptocamp (tiny change)"
+msgstr "Nicolas Bessi chez Camptocamp (changement minuscule)"
+
+#: ../../../AUTHORS:5
+msgid "Joël Grand-Guillaume at Camptocamp (tiny change)"
+msgstr "Joël Grand-Guillaume chez Camptocamp (changement minuscule)"
+
+#: ../../../AUTHORS:6
+msgid "Arthur Vuillard at Akretion (tiny change)"
+msgstr "Arthur Vuillard chez Akretion (changement minuscule)"
+
+#: ../../../AUTHORS:7
+msgid "Sebastien Beau at Akretion (tiny change)"
+msgstr "Sebastien Beau chez Akretion (changement minuscule)"
+
+#: ../../../AUTHORS:8
+msgid "Laurent Mignon at Acsone"
+msgstr "Laurent Mignon chez Acsone"
+
+#: ../../../AUTHORS:9
+msgid "Leonardo Pistone at Camptocamp"
+msgstr "Leonardo Pistone chez Camptocamp"
+
+#: ../../../AUTHORS:10
+msgid "David Béal at Akretion (tiny change)"
+msgstr "David Béal chez Akretion (changement minuscule)"
+
+#: ../../project/contributors.rst:16
+msgid "Financial Contributors"
+msgstr "Contributeurs financiers"
+
+#: ../../project/contributors.rst:18
+msgid ""
+"A fund raising has been done during the year 2013, allowing us to develop "
+"the connector framework and the Magento connector."
+msgstr ""
+"Une levée de fond a été réalisée en 2013, et a permis de développer le "
+"framework Connecteur et le Connecteur Magento."
+
+#: ../../project/contributors.rst:21
+msgid ""
+"Here is the list of the funders, ordered by the amount of the contribution:"
+msgstr "Voici la liste des fondateurs, classée par volume de contribution :"
+
+#: ../../project/contributors.rst:23
+msgid "**Logic Supply**"
+msgstr "**Logic Supply**"
+
+#: ../../project/contributors.rst:24
+msgid "**Debonix**"
+msgstr "**Debonix**"
+
+#: ../../project/contributors.rst:25
+msgid "Apertoso"
+msgstr "Apertoso"
+
+#: ../../project/contributors.rst:26
+msgid "OpenBIG"
+msgstr "OpenBIG"
+
+#: ../../project/contributors.rst:27
+msgid "Smile"
+msgstr "Smile"
+
+#: ../../project/contributors.rst:28
+msgid "IT Service Partners"
+msgstr "IT Service Partners"
+
+#: ../../project/contributors.rst:29
+msgid "WillowIT"
+msgstr "WillowIT"
+
+#: ../../project/contributors.rst:30
+msgid "Eezee-It"
+msgstr "Eezee-It"
+
+#: ../../project/contributors.rst:31
+msgid "Auguria"
+msgstr "Auguria"
+
+#: ../../project/contributors.rst:32
+msgid "Enova"
+msgstr "Enova"
+
+#: ../../project/contributors.rst:33
+msgid "Mr. Goran Sunjka"
+msgstr "M. Goran Sunjka"
+
+#: ../../project/contributors.rst:34
+msgid "Taktik"
+msgstr "Taktik"
+
+#: ../../project/contributors.rst:35
+msgid "Maison del Gusto"
+msgstr "Maison del Gusto"
+
+#: ../../project/contributors.rst:36
+msgid "Open2bizz Software"
+msgstr "Open2bizz Software"
+
+#: ../../project/contributors.rst:37
+msgid "Bee Company"
+msgstr "Bee Company"
+
+#: ../../project/contributors.rst:38
+msgid "initOS"
+msgstr "initOS"
+
+#: ../../project/contributors.rst:39
+msgid "Rhônalia"
+msgstr "Rhônalia"
+
+#: ../../project/contributors.rst:40
+msgid "Julius Network Solutions"
+msgstr "Julius Network Solutions"
+
+#: ../../project/contributors.rst:41
+msgid "Elico Corp"
+msgstr "Elico Corp"
+
+#: ../../project/contributors.rst:42
+msgid "Linko Solutions"
+msgstr "Linko Solutions"
+
+#: ../../project/contributors.rst:43
+msgid "HSP Hanse Shopping"
+msgstr "HSP Hanse Shopping"
+
+#: ../../project/contributors.rst:44
+msgid "Burn Out Italy"
+msgstr "Burn Out Italy"
+
+#: ../../project/contributors.rst:45
+msgid "Mr. Peter Dijkstra"
+msgstr "M. Peter Dijkstra"
+
+#: ../../project/contributors.rst:46
+msgid "Mr. Luc Maurer"
+msgstr "M. Luc Maurer"
+
+#: ../../project/contributors.rst:47
+msgid "Mr. Maxime Chambreuil"
+msgstr "M. Maxime Chambreuil"
+
+#: ../../project/contributors.rst:48
+msgid "Mr. Eric Vernichon"
+msgstr "M. Eric Vernichon"
+
+#: ../../project/contributors.rst:49
+msgid "Avanzosc"
+msgstr "Avanzosc"
+
+#: ../../project/contributors.rst:50
+msgid "Mr. Fabio Martinelli"
+msgstr "M. Fabio Martinelli"
+
+#: ../../project/contributors.rst:51
+msgid "Mr. Marcelo Bello"
+msgstr "M. Marcelo Bello"
+
+#: ../../project/contributors.rst:52
+msgid "Rove.design"
+msgstr "Rove.design"
+
+#: ../../project/contributors.rst:53
+msgid "Mr. Mark Felling"
+msgstr "M. Mark Felling"
+
+#: ../../project/contributors.rst:55
+msgid "Thanks to all of them!"
+msgstr "Merci à eux !"
+
+#: ../../project/license.rst:5
+msgid "License"
+msgstr "Licence"
+
+#: ../../project/license.rst:7
+msgid "This work is licensed under the AGPL3 license."
+msgstr "Ce travail est publié sous licence AGPL3."
+
+#: ../../project/roadmap.rst:5
+msgid "Roadmap"
+msgstr "Roadmap"
+
+#: ../../project/roadmap.rst:7
+msgid "Here is a list of things we may agree to merge."
+msgstr "Voici une liste de choses qu'on peut s'accorder à intégrer"
+
+#: ../../project/roadmap.rst:9
+msgid "Queue: use PostgreSQL `notify` for direct enqueue of jobs"
+msgstr ""
+"Queue : utiliser `notify` de PostgreSQL pour une mise en queue directe des "
+"jobs"
+
+#: ../../project/roadmap.rst:13
+msgid ""
+"Add facilities to parse the errors from the jobs so we can replace it by "
+"more contextual and helpful errors."
+msgstr ""
+"Ajouter des facilités pour analyser les erreurs des jobs pour pouvoir les "
+"remplacer par des erreurs plus contextuelles et utiles"
+
+#: ../../project/roadmap.rst:16
+msgid ""
+"A logger which keeps in a buffer all the logs and flushes them when an error "
+"occurs in a synchronization, clears them if it succeeded"
+msgstr ""
+"Un `logger` qui garde en tampon tous les logs et les vide quand une erreur "
+"survient pendant une synchronisation, et les efface s'ils ont réussi"
+
+#: ../../project/roadmap.rst:19
+msgid ""
+"Job Channels: each job is owned by a channel and workers can be dedicated to "
+"one channel only"
+msgstr ""
+"Canal de job : chaque job appartient à un canal et les workers peuvent être "
+"dédiés à un canal"
+
+#: ../../../CHANGES.rst:107
+msgid ""
+"Fix: inheritance broken when an orm.Model inherit from an orm.AbstractModel. "
+"One effect was that the mail.thread features were no longer working "
+"(lp:1233355)"
+msgstr ""
+"Correction : héritage cassé quand un orm.Model hérite d'un orm."
+"AbstractModel. Un effet était que les fonctionnalités de mail.thread ne "
+"fonctionnaient plus (lp:1233355)"
+
+#: ../../../AUTHORS:11
+msgid "Christophe Combelles at Anybox (french translation)"
+msgstr "Christophe Combelles chez Anybox (trad française)"
+
+#: ../../project/contribute.rst:65
+msgid "Creating or maintaining a translation of this doc"
+msgstr "Créer ou maintenir une traduction de cette doc"
+
+#: ../../project/contribute.rst:67
+msgid ""
+"Install Odoo, its dependencies, sphinx, sphinx_bootstrap_theme and sphinx-"
+"intl"
+msgstr ""
+"Installez Odoo, ses dépendances, sphinx, sphinx_bootstrap_theme et sphinx-"
+"intl"
+
+#: ../../project/contribute.rst:72
+msgid "create an empty database with the connector module installed"
+msgstr "créez une nouvelle base de donnée avec le module connector installé"
+
+#: ../../project/contribute.rst:73
+msgid "``cd connector/doc``"
+msgstr "``cd connector/doc``"
+
+#: ../../project/contribute.rst:74
+msgid "rebuild the gettext .pot source catalogs: ``make gettext``"
+msgstr "reconstruisez les catalogues gettext sources .pot: ``make gettext``"
+
+#: ../../project/contribute.rst:75
+msgid ""
+"update the .po translation files from the latest .pot files (here for "
+"language 'fr'): ``sphinx-intl update -l fr -p _build/locale``"
+msgstr ""
+"mettez à jour les fichiers de traduction .po depuis les derniers fichiers ."
+"pot (ici pour la langue 'fr'): ``sphinx-intl update -l fr -p _build/locale``"
+
+#: ../../project/contribute.rst:77
+msgid ""
+"create or edit the translation in the .po files: ``poedit locale/fr/"
+"LC_MESSAGES/*.po``"
+msgstr ""
+"créez ou modifiez la traduction dans les fichiers .po : ``poedit locale/fr/"
+"LC_MESSAGES/*.po``"
+
+#: ../../project/contribute.rst:79
+msgid "compile the .po files into .mo files: ``sphinx-intl build``"
+msgstr "compilez les fichiers .po en fichiers .mo : ``sphinx-intl build``"
+
+#: ../../project/contribute.rst:80
+msgid ""
+"build the translated documentation to html: ``make SPHINXOPTS=\"-Dlanguage=fr"
+"\" html``"
+msgstr ""
+"construisez en html la documentation traduite : ``make SPHINXOPTS=\"-"
+"Dlanguage=fr\" html``"
+
+#: ../../project/contribute.rst:83
+msgid ""
+"The same using a `buildout <https://bitbucket.org/anybox/"
+"public_buildbot_buildouts/src/tip/odoo-connector.cfg>`_::"
+msgstr ""
+"La même chose en utilisant un `buildout <https://bitbucket.org/anybox/"
+"public_buildbot_buildouts/src/tip/odoo-connector.cfg>`_::"
+
+#: ../../project/contribute.rst:69
+msgid ""
+"Add `this patch <https://bitbucket.org/shimizukawa/sphinx-intl/pull-"
+"request/9/>`_ to sphinx-intl (until merged) to support *fuzzy* translations"
+msgstr ""
+"Ajoutez `ce patch <https://bitbucket.org/shimizukawa/sphinx-intl/pull-"
+"request/9/>`_ à sphinx-intl (jusqu'à ce que ce soit mergé) pour gérer les "
+"traductions *fuzzy*"
+
+#: ../../project/contribute.rst:29
+msgid ""
+"Then, my personal advice is to look at the existing connectors (`Odoo "
+"Magento Connector`_, `Odoo Prestashop Connector`_). You will also probably "
+"need to dive a bit in the framework's code."
+msgstr ""
+"Ensuite, il est conseillé de parcourir les connecteurs existants "
+"(`Connecteur Odoo Magento`_, `Connecteur Odoo Prestashop`_). Vous devrez "
+"aussi plonger peut-être un peu dans le code du framework."
+
+#: ../../project/contribute.rst:48
+msgid "Name of the Odoo module:"
+msgstr "Nom du module Odoo :"
+
+#: ../../project/contribute.rst:100
+msgid ""
+"Then you can see the result in _build/html/ and submit a Pull Request. "
+"Repeat the 5 last steps to update the translation if modified upstream."
+msgstr ""
+"Vous pouvez ensuite voir le résultat dans _build/html/ et soumettre un "
+"\"Pull Request\". Répétez les 5 dernières étapes pour remettre à jour les "
+"traductions en cas de modification dans le tronc principal."
+
+#: ../../project/roadmap.rst:11 ../../project/roadmap.rst:22
+msgid "See: https://github.com/OCA/connector/pull/52"
+msgstr "See: https://github.com/OCA/connector/pull/52"
+
+#~ msgid ""
+#~ "Then, my personal advice is to look at the existing connectors (`OpenERP "
+#~ "Magento Connector`_, `OpenERP Prestashop Connector`_). You will also "
+#~ "probably need to dive a bit in the framework's code."
+#~ msgstr ""
+#~ "Ensuite, il est conseillé de parcourir les connecteurs existants "
+#~ "(`Connecteur OpenERP Magento`_, `Connecteur OpenERP Prestashop`_). Vous "
+#~ "devrez aussi plonger peut-être un peu dans le code du framework."
+
+#~ msgid "Name of the OpenERP module:"
+#~ msgstr "Nom du module OpenERP :"
+
+#~ msgid ""
+#~ "Experimental branch: lp:~openerp-connector-core-editors/openerp-"
+#~ "connector/7.0-connector-pg-notify-listen-experimental"
+#~ msgstr ""
+#~ "Branche expérimentale : lp:~openerp-connector-core-editors/openerp-"
+#~ "connector/7.0-connector-pg-notify-listen-experimental"
+
+#~ msgid ""
+#~ "Then you can see the result in _build/html/ and submit a Pull Request"
+#~ msgstr ""
+#~ "Vous pouvez ensuite voir le résultat dans _build/html/ et soumettre un "
+#~ "Pull Request"
+
+#~ msgid ""
+#~ "Add `this patch <https://bitbucket.org/shimizukawa/sphinx-intl/pull-"
+#~ "request/9/issue-9-support-fuzzy-translations>`_ to sphinx-intl (until "
+#~ "merged)"
+#~ msgstr ""
+#~ "Ajoutez `ce patch <https://bitbucket.org/shimizukawa/sphinx-intl/pull-"
+#~ "request/9/issue-9-support-fuzzy-translations>`_ to sphinx-intl (jusqu'à "
+#~ "ce qu'il soit mergé)"
+
+#~ msgid ""
+#~ "Fix: inheritance broken when an orm.Model inherit from an or."
+#~ "AbstractModel. One effect was that the mail.thread features were no "
+#~ "longer working (lp:1233355)"
+#~ msgstr ""
+#~ "Correction : héritage cassé quand un orm.Model hérite d'un or."
+#~ "AbstractModel. Une conséquence est que les fonctionnalités de mail.thread "
+#~ "ne fonctionnaient plus (lp:1233355)"

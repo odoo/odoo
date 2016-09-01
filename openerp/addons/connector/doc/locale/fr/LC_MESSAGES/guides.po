@@ -1,0 +1,1214 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Connector\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-15 22:28+0300\n"
+"PO-Revision-Date: 2015-05-05 11:55+0100\n"
+"Last-Translator: Guewen Baconnier <guewen.baconnier@camptocamp.com>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: ../../guides/bootstrap_connector.rst:6
+msgid "Boostrapping a connector"
+msgstr "Amorcer la création un nouveau connecteur"
+
+#: ../../guides/bootstrap_connector.rst:8
+msgid "We'll see the steps to bootstrap a new connector."
+msgstr ""
+"Nous allons voir les étapes pour amorcer la création d'un nouveau connecteur"
+
+#: ../../guides/bootstrap_connector.rst:10
+msgid ""
+"Besides that, you may want to use the existing connectors to have some real "
+"implementation examples:"
+msgstr ""
+"À côté de ça, vous devriez utiliser les connecteurs existants pour avoir des "
+"exemples réels d'implémentation:"
+
+#: ../../guides/bootstrap_connector.rst:16
+msgid ""
+"Some boilerplate is necessary, so this document will guide you through some "
+"steps. Please also take a look on the :ref:`naming-convention`."
+msgstr ""
+"Du code boilerplate est nécessaire, donc ce document va vous guider à "
+"travers différentes étapes. Consultez également les :ref:`naming-convention`."
+
+#: ../../guides/bootstrap_connector.rst:59
+msgid "Nothing special but 2 things to note:"
+msgstr "Il y a 2 points à noter :"
+
+#: ../../guides/bootstrap_connector.rst:61
+msgid "It depends from ``connector``."
+msgstr "Il dépend de ``connector``."
+
+#: ../../guides/bootstrap_connector.rst:62
+msgid "The module category should be ``Connector``."
+msgstr "La catégorie du module doit être ``Connector``."
+
+#: ../../guides/bootstrap_connector.rst:64
+msgid ""
+"Of course, we also need to create the ``__init__.py`` file where we will put "
+"the imports of our python modules."
+msgstr ""
+"Bien sûr, nous devons aussi créer le fichier ``__init__.py`` où nous plaçons "
+"les imports de nos modules Python."
+
+#: ../../guides/bootstrap_connector.rst:70
+msgid "Install the module in the connector"
+msgstr "Installation du module dans le connecteur"
+
+#: ../../guides/bootstrap_connector.rst:72
+msgid ""
+"Each new module needs to be plugged in the connector's framework. That's "
+"just a matter of following a convention and creating ``connector_coffee/"
+"connector.py``"
+msgstr ""
+"Chaque nouveau module doit être branché dans le framework du connecteur. "
+"C'est juste un question de suivre une convention et créer un fichier "
+"``connector_coffee/connector.py``"
+
+#: ../../guides/bootstrap_connector.rst:82
+msgid ""
+"If you miss this line of code, your ConnectorUnit classes won't be found."
+msgstr ""
+"Si vous oubliez cette ligne de code, vos classes ConnectorUnit seront "
+"introuvables."
+
+#: ../../guides/bootstrap_connector.rst:90
+msgid ""
+"To prevent this, we use a little trick: create an abstract model and look in "
+"the registry if it is loaded."
+msgstr ""
+"Pour éviter cela, nous utilisons une astuce: créer un « abstract model » et "
+"regarder dans le registre s'il est chargé."
+
+#: ../../guides/bootstrap_connector.rst:96
+msgid "Declare the backends"
+msgstr "Déclaration des backends"
+
+#: ../../guides/bootstrap_connector.rst:98
+msgid "Our module is compatible with the coffee machines:"
+msgstr "Notre module est compatible avec les machines à café :"
+
+#: ../../guides/bootstrap_connector.rst:100
+msgid "Coffee 1900"
+msgstr "Coffee 1900"
+
+#: ../../guides/bootstrap_connector.rst:101
+msgid "Coffee 2900"
+msgstr "Coffee 2900"
+
+#: ../../guides/bootstrap_connector.rst:103
+msgid ""
+"So we'll declare a backend `coffee`, the generic entity, and a backend per "
+"version."
+msgstr ""
+"Donc nous allons déclarer un backend `coffee`, l'entité générique, et un "
+"backend différent par version."
+
+#: ../../guides/bootstrap_connector.rst:106
+msgid "Put this in ``connector_coffee/backend.py``::"
+msgstr "Placez ceci dans ``connector_coffee/backend.py``::"
+
+#: ../../guides/bootstrap_connector.rst:118
+msgid "Backend Model"
+msgstr "Modèle du backend"
+
+#: ../../guides/bootstrap_connector.rst:120
+msgid "We declared the backends, but we need a model to configure them."
+msgstr ""
+"Nous avons déclaré les backends, mais nous avons besoin d'un modèle pour les "
+"configurer."
+
+#: ../../guides/bootstrap_connector.rst:122
+msgid ""
+"We create a model ``coffee.backend`` which is an ``_inherit`` of ``connector."
+"backend``. In ``connector_coffee/coffee_model.py``::"
+msgstr ""
+"Nous créons un modèle ``coffee.backend`` qui est un ``_inherit`` de "
+"``connector.backend``. Dans ``connector_coffee/coffee_model.py``::"
+
+#: ../../guides/bootstrap_connector.rst:157
+msgid "Notes:"
+msgstr "Notes :"
+
+#: ../../guides/bootstrap_connector.rst:159
+msgid ""
+"The ``_backend_type`` must be the same than the name in the backend in "
+"`Declare the backends`_."
+msgstr ""
+"Le ``_backend_type`` doit être le même que le nom du backend dans "
+"`Déclaration des backends`_."
+
+#: ../../guides/bootstrap_connector.rst:161
+msgid ""
+"the versions should be the same than the ones declared in `Declare the "
+"backends`_."
+msgstr ""
+"les versions doivent être les mêmes que celles déclarées dans `Déclaration "
+"des backends`_."
+
+#: ../../guides/bootstrap_connector.rst:162
+msgid ""
+"We may want to add as many fields as we want to configure our connection or "
+"configuration regarding the backend in that model."
+msgstr ""
+"Nous pouvons ajouter dans ce modèle autant de champs que nous voulons pour "
+"configurer notre connexion ou configuration en rapport avec le backend."
+
+#: ../../guides/bootstrap_connector.rst:168
+msgid "Abstract Binding"
+msgstr "Binding abstrait"
+
+#: ../../guides/bootstrap_connector.rst:170
+msgid ""
+"If we have many :ref:`binding`, we may want to create an abstract model for "
+"them."
+msgstr ""
+"Si nous avons de nombreux :ref:`binding`, nous pouvons créer un modèle "
+"abstrait pour eux."
+
+#: ../../guides/bootstrap_connector.rst:173
+msgid "It can be as follows (in ``connector_coffee/connector.py``)::"
+msgstr "Cela peut être comme suit (dans ``connector_coffee/connector.py``)::"
+
+#: ../../guides/bootstrap_connector.rst:197 ../../guides/concepts.rst:125
+msgid "Environment"
+msgstr "Environnement"
+
+#: ../../guides/bootstrap_connector.rst:199
+msgid ""
+"We'll often need to create a new environment to work with. I propose to "
+"create a helper method which build it for us (in ``connector_coffee/"
+"connector.py``::"
+msgstr ""
+"Nous aurons souvent besoin de créer un nouvel environnement avec lequel "
+"travailler. Je propose de créer une méthode auxiliaire qui le construit "
+"(dans ``connector_coffee/connector.py``::"
+
+#: ../../guides/bootstrap_connector.rst:218
+msgid ""
+"Note that the part regarding the language definition is totally optional but "
+"I left it as an example."
+msgstr ""
+"Remarquez que la partie qui concerne la définition du langage est "
+"complètement optionnelle mais elle est conservée pour l'exemple."
+
+#: ../../guides/bootstrap_connector.rst:224
+msgid "Checkpoints"
+msgstr "Points de contrôle"
+
+#: ../../guides/bootstrap_connector.rst:226
+msgid ""
+"When new records are imported and need a review, :ref:`checkpoint` are "
+"created. I propose to create a helper too in ``connector_coffee/connector."
+"py``::"
+msgstr ""
+"Quand de nouveaux enregistrements sont importés et ont besoin de "
+"vérification, des :ref:`checkpoint` sont créés. Je propose de créer aussi un "
+"auxiliaire dans ``connector_coffee/connector.py``::"
+
+#: ../../guides/bootstrap_connector.rst:239
+msgid "ConnectorUnit classes"
+msgstr "Classes ConnectorUnit"
+
+#: ../../guides/bootstrap_connector.rst:241
+msgid ""
+"We'll probably need to create synchronizers, mappers, backend adapters, "
+"binders and maybe our own types of ConnectorUnit classes."
+msgstr ""
+"Nous aurons probablement besoin de créer des synchroniseurs, des mappeurs, "
+"des adaptateurs de backend, des bindings, et peut-être nos propres types de "
+"classes ConnectorUnit"
+
+#: ../../guides/code_overview.rst:5
+msgid "Code Overview"
+msgstr "Survol du code"
+
+#: ../../guides/code_overview.rst:7
+msgid "Here is an overview of some of the concepts in the framework."
+msgstr "Voici un survol de certains concepts du framework."
+
+#: ../../guides/code_overview.rst:9
+msgid ""
+"As an example, we'll see the steps for exporting an invoice to Magento. The "
+"steps won't show all the steps, but a simplified excerpt of a real use case "
+"exposing the main ideas."
+msgstr ""
+"Comme exemple, nous allons voir les étapes pour exporter une facture vers "
+"Magento. Ce n'est pas un exemple complet mais un aperçu d'un cas réel pour "
+"exposer les idée principales."
+
+#: ../../guides/code_overview.rst:15
+msgid "Backends"
+msgstr "Backends"
+
+#: ../../guides/code_overview.rst:17
+msgid ""
+"All start with the declaration of the :py:class:`~connector.backend."
+"Backend`::"
+msgstr ""
+"Tout commence par une déclaration du :py:class:`~connector.backend.Backend`::"
+
+#: ../../guides/code_overview.rst:27
+msgid ""
+"As you see, Magento is the parent of Magento 1.7. We can define a hierarchy "
+"of backends."
+msgstr ""
+"Comme vous pouvez voir, Magento est parent de Magento 1.7. Nous pouvons donc "
+"définir une hiérarchie de backends."
+
+#: ../../guides/code_overview.rst:32 ../../guides/concepts.rst:213
+msgid "Bindings"
+msgstr "Bindings (Liaisons)"
+
+#: ../../guides/code_overview.rst:55 ../../guides/concepts.rst:88
+msgid "Session"
+msgstr "Session"
+
+#: ../../guides/code_overview.rst:57
+msgid ""
+"The framework uses :py:class:`~connector.session.ConnectorSession` objects "
+"to store the ``cr``, ``uid`` and ``context`` in a :class:`openerp.api."
+"Environment`.  So from a session, we can access to the usual ``self.env`` "
+"(new API) or ``self.pool`` (old API)."
+msgstr ""
+"Le framework utilise des objets  :py:class:`~connector.session."
+"ConnectorSession` pour stocker les ``cr``, ``uid`` et ``context`` dans un :"
+"class:`openerp.api.Environment`.  Donc depuis une session, nous pouvons "
+"accéder aux habituels ``self.env`` (nouvelle API) ou ``self.pool`` (ancienne "
+"API)."
+
+#: ../../guides/code_overview.rst:64 ../../guides/concepts.rst:20
+msgid "Events"
+msgstr "Événements"
+
+#: ../../guides/code_overview.rst:66
+msgid ""
+"We can create :py:class:`~connector.event.Event` on which we'll be able to "
+"subscribe consumers.  The connector already integrates the most generic "
+"ones: :py:meth:`~connector.event.on_record_create`, :py:meth:`~connector."
+"event.on_record_write`, :py:meth:`~connector.event.on_record_unlink`"
+msgstr ""
+"Nous pouvons créer un :py:class:`~connector.event.Event` sur lequel nous "
+"pouvons abonner des consommateurs. Le connecteur fournit d'origine les plus "
+"génériques: :py:meth:`~connector.event.on_record_create`, :py:meth:"
+"`~connector.event.on_record_write`, :py:meth:`~connector.event."
+"on_record_unlink`"
+
+#: ../../guides/code_overview.rst:73
+msgid ""
+"When we create a ``magento.account.invoice`` record, we want to delay a job "
+"to export it to Magento, so we subscribe a new consumer on :py:meth:"
+"`~connector.event.on_record_create`::"
+msgstr ""
+"À la création d'un enregistrement ``magento.account.invoice``, nous voulons "
+"lancer un job déporté pour l'exporter vers Magento, donc nous abonnons un "
+"nouveau consommateur à l'événement :py:meth:`~connector.event."
+"on_record_create`::"
+
+#: ../../guides/code_overview.rst:84
+msgid ""
+"On the last line, you can notice an ``export_invoice.delay``. We'll discuss "
+"about that in Jobs_"
+msgstr ""
+"Sur la dernière ligne, vous pouvez notez un ``export_invoice.delay``. Nous "
+"parlerons de ceci dans Jobs_"
+
+#: ../../guides/code_overview.rst:89
+msgid "Jobs"
+msgstr "Jobs"
+
+#: ../../guides/code_overview.rst:91
+msgid ""
+"A :py:class:`~connector.queue.job.Job` is a task to execute later. In that "
+"case: create the invoice on Magento."
+msgstr ""
+"Un :py:class:`~connector.queue.job.Job` est une tâche à exécuter plus tard. "
+"Dans le cas présent: créer une facture dans Magento."
+
+#: ../../guides/code_overview.rst:94
+msgid ""
+"Any function decorated with :py:meth:`~connector.queue.job.job` can be "
+"posted in the queue of jobs using a ``delay()`` function and will be run as "
+"soon as possible::"
+msgstr ""
+"N'importe quelle fonction décorée avec :py:meth:`~connector.queue.job.job` "
+"peut être envoyée dans la queue de jobs en utilisant la fonction ``delay()`` "
+"et sera lancée aussi tôt que possible ::"
+
+#: ../../guides/code_overview.rst:107
+msgid "There is a few things happening there:"
+msgstr "Voici les choses qui se passent à ce moment :"
+
+#: ../../guides/code_overview.rst:109
+msgid "We find the backend on which we'll export the invoice."
+msgstr "Nous trouvons le backend vers lequel exporter la facture."
+
+#: ../../guides/code_overview.rst:110
+msgid ""
+"We build an :py:class:`~connector.connector.Environment` with the current :"
+"py:class:`~connector.session.ConnectorSession`, the model we work with and "
+"the target backend."
+msgstr ""
+"Nous construisons un :py:class:`~connector.connector.Environment` avec la :"
+"py:class:`~connector.session.ConnectorSession` actuelle, le modèle avec "
+"lequel on travaille et le backend cible."
+
+#: ../../guides/code_overview.rst:113
+msgid ""
+"We get the :py:class:`~connector.connector.ConnectorUnit` responsible for "
+"the work using :py:meth:`~connector.connector.Environment."
+"get_connector_unit` (according the backend version and the model)  and we "
+"call ``run()`` on it."
+msgstr ""
+"Nous récupérons la :py:class:`~connector.connector.ConnectorUnit` "
+"responsable du travail grâce à :py:meth:`~connector.connector.Environment."
+"get_connector_unit` (en fonction de la version du backend et du modèle) et "
+"nous appelons sa méthode ``run()``."
+
+#: ../../guides/code_overview.rst:122 ../../guides/concepts.rst:143
+msgid "ConnectorUnit"
+msgstr "ConnectorUnit"
+
+#: ../../guides/code_overview.rst:124
+msgid ""
+"These are all classes which are responsible for a specific work. The main "
+"types of :py:class:`~connector.connector.ConnectorUnit` are (the "
+"implementation of theses classes belongs to the connectors):"
+msgstr ""
+"Voici toutes les classes qui sont responsables d'un travail particulier. Les "
+"principaux types de :py:class:`~connector.connector.ConnectorUnit` sont "
+"(l'implémentation de ces classes fait partie des connecteurs):"
+
+#: ../../guides/code_overview.rst:128
+msgid ":py:class:`~connector.connector.Binder`"
+msgstr ":py:class:`~connector.connector.Binder`"
+
+#: ../../guides/code_overview.rst:133
+msgid ":py:class:`~connector.unit.mapper.Mapper`"
+msgstr ":py:class:`~connector.unit.mapper.Mapper`"
+
+#: ../../guides/code_overview.rst:138
+msgid ":py:class:`~connector.unit.backend_adapter.BackendAdapter`"
+msgstr ":py:class:`~connector.unit.backend_adapter.BackendAdapter`"
+
+#: ../../guides/code_overview.rst:140
+msgid ""
+"The ``adapters`` implements the discussion with the ``backend's`` APIs. They "
+"usually adapt their APIs to a common interface (CRUD)."
+msgstr ""
+"Les ``adaptateurs`` implémentent le dialogue avec les API du ``backend``. "
+"Elles adaptent habituellement leurs APIs à une interface commune (CRUD)."
+
+#: ../../guides/code_overview.rst:143
+msgid ":py:class:`~connector.unit.synchronizer.Synchronizer`"
+msgstr ":py:class:`~connector.unit.synchronizer.Synchronizer`"
+
+#: ../../guides/code_overview.rst:145
+msgid ""
+"The ``synchronizers`` are the main piece of a synchronization.  They define "
+"the flow of a synchronization and use the other :py:class:`~connector."
+"connector.ConnectorUnit` (the ones above or specific ones)."
+msgstr ""
+"Les ``synchroniseurs`` sont la partie principale d'une synchronisation. Ils "
+"définissent le flux de synchronisation et utilisent les :py:class:"
+"`~connector.connector.ConnectorUnit` (ceux ci-dessus ou des spécifiques)."
+
+#: ../../guides/code_overview.rst:150
+msgid ""
+"For the export of the invoice, we just need an ``adapter`` and a "
+"``synchronizer`` (the real implementation is more complete)::"
+msgstr ""
+"Pour l'export de la facture, nous avons juste besoin d'un ``adaptateur`` et "
+"d'un ``synchroniseur`` (l'implémentation réelle est plus complexe)::"
+
+#: ../../guides/concepts.rst:5
+msgid "Connector Concepts"
+msgstr "Concepts du connecteur"
+
+#: ../../guides/concepts.rst:7
+msgid ""
+"The framework to develop connectors is decoupled in small pieces of codes "
+"interacting together. Each of them can be used or not in an implementation."
+msgstr ""
+"Le framework pour développer des connecteur est découplé en composants "
+"interagissant ensemble. Chacun d'eux peut être utilisé ou non dans une "
+"implémentation."
+
+#: ../../guides/concepts.rst:13
+msgid ""
+"This document describes them from a high-level point of view and gives "
+"pointers to more concrete 'how-to' or small tutorials."
+msgstr ""
+"Ce document les décrit d'un point de vue haut-niveau et donne des pointeurs "
+"vers des « how-to » plus concrets ou de petits tutoriels."
+
+#: ../../guides/concepts.rst:25
+msgid ""
+"The basic idea is to declare an :py:class:`~connector.event.Event`, for "
+"instance :py:class:`~connector.event.on_record_create`. Then each connector "
+"has the ability to subscribe one or many function on it. The creation of a "
+"record should fire :py:class:`~connector.event.on_record_create`, which will "
+"trigger all the subscribed functions."
+msgstr ""
+"L'idée de base est de déclarer un :py:class:`~connector.event.Event`, par "
+"exemple :py:class:`~connector.event.on_record_create`. Grâce à ceci, chaque "
+"connecteur a la possibilité d'abonner une ou plusieurs fonctions sur "
+"l'événement. La création de l'enregistrement doit alors exécuter :py:class:"
+"`~connector.event.on_record_create`, qui va déclencher toutes les fonctions "
+"abonnées."
+
+#: ../../guides/concepts.rst:32
+msgid ""
+"The same event can be shared across several connectors, easing their "
+"implementation. For instance, the module connector_ecommerce_ which extends "
+"the framework with common e-commerce capabilities, adds its own events "
+"common to e-commerce."
+msgstr ""
+"Le même événement peut être partagé entre plusieurs connecteurs, facilitant "
+"ainsi leur implémentation. Par exemple, le module connector_ecommerce_ qui "
+"est une extension du framework avec des capacités courantes pour le e-"
+"commerce, ajoute ses propres événements dédiés au e-commerce."
+
+#: ../../guides/concepts.rst:38 ../../guides/concepts.rst:81
+#: ../../guides/concepts.rst:115 ../../guides/concepts.rst:136
+msgid "A connectors developer is mostly interested by:"
+msgstr "Un développeur de connecteur est principalement intéressé par :"
+
+#: ../../guides/concepts.rst:40
+msgid ""
+"register a new function on an event (see :py:class:`connector.event.Event`)"
+msgstr ""
+"abonner une nouvelle fonction à un événement (voir :py:class:`connector."
+"event.Event`)"
+
+#: ../../guides/concepts.rst:41
+msgid ""
+"unregister a function from an event (see :py:meth:`connector.event.Event."
+"unsubscribe`)"
+msgstr ""
+"désabonner une fonction d'un événement (voir :py:meth:`connector.event.Event."
+"unsubscribe`)"
+
+#: ../../guides/concepts.rst:42
+msgid ""
+"replace a consumer function by another one (see :py:class:`connector.event."
+"Event`)"
+msgstr ""
+"remplacer une fonction consommatrice par une autre (voir :py:class:"
+"`connector.event.Event`)"
+
+#: ../../guides/concepts.rst:43
+msgid ""
+"filter the events by model, so a subscribed function will be triggered only "
+"if the event happens on a registered model"
+msgstr ""
+"filtrer les événements par modèle, de sorte qu'une fonction abonnée ne soit "
+"déclenchée que pour l'événement d'un modèle particulier"
+
+#: ../../guides/concepts.rst:50
+msgid "Jobs Queue"
+msgstr "Queue de jobs"
+
+#: ../../guides/concepts.rst:52
+msgid ""
+"This section summarises the Job's Queue, which articulates around several "
+"classes, in broad terms, :py:class:`~connector.queue.job.Job` are executed "
+"by a :py:class:`~connector.queue.worker.Worker` which stores them in a :py:"
+"class:`~connector.queue.queue.JobsQueue`."
+msgstr ""
+"Cette section résume le principe des queues de jobs, qui s'articule autour "
+"de quelques classes, dans les grandes lignes, les :py:class:`~connector."
+"queue.job.Job` sont exécutés par un :py:class:`~connector.queue.worker."
+"Worker` qui les stocke dans une :py:class:`~connector.queue.queue.JobsQueue`."
+
+#: ../../guides/concepts.rst:61
+msgid ""
+"Jobs are stored in the :py:class:`~connector.queue.model.QueueJob` model."
+msgstr ""
+"Les jobs son stockés dans le modèle :py:class:`~connector.queue.model."
+"QueueJob`."
+
+#: ../../guides/concepts.rst:64
+msgid ""
+"Workers are stored in the :py:class:`~connector.queue.model.QueueWorker` "
+"model. A :py:class:`~connector.queue.worker.WorkerWatcher` create or destroy "
+"new workers when new :py:class:`~openerp.modules.registry.Registry` are "
+"created or destroyed, and signal the aliveness of the workers."
+msgstr ""
+"Les workers sont stockés dans le modèle :py:class:`~connector.queue.model."
+"QueueWorker`. Un :py:class:`~connector.queue.worker.WorkerWatcher` crée ou "
+"détruit de nouveaux workers quand de nouveaux :py:class:`~openerp.modules."
+"registry.Registry` sont créés ou détruits, et signale si les workers sont en "
+"vie ou non."
+
+#: ../../guides/concepts.rst:70
+msgid ""
+"Jobs are assigned to a worker in the database by a cron. The worker loads "
+"all the jobs assigned to itself in memory in the :py:class:`~connector.queue."
+"queue.JobsQueue`. When a worker is dead, it is removed from the database, so "
+"the jobs are freeed from the worker and can be assigned to another one."
+msgstr ""
+"Les jobs sont affectés à un worker dans la base de données par une tâche "
+"récurrente (cron). Le worker charge en mémoire tous les jobs qui lui sont "
+"affectés, dans la :py:class:`~connector.queue.queue.JobsQueue`. Quand un "
+"worker s'arrête, il est supprimé de la base de données, de façon que les "
+"jobs soient libérés et affectés à un autre worker."
+
+#: ../../guides/concepts.rst:83
+msgid "Delay a job (see the decorator :py:func:`~connector.queue.job.job`)"
+msgstr ""
+"Déporter un job (voir le décorateur :py:func:`~connector.queue.job.job`)"
+
+#: ../../guides/concepts.rst:97
+msgid "Backend"
+msgstr "Backend"
+
+#: ../../guides/concepts.rst:99
+msgid ""
+"A :py:class:`~connector.backend.Backend` is a reference to an external "
+"system or service."
+msgstr ""
+"Un :py:class:`~connector.backend.Backend` est une référence à un système ou "
+"service externe à OpenERP."
+
+#: ../../guides/concepts.rst:102
+msgid ""
+"A backend is defined by a name and a version. For instance ``Magento 1.7``."
+msgstr ""
+"Un backend est défini par un nom et une version. Par exemple ``Magento 1.7``."
+
+#: ../../guides/concepts.rst:105
+msgid ""
+"A reference can have a parent. The instance ``Magento 1.7`` is the child of "
+"``Magento``."
+msgstr ""
+"Une référence peut avoir un parent. L'instance ``Magento 1.7`` est fille de "
+"``Magento``."
+
+#: ../../guides/concepts.rst:108
+msgid ""
+":py:class:`~connector.connector.ConnectorUnit` classes are registered on the "
+"backends. Then, we are able to ask a registered class to a backend. If no "
+"class is found, it will search in its parent backend."
+msgstr ""
+"Les classes :py:class:`~connector.connector.ConnectorUnit` sont inscrites "
+"dans les backends. Ceci permet de récupérer une classe inscrite dans le "
+"backend. Si aucune classe n'est trouvée, elle est cherchée dans le backend "
+"parent."
+
+#: ../../guides/concepts.rst:112
+msgid ""
+"It is always accompanied by a concrete subclass of the model :py:class:"
+"`~connector.backend_model.connector_backend`."
+msgstr ""
+"Il est toujours accompagné d'une sous-classe concrète du modèle :py:class:"
+"`~connector.backend_model.connector_backend`."
+
+#: ../../guides/concepts.rst:117
+msgid "Declare the backends (see :py:class:`connector.backend.Backend`)"
+msgstr "Déclarer les backends (voir :py:class:`connector.backend.Backend`)"
+
+#: ../../guides/concepts.rst:118
+msgid ""
+"Register a ConnectorUnit on a backend (see :py:class:`connector.backend."
+"Backend`)"
+msgstr ""
+"Inscrire un ConnectorUnit dans un backend (voir :py:class:`connector.backend."
+"Backend`)"
+
+#: ../../guides/concepts.rst:119
+msgid ""
+"Replace a ConnectorUnit on a backend (see :py:class:`connector.backend."
+"Backend`)"
+msgstr ""
+"Remplacer un ConnectorUnit dans un backend (voir :py:class:`connector."
+"backend.Backend`)"
+
+#: ../../guides/concepts.rst:120
+msgid ""
+"Use a different ConnectorUnit for a different version of a backend (see :py:"
+"class:`connector.backend.Backend`)"
+msgstr ""
+"Utiliser un ConnectorUnit différent pour une version différente d'un backend "
+"(voir :py:class:`connector.backend.Backend`)"
+
+#: ../../guides/concepts.rst:127
+msgid ""
+"An :py:class:`~connector.connector.Environment` is the scope from which we "
+"will do synchronizations."
+msgstr ""
+"Un :py:class:`~connector.connector.Environment` est le périmètre à partir "
+"duquel nous allons faire des synchronisations."
+
+#: ../../guides/concepts.rst:130
+msgid ""
+"It contains a :py:class:`~connector.backend.Backend`, a record of a concrete "
+"subclass of the model :py:class:`~connector.backend_model."
+"connector_backend`, a :py:class:`~connector.session.Session` and the name of "
+"the model to work with."
+msgstr ""
+"Il contient un :py:class:`~connector.backend.Backend`, un enregistrement "
+"d'une sous-classe concrète du modèle :py:class:`~connector.backend_model."
+"connector_backend`, une :py:class:`~connector.session.Session` et le nom du "
+"modèle avec lequel travailler."
+
+#: ../../guides/concepts.rst:138
+msgid ""
+"Get a connectorUnit from an environment (:py:meth:`connector.connector."
+"ConnectorUnit.unit_for`, :py:meth:`connector.connector.ConnectorUnit."
+"binder_for`)"
+msgstr ""
+"Récupère un ConnectorUnit depuis un environnement (:py:meth:`connector."
+"connector.ConnectorUnit.unit_for`, :py:meth:`connector.connector."
+"ConnectorUnit.binder_for`)"
+
+#: ../../guides/concepts.rst:145
+msgid ""
+":py:class:`~connector.connector.ConnectorUnit` are pluggable classes used "
+"for the synchronizations with the external systems."
+msgstr ""
+"Les :py:class:`~connector.connector.ConnectorUnit` sont des classes "
+"modulables utilisées pour la synchronisation avec des systèmes externes."
+
+#: ../../guides/concepts.rst:149
+msgid ""
+"The connector defines some base classes, which you can find below. Note that "
+"you can define your own ConnectorUnits as well."
+msgstr ""
+"Le connecteur définit des classes de bases que vous pouvez trouver ci-"
+"dessous. Notez que vous pouvez aussi définir vos propres ConnectorUnits."
+
+#: ../../guides/concepts.rst:153
+msgid "Mappings"
+msgstr "Mappings"
+
+#: ../../guides/concepts.rst:155
+msgid "The base class is :py:class:`connector.unit.mapper.Mapper`."
+msgstr "La classe de base est :py:class:`connector.unit.mapper.Mapper`."
+
+#: ../../guides/concepts.rst:160
+msgid "It supports:"
+msgstr "Il prend en charge :"
+
+#: ../../guides/concepts.rst:163
+msgid "direct mappings"
+msgstr "les mapping directs"
+
+#: ../../guides/concepts.rst:163
+msgid "Fields *a* is written in field *b*."
+msgstr "Le champ *a* est écrit dans le champ *b*."
+
+#: ../../guides/concepts.rst:169
+msgid "method mappings"
+msgstr "Les mapping par méthode"
+
+#: ../../guides/concepts.rst:166
+msgid ""
+"A method is used to convert one or many fields to one or many fields, with "
+"transformation. It can be filtered, for example only applied when the record "
+"is created or when the source fields are modified."
+msgstr ""
+"Une méthode est utilisée pour convertir un ou plusieurs champs en un ou "
+"plusieurs autres champs, avec transformation éventuelle. Il peut être "
+"filtré, par exemple appliqué uniquement lorsque l'enregistrement est créé ou "
+"quand les champs source sont modifiés."
+
+#: ../../guides/concepts.rst:173
+msgid "submapping"
+msgstr "Sous-mapping"
+
+#: ../../guides/concepts.rst:172
+msgid "a sub-record (lines of a sale order) is converted using another Mapper"
+msgstr ""
+"Un sous-enregistrement (ligne d'un bon de commande) est converti grâce à un "
+"autre Mapper"
+
+#: ../../guides/concepts.rst:176
+msgid "Synchronizers"
+msgstr "Synchroniseurs"
+
+#: ../../guides/concepts.rst:178
+msgid "The base class is :py:class:`connector.unit.synchronizer.Synchronizer`."
+msgstr ""
+"La classe de base est :py:class:`connector.unit.synchronizer.Synchronizer`."
+
+#: ../../guides/concepts.rst:180
+msgid ""
+"A synchronizer defines the flow of a synchronization with a backend. It can "
+"be a record's import or export, a deletion of something, or anything else. "
+"For instance, it will use the mappings to convert the data between both "
+"systems, the backend adapters to read or write data on the backend and the "
+"binders to create the link between them."
+msgstr ""
+"Un synchroniseur définit le flux de la synchronisation avec un backend. Il "
+"peut correspondre à un import ou un export, une suppression de quelque "
+"chose, ou n'importe quoi d'autre. Par exemple, il peut utiliser les mappeurs "
+"pour convertir des données entre les deux systèmes, les adaptateurs de "
+"backend pour lire ou écrire les données sur le backend et les binders pour "
+"créer le lien entre eux."
+
+#: ../../guides/concepts.rst:189
+msgid "Backend Adapters"
+msgstr "Adaptateurs de backend"
+
+#: ../../guides/concepts.rst:191
+msgid ""
+"The base class is :py:class:`connector.unit.backend_adapter.BackendAdapter`."
+msgstr ""
+"La classe de base est :py:class:`connector.unit.backend_adapter."
+"BackendAdapter`."
+
+#: ../../guides/concepts.rst:194
+msgid ""
+"An external adapter has a common interface to speak with the backend. It "
+"translates the basic orders (search, read, write) to the protocol used by "
+"the backend."
+msgstr ""
+"Un adaptateur externe possède une interface commune pour parler avec le "
+"backend. Il traduit les commandes basiques (recherche, lecture, écriture) "
+"vers le protocole utilisé par le backend."
+
+#: ../../guides/concepts.rst:199
+msgid "Binders"
+msgstr "Binders (Liants)"
+
+#: ../../guides/concepts.rst:201
+msgid "The base class is :py:class:`connector.connector.Binder`."
+msgstr "La classe de base est :py:class:`connector.connector.Binder`."
+
+#: ../../guides/concepts.rst:217
+msgid ""
+"The proposed implementation for the connectors widely use the `_inherits` "
+"capabilities."
+msgstr ""
+"L'implémentation proposée pour les connecteurs utilise largement les "
+"capacités de l'`_inherits`."
+
+#: ../../guides/concepts.rst:220
+msgid "Say we import a customer from *Magento*."
+msgstr "Disons que nous importons un client depuis *Magento*."
+
+#: ../../guides/concepts.rst:222
+msgid ""
+"We create a `magento.res.partner` model, which `_inherits` `res.partner`."
+msgstr ""
+"Nous créons un modèle `magento.res.partner`, qui `_inherits` `res.partner`."
+
+#: ../../guides/concepts.rst:228
+msgid ""
+"It also stores all the necessary metadata related to this customer coming "
+"from Magento."
+msgstr ""
+"Il stocke également toutes les métadonnées nécessaires à ce client venant de "
+"Magento"
+
+#: ../../guides/concepts.rst:235
+msgid "Checkpoint"
+msgstr "Point de contrôle"
+
+#: ../../guides/concepts.rst:237
+msgid ""
+"A checkpoint is a record in the model `connector.checkpoint` linked to a "
+"model and a record, the connectors can create a new one when the user needs "
+"to review imported documents."
+msgstr ""
+"Un point de contrôle est un enregistrement du modèle `connector.checkpoint` "
+"lié à un modèle et un enregistrement. Les connecteurs peuvent en créer de "
+"nouveaux quand l'utilisateur a besoin de vérifier des documents importés."
+
+#: ../../guides/multiprocessing.rst:6
+msgid "Use the connector with multiprocessing"
+msgstr "Connecteur et multiprocessing"
+
+#: ../../guides/multiprocessing.rst:22
+msgid "Example::"
+msgstr "Exemple ::"
+
+#: ../../guides/multiprocessing.rst:27
+msgid ""
+"The 'Enqueue Jobs' scheduled action is useless when multiprocessing is used."
+msgstr "L'action planifiée 'Enqueue Jobs' est inutile en mode multi-processus."
+
+#: ../../guides/multiprocessing.rst:34
+msgid ""
+"The Magento Connector's buildout contains builtin commands to launch the "
+"workers: :ref:`connectormagento:installation-with-buildout`"
+msgstr ""
+"Le `buildout` du connecteur Magento contient des commandes intégrées pour "
+"lancer les workers : :ref:`connectormagento:installation-with-buildout`"
+
+#: ../../guides/bootstrap_connector.rst:13
+msgid "`Odoo Magento Connector`_"
+msgstr "`Connecteur Odoo Magento`_"
+
+#: ../../guides/bootstrap_connector.rst:14
+msgid "`Odoo Prestashop Connector`_"
+msgstr "`Connecteur Odoo Prestashop`_"
+
+#: ../../guides/bootstrap_connector.rst:19
+msgid ""
+"For the sake of the example, we'll imagine we have to synchronize Odoo with "
+"a coffee machine."
+msgstr ""
+"Pour cet exemple nous allons imaginer que nous devons synchroniser Odoo avec "
+"une machine à café."
+
+#: ../../guides/bootstrap_connector.rst:24
+msgid "Odoo Manifest"
+msgstr ""
+
+#: ../../guides/bootstrap_connector.rst:26
+msgid ""
+"As we want to synchronize Odoo with a coffee machine, we'll name our "
+"connector connector_coffee."
+msgstr ""
+"Comme nous voulons synchroniser Odoo avec une machine à café, nous allons "
+"nommer notre connecteur connector_coffee"
+
+#: ../../guides/bootstrap_connector.rst:29
+msgid ""
+"First, we need to create the Odoo addons itself, editing the "
+"``connector_coffee/__openerp__.py`` manifest."
+msgstr ""
+"Tout d'abord, nous devons créer le module Odoo lui-même, en modifiant le "
+"fichier ``connector_coffee/__openerp__.py``."
+
+#: ../../guides/bootstrap_connector.rst:85
+msgid ""
+"The reason for this is that Odoo may import the Python modules of "
+"uninstalled modules, so it automatically registers the events and "
+"ConnectorUnit classes, even for uninstalled modules."
+msgstr ""
+"La raison de ce fonctionnement est qu'Odoo importe les modules Python des "
+"addons non installés, donc il inscrit automatiquement les événements et les "
+"classes ConnectorUnit, même pour les modules non installés."
+
+#: ../../guides/bootstrap_connector.rst:244
+msgid ""
+"Their implementation can vary a lot. Have a look on the `Odoo Magento "
+"Connector`_ and `Odoo Prestashop Connector`_ projects."
+msgstr ""
+"Leur implémentation peut varier énormément. Jetez un œil aux projets "
+"`Connecteur Odoo Magento`_ et `Connecteur Odoo Prestashop`_."
+
+#: ../../guides/code_overview.rst:34
+msgid ""
+"The ``binding`` is the link between an Odoo record and an external record. "
+"There is no forced implementation for the ``bindings``. The most "
+"straightforward techniques are: storing the external ID in the same model "
+"(``account.invoice``), in a new link model or in a new link model which "
+"``_inherits`` ``account.invoice``. Here we choose the latter solution::"
+msgstr ""
+"Un ``binding`` est ce qui permet de lier un enregistrement Odoo et un "
+"enregistrement externe. Il n'y a pas d'obligation pour l'implémentation des "
+"``liaisons``. Les techniques les plus évidentes sont: stocker les ID "
+"externes dans le même modèle (``account.invoice``), dans un modèle de "
+"liaison ou dans un modèle de laison qui ``_inherits`` ``account.invoice``. "
+"Ici nous choisissons la dernière solution ::"
+
+#: ../../guides/code_overview.rst:130
+msgid ""
+"The ``binders`` give the external ID or Odoo ID from respectively an Odoo ID "
+"or an external ID."
+msgstr ""
+"Les ``binders`` (liants) donnent l'ID externe ou l'ID Odoo en fonction, "
+"respectivement, d'un ID Odoo ou d'un ID externe."
+
+#: ../../guides/code_overview.rst:135
+msgid ""
+"The ``mappers`` transform a external record into an Odoo record or "
+"conversely."
+msgstr ""
+"Les ``mappeurs`` transforment un enregistrement externe en enregistrement "
+"Odoo ou l'inverse."
+
+#: ../../guides/concepts.rst:11
+msgid "An example of implementation is the `Odoo Magento Connector`_."
+msgstr "Un exemple d'implémentation est le `Connecteur Odoo Magento`_."
+
+#: ../../guides/concepts.rst:22
+msgid ""
+"Events are hooks in Odoo on which we can plug some actions. They are based "
+"on an Observer pattern."
+msgstr ""
+"Les événements sont des points d'accroche dans Odoo sur lesquels on peut "
+"brancher des actions. Ils sont basés sur le motif de conception « "
+"Observateur »."
+
+#: ../../guides/concepts.rst:77
+msgid ""
+"When multiple Odoo processes are running, a worker per process is running, "
+"but only those which are *CronWorkers* enqueue and execute jobs, to avoid to "
+"clutter the HTTP processes."
+msgstr ""
+"Si plusieurs processus Odoo sont en marche, il y a un worker par processus, "
+"mais seuls ceux qui sont des *CronWorkers* traitent les jobs dans la queue, "
+"pour éviter d'encombrer les processus HTTP."
+
+#: ../../guides/concepts.rst:90
+msgid ""
+"A :py:class:`~connector.session.ConnectorSession` is a container for the "
+"usual ``cr``, ``uid``, ``context`` used in Odoo. Now, it contains the Odoo "
+"``Environment`` as ``self.env``. We use them accross the connectors."
+msgstr ""
+"Une :py:class:`~connector.session.ConnectorSession` est un conteneur pour "
+"les classiques ``cr``, ``uid``, ``context`` utilisés dans Odoo. Maintenant "
+"il contient l'``Environment`` Odoo dans ``self.env``. Nous les utilisons au "
+"sein des connecteurs."
+
+#: ../../guides/concepts.rst:157
+msgid ""
+"A mapping translates an external record to an Odoo record and conversely."
+msgstr ""
+"Un mapping convertit un enregistrement externe en un enregistrement Odoo et "
+"inversement."
+
+#: ../../guides/concepts.rst:204
+msgid ""
+"Binders are classes which know how to find the external ID for an Odoo ID, "
+"how to find the Odoo ID for an external ID and how to create the binding "
+"between them."
+msgstr ""
+"Les Binders sont des classes qui savent comment trouver l'ID externe depuis "
+"un ID Odoo, comment trouver l'ID Odoo depuis un ID externe et comment créer "
+"le lien entre elles."
+
+#: ../../guides/concepts.rst:215
+msgid "Here a binding means the link of a record between Odoo and a backend."
+msgstr ""
+"Ici, un « binding » signifie le lien d'un enregistrement entre Odoo et un "
+"backend."
+
+#: ../../guides/concepts.rst:225
+msgid ""
+"This model, called a *binding* model, knows the ID of the partner in Odoo, "
+"the ID in Magento and the relation to the backend model."
+msgstr ""
+"Ce modèle, appelé modèle de *binding* (liaison), connaît les ID du `partner` "
+"dans Odoo, l'ID dans Magento et la relation avec le modèle backend."
+
+#: ../../guides/multiprocessing.rst:8
+msgid ""
+"When Odoo is launched with 1 process, the jobs worker will run threaded in "
+"the same process."
+msgstr ""
+"Quand Odoo est lancé avec un seul processus, le worker de jobs fonctionne "
+"dans un thread."
+
+#: ../../guides/multiprocessing.rst:11
+msgid ""
+"When Odoo is launched with multiple processes using the option ``--"
+"workers``, the jobs workers are not independant processes, however, you have "
+"to launch them separately with the script ``openerp-connector-worker`` "
+"located in the connector module."
+msgstr ""
+"Quand Odoo est lancé en multi-processus grâce à l'option ``--workers``, les "
+"workers de jobs ne sont pas des processus indépendants, mais vous devez les "
+"lancer séparément avec le script ``openerp-connector-worker`` situé dans le "
+"module `connector`."
+
+#: ../../guides/multiprocessing.rst:16
+msgid ""
+"It takes the same arguments and configuration file than the Odoo server."
+msgstr ""
+"Il prend les mêmes arguments et fichier de configuration que le serveur Odoo."
+
+#: ../../guides/multiprocessing.rst:19
+msgid ""
+"The Python path must contain the path to the Odoo server when ``openerp-"
+"connector-worker`` is launched."
+msgstr ""
+"Le `path` de Python doit contenir le chemin vers le serveur Odoo quand "
+"``openerp-connector-worker`` est lancé."
+
+#: ../../guides/multiprocessing.rst:30
+msgid ""
+"The ``openerp-connector-worker`` should not be launched alongside Odoo when "
+"the latter does not run in multiprocess mode, because the interprocess "
+"signaling would not be done."
+msgstr ""
+"Le script ``openerp-connector-worker`` ne doit pas être lancé avec Odoo "
+"quand ce dernier ne fonctionne pas en multi-processus, parce que les signaux "
+"inter-processus ne seraient pas transmis."
+
+#~ msgid "`OpenERP Magento Connector`_"
+#~ msgstr "`Connecteur OpenERP Magento`_"
+
+#~ msgid "`OpenERP Prestashop Connector`_"
+#~ msgstr "`Connecteur OpenERP Prestashop`_"
+
+#~ msgid ""
+#~ "For the sake of the example, we'll imagine we have to synchronize OpenERP "
+#~ "with a coffee machine."
+#~ msgstr ""
+#~ "Pour cet exemple nous allons imaginer que nous devons synchroniser "
+#~ "OpenERP avec une machine à café."
+
+#~ msgid "OpenERP Manifest"
+#~ msgstr "Manifest OpenERP"
+
+#~ msgid ""
+#~ "As we want to synchronize OpenERP with a coffee machine, we'll name our "
+#~ "connector connector_coffee."
+#~ msgstr ""
+#~ "Comme nous voulons synchroniser OpenERP avec une machine à café, nous "
+#~ "allons nommer notre connecteur connector_coffee"
+
+#~ msgid ""
+#~ "First, we need to create the OpenERP addons itself, editing the "
+#~ "``connector_coffee/__openerp__.py`` manifest."
+#~ msgstr ""
+#~ "Tout d'abord, nous devons créer le module OpenERP lui-même, en modifiant "
+#~ "le fichier ``connector_coffee/__openerp__.py``."
+
+#~ msgid ""
+#~ "The reason for this is that OpenERP may import the Python modules of "
+#~ "uninstalled modules, so it automatically registers the events and "
+#~ "ConnectorUnit classes, even for uninstalled modules."
+#~ msgstr ""
+#~ "La raison de ce fonctionnement est qu'OpenERP importe les modules Python "
+#~ "des addons non installés, donc il inscrit automatiquement les événements "
+#~ "et les classes ConnectorUnit, même pour les modules non installés."
+
+#~ msgid ""
+#~ "Their implementation can vary a lot. Have a look on the `OpenERP Magento "
+#~ "Connector`_ and `OpenERP Prestashop Connector`_ projects."
+#~ msgstr ""
+#~ "Leur implémentation peut varier énormément. Jetez un œil aux projets "
+#~ "`Connecteur OpenERP Magento`_ et `Connecteur OpenERP Prestashop`_."
+
+#~ msgid ""
+#~ "The ``binding`` is the link between an OpenERP record and an external "
+#~ "record. There is no forced implementation for the ``bindings``. The most "
+#~ "straightforward techniques are: storing the external ID in the same model "
+#~ "(``account.invoice``), in a new link model or in a new link model which "
+#~ "``_inherits`` ``account.invoice``. Here we choose the latter solution::"
+#~ msgstr ""
+#~ "Un ``binding`` est ce qui permet de lier un enregistrement OpenERP et un "
+#~ "enregistrement externe. Il n'y a pas d'obligation pour l'implémentation "
+#~ "des ``liaisons``. Les techniques les plus évidentes sont: stocker les ID "
+#~ "externes dans le même modèle (``account.invoice``), dans un modèle de "
+#~ "liaison ou dans un modèle de laison qui ``_inherits`` ``account."
+#~ "invoice``. Ici nous choisissons la dernière solution ::"
+
+#~ msgid ""
+#~ "The ``binders`` give the external ID or OpenERP ID from respectively an "
+#~ "OpenERP ID or an external ID."
+#~ msgstr ""
+#~ "Les ``binders`` (liants) donnent l'ID externe ou l'ID OpenERP en "
+#~ "fonction, respectivement, d'un ID OpenERP ou d'un ID externe."
+
+#~ msgid ""
+#~ "The ``mappers`` transform a external record into an OpenERP record or "
+#~ "conversely."
+#~ msgstr ""
+#~ "Les ``mappeurs`` transforment un enregistrement externe en enregistrement "
+#~ "OpenERP ou l'inverse."
+
+#~ msgid "An example of implementation is the `OpenERP Magento Connector`_."
+#~ msgstr "Un exemple d'implémentation est le `Connecteur OpenERP Magento`_."
+
+#~ msgid ""
+#~ "When multiple OpenERP processes are running, a worker per process is "
+#~ "running, but only those which are *CronWorkers* enqueue and execute jobs, "
+#~ "to avoid to clutter the HTTP processes."
+#~ msgstr ""
+#~ "Si plusieurs processus OpenERP sont en marche, il y a un worker par "
+#~ "processus, mais seuls ceux qui sont des *CronWorkers* traitent les jobs "
+#~ "dans la queue, pour éviter d'encombrer les processus HTTP."
+
+#~ msgid ""
+#~ "A :py:class:`~connector.session.ConnectorSession` is a container for the "
+#~ "usual ``cr``, ``uid``, ``context`` used in OpenERP. Now, it contains the "
+#~ "Odoo ``Environment`` as ``self.env``. We use them accross the connectors."
+#~ msgstr ""
+#~ "Une :py:class:`~connector.session.ConnectorSession` est un conteneur pour "
+#~ "les classiques ``cr``, ``uid``, ``context`` utilisés dans OpenERP. "
+#~ "Maintenant il contient l'``Environment`` Odoo dans ``self.env``. Nous les "
+#~ "utilisons au sein des connecteurs."
+
+#~ msgid ""
+#~ "A mapping translates an external record to an OpenERP record and "
+#~ "conversely."
+#~ msgstr ""
+#~ "Un mapping convertit un enregistrement externe en un enregistrement "
+#~ "OpenERP et inversement."
+
+#~ msgid ""
+#~ "Binders are classes which know how to find the external ID for an OpenERP "
+#~ "ID, how to find the OpenERP ID for an external ID and how to create the "
+#~ "binding between them."
+#~ msgstr ""
+#~ "Les Binders sont des classes qui savent comment trouver l'ID externe "
+#~ "depuis un ID OpenERP, comment trouver l'ID OpenERP depuis un ID externe "
+#~ "et comment créer le lien entre elles."
+
+#~ msgid ""
+#~ "Here a binding means the link of a record between OpenERP and a backend."
+#~ msgstr ""
+#~ "Ici, un « binding » signifie le lien d'un enregistrement entre OpenERP et "
+#~ "un backend."
+
+#~ msgid ""
+#~ "This model, called a *binding* model, knows the ID of the partner in "
+#~ "OpenERP, the ID in Magento and the relation to the backend model."
+#~ msgstr ""
+#~ "Ce modèle, appelé modèle de *binding* (liaison), connaît les ID du "
+#~ "`partner` dans OpenERP, l'ID dans Magento et la relation avec le modèle "
+#~ "backend."
+
+#~ msgid ""
+#~ "When OpenERP is launched with 1 process, the jobs worker will run "
+#~ "threaded in the same process."
+#~ msgstr ""
+#~ "Quand OpenERP est lancé avec un seul processus, le worker de jobs "
+#~ "fonctionne dans un thread."
+
+#~ msgid ""
+#~ "When OpenERP is launched with multiple processes using the option ``--"
+#~ "workers``, the jobs workers are not independant processes, however, you "
+#~ "have to launch them separately with the script ``openerp-connector-"
+#~ "worker`` located in the connector module."
+#~ msgstr ""
+#~ "Quand OpenERP est lancé en multi-processus grâce à l'option ``--"
+#~ "workers``, les workers de jobs ne sont pas des processus indépendants, "
+#~ "mais vous devez les lancer séparément avec le script ``openerp-connector-"
+#~ "worker`` situé dans le module `connector`."
+
+#~ msgid ""
+#~ "It takes the same arguments and configuration file than the OpenERP "
+#~ "server."
+#~ msgstr ""
+#~ "Il prend les mêmes arguments et fichier de configuration que le serveur "
+#~ "OpenERP."
+
+#~ msgid ""
+#~ "The Python path must contain the path to the OpenERP server when "
+#~ "``openerp-connector-worker`` is launched."
+#~ msgstr ""
+#~ "Le `path` de Python doit contenir le chemin vers le serveur OpenERP quand "
+#~ "``openerp-connector-worker`` est lancé."
+
+#~ msgid ""
+#~ "The ``openerp-connector-worker`` should not be launched alongside OpenERP "
+#~ "when the latter does not run in multiprocess mode, because the "
+#~ "interprocess signaling would not be done."
+#~ msgstr ""
+#~ "Le script ``openerp-connector-worker`` ne doit pas être lancé avec "
+#~ "OpenERP quand ce dernier ne fonctionne pas en multi-processus, parce que "
+#~ "les signaux inter-processus ne seraient pas transmis."
+
+#~ msgid ""
+#~ "Events are hooks in OpenERP on which we can plug some actions. They are "
+#~ "based on an Observer pattern."
+#~ msgstr ""
+#~ "Les événements sont des points d'accroche dans OpenERP sur lesquels on "
+#~ "peut brancher des actions. Ils sont basés sur le motif de conception « "
+#~ "Observateur »."

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_connector_checkpoint_form" model="ir.ui.view">
+            <field name="name">connector.checkpoint.form</field>
+            <field name="model">connector.checkpoint</field>
+            <field name="arch" type="xml">
+                <form string="Connector Checkpoint" create="false"
+                        delete="false" edit="false" version="7.0">
+                    <header>
+                        <button name="reviewed"
+                            type="object"
+                            class="oe_highlight"
+                            states="need_review"
+                            string="Reviewed"/>
+                        <field name="state"
+                            widget="statusbar"
+                            statusbar_visible="need_review,reviewed"
+                            statusbar_colors='{"reviewed":"grey"}'/>
+                    </header>
+                    <sheet>
+                        <h1>
+                            Click on the <field name="model_id" class="oe_inline" options='{"no_open": 1}'/>
+                            to verify it:
+                            <field name="record"/>
+                        </h1>
+                        <group>
+                            <field name="backend_id"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_connector_checkpoint_tree" model="ir.ui.view">
+            <field name="name">connector.checkpoint.tree</field>
+            <field name="model">connector.checkpoint</field>
+            <field name="arch" type="xml">
+                <tree string="Connector Checkpoint" create="false"
+                        delete="false" edit="false" version="7.0">
+                    <field name="model_id"/>
+                    <field name="record"/>
+                    <field name="backend_id"/>
+                    <field name="state"/>
+                    <button name="reviewed"
+                        type="object"
+                        class="oe_highlight"
+                        icon="kanban-apply"
+                        states="need_review"
+                        string="Reviewed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_connector_checkpoint_search" model="ir.ui.view">
+            <field name="name">connector.checkpoint.search</field>
+            <field name="model">connector.checkpoint</field>
+            <field name="arch" type="xml">
+                <search string="Connector Checkpoint">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <filter name="need_review" string="Need Review"
+                        domain="[('state', '=', 'need_review')]"/>
+                    <filter name="reviewed" string="Reviewed"
+                        domain="[('state', '=', 'reviewed')]"/>
+                   <group string="Group By...">
+                       <filter string="Model" context="{'group_by' : 'model_id'}" />
+                   </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_connector_checkpoint" model="ir.actions.act_window">
+            <field name="name">Connector Checkpoint</field>
+            <field name="res_model">connector.checkpoint</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_connector_checkpoint_tree"/>
+            <field name="help" type="html">
+                <p>No record to check.</p>
+                <p> When a connector imports new records which have
+                    configuration or reviews to do manually, they
+                    will appear in this list.  Once a record has been
+                    checked, click on the 'Reviewed' button.  </p>
+                <p>The connectors list the new records to verify
+                    based on their type.  Only some need a manual
+                    review.</p>
+            </field>
+            <field name="context">{'search_default_need_review': 1}</field>
+        </record>
+
+        <record id="view_connector_checkpoint_review" model="ir.ui.view">
+            <field name="name">connector.checkpoint.review.form</field>
+            <field name="model">connector.checkpoint.review</field>
+            <field name="arch" type="xml">
+                <form string="Review Checkpoints" version="7.0">
+                    <group string="The selected checkpoints will be set as reviewed.">
+                        <field name="checkpoint_ids" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="review" string="Set as reviewed" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_connector_checkpoint_review" model="ir.actions.act_window">
+            <field name="name">Review Checkpoints</field>
+            <field name="res_model">connector.checkpoint.review</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_connector_checkpoint_review"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_connector_checkpoint_review_values" model="ir.values">
+            <field name="model_id" ref="model_connector_checkpoint" />
+            <field name="name">Review Checkpoints</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_connector_checkpoint_review'))"/>
+            <field name="key">action</field>
+            <field name="model">connector.checkpoint</field>
+        </record>
+
+    </data>
+</openerp>

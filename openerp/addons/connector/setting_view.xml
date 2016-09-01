@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_connector_menu" model="ir.actions.client">
+            <field name="name">Open Connector Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_connector_root')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_connector_menu"/>
+            <field name="state">open</field>
+        </record>
+        <record id="view_connector_config_settings" model="ir.ui.view">
+            <field name="name">Connector Settings</field>
+            <field name="model">connector.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Connector" version="7.0" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <separator string="Backends"/>
+                    <group>
+                        <label for="id" string="Backends"/>
+                        <div>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_connector_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure Connector</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">connector.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_connector_config_settings" name="Connector" parent="base.menu_custom"
+            sequence="20" action="action_connector_config_settings"/>
+
+    </data>
+</openerp>
+

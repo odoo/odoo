@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Connector-related subtypes for messaging / Chatter -->
+        <record id="mt_job_failed" model="mail.message.subtype">
+            <field name="name">Job failed</field>
+            <field name="res_model">queue.job</field>
+            <field name="default" eval="True"/>
+        </record>
+
+        <record id="ir_cron_autovacuum_queue_jobs" model="ir.cron">
+            <field name="name">AutoVacuum Queue Jobs</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'queue.job'" name="model"/>
+            <field eval="'autovacuum'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+    </data>
+
+    <data noupdate="0">
+
+        <record model="queue.job.channel" id="channel_root">
+            <field name="name">root</field>
+        </record>
+
+    </data>
+</openerp>

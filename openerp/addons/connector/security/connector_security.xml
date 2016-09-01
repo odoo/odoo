@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record model="ir.module.category" id="module_category_connector">
+        <field name="name">Connector</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="group_connector_manager" model="res.groups">
+        <field name="name">Connector Manager</field>
+        <field name="category_id" ref="module_category_connector"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+    </data>
+    
+    <data noupdate="1">
+
+    <record id="queue_job_comp_rule" model="ir.rule">
+      <field name="name" >Queue job multi-company</field>
+      <field name="model_id" ref="model_queue_job"/>
+      <field name="global" eval="True"/>
+      <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+  </data>
+ 
+</openerp>
