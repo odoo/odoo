@@ -283,7 +283,7 @@ class stock_picking(osv.osv):
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
         if context is None:
             context = {}
-        partner, currency_id, company_id = key
+        partner, currency_id, company_id, user_id = key
         if inv_type in ('out_invoice', 'out_refund'):
             account_id = partner.property_account_receivable.id
             payment_term = partner.property_payment_term.id or False
@@ -293,7 +293,7 @@ class stock_picking(osv.osv):
         return {
             'origin': move.picking_id.name,
             'date_invoice': context.get('date_inv', False),
-            'user_id': uid,
+            'user_id': user_id,
             'partner_id': partner.id,
             'account_id': account_id,
             'payment_term': payment_term,
@@ -315,7 +315,7 @@ class stock_picking(osv.osv):
             origin = move.picking_id.name
             partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
 
-            key = (partner, currency_id, company.id)
+            key = (partner, currency_id, company.id, uid)
             invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
 
             if key not in invoices:
