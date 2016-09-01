@@ -827,8 +827,9 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _get_display_price(self, product):
         if self.order_id.pricelist_id.discount_policy == 'without_discount':
-            return product.lst_price
-        return product.price
+            from_currency = self.order_id.company_id.currency_id
+            return from_currency.compute(product.lst_price, self.order_id.pricelist_id.currency_id)
+        return product.with_context(pricelist=self.order_id.pricelist_id.id).price
 
     @api.multi
     @api.onchange('product_id')
