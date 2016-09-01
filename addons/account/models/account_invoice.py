@@ -522,7 +522,7 @@ class AccountInvoice(models.Model):
             report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
         except IndexError:
             report_invoice = False
-        if report_invoice:
+        if report_invoice and report_invoice.attachment:
             for invoice in self:
                 with invoice.env.do_in_draft():
                     invoice.number, invoice.state = invoice.move_name, 'open'
@@ -1146,7 +1146,10 @@ class AccountInvoiceLine(models.Model):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='product_id']"):
                 if self._context['type'] in ('in_invoice', 'in_refund'):
-                    node.set('domain', "[('purchase_ok', '=', True)]")
+                    # Hack to fix the stable version 8.0 -> saas-12
+                    # purchase_ok will be moved from purchase to product in master #13271
+                    if 'purchase_ok' in self.env['product.template']._fields:
+                        node.set('domain', "[('purchase_ok', '=', True)]")
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
             res['arch'] = etree.tostring(doc)

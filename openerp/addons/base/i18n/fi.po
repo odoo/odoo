@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-08-18 14:03+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"PO-Revision-Date: 2016-08-29 07:58+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -836,7 +836,7 @@ msgid ""
 "This module adds 'Allow Canceling Entries' field on form view of account journal.\n"
 "If set to true it allows user to cancel entries & invoices.\n"
 "    "
-msgstr "\nSallii kirjanpitotapahtumien peruuttamisen.\n=====================================\n\nModuuli lisää \"Salli vientien peruuttaminen\"-kentän päiväkirjoille. Jos tämä on valittuna, käyttäjä pystyy peruuttamaan vientejä ja laskuja.\n    "
+msgstr "\nSallii kirjanpitotapahtumien peruuttamisen.\n=====================================\n\nModuuli lisää \"Salli vientien peruuttaminen\"-kentän päiväkirjoille. \nJos tämä on valittuna, käyttäjä pystyy peruuttamaan vientejä ja laskuja.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -1497,7 +1497,7 @@ msgid ""
 "by the ``auth_signup`` module (signup for new users does not\n"
 "necessarily have to be enabled).\n"
 "\n"
-msgstr "\nSalatut salasanat\n===============\n\nKorvaa normaalin salasanan vahvasti salatulla salasana-hashilla.\n\nAvaimen luonnissa käytetään tällä hetkellä RSA Security LLC:n standardiversiota \"PKDF2\" yhdistettynä SHA512-salaukseen. Tämä sisältää avaimen salt-arvon käytön ja avaimen kryptauksen useilla tuhansilla salauskierroksilla.\n\nKaikki salasaat tullaan salaamaan heti kun moduuli asennetaan. Tämä voi kestää joitain minuutteja jos käyttäjiä on tuhansia.\n\nVanhat versiot salatuista salasanoista päivitetään automaattisesti tämänhetkistä skeemaa vastaavaksi, jos käytössä oli aiemmin heikompi \"md5crypt\"-avaimenluontifunktio.\n\nHuomio: moduulin asentaminen estää käyttäjän salasanan palautuksen pysyvästi. Tämän vuoksi on suositeltavaa sallia käyttäjille jonkinlainen salasanan resetointimahdollisuus, kuten \"auth_signup\"-moduulissa on toteutettu (uusien käyttäjien automaattista rekisteröitymistä ei tarvi sallia).\n"
+msgstr "\nSalatut salasanat\n===============\n\nKorvaa normaalin salasanan vahvasti salatulla salasana-hashilla.\n\nAvaimen luonnissa käytetään tällä hetkellä RSA Security LLC:n standardiversiota \"PKDF2\" yhdistettynä SHA512-salaukseen. Tämä sisältää avaimen salt-arvon käytön ja avaimen kryptauksen useilla tuhansilla salauskierroksilla.\n\nKaikki salasanat tullaan salaamaan heti kun moduuli asennetaan. Tämä voi kestää joitain minuutteja, jos käyttäjiä on tuhansia.\n\nVanhat versiot salatuista salasanoista päivitetään automaattisesti tämänhetkistä skeemaa vastaavaksi, jos käytössä oli aiemmin heikompi \"md5crypt\"-avaimenluontifunktio.\n\nHuomio: moduulin asentaminen estää käyttäjän salasanan palautuksen pysyvästi. Tämän vuoksi on suositeltavaa sallia käyttäjille jonkinlainen salasanan resetointimahdollisuus, kuten \"auth_signup\"-moduulissa on toteutettu (uusien käyttäjien automaattista rekisteröitymistä ei tarvi sallia).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -2586,7 +2586,7 @@ msgid ""
 "Product extension. This module adds:\n"
 "  * Computes standard price from the BoM of the product with a button on the product variant based\n"
 "    on the materials in the BoM and the work centers.  It can create the necessary accounting entries when necessary.\n"
-msgstr "\nSuomennos tähän kiitos\n"
+msgstr "\nTuotteiden laajennus. Tämä moduuli lisää:\n  * Laskee standardihinnan tuotteen osaluettelon perusteella. Laskenta tapahtuu tuotevariantilla olevan painikkeen avulla, käyttäen osaluettelon ja työpisteiden materiaaleja laskennassa.\nModuuli osaa myös luoda tarvittavat kirjanpidon tapahtumat silloin kun se on tarpeellista.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -7182,7 +7182,7 @@ msgstr "Luo uusi tietue Base-malliin"
 msgid ""
 "Create and manage the companies that will be managed by Odoo from here. "
 "Shops or subsidiaries can be created and maintained from here."
-msgstr "Luo ja hallitse tästä yrityksiä joita hallinnoidaan Odoon kautta. Toimipisteet ja tytäryhtiöt voidaan luoda ja hallita täällä."
+msgstr "Luo ja hallitse tästä yrityksiä, joita hallinnoidaan Odoon kautta. Toimipisteet ja tytäryhtiöt voidaan luoda ja hallita täällä."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_users
@@ -7626,7 +7626,7 @@ msgstr "Tietokannan rakenne"
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
 "type incoherence in a previous request"
-msgstr "Tietokannan \"fetch\"-funktiosta puuttuu ids ({}) ja sillä on ylimääräinen ids ({}). Tämä voi johtua tyyppien epäyhtenäisyydestä edellisessä kutsussa"
+msgstr "Tietokannan hae-funktiosta puuttuu ids ({}) ja sillä on ylimääräinen ids ({}). Tämä voi johtua tyyppien epäyhtenäisyydestä edellisessä kutsussa."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_res_id
@@ -8048,7 +8048,7 @@ msgstr "Näytä"
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_display_name
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -9436,7 +9436,7 @@ msgstr "Laiteajuri viivakoodinlukijoille"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
-msgstr "Rautapuolen ajuri ESC/POS "
+msgstr "Rautapuolen ajuri ESC/POS -tulostimille ja kassalippaille"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_scale
@@ -10046,7 +10046,7 @@ msgstr "Saapuvat siirtymät"
 #. module: base
 #: constraint:ir.actions.server:0
 msgid "Incorrect Write Record Expression"
-msgstr "Virheellinen tietueenkirjoituslause"
+msgstr "Virheellinen lauseke tietueen tallentamiselle"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_index
@@ -11861,7 +11861,7 @@ msgstr ""
 msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
-msgstr "Moduulin lataamien %s epäonnistui: tiedostoa %s ei voitu prosessoida:\n%s"
+msgstr "Moduulin lataaminen %s epäonnistui: tiedostoa %s ei voitu prosessoida:\n%s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_module
@@ -12373,7 +12373,7 @@ msgstr ""
 msgid ""
 "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
 "get the required padding size."
-msgstr "Odoo lisää automaattisesti nollia \"Seuraavan numeron\" vasemmalle puolelle, jotta numerosta saadaan oikean mittainen."
+msgstr "Odoo lisää automaattisesti nollia 'Seuraavan numeron' vasemmalle puolelle, jotta numerosta saadaan oikean mittainen."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
@@ -12436,7 +12436,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event's Tickets"
-msgstr "Tapahtuman liput verkossa"
+msgstr "Tapahtuman liput sivustolla"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event
@@ -12451,7 +12451,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_quote
 msgid "Online Proposals"
-msgstr "Ehdotukset verkossa"
+msgstr "Online-tarjoukset"
 
 #. module: base
 #: code:addons/base/res/res_config.py:551
@@ -12815,7 +12815,7 @@ msgstr "Kumppanien tunnisteet"
 #: model:ir.ui.view,arch_db:base.view_partner_title_form
 #: model:ir.ui.view,arch_db:base.view_partner_title_tree
 msgid "Partner Titles"
-msgstr ""
+msgstr "Kumppanien tittelit"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_partner_id
@@ -13618,7 +13618,7 @@ msgstr ""
 #. module: base
 #: constraint:ir.actions.server:0
 msgid "Recursion found in child server actions"
-msgstr "Palvelintoimintojen alatoiminnoista löyty rekursiota"
+msgstr "Palvelintoimintojen alatoiminnoista löytyi rekursiota"
 
 #. module: base
 #: code:addons/models.py:4026
@@ -14304,7 +14304,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_action_id
 msgid "Select the client action that has to be executed."
-msgstr "Valitse käytettävä asiaspäätteen toiminto"
+msgstr "Valitse käytettävä asiakaspäätteen toiminto"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_wkf_transition_id
@@ -14928,7 +14928,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr "Sponsorit, seurannat, agenda, tapahtumien uutiset"
+msgstr "Sponsorit, tilat, ohjelma, tapahtumien uutiset"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_sir
@@ -15552,7 +15552,7 @@ msgid ""
 "The configuration wizards are used to help you configure a new instance of "
 "Odoo. They are launched during the installation of new modules, but you can "
 "choose to restart some wizards manually from this menu."
-msgstr "Automaattisia toimintoja käytetään auttamaan uuden Odoo-instanssin konfiguroinnissa.  Ne käynnistetään uusien moduulien asennuksen aikana, mutta voit uudelleen käynnistäö joitakin automaattisia toimintoja manuaalisesti tästä valikosta."
+msgstr "Automaattisia toimintoja käytetään auttamaan uuden Odoo-instanssin konfiguroinnissa.  Ne käynnistetään uusien moduulien asennuksen aikana, mutta voit uudelleen käynnistää joitakin automaattisia toimintoja manuaalisesti tästä valikosta."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_related
@@ -15986,7 +15986,7 @@ msgstr "Aikavyöhyke"
 #: model:ir.model.fields,field_description:base.field_res_partner_tz_offset
 #: model:ir.model.fields,field_description:base.field_res_users_tz_offset
 msgid "Timezone offset"
-msgstr ""
+msgstr "Aikavyöhykkeen aikaero"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tip
@@ -15998,7 +15998,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_title_name
 #: model:ir.model.fields,field_description:base.field_res_users_title
 msgid "Title"
-msgstr "Otsikko"
+msgstr "Titteli"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_to

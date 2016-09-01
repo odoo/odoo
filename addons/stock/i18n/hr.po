@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-06-21 08:53+0000\n"
+"PO-Revision-Date: 2016-08-29 09:07+0000\n"
 "Last-Translator: Mario Jureša <mario.juresa@uvid.hr>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -226,7 +226,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Potvrdi ispo
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Potvrdi narudžbu</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -266,7 +266,7 @@ msgid ""
 "                                        <strong>Import</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n                                        <strong>Uvezi</strong><br/>\n                                        <span class=\"small\">&gt; 50 dobavljača</span>\n                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -276,7 +276,7 @@ msgid ""
 "                                        <strong> Create manually</strong><br/>\n"
 "                                        <span class=\"small\">&lt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n                                        <strong> Kreiraj ručno</strong><br/>\n                                        <span class=\"small\">&lt; 50 dobavljača</span>\n                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -294,7 +294,7 @@ msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>From the Inventory application</strong>\n"
 "                                    </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                        <strong>Iz Inventara</strong>\n                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -370,7 +370,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Activate <i>Track lots or serial numbers</i></strong> in your"
-msgstr ""
+msgstr "<strong>Uključi <i>Praćenje lotova i serijskih brojeva</i></strong> u vašem"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -403,7 +403,7 @@ msgstr "<strong>Barkod</strong>"
 msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase"
 " Order"
-msgstr ""
+msgstr "<strong>Kupovina:</strong> proizvod je kupljen od dobavljača preko prodajne narudžbe"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -1121,7 +1121,7 @@ msgstr "Prigovori/pritužbe"
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Click here to create a new transfer."
-msgstr ""
+msgstr "Kliknite za dodavanje novog prijenosa."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -5751,7 +5751,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sale Order and a Transfer Order is created"
-msgstr ""
+msgstr "Upit postaje prodajni nalog i nalog za prijenos je kreiran"
 
 #. module: stock
 #: code:addons/stock/stock.py:1884
@@ -5787,7 +5787,7 @@ msgstr ""
 #: code:addons/stock/stock.py:573
 #, python-format
 msgid "The serial number %s is already in stock"
-msgstr ""
+msgstr "Ovaj serijski broj %s je već na skladištu"
 
 #. module: stock
 #: code:addons/stock/stock.py:1195
@@ -5803,7 +5803,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_warehouse_id
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "Skladište za koje je ovo pravilo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate_warehouse_id
@@ -5897,7 +5897,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "Ovo je vlasnik količine."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_picking_type_id
@@ -6163,7 +6163,7 @@ msgstr "USPS integracija"
 #: code:addons/stock/stock.py:730
 #, python-format
 msgid "Under no circumstances should you delete or change quants yourselves!"
-msgstr ""
+msgstr "Ni pod kojim uvjetima ne brisati ili mijenjati kvante!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
@@ -6324,7 +6324,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "Koristi se za raspored \"Svih operacija\" na kanban pogledu"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -6355,7 +6355,7 @@ msgstr "Potvrđeno"
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_variant_count
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_variant_count
 msgid "Variant Number"
-msgstr ""
+msgstr "Varijanta broja"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
@@ -6509,7 +6509,7 @@ msgstr "Upozorenje: pogrešna JM!"
 #: code:addons/stock/stock.py:4315
 #, python-format
 msgid "Warning: wrong quantity!"
-msgstr ""
+msgstr "Upozorenje: pogrešna količina!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
