@@ -552,7 +552,6 @@ $.summernote.pluginEvents.codeview = function (event, editor, layoutInfo) {
     }
 };
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* fix ie and re-range to don't break snippet*/
 
@@ -950,5 +949,4 @@ $.summernote.lang.odoo = {
       redo: _t('Redo')
     }
 };
-
 });
