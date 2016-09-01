@@ -134,7 +134,7 @@ class MrpBom(models.Model):
                 templates_done |= current_line.product_id.product_tmpl_id
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity}))
             else:
-                lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity}))
+                lines_done.append((current_line, {'qty': line_quantity, 'product': current_line.product_id, 'original_qty': quantity}))
 
         return boms_done, lines_done
 
