@@ -18,7 +18,10 @@ class Pricelist(models.Model):
         return self.env.user.company_id.currency_id.id
 
     def _get_default_item_ids(self):
-        return [[0, False, {'compute_price': 'formula'}]]
+        ProductPricelistItem = self.env['product.pricelist.item']
+        vals = ProductPricelistItem.default_get(ProductPricelistItem._fields.keys())
+        vals.update(compute_price='formula')
+        return [[0, False, vals]]
 
     name = fields.Char('Pricelist Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
