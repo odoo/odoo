@@ -23,7 +23,7 @@ class TestWebsitePriceList(TransactionCase):
             show,
             self.website.pricelist_id.id,
             current_pl,
-            self.website.website_pricelist_ids
+            self.website.pricelist_ids
         )
         return pls
 
@@ -32,11 +32,11 @@ class TestWebsitePriceList(TransactionCase):
         current_pl = False
 
         country_list = {
-            False: 2,
-            'BE': 2,
-            'IT': 1,
-            'US': 1,
-            'AF': 2
+            False: 4, # Benelux, Europe, US, Public
+            'BE': 2, # Benelux, Europe
+            'IT': 1, # Europe
+            'US': 1, # US
+            'AF': 1 # Public
         }
         for country, result in country_list.items():
             pls = self.get_pl(show, current_pl, country)
@@ -47,11 +47,11 @@ class TestWebsitePriceList(TransactionCase):
         current_pl = False
 
         country_list = {
-            False: 3,
-            'BE': 3,
-            'IT': 1,
-            'US': 1,
-            'AF': 3
+            False: 5, # all
+            'BE': 3, # benelux + europe + christmas
+            'IT': 2, # europe + christmas
+            'US': 1, # US
+            'AF': 1
         }
 
         for country, result in country_list.items():
@@ -60,16 +60,18 @@ class TestWebsitePriceList(TransactionCase):
 
     def test_get_pricelist_available_promocode(self):
         christmas_pl = self.ref('website_sale.list_christmas')
+        public_pl = self.ref('product.list0')
         self.args = {
-            'show': True,
-            'current_pl': christmas_pl,
+            'show': False,
+            'current_pl': public_pl,
         }
 
         country_list = {
             False: True,
             'BE': True,
-            'IT': False,
+            'IT': True,
             'US': False,
+            'AF': False,
         }
 
         for country, result in country_list.items():
