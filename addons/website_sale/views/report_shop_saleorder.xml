@@ -22,7 +22,7 @@
                                     <t t-if="doc.payment_tx_id.state == 'pending'">
                                         <t t-raw="doc.payment_acquirer_id.pending_msg"/>
                                     </t>
-                                    <t t-if="doc.payment_tx_id.state == 'done'">
+                                    <t t-if="doc.payment_tx_id.state in ['done', 'authorized']">
                                         <t t-raw="doc.payment_acquirer_id.done_msg"/>
                                     </t>
                                     <t t-if="doc.payment_tx_id.state == 'cancel'">
