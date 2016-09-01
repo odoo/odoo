@@ -125,6 +125,7 @@
                         <group>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="country_group_ids"/>
                         </group>
                         <div groups="product.group_pricelist_item">
                             <separator string="Pricelist Items"/>
@@ -145,6 +146,16 @@
                         </div>
                     </sheet>
                 </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="inherits_website_sale_country_group_form">
+            <field name="name">website_sale.country_group.form</field>
+            <field name="model">res.country.group</field>
+            <field name="inherit_id" ref="base.view_country_group_form"/>
+            <field name="arch" type="xml">
+                <group name="country_group" position="after">
+                    <field name="pricelist_ids"/>
+                </group>
             </field>
         </record>
         <record id="product_pricelist_action2" model="ir.actions.act_window">

@@ -142,6 +142,7 @@ class SaleOrder(models.Model):
         else:
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
+            values['price_unit'] = order_line._get_display_price(order_line.product_id)
             order_line.write(values)
 
         return {'line_id': order_line.id, 'quantity': quantity}
@@ -172,8 +173,12 @@ class Website(models.Model):
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', string='Sales Team')
-    website_pricelist_ids = fields.One2many('website_pricelist', 'website_id',
-                                            string='Price list available for this Ecommerce/Website')
+    pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
+                                    string='Price list available for this Ecommerce/Website')
+
+    @api.one
+    def _compute_pricelist_ids(self):
+        self.pricelist_ids = self.env["product.pricelist"].search([("website_id", "=", self.id)])
 
     @api.multi
     def _compute_pricelist_id(self):
@@ -199,12 +204,12 @@ class Website(models.Model):
         pricelists = self.env['product.pricelist']
         if country_code:
             for cgroup in self.env['res.country.group'].search([('country_ids.code', '=', country_code)]):
-                for group_pricelists in cgroup.website_pricelist_ids:
-                    if not show_visible or group_pricelists.selectable or group_pricelists.pricelist_id.id in (current_pl, order_pl):
-                        pricelists |= group_pricelists.pricelist_id
+                for group_pricelists in cgroup.pricelist_ids:
+                    if not show_visible or group_pricelists.selectable or group_pricelists.id in (current_pl, order_pl):
+                        pricelists |= group_pricelists
 
-        if not pricelists:  # no pricelist for this country, or no GeoIP
-            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.pricelist_id.id in (current_pl, order_pl)).mapped('pricelist_id')
+        if not pricelists and not country_code:  # no pricelist for this country, or no GeoIP
+            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
 
         partner = self.env.user.partner_id
         if not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl:
@@ -237,7 +242,7 @@ class Website(models.Model):
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    request.session.get('website_sale_current_pl'),
-                                                   website.website_pricelist_ids,
+                                                   website.pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
                                                    order_pl=order_pl and order_pl.id or None)
         return self.env['product.pricelist'].browse(pricelists)
@@ -442,48 +447,6 @@ class Website(models.Model):
         })
 
 
-class WebsitePricelist(models.Model):
-    _name = 'website_pricelist'
-    _description = 'Website Pricelist'
-
-    name = fields.Char('Pricelist Name', compute='_get_display_name', required=True)
-    website_id = fields.Many2one('website', string="Website", required=True)
-    selectable = fields.Boolean(help="Allow the end user to choose this price list")
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
-    country_group_ids = fields.Many2many('res.country.group', 'res_country_group_website_pricelist_rel',
-                                         'website_pricelist_id', 'res_country_group_id', string='Country Groups')
-
-    def clear_cache(self):
-        # website._get_pl() is cached to avoid to recompute at each request the
-        # list of available pricelists. So, we need to invalidate the cache when
-        # we change the config of website price list to force to recompute.
-        website = self.env['website']
-        website._get_pl_partner_order.clear_cache(website)
-
-    @api.multi
-    def _get_display_name(self):
-        for website_pl in self:
-            website_pl.name = _("Website Pricelist for %s") % website_pl.pricelist_id.name
-
-    @api.model
-    def create(self, data):
-        res = super(WebsitePricelist, self).create(data)
-        self.clear_cache()
-        return res
-
-    @api.multi
-    def write(self, data):
-        res = super(WebsitePricelist, self).write(data)
-        self.clear_cache()
-        return res
-
-    @api.multi
-    def unlink(self):
-        res = super(WebsitePricelist, self).unlink()
-        self.clear_cache()
-        return res
-
-
 class ResCountry(models.Model):
     _inherit = 'res.country'
 
@@ -492,13 +455,6 @@ class ResCountry(models.Model):
 
     def get_website_sale_states(self, mode='billing'):
         return self.sudo().state_ids
-
-
-class ResCountryGroup(models.Model):
-    _inherit = 'res.country.group'
-
-    website_pricelist_ids = fields.Many2many('website_pricelist', 'res_country_group_website_pricelist_rel',
-                                             'res_country_group_id', 'website_pricelist_id', string='Website Price Lists')
 
 
 class ResPartner(models.Model):

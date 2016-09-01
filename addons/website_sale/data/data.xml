@@ -35,11 +35,9 @@
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
-        <record id="wlist0" model="website_pricelist">
+        <record model="product.pricelist" id="product.list0">
             <field name="selectable" eval="True" />
             <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='product.list0' />
-            <field name="country_group_ids" eval="[(6, 0, [ref('base.europe')])]" />
         </record>
     </data>
     <data>

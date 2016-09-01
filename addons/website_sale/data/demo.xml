@@ -712,9 +712,22 @@ Weight: 31 grams</field>
             <field name="html_color">#000000</field>
         </record>
 
+        <record id="benelux" model="res.country.group">
+            <field name="name">BeNeLux</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('base.be'),ref('base.lu'),ref('base.nl')])]"/>
+        </record>
+
+        <record id="country_group_us_ca" model="res.country.group">
+             <field name="name">US-CA</field>
+             <field name="country_ids" eval="[(6,0,[ref('base.us'),ref('base.ca')])]"/>
+        </record>
 
         <record id="list_christmas" model="product.pricelist">
             <field name="name">Christmas Pricelist</field>
+            <field name="selectable" eval="False" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
         </record>
         <record id="item_christmas" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_christmas"/>
@@ -726,6 +739,9 @@ Weight: 31 grams</field>
 
         <record id="list_benelux" model="product.pricelist">
             <field name="name">Benelux Pricelist</field>
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
         </record>
         <record id="item_benelux" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_benelux"/>
@@ -735,37 +751,31 @@ Weight: 31 grams</field>
             <field name="sequence">10</field>
         </record>
 
-        <record id="benelux" model="res.country.group">
-            <field name="name">BeNeLux</field>
-            <field name="country_ids" eval="[(6,0,[
-                ref('base.be'),ref('base.lu'),ref('base.nl')])]"/>
-        </record>
-
-        <record id="US_CA" model="res.country.group">
-            <field name="name">US-CA</field>
-            <field name="country_ids" eval="[(6,0,[
-                ref('base.us'),ref('base.ca')])]"/>
-        </record>
-
-        <record id="wlist-US" model="website_pricelist">
+        <record id="list_europe" model="product.pricelist">
+            <field name="name">Europe Pricelist</field>
             <field name="selectable" eval="True" />
             <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='product.list0' />
-            <field name="country_group_ids" eval="[(6,0,[ref('US_CA')])]" />
+            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
+        </record>
+        <record id="item_europe" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_europe"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">10</field>
+            <field name="sequence">10</field>
         </record>
 
-        <record id="wlist-CHRISTMAS" model="website_pricelist">
-            <field name="selectable" eval="False" />
-            <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='list_christmas' />
-            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+        <record id="list_us" model="product.pricelist">
+             <field name="name">US/CA Pricelist</field>
+             <field name="selectable" eval="True" />
+             <field name="website_id" ref="website.default_website" />
+             <field name="country_group_ids" eval="[(6,0,[ref('country_group_us_ca')])]" />
         </record>
-
-        <record id="wlist-BENELUX" model="website_pricelist">
-            <field name="selectable" eval="True" />
-            <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='list_benelux' />
-            <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
+        <record id="item_us" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list_us"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">10</field>
+            <field name="sequence">10</field>
         </record>
-
 </odoo>
