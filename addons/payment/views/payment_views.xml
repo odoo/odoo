@@ -25,6 +25,7 @@
                 <form string="Payment Acquirer">
                     <field name="environment" invisible='1'/>
                     <field name="fees_implemented" invisible='1'/>
+                    <field name="token_implemented" invisible='1'/>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
@@ -79,6 +80,7 @@
                             <page string="Configuration">
                                 <group name="acquirer_config">
                                     <field name="auto_confirm" widget="radio"/>
+                                    <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                     <field name="journal_id" attrs="{'required': [('auto_confirm', '=', 'generate_and_pay_invoice')], 'invisible': [('auto_confirm', '!=', 'generate_and_pay_invoice')]}"/>
                                     <label for="view_template_id" groups="base.group_no_one"/>
                                     <div groups="base.group_no_one">

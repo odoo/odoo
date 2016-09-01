@@ -24,6 +24,22 @@ class PaymentAcquirerAuthorize(models.Model):
     authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize')
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize')
 
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+        """
+        res = super(PaymentAcquirerAuthorize, self)._get_feature_support()
+        res['authorize'].append('authorize')
+        res['tokenize'].append('authorize')
+        return res
+
     def _get_authorize_urls(self, environment):
         """ Authorize URLs """
         if environment == 'prod':
@@ -169,11 +185,29 @@ class TxAuthorize(models.Model):
             return True
         status_code = int(data.get('x_response_code', '0'))
         if status_code == self._authorize_valid_tx_status:
-            self.write({
-                'state': 'done' if data.get('x_type').lower() in ['auth_capture', 'prior_auth_capture'] else 'authorized',
-                'acquirer_reference': data.get('x_trans_id'),
-                'date_validate': fields.Datetime.now() if data.get('x_type').lower() in ['auth_capture', 'prior_auth_capture'] else False,
-            })
+            if data.get('x_type').lower() in ['auth_capture', 'prior_auth_capture']:
+                self.write({
+                    'state': 'done',
+                    'acquirer_reference': data.get('x_trans_id'),
+                    'date_validate': fields.Datetime.now(),
+                })
+            elif data.get('x_type').lower() in ['auth_only']:
+                self.write({
+                    'state': 'authorized',
+                    'acquirer_reference': data.get('x_trans_id'),
+                })
+            if self.partner_id and not self.payment_token_id and \
+               (self.type == 'form_save' or self.acquirer_id.save_token == 'always'):
+                transaction = AuthorizeAPI(self.acquirer_id)
+                res = transaction.create_customer_profile_from_tx(self.partner_id, self.acquirer_reference)
+                token_id = self.env['payment.token'].create({
+                    'authorize_profile': res.get('profile_id'),
+                    'name': res.get('name'),
+                    'acquirer_ref': res.get('payment_profile_id'),
+                    'acquirer_id': self.acquirer_id.id,
+                    'partner_id': self.partner_id.id,
+                })
+                self.payment_token_id = token_id
             return True
         elif status_code == self._authorize_pending_tx_status:
             self.write({
@@ -299,3 +333,5 @@ class PaymentToken(models.Model):
                 }
             else:
                 raise ValidationError('The Customer Profile creation in Authorize.NET failed.')
+        else:
+            return values

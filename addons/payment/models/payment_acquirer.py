@@ -101,8 +101,18 @@ class PaymentAcquirer(models.Model):
         'Error Message', translate=True,
         default='<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.',
         help='Message displayed, if error is occur during the payment process.')
+    save_token = fields.Selection([
+        ('none', 'Never'),
+        ('ask', 'Let the customer decide'),
+        ('always', 'Always')],
+        string='Store Card Data', default='none',
+        help="Determine if card data is saved as a token automatically or not. "
+        "Payment tokens allow your customer to reuse their cards in the e-commerce "
+        "or allow you to charge an invoice directly on a credit card. If set to "
+        "'let the customer decide', ecommerce customers will have a checkbox displayed on the payment page.")
+    token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support')
 
-    fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_fees_implemented')
+    fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
     fees_active = fields.Boolean('Add Extra Fees')
     fees_dom_fixed = fields.Float('Fixed domestic fees')
     fees_dom_var = fields.Float('Variable domestic fees (in percents)')
@@ -127,9 +137,12 @@ class PaymentAcquirer(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
-    @api.one
-    def _compute_fees_implemented(self):
-        self.fees_implemented = hasattr(self, '%s_compute_fees' % self.provider)
+    @api.multi
+    def _compute_feature_support(self):
+        feature_support = self._get_feature_support()
+        for acquirer in self:
+            acquirer.fees_implemented = acquirer.provider in feature_support['fees']
+            acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
     @api.multi
     def _check_required_if_provider(self):
@@ -140,9 +153,29 @@ class PaymentAcquirer(models.Model):
                 return False
         return True
 
+    @api.constrains('auto_confirm')
+    def _check_authorization_support(self):
+        for acquirer in self:
+            if acquirer.auto_confirm == 'authorize' and acquirer.provider not in self._get_feature_support()['authorize']:
+                raise ValidationError('Transaction Authorization is not supported by this payment provider.')
+        return True
+
     _constraints = [
         (_check_required_if_provider, 'Required fields not filled', []),
     ]
+
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+        """
+        return dict(authorize=[], tokenize=[], fees=[])
 
     @api.model
     def create(self, vals):
@@ -370,7 +403,7 @@ class PaymentTransaction(models.Model):
     type = fields.Selection([
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
-        ('form_save', 'Form with credentials storage')], 'Type',
+        ('form_save', 'Form with tokenization')], 'Type',
         default='form', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
