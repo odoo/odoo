@@ -15,6 +15,33 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     code = fields.Char(string='E-commerce Promotional Code')
+    website_id = fields.Many2one('website', string="Website")
+    selectable = fields.Boolean(help="Allow the end user to choose this price list")
+
+    def clear_cache(self):
+        # website._get_pl() is cached to avoid to recompute at each request the
+        # list of available pricelists. So, we need to invalidate the cache when
+        # we change the config of website price list to force to recompute.
+        website = self.env['website']
+        website._get_pl_partner_order.clear_cache(website)
+
+    @api.model
+    def create(self, data):
+        res = super(ProductPricelist, self).create(data)
+        self.clear_cache()
+        return res
+
+    @api.multi
+    def write(self, data):
+        res = super(ProductPricelist, self).write(data)
+        self.clear_cache()
+        return res
+
+    @api.multi
+    def unlink(self):
+        res = super(ProductPricelist, self).unlink()
+        self.clear_cache()
+        return res
 
 
 class ProductPublicCategory(models.Model):

@@ -28,6 +28,9 @@ class Pricelist(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency', default=_get_default_currency_id, required=True)
     company_id = fields.Many2one('res.company', 'Company')
 
+    country_group_ids = fields.Many2many('res.country.group', 'res_country_group_pricelist_rel',
+                                         'pricelist_id', 'res_country_group_id', string='Country Groups')
+
     @api.multi
     def name_get(self):
         return [(pricelist.id, '%s (%s)' % (pricelist.name, pricelist.currency_id.name)) for pricelist in self]
@@ -282,6 +285,13 @@ class Pricelist(models.Model):
     def _price_get_multi(self, pricelist, products_by_qty_by_partner):
         """ Mono pricelist, multi product - return price per product """
         return pricelist.get_products_price(zip(**products_by_qty_by_partner))
+
+
+class ResCountryGroup(models.Model):
+    _inherit = 'res.country.group'
+
+    pricelist_ids = fields.Many2many('product.pricelist', 'res_country_group_pricelist_rel',
+                                     'res_country_group_id', 'pricelist_id', string='Pricelists')
 
 
 class PricelistItem(models.Model):
