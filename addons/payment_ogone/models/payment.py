@@ -32,10 +32,25 @@ class PaymentAcquirerOgone(models.Model):
     ogone_password = fields.Char('API User Password', required_if_provider='ogone')
     ogone_shakey_in = fields.Char('SHA Key IN', size=32, required_if_provider='ogone')
     ogone_shakey_out = fields.Char('SHA Key OUT', size=32, required_if_provider='ogone')
-    ogone_alias_usage = fields.Char('Alias Usage', help="""If you want to use Ogone Aliases,
-                                                           this default Alias Usage will be presented to
-                                                           the customer as the reason you want to
-                                                           keep his payment data""")
+    ogone_alias_usage = fields.Char('Alias Usage', default="Allow saving my payment data",
+                                    help="If you want to use Ogone Aliases, this default "
+                                    "Alias Usage will be presented to the customer as the "
+                                    "reason you want to keep his payment data")
+
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+        """
+        res = super(PaymentAcquirerOgone, self)._get_feature_support()
+        res['tokenize'].append('ogone')
+        return res
 
     def _get_ogone_urls(self, environment):
         """ Ogone URLS:
@@ -156,7 +171,7 @@ class PaymentAcquirerOgone(models.Model):
             'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
             'PARAMPLUS': 'return_url=%s' % ogone_tx_values.pop('return_url') if ogone_tx_values.get('return_url') else False,
         }
-        if values.get('type') == 'form_save':
+        if self.save_token in ['ask', 'always']:
             temp_ogone_tx_values.update({
                 'ALIAS': 'ODOO-NEW-ALIAS-%s' % time.time(),    # something unique,
                 'ALIASUSAGE': values.get('alias_usage') or self.ogone_alias_usage,
@@ -238,17 +253,17 @@ class PaymentTxOgone(models.Model):
             tx.acquirer_reference = pay_id
 
         # alias was created on ogone server, store it
-        if alias:
-            Method = self.env['payment.token']
+        if alias and tx.type == 'form_save':
+            Token = self.env['payment.token']
             domain = [('acquirer_ref', '=', alias)]
             cardholder = data.get('CN')
-            if not Method.search_count(domain):
+            if not Token.search_count(domain):
                 _logger.info('Ogone: saving alias %s for partner %s' % (data.get('CARDNO'), tx.partner_id))
-                ref = Method.create({'name': data.get('CARDNO') + (' - ' + cardholder if cardholder else ''),
-                                     'partner_id': tx.partner_id.id,
-                                     'acquirer_id': tx.acquirer_id.id,
-                                     'acquirer_ref': alias})
-                tx.write({'payment_token_id': ref})
+                ref = Token.create({'name': data.get('CARDNO') + (' - ' + cardholder if cardholder else ''),
+                                    'partner_id': tx.partner_id.id,
+                                    'acquirer_id': tx.acquirer_id.id,
+                                    'acquirer_ref': alias})
+                tx.write({'payment_token_id': ref.id})
 
         return tx
 
@@ -278,7 +293,9 @@ class PaymentTxOgone(models.Model):
                 'date_validate': datetime.datetime.strptime(data['TRXDATE'], '%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             }
-            if data.get('ALIAS') and self.partner_id and self.type == 'form_save' and not self.payment_token_id:
+            if data.get('ALIAS') and self.partner_id and \
+               (self.type == 'form_save' or self.acquirer_id.save_token == 'always')\
+               and not self.payment_token_id:
                 pm = self.env['payment.token'].create({
                     'partner_id': self.partner_id.id,
                     'acquirer_id': self.acquirer_id.id,
@@ -383,7 +400,9 @@ class PaymentTxOgone(models.Model):
                 'date_validate': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': tree.get('PAYID'),
             })
-            if tree.get('ALIAS') and self.partner_id and self.type == 'form_save' and not self.payment_token_id:
+            if tree.get('ALIAS') and self.partner_id and \
+               (self.type == 'form_save' or self.acquirer_id.save_token == 'always')\
+               and not self.payment_token_id:
                 pm = self.env['payment.token'].create({
                     'partner_id': self.partner_id.id,
                     'acquirer_id': self.acquirer_id.id,
