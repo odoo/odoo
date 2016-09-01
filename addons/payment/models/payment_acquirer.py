@@ -4,6 +4,7 @@ import logging
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import float_round, image_resize_images
 from odoo.addons.base.module import module
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -14,11 +15,6 @@ def _partner_format_address(address1=False, address2=False):
 
 def _partner_split_name(partner_name):
     return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
-
-
-class ValidationError(ValueError):
-    """ Used for value error when validating transaction data coming from acquirers. """
-    pass
 
 
 class PaymentAcquirer(models.Model):
@@ -75,6 +71,7 @@ class PaymentAcquirer(models.Model):
         help="Make this payment acquirer available (Customer invoices, etc.)")
     auto_confirm = fields.Selection([
         ('none', 'No automatic confirmation'),
+        ('authorize', 'Authorize the amount and confirm the SO on acquirer confirmation'),
         ('confirm_so', 'Confirm the SO on acquirer confirmation'),
         ('generate_and_pay_invoice', 'On acquirer confirmation, confirm the SO, generate the invoice and pay it')],
         string='Order Confirmation', default='confirm_so', required=True)
@@ -104,8 +101,18 @@ class PaymentAcquirer(models.Model):
         'Error Message', translate=True,
         default='<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.',
         help='Message displayed, if error is occur during the payment process.')
+    save_token = fields.Selection([
+        ('none', 'Never'),
+        ('ask', 'Let the customer decide'),
+        ('always', 'Always')],
+        string='Store Card Data', default='none',
+        help="Determine if card data is saved as a token automatically or not. "
+        "Payment tokens allow your customer to reuse their cards in the e-commerce "
+        "or allow you to charge an invoice directly on a credit card. If set to "
+        "'let the customer decide', ecommerce customers will have a checkbox displayed on the payment page.")
+    token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support')
 
-    fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_fees_implemented')
+    fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
     fees_active = fields.Boolean('Add Extra Fees')
     fees_dom_fixed = fields.Float('Fixed domestic fees')
     fees_dom_var = fields.Float('Variable domestic fees (in percents)')
@@ -130,9 +137,12 @@ class PaymentAcquirer(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
-    @api.one
-    def _compute_fees_implemented(self):
-        self.fees_implemented = hasattr(self, '%s_compute_fees' % self.provider)
+    @api.multi
+    def _compute_feature_support(self):
+        feature_support = self._get_feature_support()
+        for acquirer in self:
+            acquirer.fees_implemented = acquirer.provider in feature_support['fees']
+            acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
     @api.multi
     def _check_required_if_provider(self):
@@ -143,9 +153,29 @@ class PaymentAcquirer(models.Model):
                 return False
         return True
 
+    @api.constrains('auto_confirm')
+    def _check_authorization_support(self):
+        for acquirer in self:
+            if acquirer.auto_confirm == 'authorize' and acquirer.provider not in self._get_feature_support()['authorize']:
+                raise ValidationError('Transaction Authorization is not supported by this payment provider.')
+        return True
+
     _constraints = [
         (_check_required_if_provider, 'Required fields not filled', []),
     ]
+
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+        """
+        return dict(authorize=[], tokenize=[], fees=[])
 
     @api.model
     def create(self, vals):
@@ -373,11 +403,12 @@ class PaymentTransaction(models.Model):
     type = fields.Selection([
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
-        ('form_save', 'Form with credentials storage')], 'Type',
+        ('form_save', 'Form with tokenization')], 'Type',
         default='form', required=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending'),
+        ('authorized', 'Authorized'),
         ('done', 'Done'),
         ('error', 'Error'),
         ('cancel', 'Canceled')], 'Status',
@@ -563,13 +594,38 @@ class PaymentTransaction(models.Model):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
+    def s2s_capture_transaction(self, **kwargs):
+        custom_method_name = '%s_s2s_capture_transaction' % self.acquirer_id.provider
+        if hasattr(self, custom_method_name):
+            return getattr(self, custom_method_name)(**kwargs)
+
+    @api.multi
+    def s2s_void_transaction(self, **kwargs):
+        custom_method_name = '%s_s2s_void_transaction' % self.acquirer_id.provider
+        if hasattr(self, custom_method_name):
+            return getattr(self, custom_method_name)(**kwargs)
+
+    @api.multi
     def s2s_get_tx_status(self):
         """ Get the tx status. """
         invalid_param_method_name = '_%s_s2s_get_tx_status' % self.acquirer_id.provider
         if hasattr(self, invalid_param_method_name):
             return getattr(self, invalid_param_method_name)()
-
         return True
+
+    @api.multi
+    def action_capture(self):
+        if any(self.mapped(lambda tx: tx.state != 'authorized')):
+            raise ValidationError('Only transactions in the Authorized status can be captured.')
+        for tx in self:
+            tx.s2s_capture_transaction()
+
+    @api.multi
+    def action_void(self):
+        if any(self.mapped(lambda tx: tx.state != 'authorized')):
+            raise ValidationError('Only transactions in the Authorized status can be voided.')
+        for tx in self:
+            tx.s2s_void_transaction()
 
 
 class PaymentToken(models.Model):
@@ -594,8 +650,10 @@ class PaymentToken(models.Model):
             custom_method_name = '%s_create' % acquirer.provider
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(values))
-
-        return super(PaymentToken, self).create(values)
+                # remove all non-model fields used by (provider)_create method to avoid warning
+                fields_wl = set(self._fields.keys()) & set(values.keys())
+                clean_vals = {field: values[field] for field in fields_wl}
+        return super(PaymentToken, self).create(clean_vals)
 
     @api.multi
     @api.depends('name')

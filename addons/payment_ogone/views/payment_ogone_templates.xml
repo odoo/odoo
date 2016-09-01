@@ -19,7 +19,7 @@
                 <input type='hidden' name='OWNERCTY' t-att-value='OWNERCTY'/>
                 <input type='hidden' name='OWNERTOWN' t-att-value='OWNERTOWN'/>
                 <input type='hidden' name='OWNERTELNO' t-att-value='OWNERTELNO'/>
-                <t t-if="type == 'form_save'">
+                <t t-if="acquirer.save_token in ['ask', 'always']">
                     <input type='hidden' name='ALIAS' t-att-value='ALIAS'/>
                     <input type='hidden' name='ALIASUSAGE' t-att-value='ALIASUSAGE'/>
                 </t>
