@@ -61,7 +61,7 @@ class Property(models.Model):
                 prop = self[0]
                 type_ = prop.type
             else:
-                type_ = self._defaults['type']
+                type_ = self._fields['type'].default(self)
 
         field = TYPE2FIELD.get(type_)
         if not field:

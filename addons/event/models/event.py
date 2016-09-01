@@ -7,6 +7,8 @@ from odoo.addons.mail.models.mail_template import format_tz
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import html_translate
 
+from dateutil.relativedelta import relativedelta
+
 
 class EventType(models.Model):
     """ Event Type """
@@ -184,7 +186,7 @@ class EventEvent(models.Model):
         readonly=False, states={'done': [('readonly', True)]})
     country_id = fields.Many2one('res.country', 'Country',  related='address_id.country_id', store=True)
     description = fields.Html(
-        string='Description', oldname='note', translate=html_translate, sanitize=False,
+        string='Description', oldname='note', translate=html_translate, sanitize_attributes=False,
         readonly=False, states={'done': [('readonly', True)]})
     # badge fields
     badge_front = fields.Html(string='Badge Front')
@@ -427,17 +429,16 @@ class EventRegistration(models.Model):
         self.ensure_one()
         today = fields.Datetime.from_string(fields.Datetime.now())
         event_date = fields.Datetime.from_string(self.event_begin_date)
-
-        if today.month == event_date.month:
-            if event_date.day == today.day:
-                return _('Today')
-            elif event_date.day - today.day == 1:
-                return _('Tomorrow')
-            elif event_date.isocalendar()[1] == today.isocalendar()[1]:
-                return _('This week')
-            else:
-                return _('This month')
-        elif event_date.month - today.month == 1:
+        diff = (event_date.date() - today.date())
+        if diff.days == 0:
+            return _('Today')
+        elif diff.days == 1:
+            return _('Tomorrow')
+        elif event_date.isocalendar()[1] == today.isocalendar()[1]:
+            return _('This week')
+        elif today.month == event_date.month:
+            return _('This month')
+        elif event_date.month == (today + relativedelta(months=+1)):
             return _('Next month')
         else:
-            return format_tz(self.event_begin_date, tz='UTC', format='%Y%m%dT%H%M%SZ')
+            return format_tz(self.env, self.event_begin_date, tz='UTC', format='%Y%m%dT%H%M%SZ')

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -101,14 +100,15 @@ class ProductProduct(models.Model):
 
         locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.user.company_id.id)])
 
-        product_accounts = {(product.id, product.product_tmpl_id.get_product_accounts()) for product in self}
-        price_precision = dp.get_precision('Product Price')
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
 
         for location in locations:
             for product in self.with_context(location=location.id, compute_child=False):
                 diff = product.standard_price - new_price
-                if tools.float_is_zero(diff, precision_digits=price_precision):
+                if diff:
                     raise UserError(_("No difference between standard price and new price!"))
+                if not product_accounts[product.id].get('stock_valuation', False):
+                    raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
                 qty_available = product.qty_available
                 if qty_available:
                     # Accounting Entries

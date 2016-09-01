@@ -27,7 +27,6 @@ class ProductTemplate(models.Model):
 
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
-    product_manager = fields.Many2one('res.users', 'Product Manager')
     description = fields.Text(
         'Description', translate=True,
         help="A precise description of the Product, used only for internal information purposes.")
@@ -85,6 +84,7 @@ class ProductTemplate(models.Model):
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
         help="Specify if the product can be selected in a sales order line.")
+    purchase_ok = fields.Boolean('Can be Purchased', default=True)
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist', store=False,
         help='Technical field. Used for searching on pricelists, not stored in database.')
@@ -110,6 +110,9 @@ class ProductTemplate(models.Model):
 
     attribute_line_ids = fields.One2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes')
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
+    # performance: product_variant_id provides prefetching on the first product variant only
+    product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
+
     product_variant_count = fields.Integer(
         '# Product Variants', compute='_compute_product_variant_count')
 
@@ -135,6 +138,11 @@ class ProductTemplate(models.Model):
         help="Small-sized image of the product. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
+
+    @api.depends('product_variant_ids')
+    def _compute_product_variant_id(self):
+        for p in self:
+            p.product_variant_id = p.product_variant_ids[:1].id
 
     @api.multi
     def _compute_currency_id(self):
@@ -181,7 +189,7 @@ class ProductTemplate(models.Model):
     def _compute_standard_price(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.standard_price = template.product_variant_ids[0].standard_price
+            template.standard_price = template.product_variant_id.standard_price
         for template in (self - unique_variants):
             template.standard_price = 0.0
 
@@ -198,7 +206,7 @@ class ProductTemplate(models.Model):
     def _compute_volume(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.volume = template.product_variant_ids[0].volume
+            template.volume = template.product_variant_id.volume
         for template in (self - unique_variants):
             template.volume = 0.0
 
@@ -211,7 +219,7 @@ class ProductTemplate(models.Model):
     def _compute_weight(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.weight = template.product_variant_ids[0].weight
+            template.weight = template.product_variant_id.weight
         for template in (self - unique_variants):
             template.weight = 0.0
 
@@ -229,7 +237,7 @@ class ProductTemplate(models.Model):
     def _compute_default_code(self):
         unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
         for template in unique_variants:
-            template.default_code = template.product_variant_ids[0].default_code
+            template.default_code = template.product_variant_id.default_code
         for template in (self - unique_variants):
             template.default_code = ''
 
@@ -292,17 +300,19 @@ class ProductTemplate(models.Model):
             return super(ProductTemplate, self).name_search(name=name, args=args, operator=operator, limit=limit)
 
         Product = self.env['product.product']
-        products = Product.search(name, args, operator=operator, limit=limit)
-        templates = products.mapped('product_tmpl_id')
-        while products and len(templates) < limit:
-            domain = [('product_tmpl_id', 'not in', templates.ids)]
+        templates = self.browse([])
+        while True:
+            domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
-            products = Product.search(name, args+domain, operator=operator)
+            products_ns = Product.name_search(name, args+domain, operator=operator)
+            products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
+            if (not products) or (len(templates) > limit):
+                break
 
         # re-apply product.template order + name_get
         return super(ProductTemplate, self).name_search(
-            '', args=[('id', 'in', templates.ids)],
+            '', args=[('id', 'in', list(set(templates.ids)))],
             operator='ilike', limit=limit)
 
     @api.multi
@@ -347,7 +357,7 @@ class ProductTemplate(models.Model):
         for tmpl_id in self.with_context(active_test=False):
             # list of values combination
             existing_variants = [set(variant.attribute_value_ids.ids) for variant in tmpl_id.product_variant_ids]
-            variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids))
+            variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids if line.value_ids and line.value_ids[0].attribute_id.create_variant))
             variant_matrix = map(lambda record_list: reduce(lambda x, y: x+y, record_list, self.env['product.attribute.value']), variant_matrix)
             to_create_variants = filter(lambda rec_set: set(rec_set.ids) not in existing_variants, variant_matrix)
 

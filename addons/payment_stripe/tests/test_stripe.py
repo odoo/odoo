@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-
+import unittest
 import odoo
 from odoo import fields
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(True)
+@odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
 class StripeCommon(PaymentAcquirerCommon):
 
@@ -15,10 +15,11 @@ class StripeCommon(PaymentAcquirerCommon):
         self.stripe = self.env.ref('payment.payment_acquirer_stripe')
 
 
-@odoo.tests.common.at_install(True)
+@odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
 class StripeTest(StripeCommon):
 
+    @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")
     def test_10_stripe_s2s(self):
         self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
 
@@ -54,6 +55,7 @@ class StripeTest(StripeCommon):
         # Check state
         self.assertEqual(tx.state, 'done', 'Stripe: Transcation has been discarded.')
 
+    @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")
     def test_20_stripe_form_render(self):
         self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
 
@@ -86,6 +88,7 @@ class StripeTest(StripeCommon):
                 'Stripe: wrong value for input %s: received %s instead of %s' % (email, email, form_values.get('email'))
             )
 
+    @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")
     def test_30_stripe_form_management(self):
         self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
 

@@ -224,7 +224,7 @@ class PosOrder(models.Model):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['partner_id'], (values['product_id'], values['name']), values['analytic_account_id'], values['debit'] > 0)
+                    key = ('product', values['partner_id'], (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']), values['analytic_account_id'], values['debit'] > 0)
                 elif data_type == 'tax':
                     key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':
@@ -238,18 +238,10 @@ class PosOrder(models.Model):
                     if not grouped_data[key]:
                         grouped_data[key].append(values)
                     else:
-                        for line in grouped_data[key]:
-                            if line.get('tax_code_id') == values.get('tax_code_id'):
-                                current_value = line
-                                current_value['quantity'] = current_value.get(
-                                    'quantity', 0.0) + values.get('quantity', 0.0)
-                                current_value['credit'] = current_value.get(
-                                    'credit', 0.0) + values.get('credit', 0.0)
-                                current_value['debit'] = current_value.get(
-                                    'debit', 0.0) + values.get('debit', 0.0)
-                                break
-                        else:
-                            grouped_data[key].append(values)
+                        current_value = grouped_data[key][0]
+                        current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
+                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
+                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
                 else:
                     grouped_data[key].append(values)
 
@@ -288,7 +280,7 @@ class PosOrder(models.Model):
                     'analytic_account_id': self._prepare_analytic_account(line),
                     'credit': ((amount > 0) and amount) or 0.0,
                     'debit': ((amount < 0) and -amount) or 0.0,
-                    'tax_ids': [(6, 0, line.tax_ids.ids)],
+                    'tax_ids': [(6, 0, line.tax_ids_after_fiscal_position.ids)],
                     'partner_id': partner_id
                 })
 

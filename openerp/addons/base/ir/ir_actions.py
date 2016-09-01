@@ -919,7 +919,6 @@ class IrActionsServer(models.Model):
             'object': obj,
             'obj': obj,
             # Deprecated use env or model instead
-            'self': model._model,
             'pool': self.pool,
             'cr': self._cr,
             'context': self._context,

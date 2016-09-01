@@ -21,6 +21,44 @@ function get_running_delay_key() {
     return get_running_key() + "_delay";
 }
 
+function get_first_visible_element($elements) {
+    for (var i = 0 ; i < $elements.length ; i++) {
+        var $i = $elements.eq(i);
+        if ($i.is(":visible") && _has_visibility($i)) {
+            return $i;
+        }
+    }
+    return $();
+
+    function _has_visibility($elem) {
+        if ($elem.css("visibility") === "hidden") {
+            return false;
+        }
+        if ($elem.is("html")) {
+            return true;
+        }
+        return _has_visibility($elem.parent());
+    }
+}
+
+function do_before_unload(if_unload_callback, if_not_unload_callback) {
+    if_unload_callback = if_unload_callback || function () {};
+    if_not_unload_callback = if_not_unload_callback || if_unload_callback;
+
+    var old_before = window.onbeforeunload;
+    var reload_timeout;
+    window.onbeforeunload = function () {
+        clearTimeout(reload_timeout);
+        window.onbeforeunload = old_before;
+        if_unload_callback();
+        if (old_before) return old_before.apply(this, arguments);
+    };
+    reload_timeout = _.defer(function () {
+        window.onbeforeunload = old_before;
+        if_not_unload_callback();
+    });
+}
+
 var RunningTourActionHelper = core.Class.extend({
     init: function (tip_widget) {
         this.tip_widget = tip_widget;
@@ -34,6 +72,9 @@ var RunningTourActionHelper = core.Class.extend({
     drag_and_drop: function (to, element) {
         this._drag_and_drop(this._get_action_values(element), to);
     },
+    keydown: function (keyCodes, element) {
+        this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
+    },
     auto: function (element) {
         var values = this._get_action_values(element);
         if (values.consume_event === "input") {
@@ -43,7 +84,11 @@ var RunningTourActionHelper = core.Class.extend({
         }
     },
     _get_action_values: function (element) {
-        var $element = element ? $(element).first() : this.tip_widget.$anchor;
+        var $e = $(element);
+        var $element = element ? get_first_visible_element($e) : this.tip_widget.$anchor;
+        if ($element.length === 0) {
+            $element = $e.first();
+        }
         var consume_event = element ? Tip.getConsumeEventType($element) : this.tip_widget.consume_event;
         return {
             $element: $element,
@@ -51,11 +96,18 @@ var RunningTourActionHelper = core.Class.extend({
         };
     },
     _click: function (values) {
-        var href = values.$element.attr("href");
-        if (href && href.length && href[0] !== "#" && values.$element.is("a")) {
-            window.location.href = href;
-        } else {
-            values.$element.mousedown().mouseup().click();
+        trigger_mouse_event(values.$element, "mouseover");
+        values.$element.trigger("mouseenter");
+        trigger_mouse_event(values.$element, "mousedown");
+        trigger_mouse_event(values.$element, "mouseup");
+        trigger_mouse_event(values.$element, "click");
+        trigger_mouse_event(values.$element, "mouseout");
+        values.$element.trigger("mouseleave");
+
+        function trigger_mouse_event($element, type) {
+            var e = document.createEvent("MouseEvents");
+            e.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
+            $element[0].dispatchEvent(e);
         }
     },
     _text: function (values, text) {
@@ -63,10 +115,17 @@ var RunningTourActionHelper = core.Class.extend({
 
         text = text || "Test";
         if (values.consume_event === "input") {
-            values.$element.val(text).trigger("input");
+            values.$element.trigger("keydown").val(text).trigger("keyup").trigger("input");
+        } else if (values.$element.is("select")) {
+            values.$element.children("option")
+                .prop("selected", false).removeProp("selected")
+                .filter(function () { return $(this).val() === text; })
+                .prop("selected", true);
+            this._click(values);
         } else {
             values.$element.text(text);
         }
+        values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
         var $to = $(to || document.body);
@@ -82,6 +141,21 @@ var RunningTourActionHelper = core.Class.extend({
         values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
         values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
         values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
+    },
+    _keydown: function (values, keyCodes) {
+        while (keyCodes.length) {
+            var keyCode = +keyCodes.shift();
+            values.$element.trigger({type: "keydown", keyCode: keyCode});
+            if ((keyCode > 47 && keyCode < 58) // number keys
+                || keyCode === 32 // spacebar
+                || (keyCode > 64 && keyCode < 91) // letter keys
+                || (keyCode > 95 && keyCode < 112) // numpad keys
+                || (keyCode > 185 && keyCode < 193) // ;=,-./` (in order)
+                || (keyCode > 218 && keyCode < 223)) {   // [\]' (in order))
+                document.execCommand("insertText", 0, String.fromCharCode(keyCode));
+            }
+            values.$element.trigger({type: "keyup", keyCode: keyCode});
+        }
     },
 });
 
@@ -106,7 +180,6 @@ return core.Class.extend({
      * @param [Array] dict of steps, each step being a dict containing a tip description
      */
     register: function() {
-        var self = this;
         var args = Array.prototype.slice.call(arguments);
         var last_arg = args[args.length - 1];
         var name = args[0];
@@ -118,12 +191,10 @@ return core.Class.extend({
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
         var tour = {
             name: name,
-            current_step: parseInt(local_storage.getItem(get_step_key(name))) || 0,
-            steps: _.filter(steps, function (step) {
-                return !step.edition || step.edition === self.edition;
-            }),
+            steps: steps,
             url: options.url,
             test: options.test,
+            wait_for: options.wait_for || $.when(),
         };
         if (options.skip_enabled) {
             tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
@@ -133,19 +204,34 @@ return core.Class.extend({
             };
         }
         this.tours[name] = tour;
-        if (this.running_tour === name || (!tour.test && !_.contains(this.consumed_tours, name))) {
-            this._to_next_step(name, 0);
-        }
+    },
+    _register_all: function (do_update) {
+        if (this._all_registered) return;
+        this._all_registered = true;
 
-        if (!this.running_tour || this.running_tour === name) {
-            this.update(name);
-        }
+        _.each(this.tours, this._register.bind(this, do_update));
+    },
+    _register: function (do_update, tour, name) {
+        if (tour.ready) return $.when();
+
+        return tour.wait_for.then((function () {
+            tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
+            tour.steps = _.filter(tour.steps, (function (step) {
+                return !step.edition || step.edition === this.edition;
+            }).bind(this));
+
+            tour.ready = true;
+
+            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !_.contains(this.consumed_tours, name)))) {
+                this._to_next_step(name, 0);
+                this.update(name);
+            }
+        }).bind(this));
     },
     run: function (tour_name, step_delay) {
         if (this.running_tour) {
-            console.warn(_.str.sprintf("Killing tour %s", tour_name));
-            this._deactivate_tip(this.active_tooltips[tour_name]);
-            this._consume_tour(tour_name);
+            this._deactivate_tip(this.active_tooltips[this.running_tour]);
+            this._consume_tour(this.running_tour, _.str.sprintf("Killing tour %s", this.running_tour));
             return;
         }
         var tour = this.tours[tour_name];
@@ -162,18 +248,12 @@ return core.Class.extend({
         this._deactivate_tip(this.active_tooltips[tour_name]);
 
         tour.current_step = 0;
+        this._to_next_step(tour_name, 0);
         local_storage.setItem(get_step_key(tour_name), tour.current_step);
-        this.active_tooltips[tour_name] = tour.steps[tour.current_step];
 
         if (tour.url) {
             this.pause();
-            var old_before = window.onbeforeunload;
-            var reload_timeout;
-            window.onbeforeunload = function () {
-                clearTimeout(reload_timeout);
-            };
-            reload_timeout = _.defer((function () {
-                window.onbeforeunload = old_before;
+            do_before_unload(null, (function () {
                 this.play();
                 this.update();
             }).bind(this));
@@ -196,16 +276,16 @@ return core.Class.extend({
     update: function (tour_name) {
         if (this.paused) return;
 
-        if (this.running_tour) {
-            if (this.tours[this.running_tour] === undefined) return;
-            if (this.running_tour_timeout === undefined) {
-                this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
-            }
-        }
-
         this.$modal_displayed = $('.modal:visible').last();
+
         tour_name = this.running_tour || tour_name;
         if (tour_name) {
+            var tour = this.tours[tour_name];
+            if (!tour || !tour.ready) return;
+
+            if (this.running_tour && this.running_tour_timeout === undefined) {
+                this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
+            }
             this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
         } else {
             _.each(this.active_tooltips, this._check_for_tooltip.bind(this));
@@ -213,7 +293,7 @@ return core.Class.extend({
     },
     _check_for_tooltip: function (tip, tour_name) {
         var $trigger;
-        if (this.$modal_displayed.length) {
+        if (tip.in_modal !== false && this.$modal_displayed.length) {
             $trigger = this.$modal_displayed.find(tip.trigger);
         } else {
             $trigger = $(tip.trigger);
@@ -229,22 +309,6 @@ return core.Class.extend({
             }
         } else {
             this._deactivate_tip(tip);
-        }
-
-        function get_first_visible_element($elements) {
-            for (var i = 0 ; i < $elements.length ; i++) {
-                var $elem = $elements.eq(i);
-                if ($elem.is(":visible")) {
-                    var $i = $elem;
-                    while ($i.css("visibility") !== "hidden") {
-                        $i = $i.parent();
-                        if ($i.is("html")) {
-                            return $elem;
-                        }
-                    }
-                }
-            }
-            return $();
         }
     },
     _activate_tip: function(tip, tour_name, $anchor) {
@@ -344,15 +408,16 @@ return core.Class.extend({
 
         var action_helper = new RunningTourActionHelper(tip.widget);
         _.delay((function () {
+            do_before_unload(this._consume_tip.bind(this, tip, tour_name));
+
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
-                var m = tip.run.match(/^(click|text|drag_and_drop) *(?:\(? *["']?(.+)["']? *\)?)?$/);
+                var m = tip.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
                 action_helper[m[1]](m[2]);
             } else {
                 action_helper.auto();
             }
-            this._consume_tip(tip, tour_name);
         }).bind(this), this.running_step_delay);
     },
 
@@ -384,5 +449,4 @@ return core.Class.extend({
         },
     },
 });
-
 });

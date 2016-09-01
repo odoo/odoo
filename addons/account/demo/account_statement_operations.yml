@@ -9,7 +9,7 @@
       }
       if account_id:
           vals['account_id'] = account_id
-          self._update('account.operation.template', 'account', vals, 'statement_operation_template_1')
+          self._update(cr, uid, 'account.reconcile.model', 'account', vals, 'account_reconcile_model_1')
 -
   !python {model: ir.model.data, id: False} : |
       account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_expenses')), ('tag_ids', '=', ref('account_tag_operating'))], limit=1).id
@@ -21,7 +21,7 @@
       }
       if account_id:
           vals['account_id'] = account_id
-          self._update('account.operation.template', 'account', vals, 'statement_operation_template_2')
+          self._update(cr, uid, 'account.reconcile.model', 'account', vals, 'account_reconcile_model_2')
 -
   !python {model: ir.model.data, id: False} : |
       account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', '=', ref('account_tag_operating'))], limit=1).id
@@ -33,5 +33,5 @@
       }
       if account_id:
           vals['account_id'] = account_id
-          self._update('account.operation.template', 'account', vals, 'statement_operation_template_3')
+          self._update(cr, uid, 'account.reconcile.model', 'account', vals, 'account_reconcile_model_3')
 -

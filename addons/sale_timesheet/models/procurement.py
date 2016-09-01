@@ -61,7 +61,7 @@ class ProcurementOrder(models.Model):
             'planned_hours': planned_hours,
             'remaining_hours': planned_hours,
             'partner_id': self.sale_line_id.order_id.partner_id.id or self.partner_dest_id.id,
-            'user_id': self.product_id.product_manager.id,
+            'user_id': self.env.uid,
             'procurement_id': self.id,
             'description': self.name + '\n',
             'project_id': project.id,

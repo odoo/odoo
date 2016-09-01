@@ -535,6 +535,16 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
+                <group name="inventory" position="after">
+                    <separator string="Vendors"/>
+                    <field name="seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}"/>
+                    <group name="packaging" string="Packaging"
+                        colspan="4"
+                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+                        groups="product.group_stock_packaging">
+                        <field name="packaging_ids" nolabel="1"/>
+                    </group>
+                </group>
                 <div name="options" position="inside">
                     <div>
                         <field name="purchase_ok"/>
@@ -551,17 +561,11 @@
                                 attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
                     </group>
                 </group>
-            </field>
-        </record>
-
-        <record id="product_template_search_view_purchase" model="ir.ui.view">
-            <field name="name">product.template.search.purchase.form</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_search_view"/>
-            <field name="arch" type="xml">
-                <filter name="filter_to_sell" position="after">
-                   <filter name="filter_to_purchase" string="Can be Purchased" domain="[('purchase_ok', '=', 1)]"/>
-                </filter>
+                <field name="description_sale" position="after">
+                    <separator string="Description for Vendors" colspan="4"/>
+                    <field name="description_purchase" nolabel="1"
+                        placeholder="This note will be displayed on requests for quotation." colspan="4"/>
+                </field>
             </field>
         </record>
 

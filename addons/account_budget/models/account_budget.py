@@ -132,7 +132,6 @@ class CrossoveredBudgetLines(models.Model):
                     else:
                         theo_amt = line.planned_amount
                 else:
-                    print type(today)
                     line_timedelta = fields.Datetime.from_string(line.date_to) - fields.Datetime.from_string(line.date_from)
                     elapsed_timedelta = fields.Datetime.from_string(today) - (fields.Datetime.from_string(line.date_from))
 

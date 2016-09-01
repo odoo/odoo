@@ -321,7 +321,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var shadow = options.shadow || false;
         options.headers = _.extend({}, options.headers)
         if (odoo.debug) {
-            options.headers["X-Debug-Mode"] = true;
+            options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
 
         delete options.shadow;

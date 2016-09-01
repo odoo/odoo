@@ -112,23 +112,6 @@ class IrSequence(models.Model):
     use_date_range = fields.Boolean(string='Use subsequences per date_range')
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
 
-    @api.model_cr
-    def init(self):
-        return  # Don't do the following index yet.
-
-        # CONSTRAINT/UNIQUE INDEX on (code, company_id)
-        # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
-        # only support field names in constraint definitions, and we need a function here:
-        # we need to special-case company_id to treat all NULL company_id as equal, otherwise
-        # we would allow duplicate (code, NULL) ir_sequences.
-        self._cr.execute("""
-            SELECT indexname FROM pg_indexes WHERE indexname =
-            'ir_sequence_unique_code_company_id_idx'""")
-        if not self._cr.fetchone():
-            self._cr.execute("""
-                CREATE UNIQUE INDEX ir_sequence_unique_code_company_id_idx
-                ON ir_sequence (code, (COALESCE(company_id,-1)))""")
-
     @api.model
     def create(self, values):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.

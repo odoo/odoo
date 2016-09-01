@@ -138,7 +138,7 @@
                                 </tr>
                               </tbody>
                             </table>
-                            <p t-if="not o.pack_operation_ids">
+                            <p t-if="o.state in ['draft', 'waiting', 'confirmed']">
                                 You do not have any products reserved for this picking.  Please click the 'Reserve' button
                                 to check if products are available.
                             </p>

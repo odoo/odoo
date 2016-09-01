@@ -134,6 +134,7 @@ class WebsiteMembership(http.Controller):
                 count_members += len(free_partner_ids)
 
         google_map_partner_ids = ",".join(map(str, google_map_partner_ids))
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         partners = {p.id: p for p in Partner.sudo().browse(list(page_partner_ids))}
 
@@ -155,7 +156,8 @@ class WebsiteMembership(http.Controller):
             'pager': pager,
             'post': post,
             'search': "?%s" % werkzeug.url_encode(post),
-            'search_count': count_members
+            'search_count': count_members,
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_membership.index", values)
 

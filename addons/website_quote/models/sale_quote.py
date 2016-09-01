@@ -11,7 +11,7 @@ class SaleQuoteTemplate(models.Model):
     _description = "Sale Quotation Template"
 
     name = fields.Char('Quotation Template', required=True)
-    website_description = fields.Html('Description', translate=html_translate, sanitize=False)
+    website_description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     quote_line = fields.One2many('sale.quote.line', 'quote_id', 'Quotation Template Lines', copy=True)
     note = fields.Text('Terms and conditions')
     options = fields.One2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True)
@@ -100,7 +100,7 @@ class SaleQuoteOption(models.Model):
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    website_description = fields.Html('Option Description', translate=html_translate, sanitize=False)
+    website_description = fields.Html('Option Description', translate=html_translate, sanitize_attributes=False)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
     uom_id = fields.Many2one('product.uom', 'Unit of Measure ', required=True)

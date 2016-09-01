@@ -244,7 +244,7 @@ class AccountInvoice(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='always')
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Term', oldname='payment_term',
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
         readonly=True, states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
              "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
@@ -594,7 +594,7 @@ class AccountInvoice(models.Model):
                 'amount_currency': self.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, self.currency_id),
                 'currency_id': self.currency_id.id})
         if credit_aml.payment_id:
-            credit_aml.payment_id.write({'invoice_ids': [(4, id, None)]})
+            credit_aml.payment_id.write({'invoice_ids': [(4, self.id, None)]})
         return self.register_payment(credit_aml)
 
     @api.multi
@@ -706,7 +706,7 @@ class AccountInvoice(models.Model):
         will be grouped together if the journal has the 'group line' option. Of course a module
         can add fields to invoice lines that would need to be tested too before merging lines
         or not."""
-        return "%s-%s-%s-%s-%s" % (
+        return "%s-%s-%s-%s-%s-%s" % (
             invoice_line['account_id'],
             invoice_line.get('tax_line_id', 'False'),
             invoice_line.get('product_id', 'False'),
@@ -1157,7 +1157,10 @@ class AccountInvoiceLine(models.Model):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='product_id']"):
                 if self._context['type'] in ('in_invoice', 'in_refund'):
-                    node.set('domain', "[('purchase_ok', '=', True)]")
+                    # Hack to fix the stable version 8.0 -> saas-12
+                    # purchase_ok will be moved from purchase to product in master #13271
+                    if 'purchase_ok' in self.env['product.template']._fields:
+                        node.set('domain', "[('purchase_ok', '=', True)]")
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
             res['arch'] = etree.tostring(doc)
@@ -1321,7 +1324,7 @@ class AccountPaymentTerm(models.Model):
     def _default_line_ids(self):
         return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 9, 'days': 0, 'option': 'day_after_invoice_date'})]
 
-    name = fields.Char(string='Payment Term', translate=True, required=True)
+    name = fields.Char(string='Payment Terms', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
     note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
@@ -1396,14 +1399,14 @@ class AccountPaymentTermLine(models.Model):
         ],
         default='day_after_invoice_date', required=True, string='Options'
         )
-    payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
+    payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment term lines.")
 
     @api.one
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
         if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
-            raise ValidationError(_('Percentages for Payment Term Line must be between 0 and 100.'))
+            raise ValidationError(_('Percentages for Payment Terms Line must be between 0 and 100.'))
 
     @api.onchange('option')
     def _onchange_option(self):

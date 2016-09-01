@@ -121,6 +121,8 @@ def slugify(s, max_length=None):
 
 def slug(value):
     if isinstance(value, models.BaseModel):
+        if isinstance(value.id, models.NewId):
+            raise ValueError("Cannot slug non-existent record %s" % value)
         # [(id, name)] = value.name_get()
         identifier, name = value.id, value.display_name
     else:
@@ -162,7 +164,7 @@ class Website(models.Model):
     domain = fields.Char('Website Domain')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
-    default_lang_id = fields.Many2one('res.lang', string="Default language", default=_default_language)
+    default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language)
     default_lang_code = fields.Char(related='default_lang_id.code', string="Default language code", store=True)
 
     social_twitter = fields.Char('Twitter Account')
@@ -392,7 +394,7 @@ class Website(models.Model):
     def get_current_website(self):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
         website_id = self._get_current_website_id(domain_name)
-        request.context['website_id'] = website_id
+        request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
     @tools.cache('domain_name')

@@ -260,9 +260,9 @@ class MrpBomLine(models.Model):
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
             'help': _('''<p class="oe_view_nocontent_create">
-                        Documents are attached to the tasks and issues of your project.</p><p>
-                        Send messages or log internal notes with attachments to link
-                        documents to your project.
+                        Click to upload files to your product.
+                    </p><p>
+                        Use this feature to store any files, like drawings or specifications.
                     </p>'''),
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % ('product.product', self.product_id.id)

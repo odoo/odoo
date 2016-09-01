@@ -48,8 +48,9 @@ Wizards provided by this module:
         'data/l10n_be_sequence_data.xml',
         'data/fiscal_templates_data.xml',
         'data/account_fiscal_position_tax_template_data.xml',
+        'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.yml',
-        'data/menuitem_data.xml'
+        'data/menuitem_data.xml',
     ],
     'demo': [
         'demo/l10n_be_demo.yml',

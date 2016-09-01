@@ -908,6 +908,13 @@
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
         </record>
+        <record id="a653" model="account.account.template">
+            <field name="code">653</field>
+            <field name="name">Escomptes clients</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses" />
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_financing')])]"/>
+        </record>
         <record id="a654" model="account.account.template">
             <field name="name">Différences de change</field>
             <field name="code">654</field>

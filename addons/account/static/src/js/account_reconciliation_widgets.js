@@ -76,7 +76,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         this.formatCurrencies; // Method that formats the currency ; loaded from the server
         this.model_res_users = new Model("res.users");
         this.model_tax = new Model("account.tax");
-        this.model_presets = new Model("account.operation.template");
+        this.model_presets = new Model("account.reconcile.model");
         this.max_move_lines_displayed = 5;
         // Number of reconciliations loaded initially and by clicking 'show more'
         this.num_reconciliations_fetched_in_batch = 10;
@@ -277,7 +277,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     presetConfigCreateClickHandler: function(e) {
         e.preventDefault();
         var self = this;
-        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+        return self.rpc("/web/action/load", {action_id: "account.action_account_reconcile_model"}).then(function(result) {
             result.views = [[false, "form"], [false, "list"]];
             return self.do_action(result);
         });
@@ -286,7 +286,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     presetConfigEditClickHandler: function(e) {
         e.preventDefault();
         var self = this;
-        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+        return self.rpc("/web/action/load", {action_id: "account.action_account_reconcile_model"}).then(function(result) {
             result.views = [[false, "list"], [false, "form"]];
             return self.do_action(result);
         });
@@ -988,7 +988,7 @@ var abstractReconciliationLine = Widget.extend({
             var tax_id = self.tax_id_field.get("value");
             if (amount && tax_id) {
                 deferred_tax = self.model_tax
-                    .call("compute_all", [[tax_id], amount, self.get("currency_id")])
+                    .call("json_friendly_compute_all", [[tax_id], amount, self.get("currency_id")])
                     .then(function(data){
                         line_created_being_edited.length = 1; // remove tax lines
                         line_created_being_edited[0].amount_before_tax = amount;

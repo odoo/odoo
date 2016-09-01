@@ -9,7 +9,7 @@
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group string="Mass Mailing">
+                    <group string="Mass Mailing" name="mass_mailing_group">
                         <field name="group_mass_mailing_campaign" widget="radio"/>
                         <label for="module_mass_mailing_themes" string="Mass mailing themes"/>
                         <div>
@@ -17,7 +17,6 @@
                             <label for="module_mass_mailing_themes" invisible="1"/>
                             <a href="https://www.odoo.com/page/email-marketing" target="_blank"> More Info </a>
                         </div>
-                        <field name="group_website_popup_on_exit" widget="radio"/>
                     </group>
                 </form>
             </field>

@@ -1,35 +1,21 @@
-# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-#
+# 
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2015
-# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * account_test
-#
-# Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_test
@@ -60,13 +46,8 @@ msgstr "会计测试"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
-#, fuzzy
 msgid "Active"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"有效\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"活跃"
+msgstr "活跃"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
@@ -76,8 +57,8 @@ msgstr "检查凭证行是否平衡并且有相同的时间和日期"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
 msgstr "在银行对账单检查，期末余额 = 期初余额 + 本期发生额"
 
 #. module: account_test
@@ -95,8 +76,8 @@ msgstr "检查已调节的会计凭证，属于已调节发票的应付科目和
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
 msgstr "检查已收和已付科目中已调节的分录相关的销售/采购发票"
 
 #. module: account_test
@@ -117,39 +98,30 @@ msgstr "代码帮助"
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your "
-"test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was "
-"succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named "
-"`column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your "
-"code:\n"
+"Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct "
-"indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"代码应该总是设​置一个名为\"result\"变量来保存你的测试结果，这可以是列表或字"
-"典。 如果\"result\"变量是一个空列表，这意味着测试是成功的。 否则，它会尝试翻"
-"译和打印\"result\"变量中的内容.\n"
+"代码应该总是设​置一个名为\"result\"变量来保存你的测试结果，这可以是列表或字典。 如果\"result\"变量是一个空列表，这意味着测试是成功的。 否则，它会尝试翻译和打印\"result\"变量中的内容.\n"
 "\n"
-"如果输出的结果在列表或字典中你可以在`result`的内容中设置一个名为"
-"`column_order`的变量。\n"
+"如果输出的结果在列表或字典中你可以在`result`的内容中设置一个名为`column_order`的变量。\n"
 "\n"
 "若您需要它们，您同样可以使用以列变量至你的代码中：\n"
 "    * cr: cursor to the database\n"
@@ -160,8 +132,7 @@ msgstr ""
 "例如:：\n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -173,13 +144,8 @@ msgstr "创建者"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"创建时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"创建于"
+msgstr "创建于"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -200,54 +166,29 @@ msgstr "表达式"
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"标识"
+msgstr "ID"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后修改时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后修改日"
+msgstr "最后修改日"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新者\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后更新人"
+msgstr "最后更新人"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最近更新时间"
+msgstr "最近更新时间"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
-#, fuzzy
 msgid "Python Code"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Python代码\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Python 代码"
+msgstr "Python 代码"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
@@ -307,7 +248,7 @@ msgid "Tests"
 msgstr "测试"
 
 #. module: account_test
-#: code:addons/account_test/report/account_test_report.py:49
+#: code:addons/account_test/report/report_account_test.py:51
 #, python-format
 msgid "The test was passed successfully"
 msgstr "测试通过"

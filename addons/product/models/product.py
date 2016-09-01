@@ -376,7 +376,10 @@ class ProductProduct(models.Model):
 
         result = []
         for product in self.sudo():
-            variant = ", ".join([v.name for v in product.attribute_value_ids])
+            # display only the attributes with multiple possible values on the template
+            variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
+            variant = ", ".join([v.name for v in product.attribute_value_ids if v.attribute_id in variable_attributes])
+
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
@@ -426,7 +429,7 @@ class ProductProduct(models.Model):
                 if not limit or len(products) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(products)) if limit else False
-                    products += self.search(args + [('name', operator, name), ('id', 'not in', self.ids)], limit=limit2)
+                    products += self.search(args + [('name', operator, name), ('id', 'not in', products.ids)], limit=limit2)
             elif not products and operator in expression.NEGATIVE_TERM_OPERATORS:
                 products = self.search(args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit)
             if not products and operator in positive_operators:

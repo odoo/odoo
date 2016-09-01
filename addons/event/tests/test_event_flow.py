@@ -6,6 +6,8 @@ from dateutil.relativedelta import relativedelta
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tools import mute_logger
+from odoo.fields import Datetime
+from mock import patch
 
 
 class TestEventFlow(TestEventCommon):
@@ -118,3 +120,27 @@ class TestEventFlow(TestEventCommon):
 
     def test_event_data(self):
         self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Tomorrow')
+
+    def test_event_date_range(self):
+        self.patcher = patch('odoo.addons.event.models.event.fields.Datetime', wraps=Datetime)
+        self.mock_datetime = self.patcher.start()
+
+        self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 31, 12, 0))
+
+        self.event_0.registration_ids.event_begin_date = datetime.datetime(2015, 12, 31, 18, 0)
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Today')
+
+        self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 1, 6, 0)
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Tomorrow')
+
+        self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 2, 6, 0)
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'This week')
+
+        self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 2, 1, 6, 0)
+        self.assertTrue('T' in self.event_0.registration_ids.get_date_range_str())
+
+        self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 15, 12, 0))
+        self.event_0.registration_ids.event_begin_date = datetime.datetime(2015, 12, 31, 6, 0)
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'This month')
+
+        self.patcher.stop()

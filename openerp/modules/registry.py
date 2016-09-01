@@ -20,8 +20,8 @@ _logger = logging.getLogger(__name__)
 class Registry(Mapping):
     """ Model registry for a particular database.
 
-    The registry is essentially a mapping between model names and model
-    instances. There is one registry instance per database.
+    The registry is essentially a mapping between model names and model classes.
+    There is one registry instance per database.
 
     """
 
@@ -29,8 +29,6 @@ class Registry(Mapping):
         super(Registry, self).__init__()
         self.models = {}    # model name/model instance mapping
         self._sql_error = {}
-        self._store_function = {}
-        self._pure_function_fields = {}         # {model: [field, ...], ...}
         self._init = True
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
@@ -91,16 +89,6 @@ class Registry(Mapping):
     @lazy_property
     def model_cache(self):
         return RegistryManager.model_cache
-
-    @lazy_property
-    def pure_function_fields(self):
-        """ Return the list of pure function fields (field objects) """
-        fields = []
-        for mname, fnames in self._pure_function_fields.iteritems():
-            model_fields = self[mname]._fields
-            for fname in fnames:
-                fields.append(model_fields[fname])
-        return fields
 
     @lazy_property
     def field_sequence(self):
@@ -196,7 +184,7 @@ class Registry(Mapping):
             ir_model._instanciate(model_data)
 
         # prepare the setup on all models
-        models = [env[model_name] for model_name in self.models]
+        models = env.values()
         for model in models:
             model._prepare_setup()
 

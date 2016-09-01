@@ -125,7 +125,8 @@ class ir_cron(models.Model):
         except Exception, e:
             self._handle_callback_exception(model_name, method_name, args, job_id, e)
 
-    def _process_job(self, job_cr, job, cron_cr):
+    @classmethod
+    def _process_job(cls, job_cr, job, cron_cr):
         """ Run a given job taking care of the repetition.
 
         :param job_cr: cursor to use to execute the job, safe to commit/rollback
@@ -135,7 +136,7 @@ class ir_cron(models.Model):
         """
         try:
             with api.Environment.manage():
-                cron = api.Environment(job_cr, job['user_id'], {})[self._name]
+                cron = api.Environment(job_cr, job['user_id'], {})[cls._name]
                 # Use the user's timezone to compare and compute datetimes,
                 # otherwise unexpected results may appear. For instance, adding
                 # 1 month in UTC to July 1st at midnight in GMT+2 gives July 30

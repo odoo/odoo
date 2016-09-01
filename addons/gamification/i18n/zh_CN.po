@@ -1,47 +1,30 @@
-# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * gamification
-#
+# 
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * gamification
-#
-# Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
 "PO-Revision-Date: 2016-08-18 08:38+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
 msgid ""
 "\n"
-"        <p>Congratulation, you have received the badge <strong>${object."
-"badge_id.name}</strong> !\n"
+"        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !\n"
 "            % if object.sender_id\n"
-"                This badge was granted by <strong>${object.sender_id.name}</"
-"strong>.\n"
+"                This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
 "            % endif\n"
 "        </p>\n"
 "\n"
@@ -70,9 +53,7 @@ msgid ""
 "        <strong>Reminder ${object.name}</strong>\n"
 "    </p>\n"
 "    \n"
-"    <p>You have not updated your progress for the goal ${object."
-"definition_id.name} (currently reached at ${object.completeness}%) for at "
-"least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
+"    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
 
@@ -83,8 +64,7 @@ msgid ""
 "<p>\n"
 "    <strong>${object.name}</strong>\n"
 "</p>\n"
-"<p class=\"oe_grey\">The following message contains the current progress for "
-"the challenge ${object.name}</p>\n"
+"<p class=\"oe_grey\">The following message contains the current progress for the challenge ${object.name}</p>\n"
 "\n"
 "% if object.visibility_mode == 'personal':\n"
 "    <table width=\"100%\" border=\"1\">\n"
@@ -153,21 +133,39 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:746
+#: code:addons/gamification/models/challenge.py:591
+#, python-format
+msgid "%s has joined the challenge"
+msgstr "%s 加入挑战"
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:600
+#, python-format
+msgid "%s has refused the challenge"
+msgstr "%s 拒绝挑战"
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:657
+#, python-format
+msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:654
 #, python-format
 msgid ""
-"<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this "
-"challenge."
+"<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
+" challenge."
 msgstr "<br/>没有人成功的完成每一个目标，那么这个挑战不会发放任何徽章"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:744
+#: code:addons/gamification/models/challenge.py:652
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr "每一个成功用户的<br/> 奖励（徽章 %s）被送到 %s。"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:753
+#: code:addons/gamification/models/challenge.py:662
 #, python-format
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
@@ -178,36 +176,28 @@ msgstr "<br/>特殊的奖励被派往上相互竞争的用户。这个挑战是�
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
-"                                    <span class=\"o_stat_text\">Goals</span>"
+"                                <span class=\"o_stat_text\">Goals</span>"
 msgstr ""
-"<span class=\"o_stat_text\">相关的</span>\n"
-"                                    <span class=\"o_stat_text\">目标</span>"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
 msgid ""
 "A badge is a symbolic token granted to a user as a sign of reward.\n"
-"                    It can be deserved automatically when some conditions "
-"are met or manually by users.\n"
-"                    Some badges are harder than others to get with specific "
-"conditions."
+"                It can be deserved automatically when some conditions are met or manually by users.\n"
+"                Some badges are harder than others to get with specific conditions."
 msgstr ""
-"徽章是给用户象征性的奖励。有些条件满足的时候它可以自动的得到或者用户手动的设"
-"置。根据具体条件的设置，有些徽章会比其他徽章更难得到"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid ""
-"A goal definition is a technical model of goal defining a condition to "
-"reach.\n"
-"                    The dates, values to reach or users are defined in goal "
-"instance."
+"A goal definition is a technical model of goal defining a condition to reach.\n"
+"                The dates, values to reach or users are defined in goal instance."
 msgstr ""
-"目标定义是要达成一定条件的目标的技术模型要达成的日期，数值或者在目标实例中的"
-"用户定义"
 
 #. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3030
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
@@ -217,8 +207,8 @@ msgstr "当一个目标的当前值达到目标值时被视为已完成"
 #: model:ir.actions.act_window,help:gamification.goal_list_action
 msgid ""
 "A goal is defined by a user and a goal definition.\n"
-"                    Goals can be created automatically by using challenges."
-msgstr "用户定义目标并且目标能被挑战自动的创建"
+"                Goals can be created automatically by using challenges."
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -226,19 +216,9 @@ msgid "A selected list of users"
 msgstr "已选的用户列表"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-msgid "Accept"
-msgstr "接受"
-
-#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_action_id
-#, fuzzy
 msgid "Action"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"行动\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"动作"
+msgstr "动作"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_active
@@ -252,13 +232,8 @@ msgstr "高级选项"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth
-#, fuzzy
 msgid "Allowance to Grant"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"津贴补助\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"允许授予"
+msgstr "允许授予"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_user_domain
@@ -273,19 +248,15 @@ msgstr "出现在"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge To"
-msgstr "指定的挑战"
+msgstr "指派挑战给"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for "
-"automatic creation of goals.\n"
-"                    The goals are created for the specified users or member "
-"of the group."
+"                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
+"                The goals are created for the specified users or member of the group."
 msgstr ""
-"给选定的用户分配一个目标列表，自动创建目标的挑战可以是一段时期（每周，每"
-"月……）目标是为指定的用户或者组成员创建的"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
@@ -295,7 +266,7 @@ msgstr "授权用户"
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: execute a specific Python code"
-msgstr "自动：执行一个特定的Python代码"
+msgstr "自动：执行特定Python代码"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -305,7 +276,7 @@ msgstr "自动：记录数"
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: sum on a field"
-msgstr "自动:金额字段"
+msgstr "自动：字段加总"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_name
@@ -324,7 +295,7 @@ msgstr "徽章描述"
 #: model:mail.message.subtype,description:gamification.mt_badge_granted
 #: model:mail.message.subtype,name:gamification.mt_badge_granted
 msgid "Badge Granted"
-msgstr "授予徽章"
+msgstr "徽章授予"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_list_view
@@ -351,8 +322,7 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"当完成一个任务时授予一枚徽章，这是在一个运行周期结束时（如：最后的每月挑战"
-"月），在一个挑战的结束日期（如果没有周期性设置）或挑战时的手动关闭"
+"当完成一个任务时授予一枚徽章，这是在一个运行周期结束时（如：最后的每月挑战月），在一个挑战的结束日期（如果没有周期性设置）或挑战时的手动关闭"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_mode
@@ -370,7 +340,7 @@ msgid "Can not grant"
 msgstr "不能授予"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:461
+#: code:addons/gamification/models/goal.py:410
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr "不能修改一个已开始的目标配置"
@@ -383,13 +353,8 @@ msgstr "取消"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
-#, fuzzy
 msgid "Canceled"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"已作废\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"已取消"
+msgstr "已取消"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -399,94 +364,47 @@ msgstr "类别"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_challenge_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_challenge_id
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-#, fuzzy
 msgid "Challenge"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战"
-
-#. module: gamification
-#: model:ir.actions.act_window,name:gamification.challenge_wizard
-msgid "Challenge Description"
-msgstr "任务描述"
+msgstr "挑战"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_line_id
-#, fuzzy
 msgid "Challenge Line"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务行\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战行"
+msgstr "挑战行"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_line_list_view
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-#, fuzzy
 msgid "Challenge Lines"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务行\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战行"
+msgstr "挑战行"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_name
-#, fuzzy
 msgid "Challenge Name"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务名称\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战名称"
+msgstr "挑战名称"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_challenge_id
-#, fuzzy
 msgid "Challenge originating"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务开始\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战源于"
+msgstr "挑战源于"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_challenge_id
-#, fuzzy
 msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"已产生目标的任务，分配具体的目标任务给用户\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"已产生目标的挑战，分配具体的目标任务给用户"
+msgstr "已产生目标的挑战，分配具体的目标任务给用户"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
-#, fuzzy
 msgid "Challenges"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战"
+msgstr "挑战"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max
-#, fuzzy
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"检查设定每人每月限额发送此徽章\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"检查按人设定发放此徽章的月度限额"
+msgstr "检查按人设定发放此徽章的月度限额"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -510,23 +428,13 @@ msgstr "点击创建一个目标"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
-#, fuzzy
 msgid "Clickable Goals"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"点击目标\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"可点击目标"
+msgstr "可点击目标"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_closed
-#, fuzzy
 msgid "Closed goal"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"关闭目标\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"关闭的目标"
+msgstr "关闭的目标"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_comment
@@ -545,25 +453,11 @@ msgid "Completeness"
 msgstr "完整性"
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_computation_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_computation_mode
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
-#, fuzzy
 msgid "Computation Mode"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"计算方式\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"计算模式"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_computation_mode
-msgid "Computation mode"
-msgstr "计算方式"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
-msgid "Condition"
-msgstr "条件"
+msgstr "计算模式"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
@@ -577,9 +471,7 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr ""
-"为系统创建和管理用户。在一段时间内用该系统的用户可以暂不激活。你还可以给用户"
-"分配某一个组，以便他们能用到系统的指定功能"
+msgstr "为系统创建和管理用户。在一段时间内用该系统的用户可以暂不激活。你还可以给用户分配某一个组，以便他们能用到系统的指定功能"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
@@ -605,13 +497,8 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"创建时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"创建于"
+msgstr "创建于"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_uid
@@ -650,6 +537,7 @@ msgid "Define the visibility of the challenge through menus"
 msgstr "通过菜单定义的可见性的挑战"
 
 #. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_goal_computation_mode
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_computation_mode
 msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
@@ -657,12 +545,7 @@ msgid ""
 msgstr "定义将计算的目标，操作的结果将存储在“当前”"
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3136
-msgid "Definition Condition"
-msgstr "定义条件"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3145
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3039
 msgid "Definition Description"
 msgstr "定义说明"
 
@@ -673,13 +556,9 @@ msgstr "根据不同的显示模式，报告将是个人或共享"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
-msgid "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"描述了挑战：什么是什么，谁是目标，它为什么重要\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"描述挑战：目标是什么，谁的目标，为什么重要..."
+msgid ""
+"Describe the challenge: what is does, who it targets, why it matters..."
+msgstr "描述挑战：目标是什么，谁的目标，为什么重要..."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -694,7 +573,6 @@ msgstr "说明"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_visibility_mode
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
 msgid "Display Mode"
 msgstr "显示模式"
 
@@ -711,6 +589,7 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_mode
 msgid "Displayed as"
 msgstr "显示为"
@@ -722,17 +601,12 @@ msgstr "批处理用户的特有字段"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_domain
-#, fuzzy
 msgid ""
 "Domain for filtering records. General rule, not user depending, e.g. "
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"域过滤记录。一般规则，不依赖用户，例如.[('state', '=', 'done')]。如果不是批处"
-"理模式，表达式可以包含当前用户的浏览记录的'user'参考。\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"用于过滤记录的领域。一般规则，不是用户依赖的，例如.[('state', '=', 'done')]. "
+"用于筛选记录的领域。一般规则，不是用户依赖的，例如.[('state', '=', 'done')]. "
 "如果不是在批处理模式下，该规则可以包含当前用户的浏览记录作为参考给“user”。"
 
 #. module: gamification
@@ -742,7 +616,8 @@ msgid "Done"
 msgstr "完成"
 
 #. module: gamification
-#: selection:gamification.challenge,state:0 selection:gamification.goal,state:0
+#: selection:gamification.challenge,state:0
+#: selection:gamification.goal,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
 msgstr "草稿"
@@ -751,13 +626,8 @@ msgstr "草稿"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_end_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_end_date
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
-#, fuzzy
 msgid "End Date"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"终止日期\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"结束日期"
+msgstr "结束日期"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_mode
@@ -766,23 +636,13 @@ msgstr "批量评估每个用户的表现"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
-msgid "Evaluted expression for batch mode"
-msgstr "评估表现批处理模式"
-
-#. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-msgid "Even if the challenge is failed, best challengers will be rewarded"
-msgstr "即使挑战失败，最好的挑战者也将被奖励"
+msgid "Evaluated expression for batch mode"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
-#, fuzzy
 msgid "Everyone"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"全体\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"所有人"
+msgstr "所有人"
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
@@ -801,23 +661,13 @@ msgstr "字段总计"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_domain
-#, fuzzy
 msgid "Filter Domain"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"筛选域\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"筛选领域"
+msgstr "筛选域"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
-#, fuzzy
 msgid "For 1st user"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"首位用户\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"第一位用户"
+msgstr "第一位用户"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_second_id
@@ -866,33 +716,18 @@ msgstr "游戏化任务"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
-#, fuzzy
 msgid "Gamification generic goal for challenge"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务游戏化的一般目标\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战的游戏化一般目标"
+msgstr "挑战的游戏化一般目标"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
-#, fuzzy
 msgid "Gamification goal definition"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"游戏化的目标定义\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"游戏化目标定义"
+msgstr "游戏化目标定义"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
-#, fuzzy
 msgid "Gamification goal instance"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"游戏化的目标实例\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"游戏化目标实例"
+msgstr "游戏化目标实例"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
@@ -908,7 +743,7 @@ msgstr "目标"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3147
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3041
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
@@ -923,13 +758,8 @@ msgstr "目标定义"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description
-#, fuzzy
 msgid "Goal Description"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"目标描述\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"目标说明"
+msgstr "目标说明"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -942,14 +772,11 @@ msgid "Goal List"
 msgstr "目标清单"
 
 #. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition
-#, fuzzy
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3030
 msgid "Goal Performance"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"目标性能\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"目标绩效"
+msgstr "目标绩效"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -968,7 +795,6 @@ msgstr "目标定义"
 #: model:ir.ui.menu,name:gamification.gamification_goal_menu
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Goals"
 msgstr "目标"
 
@@ -1023,13 +849,8 @@ msgstr "公司将接收报告的副本，除了用户"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
-#, fuzzy
 msgid "HR Challenges"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"人力资源任务\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"人力资源挑战"
+msgstr "人力资源挑战"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
@@ -1042,6 +863,11 @@ msgid "How to compute the goal?"
 msgstr "如何计算目标？"
 
 #. module: gamification
+#: selection:gamification.challenge,category:0
+msgid "Human Resources / Engagement"
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_id
@@ -1050,13 +876,8 @@ msgstr "如何计算目标？"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"标识"
+msgstr "ID"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_res_id_field
@@ -1065,8 +886,8 @@ msgstr "用户ID字段"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
-msgid "If a maxium is set"
-msgstr "如果一个最大设置"
+msgid "If a maximum is set"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
@@ -1088,17 +909,14 @@ msgstr "进行中"
 msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
-msgstr ""
-"在批处理模式下，评估范围是全部，如果启用，不要在过滤字段使用关键词'user'"
+msgstr "在批处理模式下，评估范围是全部，如果启用，不要在筛选字段使用关键词'user'"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_distinctive_field
 msgid ""
 "In batch mode, this indicates which field distinct one user form the other, "
 "e.g. user_id, partner_id..."
-msgstr ""
-"用批处理模式，这表明一个用户形式跟其它用户 有区别，例如.user_id, "
-"partner_id..."
+msgstr "用批处理模式，这表明一个用户形式跟其它用户 有区别，例如.user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_last_update
@@ -1106,9 +924,7 @@ msgid ""
 "In case of manual goal, reminders are sent if the goal as not been updated "
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
-msgstr ""
-"如遇手动目标，提醒如果目标没有被更新，一会儿发（定义在挑战），忽略的情况下的"
-"非手动的目标或目标不与挑战"
+msgstr "如遇手动目标，提醒如果目标没有被更新，一会儿发（定义在挑战），忽略的情况下的非手动的目标或目标不与挑战"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1121,20 +937,10 @@ msgid "Individual Goals"
 msgstr "个人目标"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:338
-#, python-format
-msgid "Invalid return content from the evaluation of code for definition %s"
-msgstr "定义从诊断代码中返回的无效内容 %s"
-
-#. module: gamification
+#: model:gamification.challenge.line,name:gamification.line_base_admin3
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
 msgstr "邀请新用户"
-
-#. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-msgid "Invited"
-msgstr "邀请"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge___last_update
@@ -1145,13 +951,8 @@ msgstr "邀请"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal___last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition___last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后修改时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后修改日"
+msgstr "最后修改日"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_last_report_date
@@ -1160,13 +961,8 @@ msgstr "最新报告日期"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_last_update
-#, fuzzy
 msgid "Last Update"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最新更新\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最近更新"
+msgstr "最近更新"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_uid
@@ -1177,13 +973,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新者\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后更新人"
+msgstr "最后更新人"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_date
@@ -1194,13 +985,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最近更新时间"
+msgstr "最近更新时间"
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
@@ -1219,13 +1005,8 @@ msgstr "列表行"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_ids
-#, fuzzy
 msgid "Lines"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"行\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"明细行"
+msgstr "明细行"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_ids
@@ -1234,13 +1015,8 @@ msgstr "将要设置的目标列表"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_user_ids
-#, fuzzy
 msgid "List of users participating to the challenge"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"参与任务的用户列表\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"参与挑战的用户列表"
+msgstr "参与挑战的用户列表"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
@@ -1260,13 +1036,8 @@ msgstr "货币"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_monetary
-#, fuzzy
 msgid "Monetary Value"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"货币值\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"金钱值"
+msgstr "金钱值"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1276,13 +1047,8 @@ msgstr "每月"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max
-#, fuzzy
 msgid "Monthly Limited Sending"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"每月有限的发送\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"月度限额发放"
+msgstr "月度限额发放"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_this_month
@@ -1296,13 +1062,8 @@ msgstr "我的目标"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_monthly_sending
-#, fuzzy
 msgid "My Monthly Sending Total"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"我每月发送的总数\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"月度发放总数"
+msgstr "月度发放总数"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_this_month
@@ -1311,13 +1072,8 @@ msgstr "我的月份总计"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my
-#, fuzzy
 msgid "My Total"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"我的总数\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"我的总计"
+msgstr "我的总计"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_name
@@ -1326,13 +1082,8 @@ msgstr "名称"
 
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
-#, fuzzy
 msgid "Never"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"不接收\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"从不"
+msgstr "从不"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
@@ -1346,13 +1097,8 @@ msgstr "下次报告日期"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
-#, fuzzy
 msgid "No monthly sending limit"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"没有每月发送限制\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"没有月度发放限额"
+msgstr "没有月度发放限额"
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_problem_solver
@@ -1361,16 +1107,11 @@ msgstr "没有人能像你一样解决挑战"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
-#, fuzzy
 msgid "No one, assigned through challenges"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"没有人完成已分配的任务\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"没有人完成已分配的挑战"
+msgstr "没有人完成已分配的挑战"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:756
+#: code:addons/gamification/models/challenge.py:669
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr "没有人达到获得特殊徽章的要求"
@@ -1421,11 +1162,6 @@ msgid "Owners"
 msgstr "拥有者"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-msgid "Participating"
-msgstr "参与"
-
-#. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "People having some badges"
 msgstr "有一些徽章的人"
@@ -1449,42 +1185,25 @@ msgstr "周期"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
-#, fuzzy
 msgid "Problem Solver"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"解决问题的方法\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"问题解决者"
+msgstr "问题解决者"
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
-#, fuzzy
 msgid "Progressive (using numerical values)"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"逐行扫描（使用数值）\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"逐行（使用数值化值）"
+msgstr "逐行（使用数值化值）"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
-#, fuzzy
 msgid "Python Code"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Python代码\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Python 代码"
+msgstr "Python 代码"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_compute_code
 msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
-msgstr ""
-"Python代码必须为每个用户执行， 'result'，应包含新的当前值，评估的用户可以通过"
-"object.user_id访问。"
+msgstr "Python代码必须为每个用户执行， 'result'，应包含新的当前值，评估的用户可以通过object.user_id访问。"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1503,33 +1222,23 @@ msgstr "手动记录"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
-#, fuzzy
 msgid "Reference"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"引用\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"参考"
+msgstr "参考"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "Refresh Challenge"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"更新任务\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"刷新挑战"
-
-#. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-msgid "Reject"
-msgstr "拒绝"
+msgstr "刷新挑战"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
 msgstr "相关目标"
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "用于管理资源访问权限的用户名"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_remaining_sending
@@ -1572,18 +1281,13 @@ msgid "Responsible"
 msgstr "负责人"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:551
-#, fuzzy, python-format
+#: code:addons/gamification/models/challenge.py:489
+#, python-format
 msgid "Retrieving progress for personal challenge without user information"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"正在检索个人任务的进度，无需用户信息\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"正在检索个人挑战的进度，无需用户信息"
+msgstr "正在检索个人挑战的进度，无需用户信息"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
 msgid "Reward"
 msgstr "奖励"
 
@@ -1599,13 +1303,8 @@ msgstr "每完成一个目标就马上奖励"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_challenge_ids
-#, fuzzy
 msgid "Reward of Challenges"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务奖励\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战的奖励"
+msgstr "挑战的奖励"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_goal_definition_ids
@@ -1614,13 +1313,8 @@ msgstr "奖励按照"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
-#, fuzzy
 msgid "Rewards for challenges"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"任务奖励\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"挑战的奖励"
+msgstr "挑战的奖励"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
@@ -1629,13 +1323,8 @@ msgstr "运行中"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
-#, fuzzy
 msgid "Running Challenges"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"运行中的任务\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"运行中的挑战"
+msgstr "运行中的挑战"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1644,13 +1333,8 @@ msgstr "安排"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
-#, fuzzy
 msgid "Search Challenges"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"搜索任务\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"搜索挑战"
+msgstr "搜索挑战"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
@@ -1700,19 +1384,27 @@ msgid "Set the current value you have reached for this goal"
 msgstr "设置你已经达到这个目标的当前值"
 
 #. module: gamification
+#: model:gamification.challenge.line,name:gamification.line_base_admin1
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
 msgstr "设置你的公司数据"
 
 #. module: gamification
+#: model:gamification.challenge.line,name:gamification.line_base_admin2
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
 msgstr "设置您的公司LOGO徽标"
 
 #. module: gamification
+#: model:gamification.challenge.line,name:gamification.line_base_discover1
 #: model:gamification.goal.definition,name:gamification.definition_base_timezone
 msgid "Set your Timezone"
 msgstr "设置您的时区"
+
+#. module: gamification
+#: selection:gamification.challenge,category:0
+msgid "Settings / Gamification Tools"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
@@ -1756,7 +1448,7 @@ msgstr "订阅"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3141
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3035
 msgid "Suffix"
 msgstr "后缀"
 
@@ -1767,13 +1459,8 @@ msgstr "建议用户"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_target_goal
-#, fuzzy
 msgid "Target Value to Reach"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"达到目标值\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"要达到的目标值"
+msgstr "要达到的目标值"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -1786,13 +1473,15 @@ msgid "The action that will be called to update the goal value."
 msgstr "将被调用来更新目标值的动作"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:740
+#: code:addons/gamification/models/challenge.py:648
 #, python-format
 msgid "The challenge %s is finished."
 msgstr "我们面临的挑战 %s 已完成"
 
 #. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3035
 msgid "The currency and suffix field"
 msgstr "币种和后缀字段"
 
@@ -1803,17 +1492,10 @@ msgstr "用于评估的时间段的日期"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_end_date
-#, fuzzy
 msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"一天一个新的任务将自动关闭。如果没有周期性设置，将使用此日期为目标的结束日"
-"期。\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"一天一个新的挑战将自动关闭。如果没有周期性设置，将使用此日期为目标的关闭日"
-"期。"
+msgstr "一天一个新的挑战将自动关闭。如果没有周期性设置，将使用此日期为目标的关闭日期。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_start_date
@@ -1823,18 +1505,13 @@ msgid ""
 msgstr "新挑战自动开始日期。如果没有周期性设置，将此日期作为为目标开始日期。"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:129
-#, fuzzy, python-format
+#: code:addons/gamification/models/goal.py:90
+#, python-format
 msgid ""
 "The domain for the definition %s seems incorrect, please check it.\n"
 "\n"
 "%s"
 msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"定义 %s 的域貌似不正确，请检查它。\n"
-"\n"
-"%s\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "定义 %s 的领域貌似不正确，请检查它。\n"
 "\n"
 "%s"
@@ -1873,15 +1550,15 @@ msgstr "越低越好"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max_number
-msgid "The maximum number of time this badge can be sent per month per person."
+msgid ""
+"The maximum number of time this badge can be sent per month per person."
 msgstr "这个徽章可以给每人每月最大时间数"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:146
+#: code:addons/gamification/models/goal.py:107
 #, python-format
 msgid ""
-"The model configuration for the definition %s seems incorrect, please check "
-"it.\n"
+"The model configuration for the definition %s seems incorrect, please check it.\n"
 "\n"
 "%s not found"
 msgstr ""
@@ -1890,11 +1567,10 @@ msgstr ""
 "%s 未找到"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:143
+#: code:addons/gamification/models/goal.py:104
 #, python-format
 msgid ""
-"The model configuration for the definition %s seems incorrect, please check "
-"it.\n"
+"The model configuration for the definition %s seems incorrect, please check it.\n"
 "\n"
 "%s not stored"
 msgstr ""
@@ -1912,12 +1588,12 @@ msgstr "为评估本领域的模型对象"
 msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
-msgstr ""
-"数天之后，分配到一个手动目标的用户将被提醒。如果没有指定值永远不会提醒。"
+msgstr "数天之后，分配到一个手动目标的用户将被提醒。如果没有指定值永远不会提醒。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_this_month
-msgid "The number of time the current user has received this badge this month."
+msgid ""
+"The number of time the current user has received this badge this month."
 msgstr "本月当前用户已收到时间这个徽章的数量"
 
 #. module: gamification
@@ -1946,16 +1622,13 @@ msgid "The number of time this badge has been received."
 msgstr "这个徽章已收到的时间数"
 
 #. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_monetary
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_monetary
-#, fuzzy
 msgid "The target and current value are defined in the company currency."
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"公司的目标和当前货币定义的值\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"目标和当前值以公司货币定义。"
+msgstr "目标和当前值以公司货币定义。"
 
 #. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix
 msgid "The unit of the target and current values"
 msgstr "单元目标和当前值"
@@ -1981,26 +1654,17 @@ msgstr "这些目标已经成功的用户会自动的收到徽章"
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression
 msgid ""
 "The value to compare with the distinctive field. The expression can contain "
-"reference to 'user' which is a browse record of the current user, e.g. user."
-"id, user.partner_id.id..."
-msgstr ""
-"独特字段与数值进行比较。该规则可以包含当前用户的浏览记录作为参考给“user”，如."
+"reference to 'user' which is a browse record of the current user, e.g. "
 "user.id, user.partner_id.id..."
+msgstr ""
+"独特字段与数值进行比较。该规则可以包含当前用户的浏览记录作为参考给“user”，如.user.id, user.partner_id.id..."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid ""
 "There is no goals associated to this challenge matching your search.\n"
-"                Make sure that your challenge is active and assigned to at "
-"least one user."
+"            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
-"没有和这个挑战相关的目标匹配你的搜索\n"
-"确保你的挑战是激活的并且分配给至少一个用户"
-
-#. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-msgid "There is no reward upon completion of this challenge."
-msgstr "有这种挑战完成后没有奖励"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_closed
@@ -2008,7 +1672,7 @@ msgid "These goals will not be recomputed."
 msgstr "这些目标将不会被重新计算"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:223
+#: code:addons/gamification/models/badge.py:213
 #, python-format
 msgid "This badge can not be sent by users."
 msgstr "这个徽章不能发送的用户"
@@ -2020,13 +1684,8 @@ msgstr "这一领域的图像用于徽章,仅限于256 x256"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
-#, fuzzy
 msgid "To"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"到\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"至"
+msgstr "至"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_target_goal
@@ -2050,13 +1709,8 @@ msgstr "唯一的所有者"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_suffix
-#, fuzzy
 msgid "Unit"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"单件\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"单位"
+msgstr "单位"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
@@ -2064,7 +1718,7 @@ msgid "Update"
 msgstr "更新"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:495
+#: code:addons/gamification/models/goal.py:445
 #, python-format
 msgid "Update %s"
 msgstr "更新  %s"
@@ -2079,19 +1733,18 @@ msgstr "用户"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_domain
-#, fuzzy
 msgid "User domain"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"用户域\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"用户领域"
+msgstr "用户领域"
 
 #. module: gamification
-#: model:ir.model,name:gamification.model_res_users
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_ids
 msgid "Users"
 msgstr "用户"
+
+#. module: gamification
+#: selection:gamification.challenge,category:0
+msgid "Website / Forum"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -2114,8 +1767,7 @@ msgstr "你希望谁来奖励？"
 msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
-msgstr ""
-"启用此选项，一个用户可以一次获得一枚徽章。前3枚徽章只有在任务结束时才能奖励"
+msgstr "启用此选项，一个用户可以一次获得一枚徽章。前3枚徽章只有在任务结束时才能奖励"
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
@@ -2129,19 +1781,19 @@ msgid "Yearly"
 msgstr "每年"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:225
+#: code:addons/gamification/models/badge.py:215
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr "你是不是在用户允许列表中"
 
 #. module: gamification
-#: code:addons/gamification/wizard/grant_badge.py:26
+#: code:addons/gamification/wizard/grant_badge.py:24
 #, python-format
 msgid "You can not grant a badge to yourself"
 msgstr "你不能自己授予自己一个徽章"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:235
+#: code:addons/gamification/models/challenge.py:195
 #, python-format
 msgid "You can not reset a challenge with unfinished goals."
 msgstr "你不能重新设置一个带有未完成目标的挑战"
@@ -2157,13 +1809,13 @@ msgid "You did great at your job."
 msgstr "你的工作做的很好"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:227
+#: code:addons/gamification/models/badge.py:217
 #, python-format
 msgid "You do not have the required badges."
 msgstr "您没有必要的徽章"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:229
+#: code:addons/gamification/models/badge.py:219
 #, python-format
 msgid "You have already sent this badge too many time this month."
 msgstr "您已经在本月太多的时间发送这个徽章"
@@ -2186,44 +1838,25 @@ msgstr "天"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "e.g. Monthly Sales Objectives"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"例如月度销售目标\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"例如，月度销售目标"
+msgstr "例如，月度销售目标"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
-#, fuzzy
 msgid "e.g. days"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"如.天\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"例如，天数"
+msgstr "例如，天数"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid ""
-"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', "
-"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], "
-"count=True, context=context)"
+"e.g. result = env['mail.followers'].search_count([('res_model', '=', "
+"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 msgstr ""
-"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', "
-"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], "
-"count=True, context=context)"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
-#, fuzzy
 msgid "e.g. user.partner_id.id"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"例如 user.partner_id.id\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"例如，user.partner_id.id"
+msgstr "例如，user.partner_id.id"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
@@ -2246,11 +1879,6 @@ msgid "refresh"
 msgstr "刷新"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_wizard
-msgid "reply later"
-msgstr "以后答复"
-
-#. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
 msgstr "比目标"
@@ -2264,225 +1892,3 @@ msgstr "于"
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
 msgstr "本月"
-
-#~ msgid ""
-#~ "\n"
-#~ "    <header>\n"
-#~ "        <strong>Reminder ${object.name}</strong>\n"
-#~ "    </header>\n"
-#~ "    \n"
-#~ "    <p>You have not updated your progress for the goal ${object."
-#~ "definition_id.name} (currently reached at ${object.completeness}%) for at "
-#~ "least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<header>\n"
-#~ "        <strong>提醒 ${object.name}</strong>\n"
-#~ "    </header>\n"
-#~ "    \n"
-#~ "    <p> 最近 ${object.remind_update_delay} 天内，你没有更新你的目标进度 "
-#~ "${object.definition_id.name} (当前完成 ${object.completeness}%)。 不要忘记"
-#~ "去做。</p>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "\n"
-#~ "<header>\n"
-#~ "    <strong>${object.name}</strong>\n"
-#~ "</header>\n"
-#~ "<p class=\"oe_grey\">The following message contains the current progress "
-#~ "for the challenge ${object.name}</p>\n"
-#~ "\n"
-#~ "% if object.visibility_mode == 'personal':\n"
-#~ "    <table width=\"100%\" border=\"1\">\n"
-#~ "    <tr>\n"
-#~ "        <th>Goal</th>\n"
-#~ "        <th>Target</th>\n"
-#~ "        <th>Current</th>\n"
-#~ "        <th>Completeness</th>\n"
-#~ "    </tr>\n"
-#~ "    % for line in ctx[\"challenge_lines\"]:\n"
-#~ "        <tr\n"
-#~ "            % if line['completeness'] >= 100:\n"
-#~ "                style=\"font-weight:bold;\"\n"
-#~ "            % endif\n"
-#~ "            >\n"
-#~ "            <td>${line['name']}</td>\n"
-#~ "            <td>${line['target']}\n"
-#~ "            % if line['suffix']:\n"
-#~ "                ${line['suffix']}\n"
-#~ "            % endif\n"
-#~ "            </td>\n"
-#~ "            <td>${line['current']}\n"
-#~ "            % if line['suffix']:\n"
-#~ "                ${line['suffix']}\n"
-#~ "            % endif\n"
-#~ "            </td>\n"
-#~ "            <td>${line['completeness']} %</td>\n"
-#~ "        </tr>\n"
-#~ "    % endfor\n"
-#~ "    </table>\n"
-#~ "% else:\n"
-#~ "    % for line in ctx[\"challenge_lines\"]:\n"
-#~ "        <table width=\"100%\" border=\"1\">\n"
-#~ "            <tr>\n"
-#~ "                <th colspan=\"4\">${line['name']}</th>\n"
-#~ "            </tr>\n"
-#~ "            <tr>\n"
-#~ "                <th>#</th>\n"
-#~ "                <th>Person</th>\n"
-#~ "                <th>Completeness</th>\n"
-#~ "                <th>Current</th>\n"
-#~ "            </tr>\n"
-#~ "            % for goal in line['goals']:\n"
-#~ "                <tr\n"
-#~ "                    % if goal.completeness >= 100:\n"
-#~ "                        style=\"font-weight:bold;\"\n"
-#~ "                    % endif\n"
-#~ "                    >\n"
-#~ "                    <td>${goal['rank']}</td>\n"
-#~ "                    <td>${goal['name']}</td>\n"
-#~ "                    <td>${goal['completeness']}%</td>\n"
-#~ "                    <td>${goal['current']}/${line['target']}\n"
-#~ "                    % if line['suffix']:\n"
-#~ "                        ${line['suffix']}\n"
-#~ "                    % endif\n"
-#~ "                    </td>\n"
-#~ "                </tr>\n"
-#~ "            % endfor\n"
-#~ "        </table>\n"
-#~ "\n"
-#~ "        <br/><br/>\n"
-#~ "\n"
-#~ "    % endfor\n"
-#~ "% endif\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<header>\n"
-#~ "    <strong>${object.name}</strong>\n"
-#~ "</header>\n"
-#~ "<p class=\"oe_grey\">下面的信息包含了任务的当前进度 ${object.name}</p>\n"
-#~ "\n"
-#~ "% if object.visibility_mode == 'personal':\n"
-#~ "    <table width=\"100%\" border=\"1\">\n"
-#~ "    <tr>\n"
-#~ "        <th>总目标</th>\n"
-#~ "        <th>目标</th>\n"
-#~ "        <th>当前</th>\n"
-#~ "        <th>完整性</th>\n"
-#~ "    </tr>\n"
-#~ "    % for line in ctx[\"challenge_lines\"]:\n"
-#~ "        <tr\n"
-#~ "            % if line['completeness'] >= 100:\n"
-#~ "                style=\"font-weight:bold;\"\n"
-#~ "            % endif\n"
-#~ "            >\n"
-#~ "            <td>${line['name']}</td>\n"
-#~ "            <td>${line['target']}\n"
-#~ "            % if line['suffix']:\n"
-#~ "                ${line['suffix']}\n"
-#~ "            % endif\n"
-#~ "            </td>\n"
-#~ "            <td>${line['current']}\n"
-#~ "            % if line['suffix']:\n"
-#~ "                ${line['suffix']}\n"
-#~ "            % endif\n"
-#~ "            </td>\n"
-#~ "            <td>${line['completeness']} %</td>\n"
-#~ "        </tr>\n"
-#~ "    % endfor\n"
-#~ "    </table>\n"
-#~ "% else:\n"
-#~ "    % for line in ctx[\"challenge_lines\"]:\n"
-#~ "        <table width=\"100%\" border=\"1\">\n"
-#~ "            <tr>\n"
-#~ "                <th colspan=\"4\">${line['name']}</th>\n"
-#~ "            </tr>\n"
-#~ "            <tr>\n"
-#~ "                <th>#</th>\n"
-#~ "                <th>个人</th>\n"
-#~ "                <th>完整性</th>\n"
-#~ "                <th>当前</th>\n"
-#~ "            </tr>\n"
-#~ "            % for goal in line['goals']:\n"
-#~ "                <tr\n"
-#~ "                    % if goal.completeness >= 100:\n"
-#~ "                        style=\"font-weight:bold;\"\n"
-#~ "                    % endif\n"
-#~ "                    >\n"
-#~ "                    <td>${goal['rank']}</td>\n"
-#~ "                    <td>${goal['name']}</td>\n"
-#~ "                    <td>${goal['completeness']}%</td>\n"
-#~ "                    <td>${goal['current']}/${line['target']}\n"
-#~ "                    % if line['suffix']:\n"
-#~ "                        ${line['suffix']}\n"
-#~ "                    % endif\n"
-#~ "                    </td>\n"
-#~ "                </tr>\n"
-#~ "            % endfor\n"
-#~ "        </table>\n"
-#~ "\n"
-#~ "        <br/><br/>\n"
-#~ "\n"
-#~ "    % endfor\n"
-#~ "% endif\n"
-#~ "            "
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "For Every Succeding User"
-#~ msgstr "每一位成功的用户"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Inherited models"
-#~ msgstr "继承的模块"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Related user name for the resource to manage its access."
-#~ msgstr "用于管理资源访问权限的用户名"

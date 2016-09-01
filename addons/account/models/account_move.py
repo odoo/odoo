@@ -239,11 +239,13 @@ class AccountMoveLine(models.Model):
     _description = "Journal Item"
     _order = "date desc, id desc"
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         """ change index on partner_id to a multi-column index on (partner_id, ref), the new index will behave in the
             same way when we search on partner_id, with the addition of being optimal when having a query that will
             search on partner_id and ref at the same time (which is the case when we open the bank reconciliation widget)
         """
+        cr = self._cr
         cr.execute('DROP INDEX IF EXISTS account_move_line_partner_id_index')
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
         if not cr.fetchone():
@@ -411,6 +413,8 @@ class AccountMoveLine(models.Model):
     invoice_id = fields.Many2one('account.invoice', oldname="invoice")
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
     user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type")
+    tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
+        help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the module account_tax_cash_basis, some will become exigible only when the payment is recorded.")
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),

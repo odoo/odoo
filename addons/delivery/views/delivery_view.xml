@@ -42,7 +42,12 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
                             </button>
                             <button name="toggle_prod_environment" type="object" class="oe_stat_button" icon="fa-check-square" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}">
-                                <field name="prod_environment" widget="boolean_button" options='{"terminology": "prod_environment"}'/>
+                                <field name="prod_environment" widget="boolean_button" options='{"terminology": {
+                                    "string_true": "Production Environment",
+                                    "hover_true": "Switch to test environment",
+                                    "string_false": "Test Environment",
+                                    "hover_false": "Switch to production environment"
+                                }}'/>
                             </button>
                         </div>
                         <div class="oe_title" name="title">

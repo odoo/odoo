@@ -46,10 +46,16 @@ class CrmTeam(models.Model):
                 ('state', 'in', ['open', 'paid']),
                 ('team_id', '=', team.id),
                 ('date', '<=', date.today()),
-                ('date', '>=', date.today().replace(day=1))
+                ('date', '>=', date.today().replace(day=1)),
+                ('type', 'in', ['out_invoice', 'out_refund']),
             ])
             team.invoiced = sum(invoices.mapped('amount_untaxed_signed'))
 
     @api.multi
     def update_invoiced_target(self, value):
         return self.write({'invoiced_target': round(float(value or 0))})
+
+    @api.onchange('use_quotations')
+    def _onchange_use_quotation(self):
+        if self.use_quotations:
+            self.use_invoices = True

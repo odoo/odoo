@@ -106,7 +106,7 @@ class SaleOrder(models.Model):
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('sent', 'Quotation Sent'),
-        ('sale', 'Sale Order'),
+        ('sale', 'Sales Order'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
@@ -142,7 +142,7 @@ class SaleOrder(models.Model):
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
 
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Term', oldname='payment_term')
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, oldname='section_id')

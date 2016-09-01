@@ -1,25 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Joray <13637815@qq.com>, 2016
-# Joray <13637815@qq.com>, 2016
-# patrick liao <patrickliao@189.cn>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-12 00:48+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
+"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
@@ -36,7 +32,12 @@ msgstr "归档"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr "通过即时贴类别"
+msgstr "即时贴类别"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "点击来创建一个新的标签"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -66,7 +67,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:note.field_note_stage_create_date
 #: model:ir.model.fields,field_description:note.field_note_tag_create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建于"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_date_done
@@ -107,24 +108,23 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:note.field_note_stage___last_update
 #: model:ir.model.fields,field_description:note.field_note_tag___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_uid
 #: model:ir.model.fields,field_description:note.field_note_stage_write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_date
 #: model:ir.model.fields,field_description:note.field_note_stage_write_date
 #: model:ir.model.fields,field_description:note.field_note_tag_write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "最近更新时间"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "稍后"
@@ -132,10 +132,10 @@ msgstr "稍后"
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr "新建"
+msgstr "新的"
 
 #. module: note
-#: code:addons/note/note.py:165
+#: code:addons/note/models/note.py:128
 #, python-format
 msgid "New Note"
 msgstr "新备注"
@@ -145,7 +145,7 @@ msgstr "新备注"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "笔记"
+msgstr "便笺"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
@@ -183,8 +183,8 @@ msgstr "所有者"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "便签阶段的所有者"
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -236,48 +236,41 @@ msgid "Tag name already exists !"
 msgstr "标签名已存在!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "标签"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "本周"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
-msgstr "今天"
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "明天"
+msgstr "今日"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
-"单击增加一个个人便签。 使用便签来组织个人的任务或者是事项。所有的便器都是私有"
-"的。 没有其他人看到它们。 然后，你能通过在便签上邀请关注者来分享你的一些便签 "
-"(对于会议记录非常有用，特别是当你激活了便签簿的 合作书写模式)。 通过增加、删"
-"除或者修改列，你可以个性化你对便签和任务的处理。"
+"单击增加一个个人便签。 使用便签来组织个人的任务或者是事项。所有的便器都是私有的。 没有其他人看到它们。 "
+"然后，你能通过在便签上邀请关注者来分享你的一些便签 (对于会议记录非常有用，特别是当你激活了便签簿的 合作书写模式)。 "
+"通过增加、删除或者修改列，你可以个性化你对便签和任务的处理。"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
 msgid "Used to order the note stages"
-msgstr "用来整理便签阶段"
+msgstr "用于便签阶段排序"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
@@ -290,51 +283,3 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr "通过增加、删除或者修改列，你可以个性化你对便签和任务的处理。"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"

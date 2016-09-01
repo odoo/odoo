@@ -1,35 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-#
+# 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2015
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-13 15:11+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
-"Language: nl\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
+"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Issues"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Taken"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -49,17 +44,11 @@ msgstr "<span class=\"o_stat_text\"> Offerte(s) </span>"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Een lid waarmee u uw lidmaatschap wilt associëren. Het houdt rekening met de "
-"lidmaatschap status van het geassocieerde lid."
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
-msgid "Activation"
-msgstr "Offerte"
+"Een lid waarmee u uw lidmaatschap wilt associëren. Het houdt rekening met de"
+" lidmaatschap status van het geassocieerde lid."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -72,9 +61,16 @@ msgid "Cancel Membership Date"
 msgstr "Annuleer lidmaatschap datum"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
-msgstr "Aantal betalingsmethodes"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:14
+#, python-format
+msgid "Click here to see more options."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+msgid "Count Payment Token"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
@@ -107,26 +103,9 @@ msgid "Free Member"
 msgstr "Gratis lid"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factuur"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -140,8 +119,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -149,16 +127,9 @@ msgstr ""
 "-Geen lid: Een lid die nog geen lidmaatschap heeft aangevraagd.\n"
 "-Opgezegd lid: Een lid die zijn lidmaatschap heeft opgezegd.\n"
 "-Oud lid: Een lid waarvan het lidmaatschap is vervallen.\n"
-"-Wachtend lid: Een lid die lidmaatschap heeft aangevraagd en waarvan de "
-"factuur wordt gemaakt.\n"
+"-Wachtend lid: Een lid die lidmaatschap heeft aangevraagd en waarvan de factuur wordt gemaakt.\n"
 "-Gefactureerd lid: Een lid waarvan de factuur is gemaakt.\n"
-"                    -Betalend lid: Een lid die zijn lidmaatschap heeft "
-"betaald."
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
-msgid "Latest Partner Review"
-msgstr ""
+"                    -Betalend lid: Een lid die zijn lidmaatschap heeft betaald."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -166,13 +137,10 @@ msgid "Lead/Opportunity"
 msgstr "Lead/Prospect"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
-msgid "Level"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
-msgid "Level Weight"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:18
+#, python-format
+msgid "Let's have a look at the quotations of this sales team."
 msgstr ""
 
 #. module: sale_crm
@@ -201,14 +169,19 @@ msgid "Membership Start Date"
 msgstr "Lidmaatschap startdatum"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "Bericht voor verkooporder"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "Bericht voor Picking"
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nieuwe offerte"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
@@ -226,15 +199,9 @@ msgid "Orders"
 msgstr "Orders"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-#, fuzzy
-msgid "Partnership Date"
-msgstr "Annuleer lidmaatschap datum"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
-msgstr "Betalingsmethodes"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
+msgid "Payment Tokens"
+msgstr "Betaal tokens"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -249,13 +216,32 @@ msgstr "Offertes"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
-msgstr "Verkooporders"
+msgstr "Verkooporder"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Selecteer als u een gratis lid,maatschap wilt geven."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Door de 'Waarschuwingsoptie' te selecteren wordt het bericht naar de "
+"gebruiker gestuurd. Door het 'Blokkerend bericht' te kiezen wordt een fout "
+"gegenereerd met de boodschap en het proces wordt geblokkeerd. Het bericht "
+"moet in het volgende veld worden ingevoerd."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr "Voorraad picking"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -268,11 +254,6 @@ msgid "Tags"
 msgstr "Labels"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Taken"
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
 msgstr "De met de relatie overeengekomen prijs"
@@ -283,8 +264,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
-"De voorraadlocatie zal gebruikte worden, in plaats van de standaard, voor de "
-"goederen welke verzonden worden naar deze relatie."
+"De voorraadlocatie zal gebruikte worden, in plaats van de standaard, voor de"
+" goederen welke verzonden worden naar deze relatie."
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
@@ -302,44 +283,4 @@ msgstr "Gebruikers"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr "Plaats leverancier"
-
-#~ msgid "# Claims"
-#~ msgstr "# Klachten"
-
-#~ msgid "Campaign"
-#~ msgstr "Campagne"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Geo breedtegraad"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Geo lokalisatie datum"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Geo lengtegraad"
-
-#~ msgid "Medium"
-#~ msgstr "Kanaal"
-
-#~ msgid "Source"
-#~ msgstr "Bron"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Dit is de naam welke u helpt om uw verschillende campagnes te volgen. "
-#~ "Zoals bijvoorbeeld: Fall_drive, Christmas_Special"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Dit is de methode van afleveren. Bijvoorbeeld, Brief, E-mail of Banner "
-#~ "advertentie"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Dit is de bron van de link. Bijvoorbeeld: Zoekmachine, ander domein of de "
-#~ "naam van de e-mail lijst"
+msgstr "Leverancier locatie"

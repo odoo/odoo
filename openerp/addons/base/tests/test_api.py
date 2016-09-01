@@ -26,20 +26,15 @@ class TestAPI(common.TransactionCase):
     def test_00_query(self):
         """ Build a recordset, and check its contents. """
         domain = [('name', 'ilike', 'j')]
-        ids = self.registry('res.partner').search(self.cr, self.uid, domain)
         partners = self.env['res.partner'].search(domain)
 
-        # partners is a collection of browse records corresponding to ids
-        self.assertTrue(ids)
+        # partners is a collection of browse records
         self.assertTrue(partners)
 
         # partners and its contents are instance of the model
         self.assertIsRecordset(partners, 'res.partner')
         for p in partners:
             self.assertIsRecord(p, 'res.partner')
-
-        self.assertEqual([p.id for p in partners], ids)
-        self.assertEqual(self.env['res.partner'].browse(ids), partners)
 
     @mute_logger('openerp.models')
     def test_01_query_offset(self):
@@ -71,7 +66,8 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.models')
     def test_04_query_count(self):
         """ Test the search method with count=True. """
-        count1 = self.registry('res.partner').search(self.cr, self.uid, [], count=True)
+        self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
+        count1 = self.cr.fetchone()[0]
         count2 = self.env['res.partner'].search([], count=True)
         self.assertIsInstance(count1, (int, long))
         self.assertIsInstance(count2, (int, long))
@@ -136,54 +132,6 @@ class TestAPI(common.TransactionCase):
 
         self.assertFalse(partner.parent_id.user_id.groups_id)
         self.assertIsRecordset(partner.parent_id.user_id.groups_id, 'res.groups')
-
-    @mute_logger('openerp.models')
-    def test_10_old_old(self):
-        """ Call old-style methods in the old-fashioned way. """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
-        self.assertTrue(partners)
-        ids = map(int, partners)
-
-        # call method name_get on partners' model, and check its effect
-        res = partners._model.name_get(self.cr, self.uid, ids)
-        self.assertEqual(len(res), len(ids))
-        self.assertEqual(set(val[0] for val in res), set(ids))
-
-    @mute_logger('openerp.models')
-    def test_20_old_new(self):
-        """ Call old-style methods in the new API style. """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
-        self.assertTrue(partners)
-
-        # call method name_get on partners itself, and check its effect
-        res = partners.name_get()
-        self.assertEqual(len(res), len(partners))
-        self.assertEqual(set(val[0] for val in res), set(map(int, partners)))
-
-    @mute_logger('openerp.models')
-    def test_25_old_new(self):
-        """ Call old-style methods on records (new API style). """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
-        self.assertTrue(partners)
-
-        # call method name_get on partner records, and check its effect
-        for p in partners:
-            res = p.name_get()
-            self.assertTrue(isinstance(res, list) and len(res) == 1)
-            self.assertTrue(isinstance(res[0], tuple) and len(res[0]) == 2)
-            self.assertEqual(res[0][0], p.id)
-
-    @mute_logger('openerp.models')
-    def test_30_new_old(self):
-        """ Call new-style methods in the old-fashioned way. """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
-        self.assertTrue(partners)
-        ids = map(int, partners)
-
-        # call method write on partners' model, and check its effect
-        partners._model.write(self.cr, self.uid, ids, {'active': False})
-        for p in partners:
-            self.assertFalse(p.active)
 
     @mute_logger('openerp.models')
     def test_40_new_new(self):

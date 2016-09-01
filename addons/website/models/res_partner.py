@@ -16,11 +16,15 @@ class Partner(models.Model):
 
     @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):
+        google_maps_api_key = self.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        if not google_maps_api_key:
+            return False
         params = {
             'center': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.name_get()[0][1] or ''),
             'size': "%sx%s" % (height, width),
             'zoom': zoom,
             'sensor': 'false',
+            'key': google_maps_api_key,
         }
         return urlplus('//maps.googleapis.com/maps/api/staticmap', params)
 

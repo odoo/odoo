@@ -95,11 +95,17 @@ class BlogPost(models.Model):
         return res
 
     def _default_content(self):
-        return '''  <div class="container">
-                        <section class="mt16 mb16">
+        return '''
+            <section class="s_text_block">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 mb16 mt16">
                             <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
-                        </section>
-                    </div> '''
+                        </div>
+                    </div>
+                </div>
+            </section>
+        '''
 
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
@@ -110,7 +116,7 @@ class BlogPost(models.Model):
         default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": ""}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
-    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
+    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize_attributes=False)
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 
@@ -198,7 +204,7 @@ class BlogPost(models.Model):
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (self.blog_id.id, self.id),
             'target': 'self',
-            'res_id': self.id,
+            'res_id': post.id,
         }
 
     @api.multi

@@ -20,13 +20,6 @@
                             </div>
                             <div class="col-md-12">
                                 <p>
-                                    With a small team of smart people, we released the most
-                                    disruptive enterprise management software in the world.
-                                    Odoo is fully open source, super easy, full featured
-                                    (3000+ apps) and its online offer is 3 times cheaper than
-                                    traditional competitors like SAP and Ms Dynamics.
-                                </p>
-                                <p>
                                     Join us, we offer you an extraordinary chance to learn, to
                                     develop and to be part of an exciting experience and
                                     team.
@@ -45,12 +38,11 @@
                     <div class="col-md-12" id="jobs_grid">
                         <div t-if="not jobs">
                             <div class="text-center text-muted">
-                              <h4 class="css_editable_display">No job offer found</h4>
-                              <h4 class="css_editable_hidden">There isn't job offer published now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h4>
+                              <h3 class="css_editable_hidden"><a t-attf-href="/page/website.contactus">Contact us</a> for job opportunities.</h3>
                               <t groups="base.group_website_publisher">
-                                <t groups="base.group_hr_manager">
-                                  <p>Click on "Content" to define a new job offer or "Help" for more informations.</p>
-                                </t>
+                                <h4 groups="base.group_hr_manager">
+                                    Create new job pages from the <strong><i>+New</i></strong> top-right button.
+                                </h4>
                               </t>
                             </div>
                         </div>
@@ -85,53 +77,43 @@
     </t>
 </template>
 
-<template id="detail" name='Job Detail'>
+<template id="detail" name="Job Detail">
     <t t-call="website.layout">
-    <t t-set="additional_title">Job Detail</t>
-    <div id="wrap" class="js_hr_recruitment">
-        <div class="oe_structure"/>
+        <t t-set="additional_title">Job Detail</t>
+        <div id="wrap" class="js_hr_recruitment">
+            <div class="oe_structure"/>
 
-        <section class="container mt8">
-            <div class="row">
-              <div class="col-sm-5">
-                  <ol class="breadcrumb mb0">
-                      <li><a href="/jobs">Our Jobs</a></li>
-                      <li class="active"><span t-field="job.name"></span></li>
-                  </ol>
-              </div><div class="col-sm-7">
-                  <t t-call="website.publish_management">
-                      <t t-set="object" t-value="job"/>
-                      <t t-set="publish_edit" t-value="True"/>
-                  </t>
-              </div>
-            </div>
-        </section>
-
-        <div class="oe_structure" style="clear:both;">
-            <h1 class="text-center" t-field="job.name"/>
-            <h5 class="text-center" t-field="job.address_id" t-options='{
-                "widget": "contact",
-                "fields": ["address"],
-                "no_tag_br": True
-                }'/>
-           <h5 class="text-center text-muted">
-                <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
-            </h5>
-        </div>
-        <div t-field="job.website_description"/>
-
-        <div class="oe_structure">
-            <section class="mt16 mb16">
+            <!-- Breadcrumb -->
+            <section class="mb16 bg-white">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-12 text-center mt16 mb16">
-                            <a t-attf-href="/jobs/apply/#{ job.id }" class="btn btn-primary btn-lg">Apply</a>
-                        </div>
+                    <div class="pull-right">
+                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg pull-right mt32 mb4">Apply Now!</a>
+                        <br/>
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="job"/>
+                            <t t-set="publish_edit" t-value="True"/>
+                        </t>
                     </div>
+                    <label class="mb0 mt16"><a href="/jobs">Jobs</a></label> /
+                    <h1 class="mb0 mt0" t-field="job.name"/>
+                    <h4 class="mt0" t-field="job.address_id" t-field-options='{
+                        "widget": "contact",
+                        "fields": ["city"],
+                        "no_tag_br": True
+                    }'/>
                 </div>
             </section>
+
+            <div t-field="job.website_description"/>
+
+            <div class="oe_structure">
+                <section class="o_job_bottom_bar mt32 mb32">
+                    <div class="text-center">
+                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
+                    </div>
+                </section>
+            </div>
         </div>
-    </div>
     </t>
 </template>
 
@@ -202,6 +184,198 @@
             </div>
         </div>
     </t>
+</template>
+
+<template id="default_website_description">
+    <!-- Description -->
+    <section class="mb32">
+        <div class="container">
+            <p class="mt0 lead">
+                Short summary of the job: A sales job for smart people and can
+                learn quickly new industries management practices. You will be
+                in charge of the full sales cycle from the opportunity
+                qualification to the negotiation, going through astonishing
+                product demos.
+            </p>
+        </div>
+    </section>
+
+    <!-- Responsibilities -->
+    <section class="o_tasks">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <h4><strong>Responsibilities</strong></h4>
+                    <p>Full sales cycle</p>
+                    <p>Achieve monthly targets</p>
+                    <p>US + Canada Territory</p>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <h4><strong>Challenges</strong></h4>
+                    <p>Full sales cycle</p>
+                    <p>Achieve monthly targets</p>
+                    <p>US + Canada Territory</p>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <h4><strong>Must Have</strong></h4>
+                    <p>Full sales cycle</p>
+                    <p>Achieve monthly targets</p>
+                    <p>US + Canada Territory</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's great -->
+    <section class="mb32 mt16">
+        <div class="container">
+            <h4><strong>What's great in the job?</strong></h4>
+            <ul>
+                <li>No outbound calls, you get leads and focus on providing value to them</li>
+                <li>You sell management software to directors of SMEs: interesting projects and people</li>
+                <li>Large apps scope: CRM, MRP, Accounting, Inventory, HR, Project Mgt, etc.</li>
+                <li>Direct coordination with functional consultants for qualification and follow ups</li>
+                <li>High commissions for good performers</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Datas -->
+    <section style="border: 0 solid #e3e3e3; border-width: 2px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-4 mt16 mb16">
+                    <h6 class="mb0">Job Complexity:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <h6 class="mb0">Personal Evolution:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <h6 class="mb0">Variability of the Job:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star-o"/>
+                    <h6 class="mb0">Job Security:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star-o"/>
+                    <i class="fa fa-star-o"/>
+                    <h6 class="mb0">Overachieving Possibilities:</h6>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                    <i class="fa fa-star"/>
+                </div>
+                <div class="col-sm-6 col-md-4 mt16 mb16">
+                    <h6 class="mb0">Team / Company Size:</h6>
+                    <p class="text-uppercase ">10  / 40 people</p>
+                    <h6 class="mb0">Avg Deal Size:</h6>
+                    <p class="text-uppercase ">$15k</p>
+                    <h6 class="mb0">Sales Cycle:</h6>
+                    <p class="text-uppercase ">3 months</p>
+                    <h6 class="mb0">Company Growth:</h6>
+                    <p class="text-uppercase ">50% YoY</p>
+                    <h6 class="mb0">Company Maturity:</h6>
+                    <p class="text-uppercase ">Profitable</p>
+                </div>
+                <div class="col-sm-6 col-md-4 mt16 mb16">
+                    <h3 class="mt0">Need More Info?</h3>
+                    <ul>
+                        <li><a href="#">The founder’s story</a></li>
+                        <li><a href="#">The culture</a></li>
+                        <li><a href="https://twitter.com/odoo/likes">What people say about us?</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perks -->
+    <section class="o_perk mt16 mb16">
+        <div class="container">
+            <div class="row">
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-heart"/>
+                    <h4 class="mb0 mt8">Benefits</h4>
+                    <p>Healthcare, dental, vision, life insurance, Flexible Spending Account (FSA), Health Savings Account (HSA)</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-sun-o"/>
+                    <h4 class="mt8 mb0">PTOs</h4>
+                    <p>Vacation, Sick, and Holiday paid leaves</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-car"/>
+                    <h4 class="mt8 mb0">Save on commute</h4>
+                    <p>Pre-tax commuter benefitsbr <br/>(parking and transit) </p>
+                    </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-check-circle"/>
+                    <h4 class="mb0 mt8">Discount Programs</h4>
+                    <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
+                </div>
+            </div><div class="row">
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-map-marker"/>
+                    <h4 class="mb0 mt8">Prime location</h4>
+                    <p>Only a couple blocs from BART, Caltrain, Highway 101, carpool pickup, and Bay Bridge.</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-calendar"/>
+                    <h4 class="mt8 mb0">Sponsored Events</h4>
+                    <p>Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event</p>
+                </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-futbol-o"/>
+                    <h4 class="mt8 mb0">Sport Activity</h4>
+                    <p>Play any sport with colleagues and the bill is covered</p>
+                    </div>
+                <div class="text-center col-md-3 mt16 mb16">
+                    <span class="fa fa-2x fa-coffee"/>
+                    <h4 class="mb0 mt8">Eat &amp; Drink</h4>
+                    <p>Peet's and Philz coffee provided all day to order and pantry snacks</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photos -->
+    <section class="mt16 mb16">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_3.jpg"/>
+                </div>
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_2.jpg"/>
+                </div>
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_4.jpg"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_6.jpg"/>
+                </div>
+                <div class="col-sm-6 col-md-3 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_5.jpg"/>
+                </div>
+                <div class="col-sm-12 col-md-6 mt16 mb16">
+                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_1.jpg"/>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <template id="thankyou">

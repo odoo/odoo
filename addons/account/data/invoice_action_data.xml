@@ -16,10 +16,10 @@
             <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
+<p>Dear ${object.partner_id.name} 
 % set access_action = object.get_access_action()
 % set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)
 
-<p>Dear ${object.partner_id.name} 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)
 % endif

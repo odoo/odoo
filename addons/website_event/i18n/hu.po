@@ -1,30 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event
-#
+# 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-01 16:27+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -54,7 +48,7 @@ msgstr "<i class=\"fa fa-clock-o\"/> Tól"
 #: model:ir.ui.view,arch_db:website_event.index
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i>to</i>"
-msgstr "<i>eddiig</i>"
+msgstr "<i>eddig</i>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_quotes
@@ -99,24 +93,16 @@ msgstr "<strong>Részvétel Twitter-en</strong>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
-msgstr ""
-"<strong>Telefon</strong> <span class=\"text-muted\">(Választható)</span>"
+msgstr "<strong>Telefon</strong> <span class=\"text-muted\">(Választható)</span>"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:25
-#, python-format
-msgid "Add Content"
-msgstr "Tartalom hozzáadás"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Összes kategória"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Összes ország"
@@ -138,78 +124,45 @@ msgstr "Regisztráció törlése"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:48
+#: code:addons/website_event/static/src/js/website.tour.event.js:24
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "Kattints <em>Folytatás</em> egy esemény létrehozásához."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:15
 #, python-format
 msgid "Click here to create a new event."
 msgstr "Kattintson egy új esemény létrehozásához."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:43
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "Kattintson az események további személyre szabásához."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:38
 #, python-format
 msgid "Click to publish your event."
 msgstr "Kattintson az esemény közzétételéhez"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:54
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-#, python-format
 msgid "Continue"
 msgstr "Folytatás"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:47
-#, python-format
-msgid "Create Event"
-msgstr "Esemény létrehozása"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:41
+#: code:addons/website_event/static/src/js/website.tour.event.js:19
 #, python-format
 msgid ""
-"Create a name for your new event and click <em>'Continue'</em>. e.g: "
+"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
-"Hozza létre az új esemény nevét és kattintson <em>'Tovább'</em>. pl: "
-"Technikai Tréning"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:18
-#, python-format
-msgid "Create an Event"
-msgstr "Esemény létrehozása"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:40
-#, python-format
-msgid "Create an Event Name"
-msgstr "Hozzon létre egy esemény nevet"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:15
-#, python-format
-msgid "Create an event"
-msgstr "Esemény létrehozása"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event_show_menu
@@ -221,30 +174,16 @@ msgstr ""
 "oldalán."
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:81
-#, python-format
-msgid "Customize your event"
-msgstr "Rendezvény testreszabása"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_show_menu
 msgid "Dedicated Menu"
 msgstr "Ide vonatkozó menü"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:59
+#: code:addons/website_event/static/src/js/website.tour.event.js:28
 #, python-format
-msgid "Drag & Drop a block"
-msgstr "Fogd & Vidd egy blokkot"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:60
-#, python-format
-msgid "Drag the 'Image-Text' block and drop it in your page."
-msgstr "Fogd a 'Kép-felirat' blokkot és vidd a saját oldaladra."
+msgid "Drag this block and drop it in your page."
+msgstr "Húzza ezt a blokkot, és dobja el az oldalában."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -258,8 +197,8 @@ msgstr "Jelvény szerkesztése"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "End of Subscription"
-msgstr "Feliratkozást vége"
+msgid "End of Registration"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -288,8 +227,8 @@ msgstr "Esemény menü"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Subscription"
-msgstr "Eseményre feliratkozás"
+msgid "Event Registration"
+msgstr "Rendezvény regisztráció"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -301,6 +240,11 @@ msgstr "Esemény nem található!"
 #: model:mail.message.subtype,name:website_event.mt_event_published
 msgid "Event published"
 msgstr "Esemény közzétéve"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Event registration is closed."
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -317,7 +261,7 @@ msgstr "Esemény nincs közzétéve"
 #: model:ir.ui.view,arch_db:website_event.header_footer_custom
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
-msgstr "Események"
+msgstr "Rendezvények"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_country_event
@@ -350,20 +294,18 @@ msgid "Free"
 msgstr "Szabad"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
 #, python-format
 msgid "Introduction"
 msgstr "Bemutatás"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:19
-#, python-format
-msgid "Let's go through the first steps to publish a new event."
-msgstr "Lássuk az első lépéseket egy új esemény közzétételéhez."
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "Helyszín"
@@ -380,8 +322,7 @@ msgstr "Név"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
-#: code:addons/website_event/static/src/js/website.tour.event.js:32
+#: code:addons/website_event/controllers/main.py:184
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -389,26 +330,19 @@ msgid "New Event"
 msgstr "Új esemény"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:52
-#, python-format
-msgid "New Event Created"
-msgstr "Új esemény létrehozva"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Következő rendezvény"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Következő hét"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Következő hónap"
@@ -419,14 +353,14 @@ msgid "No event found"
 msgstr "Nem talált eseményt"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Régi események"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:67
+#: code:addons/website_event/static/src/js/website.tour.event.js:33
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "Ha rákattint a mentésre, eseménye frissítésre kerül."
@@ -457,6 +391,12 @@ msgid "Our Trainings"
 msgstr "Tréningjeink"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr "Részvétel"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "Telefon"
@@ -469,14 +409,7 @@ msgstr "Régebbi események fényképei"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Price"
-msgstr "Érték"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:74
-#, python-format
-msgid "Publish your event"
-msgstr "Tegye közzé esemélnyeit"
+msgstr "Ár"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -489,7 +422,7 @@ msgid "Reference"
 msgstr "Hivatkozás"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Regisztráció"
@@ -505,13 +438,6 @@ msgid "Return to the event list."
 msgstr "Vissza az esemény listához."
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:66
-#, python-format
-msgid "Save your modifications"
-msgstr "Módosításai mentése"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "See all events from"
 msgstr "Összes esemény megtekintése ettől kezdve"
@@ -520,13 +446,6 @@ msgstr "Összes esemény megtekintése ettől kezdve"
 #: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "See all upcoming events"
 msgstr "Összes jövőbeni esemény megtekintése"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:20
-#, python-format
-msgid "Skip It"
-msgstr "Kihagy"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -544,37 +463,13 @@ msgid "Sorry, the requested event is not available anymore."
 msgstr "Bocsánat, a kért esemény már nem áll rendelkezésre."
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:20
-#, python-format
-msgid "Start Tutorial"
-msgstr "Bemutató indítása"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Ezen a héten"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:26
-#, fuzzy, python-format
-msgid "This button allows you to create new pages, events, menus, etc."
-msgstr ""
-"A <em>Tartalom</em> menü lehetővé teszi új lapok, események, menük, stb. "
-"létrehozását."
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:53
-#, python-format
-msgid "This is your new event page. We will edit the event presentation page."
-msgstr ""
-"Ez az új esemény oldala. Szerkeszteni fogjuk az esemény bemutató oldalt."
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Ebben a hónapban"
@@ -590,7 +485,7 @@ msgid "Ticket Type #"
 msgstr "Jegy típus #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Ma"
@@ -619,8 +514,8 @@ msgstr "Látható a weboldalon"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your subscription to our event"
-msgstr "Örülünk, hogy az esemény feliratkozását visszaigazolhatjuk"
+msgid "We are glad to confirm your registration to our event"
+msgstr ""
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -628,9 +523,19 @@ msgid "Website Home"
 msgstr "Weboldal kezdőlap"
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
+msgid "Website Messages"
+msgstr "Weboldal üzenetek"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
+msgid "Website communication history"
+msgstr "Weboldal  kommunikáció történet"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "When"
-msgstr "Időpont"
+msgstr "Mikor"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -650,13 +555,8 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your subscription"
-msgstr "Feliratkozása"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "not published"
-msgstr "nem közzétett"
+msgid "Your registration"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -673,27 +573,7 @@ msgstr "húzza jobbra"
 msgid "to"
 msgstr "ig"
 
-#~ msgid "Drag the 'Text Block' in your event page."
-#~ msgstr "Vigye a 'Szöveg blokk'-ot az esemény oldalára."
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "A teljes URL elérési út a dokumentum weboldalon keresztüli eléréséhez."
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website URL"
-#~ msgstr "Honlap URL"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "Website meta description"
-#~ msgstr "Honlap meta leírás"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Honlap meta kulcsszavai"
-
-#~ msgid "Website meta title"
-#~ msgstr "Honlap meta cím"
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "unpublished"
+msgstr ""

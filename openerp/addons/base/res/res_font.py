@@ -125,7 +125,8 @@ class ResFont(models.Model):
                                     builtin_font_family, mode)
         return True
 
-    def clear_caches(self):
+    @classmethod
+    def clear_caches(cls):
         """Force worker to resync at next report loading by setting an empty font list"""
         customfonts.CustomTTFonts = []
-        return super(ResFont, self).clear_caches()
+        return super(ResFont, cls).clear_caches()

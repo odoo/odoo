@@ -27,7 +27,7 @@ var dom = $.summernote.core.dom;
 var range = $.summernote.core.range;
 var eventHandler = $.summernote.eventHandler;
 var renderer = $.summernote.renderer;
-var options = $.summernote.options;
+// var options = $.summernote.options;
 
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
@@ -96,11 +96,11 @@ renderer.tplPopovers = function (lang, options) {
     //////////////// image popover
 
     // add center button for images
-    var $centerbutton = $(tplIconButton('fa fa-align-center', {
-            title: _t('Center'),
-            event: 'floatMe',
-            value: 'center'
-        })).insertAfter($imagePopover.find('[data-event="floatMe"][data-value="left"]'));
+    $(tplIconButton('fa fa-align-center', {
+        title: _t('Center'),
+        event: 'floatMe',
+        value: 'center'
+    })).insertAfter($imagePopover.find('[data-event="floatMe"][data-value="left"]'));
     $imagePopover.find('button[data-event="removeMedia"]').parent().remove();
     $imagePopover.find('button[data-event="floatMe"][data-value="none"]').remove();
 
@@ -114,18 +114,18 @@ renderer.tplPopovers = function (lang, options) {
         '<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
         '<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
     ];
-    var $button = $(tplIconButton('fa fa-plus-square-o', {
-            title: _t('Padding'),
-            dropdown: tplDropdown(dropdown_content)
-        })).appendTo($padding);
+    $(tplIconButton('fa fa-plus-square-o', {
+        title: _t('Padding'),
+        dropdown: tplDropdown(dropdown_content)
+    })).appendTo($padding);
 
     // circle, boxed... options became toggled
     $imagePopover.find('[data-event="imageShape"]:not([data-value])').remove();
     var $button = $(tplIconButton('fa fa-sun-o', {
-            title: _t('Shadow'),
-            event: 'imageShape',
-            value: 'shadow'
-        })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
+        title: _t('Shadow'),
+        event: 'imageShape',
+        value: 'shadow'
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
 
     // add spin for fa
     var $spin = $('<div class="btn-group hidden only_fa"/>').insertAfter($button.parent());
@@ -182,7 +182,7 @@ renderer.tplPopovers = function (lang, options) {
     //////////////// text/air popover
 
     //// highlight the text format
-    $airPopover.find('.note-style').on('mousedown', function () {
+    $airPopover.find('.note-style .dropdown-toggle').on('mousedown', function () {
         var $format = $airPopover.find('[data-event="formatBlock"]');
         var node = range.create().sc;
         var formats = $format.map(function () { return $(this).data("value"); }).get();
@@ -344,7 +344,7 @@ eventHandler.modules.editor.resize = function ($editable, sValue) {
     if (width) {
         width = width[2]/100;
     }
-    $target.css('width', (width != sValue && sValue != "auto") ? (sValue * 100) + '%' : '');
+    $target.css('width', (width !== sValue && sValue !== "auto") ? (sValue * 100) + '%' : '');
 };
 eventHandler.modules.editor.resizefa = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
@@ -613,22 +613,23 @@ function summernote_mousedown (event) {
     rte.history.splitNext();
 
     var $editable = $(event.target).closest(".o_editable, .note-editor");
+    var r;
 
-    if (!!document.documentMode) {
+    if (document.documentMode) {
         summernote_ie_fix(event, function (node) { return node.tagName === "DIV" || node.tagName === "IMG" || (node.dataset && node.dataset.oeModel); });
     } else if (last_div && event.target !== last_div) {
         if (last_div.tagName === "A") {
             summernote_ie_fix(event, function (node) { return node.dataset && node.dataset.oeModel; });
         } else if ($editable.length) {
             if (summernote_ie_fix(event, function (node) { return node.tagName === "A"; })) {
-                var r = range.create();
+                r = range.create();
                 r.select();
             }
         }
     }
 
     // restore range if range lost after clicking on non-editable area
-    var r = range.create();
+    r = range.create();
     var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
     var r_editable = editables.has((r||{}).sc);
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
@@ -721,31 +722,27 @@ function summernote_ie_fix (event, pred) {
 var fn_attach = eventHandler.attach;
 eventHandler.attach = function (oLayoutInfo, options) {
     fn_attach.call(this, oLayoutInfo, options);
+
     oLayoutInfo.editor().on('dragstart', 'img', function (e) { e.preventDefault(); });
-    $(document).on('mousedown', summernote_mousedown);
-    $(document).on('mouseup', summernote_mouseup);
+    $(document).on('mousedown', summernote_mousedown).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
-    var imageSelector = 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image';
-    var show_tooltip = true;
-    oLayoutInfo.editor().on('dblclick', imageSelector, function (event) {
-        show_tooltip = false;
-        if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
-            new widgets.MediaDialog(null, {}, oLayoutInfo.editor(), event.target).open();
-        }
+
+    /**
+     * Open Media Dialog on double click on an image/video/icon.
+     * Shows a tooltip on click to say to the user he can double click.
+     */
+    create_dblclick_feature("img, .media_iframe_video, i.fa, span.fa, a.o_image", function () {
+        eventHandler.modules.imageDialog.show(oLayoutInfo);
     });
-    oLayoutInfo.editor().on('click', imageSelector, function (event) {
-        if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
-            setTimeout(function () {
-                if (show_tooltip) {
-                    $(event.target).tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
-                    setTimeout(function () {
-                        $(event.target).tooltip('destroy');
-                    }, 800);
-                }
-            }, 400);
-            show_tooltip = true;
-        }
+
+    /**
+     * Open Link Dialog on double click on a link/button.
+     * Shows a tooltip on click to say to the user he can double click.
+     */
+    create_dblclick_feature("a[href], .btn", function () {
+        eventHandler.modules.linkDialog.show(oLayoutInfo);
     });
+
     if(oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
         oLayoutInfo.editor().on('click', 'img', function (event) {
             $(event.target).trigger("dblclick");
@@ -763,7 +760,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
             var $nodes = $('[data-oe-model], [data-oe-translation-id]')
-                .filter(function () { return this != $node[0];});
+                .filter(function () { return this !== $node[0];});
 
             if ($node.data('oe-model')) {
                 $nodes = $nodes.filter('[data-oe-model="'+$node.data('oe-model')+'"]')
@@ -780,13 +777,13 @@ eventHandler.attach = function (oLayoutInfo, options) {
 
             if ($node.data('oe-type') === "many2one") {
                 $nodes = $nodes.add($('[data-oe-model]')
-                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter(function () { return this !== $node[0] && nodes.indexOf(this) === -1; })
                     .filter('[data-oe-many2one-model="'+$node.data('oe-many2one-model')+'"]')
                     .filter('[data-oe-many2one-id="'+$node.data('oe-many2one-id')+'"]')
                     .filter('[data-oe-type="many2one"]'));
 
                 $nodes = $nodes.add($('[data-oe-model]')
-                    .filter(function () { return this != $node[0] && nodes.indexOf(this) === -1; })
+                    .filter(function () { return this !== $node[0] && nodes.indexOf(this) === -1; })
                     .filter('[data-oe-model="'+$node.data('oe-many2one-model')+'"]')
                     .filter('[data-oe-id="'+$node.data('oe-many2one-id')+'"]')
                     .filter('[data-oe-field="name"]'));
@@ -812,6 +809,29 @@ eventHandler.attach = function (oLayoutInfo, options) {
             $('button[data-event="undo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasUndo());
             $('button[data-event="redo"]', $toolbar).attr('disabled', !oLayoutInfo.editable().data('NoteHistory').hasRedo());
         });
+
+    function create_dblclick_feature(selector, callback) {
+        var show_tooltip = true;
+
+        oLayoutInfo.editor().on("dblclick", selector, function (e) {
+            if ($(e.target).closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
+            show_tooltip = false;
+            callback();
+        });
+
+        oLayoutInfo.editor().on("click", selector, function (e) {
+            var $target = $(e.target);
+            if ($target.closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
+            show_tooltip = true;
+            setTimeout(function () {
+                if (!show_tooltip) return;
+                $target.tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
+                setTimeout(function () {
+                    $target.tooltip('destroy');
+                }, 800);
+            }, 400);
+        });
+    }
 };
 var fn_detach = eventHandler.detach;
 eventHandler.detach = function (oLayoutInfo, options) {

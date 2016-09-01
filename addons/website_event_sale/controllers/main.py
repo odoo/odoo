@@ -10,10 +10,10 @@ class WebsiteEventSaleController(WebsiteEventController):
 
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
     def event_register(self, event, **post):
-        pricelist_id = int(request.website.get_current_pricelist())
+        event = event.with_context(pricelist=request.website.get_current_pricelist().id)
         values = {
-            'event': event.with_context(pricelist=pricelist_id),
-            'main_object': event.with_context(pricelist=pricelist_id),
+            'event': event,
+            'main_object': event,
             'range': range,
         }
         return request.render("website_event.event_description_full", values)
@@ -55,15 +55,13 @@ class WebsiteEventSaleController(WebsiteEventController):
         return request.redirect("/shop/checkout")
 
     def _add_event(self, event_name="New Event", context=None, **kwargs):
-        if context is None:
-            context = {}
         product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
         if product:
-            context['default_event_ticket_ids'] = [[0, 0, {
+            context = dict(context or {}, default_event_ticket_ids=[[0, 0, {
                 'name': _('Registration'),
                 'product_id': product.id,
                 'deadline': False,
                 'seats_max': 1000,
                 'price': 0,
-            }]]
+            }]])
         return super(WebsiteEventSaleController, self)._add_event(event_name, context, **kwargs)

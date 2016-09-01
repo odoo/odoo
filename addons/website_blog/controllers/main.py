@@ -122,10 +122,11 @@ class WebsiteBlog(http.Controller):
 
         blog_posts = BlogPost.search(domain, order="post_date desc")
         pager = request.website.pager(
-            url=blog_url(),
+            url=request.httprequest.path,
             total=len(blog_posts),
             page=page,
             step=self._blog_post_per_page,
+            url_args=opt,
         )
         pager_begin = (page - 1) * self._blog_post_per_page
         pager_end = page * self._blog_post_per_page
@@ -205,7 +206,7 @@ class WebsiteBlog(http.Controller):
 
         tag = None
         if tag_id:
-            tag = request.registry['blog.tag'].browse(request.cr, request.uid, int(tag_id), context=request.context)
+            tag = request.env['blog.tag'].browse(int(tag_id))
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         if not blog_post.blog_id.id == blog.id:
@@ -246,9 +247,9 @@ class WebsiteBlog(http.Controller):
         }
         response = request.render("website_blog.blog_post_complete", values)
 
-        request.session[request.session_id] = request.session.get(request.session_id, [])
-        if not (blog_post.id in request.session[request.session_id]):
-            request.session[request.session_id].append(blog_post.id)
+        request.session[request.session.sid] = request.session.get(request.session.sid, [])
+        if not (blog_post.id in request.session[request.session.sid]):
+            request.session[request.session.sid].append(blog_post.id)
             # Increase counter
             blog_post.sudo().write({
                 'visits': blog_post.visits+1,

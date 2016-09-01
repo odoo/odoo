@@ -6,7 +6,6 @@ var Class = require('web.Class');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
-var ace_call = require('website.ace_call');
 var website = require('website.website');
 var local_storage = require('web.local_storage');
 
@@ -22,17 +21,26 @@ var Ace = Widget.extend({
         'click a[data-action=ace]': 'launchAce',
     },
     launchAce: function (e) {
-        ace_call.load();
+        var self = this;
+        if (!window.ace && !this.loadJS_def) {
+            this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
+                return $.when(ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
+                    ajax.loadJS('/web/static/lib/ace/theme-monokai.js'));
+            });
+        }
 
         if (e) {
             e.preventDefault();
         }
-        if (this.globalEditor) {
-            this.globalEditor.open();
-        } else {
-            this.globalEditor = new ViewEditor(this);
-            this.globalEditor.appendTo($(document.body));
-        }
+
+        return $.when(this.loadJS_def).then(function () {
+            if (self.globalEditor) {
+                self.globalEditor.open();
+            } else {
+                self.globalEditor = new ViewEditor(self);
+                self.globalEditor.appendTo($(document.body));
+            }
+        });
     },
 });
 
@@ -217,6 +225,7 @@ var ViewEditor = Widget.extend({
             var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);
             editingSession.setMode("ace/mode/xml");
             editingSession.setUndoManager(new ace.UndoManager());
+            editingSession.setUseWorker(false);
             editingSession.on("change", function () {
                 setTimeout(function () {
                     var $option = self.$('#ace-view-list').find('[value='+viewId+']');

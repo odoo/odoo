@@ -224,15 +224,12 @@ class IrQWeb(models.AbstractModel, QWeb):
                     if atype not in ('text/less', 'text/sass'):
                         atype = 'text/css'
                     path = filter(None, href.split('/'))
-                    filename = get_resource_path(*path)
+                    filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
                 elif el.tag == 'script':
                     atype = 'text/javascript'
-                    if src:
-                        path = filter(None, src.split('/'))
-                        filename = get_resource_path(*path)
-                    else:
-                        filename = None
+                    path = filter(None, src.split('/'))
+                    filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:
                     remains.append(html.tostring(el))
@@ -253,7 +250,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         field_options['type'] = field_options.get('widget', field.type)
         inherit_branding = options.get('inherit_branding', options.get('inherit_branding_auto') and record.check_access_rights('write', False))
         field_options['inherit_branding'] = inherit_branding
-        translate = options.get('edit_translations') and options.get('translatable') and getattr(field, 'translate', False)
+        translate = options.get('edit_translations') and options.get('translatable') and field.translate
         field_options['translate'] = translate
 
         # field converter

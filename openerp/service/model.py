@@ -9,6 +9,7 @@ import time
 
 import openerp
 from openerp.exceptions import UserError, ValidationError, QWebException
+from openerp.models import check_method_name
 from openerp.tools.translate import translate
 from openerp.tools.translate import _
 
@@ -152,8 +153,8 @@ def check(f):
                             model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
                         model = table.replace("_",".")
                         if model in registry:
-                            model_obj = registry[model]
-                            model_name = model_obj._description or model_obj._name
+                            model_class = registry[model]
+                            model_name = model_class._description or model_class._name
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                     except Exception:
                         pass
@@ -164,10 +165,11 @@ def check(f):
     return wrapper
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
-    object = openerp.registry(cr.dbname).get(obj)
-    if object is None:
+    recs = openerp.api.Environment(cr, uid, {}).get(obj)
+    if recs is None:
         raise UserError(_("Object %s doesn't exist") % obj)
-    return getattr(object, method)(cr, uid, *args, **kw)
+    return openerp.api.call_kw(recs, method, args, kw)
+
 
 def execute_kw(db, uid, obj, method, args, kw=None):
     return execute(db, uid, obj, method, *args, **kw or {})
@@ -176,8 +178,7 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db
     with openerp.registry(db).cursor() as cr:
-        if method.startswith('_'):
-            raise UserError(_('Private methods (such as %s) cannot be called remotely.') % (method,))
+        check_method_name(method)
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
             _logger.info('The method %s of the object %s can not return `None` !', method, obj)

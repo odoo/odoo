@@ -354,13 +354,10 @@ class TestApplyInheritanceSpecs(ViewCase):
 class TestApplyInheritanceWrapSpecs(ViewCase):
     def setUp(self):
         super(TestApplyInheritanceWrapSpecs, self).setUp()
-        self.View = self.registry('ir.ui.view')
         self.base_arch = E.template(E.div(E.p("Content")))
 
     def apply_spec(self, spec):
-        self.View.apply_inheritance_specs(self.cr, self.uid,
-                                          self.base_arch,
-                                          spec, None)
+        self.View.apply_inheritance_specs(self.base_arch, spec, None)
 
     def test_replace(self):
         spec = E.xpath(

@@ -55,6 +55,12 @@ class WebsiteCrmBackend(WebsiteBackend):
                 },
             ],
             'leads': leads,
+            'lead_fields': {
+                'create_date': 'Create Date',
+                'campaign_id': 'Campaign',
+                'medium_id': 'Medium',
+                'source_id': 'Source',
+            },
         }
 
         return results

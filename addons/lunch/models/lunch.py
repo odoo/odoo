@@ -26,14 +26,14 @@ class LunchOrder(models.Model):
             for order in prev_order
         }.values()
 
-    user_id = fields.Many2one('res.users', 'User', required=True, readonly=True,
+    user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
     date = fields.Date('Date', required=True, readonly=True,
                        states={'new': [('readonly', False)]},
                        default=fields.Date.context_today)
     order_line_ids = fields.One2many('lunch.order.line', 'order_id', 'Products',
-                                     ondelete="cascade", readonly=True, copy=True,
+                                     readonly=True, copy=True,
                                      states={'new': [('readonly', False)], False: [('readonly', False)]})
     total = fields.Float(compute='_compute_total', string="Total", store=True)
     state = fields.Selection([('new', 'New'),
@@ -220,7 +220,7 @@ class LunchCashMove(models.Model):
     _name = 'lunch.cashmove'
     _description = 'lunch cashmove'
 
-    user_id = fields.Many2one('res.users', 'User', required=True,
+    user_id = fields.Many2one('res.users', 'User',
                               default=lambda self: self.env.uid)
     date = fields.Date('Date', required=True, default=fields.Date.context_today)
     amount = fields.Float('Amount', required=True, help='Can be positive (payment) or negative (order or payment if user wants to get his money back)')

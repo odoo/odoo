@@ -118,6 +118,10 @@ var Tip = Widget.extend({
     },
     _get_ideal_location: function () {
         var $location = this.$anchor;
+        if ($location.is("html,body")) {
+            return $(document.body);
+        }
+
         var o;
         var p;
         do {
@@ -259,7 +263,8 @@ var Tip = Widget.extend({
 
 Tip.getConsumeEventType = function ($element) {
     if ($element.is("textarea") || $element.filter("input").is(function () {
-        return !!$(this).attr("type").match(/^(email|number|password|search|tel|text|url)$/);
+        var type = $(this).attr("type");
+        return !type || !!type.match(/^(email|number|password|search|tel|text|url)$/);
     })) {
         return "input";
     }

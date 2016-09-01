@@ -30,23 +30,10 @@ class MassMailingList(models.Model):
     _order = 'name'
     _description = 'Mailing List'
 
-    def _default_popup_content(self):
-        return """<div class="modal-header text-center">
-    <h3 class="modal-title mt8">Odoo Presents</h3>
-</div>
-<div class="o_popup_message">
-    <font>7</font>
-    <strong>Business Hacks</strong>
-    <span> to<br/>boost your marketing</span>
-</div>
-<p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"""
-
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
     create_date = fields.Datetime(string='Creation Date')
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
-    popup_content = fields.Html(string="Website Popup Content", translate=True, sanitize=False, default=_default_popup_content)
-    popup_redirect_url = fields.Char(string="Website Popup Redirect URL", default='/')
 
     def _compute_contact_nbr(self):
         contacts_data = self.env['mail.mass_mailing.contact'].read_group([('list_id', 'in', self.ids), ('opt_out', '!=', True)], ['list_id'], ['list_id'])
@@ -313,7 +300,7 @@ class MassMailing(models.Model):
     create_date = fields.Datetime(string='Creation Date')
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    body_html = fields.Html(string='Body', translate=html_translate, sanitize=False)
+    body_html = fields.Html(string='Body', translate=html_translate, sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')

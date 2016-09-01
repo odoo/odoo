@@ -12,25 +12,47 @@ class AccountPartialReconcileCashBasis(models.Model):
         # Search in account_move if we have any taxes account move lines
         tax_group = {}
         total_by_cash_basis_account = {}
+        line_to_create = []
         for move in (self.debit_move_id.move_id, self.credit_move_id.move_id):
             for line in move.line_ids:
-                if line.tax_line_id and line.tax_line_id.use_cash_basis:
+                #TOCHECK: normal and cash basis taxes shoudn't be mixed together (on the same invoice line for example) as it will
+                #create reporting issues. Not sure of the behavior to implement in that case, though.
+                if not line.tax_exigible:
                     # amount to write is the current cash_basis amount minus the one before the reconciliation
                     matched_percentage = value_before_reconciliation[move.id]
                     amount = (line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage
-                    # group by line account
-                    acc = line.account_id.id
-                    if tax_group.get(acc, False):
-                        tax_group[acc] += amount
-                    else:
-                        tax_group[acc] = amount
-                    # Group by cash basis account
-                    acc = line.tax_line_id.cash_basis_account.id
-                    if total_by_cash_basis_account.get(acc, False):
-                        total_by_cash_basis_account[acc] += amount
-                    else:
-                        total_by_cash_basis_account[acc] = amount
-        line_to_create = []
+                    if line.tax_line_id and line.tax_line_id.use_cash_basis:
+                        # group by line account
+                        acc = line.account_id.id
+                        if tax_group.get(acc, False):
+                            tax_group[acc] += amount
+                        else:
+                            tax_group[acc] = amount
+                        
+                        # Group by cash basis account and tax
+                        acc = line.tax_line_id.cash_basis_account.id
+                        key = (acc, line.tax_line_id.id)
+                        if key in total_by_cash_basis_account:
+                            total_by_cash_basis_account[key] += amount
+                        else:
+                            total_by_cash_basis_account[key] = amount
+                    for tax in line.tax_ids:
+                        if tax.use_cash_basis:
+                            line_to_create.append((0, 0, {
+                                'name': '/',
+                                'debit': line.debit_cash_basis - line.debit * matched_percentage,
+                                'credit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'account_id': line.account_id.id,
+                                'tax_ids': [(6, 0, [tax.id])],
+                                'tax_exigible': True,
+                                }))
+                            line_to_create.append((0, 0, {
+                                'name': '/',
+                                'credit': line.debit_cash_basis - line.debit * matched_percentage,
+                                'debit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'account_id': line.account_id.id,
+                                }))
+
         for k, v in tax_group.items():
             line_to_create.append((0, 0, {
                 'name': '/',
@@ -40,12 +62,15 @@ class AccountPartialReconcileCashBasis(models.Model):
                 }))
 
         # Create counterpart vals
-        for k, v in total_by_cash_basis_account.items():
+        for key, v in total_by_cash_basis_account.items():
+            k, tax_id = key
             line_to_create.append((0, 0, {
                 'name': '/',
                 'debit': abs(v) if v < 0 else 0.0,
                 'credit': v if v > 0 else 0.0,
                 'account_id': k,
+                'tax_line_id': tax_id,
+                'tax_exigible': True,
                 }))
 
         # Create move
@@ -55,7 +80,7 @@ class AccountPartialReconcileCashBasis(models.Model):
                 raise UserError(_('There is no tax cash basis journal defined ' \
                                     'for this company: "%s" \nConfigure it in Accounting/Configuration/Settings') % \
                                       (self.company_id.name))
-            move = self.env['account.move'].create({
+            move = self.env['account.move'].with_context(dont_create_taxes=True).create({
                 'journal_id': self.company_id.tax_cash_basis_journal_id.id,
                 'line_ids': line_to_create,
                 'tax_cash_basis_rec_id': self.id})

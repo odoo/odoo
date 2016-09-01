@@ -161,9 +161,8 @@ class Partner(models.Model):
 
     @api.model
     def _cron_update_membership(self):
-        partners = self.search([('membership_state', 'in', ['invoiced', 'paid'])])
-        if partners:
-            partners._store_set_values(['membership_state'])
+        # used to recompute 'membership_state'; should no longer be necessary
+        pass
 
     @api.multi
     def create_membership_invoice(self, product_id=None, datas=None):

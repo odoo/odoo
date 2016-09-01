@@ -82,7 +82,7 @@ def post_install(flag):
 class BaseCase(unittest.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
-    
+
     This class is abstract and expects self.registry, self.cr and self.uid to be
     initialized by subclasses.
     """
@@ -99,10 +99,7 @@ class BaseCase(unittest.TestCase):
         :raise: ValueError if not found
         :returns: registered id
         """
-        assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
-        module, xid = xid.split('.')
-        _, id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, module, xid)
-        return id
+        return self.browse_ref(xid).id
 
     def browse_ref(self, xid):
         """ Returns a record object for the provided
@@ -114,8 +111,7 @@ class BaseCase(unittest.TestCase):
         :returns: :class:`~openerp.models.BaseModel`
         """
         assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
-        module, xid = xid.split('.')
-        return self.registry('ir.model.data').get_object(self.cr, self.uid, module, xid)
+        return self.env.ref(xid)
 
     @contextmanager
     def _assertRaises(self, exception):
@@ -276,8 +272,8 @@ class HttpCase(TransactionCase):
             return
 
         db = get_db_name()
-        Users = self.registry['res.users']
-        uid = Users.authenticate(db, user, password, None)
+        uid = self.registry['res.users'].authenticate(db, user, password, None)
+        env = api.Environment(self.cr, uid, {})
 
         # self.session.authenticate(db, user, password, uid=uid)
         # OpenERPSession.authenticate accesses the current request, which we
@@ -288,7 +284,7 @@ class HttpCase(TransactionCase):
         session.uid = uid
         session.login = user
         session.password = password
-        session.context = Users.context_get(self.cr, uid) or {}
+        session.context = env['res.users'].context_get() or {}
         session.context['uid'] = uid
         session._fix_lang(session.context)
 
@@ -366,7 +362,8 @@ class HttpCase(TransactionCase):
         _logger.info('phantom_run executing %s', ' '.join(cmd))
 
         ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_%s_%s.*' % (HOST, PORT))
-        for i in glob.glob(ls_glob):
+        ls_glob2 = os.path.expanduser('~/.local/share/Ofi Labs/PhantomJS/http_%s_%s.*' % (HOST, PORT))
+        for i in (glob.glob(ls_glob) + glob.glob(ls_glob2)):
             _logger.info('phantomjs unlink localstorage %s', i)
             os.unlink(i)
         try:

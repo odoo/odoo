@@ -109,7 +109,7 @@
                                                     attrs="{'readonly': [('state','=','base')]}"/>
                                                 <field name="related"/>
                                                 <field name="depends"/>
-                                                <field name="compute"/>
+                                                <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                             </group>
                                             <h3>How to define a computed field</h3>
                                             <p>Computed fields are defined with the fields
@@ -276,7 +276,7 @@
                                         attrs="{'readonly': [('state','=','base')]}"/>
                                     <field name="related"/>
                                     <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
-                                    <field name="compute"/>
+                                    <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                 </group>
                                 <h3>How to define a computed field</h3>
                                 <p>Computed fields are defined with the fields

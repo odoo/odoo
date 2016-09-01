@@ -1,22 +1,7 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * barcodes
-#
-# Translators:
-# Clo <clo@odoo.com>, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
-# Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2016
-# Olivier Dony <odo@odoo.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2015
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
-# Sylvain GROS-DESORMEAUX <sylvain.grodes@gmail.com>, 2015
-# Xavier Symons <xsy@openerp.com>, 2015
-# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * barcodes
-#
+# 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -31,45 +16,41 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-18 08:37+0000\n"
 "PO-Revision-Date: 2016-08-18 08:37+0000\n"
 "Last-Translator: Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:223
+#: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
 " '*' n'est pas un modèle de code-barres Regex. Vouliez-vous indiquer '.*' ?"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:221
+#: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid ": a rule can only contain one pair of braces."
 msgstr ": une règle ne peut contenir qu'une paire d'accolades."
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:217
+#: code:addons/barcodes/models/barcodes.py:196
 #, python-format
 msgid ": braces can only contain N's followed by D's."
 msgstr ": les accolades ne peuvent contenir que des N suivis par des D."
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:219
+#: code:addons/barcodes/models/barcodes.py:198
 #, python-format
 msgid ": empty braces."
 msgstr ": accolades vides."
@@ -77,35 +58,27 @@ msgstr ": accolades vides."
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
-"categorized.\n"
-"                                When a barcode is scanned it is associated "
-"to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of "
-"regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix "
-"of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
 msgstr ""
-"<i>La nomenclature des codes-barres</i> défini comment les codes-barres sont "
-"reconnus et catégorisés.\n"
-"                                Lorsqu'un code-barre est scanné, il est "
-"associé à la <i>première</i> règle avec un modèle \n"
-"correspondant. La syntaxe du modèle est celui de l'expression régulière, et "
-"un code-barre est associé\n"
-"                                si l'expression régulière correspond à un "
-"préfixe du code-barre."
+"<i>La nomenclature des codes-barres</i> défini comment les codes-barres sont reconnus et catégorisés.\n"
+"                                Lorsqu'un code-barre est scanné, il est associé à la <i>première</i> règle avec un modèle \n"
+"correspondant. La syntaxe du modèle est celui de l'expression régulière, et un code-barre est associé\n"
+"                                si l'expression régulière correspond à un préfixe du code-barre."
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets "
-"barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr ""
 "Une nomenclature de code barre définit la façon dont le point de vente "
 "identifie et interprète le code barre."
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:191
+#: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
 #, python-format
 msgid "Alias"
@@ -128,7 +101,8 @@ msgid "An internal identification of the barcode nomenclature"
 msgstr "Un identifiant interne de la nomenclature de code-barres"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:183
+#: code:addons/barcodes/models/barcodes.py:177
+#: selection:barcode.rule,encoding:0
 #, python-format
 msgid "Any"
 msgstr "Tous"
@@ -142,13 +116,8 @@ msgstr "Nomenclature de code-barre"
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
-#, fuzzy
 msgid "Barcode Nomenclatures"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nomenclature de code-barre\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Nomenclatures de code-barre"
+msgstr "Nomenclatures de code-barre"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
@@ -166,9 +135,19 @@ msgid "Barcode Scanned"
 msgstr "Code barre scanné"
 
 #. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "Caissier"
+
+#. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Click to add a Barcode Nomenclature ."
 msgstr "Cliquez afin d'ajouter une nomenclature de code barre."
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "Client"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
@@ -183,21 +162,36 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "Carte de crédit "
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "Article en promotion"
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
-#, fuzzy
 msgid "Display Name"
+msgstr "Afficher le nom"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-13"
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom affiché\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afficher le nom"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "EAN-13 to UPC-A"
 msgstr "EAN-13 vers UPC-A"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-8"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_encoding
@@ -229,35 +223,30 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dernière modification le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière Modification le"
+msgstr "Dernière Modification le"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour par\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour le"
+msgstr "Dernière mise à jour le"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "Lieu"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "Lot"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
@@ -270,31 +259,31 @@ msgid "Nomenclature Name"
 msgstr "Nom de la nomenclature"
 
 #. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "Colis"
+
+#. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can "
-"be\n"
-"                                encoded into the barcode. They are indicated "
-"by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are "
-"encoded. Floats are also supported with the \n"
-"                                decimals indicated with D's, such as "
-"<code>{NNNDD}</code>. In these cases, \n"
-"                                the barcode field on the associated records "
-"<i>must</i> show these digits as \n"
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
-"Les motifs peuvent aussi définir comment les valeurs numériques telles que "
-"le poids ou le prix, peuvent être\n"
-"                                encodées dans le code-barres. Ils sont "
-"indiqués par le <code>{NNN}</code> où les N's\n"
-"                                définissent où les chiffres du numéro sont "
-"encodés. Les flotteurs sont également pris en charge avec les\n"
-"                                décimales indiquées avec les D's, tel que "
-"<code>{NNNDD}</code>. Dans ces cas-là, \n"
-"                                le champ du code-barres sur les "
-"enregistrements associés <i>doivent</i> montrer ces chiffres commes \n"
+"Les motifs peuvent aussi définir comment les valeurs numériques telles que le poids ou le prix, peuvent être\n"
+"                                encodées dans le code-barres. Ils sont indiqués par le <code>{NNN}</code> où les N's\n"
+"                                définissent où les chiffres du numéro sont encodés. Les flotteurs sont également pris en charge avec les\n"
+"                                décimales indiquées avec les D's, tel que <code>{NNNDD}</code>. Dans ces cas-là, \n"
+"                                le champ du code-barres sur les enregistrements associés <i>doivent</i> montrer ces chiffres commes \n"
 "                                zéros."
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
@@ -339,8 +328,9 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Le motif correspondant sera un alias pour ce code-barres"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:217 code:addons/barcodes/barcodes.py:219
-#: code:addons/barcodes/barcodes.py:221
+#: code:addons/barcodes/models/barcodes.py:196
+#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid "There is a syntax error in the barcode pattern "
 msgstr "Il y a une erreur de syntaxe dans le modèle de code-barres"
@@ -378,13 +368,18 @@ msgstr "Type"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in "
-"one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
 msgstr ""
-"Les codes UPC peuvent être converti en EAN en mettant un zéro comme préfixe. "
-"Ce réglage détermine si un code-barres UPC/EAN devrait être automatiquement "
-"converti dans un sens ou dans l'autre en faisant correspondre une règle avec "
-"l'autre encodage."
+"Les codes UPC peuvent être converti en EAN en mettant un zéro comme préfixe."
+" Ce réglage détermine si un code-barres UPC/EAN devrait être automatiquement"
+" converti dans un sens ou dans l'autre en faisant correspondre une règle "
+"avec l'autre encodage."
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "UPC-A"
+msgstr ""
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
@@ -397,27 +392,28 @@ msgid "UPC/EAN Conversion"
 msgstr "Conversion UPC/EAN"
 
 #. module: barcodes
-#: code:addons/barcodes/barcodes.py:191
+#: code:addons/barcodes/models/barcodes.py:184 selection:barcode.rule,type:0
 #, python-format
 msgid "Unit Product"
 msgstr "Unité de produit"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
 "Utilisé pour commander des règles telles que les règles avec une séquence "
 "similaire correspondent en premier"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
-#, fuzzy
 msgid "Value of the last barcode scanned."
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Valeur du dernier code-barres scanné\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Valeur du dernier code-barres scanné."
+msgstr "Valeur du dernier code-barres scanné."
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr "Article pesé"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -433,27 +429,3 @@ msgstr "barcode.rule"
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "barcodes.barcode_events_mixin"
 msgstr "barcodes.barcode_events_mixin"
-
-#~ msgid "Cashier"
-#~ msgstr "Caissier"
-
-#~ msgid "Client"
-#~ msgstr "Client"
-
-#~ msgid "Credit Card"
-#~ msgstr "Carte de crédit "
-
-#~ msgid "Discounted Product"
-#~ msgstr "Article en promotion"
-
-#~ msgid "Location"
-#~ msgstr "Lieu"
-
-#~ msgid "Lot"
-#~ msgstr "Lot"
-
-#~ msgid "Package"
-#~ msgstr "Colis"
-
-#~ msgid "Weighted Product"
-#~ msgstr "Article pesé"

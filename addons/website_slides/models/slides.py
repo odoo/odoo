@@ -34,7 +34,7 @@ class Channel(models.Model):
 
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
-    description = fields.Html('Description', translate=html_translate, sanitize=False)
+    description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     sequence = fields.Integer(default=10, help='Display order')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
@@ -102,7 +102,7 @@ class Channel(models.Model):
         string='Channel Groups', help="Groups allowed to see presentations in this channel")
     access_error_msg = fields.Html(
         'Error Message', help="Message to display when not accessible due to access rights",
-        default="<p>This channel is private and its content is restricted to some users.</p>", translate=html_translate, sanitize=False)
+        default="<p>This channel is private and its content is restricted to some users.</p>", translate=html_translate, sanitize_attributes=False)
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
@@ -148,7 +148,8 @@ class Channel(models.Model):
         super(Channel, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for channel in self:
-            channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
+            if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.onchange('visibility')
     def change_visibility(self):
@@ -352,12 +353,13 @@ class Slide(models.Model):
         super(Slide, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for slide in self:
-            #link_tracker is not in dependencies, so use it to shorten url only if installed.
-            if self.env.registry.get('link.tracker'):
-                url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
-            else:
-                url = '%s/slides/slide/%s' % (base_url, slug(slide))
-            slide.website_url = url
+            if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                # link_tracker is not in dependencies, so use it to shorten url only if installed.
+                if self.env.registry.get('link.tracker'):
+                    url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
+                else:
+                    url = '%s/slides/slide/%s' % (base_url, slug(slide))
+                slide.website_url = url
 
     @api.model
     def create(self, values):

@@ -1,69 +1,50 @@
-# #-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-#
-# Translators:
-# fausthuang, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# #-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * account_voucher
-#
+# 
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher "
-"number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
 "‘草稿’状态被用来标识新生成的但是还没被确认的凭证\n"
 "‘形式’状态被用在凭证还没有凭证号的时候\n"
-"‘已过账’状态用在创建了凭证，生成了相关的凭证号并且该凭证的会计分录也已经生成"
-"的时候\n"
+"‘已过账’状态用在创建了凭证，生成了相关的凭证号并且该凭证的会计分录也已经生成的时候\n"
 "“取消’状态被用在已经去小的凭证上"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
-#, fuzzy
 msgid "Account"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"科目\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"账户"
+msgstr "账户"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
+msgstr "会计日期"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
 msgstr "会计日期"
 
 #. module: account_voucher
@@ -73,23 +54,13 @@ msgstr "会计凭单"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
-#, fuzzy
 msgid "Amount"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"金额\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"总额"
+msgstr "总额"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
-#, fuzzy
 msgid "Analytic Account"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"分析账户\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"分析会计"
+msgstr "分析账户"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -98,7 +69,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "你确信要取消这个收据？"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "账单日期"
 
@@ -128,7 +101,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/models/account_voucher.py:165
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "不能删除已经开启或者支付的单据。"
@@ -164,24 +137,14 @@ msgstr "创建者"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
-#, fuzzy
 msgid "Created on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"创建时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"创建于"
+msgstr "创建于"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
-#, fuzzy
 msgid "Currency"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"货币\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"币种"
+msgstr "币种"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -191,9 +154,7 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "日期"
 
@@ -229,7 +190,7 @@ msgid "Due Date"
 msgstr "截止日期"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr "会计分录的生效日期"
 
@@ -248,13 +209,8 @@ msgstr "分组"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
-#, fuzzy
 msgid "ID"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"标识"
+msgstr "ID"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
@@ -273,13 +229,8 @@ msgstr "内部备注"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
-#, fuzzy
 msgid "Journal"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"日记账\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"分类账"
+msgstr "分类账"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
@@ -295,45 +246,25 @@ msgstr "日记账项目"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后修改时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后修改日"
+msgstr "最后修改日"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新者\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最后更新人"
+msgstr "最后更新人"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"最后更新时间\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"最近更新时间"
+msgstr "最近更新时间"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
-#, fuzzy
 msgid "Notes"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"备注\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"便签"
+msgstr "备注"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
@@ -347,13 +278,8 @@ msgstr "仅针对价外税"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
-#, fuzzy
 msgid "Paid"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"已付\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"已支付"
+msgstr "已支付"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
@@ -382,37 +308,24 @@ msgid "Payment Reference"
 msgstr "付款参考"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
-#, fuzzy, python-format
+#: code:addons/account_voucher/models/account_voucher.py:201
+#, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"请激活选中日记账的 序号（ sequence  ）。\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"请激活选中分类账的 序号（ sequence  ）。"
+msgstr "请激活选中分类账的 序号（ sequence  ）。"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
-#, fuzzy, python-format
+#: code:addons/account_voucher/models/account_voucher.py:204
+#, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"请定义日记账序列\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"请在日记账中定义序列号"
+msgstr "请在日记账中定义序列号"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
-#, fuzzy
 msgid "Posted"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"已过账\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"已登帐"
+msgstr "已登帐"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -536,13 +449,8 @@ msgstr "这张凭单已全部付完"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
-#, fuzzy
 msgid "The income or expense account related to the selected product."
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"选择的产品相关的利润或费用科目\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"被选定产品的相关收入科目或者费用科目"
+msgstr "被选定产品的相关收入科目或者费用科目"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
@@ -562,13 +470,8 @@ msgstr "总计"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
-#, fuzzy
 msgid "Total Amount"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"总额总计\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"金额总计"
+msgstr "金额总计"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
@@ -599,7 +502,7 @@ msgid "Vendor Voucher"
 msgstr "供应商凭单"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:31
+#: code:addons/account_voucher/models/account_voucher.py:97
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -650,71 +553,7 @@ msgid ""
 msgstr "当销售收据被确认掉，你也可以同时登记这张销售收据的付款"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
-#, fuzzy, python-format
+#: code:addons/account_voucher/models/account_voucher.py:367
+#, python-format
 msgid "You must first select a partner!"
-msgstr ""
-"#-#-#-#-#  zh_CN.po (Odoo 9.0)  #-#-#-#-#\n"
-"您必须先选择一个业务伙伴!\n"
-"#-#-#-#-#  zh_CN.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"需要先选定业务伙伴"
-
-#~ msgid "Action Needed"
-#~ msgstr "需要行动"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "如果勾选此项，有新消息会提醒你"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Invoicing Menu"
-#~ msgstr "打开开票菜单"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "Accounting Date"
-#~ msgstr "会计日期"
+msgstr "需要先选定业务伙伴"

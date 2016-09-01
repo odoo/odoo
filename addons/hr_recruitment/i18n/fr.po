@@ -1,21 +1,7 @@
-# #-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_recruitment
-#
-# Translators:
-# Benedicte HANET <hanetb@gmail.com>, 2016
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2015
-# Martin Trigaux, 2015-2016
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
-# Melanie Bernard <mbe@odoo.com>, 2015
-# Miguel Vidali <mvidali129@gmail.com>, 2015
-# Nancy Bolognesi <nb@microcom.ca>, 2015
-# #-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * hr_recruitment
-#
+# 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -38,22 +24,18 @@
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-08-18 08:36+0000\n"
 "PO-Revision-Date: 2016-08-18 08:36+0000\n"
 "Last-Translator: Shark McGnark <peculiarcheese@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_recruitment
@@ -73,8 +55,7 @@ msgid ""
 "\n"
 "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
 "<p>Thank you for your enquiry.<br />\n"
-"Your resume got our interest. I will contact you as soon as possible to "
-"plan\n"
+"Your resume got our interest. I will contact you as soon as possible to plan\n"
 "next steps of the recruitment process.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
@@ -85,8 +66,7 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Dear all,</p>\n"
-"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will "
-"be\n"
+"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will be\n"
 "joining us as a ${object.job_id.name}\n"
 "%if object.department_id:\n"
 "    in ${object.department_id.name}.\n"
@@ -181,13 +161,8 @@ msgstr "<span class=\"o_stat_text\">Trackers</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-#, fuzzy
 msgid "<span>New</span>"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"<span>Nouveau</span>\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"<span>Nouvelle</span>"
+msgstr "<span>Nouvelle</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -210,6 +185,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_active
 msgid "Active"
 msgstr "Actif"
 
@@ -217,6 +193,15 @@ msgstr "Actif"
 #: model:survey.question,question:hr_recruitment.recruitment_2_4
 msgid "Activities"
 msgstr "Activités"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:20
+#, python-format
+msgid ""
+"Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
+"Qualified &gt; First Interview &gt; Recruited</i>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -281,13 +266,8 @@ msgstr "Statut du candidat modifié"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
-#, fuzzy
 msgid "Applicant created"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Candidat crée\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Candidat créé"
+msgstr "Candidat créé"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -310,31 +290,23 @@ msgstr "Candidats"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
-"Applicants and their attached CV are created automatically when an email is "
-"sent.\n"
-"                If you install the document management modules, all resumes "
-"are indexed automatically,\n"
+"Applicants and their attached CV are created automatically when an email is sent.\n"
+"                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-"Les postulants et leurs cv sont créés automatiquement lorsqu'un email est "
-"envoyé. \n"
-"Si vous installez le module Document Management, tous les cv seront "
-"automatiquement indexés,\n"
+"Les postulants et leurs cv sont créés automatiquement lorsqu'un email est envoyé. \n"
+"Si vous installez le module Document Management, tous les cv seront automatiquement indexés,\n"
 "ainsi vous pourrez rechercher facilement des infos à travers leur contenu."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
-"Applicants and their attached CV are created automatically when an email is "
-"sent.\n"
-"            If you install the document management modules, all resumes are "
-"indexed automatically, \n"
+"Applicants and their attached CV are created automatically when an email is sent.\n"
+"            If you install the document management modules, all resumes are indexed automatically, \n"
 "            so that you can easily search through their content."
 msgstr ""
-"Les postulants et leurs cv sont créés automatiquement lorsqu'un email est "
-"envoyé. \n"
-"Si vous installez le module Document Management, tous les cv sont "
-"automatiquement indexés,\n"
+"Les postulants et leurs cv sont créés automatiquement lorsqu'un email est envoyé. \n"
+"Si vous installez le module Document Management, tous les cv sont automatiquement indexés,\n"
 "ainsi vous pouvez rechercher facilement des infos à travers leur contenu."
 
 #. module: hr_recruitment
@@ -398,13 +370,8 @@ msgstr "Archivé"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
-#, fuzzy
 msgid "Assigned"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Attribué\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Assigné"
+msgstr "Assigné"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_ids
@@ -477,8 +444,8 @@ msgstr "Catégorie de candidat"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_survey
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_survey_id
 msgid ""
-"Choose an interview form for this job position and you will be able to print/"
-"answer this interview from all applicants who apply for this job"
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
 msgstr ""
 "Sélectionnez un formulaire d'entretien pour ce poste. Vous pourrez "
 "l'imprimer et y répondre pour chaque candidat ayant postulé pour ce poste."
@@ -486,12 +453,8 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Click here to create a new job. You can remove the \"In Recruitment\" filter "
-"to display all the job positions."
+msgid "Click here to create a new job position."
 msgstr ""
-"Cliquez ici pour créer une nouvelle position. Vous pouvez enlever le filtre "
-"\"En processus de recrutement\" pour afficher toutes les offres."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -504,6 +467,11 @@ msgstr "Cliquer pour ajouter un nouvel employé."
 msgid "Click to add a new stage in the recruitment process."
 msgstr ""
 "Cliquez pour ajouter une nouvelle étape dans le processus de recrutement."
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr "Cliquez sur pour ajouter une nouvelle étiquette."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
@@ -541,17 +509,22 @@ msgid "Configure Recruitment"
 msgstr "Configurer le recrutement"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:388
+#: code:addons/hr_recruitment/models/hr_recruitment.py:389
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
 msgstr "Contact"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:390
+#: code:addons/hr_recruitment/models/hr_recruitment.py:391
 #, python-format
 msgid "Contact Email"
 msgstr "Courriel du contact"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
+msgid "Content"
+msgstr "Contenu"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -559,14 +532,9 @@ msgid "Contract"
 msgstr "Contrat"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
-msgid "Contract Proposal"
-msgstr "Proposition de contrat"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
-msgid "Contract Signed"
-msgstr "Contrat signé"
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create"
+msgstr "Créer"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
@@ -577,6 +545,12 @@ msgstr "Date de création"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Create Employee"
 msgstr "Créer un employé"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create a Job Position"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -635,14 +609,15 @@ msgid "Default Values"
 msgstr "Valeurs par défaut"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Définissez une adresse courriel spécifique pour ce poste. Si vous la laissez "
-"vide, l'adresse courriel par défaut présente dans les paramètres des "
+"Définissez une adresse courriel spécifique pour ce poste. Si vous la laissez"
+" vide, l'adresse courriel par défaut présente dans les paramètres des "
 "ressources humaines sera utilisée "
 
 #. module: hr_recruitment
@@ -652,21 +627,8 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
-"Définissez ici les différentes étapes du processus de recrutement, par "
-"exemple\n"
+"Définissez ici les différentes étapes du processus de recrutement, par exemple\n"
 "appel de qualification, première entrevue, deuxième entrevue, refusé, engagé."
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
-msgid ""
-"Define job position profile and manage recruitment in a context of a "
-"particular job: print interview survey, define number of expected new "
-"employees, and manage its recruitment pipe"
-msgstr ""
-"Définissez un profil par position et gérer le recrutement par contexte; "
-"imprimer le questionnaire pour l'entrevue, définissez le nombre de nouveaux "
-"employés attendus, et gérez votre flux de recrutement"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -696,7 +658,6 @@ msgid "Delete"
 msgstr "Supprimer"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_department
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -709,6 +670,12 @@ msgid "Department Manager"
 msgstr "Gestionnaire du département"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
+msgid "Departments"
+msgstr "Départements"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
 msgid "Description"
 msgstr "Description"
@@ -717,6 +684,11 @@ msgstr "Description"
 #: model:survey.label,value:hr_recruitment.rrow_2_1_4
 msgid "Desk space"
 msgstr "Espace de bureau"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Discard"
+msgstr "Annuler"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -732,13 +704,8 @@ msgstr "Afficher le formulaire d'entrevue"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_display_name
-#, fuzzy
 msgid "Display Name"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Nom affiché\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Afficher le nom"
+msgstr "Afficher le nom"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.config.settings,module_document:0
@@ -795,14 +762,10 @@ msgid "Email"
 msgstr "Courriel"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-#, fuzzy
 msgid "Email Alias"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Alias email\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Alias d'email"
+msgstr "Alias d'email"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
@@ -810,8 +773,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
-"Alias de courriel pour ce poste. Les nouveaux courriels vont automatiquement "
-"créer de nouveaux candidats pour ce poste."
+"Alias de courriel pour ce poste. Les nouveaux courriels vont automatiquement"
+" créer de nouveaux candidats pour ce poste."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -837,7 +800,8 @@ msgid "Employees"
 msgstr "Employés"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Excellent"
 msgstr "Excellent"
 
@@ -887,11 +851,6 @@ msgid "Filter and view on next actions and date"
 msgstr "Filtrer et afficher  les actions à venir et leur date"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Premier entretien"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "Plié dans le flux de recrutement"
@@ -922,7 +881,8 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Donne l'ordre dans la liste des étapes."
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "Bon"
 
@@ -958,6 +918,11 @@ msgid "Hired Employees"
 msgstr "Employés recrutés"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
@@ -970,15 +935,10 @@ msgstr "ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_thread_id
-#, fuzzy
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID de l'enregistrement parent qui contient l'alias (exemple: le projet qui "
-"contient l'alias lié à la tâche)\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Identifiant de l'enregistrement parent qui définit l'alias (exemple : le "
 "projet qui contient l'alias lié à la tâche)"
 
@@ -1023,11 +983,6 @@ msgid "Important"
 msgstr "Important"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
-msgid "Initial Qualification"
-msgstr "Qualification initiale"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Interview Form"
@@ -1045,6 +1000,11 @@ msgid "Job Campaign"
 msgstr "Campagne d'offres "
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Job Email"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
 msgstr "Job ID"
@@ -1056,13 +1016,8 @@ msgstr "Lieu de travail"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
-#, fuzzy
 msgid "Job Position"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Poste occupé\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Poste Occupé"
+msgstr "Poste Occupé"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
@@ -1113,13 +1068,8 @@ msgstr "Connaissances"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage___last_update
-#, fuzzy
 msgid "Last Modified on"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Dernière modification le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière Modification le"
+msgstr "Dernière Modification le"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
@@ -1141,13 +1091,8 @@ msgstr "Dernière étape de mise à jour"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_uid
-#, fuzzy
 msgid "Last Updated by"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour par\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_date
@@ -1155,31 +1100,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_date
-#, fuzzy
 msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:16
+#, python-format
+msgid ""
+"Let's have a look at the <b>applications pipeline</b> for this job position."
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mis à jour le\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Dernière mise à jour le"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_2_1
 msgid "Male"
 msgstr "Masculin"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_config_settings_module_document
-msgid ""
-"Manage your CV's and motivation letter related to all applicants.\n"
-"-This installs the module document_ftp. This will install the knowledge "
-"management  module in order to allow you to search using specific keywords "
-"through  the content of all documents (PDF, .DOCx...)"
-msgstr ""
-"Gérez vos CV et lettres de motivation envoyées par tous les candidats.\n"
-"Pour cela, installez le module document_ftp. Cela installera le knowledge "
-"management module afin que vous puissiez rechercher du contenu dans tous vos "
-"documents (PDF, .DOCx...) via des mots-clés spécifiques."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1188,33 +1123,18 @@ msgstr "Maîtrise"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id
-#, fuzzy
 msgid "Medium"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Moyenne\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Moyen"
+msgstr "Moyen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
-#, fuzzy
 msgid "Mobile"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tél. portable\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mobile"
+msgstr "Mobile"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#, fuzzy
 msgid "Mobile:"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Portable :\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Mobile :"
+msgstr "Mobile :"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1263,7 +1183,7 @@ msgid "New Applications"
 msgstr "Nouvelles candidatures"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:438
+#: code:addons/hr_recruitment/models/hr_recruitment.py:439
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "Nouveau Employé %s Engagé"
@@ -1309,10 +1229,15 @@ msgid "No Interview Form"
 msgstr "Pas de formulaire d'entretien"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:406
+#: code:addons/hr_recruitment/models/hr_recruitment.py:407
 #, python-format
 msgid "No Subject"
 msgstr "Pas de sujet"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid "No document yet."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_10
@@ -1320,14 +1245,10 @@ msgid "No out of hours working"
 msgstr "Pas d'heures supplémentaires"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
-#, fuzzy
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Normal"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Normal\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Normale"
+msgstr "Normale"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_1
@@ -1348,8 +1269,7 @@ msgstr "Nombre de jours pour terminer l'incident"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
-"                process and follow up all operations: meetings, interviews, "
-"etc."
+"                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
 "Odoo vous aide à tracker les candidature lors du processus de recrutement.\n"
 "procédé et suivi de toutes les opérations, rendez-vous, interviews, etc."
@@ -1374,6 +1294,26 @@ msgid "Office location"
 msgstr "Localisation du Bureau"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+msgid ""
+"Once a job position is created, you can track related applications\n"
+"                  and manage the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid ""
+"Once a job position is created, you can track the applicants\n"
+"                  and manage the recruitment process related to the job\n"
+"                  position."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Ongoing"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
@@ -1381,8 +1321,8 @@ msgid ""
 "creation of new records completely."
 msgstr ""
 "ID optionnel d'un fil (enregistrement) auquel tout message entrant sera "
-"rattaché, même si il ne s'agissait pas d'une réponse à ce fil. Si renseigné, "
-"la création de nouveaux enregistrements sera complètement désactivée."
+"rattaché, même si il ne s'agissait pas d'une réponse à ce fil. Si renseigné,"
+" la création de nouveaux enregistrements sera complètement désactivée."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1396,19 +1336,14 @@ msgstr "Modèle parent"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_thread_id
-#, fuzzy
 msgid "Parent Record Thread ID"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"ID du Parent de l'enregistrement de la discussion\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Identifiant de la discussion de l'enregistrement parent"
+msgstr "Identifiant de la discussion de l'enregistrement parent"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
@@ -1427,13 +1362,8 @@ msgstr "Avantages tel que parking gratuit, abonnements à la salle de sport"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
-#, fuzzy
 msgid "Phone"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tél.\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Téléphone"
+msgstr "Téléphone"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
@@ -1441,11 +1371,9 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following "
-"channels\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Politique de publication d'un message sur le document via la passerelle de "
-"courriel.\n"
+"Politique de publication d'un message sur le document via la passerelle de courriel.\n"
 "- tout le monde : tout le monde peut publier\n"
 "- partenaires : seulement les partenaires authentifiés\n"
 "- abonnés : seulement les abonnés au canaux de suivi\n"
@@ -1538,6 +1466,11 @@ msgid "Refuse"
 msgstr "Refuser"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Refused"
+msgstr "Refusée"
+
+#. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_12
 msgid "Regular meetings"
 msgstr "Rendez-vous réguliers"
@@ -1627,17 +1560,6 @@ msgid "Search Applicants"
 msgstr "Recherche candidats"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
-msgid "Search through resumes and motivation letters."
-msgstr ""
-"Recherchez parmi les curriculum vitae et les lettres de motivation         "
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "Second entretien"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1657,13 +1579,8 @@ msgstr "Assez important"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_source_id
-#, fuzzy
 msgid "Source"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Source\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Origine"
+msgstr "Origine"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_name
@@ -1732,20 +1649,15 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
-"Etape précédente du stage actuel du candidat. Utilisé pour l'analyse des cas "
-"perdus."
+"Etape précédente du stage actuel du candidat. Utilisé pour l'analyse des cas"
+" perdus."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_tree
-#, fuzzy
 msgid "Stages"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Étapes\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Etapes"
+msgstr "Etapes"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1769,26 +1681,19 @@ msgstr "Sujet / candidat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_survey
-#, fuzzy
 msgid "Survey"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Enquête\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Sondage"
+msgstr "Sondage"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.applicant.category:0
-#, fuzzy
 msgid "Tag name already exists !"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Le nom de tag existe déjà !\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Ce nom d'étiquette existe déjà !"
+msgstr "Ce nom d'étiquette existe déjà !"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Étiquettes"
 
@@ -1813,13 +1718,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Le modèle (sorte de document Odoo) auquel correspond cet alias. Tout les e-"
-"mail entrant ne correspondant pas à un enregistrement existant entraînera la "
-"création d'un nouvel enregistrement de ce modèle (Ex. : une tâche d'un "
+"Le modèle (sorte de document Odoo) auquel correspond cet alias. Tout les "
+"e-mail entrant ne correspondant pas à un enregistrement existant entraînera "
+"la création d'un nouvel enregistrement de ce modèle (Ex. : une tâche d'un "
 "projet)"
 
 #. module: hr_recruitment
@@ -1833,8 +1738,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Le nom de l'alias de messagerie, par exemple 'carrieres' pour relever les e-"
-"mails de <carrieres@example.odoo.com>"
+"Le nom de l'alias de messagerie, par exemple 'carrieres' pour relever les "
+"e-mails de <carrieres@example.odoo.com>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
@@ -1844,8 +1749,8 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Le propriétaire d'enregistrements créés lors de la réception de courriel sur "
-"cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
+"Le propriétaire d'enregistrements créés lors de la réception de courriel sur"
+" cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
 "le propriétaire approprié à partir de l'adresse de l'expéditeur (De) ou "
 "utilisera le compte Administrateur si aucun utilisateur du système n'est "
 "trouvé pour cette adresse."
@@ -1894,11 +1799,20 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_source_id
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of "
-"email list"
+"This is the source of the link Ex: Search Engine, another domain, or name of"
+" email list"
 msgstr ""
 "Ceci est la source du lien. Ex: moteur de recherche, autre domaine, ou nom "
 "d'une liste de courriel"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid ""
+"This menu helps you search through resumes and motivation\n"
+"                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
+"                files so that you can search keywords from the content of these\n"
+"                files."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
@@ -1922,6 +1836,15 @@ msgstr ""
 "afficher dans cette étape."
 
 #. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:30
+#, python-format
+msgid ""
+"Try to send an email to this address, it will create an application "
+"automatically."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Unassigned"
@@ -1936,18 +1859,20 @@ msgstr "Messages non lus"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_date
-#, fuzzy
 msgid "Update Date"
-msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Mettre à jour la date\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
-"Date de mise à jour"
+msgstr "Date de mise à jour"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
 msgid "Use template"
 msgstr "Utiliser un modèle"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:25
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1960,7 +1885,8 @@ msgid "User Email"
 msgstr "Courriel de l'utilisateur"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
 msgid "Very Good"
 msgstr "Très bien"
 
@@ -1968,6 +1894,13 @@ msgstr "Très bien"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_4
 msgid "Very important"
 msgstr "Très important"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:11
+#, python-format
+msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1991,24 +1924,17 @@ msgstr "Quel est votre sexe?"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
-#, fuzzy
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
-"                can easily find all the information you need for each "
-"person;\n"
+"                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
-"#-#-#-#-#  fr.po (Odoo 9.0)  #-#-#-#-#\n"
-"Avec un coup d'oeil rapide sur l'écran Odoo des employés, vous pouvez "
-"aisément trouver toute l'information que vous avez de besoin sur chaque "
-"personne; informations de contact, poste occupé, disponnibilité, etc.\n"
-"#-#-#-#-#  fr.po (Odoo Server 10.0alpha1e)  #-#-#-#-#\n"
 "Avec un coup d’œil rapide sur l'écran Odoo des employés, vous pouvez "
 "aisément trouver toute l'information dont vous avez besoin sur chaque "
 "personne; informations de contact, position de travail, disponibilité, etc."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:442
+#: code:addons/hr_recruitment/models/hr_recruitment.py:443
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -2019,6 +1945,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "e.g. Call for interview"
 msgstr "par ex. appel pour l'entretien"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "e.g. Sales Manager"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
@@ -2035,223 +1966,3 @@ msgstr "Candidats"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Please welcome him/her and help him/her finding his/her "
-#~ "marks.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<p>\n"
-#~ "\n"
-#~ "%if object.department_id:\n"
-#~ "\n"
-#~ "Je suis ravie(e) de vous annoncer que <strong> ${object.name} </strong> "
-#~ "nous a rejoint en tant que ${object.job_id.name}\n"
-#~ "\n"
-#~ "dans le département ${object.department_id.name}.\n"
-#~ "\n"
-#~ "%else:\n"
-#~ "\n"
-#~ "Je suis ravie(e) de vous annoncer que <strong> ${object.name} </strong> "
-#~ "nous a rejoint en tant que ${object.job_id.name}.\n"
-#~ "\n"
-#~ "%endif\n"
-#~ "\n"
-#~ "</p>\n"
-#~ "\n"
-#~ "<p>Veuillez l'accueillir comme il se doit et l'aider lors de ses premiers "
-#~ "pas.</p>"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>Cher(e) ${object.partner_name or 'candidat(e)'},</p>\n"
-#~ "<p>Félicitations! Votre CV a retenu notre intérêt!\n"
-#~ "\n"
-#~ "Je vous appellerai dès que possible pour effectuer une entrevue "
-#~ "téléphonique de 10 minutes et pour également planifier une première "
-#~ "rencontre. </p>\n"
-#~ "\n"
-#~ "<p> Si je n'arrive pas à vous joindre ou si vous manquez mon appel, "
-#~ "n'hésitez pas à me rappeler au 001 312 349 3030\n"
-#~ "\n"
-#~ "Si je ne réponds pas, n'hésitez pas à me laisser un message avec vos "
-#~ "disponibilités pour que je puisse vous rappeler au moment le plus adéquat."
-#~ "</p>\n"
-#~ "\n"
-#~ "<p>Bien à vous,</p>\n"
-#~ "\n"
-#~ "<br/>\n"
-#~ "\n"
-#~ "${object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>Cher ${object.partner_name or 'applicant'},</p>\n"
-#~ "<p>Nous vous remercion spour l'intérêt porté à notre entreprise et pour "
-#~ "votre candidature.\n"
-#~ "Malheureusement votre profil ne correspond à nos besoins. \n"
-#~ "Le poste a déjà été pourvu.</p>\n"
-#~ "<p>Si vous désirez plus de détails, n'hésitez pas à nous contacter.</p>\n"
-#~ "<p>Bien à vous,</p>\n"
-#~ "<br/>\n"
-#~ "${object.user_id and object.user_id.signature | safe or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "A besoin d'une action"
-
-#~ msgid "Campaign"
-#~ msgstr "Campagne"
-
-#~ msgid ""
-#~ "Create email and url for each distinct source. <br>\n"
-#~ "                When the applicant will arrive, you will know from wich "
-#~ "source the Job position is coming."
-#~ msgstr ""
-#~ "Créer un courriel et une url pour chaque source distincte. <br>\n"
-#~ "Ainsi quand un(e) candidat(e) arrivera, vous saurez d'où vient le CV. "
-
-#~ msgid ""
-#~ "Create here some alias...\n"
-#~ "                That will allow you to track from where the applicant is "
-#~ "coming from..."
-#~ msgstr ""
-#~ "Créer un alias...\n"
-#~ "Cela vous permettra de surveiller d'où le candidat vient..."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message posté sur cet enregistrement"
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "HR Department"
-#~ msgstr "Département RH"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "si elle est cochée, de nouveaux messages requièrent votre attention."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Si autre, précisez :"
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Job Stages"
-#~ msgstr "Etapes du recrutement"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historique des messages et communications"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Ouvrir le menu RH"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Politique pour poster un message sur le document via la passerelle "
-#~ "email.\n"
-#~ "- tout le monde: tout le monde peut poster\n"
-#~ "- partenaires: seulement les partenaires authentifiés\n"
-#~ "- suiveurs: seulement les personnes qui suivent le document lié\n"
-
-#~ msgid "Reset Application"
-#~ msgstr "Réinitialiser la candidature"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "C'est le nom qui vous permet de conserver la trace de vos campagnes. Par "
-#~ "exemple : Commercialisation_Automne, Spécial_Noël"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"
-
-#~ msgid "Welcoming ${object.name} "
-#~ msgstr "Bienvenue à ${object.name}"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Cliquez sur pour ajouter une nouvelle étiquette."
-
-#~ msgid "Content"
-#~ msgstr "Contenu"
-
-#~ msgid "Create"
-#~ msgstr "Créer"
-
-#~ msgid "Departments"
-#~ msgstr "Départements"
-
-#~ msgid "Discard"
-#~ msgstr "Annuler"
-
-#~ msgid "Refused"
-#~ msgstr "Refusée"

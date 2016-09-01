@@ -27,7 +27,6 @@ return session.is_bound.then(function () {
     // in the page source.
     if (session.is_frontend && session.is_superuser) {
         defs.push(new Model('web_tour.tour').call('get_consumed_tours'));
-        defs.push(ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb));
     }
     return $.when.apply($, defs).then(function (consumed_tours) {
         var tour = new TourManager(session.is_frontend ? consumed_tours : session.web_tours);
@@ -51,27 +50,54 @@ return session.is_bound.then(function () {
             }
         }, 500);
         var observer = new MutationObserver(check_tooltip);
-        var observe = function () {
-            $(function () {
-                observer.observe(document.body, {
-                    attributes: true,
-                    childList: true,
-                    subtree: true,
+        var start_service = (function () {
+            var load_def;
+
+            return function (observe) {
+                if (load_def === undefined && observe && session.is_frontend) {
+                    load_def = ajax.loadXML('/web_tour/static/src/xml/tip.xml', QWeb);
+                }
+
+                var def = $.Deferred();
+                $(function () {
+                    /**
+                     * Once the DOM is ready, we still have to wait all the modules are loaded before completing the tours
+                     * registration and starting listening for DOM mutations.
+                     */
+                     $.when(load_def).then(function () {
+                         _.defer(function () {
+                            tour._register_all(observe);
+                            if (observe) {
+                                observer.observe(document.body, {
+                                    attributes: true,
+                                    childList: true,
+                                    subtree: true,
+                                });
+                            }
+                            def.resolve();
+                        });
+                    });
                 });
-                tour.update();
-            });
-        };
+                return def;
+            };
+        })();
 
         // Enable the MutationObserver for the admin or if a tour is running, when the DOM is ready
-        if (session.is_superuser || tour.running_tour) {
-            observe();
-        }
+        start_service(session.is_superuser || tour.running_tour);
+
         // Override the TourManager so that it enables/disables the observer when necessary
         if (!session.is_superuser) {
             var run = tour.run;
             tour.run = function () {
-                run.apply(this, arguments);
-                if (this.running_tour) { observe(); }
+                var self = this;
+                var args = arguments;
+
+                start_service(true).then(function () {
+                    run.apply(self, args);
+                    if (!self.running_tour) {
+                        observer.disconnect();
+                    }
+                });
             };
             var _consume_tour = tour._consume_tour;
             tour._consume_tour = function () {
