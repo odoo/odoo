@@ -4,6 +4,7 @@
 import logging
 import logging.handlers
 import os
+import re
 import platform
 import pprint
 import release
@@ -107,6 +108,31 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
+class WerkzeugFilter(logging.Filter):
+    """Add a log error if there is a 404 code in the message"""
+
+    def __init__(self, logger, level=None):
+        self.__level = level
+        self.__logger = logger
+        super(WerkzeugFilter, self).__init__()
+
+    def get_message_status_code(self, msg):
+        re_res = re.search(r" (\d+) -$", msg)
+        return re_res and int(re_res.group(1))
+
+    def has_error(self, status_code):
+        if status_code == 404:
+            return True
+
+    def filter(self, record):
+        if self.__level is None or record.levelno != self.__level:
+            return True
+        msg = record.__dict__.get('msg') or ''
+        status_code = self.get_message_status_code(msg)
+        if self.has_error(status_code):
+            self.__logger.error('werzeurg has error %d: %s', status_code, msg)
+        return True
+
 _logger_init = False
 def init_logger():
     global _logger_init
@@ -193,6 +219,10 @@ def init_logger():
 
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
+
+    werkzeug_filter = WerkzeugFilter(_logger, logging.INFO)
+    werkzeug_logger = logging.getLogger('werkzeug')
+    werkzeug_logger.addFilter(werkzeug_filter)
 
 DEFAULT_LOG_CONFIGURATION = [
     'openerp.workflow.workitem:WARNING',
