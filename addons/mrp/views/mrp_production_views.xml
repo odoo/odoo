@@ -272,6 +272,18 @@
                     <field name="product_id" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
                     <field name="name" string="Work Center" filter_domain="[('routing_id.operation_ids.workcenter_id','ilike',self)]"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                    <separator/>
+                    <filter string="My Activities" name="my_activity"
+                            domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                    <filter string="Today Activities" name="today"
+                            domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week Activities" name="this_week"
+                            domain="['&amp;', ('activity_log_ids.date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                     ('activity_log_ids.date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                            ]"/>
+                    <filter string="Overdue Activities" name="overdue"
+                            domain="[('activity_log_ids.date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Routing" domain="[]" context="{'group_by':'routing_id'}"/>

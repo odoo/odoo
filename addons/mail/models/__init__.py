@@ -3,6 +3,7 @@
 import mail_message_subtype
 import mail_tracking_value
 import mail_alias
+import mail_activity
 import mail_followers
 import mail_message
 import mail_mail

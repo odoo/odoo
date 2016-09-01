@@ -6,12 +6,12 @@ from odoo import fields
 from datetime import date
 
 
-class TestCrmActivity(TestCrmCases):
+class TestCrmMailActivity(TestCrmCases):
 
     def setUp(self):
-        super(TestCrmActivity, self).setUp()
+        super(TestCrmMailActivity, self).setUp()
         # Set up activities
-        Activity = self.env['crm.activity']
+        Activity = self.env['mail.activity']
         self.activity3 = Activity.create({
             'name': 'Celebrate the sale',
             'days': 3,
@@ -25,7 +25,6 @@ class TestCrmActivity(TestCrmCases):
             'description': 'ACT 2 : I want to show you my ERP !',
             'internal': True,
             'res_model': 'crm.lead',
-            'recommended_activity_ids': [(6, 0, [self.activity3.id])],
         })
         self.activity1 = Activity.create({
             'name': 'Initial Contact',
@@ -33,7 +32,6 @@ class TestCrmActivity(TestCrmCases):
             'description': 'ACT 1 : Presentation, barbecue, ... ',
             'internal': True,
             'res_model': 'crm.lead',
-            'recommended_activity_ids': [(6, 0, [self.activity2.id])],
         })
 
         # I create an opportunity, as salesman
@@ -71,17 +69,17 @@ class TestCrmActivity(TestCrmCases):
             'subtype_ids': [(4, activity.subtype_id.id)]
         })
 
-        # Instanciate wizard, trigger onchange lead and set the next activity
-        ActivityLogWizard = self.env['crm.activity.log'].sudo(self.crm_salesman.id)
-        wizard = ActivityLogWizard.create({
-            'note': 'Content of the activity to log',
-            'lead_id': self.lead.id,
-        })
-        wizard.onchange_lead_id()
-        wizard.write({
+        # trigger onchange and set the due date (date_action)
+        ActivityLog = self.env['mail.activity.log'].sudo(self.crm_salesman.id)
+        activity_log = ActivityLog.create({
             'next_activity_id': activity.id,
+            'note': 'Content of the activity to log',
+            'res_id': self.lead.id,
+            'date_action': fields.Date.today(),
+            'model': 'crm.lead'
         })
-        wizard.action_log()
+        activity_log.onchange_next_activity_id()
+        activity_log.mark_as_done()
 
         # Check message recipients
         activity_message = self.lead.message_ids[0]
@@ -91,42 +89,39 @@ class TestCrmActivity(TestCrmCases):
     def test_crm_activity_next_action(self):
         """ This test case set the next activity on a lead, log another, and schedule a third. """
         # Add the next activity (like we set it from a form view)
-        self.lead.write({
-            'next_activity_id': self.activity1.id
+        activity_log = self.env['mail.activity.log'].sudo(self.crm_salesman.id).create({
+            'next_activity_id': self.activity1.id,
+            'date_action': fields.Date.today(),
+            'res_id': self.lead.id,
+            'model': 'crm.lead',
         })
-        self.lead._onchange_next_activity_id()
+        activity_log.onchange_next_activity_id()
 
         # Check the next activity is correct
         self.assertEqual(self.lead.title_action, self.activity1.description, 'Activity title should be the same on the lead and on the chosen activity')
 
-        # Instanciate the wizard to schedule the next activity
-        wizard = self.env['crm.activity.log'].sudo(self.crm_salesman.id).create({
-            'note': 'Content of the activity to log',
-            'lead_id': self.lead.id,
-        })
-        wizard.onchange_lead_id()
-        wizard.write({
+        # Schedule the next activity
+        activity_log.write({
             'next_activity_id': self.activity2.id,
+            'note': 'Content of the activity to log',
         })
-        wizard.action_log()
+        activity_log.onchange_next_activity_id()
+        activity_log.mark_as_done()
 
         # Check the next activity on the lead has been removed
         self.assertFalse(self.lead.next_activity_id.id, 'No next activity should be set on lead, since we jsut log another activity')
 
-        # Instanciate the wizard to schedule the next activity
-        self.env['crm.activity.log'].sudo(self.crm_salesman.id).create({
+        # Schedule the next activity
+        activity_log = self.env['mail.activity.log'].sudo(self.crm_salesman.id).create({
             'next_activity_id': self.activity3.id,
+            'date_action': fields.Date.today(),
             'note': 'Content of the activity to log',
-            'lead_id': self.lead.id,
+            'res_id': self.lead.id,
+            'model': 'crm.lead',
         })
-        wizard.onchange_lead_id()
-        wizard.write({
-            'next_activity_id': self.activity3.id,
-        })
-        wizard.onchange_next_activity_id()
-        wizard.action_schedule()
+        activity_log.onchange_next_activity_id()
 
         # Check the activity is well scheldule on lead
-        delta_days = (fields.Date.from_string(self.lead.date_action) - date.today()).days
+        delta_days = (fields.Date.from_string(activity_log.date_action) - date.today()).days
         self.assertEqual(self.activity3.days, delta_days, 'The action date should be in the number of days set up on the activity 3')
-        self.assertEqual(self.lead.title_action, self.activity3.description, 'Activity title should be the same on the lead and on the activity 3')
+        self.assertEqual(activity_log.title_action, self.activity3.description, 'Activity title should be the same on the lead and on the activity 3')

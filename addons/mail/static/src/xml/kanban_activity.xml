@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="KanbanActivity">
+    <div class="dropdown o_kanban_selection">
+        <a class="dropdown-toggle o_activity_logs" data-toggle="dropdown">
+            <span t-attf-class="fa o_activity_color_#{widget.activity_state or 'default'} fa-chevron-circle-right fa-lg"/>
+        </a>
+        <ul class="dropdown-menu o_activity" role="menu">
+        </ul>
+    </div>
+</t>
+
+<t t-name="KanbanActivityLoading">
+    <li class="text-center o_no_activity">
+        <span class="fa fa-spinner fa-spin fa-2x" />
+    </li>
+</t>
+
+<t t-name="KanbanActivityDropdown">
+    <li t-if="_.isEmpty(records)" class="text-center o_no_activity">
+        <span>No activities.</span>
+    </li>
+    <li t-if="!_.isUndefined(records)">
+        <ul class="o_activity_log">
+            <t t-foreach="_.keys(records)" t-as="key">
+                <t t-set="logs" t-value="records[key]" />
+                <li>
+                    <label t-attf-class="o_activity_label o_activity_color_#{key}">
+                        <t t-esc="selection[key]" /> (<span t-esc="logs.length" />)
+                    </label>
+                </li>
+                <li t-foreach="logs" t-as="log">
+                    <div t-att-data-activity-id="log.id" class="o_schedule_activity">
+                        <div class="col-xs-1"><span t-attf-class="mt8 #{log.icon} fa-lg" /></div>
+                        <div class="col-xs-8 o_wrap_title">
+                            <strong><t t-esc="log.title_action or log.next_activity_id[1]" /></strong>
+                            <p t-att-title="log.date_action">
+                                <span class="fa fa-clock-o" />
+                                <t t-esc="log.day" />
+                            </p>
+                        </div>
+                        <div class="col-xs-1">
+                            <span class="o_mark_as_done fa fa-check-circle fa-2x" t-att-data-activity-id="log.id" title="Mark as done" />
+                        </div>
+                    </div>
+                </li>
+            </t>
+        </ul>
+    </li>
+    <li>
+        <div class="text-center">
+            <a class="o_schedule_activity">
+                <strong>Schedule an activity</strong>
+            </a>
+        </div>
+    </li>
+</t>
+
+</templates>

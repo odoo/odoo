@@ -35,20 +35,6 @@ tour.register('crm_tour', {
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:not(.o_updating) .oe_kanban_status_red",
-    extra_trigger: ".o_opportunity_kanban",
-    content: _t("This opportunity has <b>no next activity scheduled</b>. <i>Click to set one.</i>"),
-    position: "bottom"
-}, {
-    trigger: ".o_recommended_activity .o_radio_item",
-    extra_trigger: ".o_opportunity_kanban",
-    content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now on.</i></p>"),
-    position: "left",
-    run: function (actions) {
-        actions.auto(this.$anchor.children("input").first());
-        actions.auto(".modal-footer .btn-primary");
-    },
-}, {
     trigger: ".o_kanban_record",
     extra_trigger: ".o_opportunity_kanban",
     content: _t("Click on an opportunity to zoom to it."),

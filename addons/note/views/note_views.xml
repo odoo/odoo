@@ -160,6 +160,18 @@
           <field name="tag_ids"/>
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
+          <separator/>
+          <filter string="My Activities" name="my_activity"
+                  domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+          <filter string="Today Activities" name="today"
+                  domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+          <filter string="This Week Activities" name="this_week"
+                  domain="['&amp;', ('activity_log_ids.date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                           ('activity_log_ids.date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                  ]"/>
+          <filter string="Overdue Activities" name="overdue"
+                  domain="[('activity_log_ids.date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                  help="Show all records which has next action date is before today"/>
           <group expand="0" string="Group By">
             <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>

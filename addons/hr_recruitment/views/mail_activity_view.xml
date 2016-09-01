@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_applicant_activity_tree_view" model="ir.ui.view">
+        <field name="name">hr.applicant.activity.tree.view</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <tree string="Next Activity" decoration-danger="date_action &lt; current_date" default_order="date_action">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_action"/>
+                <field name="next_activity_id"/>
+                <field name="title_action"/>
+                <field name="stage_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_applicant_activity_log" model="ir.actions.act_window">
+        <field name="name">Activity</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="view_id" ref="hr_applicant_activity_tree_view"/>
+        <field name="context">{
+            'search_default_my_activity':1
+        }
+        </field>
+        <field name="help" type="html">
+            <p>
+                Currently there are not any activity scheduled.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="My Next Activities"
+        id="menu_hr_applicant_next_activity"
+        parent="hr_recruitment.menu_crm_case_categ0_act_job"
+        action="action_hr_applicant_activity_log"
+        sequence="20"/>
+</odoo>

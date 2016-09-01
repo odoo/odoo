@@ -146,7 +146,7 @@ class WebsiteAccount(website_account):
             "website_crm_partner_assign.portal_my_opportunity", {
                 'opportunity': lead,
                 'stages': request.env['crm.stage'].search([('probability', '!=', '100')], order='sequence desc'),
-                'activities': request.env['crm.activity'].sudo().search([], order='sequence desc'),
+                'activities': request.env['mail.activity'].sudo().search([], order='sequence desc'),
                 'states': request.env['res.country.state'].sudo().search([]),
                 'countries': request.env['res.country'].sudo().search([]),
             })
