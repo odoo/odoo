@@ -39,7 +39,7 @@ class HrExpense(models.Model):
         ('reported', 'Reported'),
         ('done', 'Posted'),
         ('refused', 'Refused')
-        ], compute='_compute_state', string='Status', copy=False, default="draft", index=True, readonly=True, required=True, store=True,
+        ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True,
         help="Status of the expense.")
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", readonly=True, copy=False)
     reference = fields.Char(string="Bill Reference")
