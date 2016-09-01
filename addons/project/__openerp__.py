@@ -38,7 +38,6 @@ Dashboard / Reports for Project Management will include:
         'security/ir.model.access.csv',
         'data/project_data.xml',
         'report/project_report_views.xml',
-        'report/project_cumulative_views.xml',
         'views/project_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_views.xml',

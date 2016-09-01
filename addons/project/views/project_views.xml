@@ -14,7 +14,7 @@
             sequence="2" groups="base.group_no_one,group_project_user"/>
 
         <menuitem id="menu_project_config" name="Configuration" parent="base.menu_main_pm"
-            sequence="100"/>
+            sequence="100" groups="project.group_project_manager"/>
 
         <record id="view_task_search_form" model="ir.ui.view">
             <field name="name">project.task.search.form</field>
@@ -250,9 +250,6 @@
                                             </div>
                                             <div>
                                                 <a name="%(project.action_project_task_user_tree_filtered)d" type="action">Tasks</a>
-                                            </div>
-                                            <div>
-                                                <a name="%(project.action_view_task_history_cumulative_filter)d" type="action">Cumulative Flow</a>
                                             </div>
                                         </div>
                                         <div t-if="widget.editable" class="o_project_kanban_colorpicker">
@@ -743,12 +740,7 @@ action = model.activate_sample_project()
         <!-- Reporting menus -->
         <menuitem id="base.menu_project_report" name="Reports"
             groups="project.group_project_manager"
-            parent="base.menu_main_pm" sequence="99"/>
-        <menuitem id="menu_project_task_user_tree" name="Tasks"
             action="project.action_project_task_user_tree"
-            parent="base.menu_project_report"/>
-        <menuitem id="menu_action_view_task_history_cumulative"
-            action="project.action_view_task_history_cumulative"
-            parent="base.menu_project_report"/>
+            parent="base.menu_main_pm" sequence="99"/>
 
 </odoo>

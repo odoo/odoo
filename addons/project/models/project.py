@@ -491,19 +491,6 @@ class Task(models.Model):
         # perform search, return the first found
         return self.env['project.task.type'].search(search_domain, order=order, limit=1).id
 
-    def _store_history(self):
-        for task in self:
-            self.env['project.task.history'].create({
-                'task_id': task.id,
-                'remaining_hours': task.remaining_hours,
-                'planned_hours': task.planned_hours,
-                'kanban_state': task.kanban_state,
-                'type_id': task.stage_id.id,
-                'user_id': task.user_id.id
-
-            })
-        return True
-
     # ------------------------------------------------
     # CRUD overrides
     # ------------------------------------------------
@@ -520,7 +507,6 @@ class Task(models.Model):
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
-        task._store_history()
         return task
 
     @api.multi
@@ -538,8 +524,6 @@ class Task(models.Model):
 
         result = super(Task, self).write(vals)
 
-        if any(item in vals for item in ['stage_id', 'remaining_hours', 'user_id', 'kanban_state']):
-            self._store_history()
         return result
 
     # ---------------------------------------------------
@@ -774,47 +758,6 @@ class AccountAnalyticAccount(models.Model):
         else:
             result = {'type': 'ir.actions.act_window_close'}
         return result
-
-
-class ProjectTaskHistory(models.Model):
-    """
-    Tasks History, used for cumulative flow charts (Lean/Agile)
-    """
-    _name = 'project.task.history'
-    _description = 'History of Tasks'
-    _rec_name = 'task_id'
-    _log_access = False
-
-    @api.depends('date', 'task_id', 'type_id', 'type_id.fold')
-    def _compute_end_date(self):
-        for history in self:
-            if history.type_id and history.type_id.fold:
-                history.end_date = history.date
-                continue
-            self.env.cr.execute('''select
-                    date
-                from
-                    project_task_history
-                where
-                    task_id=%s and
-                    id>%s
-                order by id limit 1''', (history.task_id.id, history.id))
-            res = self.env.cr.fetchone()
-            history.end_date = res and res[0] or False
-
-    task_id = fields.Many2one('project.task', string='Task', ondelete='cascade', required=True, index=True)
-    type_id = fields.Many2one('project.task.type', string='Stage')
-    kanban_state = fields.Selection([
-            ('normal', 'Normal'),
-            ('blocked', 'Blocked'),
-            ('done', 'Ready for next stage')
-        ], string='Kanban State')
-    date = fields.Date(string='Date', index=True, default=fields.Date.context_today)
-    end_date = fields.Date(string='End Date', compute='_compute_end_date', store=True)
-    remaining_hours = fields.Float(string='Remaining Time', digits=(16, 2))
-    planned_hours = fields.Float(string='Planned Time', digits=(16, 2))
-    user_id = fields.Many2one('res.users', string='Responsible')
-
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks (or issues) """
