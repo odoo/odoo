@@ -522,7 +522,7 @@ class AccountInvoice(models.Model):
             report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
         except IndexError:
             report_invoice = False
-        if report_invoice:
+        if report_invoice and report_invoice.attachment:
             for invoice in self:
                 with invoice.env.do_in_draft():
                     invoice.number, invoice.state = invoice.move_name, 'open'

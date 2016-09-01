@@ -411,10 +411,12 @@ class stock_quant(osv.osv):
         quants_reconcile = []
         to_move_quants = []
         self._check_location(cr, uid, location_to, context=context)
+        check_lot = False
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
                 quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=location_from, force_location_to=location_to, context=context)
+                check_lot = True
             else:
                 self._quant_split(cr, uid, quant, qty, context=context)
                 to_move_quants.append(quant)
@@ -432,6 +434,26 @@ class stock_quant(osv.osv):
             if cr.fetchone():
                 for quant in quants_reconcile:
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+
+        # In case of serial tracking, check if the product does not exist somewhere internally already
+        # Checking that a positive quant already exists in an internal location is too restrictive.
+        # Indeed, if a warehouse is configured with several steps (e.g. "Pick + Pack + Ship") and
+        # one step is forced (creates a quant of qty = -1.0), it is not possible afterwards to
+        # correct the inventory unless the product leaves the stock.
+        picking_type = move.picking_id and move.picking_id.picking_type_id or False
+        if check_lot and lot_id and move.product_id.tracking == 'serial' and (not picking_type or (picking_type.use_create_lots or picking_type.use_existing_lots)):
+            other_quants = self.search(cr, uid, [('product_id', '=', move.product_id.id), ('lot_id', '=', lot_id),
+                                                 ('location_id.usage', '=', 'internal')], context=context)
+
+            if other_quants:
+                # We raise an error if:
+                # - the total quantity is strictly larger than 1.0
+                # - there are more than one negative quant, to avoid situations where the user would
+                #   force the quantity at several steps of the process
+                other_quants = self.browse(cr, uid, other_quants, context=context)
+                if sum(other_quants.mapped('qty')) > 1.0 or len([q for q in other_quants.mapped('qty') if q < 0]) > 1:
+                    lot_name = self.pool['stock.production.lot'].browse(cr, uid, lot_id, context=context).name
+                    raise UserError(_('The serial number %s is already in stock.') % lot_name + _("Otherwise make sure the right stock/owner is set."))
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id = False, entire_pack=False, context=None):
         context=context or {}
@@ -566,16 +588,10 @@ class stock_quant(osv.osv):
             negative_quant_id = self.create(cr, SUPERUSER_ID, negative_vals, context=context)
             vals.update({'propagated_from_id': negative_quant_id})
 
-        # In case of serial tracking, check if the product does not exist somewhere internally already
         picking_type = move.picking_id and move.picking_id.picking_type_id or False
         if lot_id and move.product_id.tracking == 'serial' and (not picking_type or (picking_type.use_create_lots or picking_type.use_existing_lots)):
             if qty != 1.0:
                 raise UserError(_('You should only receive by the piece with the same serial number'))
-            other_quants = self.search(cr, uid, [('product_id', '=', move.product_id.id), ('lot_id', '=', lot_id),
-                                                 ('qty', '>', 0.0), ('location_id.usage', '=', 'internal')], context=context)
-            if other_quants:
-                lot_name = self.pool['stock.production.lot'].browse(cr, uid, lot_id, context=context).name
-                raise UserError(_('The serial number %s is already in stock.') % lot_name + _("Otherwise make sure the right stock/owner is set."))
 
         #create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         quant_id = self.create(cr, SUPERUSER_ID, vals, context=context)
