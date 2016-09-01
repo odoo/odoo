@@ -24,13 +24,13 @@ $(document).ready(function () {
             $("div.js_payment a.list-group-item").removeClass("list-group-item-info");
             $('span.js_radio').switchClass(ico_on, ico_off, 0);
             if (token) {
-              $("div.oe_sale_acquirer_button div.pre_msg").hide();
+              $("div.oe_sale_acquirer_button div.token_hide").hide();
               $(ev.currentTarget).find('span.js_radio').switchClass(ico_off, ico_on, 0);
               $(ev.currentTarget).parents('li').find('input').prop("checked", true);
               $(ev.currentTarget).addClass("list-group-item-info");
             }
             else{
-              $("div.oe_sale_acquirer_button div.pre_msg").show();
+              $("div.oe_sale_acquirer_button div.token_hide").show();
             }
             $("div.oe_sale_acquirer_button[data-id]", $payment).addClass("hidden");
             $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
@@ -46,7 +46,7 @@ $(document).ready(function () {
       var acquirer = $(ev.currentTarget).parents('div.oe_sale_acquirer_button').first();
       var acquirer_id = acquirer.data('id');
       var acquirer_token = acquirer.attr('data-token'); // !=data
-      var params = {};
+      var params = {'tx_type': acquirer.find('input[name="odoo_save_token"]').is(':checked')?'form_save':'form'};
       if (! acquirer_id) {
         return false;
       }
