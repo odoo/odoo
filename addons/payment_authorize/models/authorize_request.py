@@ -126,6 +126,42 @@ class AuthorizeAPI():
         res['payment_profile_id'] = response.find('customerPaymentProfileIdList/numericString').text
         return res
 
+    def create_customer_profile_from_tx(self, partner, transaction_id):
+        """Create an Auth.net payment/customer profile from an existing transaction.
+
+        Creates a customer profile for the partner/credit card combination and links
+        a corresponding payment profile to it. Note that a single partner in the Odoo
+        database can have multiple customer profiles in Authorize.net (i.e. a customer
+        profile is created for every res.partner/payment.token couple).
+
+        Note that this function makes 2 calls to the authorize api, since we need to
+        obtain a partial cardnumber to generate a meaningful payment.token name.
+
+        :param record partner: the res.partner record of the customer
+        :param str transaction_id: id of the authorized transaction in the
+                                   Authorize.net backend
+
+        :return: a dict containing the profile_id and payment_profile_id of the
+                 newly created customer profile and payment profile as well as the
+                 last digits of the card number
+        :rtype: dict
+        """
+        root = self._base_tree('createCustomerProfileFromTransactionRequest')
+        etree.SubElement(root, "transId").text = transaction_id
+        customer = etree.SubElement(root, "customer")
+        etree.SubElement(customer, "merchantCustomerId").text = 'ODOO-%s-%s' % (partner.id, uuid4().hex[:8])
+        etree.SubElement(customer, "email").text = partner.email
+        response = self._authorize_request(root)
+        res = dict()
+        res['profile_id'] = response.find('customerProfileId').text
+        res['payment_profile_id'] = response.find('customerPaymentProfileIdList/numericString').text
+        root_profile = self._base_tree('getCustomerPaymentProfileRequest')
+        etree.SubElement(root_profile, "customerProfileId").text = res['profile_id']
+        etree.SubElement(root_profile, "customerPaymentProfileId").text = res['payment_profile_id']
+        response_profile = self._authorize_request(root_profile)
+        res['name'] = response_profile.find('paymentProfile/payment/creditCard/cardNumber').text
+        return res
+
     # Transaction management
     def auth_and_capture(self, token, amount, reference):
         """Authorize and capture a payment for the given amount.
@@ -193,7 +229,7 @@ class AuthorizeAPI():
         Capture a previsouly authorized payment. Note that the amount is required
         even though we do not support partial capture.
 
-        :param str transaction_id: the id of the authorized transaction in the
+        :param str transaction_id: id of the authorized transaction in the
                                    Authorize.net backend
         :param str amount: transaction amount (up to 15 digits with decimal point)
 
