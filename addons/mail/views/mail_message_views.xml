@@ -59,10 +59,24 @@
                             </page>
                             <page string="Recipients">
                                 <group>
-                                    <field name="partner_ids" widget="many2many_tags"/>
-                                    <field name="channel_ids" widget="many2many_tags"/>
-                                    <field name="needaction_partner_ids" widget="many2many_tags"/>
-                                    <field name="starred_partner_ids" widget="many2many_tags"/>
+                                    <group>
+                                        <field name="partner_ids" widget="many2many_tags"/>
+                                        <field name="channel_ids" widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="needaction_partner_ids" widget="many2many_tags"/>
+                                        <field name="starred_partner_ids" widget="many2many_tags"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="notification_ids">
+                                        <tree>
+                                            <field name="res_partner_id"/>
+                                            <field name="is_read"/>
+                                            <field name="is_email"/>
+                                            <field name="email_status"/>
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
                             <page string="Tracking">

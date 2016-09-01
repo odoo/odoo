@@ -13,7 +13,6 @@ class TestSale(AccountingTestCase):
         self.manager = self.env['res.users'].create({
             'name': 'Andrew Manager',
             'login': 'manager',
-            'alias_name': 'andrew',
             'email': 'a.m@example.com',
             'signature': '--\nAndreww',
             'notify_email': 'always',
@@ -22,7 +21,6 @@ class TestSale(AccountingTestCase):
         self.user = self.env['res.users'].create({
             'name': 'Mark User',
             'login': 'user',
-            'alias_name': 'mark',
             'email': 'm.u@example.com',
             'signature': '--\nMark',
             'notify_email': 'always',

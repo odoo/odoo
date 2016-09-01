@@ -810,6 +810,17 @@ class Post(models.Model):
             kwargs['record_name'] = kwargs.get('record_name') or self.parent_id and self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
 
+    @api.multi
+    def message_get_message_notify_values(self, message, message_values):
+        """ Override to avoid keeping all notified recipients of a comment.
+        We avoid tracking needaction on post comments. Only emails should be
+        sufficient. """
+        if message.message_type == 'comment':
+            return {
+                'needaction_partner_ids': [],
+            }
+        return {}
+
 
 class PostReason(models.Model):
     _name = "forum.post.reason"
@@ -911,12 +922,3 @@ class Tags(models.Model):
         if self.env.user.karma < forum.karma_tag_create:
             raise KarmaError(_('Not enough karma to create a new Tag'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)
-
-class Message(models.Model):
-    _name = 'mail.message'
-    _inherit = ['mail.message']
-
-    @api.multi
-    def _is_accessible(self):
-        res = super(Message, self)._is_accessible()
-        return self.model == 'forum.post' or res

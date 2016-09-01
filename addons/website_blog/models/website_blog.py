@@ -217,3 +217,14 @@ class BlogPost(models.Model):
         for category, data in res.iteritems():
             res[category]['button_access'] = {'url': access_action, 'title': _('View Blog Post')}
         return res
+
+    @api.multi
+    def message_get_message_notify_values(self, message, message_values):
+        """ Override to avoid keeping all notified recipients of a comment.
+        We avoid tracking needaction on post comments. Only emails should be
+        sufficient. """
+        if message.message_type == 'comment':
+            return {
+                'needaction_partner_ids': [],
+            }
+        return {}
