@@ -769,7 +769,7 @@ class WebsiteSale(http.Controller):
             return request.redirect("/shop/payment?error=no_token_or_missmatch_tx")
 
     @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, token=None):
+    def payment_transaction(self, acquirer_id, tx_type='form', token=None):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -780,7 +780,6 @@ class WebsiteSale(http.Controller):
         """
         Transaction = request.env['payment.transaction'].sudo()
         order = request.website.sale_get_order()
-
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout")
 
@@ -795,11 +794,11 @@ class WebsiteSale(http.Controller):
                 # new or distinct token
                 tx = False
             elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write(dict(Transaction.on_change_partner_id(order.partner_id.id).get('value', {}), amount=order.amount_total))
+                tx.write(dict(Transaction.on_change_partner_id(order.partner_id.id).get('value', {}), amount=order.amount_total, type=tx_type))
         if not tx:
             tx_values = {
                 'acquirer_id': acquirer_id,
-                'type': 'form',
+                'type': tx_type,
                 'amount': order.amount_total,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
