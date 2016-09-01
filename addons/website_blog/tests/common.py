@@ -17,7 +17,6 @@ class TestWebsiteBlogCommon(common.TransactionCase):
         self.user_employee = Users.with_context({'no_reset_password': True}).create({
             'name': 'Armande Employee',
             'login': 'armande',
-            'alias_name': 'armande',
             'email': 'armande.employee@example.com',
             'notify_email': 'none',
             'groups_id': [(6, 0, [group_employee_id])]
@@ -25,7 +24,6 @@ class TestWebsiteBlogCommon(common.TransactionCase):
         self.user_blogmanager = Users.with_context({'no_reset_password': True}).create({
             'name': 'Bastien BlogManager',
             'login': 'bastien',
-            'alias_name': 'bastien',
             'email': 'bastien.blogmanager@example.com',
             'notify_email': 'none',
             'groups_id': [(6, 0, [group_blog_manager_id, group_employee_id])]
@@ -33,7 +31,6 @@ class TestWebsiteBlogCommon(common.TransactionCase):
         self.user_public = Users.with_context({'no_reset_password': True}).create({
             'name': 'Cedric Public',
             'login': 'cedric',
-            'alias_name': 'cedric',
             'email': 'cedric.public@example.com',
             'notify_email': 'none',
             'groups_id': [(6, 0, [group_public_id])]

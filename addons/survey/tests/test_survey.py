@@ -20,15 +20,15 @@ class TestSurvey(TransactionCase):
         User = self.env['res.users'].with_context({'no_reset_password': True})
         (group_survey_user, group_employee) = (self.ref('base.group_survey_user'), self.ref('base.group_user'))
         self.survey_manager = User.create({
-            'name': 'Gustave Doré', 'login': 'Gustav', 'alias_name': 'gustav', 'email': 'gustav.dore@example.com',
+            'name': 'Gustave Doré', 'login': 'Gustav','email': 'gustav.dore@example.com',
             'groups_id': [(6, 0, [self.ref('base.group_survey_manager'), group_survey_user, group_employee])]})
 
         self.survey_user = User.create({
-            'name': 'Lukas Peeters', 'login': 'Lukas', 'alias_name': 'lukas', 'email': 'lukas.petters@example.com',
+            'name': 'Lukas Peeters', 'login': 'Lukas', 'email': 'lukas.petters@example.com',
             'groups_id': [(6, 0, [group_survey_user, group_employee])]})
 
         self.user_public = User.create({
-            'name': 'Wout Janssens', 'login': 'Wout', 'alias_name': 'wout', 'email': 'wout.janssens@example.com',
+            'name': 'Wout Janssens', 'login': 'Wout', 'email': 'wout.janssens@example.com',
             'groups_id': [(6, 0, [self.ref('base.group_public')])]})
 
         self.survey1 = self.env['survey.survey'].sudo(self.survey_manager).create({'title': "S0", 'page_ids': [(0, 0, {'title': "P0"})]})

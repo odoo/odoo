@@ -98,14 +98,6 @@ class MassMailingContact(models.Model):
     def message_get_default_recipients(self):
         return dict((record.id, {'partner_ids': [], 'email_to': record.email, 'email_cc': False}) for record in self)
 
-    def message_receive_bounce(self, mail_id=None):
-        """Called by ``message_process`` when a bounce email (such as Undelivered
-        Mail Returned to Sender) is received for an existing thread. As contacts
-        do not inherit form mail.thread, we have to define this method to be able
-        to track bounces (see mail.thread for more details). """
-        for contact in self:
-            contact.message_bounce = contact.message_bounce + 1
-
 
 class MassMailingStage(models.Model):
 

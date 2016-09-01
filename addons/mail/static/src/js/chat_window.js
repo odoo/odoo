@@ -32,6 +32,7 @@ return Widget.extend({
             autofocus: true,
             display_stars: true,
             display_reply_icon: false,
+            display_email_icon: false,
             placeholder: _t("Say something"),
             input_less: false,
         });

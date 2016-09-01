@@ -38,5 +38,17 @@
             </p>
         </template>
 
+        <template id="message_user_assigned">
+            <p>Dear <t t-esc="object.user_id.name"/>,</p>
+            <p>You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</p>
+            <p>
+                <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)"
+                        style="background-color: #9E588B; margin-top: 10px; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">
+                    View <t t-esc="object._description.lower()"/>
+                </a>
+            </p>
+            <p style="color:#9E588B;">Powered by <a href="https://www.odoo.com">Odoo</a>.</p>
+        </template>
+
     </data>
 </odoo>

@@ -14,11 +14,15 @@ class Users(models.Model):
           group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
-    _inherit = ['mail.alias.mixin', 'res.users']
+    _inherit = ['res.users']
 
-    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
+    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
+    alias_contact = fields.Selection([
+        ('everyone', 'Everyone'),
+        ('partners', 'Authenticated Partners'),
+        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -31,16 +35,8 @@ class Users(models.Model):
         type(self).SELF_WRITEABLE_FIELDS.extend(['notify_email'])
         # duplicate list to avoid modifying the original reference
         type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        type(self).SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name'])
+        type(self).SELF_READABLE_FIELDS.extend(['notify_email'])
         return init_res
-
-    def get_alias_model_name(self, vals):
-        return self._name
-
-    def get_alias_values(self):
-        values = super(Users, self).get_alias_values()
-        values['alias_force_thread_id'] = self.id
-        return values
 
     @api.model
     def create(self, values):
@@ -64,13 +60,6 @@ class Users(models.Model):
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
         return write_res
-
-    @api.multi
-    def copy_data(self, default=None):
-        data = super(Users, self).copy_data(default)[0]
-        if data and data.get('alias_name'):
-            data['alias_name'] = data['login']
-        return [data]
 
     def _create_welcome_message(self):
         self.ensure_one()

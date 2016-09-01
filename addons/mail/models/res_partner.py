@@ -4,7 +4,7 @@
 import logging
 import threading
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, registry, SUPERUSER_ID
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -86,7 +86,6 @@ class Partner(models.Model):
             'tracking': tracking,
             'is_discussion': is_discussion,
             'subtype': message.subtype_id,
-            'is_accessible': message._is_accessible()
         }
 
     @api.model
@@ -133,8 +132,19 @@ class Partner(models.Model):
             emails |= self.env['mail.mail'].create(create_values)
         return emails, recipients_nbr
 
+    @api.model
+    def _notify_udpate_notifications(self, emails):
+        for email in emails:
+            notifications = self.env['mail.notification'].sudo().search([
+                ('mail_message_id', '=', email.mail_message_id.id),
+                ('res_partner_id', 'in', email.recipient_ids.ids)])
+            notifications.write({
+                'is_email': True,
+                'email_status': 'ready',
+            })
+
     @api.multi
-    def _notify(self, message, force_send=False, user_signature=True):
+    def _notify(self, message, force_send=False, send_after_commit=True, user_signature=True):
         # TDE TODO: model-dependant ? (like customer -> always email ?)
         message_sudo = message.sudo()
         email_channels = message.channel_ids.filtered(lambda channel: channel.email_send)
@@ -143,14 +153,19 @@ class Partner(models.Model):
             ('id', 'in', self.ids),
             ('channel_ids', 'in', email_channels.ids),
             ('email', '!=', message_sudo.author_id and message_sudo.author_id.email or message.email_from),
-            ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, user_signature=user_signature)
+            ('notify_email', '!=', 'none')])._notify_by_email(message, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
         self._notify_by_chat(message)
         return True
 
     @api.multi
-    def _notify_by_email(self, message, force_send=False, user_signature=True):
+    def _notify_by_email(self, message, force_send=False, send_after_commit=True, user_signature=True):
         """ Method to send email linked to notified messages. The recipients are
-        the recordset on which this method is called. """
+        the recordset on which this method is called.
+
+        :param boolean force_send: send notification emails now instead of letting the scheduler handle the email queue
+        :param boolean send_after_commit: send notification emails after the transaction end instead of durign the
+                                          transaction; this option is used only if force_send is True
+        :param user_signature: add current user signature to notification emails """
         if not self.ids:
             return True
 
@@ -165,7 +180,6 @@ class Partner(models.Model):
         if not user_signature:
             base_template_ctx['signature'] = False
         base_mail_values = self._notify_prepare_email_values(message)
-
 
         # classify recipients: actions / no action
         if message.model and message.res_id and hasattr(self.env[message.model], '_message_notification_recipients'):
@@ -185,6 +199,9 @@ class Partner(models.Model):
                 fol_values = template_fol.generate_email(message.id, fields=['body_html', 'subject'])
                 # send email
                 new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['followers'], **base_mail_values)
+                # update notifications
+                self._notify_udpate_notifications(new_emails)
+
                 emails |= new_emails
                 recipients_nbr += new_recipients_nbr
             if recipient_template_values['not_followers']:
@@ -196,6 +213,9 @@ class Partner(models.Model):
                 not_values = template_not.generate_email(message.id, fields=['body_html', 'subject'])
                 # send email
                 new_emails, new_recipients_nbr = self._notify_send(not_values['body'], not_values['subject'], recipient_template_values['not_followers'], **base_mail_values)
+                # update notifications
+                self._notify_udpate_notifications(new_emails)
+
                 emails |= new_emails
                 recipients_nbr += new_recipients_nbr
 
@@ -204,9 +224,24 @@ class Partner(models.Model):
         #   2. do not send emails immediately if the registry is not loaded,
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
+        test_mode = getattr(threading.currentThread(), 'testing', False)
         if force_send and recipients_nbr < recipients_max and \
-                (not self.pool._init or getattr(threading.currentThread(), 'testing', False)):
-            emails.send()
+                (not self.pool._init or test_mode):
+            email_ids = emails.ids
+            dbname = self.env.cr.dbname
+
+            def send_notifications():
+                db_registry = registry(dbname)
+                with db_registry.cursor() as cr:
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env['mail.mail'].browse(email_ids).send()
+
+            # unless asked specifically, send emails after the transaction to
+            # avoid side effects due to emails being sent while the transaction fails
+            if not test_mode and send_after_commit:
+                self._cr.after('commit', send_notifications)
+            else:
+                emails.send()
 
         return True
 
@@ -226,7 +261,7 @@ class Partner(models.Model):
             self.env.cr.execute("""
                 SELECT count(*) as needaction_count
                 FROM mail_message_res_partner_needaction_rel R
-                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
+                WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.env.user.partner_id.id,))
             return self.env.cr.dictfetchall()[0].get('needaction_count')
         _logger.error('Call to needaction_count without partner_id')
         return 0

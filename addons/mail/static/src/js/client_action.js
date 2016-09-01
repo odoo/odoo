@@ -491,6 +491,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             display_empty_channel: !messages.length && !this.domain.length,
             display_no_match: !messages.length && this.domain.length,
             display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
+            display_email_icon: false,
             display_reply_icon: true,
         };
     },

@@ -9,22 +9,8 @@ class TestMailFeatures(TestMail):
     # TDE TODO: tests on the redirection controller
 
     def test_alias_setup(self):
-        Users = self.env['res.users'].with_context({'no_reset_password': True})
-
-        user_valentin = Users.create({
-            'name': 'Valentin Cognito', 'email': 'valentin.cognito@gmail.com',
-            'login': 'valentin.cognito', 'alias_name': 'valentin.cognito'})
-        self.assertEqual(user_valentin.alias_name, user_valentin.login, "Login should be used as alias")
-
-        user_pagan = Users.create({
-            'name': 'Pagan Le Marchant', 'email': 'plmarchant@gmail.com',
-            'login': 'plmarchant@gmail.com', 'alias_name': 'plmarchant@gmail.com'})
-        self.assertEqual(user_pagan.alias_name, 'plmarchant', "If login is an email, the alias should keep only the local part")
-
-        user_barty = Users.create({
-            'name': 'Bartholomew Ironside', 'email': 'barty@gmail.com',
-            'login': 'b4r+_#_R3wl$$', 'alias_name': 'b4r+_#_R3wl$$'})
-        self.assertEqual(user_barty.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
+        alias = self.env['mail.alias'].with_context(alias_model_name='mail.channel').create({'alias_name': 'b4r+_#_R3wl$$'})
+        self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_needaction(self):
@@ -138,8 +124,8 @@ class TestMessagePost(TestMail):
 
         # notification emails: followers + recipients - notify_email=none (partner_2) - author (user_employee)
         self.assertEqual(set(m['email_from'] for m in self._mails),
-                         set(['%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, _domain)]),
-                         'message_post: notification email wrong email_from: should use alias of sender')
+                         set(['%s <%s>' % (self.user_employee.name, self.user_employee.email)]),
+                         'message_post: notification email wrong email_from: should use sender email')
         self.assertEqual(set(m['email_to'][0] for m in self._mails),
                          set(['%s <%s>' % (self.partner_1.name, self.partner_1.email),
                               '%s <%s>' % (self.env.user.name, self.env.user.email)]))

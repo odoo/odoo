@@ -132,6 +132,8 @@ function make_message (data) {
         attachment_ids: data.attachment_ids || [],
         subject: data.subject,
         email_from: data.email_from,
+        customer_email_status: data.customer_email_status,
+        customer_email_data: data.customer_email_data,
         record_name: data.record_name,
         tracking_value_ids: data.tracking_value_ids,
         channel_ids: data.channel_ids,
