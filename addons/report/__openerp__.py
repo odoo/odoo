@@ -9,6 +9,9 @@
 Report
         """,
     'depends': ['base', 'web'],
+    'external_dependencies': {
+        'python': ['elaphe']
+    },
     'data': [
         'data/report_paperformat_data.xml',
         'security/ir.model.access.csv',

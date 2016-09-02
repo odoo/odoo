@@ -1,4 +1,4 @@
-Germany 2015-02-25
+Germany 2016-08-09
 
 bloopark systems GmbH & Co. KG agrees to the terms of the Odoo Corporate 
 Contributor License Agreement v1.0.
@@ -18,3 +18,5 @@ Benjamin Bachmann bBachmann@bloopark.de https://github.com/benniphx
 Robert Rübner rruebner@bloopark.de https://github.com/rruebner
 Florian Fischer ffischer@bloopark.de https://github.com/florianfischer
 Mercerdes Scenna mscenna@bloopark.de https://github.com/mscenna
+Jeferson Moura jmoura@bloopark.de https://github.com/jefmoura
+

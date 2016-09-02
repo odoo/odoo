@@ -18,6 +18,7 @@ import re
 import subprocess
 import tempfile
 import time
+import cStringIO
 
 from contextlib import closing
 from distutils.version import LooseVersion
@@ -32,7 +33,7 @@ from reportlab.graphics.barcode import createBarcodeDrawing
 # here to init the T1 fonts cache at the start-up of Odoo so that rendering of barcode in multiple
 # thread does not lock the server.
 try:
-    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1).asString('png')
+    from elaphe import barcode
 except Exception:
     pass
 
@@ -555,17 +556,32 @@ class Report(models.Model):
 
         return merged_file_path
 
-    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0):
+    def barcode(self, barcode_type, value, barmargin=0, backgroundcolor='FFFFFF',
+                barcolor='000000', textalign=None, textmargin=None, width=600,
+                height=100, scale=2.0, humanreadable=0):
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
         try:
-            width, height, humanreadable = int(width), int(height), bool(int(humanreadable))
-            barcode = createBarcodeDrawing(
-                barcode_type, value=value, format='png', width=width, height=height,
-                humanReadable=humanreadable
-            )
-            return barcode.asString('png')
+            width, height, scale, margin, humanreadable = int(
+                width), int(height), float(scale), int(barmargin), bool(int(
+                humanreadable))
+            opts = dict(barcolor=barcolor, backgroundcolor=backgroundcolor)
+
+            if humanreadable:
+                opts.update(includetext=True)
+                if textalign:
+                    opts.update(textxalign=textalign)
+                if textmargin:
+                    textmargin = int(textmargin)
+                    opts.update(textxoffset=textmargin)
+
+            barcode_out = cStringIO.StringIO()
+            barcode_img = barcode(barcode_type, str(value), opts, scale=scale, margin=margin)
+            barcode_img = barcode_img.resize((width, height))
+            barcode_img.save(barcode_out, "png", resolution=100.0)
+
+            return barcode_out.getvalue()
         except (ValueError, AttributeError):
             raise ValueError("Cannot convert into barcode.")
