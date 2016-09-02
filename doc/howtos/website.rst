@@ -88,7 +88,7 @@ own :ref:`QWeb <reference/qweb>` templating system which integrates with other
 features.
 
 Create a template and ensure the template file is registered in the
-``__openerp__.py`` manifest, and alter the controller to use our template:
+``__manifest__.py`` manifest, and alter the controller to use our template:
 
 .. patch::
 

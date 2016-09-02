@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 import argparse
 import glob
+import itertools
 import os
 import sys
 
 from . import Command
 from .server import main
-from odoo.modules.module import get_module_root, MANIFEST
+from odoo.modules.module import get_module_root, MANIFEST_NAMES
 from odoo.service.db import _create_empty_database, DatabaseExists
 
 
@@ -15,9 +16,11 @@ class Start(Command):
     """Quick start the Odoo server for your project"""
 
     def get_module_list(self, path):
-        mods = glob.glob(os.path.join(path, '*/%s' % MANIFEST))
+        mods = itertools.chain.from_iterable(
+            glob.glob(os.path.join(path, '*/%s' % mname))
+            for mname in MANIFEST_NAMES
+        )
         return [mod.split(os.path.sep)[-2] for mod in mods]
-
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(

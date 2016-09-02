@@ -23,6 +23,7 @@ import traceback
 import urllib2
 import urlparse
 import warnings
+from os.path import join as opj
 from zlib import adler32
 
 import babel.core
@@ -48,6 +49,8 @@ from odoo.service.server import memory_info
 from odoo.service import security, model as service_model
 from odoo.tools.func import lazy_property
 from odoo.tools import ustr, consteq, frozendict
+
+from odoo.modules.module import module_manifest
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -1307,13 +1310,13 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
-
         for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_module:
-                    manifest_path = os.path.join(addons_path, module, '__openerp__.py')
-                    path_static = os.path.join(addons_path, module, 'static')
-                    if os.path.isfile(manifest_path) and os.path.isdir(path_static):
+                    mod_path = opj(addons_path, module)
+                    manifest_path = module_manifest(mod_path)
+                    path_static = opj(addons_path, module, 'static')
+                    if manifest_path and os.path.isdir(path_static):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         if not manifest.get('installable', True):
                             continue

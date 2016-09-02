@@ -205,9 +205,9 @@ Odoo’s themes are packaged like modules. Even if you are designing a very simp
   Create a folder and name it like this: ``theme_`` followed by your
   theme's name.
 
-``__openerp__.py``
+``__manifest__.py``
   Create an empty document and save it to your folder as
-  ``__openerp__.py``. This will contain the configuration info for
+  ``__manifest__.py``. This will contain the configuration info for
   your theme.
 
 ``__init__.py``
@@ -229,10 +229,10 @@ The final result should be something like this:
 
 .. image:: theme_tutorial_assets/img/folder.jpg
 
-Edit ``__openerp__.py``
+Edit ``__manifest__.py``
 -----------------------
 
-Open the ``__openerp__.py`` you created and copy/paste the following:
+Open the ``__manifest__.py`` you created and copy/paste the following:
 
 .. code-block:: python
 
@@ -349,7 +349,7 @@ target css rules to that element and avoid these affecting other content on the 
 The second xpath will add a welcome message just after the navigation menu.
 
 The last step is to add layout.xml to the list of xml files used by
-the theme. To do that, edit your ``__openerp__.py`` file like this
+the theme. To do that, edit your ``__manifest__.py`` file like this
 
 .. code-block:: python
 
@@ -457,7 +457,7 @@ can fill with snippets. To achieve this, just create a ``div`` with
 
    You can create as many snippet areas as you like and place them anywhere in your pages.
 
-Our page is almost ready. Now all we have to do is add **pages.xml** in our **__openerp__.py** file
+Our page is almost ready. Now all we have to do is add **pages.xml** in our **__manifest__.py** file
 
 .. code-block:: python
 
@@ -560,7 +560,7 @@ assets*".
 Placing it after the last one, we ensure that our file will
 be loaded at the end and take priority.
 
-Finally add **assets.xml** in your **__openerp__.py** file.
+Finally add **assets.xml** in your **__manifest__.py** file.
 
 Update your theme
 
@@ -717,7 +717,7 @@ the attribute will automatically be applied to the element.
 Since ``select_class`` method avoids multiple selections, the last "empty"
 option will reset the snippet to default.
 
-Add **options.xml** to ``__openerp__.py`` and update your theme.
+Add **options.xml** to ``__manifest__.py`` and update your theme.
 
 .. image:: theme_tutorial_assets/img/restart.png
 

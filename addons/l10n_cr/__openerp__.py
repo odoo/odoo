@@ -3,7 +3,6 @@
 
 ##############################################################################
 #
-#    __openerp__.py
 #    l10n_cr_account
 #    First author: Carlos Vásquez <carlos.vasquez@clearcorp.co.cr> (ClearCorp S.A.)
 #    Copyright (c) 2010-TODAY ClearCorp S.A. (http://clearcorp.co.cr). All rights reserved.

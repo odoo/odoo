@@ -14,7 +14,7 @@ Manifest
 The manifest file serves to declare a python package as an Odoo module
 and to specify module metadata.
 
-It is a file called ``__openerp__.py`` and contains a single Python
+It is a file called ``__manifest__.py`` and contains a single Python
 dictionary, where each key specifies module metadatum.
 
 ::
