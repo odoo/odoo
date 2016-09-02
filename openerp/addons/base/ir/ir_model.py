@@ -1001,6 +1001,7 @@ class IrModelData(models.Model):
     def _update(self, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False):
         # records created during module install should not display the messages of OpenChatter
         self = self.with_context(install_mode=True)
+        current_module = module
 
         if xml_id and ('.' in xml_id):
             assert len(xml_id.split('.')) == 2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % xml_id
@@ -1088,6 +1089,10 @@ class IrModelData(models.Model):
                     'res_id': record.id,
                     'noupdate': noupdate
                 })
+                if current_module and module != current_module:
+                    _logger.warning("Creating the ir.model.data %s in module %s instead of %s.",
+                                    xml_id, module, current_module)
+
 
         if xml_id and record:
             self.loads[(module, xml_id)] = (model, record.id)
