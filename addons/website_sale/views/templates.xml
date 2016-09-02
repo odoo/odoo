@@ -105,6 +105,7 @@
                             <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.1  and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
+
                             <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             <span itemprop="price" style="display:none;" t-esc="product.price" />
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />

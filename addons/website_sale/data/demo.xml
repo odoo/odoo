@@ -747,11 +747,13 @@ Weight: 31 grams</field>
         </record>
         <record id="item_benelux" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_benelux"/>
-            <field name="compute_price">formula</field>
+            <field name="compute_price">percentage</field>
             <field name="base">list_price</field>
-            <field name="price_discount">10</field>
+            <field name="percent_price">10</field>
             <field name="sequence">10</field>
+            <field name="currency_id" ref="base.EUR"/>
         </record>
+
 
         <record id="list_europe" model="product.pricelist">
             <field name="name">Europe Pricelist</field>
@@ -759,27 +761,27 @@ Weight: 31 grams</field>
             <field name="website_id" ref="website.default_website" />
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
             <field name="sequence">3</field>
+            <field name="currency_id" ref="base.EUR"/>
         </record>
         <record id="item_europe" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_europe"/>
             <field name="compute_price">formula</field>
             <field name="base">list_price</field>
-            <field name="price_discount">10</field>
             <field name="sequence">10</field>
         </record>
 
         <record id="list_us" model="product.pricelist">
-             <field name="name">US/CA Pricelist</field>
-             <field name="selectable" eval="True" />
-             <field name="website_id" ref="website.default_website" />
-             <field name="country_group_ids" eval="[(6,0,[ref('country_group_us_ca')])]" />
+            <field name="name">US/CA Pricelist</field>
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="country_group_ids" eval="[(6,0,[ref('country_group_us_ca')])]" />
             <field name="sequence">3</field>
+            <field name="currency_id" ref="base.USD"/>
         </record>
         <record id="item_us" model="product.pricelist.item">
             <field name="pricelist_id" ref="list_us"/>
             <field name="compute_price">formula</field>
             <field name="base">list_price</field>
-            <field name="price_discount">10</field>
             <field name="sequence">10</field>
         </record>
 </odoo>
