@@ -807,7 +807,8 @@ class Post(models.Model):
             self.ensure_one()
             if not self.can_comment:
                 raise KarmaError('Not enough karma to comment')
-            kwargs['record_name'] = kwargs.get('record_name') or self.parent_id and self.parent_id.name
+            if not kwargs.get('record_name') and self.parent_id:
+                kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
 
     @api.multi
