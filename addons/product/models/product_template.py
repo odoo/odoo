@@ -404,7 +404,7 @@ class ProductTemplate(models.Model):
             # unlink or inactive product
             for variant in variants_to_activate:
                 try:
-                    with self._cr.savepoint(), tools.mute_logger('openerp.sql_db'):
+                    with self._cr.savepoint(), tools.mute_logger('odoo.sql_db'):
                         variant.unlink()
                 # We catch all kind of exception to be sure that the operation doesn't fail.
                 except (psycopg2.Error, except_orm):
