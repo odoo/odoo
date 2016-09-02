@@ -18,7 +18,7 @@ from odoo.exceptions import except_orm, UserError
 from odoo.tools import html2text, ustr
 
 _logger = logging.getLogger(__name__)
-_test_logger = logging.getLogger('openerp.tests')
+_test_logger = logging.getLogger('odoo.tests')
 
 
 class MailDeliveryException(except_orm):

@@ -22,7 +22,7 @@ class ProcurementComputeAll(models.TransientModel):
             scheduler_cron = self.sudo().env.ref('procurement.ir_cron_scheduler_action')
             # Avoid to run the scheduler multiple times in the same time
             try:
-                with tools.mute_logger('openerp.sql_db'):
+                with tools.mute_logger('odoo.sql_db'):
                     self._cr.execute("SELECT id FROM ir_cron WHERE id = %s FOR UPDATE NOWAIT", (scheduler_cron.id,))
             except Exception:
                 _logger.info('Attempt to run procurement scheduler aborted, as already running')

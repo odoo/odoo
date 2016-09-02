@@ -166,7 +166,7 @@ class StripeTest(StripeCommon):
         # simulate an error
         stripe_post_data['status'] = 'error'
         stripe_post_data.update({u'error': {u'message': u"Your card's expiration year is invalid.", u'code': u'invalid_expiry_year', u'type': u'card_error', u'param': u'exp_year'}})
-        with mute_logger('openerp.addons.payment_stripe.models.payment'):
+        with mute_logger('odoo.addons.payment_stripe.models.payment'):
             tx.form_feedback(stripe_post_data, 'stripe')
         # check state
         self.assertEqual(tx.state, 'error', 'Stipe: erroneous validation did not put tx into error state')

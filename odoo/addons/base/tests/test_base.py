@@ -34,7 +34,7 @@ class TestSafeEval(unittest.TestCase):
         with self.assertRaises(ValueError):
            ast.literal_eval('{"a": True.__class__}')
 
-    @mute_logger('openerp.tools.safe_eval')
+    @mute_logger('odoo.tools.safe_eval')
     def test_05_safe_eval_forbiddon(self):
         """ Try forbidden expressions in safe_eval to verify they are not allowed (open) """
         with self.assertRaises(ValueError):

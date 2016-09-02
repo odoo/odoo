@@ -557,7 +557,7 @@ class TestExpression(TransactionCase):
         self.patch_order('res.company', 'parent_id')
         self.env['res.users'].search([('name', '=', 'test')])
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('odoo.sql_db')
     def test_invalid(self):
         """ verify that invalid expressions are refused, even for magic fields """
         Country = self.env['res.country']

@@ -16,7 +16,7 @@ def registry():
 class TestExecute(unittest.TestCase):
     """ Try cr.execute with wrong parameters """
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('odoo.sql_db')
     def test_execute_bad_params(self):
         """
         Try to use iterable but non-list or int params in query parameters.

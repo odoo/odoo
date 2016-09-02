@@ -236,7 +236,7 @@ class test_integer_field(ImporterCase):
             -1, -42, -(2**31 - 1), -(2**31), -12345678
         ], values(self.read()))
 
-    @mute_logger('openerp.sql_db', 'openerp.models')
+    @mute_logger('odoo.sql_db', 'odoo.models')
     def test_out_of_range(self):
         result = self.import_(['value'], [[str(2**31)]])
         self.assertIs(result['ids'], False)
@@ -383,14 +383,14 @@ class test_unbound_string_field(ImporterCase):
 class test_required_string_field(ImporterCase):
     model_name = 'export.string.required'
 
-    @mute_logger('openerp.sql_db', 'openerp.models')
+    @mute_logger('odoo.sql_db', 'odoo.models')
     def test_empty(self):
         result = self.import_(['value'], [[]])
         self.assertEqual(result['messages'], [message(
             u"Missing required value for the field 'Value' (value)")])
         self.assertIs(result['ids'], False)
 
-    @mute_logger('openerp.sql_db', 'openerp.models')
+    @mute_logger('odoo.sql_db', 'odoo.models')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
         self.assertEqual(result['messages'], [message(
@@ -622,7 +622,7 @@ class test_m2o(ImporterCase):
             for index, id in enumerate([record1.id, record2.id, record1.id])])
         self.assertIs(result['ids'], False)
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('odoo.sql_db')
     def test_fail_id_mistype(self):
         result = self.import_(['value/.id'], [["foo"]])
 
@@ -1105,7 +1105,7 @@ class test_datetime(ImporterCase):
 class test_unique(ImporterCase):
     model_name = 'export.unique'
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('odoo.sql_db')
     def test_unique(self):
         result = self.import_(['value'], [
             ['1'],

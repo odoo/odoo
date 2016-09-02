@@ -22,7 +22,7 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(value, model)
         self.assertFalse(value)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_00_query(self):
         """ Build a recordset, and check its contents. """
         domain = [('name', 'ilike', 'j')]
@@ -36,7 +36,7 @@ class TestAPI(common.TransactionCase):
         for p in partners:
             self.assertIsRecord(p, 'res.partner')
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_01_query_offset(self):
         """ Build a recordset with offset, and check equivalence. """
         partners1 = self.env['res.partner'].search([], offset=10)
@@ -45,7 +45,7 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_02_query_limit(self):
         """ Build a recordset with offset, and check equivalence. """
         partners1 = self.env['res.partner'].search([], limit=10)
@@ -54,7 +54,7 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_03_query_offset_limit(self):
         """ Build a recordset with offset and limit, and check equivalence. """
         partners1 = self.env['res.partner'].search([], offset=3, limit=7)
@@ -63,7 +63,7 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_04_query_count(self):
         """ Test the search method with count=True. """
         self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
@@ -73,7 +73,7 @@ class TestAPI(common.TransactionCase):
         self.assertIsInstance(count2, (int, long))
         self.assertEqual(count1, count2)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
         domain = [('name', 'ilike', 'j')]
@@ -89,7 +89,7 @@ class TestAPI(common.TransactionCase):
         partners2 = self.env['res.partner'].search(domain)
         self.assertFalse(partners2)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
         user = self.env.user
@@ -110,7 +110,7 @@ class TestAPI(common.TransactionCase):
                 for p in partners:
                     self.assertIsRecordset(p[name], field.comodel_name)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_07_null(self):
         """ Check behavior of null instances. """
         # select a partner without a parent
@@ -133,7 +133,7 @@ class TestAPI(common.TransactionCase):
         self.assertFalse(partner.parent_id.user_id.groups_id)
         self.assertIsRecordset(partner.parent_id.user_id.groups_id, 'res.groups')
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_40_new_new(self):
         """ Call new-style methods in the new API style. """
         partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
@@ -144,7 +144,7 @@ class TestAPI(common.TransactionCase):
         for p in partners:
             self.assertFalse(p.active)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_45_new_new(self):
         """ Call new-style methods on records (new API style). """
         partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
@@ -156,8 +156,8 @@ class TestAPI(common.TransactionCase):
         for p in partners:
             self.assertFalse(p.active)
 
-    @mute_logger('openerp.models')
-    @mute_logger('openerp.addons.base.ir.ir_model')
+    @mute_logger('odoo.models')
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_50_environment(self):
         """ Test environment on records. """
         # partners and reachable records are attached to self.env
@@ -204,7 +204,7 @@ class TestAPI(common.TransactionCase):
         with self.assertRaises(AccessError):
             demo_partners[0].company_id.name
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_55_draft(self):
         """ Test draft mode nesting. """
         env = self.env
@@ -219,7 +219,7 @@ class TestAPI(common.TransactionCase):
             self.assertTrue(env.in_draft)
         self.assertFalse(env.in_draft)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
         Partners = self.env['res.partner']
@@ -273,7 +273,7 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(set(partner2.child_ids), set(children2))
         self.env.check_cache()
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_60_prefetch(self):
         """ Check the record cache prefetching """
         partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
@@ -299,7 +299,7 @@ class TestAPI(common.TransactionCase):
         name_cache = self.env.cache[type(country).name]
         self.assertItemsEqual(country_ids, name_cache)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_60_prefetch_object(self):
         """ Check the prefetching model. """
         partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
@@ -351,7 +351,7 @@ class TestAPI(common.TransactionCase):
         same_prefetch(empty, empty.bank_ids)
         same_prefetch(empty, empty.category_id)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_70_one(self):
         """ Check method one(). """
         # check with many records
@@ -369,14 +369,14 @@ class TestAPI(common.TransactionCase):
         with self.assertRaises(ValueError):
             p0.ensure_one()
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_80_contains(self):
         """ Test membership on recordset. """
         p1 = self.env['res.partner'].search([('name', 'ilike', 'a')], limit=1).ensure_one()
         ps = self.env['res.partner'].search([('name', 'ilike', 'a')])
         self.assertTrue(p1 in ps)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_80_set_operations(self):
         """ Check set operations on recordsets. """
         pa = self.env['res.partner'].search([('name', 'ilike', 'a')])
@@ -429,7 +429,7 @@ class TestAPI(common.TransactionCase):
         with self.assertRaises(TypeError):
             res = ps >= ms
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_80_filter(self):
         """ Check filter on recordsets. """
         ps = self.env['res.partner'].search([])
@@ -445,7 +445,7 @@ class TestAPI(common.TransactionCase):
             ps.filtered('parent_id.customer')
         )
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_80_map(self):
         """ Check map on recordsets. """
         ps = self.env['res.partner'].search([])
@@ -469,7 +469,7 @@ class TestAPI(common.TransactionCase):
         # map an empty sequence of fields
         self.assertEqual(ps.mapped(''), ps)
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_80_sorted(self):
         """ Check sorted on recordsets. """
         ps = self.env['res.partner'].search([])
