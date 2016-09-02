@@ -15,7 +15,10 @@ class ProjectIssue(models.Model):
 
     @api.model
     def _get_default_stage_id(self):
-        return self.stage_find(self.env.context.get('default_project_id'), [('fold', '=', False)])
+        project_id = self.env.context.get('default_project_id')
+        if not project_id:
+            return False
+        return self.stage_find(project_id, [('fold', '=', False)])
 
     name = fields.Char(string='Issue', required=True)
     active = fields.Boolean(default=True)
@@ -150,6 +153,11 @@ class ProjectIssue(models.Model):
         if self.project_id:
             self.partner_id = self.project_id.partner_id.id
             self.email_from = self.project_id.partner_id.email
+            self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+        else:
+            self.partner_id = False
+            self.email_from = False
+            self.stage_id = False
 
     @api.onchange('task_id')
     def _onchange_task_id(self):

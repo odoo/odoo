@@ -294,7 +294,10 @@ class Task(models.Model):
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
-        return self.stage_find(self.env.context.get('default_project_id'), [('fold', '=', False)])
+        project_id = self.env.context.get('default_project_id')
+        if not project_id:
+            return False
+        return self.stage_find(project_id, [('fold', '=', False)])
 
     @api.multi
     def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
@@ -390,6 +393,10 @@ class Task(models.Model):
     def _onchange_project(self):
         if self.project_id:
             self.partner_id = self.project_id.partner_id
+            self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+        else:
+            self.partner_id = False
+            self.stage_id = False
 
     @api.onchange('user_id')
     def _onchange_user(self):
