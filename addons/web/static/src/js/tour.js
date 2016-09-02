@@ -9,40 +9,6 @@ var qweb = core.qweb;
 
 /////////////////////////////////////////////////
 
-
-/* jQuery selector to match exact text inside an element
- *  :containsExact()     - case insensitive
- *  :containsExactCase() - case sensitive
- *  :containsRegex()     - set by user ( use: $(el).find(':containsRegex(/(red|blue|yellow)/gi)') )
- */
-$.extend($.expr[':'],{
-    containsExact: function(element, index, matches){
-        return $.trim(element.innerHTML.toLowerCase()) === matches[3].toLowerCase();
-    },
-    containsExactCase: function(element, index, matches){
-        return $.trim(element.innerHTML) === matches[3];
-    },
-    // Note all escaped characters need to be double escaped
-    // inside of the containsRegex, so "\(" needs to be "\\("
-    containsRegex: function(element, index, matches){
-        var regreg =  /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})$/,
-        reg = regreg.exec(matches[3]);
-        return reg ? new RegExp(reg[1], reg[2]).test($.trim(element.innerHTML)) : false;
-    },
-    propChecked: function(element, index, matches) {
-        return $(element).prop("checked") === true;
-    },
-    propSelected: function(element, index, matches) {
-        return $(element).prop("selected") === true;
-    },
-    propValue: function(element, index, matches) {
-        return $(element).prop("value") === matches[3];
-    },
-    propValueContains: function(element, index, matches) {
-        return $(element).prop("value") && $(element).prop("value").indexOf(matches[3]) !== -1;
-    },
-});
-
 $.fn.getHandlers = function () {
     var results = [];
 
@@ -166,7 +132,7 @@ var Tour = {
             if (!step.waitFor && index > 0 && tour.steps[index-1].snippet) {
                 step.waitFor = '.oe_overlay_options .oe_options:visible';
             }
-            
+
             var snippet = step.element && step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
             if (snippet) {
                 step.snippet = snippet[1];
@@ -521,7 +487,7 @@ var Tour = {
                 return;
 
             } else if(next.onerror) {
-                
+
                 Tour.logError(next, "error: Can't reach the next step (call next step onerror)", false);
                 var id = next.onerror();
                 if (id) {
@@ -533,7 +499,7 @@ var Tour = {
                 }
 
             }
-            
+
             Tour.error(next, "Can't reach the next step");
             return;
 
@@ -577,7 +543,7 @@ var Tour = {
         if (state.mode === "test" && state.number > 5) {
             return Tour.error(next, "Cycling. Can't reach the next step");
         }
-        
+
         Tour.saveState(state.id, state.mode, step.id, state.number, 0, state.log);
 
         if (state.number === 1) {
@@ -653,9 +619,9 @@ var Tour = {
             if (step.snippet) {
 
                 Tour.autoDragAndDropSnippet($element);
-            
+
             } else if (step.keydown) {
-                
+
                 if (!(step.keydown instanceof Array)) {
                     step.keydown = [step.keydown];
                 }
@@ -712,7 +678,7 @@ var Tour = {
                     $element.trigger($.Event("keyup", { srcElement: $element[0] }));
                     $element.trigger($.Event("change", { srcElement: $element[0] }));
                 }, self.defaultDelay<<1);
-            
+
             }
         }
         Tour.testtimer = setTimeout(autoStep, 0);
