@@ -10,7 +10,7 @@ from odoo.tools import mute_logger
 
 class TestMailSchedule(TestEventCommon):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_event_mail_schedule(self):
         """ Test mail scheduling for events """
         self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', True)

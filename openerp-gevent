@@ -5,7 +5,7 @@ gevent.monkey.patch_all()
 import psycogreen.gevent
 psycogreen.gevent.patch_psycopg()
 
-import openerp
+import odoo
 
 if __name__ == "__main__":
-    openerp.cli.main()
+    odoo.cli.main()
