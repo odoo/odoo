@@ -56,5 +56,10 @@ odoo.define("website_sale.tour_shop", function (require) {
         extra_trigger: "body:not(.editor_enable)",
         content: _t("Click on this button so your customers can see it."),
         position: "top",
+    }, {
+        trigger: ".o_web_settings_dashboard_progress_title,.progress",
+        extra_trigger: "body:not(.editor_enable)",
+        content: _t("Follow the steps and advises in the Odoo Planner to deploy your e-Commerce website in no time!"),
+        position: "bottom",
     }]);
 });
