@@ -48,7 +48,7 @@ def git_locate():
     while path != os.path.abspath(os.sep):
         gitconfig_path = os.path.join(path, '.git/config')
         if os.path.isfile(gitconfig_path):
-            release_py = os.path.join(path, 'openerp/release.py')
+            release_py = os.path.join(path, 'odoo/release.py')
             if os.path.isfile(release_py):
                 break
         path = os.path.dirname(path)
@@ -153,8 +153,8 @@ def main():
     elif len(sys.argv) == 2 and sys.argv[1] in cmds:
         cmds[sys.argv[1]]()
     else:
-        import openerp
-        openerp.cli.main()
+        import odoo
+        odoo.cli.main()
 
 if __name__ == "__main__":
     main()

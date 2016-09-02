@@ -3,11 +3,11 @@
 
 from lxml import etree
 
-import openerp
-import openerp.tools as tools
+import odoo
+import odoo.tools as tools
 from . import print_fnc
-from openerp.models import BaseModel
-from openerp.tools.safe_eval import safe_eval
+from odoo.models import BaseModel
+from odoo.tools.safe_eval import safe_eval
 
 
 class InheritDict(dict):
@@ -88,7 +88,7 @@ class document(object):
         return safe_eval(expr, {}, {'obj': record})
 
     def parse_node(self, node, parent, browser, datas=None):
-        env = openerp.api.Environment(self.cr, self.uid, {})
+        env = odoo.api.Environment(self.cr, self.uid, {})
         attrs = self.node_attrs_get(node)
         if 'type' in attrs:
             if attrs['type']=='field':
@@ -230,7 +230,7 @@ class document(object):
         return etree.tostring(self.doc,encoding="utf-8",xml_declaration=True,pretty_print=True)
 
     def parse_tree(self, ids, model, context=None):
-        env = openerp.api.Environment(self.cr, self.uid, context or {})
+        env = odoo.api.Environment(self.cr, self.uid, context or {})
         browser = env[model].browse(ids)
         self.parse_node(self.dom, self.doc, browser)
 

@@ -7,11 +7,11 @@ import random
 import threading
 import time
 
-import openerp
-from openerp.exceptions import UserError, ValidationError, QWebException
-from openerp.models import check_method_name
-from openerp.tools.translate import translate
-from openerp.tools.translate import _
+import odoo
+from odoo.exceptions import UserError, ValidationError, QWebException
+from odoo.models import check_method_name
+from odoo.tools.translate import translate
+from odoo.tools.translate import _
 
 import security
 
@@ -24,7 +24,7 @@ def dispatch(method, params):
     (db, uid, passwd ) = params[0:3]
 
     # set uid tracker - cleaned up at the WSGI
-    # dispatching phase in openerp.service.wsgi_server.application
+    # dispatching phase in odoo.service.wsgi_server.application
     threading.current_thread().uid = uid
 
     params = params[3:]
@@ -33,7 +33,7 @@ def dispatch(method, params):
     if method not in ['execute', 'execute_kw', 'exec_workflow']:
         raise NameError("Method not available %s" % method)
     security.check(db,uid,passwd)
-    registry = openerp.registry(db).check_signaling()
+    registry = odoo.registry(db).check_signaling()
     fn = globals()[method]
     res = fn(db, uid, *params)
     registry.signal_caches_change()
@@ -87,7 +87,7 @@ def check(f):
                             ids = args[3]
                         else:
                             ids = []
-                    cr = openerp.sql_db.db_connect(dbname).cursor()
+                    cr = odoo.sql_db.db_connect(dbname).cursor()
                     return src(obj, cr, uid, ids, context=(ctx or {}))
                 except Exception:
                     pass
@@ -98,7 +98,7 @@ def check(f):
                              # be returned, it is the best we have.
 
             try:
-                cr = openerp.sql_db.db_connect(dbname).cursor()
+                cr = odoo.sql_db.db_connect(dbname).cursor()
                 res = translate(cr, name=False, source_type=ttype,
                                 lang=lang, source=src)
                 if res:
@@ -114,8 +114,8 @@ def check(f):
         tries = 0
         while True:
             try:
-                if openerp.registry(dbname)._init and not openerp.tools.config['test_enable']:
-                    raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
+                if odoo.registry(dbname)._init and not odoo.tools.config['test_enable']:
+                    raise odoo.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
                 return f(dbname, *args, **kwargs)
             except (OperationalError, QWebException) as e:
                 if isinstance(e, QWebException):
@@ -135,7 +135,7 @@ def check(f):
                 _logger.info("%s, retry %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
                 time.sleep(wait_time)
             except IntegrityError, inst:
-                registry = openerp.registry(dbname)
+                registry = odoo.registry(dbname)
                 for key in registry._sql_error.keys():
                     if key in inst[0]:
                         raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst[0])
@@ -165,10 +165,10 @@ def check(f):
     return wrapper
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
-    recs = openerp.api.Environment(cr, uid, {}).get(obj)
+    recs = odoo.api.Environment(cr, uid, {}).get(obj)
     if recs is None:
         raise UserError(_("Object %s doesn't exist") % obj)
-    return openerp.api.call_kw(recs, method, args, kw)
+    return odoo.api.call_kw(recs, method, args, kw)
 
 
 def execute_kw(db, uid, obj, method, args, kw=None):
@@ -177,7 +177,7 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 @check
 def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db
-    with openerp.registry(db).cursor() as cr:
+    with odoo.registry(db).cursor() as cr:
         check_method_name(method)
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
@@ -191,5 +191,5 @@ def exec_workflow_cr(cr, uid, obj, signal, *args):
 
 @check
 def exec_workflow(db, uid, obj, signal, *args):
-    with openerp.registry(db).cursor() as cr:
+    with odoo.registry(db).cursor() as cr:
         return exec_workflow_cr(cr, uid, obj, signal, *args)

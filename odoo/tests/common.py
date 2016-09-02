@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-The module :mod:`openerp.tests.common` provides unittest test cases and a few
+The module :mod:`odoo.tests.common` provides unittest test cases and a few
 helpers and classes to write tests.
 
 """
@@ -24,21 +24,21 @@ from pprint import pformat
 
 import werkzeug
 
-import openerp
-from openerp import api
+import odoo
+from odoo import api
 
 _logger = logging.getLogger(__name__)
 
-# The openerp library is supposed already configured.
-ADDONS_PATH = openerp.tools.config['addons_path']
+# The odoo library is supposed already configured.
+ADDONS_PATH = odoo.tools.config['addons_path']
 HOST = '127.0.0.1'
-PORT = openerp.tools.config['xmlrpc_port']
+PORT = odoo.tools.config['xmlrpc_port']
 # Useless constant, tests are aware of the content of demo data
-ADMIN_USER_ID = openerp.SUPERUSER_ID
+ADMIN_USER_ID = odoo.SUPERUSER_ID
 
 
 def get_db_name():
-    db = openerp.tools.config['db_name']
+    db = odoo.tools.config['db_name']
     # If the database name is not provided on the command-line,
     # use the one on the thread (which means if it is provided on
     # the command-line, this will break when installing another
@@ -107,7 +107,7 @@ class BaseCase(unittest.TestCase):
         :param xid: fully-qualified :term:`external identifier`, in the form
                     :samp:`{module}.{identifier}`
         :raise: ValueError if not found
-        :returns: :class:`~openerp.models.BaseModel`
+        :returns: :class:`~odoo.models.BaseModel`
         """
         assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
         return self.env.ref(xid)
@@ -138,11 +138,11 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
-        self.registry = openerp.registry(get_db_name())
+        self.registry = odoo.registry(get_db_name())
         #: current transaction's cursor
         self.cr = self.cursor()
-        self.uid = openerp.SUPERUSER_ID
-        #: :class:`~openerp.api.Environment` for the current test case
+        self.uid = odoo.SUPERUSER_ID
+        #: :class:`~odoo.api.Environment` for the current test case
         self.env = api.Environment(self.cr, self.uid, {})
 
         @self.addCleanup
@@ -172,9 +172,9 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.registry = openerp.registry(get_db_name())
+        cls.registry = odoo.registry(get_db_name())
         cls.cr = cls.registry.cursor()
-        cls.uid = openerp.SUPERUSER_ID
+        cls.uid = odoo.SUPERUSER_ID
         cls.env = api.Environment(cls.cr, cls.uid, {})
 
     @classmethod
@@ -243,10 +243,10 @@ class HttpCase(TransactionCase):
         super(HttpCase, self).setUp()
         self.registry.enter_test_mode()
         # setup a magic session_id that will be rollbacked
-        self.session = openerp.http.root.session_store.new()
+        self.session = odoo.http.root.session_store.new()
         self.session_id = self.session.sid
         self.session.db = get_db_name()
-        openerp.http.root.session_store.save(self.session)
+        odoo.http.root.session_store.save(self.session)
         # setup an url opener helper
         self.opener = urllib2.OpenerDirector()
         self.opener.add_handler(urllib2.UnknownHandler())
@@ -287,7 +287,7 @@ class HttpCase(TransactionCase):
         session.context['uid'] = uid
         session._fix_lang(session.context)
 
-        openerp.http.root.session_store.save(session)
+        odoo.http.root.session_store.save(session)
 
     def phantom_poll(self, phantom, timeout):
         """ Phantomjs Test protocol.
@@ -383,7 +383,7 @@ class HttpCase(TransactionCase):
     def _wait_remaining_requests(self):
         t0 = int(time.time())
         for thread in threading.enumerate():
-            if thread.name.startswith('openerp.service.http.request.'):
+            if thread.name.startswith('odoo.service.http.request.'):
                 while thread.isAlive():
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
@@ -392,7 +392,7 @@ class HttpCase(TransactionCase):
                     t1 = int(time.time())
                     if t0 != t1:
                         _logger.info('remaining requests')
-                        openerp.tools.misc.dumpstacks()
+                        odoo.tools.misc.dumpstacks()
                         t0 = t1
 
     def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):

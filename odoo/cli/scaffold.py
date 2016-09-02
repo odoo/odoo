@@ -9,7 +9,7 @@ import jinja2
 
 from . import Command
 
-from openerp.modules.module import (get_module_root, MANIFEST, load_information_from_description_file as load_manifest)
+from odoo.modules.module import (get_module_root, MANIFEST, load_information_from_description_file as load_manifest)
 
 
 class Scaffold(Command):

@@ -10,11 +10,11 @@ import logging
 import os
 import threading
 
-import openerp
+import odoo
 from .. import SUPERUSER_ID
-from openerp.tools import assertion_report, lazy_classproperty, config, \
+from odoo.tools import assertion_report, lazy_classproperty, config, \
                           lazy_property, topological_sort, OrderedSet
-from openerp.tools.lru import LRU
+from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
@@ -54,14 +54,14 @@ class Registry(Mapping):
                 return cls.new(db_name)
             finally:
                 # set db tracker - cleaned up at the WSGI dispatching phase in
-                # openerp.service.wsgi_server.application
+                # odoo.service.wsgi_server.application
                 threading.current_thread().dbname = db_name
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Create and return a new registry for the given database name. """
         with cls._lock:
-            with openerp.api.Environment.manage():
+            with odoo.api.Environment.manage():
                 registry = object.__new__(cls)
                 registry.init(db_name)
 
@@ -74,7 +74,7 @@ class Registry(Mapping):
                 try:
                     registry.setup_signaling()
                     # This should be a method on Registry
-                    openerp.modules.load_modules(registry._db, force_demo, status, update_module)
+                    odoo.modules.load_modules(registry._db, force_demo, status, update_module)
                 except Exception:
                     _logger.exception('Failed to load registry')
                     del cls.registries[db_name]
@@ -110,7 +110,7 @@ class Registry(Mapping):
         self._init_modules = set()
 
         self.db_name = db_name
-        self._db = openerp.sql_db.db_connect(db_name)
+        self._db = odoo.sql_db.db_connect(db_name)
 
         # special cursor for test mode; None means "normal" mode
         self.test_cr = None
@@ -118,7 +118,7 @@ class Registry(Mapping):
         # Indicates that the registry is 
         self.ready = False
 
-        # Inter-process signaling (used only when openerp.multi_process is True):
+        # Inter-process signaling (used only when odoo.multi_process is True):
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
         # The `base_cache_signaling sequence` indicates all caches must be
@@ -132,10 +132,10 @@ class Registry(Mapping):
         self.cache_cleared = False
 
         with closing(self.cursor()) as cr:
-            has_unaccent = openerp.modules.db.has_unaccent(cr)
-            if openerp.tools.config['unaccent'] and not has_unaccent:
+            has_unaccent = odoo.modules.db.has_unaccent(cr)
+            if odoo.tools.config['unaccent'] and not has_unaccent:
                 _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
-            self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
+            self.has_unaccent = odoo.tools.config['unaccent'] and has_unaccent
 
     @classmethod
     def delete(cls, db_name):
@@ -216,7 +216,7 @@ class Registry(Mapping):
         return self._fields_by_model[model_name]
 
     def do_parent_store(self, cr):
-        env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         for model_name in self._init_parent:
             if model_name in env:
                 env[model_name]._parent_store_compute()
@@ -259,7 +259,7 @@ class Registry(Mapping):
             :param partial: ``True`` if all models have not been loaded yet.
         """
         lazy_property.reset_all(self)
-        env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
         # load custom models
         ir_model = env['ir.model']
@@ -296,7 +296,7 @@ class Registry(Mapping):
             _logger.info('module %s: creating or updating database tables', context['module'])
 
         context = dict(context, todo=[])
-        env = openerp.api.Environment(cr, SUPERUSER_ID, context)
+        env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
         for model in models:
@@ -325,7 +325,7 @@ class Registry(Mapping):
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
-        if not openerp.multi_process:
+        if not odoo.multi_process:
             return
 
         with self.cursor() as cr:
@@ -351,7 +351,7 @@ class Registry(Mapping):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
-        if not openerp.multi_process:
+        if not odoo.multi_process:
             return self
 
         with closing(self.cursor()) as cr:
@@ -377,7 +377,7 @@ class Registry(Mapping):
 
     def signal_registry_change(self):
         """ Notifies other processes that the registry has changed. """
-        if openerp.multi_process:
+        if odoo.multi_process:
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
@@ -385,7 +385,7 @@ class Registry(Mapping):
 
     def signal_caches_change(self):
         """ Notifies other processes if caches have been invalidated. """
-        if openerp.multi_process and self.cache_cleared:
+        if odoo.multi_process and self.cache_cleared:
             # signal it through the database to other processes
             _logger.info("At least one model cache has been invalidated, signaling through the database.")
             with closing(self.cursor()) as cr:

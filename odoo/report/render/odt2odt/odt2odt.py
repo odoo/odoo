@@ -3,7 +3,7 @@
 
 import copy
 
-from openerp.report.render.rml2pdf import utils
+from odoo.report.render.rml2pdf import utils
 
 class odt2odt(object):
     def __init__(self, odt, localcontext):

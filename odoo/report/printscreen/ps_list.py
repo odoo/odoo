@@ -8,11 +8,11 @@ from datetime import datetime
 
 from lxml  import etree
 
-import openerp
-import openerp.tools as tools
-from openerp.report import render, report_sxw
-from openerp.report.interface import report_int
-from openerp.tools.safe_eval import safe_eval
+import odoo
+import odoo.tools as tools
+from odoo.report import render, report_sxw
+from odoo.report.interface import report_int
+from odoo.tools.safe_eval import safe_eval
 
 
 class report_printscreen_list(report_int):
@@ -49,7 +49,7 @@ class report_printscreen_list(report_int):
         self.context = context
         self.groupby = context.get('group_by',[])
         self.groupby_no_leaf = context.get('group_by_no_leaf', False)
-        env = openerp.api.Environment(cr, uid, context)
+        env = odoo.api.Environment(cr, uid, context)
         Model = env[datas['model']]
         model = env['ir.model'].search([('model', '=', Model._name)])
         model_desc = model.name or Model._description
@@ -113,7 +113,7 @@ class report_printscreen_list(report_int):
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
         _append_node('report-header', title)
 
-        env = openerp.api.Environment(self.cr, uid, {})
+        env = odoo.api.Environment(self.cr, uid, {})
         Users = env['res.users']
         _append_node('company', Users.browse(uid).company_id.name)
         rml_obj = report_sxw.rml_parse(self.cr, uid, Users._name, context)

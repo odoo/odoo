@@ -35,11 +35,11 @@ try:
 except ImportError:
     setproctitle = lambda x: None
 
-import openerp
-from openerp.modules.registry import Registry
-from openerp.release import nt_service_name
-import openerp.tools.config as config
-from openerp.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+import odoo
+from odoo.modules.registry import Registry
+from odoo.release import nt_service_name
+import odoo.tools.config as config
+from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
@@ -90,7 +90,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
         me = threading.currentThread()
-        me.name = 'openerp.service.http.request.%s' % (me.ident,)
+        me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
 # _reexec() should set LISTEN_* to avoid connection refused during reload time. It
 # should also work with systemd socket activation. This is currently untested
@@ -125,7 +125,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
 class FSWatcher(object):
     def __init__(self):
         self.observer = Observer()
-        for path in openerp.modules.module.ad_paths:
+        for path in odoo.modules.module.ad_paths:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
 
@@ -207,17 +207,17 @@ class ThreadedServer(CommonServer):
                 os._exit(0)
         elif sig == signal.SIGHUP:
             # restart on kill -HUP
-            openerp.phoenix = True
+            odoo.phoenix = True
             self.quit_signals_received += 1
 
     def cron_thread(self, number):
         while True:
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
-            registries = openerp.modules.registry.Registry.registries
+            registries = odoo.modules.registry.Registry.registries
             _logger.debug('cron%d polling for jobs', number)
             for db_name, registry in registries.iteritems():
                 while registry.ready:
-                    acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                    acquired = odoo.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                     if not acquired:
                         break
 
@@ -233,10 +233,10 @@ class ThreadedServer(CommonServer):
         # to prevent time.strptime AttributeError within the thread.
         # See: http://bugs.python.org/issue7980
         datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
-        for i in range(openerp.tools.config['max_cron_threads']):
+        for i in range(odoo.tools.config['max_cron_threads']):
             def target():
                 self.cron_thread(i)
-            t = threading.Thread(target=target, name="openerp.service.cron.cron%d" % i)
+            t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
             t.setDaemon(True)
             t.start()
             _logger.debug("cron%d started!" % i)
@@ -248,7 +248,7 @@ class ThreadedServer(CommonServer):
         self.httpd.serve_forever()
 
     def http_spawn(self):
-        t = threading.Thread(target=self.http_thread, name="openerp.service.httpd")
+        t = threading.Thread(target=self.http_thread, name="odoo.service.httpd")
         t.setDaemon(True)
         t.start()
         _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
@@ -301,7 +301,7 @@ class ThreadedServer(CommonServer):
                     time.sleep(0.05)
 
         _logger.debug('--')
-        openerp.modules.registry.Registry.delete_all()
+        odoo.modules.registry.Registry.delete_all()
         logging.shutdown()
 
     def run(self, preload=None, stop=False):
@@ -476,7 +476,7 @@ class PreforkServer(CommonServer):
                 raise KeyboardInterrupt
             elif sig == signal.SIGHUP:
                 # restart on kill -HUP
-                openerp.phoenix = True
+                odoo.phoenix = True
                 raise KeyboardInterrupt
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
@@ -608,7 +608,7 @@ class PreforkServer(CommonServer):
             return rc
 
         # Empty the cursor pool, we dont want them to be shared among forked workers.
-        openerp.sql_db.close_all()
+        odoo.sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
         while 1:
@@ -644,7 +644,7 @@ class Worker(object):
         self.request_count = 0
 
     def setproctitle(self, title=""):
-        setproctitle('openerp: %s %s %s' % (self.__class__.__name__, self.pid, title))
+        setproctitle('odoo: %s %s %s' % (self.__class__.__name__, self.pid, title))
 
     def close(self):
         os.close(self.watchdog_pipe[0])
@@ -723,7 +723,7 @@ class Worker(object):
                 self.process_work()
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
-                         len(openerp.modules.registry.Registry.registries))
+                         len(odoo.modules.registry.Registry.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
@@ -783,11 +783,11 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.service.db.list_dbs(True)
+            db_names = odoo.service.db.list_dbs(True)
         return db_names
 
     def process_work(self):
-        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
+        rpc_request = logging.getLogger('odoo.netsvc.rpc.request')
         rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         db_names = self._db_list()
@@ -799,13 +799,13 @@ class WorkerCron(Worker):
                 start_time = time.time()
                 start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
 
-            import openerp.addons.base as base
+            import odoo.addons.base as base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
-            openerp.modules.registry.Registry.delete(db_name)
+            odoo.modules.registry.Registry.delete(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
-                openerp.sql_db.close_db(db_name)
+                odoo.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
                 end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
@@ -835,9 +835,9 @@ class WorkerCron(Worker):
 server = None
 
 def load_server_wide_modules():
-    for m in openerp.conf.server_wide_modules:
+    for m in odoo.conf.server_wide_modules:
         try:
-            openerp.modules.module.load_openerp_module(m)
+            odoo.modules.module.load_openerp_module(m)
         except Exception:
             msg = ''
             if m == 'web':
@@ -848,7 +848,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
 
 def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
-    if openerp.tools.osutil.is_running_as_nt_service():
+    if odoo.tools.osutil.is_running_as_nt_service():
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
@@ -860,7 +860,7 @@ def _reexec(updated_modules=None):
 
 def load_test_file_yml(registry, test_file):
     with registry.cursor() as cr:
-        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
+        odoo.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
         if config['test_commit']:
             _logger.info('test %s has been commited', test_file)
             cr.commit()
@@ -879,7 +879,7 @@ def load_test_file_py(registry, test_file):
                 for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
                     suite.addTest(t)
                 _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                stream = openerp.modules.module.TestStream()
+                stream = odoo.modules.module.TestStream()
                 result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
                 success = result.wasSuccessful()
                 if hasattr(registry._assertion_report,'report_result'):
@@ -890,7 +890,7 @@ def load_test_file_py(registry, test_file):
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
-    config = openerp.tools.config
+    config = odoo.tools.config
     test_file = config['test_file']
     dbnames = dbnames or []
     rc = 0
@@ -901,7 +901,7 @@ def preload_registries(dbnames):
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
-                with openerp.api.Environment.manage():
+                with odoo.api.Environment.manage():
                     if test_file.endswith('yml'):
                         load_test_file_yml(registry, test_file)
                     elif test_file.endswith('py'):
@@ -915,16 +915,16 @@ def preload_registries(dbnames):
     return rc
 
 def start(preload=None, stop=False):
-    """ Start the openerp http server and cron processor.
+    """ Start the odoo http server and cron processor.
     """
     global server
     load_server_wide_modules()
-    if openerp.evented:
-        server = GeventServer(openerp.service.wsgi_server.application)
+    if odoo.evented:
+        server = GeventServer(odoo.service.wsgi_server.application)
     elif config['workers']:
-        server = PreforkServer(openerp.service.wsgi_server.application)
+        server = PreforkServer(odoo.service.wsgi_server.application)
     else:
-        server = ThreadedServer(openerp.service.wsgi_server.application)
+        server = ThreadedServer(odoo.service.wsgi_server.application)
 
     watcher = None
     if 'reload' in config['dev_mode']:
@@ -939,7 +939,7 @@ def start(preload=None, stop=False):
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings
-    if getattr(openerp, 'phoenix', False):
+    if getattr(odoo, 'phoenix', False):
         if watcher:
             watcher.stop()
         _reexec()

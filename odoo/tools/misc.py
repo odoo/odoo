@@ -40,10 +40,10 @@ from config import config
 from cache import *
 from .parse_version import parse_version 
 
-import openerp
+import odoo
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
-from openerp.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
+from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
 
 _logger = logging.getLogger(__name__)
 
@@ -104,14 +104,14 @@ def exec_pg_environ():
     See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
     """
     env = os.environ.copy()
-    if openerp.tools.config['db_host']:
-        env['PGHOST'] = openerp.tools.config['db_host']
-    if openerp.tools.config['db_port']:
-        env['PGPORT'] = str(openerp.tools.config['db_port'])
-    if openerp.tools.config['db_user']:
-        env['PGUSER'] = openerp.tools.config['db_user']
-    if openerp.tools.config['db_password']:
-        env['PGPASSWORD'] = openerp.tools.config['db_password']
+    if odoo.tools.config['db_host']:
+        env['PGHOST'] = odoo.tools.config['db_host']
+    if odoo.tools.config['db_port']:
+        env['PGPORT'] = str(odoo.tools.config['db_port'])
+    if odoo.tools.config['db_user']:
+        env['PGUSER'] = odoo.tools.config['db_user']
+    if odoo.tools.config['db_password']:
+        env['PGPASSWORD'] = odoo.tools.config['db_password']
     return env
 
 def exec_pg_command(name, *args):
@@ -150,7 +150,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
-    import openerp.modules as addons
+    import odoo.modules as addons
     adps = addons.module.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
@@ -485,7 +485,7 @@ def scan_languages():
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
-    csvpath = openerp.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
+    csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
     try:
         # read (code, name) from languages in base/res/res.lang.csv
         result = []
@@ -883,11 +883,11 @@ class mute_logger(object):
     """Temporary suppress the logging.
     Can be used as context manager or decorator.
 
-        @mute_logger('openerp.plic.ploc')
+        @mute_logger('odoo.plic.ploc')
         def do_stuff():
             blahblah()
 
-        with mute_logger('openerp.foo.bar'):
+        with mute_logger('odoo.foo.bar'):
             do_suff()
 
     """
@@ -1019,7 +1019,7 @@ def dumpstacks(sig=None, frame=None):
         for line in extract_stack(stack):
             code.append(line)
 
-    if openerp.evented:
+    if odoo.evented:
         # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
         import gc
         from greenlet import greenlet

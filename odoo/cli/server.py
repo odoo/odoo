@@ -21,15 +21,15 @@ import threading
 import traceback
 import time
 
-import openerp
+import odoo
 
 from . import Command
 
-__author__ = openerp.release.author
-__version__ = openerp.release.version
+__author__ = odoo.release.author
+__version__ = odoo.release.version
 
-# Also use the `openerp` logger for the main script.
-_logger = logging.getLogger('openerp')
+# Also use the `odoo` logger for the main script.
+_logger = logging.getLogger('odoo')
 
 def check_root_user():
     """Warn if the process's user is 'root' (on POSIX system)."""
@@ -43,7 +43,7 @@ def check_postgres_user():
 
     This function assumes the configuration has been initialized.
     """
-    config = openerp.tools.config
+    config = odoo.tools.config
     if config['db_user'] == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
@@ -53,16 +53,16 @@ def report_configuration():
 
     This function assumes the configuration has been initialized.
     """
-    config = openerp.tools.config
+    config = odoo.tools.config
     _logger.info("OpenERP version %s", __version__)
-    _logger.info('addons paths: %s', openerp.modules.module.ad_paths)
+    _logger.info('addons paths: %s', odoo.modules.module.ad_paths)
     host = config['db_host'] or os.environ.get('PGHOST', 'default')
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
     _logger.info('database: %s@%s:%s', user, host, port)
 
 def rm_pid_file(main_pid):
-    config = openerp.tools.config
+    config = odoo.tools.config
     if config['pidfile'] and main_pid == os.getpid():
         try:
             os.unlink(config['pidfile'])
@@ -74,15 +74,15 @@ def setup_pid_file():
 
     This function assumes the configuration has been initialized.
     """
-    config = openerp.tools.config
-    if not openerp.evented and config['pidfile']:
+    config = odoo.tools.config
+    if not odoo.evented and config['pidfile']:
         pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
             fd.write(str(pid))
         atexit.register(rm_pid_file, pid)
 
 def export_translation():
-    config = openerp.tools.config
+    config = odoo.tools.config
     dbname = config['db_name']
 
     if config["language"]:
@@ -95,33 +95,33 @@ def export_translation():
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
 
     with open(config["translate_out"], "w") as buf:
-        registry = openerp.modules.registry.Registry.new(dbname)
-        with openerp.api.Environment.manage():
+        registry = odoo.modules.registry.Registry.new(dbname)
+        with odoo.api.Environment.manage():
             with registry.cursor() as cr:
-                openerp.tools.trans_export(config["language"],
+                odoo.tools.trans_export(config["language"],
                     config["translate_modules"] or ["all"], buf, fileformat, cr)
 
     _logger.info('translation file written successfully')
 
 def import_translation():
-    config = openerp.tools.config
+    config = odoo.tools.config
     context = {'overwrite': config["overwrite_existing_translations"]}
     dbname = config['db_name']
 
-    registry = openerp.modules.registry.Registry.new(dbname)
-    with openerp.api.Environment.manage():
+    registry = odoo.modules.registry.Registry.new(dbname)
+    with odoo.api.Environment.manage():
         with registry.cursor() as cr:
-            openerp.tools.trans_load(
+            odoo.tools.trans_load(
                 cr, config["translate_in"], config["language"], context=context,
             )
 
 def main(args):
     check_root_user()
-    openerp.tools.config.parse_config(args)
+    odoo.tools.config.parse_config(args)
     check_postgres_user()
     report_configuration()
 
-    config = openerp.tools.config
+    config = odoo.tools.config
 
     # the default limit for CSV fields in the module is 128KiB, which is not
     # quite sufficient to import images to store in attachment. 500MiB is a
@@ -133,8 +133,8 @@ def main(args):
         preload = config['db_name'].split(',')
         for db_name in preload:
             try:
-                openerp.service.db._create_empty_database(db_name)
-            except openerp.service.db.DatabaseExists:
+                odoo.service.db._create_empty_database(db_name)
+            except odoo.service.db.DatabaseExists:
                 pass
 
     if config["translate_out"]:
@@ -148,12 +148,12 @@ def main(args):
     # This needs to be done now to ensure the use of the multiprocessing
     # signaling mecanism for registries loaded with -d
     if config['workers']:
-        openerp.multi_process = True
+        odoo.multi_process = True
 
     stop = config["stop_after_init"]
 
     setup_pid_file()
-    rc = openerp.service.server.start(preload=preload, stop=stop)
+    rc = odoo.service.server.start(preload=preload, stop=stop)
     sys.exit(rc)
 
 class Server(Command):

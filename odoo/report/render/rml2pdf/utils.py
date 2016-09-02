@@ -8,9 +8,9 @@ import re
 
 import reportlab
 
-import openerp.tools as tools
-from openerp.tools.safe_eval import safe_eval
-from openerp.tools.misc import ustr
+import odoo.tools as tools
+from odoo.tools.safe_eval import safe_eval
+from odoo.tools.misc import ustr
 
 _logger = logging.getLogger(__name__)
 

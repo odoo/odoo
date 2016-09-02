@@ -15,14 +15,14 @@ from dateutil.relativedelta import relativedelta
 import pytz
 from lxml import etree, builder
 
-import openerp
-import openerp.release
+import odoo
+import odoo.release
 from . import assertion_report
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
 from .yaml_import import convert_yaml_import
-from openerp import SUPERUSER_ID
+from odoo import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ def _get_idref(self, env, model_str, idref):
                   datetime=datetime,
                   timedelta=timedelta,
                   relativedelta=relativedelta,
-                  version=openerp.release.major_version,
+                  version=odoo.release.major_version,
                   ref=self.id_get,
                   pytz=pytz)
     if model_str:
@@ -117,7 +117,7 @@ def _eval_xml(self, node, env):
             try:
                 return unsafe_eval(a_eval, idref2)
             except Exception:
-                logging.getLogger('openerp.tools.convert.init').error(
+                logging.getLogger('odoo.tools.convert.init').error(
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), env.context)
                 raise
         def _process(s):
@@ -191,7 +191,7 @@ def _eval_xml(self, node, env):
         model = env[node.get('model', '')]
         method = node.get('name')
         # this one still depends on the old API
-        return openerp.api.call_kw(model, method, args, {})
+        return odoo.api.call_kw(model, method, args, {})
     elif node.tag == "test":
         return node.text
 
@@ -811,7 +811,7 @@ form: module.record_id""" % (xml_id,)
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
-        self.env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+        self.env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         self.cr = cr
         self.uid = SUPERUSER_ID
         self.idref = idref
@@ -892,7 +892,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         'module': module,
         'noupdate': noupdate,
     }
-    env = openerp.api.Environment(cr, SUPERUSER_ID, context)
+    env = odoo.api.Environment(cr, SUPERUSER_ID, context)
     result = env[model].load(fields, datas)
     if any(msg['type'] == 'error' for msg in result['messages']):
         # Report failed import and abort module install

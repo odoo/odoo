@@ -120,9 +120,9 @@ import traceback
 from functools import partial
 from zlib import crc32
 
-import openerp.modules
+import odoo.modules
 from ..models import MAGIC_COLUMNS, BaseModel
-import openerp.tools as tools
+import odoo.tools as tools
 
 
 # Domain operators.
@@ -427,7 +427,7 @@ def select_distinct_from_where_not_null(cr, select_field, from_table):
     return [r[0] for r in cr.fetchall()]
 
 def get_unaccent_wrapper(cr):
-    if openerp.registry(cr.dbname).has_unaccent:
+    if odoo.registry(cr.dbname).has_unaccent:
         return lambda x: "unaccent(%s)" % (x,)
     return lambda x: x
 

@@ -7,17 +7,17 @@
     through the code of yaml tests.
 """
 
-import openerp
-import openerp.report
-import openerp.tools as tools
+import odoo
+import odoo.report
+import odoo.tools as tools
 import logging
-from openerp.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval
 from subprocess import Popen, PIPE
 import os
 import tempfile
 
 _logger = logging.getLogger(__name__)
-_test_logger = logging.getLogger('openerp.tests')
+_test_logger = logging.getLogger('odoo.tests')
 
 
 def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, report_type=None):
@@ -35,7 +35,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
         rname_s = rname
     _test_logger.info("  - Trying %s.create(%r)", rname, ids)
 
-    res = openerp.report.render_report(cr, uid, ids, rname_s, data, context=context)
+    res = odoo.report.render_report(cr, uid, ids, rname_s, data, context=context)
     if not isinstance(res, tuple):
         raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
                                 (rname, type(res)))
@@ -103,7 +103,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
     context = dict(context or {})
     # TODO context fill-up
 
-    env = openerp.api.Environment(cr, uid, context)
+    env = odoo.api.Environment(cr, uid, context)
 
     def log_test(msg, *args):
         _test_logger.info("  - " + msg, *args)
