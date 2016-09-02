@@ -782,7 +782,6 @@ class AccountBankStatementLine(models.Model):
                 amount_currency = self.amount_currency * ratio
         return {
             'name': self.name,
-            'date': self.date,
             'move_id': move.id,
             'partner_id': self.partner_id and self.partner_id.id or False,
             'account_id': amount >= 0 \
@@ -791,7 +790,6 @@ class AccountBankStatementLine(models.Model):
             'credit': amount < 0 and -amount or 0.0,
             'debit': amount > 0 and amount or 0.0,
             'statement_id': self.statement_id.id,
-            'journal_id': self.statement_id.journal_id.id,
             'currency_id': statement_currency != company_currency and statement_currency.id or (st_line_currency != company_currency and st_line_currency.id or False),
             'amount_currency': amount_currency,
         }
