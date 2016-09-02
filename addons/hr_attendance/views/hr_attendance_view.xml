@@ -128,17 +128,17 @@
 
     <!-- Menus -->
 
-    <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="90" groups="base.group_hr_attendance" web_icon="hr_attendance,static/description/icon.png"/>
+    <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr.group_hr_attendance" web_icon="hr_attendance,static/description/icon.png"/>
     
-    <menuitem id="menu_hr_attendance_my_attendances" name="My Attendances" parent="menu_hr_attendance_root" sequence="10" groups="base.group_hr_attendance" action="hr_attendance_action_my_main_menu"/>
+    <menuitem id="menu_hr_attendance_my_attendances" name="My Attendances" parent="menu_hr_attendance_root" sequence="10" groups="hr.group_hr_attendance" action="hr_attendance_action_my_main_menu"/>
 
-    <menuitem id="menu_hr_attendance_manage_attendances" name="Manage Attendances" parent="menu_hr_attendance_root" sequence="20" groups="base.group_hr_user"/>
+    <menuitem id="menu_hr_attendance_manage_attendances" name="Manage Attendances" parent="menu_hr_attendance_root" sequence="20" groups="hr.group_hr_user"/>
 
-    <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_manage_attendances" sequence="10" groups="base.group_hr_user" action="hr_attendance_action"/>
+    <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_manage_attendances" sequence="10" groups="hr.group_hr_user" action="hr_attendance_action"/>
 
-    <menuitem id="menu_hr_attendance_view_employees_kanban" name="Employees" parent="menu_hr_attendance_manage_attendances" sequence="15" groups="base.group_hr_user" action="hr.open_view_employee_list_my"/>
+    <menuitem id="menu_hr_attendance_view_employees_kanban" name="Employees" parent="menu_hr_attendance_manage_attendances" sequence="15" groups="hr.group_hr_user" action="hr.open_view_employee_list_my"/>
 
-    <menuitem id="menu_hr_attendance_Kiosk_mode" name="Kiosk Mode" parent="menu_hr_attendance_manage_attendances" sequence="20" groups="base.group_hr_user" action="hr_attendance_action_main_menu"/>
+    <menuitem id="menu_hr_attendance_Kiosk_mode" name="Kiosk Mode" parent="menu_hr_attendance_manage_attendances" sequence="20" groups="hr.group_hr_user" action="hr_attendance_action_main_menu"/>
 
-    <menuitem id="menu_hr_attendance_report" name="Reports" parent="menu_hr_attendance_root" sequence="30" groups="base.group_hr_user" action="hr_attendance_action_graph"/>
+    <menuitem id="menu_hr_attendance_report" name="Reports" parent="menu_hr_attendance_root" sequence="30" groups="hr.group_hr_user" action="hr_attendance_action_graph"/>
 </odoo>

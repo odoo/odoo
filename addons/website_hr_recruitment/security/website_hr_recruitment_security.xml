@@ -25,7 +25,7 @@
         <field name="name">Job Positions: HR Officer</field>
         <field name="model_id" ref="hr.model_hr_job"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>

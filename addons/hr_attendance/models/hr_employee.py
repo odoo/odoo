@@ -20,8 +20,8 @@ class HrEmployee(models.Model):
             barcode = "".join(choice(digits) for i in range(8))
         return barcode
 
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", default=_default_random_barcode, copy=False, groups='base.group_hr_user')
-    pin = fields.Char(string="PIN", default=_default_random_pin, help="PIN used for Check In/Out in Attendance.", copy=False, groups='base.group_hr_user')
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", default=_default_random_barcode, copy=False, groups='hr.group_hr_user')
+    pin = fields.Char(string="PIN", default=_default_random_pin, help="PIN used for Check In/Out in Attendance.", copy=False, groups='hr.group_hr_user')
 
     attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
     last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id')
@@ -34,7 +34,7 @@ class HrEmployee(models.Model):
     @api.multi
     def _compute_manual_attendance(self):
         for employee in self:
-            employee.manual_attendance = employee.user_id.has_group('base.group_hr_attendance') if employee.user_id else False
+            employee.manual_attendance = employee.user_id.has_group('hr.group_hr_attendance') if employee.user_id else False
 
     @api.multi
     def _inverse_manual_attendance(self):
@@ -76,7 +76,7 @@ class HrEmployee(models.Model):
     @api.multi
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()
-        if self.env['res.users'].browse(SUPERUSER_ID).has_group('base.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
+        if self.env['res.users'].browse(SUPERUSER_ID).has_group('hr_attenance.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
             if entered_pin != self.pin:
                 return {'warning': _('Wrong PIN')}
         return self.attendance_action(next_action)

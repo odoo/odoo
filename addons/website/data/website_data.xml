@@ -30,21 +30,21 @@
             <field name="website_id" ref="default_website"/>
         </record>
 
-        <record id="base.group_website_publisher" model="res.groups">
+        <record id="group_website_publisher" model="res.groups">
             <field name="name">Editor</field>
             <field name="category_id" ref="base.module_category_website"/>
         </record>
 
         <!-- Access rules to edit ir.ui.view with qWeb type -->
-        <record id="base.group_website_designer" model="res.groups">
+        <record id="group_website_designer" model="res.groups">
             <field name="name">Editor and Designer</field>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_website_publisher'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_website_publisher'))]"/>
             <field name="category_id" ref="base.module_category_website"/>
         </record>
 
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('base.group_website_designer'))]"/>
+            <field name="groups_id" eval="[(4,ref('group_website_designer'))]"/>
         </record>
 
         <record id="action_module_website" model="ir.actions.act_window">

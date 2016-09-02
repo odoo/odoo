@@ -52,7 +52,7 @@
                 multi="True"
                 target="new"
                 key2="client_action_multi"
-                id="base.action_partner_mass_mail"
+                id="action_partner_mass_mail"
                 context="{
                             'default_composition_mode': 'mass_mail',
                             'default_partner_to': '${object.id or \'\'}',
@@ -61,7 +61,7 @@
                         }"/>
 
         <record id="email_template_partner" model="mail.template">
-            <field name="ref_ir_act_window" ref="base.action_partner_mass_mail"/>
+            <field name="ref_ir_act_window" ref="action_partner_mass_mail"/>
         </record>
 
     </data>

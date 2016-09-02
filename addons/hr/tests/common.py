@@ -11,8 +11,8 @@ class TestHrCommon(common.TransactionCase):
 
         self.Users = self.env['res.users']
 
-        self.group_hr_manager_id = self.ref('base.group_hr_manager')
-        self.group_hr_user_id = self.ref('base.group_hr_user')
+        self.group_hr_manager_id = self.ref('hr.group_hr_manager')
+        self.group_hr_user_id = self.ref('hr.group_hr_user')
         self.group_user_id = self.ref('base.group_user')
 
         # Will be used in various test cases of test_hr_flow

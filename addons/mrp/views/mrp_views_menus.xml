@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <!-- Top menu item -->
-        <menuitem id="base.menu_mrp_root"
+        <menuitem id="menu_mrp_root"
             name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager"
             icon="fa-wrench"
@@ -11,22 +11,22 @@
 
         <menuitem id="menu_mrp_manufacturing"
             name="Operations"
-            parent="base.menu_mrp_root"
+            parent="menu_mrp_root"
             sequence="10"/>
 
         <menuitem id="menu_mrp_bom"
             name="Master Data"
-            parent="base.menu_mrp_root"
+            parent="menu_mrp_root"
             sequence="20"/>
 
         <menuitem id="menu_mrp_reporting"
               name="Reporting"
-              parent="base.menu_mrp_root"
+              parent="menu_mrp_root"
               sequence="25"/>
 
         <menuitem id="menu_mrp_configuration"
             name="Configuration"
-            parent="base.menu_mrp_root"
+            parent="menu_mrp_root"
             groups="group_mrp_manager"
             sequence="100"/>
 

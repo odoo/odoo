@@ -20,7 +20,7 @@ var Message = Widget.extend({
         var self = this;
         var default_action = { type: "ir.actions.client", name: 'Attendances', tag: 'hr_attendance_my_main_menu', params: {} };
         if(!action.attendance){
-            self.session.user_has_group('base.group_hr_user').then(function(has_group){
+            self.session.user_has_group('hr.group_hr_user').then(function(has_group){
                 if(has_group){
                     self.next_action = { type: "ir.actions.client", name: 'Attendances', tag: 'hr_attendance_main_menu', target: 'fullscreen', params: {} };
                 }
