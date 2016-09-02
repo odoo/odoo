@@ -438,7 +438,7 @@ class Quant(models.Model):
         if pack_operation_id:
             pack_operation = self.env['stock.pack.operation'].browse(pack_operation_id)
             domain += [('location_id', '=', pack_operation.location_id.id)]
-            if pack_operation_id.owner_id:
+            if pack_operation.owner_id:
                 domain += [('owner_id', '=', pack_operation.owner_id.id)]
             if pack_operation.package_id and not pack_operation.product_id:
                 domain += [('package_id', 'child_of', pack_operation.package_id.id)]
