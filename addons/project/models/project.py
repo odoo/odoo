@@ -373,7 +373,7 @@ class Task(models.Model):
     partner_id = fields.Many2one('res.partner',
         string='Customer',
         default=_get_default_partner)
-    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id')
+    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one('res.company',
         string='Company',
         default=lambda self: self.env['res.company']._company_default_get())
@@ -382,9 +382,9 @@ class Task(models.Model):
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments')
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Displayed Image')
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation')
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation')
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation')
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
 
     @api.onchange('project_id')
     def _onchange_project(self):
