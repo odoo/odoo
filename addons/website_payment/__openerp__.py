@@ -10,6 +10,7 @@
         'website',
         'payment',
         'website_portal',
+        'sale'
     ],
     'data': [
         'views/website_payment_view.xml',
