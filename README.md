@@ -10,7 +10,7 @@ Odoo is a suite of web based open source business apps.
 
 The main Odoo Apps include an <a href="https://www.odoo.com/page/crm">Open Source CRM</a>,
 <a href="https://www.odoo.com/page/website-builder">Website Builder</a>,
-<a href="https://www.odoo.com/page/e-commerce">eCommerce</a>,
+<a href="https://www.odoo.com/page/e-commerce">e-Commerce</a>,
 <a href="https://www.odoo.com/page/warehouse">Warehouse Management</a>,
 <a href="https://www.odoo.com/page/project-management">Project Management</a>,
 <a href="https://www.odoo.com/page/accounting">Billing &amp; Accounting</a>,

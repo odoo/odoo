@@ -33,7 +33,7 @@
     </record>
 
     <record id="action_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">eCommerce Orders</field>
+        <field name="name">e-Commerce Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', 'in', ('sale', 'done'))]</field>
@@ -43,7 +43,7 @@
     </record>
 
     <record id="action_unpaid_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">Unpaid eCommerce Orders</field>
+        <field name="name">Unpaid e-Commerce Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', '=', 'sent')]</field>
@@ -53,7 +53,7 @@
     </record>
 
     <record id="action_abandonned_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">Abandonned eCommerce Orders</field>
+        <field name="name">Abandonned e-Commerce Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', '=', 'cancel')]</field>
@@ -87,7 +87,7 @@
     <menuitem id="menu_catalog_categories" parent="menu_catalog" action="product_public_category_action" sequence="2"/>
 
     <!-- Configuration sub-menus -->
-    <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="eCommerce"/>
+    <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="e-Commerce"/>
     <menuitem id="menu_ecommerce_payment_acquirers" parent="menu_ecommerce_settings" name="Payment Acquirers" action="payment.action_payment_acquirer"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_ecommerce_settings" action="product.product_pricelist_action2" sequence="3"/>
 
