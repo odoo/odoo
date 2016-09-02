@@ -23,7 +23,7 @@ import werkzeug
 
 from .misc import ustr
 
-import openerp
+import odoo
 
 unsafe_eval = eval
 
@@ -299,25 +299,25 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
         return unsafe_eval(c, globals_dict, locals_dict)
-    except openerp.exceptions.except_orm:
+    except odoo.exceptions.except_orm:
         raise
-    except openerp.exceptions.Warning:
+    except odoo.exceptions.Warning:
         raise
-    except openerp.exceptions.RedirectWarning:
+    except odoo.exceptions.RedirectWarning:
         raise
-    except openerp.exceptions.AccessDenied:
+    except odoo.exceptions.AccessDenied:
         raise
-    except openerp.exceptions.AccessError:
+    except odoo.exceptions.AccessError:
         raise
     except werkzeug.exceptions.HTTPException:
         raise
-    except openerp.http.AuthenticationError:
+    except odoo.http.AuthenticationError:
         raise
     except OperationalError:
         # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
         # of serialized transactions work its magic
         raise
-    except openerp.exceptions.MissingError:
+    except odoo.exceptions.MissingError:
         raise
     except Exception, e:
         import sys

@@ -20,11 +20,11 @@ from xml.sax.saxutils import escape
 from babel.messages import extract
 from lxml import etree
 
-import openerp
-from openerp.tools import config
-from openerp.tools.misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
-from openerp.tools.osutil import walksymlinks
-from openerp import sql_db, SUPERUSER_ID
+import odoo
+from odoo.tools import config
+from odoo.tools.misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from odoo.tools.osutil import walksymlinks
+from odoo import sql_db, SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -348,7 +348,7 @@ class GettextAlias(object):
         if hasattr(s, 'cr'):
             return s.cr, False
         try:
-            from openerp.http import request
+            from odoo.http import request
             return request.env.cr, False
         except RuntimeError:
             pass
@@ -387,7 +387,7 @@ class GettextAlias(object):
                     lang = s.localcontext.get('lang')
             if not lang:
                 try:
-                    from openerp.http import request
+                    from odoo.http import request
                     lang = request.env.lang
                 except RuntimeError:
                     pass
@@ -399,7 +399,7 @@ class GettextAlias(object):
                 (cr, dummy) = self._get_cr(frame, allow_create=False)
                 uid = self._get_uid(frame)
                 if cr and uid:
-                    env = openerp.api.Environment(cr, uid, {})
+                    env = odoo.api.Environment(cr, uid, {})
                     lang = env['res.users'].context_get()['lang']
         return lang
 
@@ -419,7 +419,7 @@ class GettextAlias(object):
                 cr, is_new_cr = self._get_cr(frame)
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
-                    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+                    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
                     res = env['ir.translation']._get_source(None, ('code','sql_constraint'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
@@ -574,7 +574,7 @@ class PoFile(object):
         return trans_type, name, res_id, source, trad, '\n'.join(comments)
 
     def write_infos(self, modules):
-        import openerp.release as release
+        import odoo.release as release
         self.buffer.write("# Translation of %(project)s.\n" \
                           "# This file contains the translation of the following modules:\n" \
                           "%(modules)s" \
@@ -776,7 +776,7 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
 
 
 def trans_generate(lang, modules, cr):
-    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
     to_translate = set()
 
     def push_translation(module, type, name, id, source, comments=None):
@@ -919,7 +919,7 @@ def trans_generate(lang, modules, cr):
         for m in env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
     ]
 
-    path_list = [(path, True) for path in openerp.modules.module.ad_paths]
+    path_list = [(path, True) for path in odoo.modules.module.ad_paths]
     # Also scan these non-addon paths
     for bin_path in ['osv', 'report', 'modules', 'service', 'tools']:
         path_list.append((os.path.join(config['root_path'], bin_path), True))
@@ -982,7 +982,7 @@ def trans_generate(lang, modules, cr):
             # QWeb template files
             if fnmatch.fnmatch(root, '*/static/src/xml*'):
                 for fname in fnmatch.filter(files, '*.xml'):
-                    babel_extract_terms(fname, path, root, 'openerp.tools.translate:babel_extract_qweb',
+                    babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                         extra_comments=[WEB_TRANSLATION_COMMENT])
             if not recursive:
                 # due to topdown, first iteration is in first level
@@ -1015,7 +1015,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     if verbose:
         _logger.info('loading translation file for language %s', lang)
 
-    env = openerp.api.Environment(cr, SUPERUSER_ID, context or {})
+    env = odoo.api.Environment(cr, SUPERUSER_ID, context or {})
     Lang = env['res.lang']
     Translation = env['ir.translation']
 
@@ -1192,6 +1192,6 @@ def load_language(cr, lang):
     :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     :type lang: str
     """
-    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
     installer = env['base.language.install'].create({'lang': lang})
     installer.lang_install()

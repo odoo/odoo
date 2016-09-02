@@ -18,11 +18,11 @@ import threading
 from operator import itemgetter
 from os.path import join as opj
 
-import openerp
-import openerp.tools as tools
-import openerp.release as release
-from openerp import SUPERUSER_ID, api
-from openerp.tools.safe_eval import safe_eval
+import odoo
+import odoo.tools as tools
+import odoo.release as release
+from odoo import SUPERUSER_ID, api
+from odoo.tools.safe_eval import safe_eval
 
 MANIFEST = '__openerp__.py'
 README = ['README.rst', 'README.md', 'README.txt']
@@ -37,8 +37,8 @@ hooked = False
 loaded = []
 
 class AddonsHook(object):
-    """ Makes modules accessible through openerp.addons.* and odoo.addons.*
-    """
+    """ Makes modules accessible through openerp.addons.* and odoo.addons.* """
+
     def find_module(self, name, path):
         if name.startswith(('odoo.addons.', 'openerp.addons.'))\
                 and name.count('.') == 2:
@@ -61,8 +61,8 @@ class AddonsHook(object):
         if f: f.close()
 
         # TODO: fetch existing module from sys.modules if reloads permitted
-        # create empty openerp.addons.* module, set name
-        new_mod = types.ModuleType(openerp_name)
+        # create empty odoo.addons.* module, set name
+        new_mod = types.ModuleType(odoo_name)
         new_mod.__loader__ = self
 
         # module top-level can only be a package
@@ -70,18 +70,18 @@ class AddonsHook(object):
         modfile = opj(path, '__init__.py')
         new_mod.__file__ = modfile
         new_mod.__path__ = [path]
-        new_mod.__package__ = openerp_name
+        new_mod.__package__ = odoo_name
 
         # both base and alias should be in sys.modules to handle recursive and
         # corecursive situations
-        sys.modules[openerp_name] = sys.modules[odoo_name] = new_mod
+        sys.modules[odoo_name] = sys.modules[openerp_name] = new_mod
 
         # execute source in context of module *after* putting everything in
         # sys.modules, so recursive import works
         execfile(modfile, new_mod.__dict__)
 
         # people import openerp.addons and expect openerp.addons.<module> to work
-        setattr(openerp.addons, addon_name, new_mod)
+        setattr(odoo.addons, addon_name, new_mod)
 
         return sys.modules[name]
 # need to register loader with setuptools as Jinja relies on it when using
@@ -89,19 +89,18 @@ class AddonsHook(object):
 pkg_resources.register_loader_type(AddonsHook, pkg_resources.DefaultProvider)
 
 class OdooHook(object):
-    """ Makes odoo package also available as openerp
-    """
+    """ Makes odoo package also available as openerp """
 
     def find_module(self, name, path=None):
         # openerp.addons.<identifier> should already be matched by AddonsHook,
         # only framework and subdirectories of modules should match
-        if re.match(r'^odoo\b', name):
+        if re.match(r'^openerp\b', name):
             return self
 
     def load_module(self, name):
         assert name not in sys.modules
 
-        canonical = re.sub(r'^odoo(.*)', r'openerp\g<1>', name)
+        canonical = re.sub(r'^openerp(.*)', r'odoo\g<1>', name)
 
         if canonical in sys.modules:
             mod = sys.modules[canonical]
@@ -122,7 +121,7 @@ def initialize_sys_path():
     addons paths.
 
     This ensures something like ``import crm`` (or even
-    ``import openerp.addons.crm``) works even if the addons are not in the
+    ``import odoo.addons.crm``) works even if the addons are not in the
     PYTHONPATH.
     """
     global ad_paths
@@ -177,7 +176,7 @@ def get_module_filetree(module, dir='.'):
     if dir.startswith('..') or (dir and dir[0] == '/'):
         raise Exception('Cannot access file outside the module')
 
-    files = openerp.tools.osutil.listdir(path, True)
+    files = odoo.tools.osutil.listdir(path, True)
 
     tree = {}
     for f in files:
@@ -355,14 +354,14 @@ def load_openerp_module(module_name):
     initialize_sys_path()
     try:
         mod_path = get_module_path(module_name)
-        __import__('openerp.addons.' + module_name)
+        __import__('odoo.addons.' + module_name)
 
         # Call the module's post-load hook. This can done before any model or
         # data has been initialized. This is ok as the post-load hook is for
         # server-wide (instead of registry-specific) functionalities.
         info = load_information_from_description_file(module_name)
         if info['post_load']:
-            getattr(sys.modules['openerp.addons.' + module_name], info['post_load'])()
+            getattr(sys.modules['odoo.addons.' + module_name], info['post_load'])()
 
     except Exception, e:
         msg = "Couldn't load module %s" % (module_name)
@@ -415,7 +414,7 @@ def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
-    modpath = 'openerp.addons.' + module
+    modpath = 'odoo.addons.' + module
     try:
         mod = importlib.import_module('.tests', modpath)
     except Exception, e:
@@ -436,7 +435,7 @@ def get_test_modules(module):
 
 # Use a custom stream object to log the test executions.
 class TestStream(object):
-    def __init__(self, logger_name='openerp.tests'):
+    def __init__(self, logger_name='odoo.tests'):
         self.logger = logging.getLogger(logger_name)
         self.r = re.compile(r'^-*$|^ *... *$|^ok$')
     def flush(self):
@@ -487,11 +486,11 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
 
         if suite.countTestCases():
             t0 = time.time()
-            t0_sql = openerp.sql_db.sql_counter
+            t0_sql = odoo.sql_db.sql_counter
             _logger.info('%s running tests.', m.__name__)
             result = unittest.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
             if time.time() - t0 > 5:
-                _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
+                _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
             if not result.wasSuccessful():
                 r = False
                 _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))

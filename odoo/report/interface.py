@@ -7,11 +7,11 @@ import urllib
 
 from lxml import etree
 
-import openerp
-import openerp.tools as tools
+import odoo
+import odoo.tools as tools
 from . import print_xml
 from . import render
-from openerp.modules import get_module_resource
+from odoo.modules import get_module_resource
 
 #
 # coerce any type to a unicode string (to preserve non-ascii characters)
@@ -28,7 +28,7 @@ class report_int(object):
     
     def __init__(self, name, register=True):
         if register:
-            assert openerp.conf.deprecation.allow_report_int_registration
+            assert odoo.conf.deprecation.allow_report_int_registration
             assert name.startswith('report.'), 'Report names should start with "report.".'
             assert name not in self._reports, 'The report "%s" already exists.' % name
             self._reports[name] = self
@@ -73,7 +73,7 @@ class report_rml(report_int):
         }
 
     def create(self, cr, uid, ids, datas, context=None):
-        env = openerp.api.Environment(cr, uid, context or {})
+        env = odoo.api.Environment(cr, uid, context or {})
         xml = self.create_xml(cr, uid, ids, datas, context)
         xml = tools.ustr(xml).encode('utf8')
         report_type = datas.get('report_type', 'pdf')
@@ -124,7 +124,7 @@ class report_rml(report_int):
     def create_rml(self, cr, xml, uid, context=None):
         if self.tmpl=='' and not self.internal_header:
             self.internal_header=True
-        env = openerp.api.Environment(cr, uid, context or {})
+        env = odoo.api.Environment(cr, uid, context or {})
         Translation = env['ir.translation']
 
         # In some case we might not use xsl ...

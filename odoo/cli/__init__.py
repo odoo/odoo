@@ -2,7 +2,7 @@ import logging
 import sys
 import os
 
-import openerp
+import odoo
 
 from command import Command, main
 

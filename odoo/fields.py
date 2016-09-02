@@ -15,12 +15,12 @@ import xmlrpclib
 
 import psycopg2
 
-from openerp.sql_db import LazyCursor
-from openerp.tools import float_precision, float_repr, float_round, frozendict, \
-                          html_sanitize, human_size, pg_varchar, ustr, OrderedSet
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
-from openerp.tools.translate import html_translate, _
+from odoo.sql_db import LazyCursor
+from odoo.tools import float_precision, float_repr, float_round, frozendict, \
+                       html_sanitize, human_size, pg_varchar, ustr, OrderedSet
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
+from odoo.tools.translate import html_translate, _
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -196,7 +196,7 @@ class Field(object):
                 return [('name', operator, value)]
 
         The compute method has to assign the field on all records of the invoked
-        recordset. The decorator :meth:`openerp.api.depends` must be applied on
+        recordset. The decorator :meth:`odoo.api.depends` must be applied on
         the compute method to specify the field dependencies; those dependencies
         are used to determine when to recompute the field; recomputation is
         automatic and guarantees cache/database consistency. Note that the same
@@ -268,7 +268,7 @@ class Field(object):
         .. rubric:: Incremental definition
 
         A field is defined as class attribute on a model class. If the model
-        is extended (see :class:`~openerp.models.Model`), one can also extend
+        is extended (see :class:`~odoo.models.Model`), one can also extend
         the field definition by redefining a field with the same name and same
         type on the subclass. In that case, the attributes of the field are
         taken from the parent class and overridden by the ones given in
@@ -2393,6 +2393,6 @@ class Id(Field):
         raise TypeError("field 'id' cannot be assigned")
 
 # imported here to avoid dependency cycle issues
-from openerp import SUPERUSER_ID
+from odoo import SUPERUSER_ID
 from .exceptions import AccessError, MissingError, UserError
 from .models import check_pg_name, BaseModel, IdType

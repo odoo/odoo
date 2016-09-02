@@ -13,16 +13,16 @@ from datetime import datetime
 
 from lxml import etree
 
-import openerp
-import openerp.tools as tools
+import odoo
+import odoo.tools as tools
 from . import common
 from . import preprocess
 from .interface import report_rml
-from openerp import fields
-from openerp.exceptions import AccessError
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.safe_eval import safe_eval
-from openerp.tools.translate import _
+from odoo import fields
+from odoo.exceptions import AccessError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.safe_eval import safe_eval
+from odoo.tools.translate import _
 
 
 _logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class rml_parse(object):
             context = {}
         self.cr = cr
         self.uid = uid
-        env = openerp.api.Environment(cr, uid, context)
+        env = odoo.api.Environment(cr, uid, context)
         user = env['res.users'].browse(uid)
         self.localcontext = {
             'user': user,
@@ -131,7 +131,7 @@ class rml_parse(object):
         if not model:
             model = 'ir.attachment'
         try:
-            env = openerp.api.Environment(self.cr, self.uid, {})
+            env = odoo.api.Environment(self.cr, self.uid, {})
             res = env[model].browse(int(id)).read()[0]
             if field:
                 return res[field]
@@ -150,7 +150,7 @@ class rml_parse(object):
         self.objects = self.objects.with_env(env)
 
     def _get_lang_dict(self):
-        env = openerp.api.Environment(self.cr, self.uid, {})
+        env = odoo.api.Environment(self.cr, self.uid, {})
         Lang = env['res.lang']
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
         lang_obj = Lang.search([('code', '=', lang)], limit=1) or \
@@ -168,7 +168,7 @@ class rml_parse(object):
     def get_digits(self, obj=None, f=None, dp=None):
         d = DEFAULT_DIGITS = 2
         if dp:
-            env = openerp.api.Environment(self.cr, self.uid, {})
+            env = odoo.api.Environment(self.cr, self.uid, {})
             d = env['decimal.precision'].precision_get(dp)
         elif obj and f:
             res_digits = getattr(obj._fields[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
@@ -245,7 +245,7 @@ class rml_parse(object):
     def _translate(self,text):
         lang = self.localcontext['lang']
         if lang and text and not text.isspace():
-            env = openerp.api.Environment(self.cr, self.uid, {})
+            env = odoo.api.Environment(self.cr, self.uid, {})
             Translation = env['ir.translation']
             piece_list = self._transl_regex.split(text)
             for pn in range(len(piece_list)):
@@ -303,8 +303,8 @@ class rml_parse(object):
 class report_sxw(report_rml, preprocess.report):
     """
     The register=True kwarg has been added to help remove the
-    openerp.netsvc.LocalService() indirection and the related
-    openerp.report.interface.report_int._reports dictionary:
+    odoo.netsvc.LocalService() indirection and the related
+    odoo.report.interface.report_int._reports dictionary:
     report_sxw registered in XML with auto=False are also registered in Python.
     In that case, they are registered in the above dictionary. Since
     registration is automatically done upon instanciation, and that
@@ -323,7 +323,7 @@ class report_sxw(report_rml, preprocess.report):
             self.internal_header=True
 
     def getObjects(self, cr, uid, ids, context):
-        env = openerp.api.Environment(cr, uid, context or {})
+        env = odoo.api.Environment(cr, uid, context or {})
         return env[self.table].browse(ids)
 
     def create(self, cr, uid, ids, data, context=None):
@@ -332,7 +332,7 @@ class report_sxw(report_rml, preprocess.report):
             context.update(internal_header=self.internal_header)
 
         context.update(bin_raw=True)
-        env = openerp.api.Environment(cr, uid, context)
+        env = odoo.api.Environment(cr, uid, context)
         env['res.font'].sudo().font_scan(lazy=True)
         ir_obj = env['ir.actions.report.xml']
 
@@ -385,7 +385,7 @@ class report_sxw(report_rml, preprocess.report):
     def create_source_pdf(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
             context = {}
-        env = openerp.api.Environment(cr, uid, context)
+        env = odoo.api.Environment(cr, uid, context)
         attach = report_xml.attachment
         if attach:
             objs = self.getObjects(cr, uid, ids, context)

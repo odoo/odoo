@@ -14,8 +14,8 @@ from email.header import decode_header
 from email.utils import getaddresses, formataddr
 from lxml import etree
 
-import openerp
-from openerp.loglevels import ustr
+import odoo
+from odoo.loglevels import ustr
 
 _logger = logging.getLogger(__name__)
 
@@ -445,13 +445,13 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            local_cr = cr = openerp.registry(db_name).cursor()
+            local_cr = cr = odoo.registry(db_name).cursor()
         else:
             raise Exception("No database cursor found, please pass one explicitly")
 
     # Send Email
     try:
-        mail_server_pool = openerp.registry(cr.dbname)['ir.mail_server']
+        mail_server_pool = odoo.registry(cr.dbname)['ir.mail_server']
         res = False
         # Pack Message into MIME Object
         email_msg = mail_server_pool.build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,

@@ -5,10 +5,10 @@ import logging
 import sys
 import threading
 
-import openerp
-import openerp.report
-from openerp import tools
-from openerp.exceptions import UserError
+import odoo
+import odoo.report
+from odoo import tools
+from odoo.exceptions import UserError
 
 import security
 
@@ -30,7 +30,7 @@ def dispatch(method, params):
     if method not in ['report', 'report_get', 'render_report']:
         raise KeyError("Method not supported %s" % method)
     security.check(db,uid,passwd)
-    registry = openerp.registry(db).check_signaling()
+    registry = odoo.registry(db).check_signaling()
     fn = globals()['exp_' + method]
     res = fn(db, uid, *params)
     registry.signal_caches_change()
@@ -50,12 +50,12 @@ def exp_render_report(db, uid, object, ids, datas=None, context=None):
 
     self_reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
-    cr = openerp.registry(db).cursor()
+    cr = odoo.registry(db).cursor()
     try:
-        result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
+        result, format = odoo.report.render_report(cr, uid, ids, object, datas, context)
         if not result:
             tb = sys.exc_info()
-            self_reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
+            self_reports[id]['exception'] = odoo.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
         self_reports[id]['result'] = result
         self_reports[id]['format'] = format
         self_reports[id]['state'] = True
@@ -63,10 +63,10 @@ def exp_render_report(db, uid, object, ids, datas=None, context=None):
 
         _logger.exception('Exception: %s\n', exception)
         if hasattr(exception, 'name') and hasattr(exception, 'value'):
-            self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
+            self_reports[id]['exception'] = odoo.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
         else:
             tb = sys.exc_info()
-            self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
+            self_reports[id]['exception'] = odoo.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
         self_reports[id]['state'] = True
     cr.commit()
     cr.close()
@@ -88,23 +88,23 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
     self_reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
     def go(id, uid, ids, datas, context):
-        with openerp.api.Environment.manage():
-            cr = openerp.registry(db).cursor()
+        with odoo.api.Environment.manage():
+            cr = odoo.registry(db).cursor()
             try:
-                result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
+                result, format = odoo.report.render_report(cr, uid, ids, object, datas, context)
                 if not result:
                     tb = sys.exc_info()
-                    self_reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
+                    self_reports[id]['exception'] = odoo.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
                 self_reports[id]['result'] = result
                 self_reports[id]['format'] = format
                 self_reports[id]['state'] = True
             except Exception, exception:
                 _logger.exception('Exception: %s\n', exception)
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
-                    self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
+                    self_reports[id]['exception'] = odoo.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:
                     tb = sys.exc_info()
-                    self_reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
+                    self_reports[id]['exception'] = odoo.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
                 self_reports[id]['state'] = True
             cr.commit()
             cr.close()

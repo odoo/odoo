@@ -11,19 +11,19 @@ import sys
 import threading
 import time
 
-import openerp
-import openerp.modules.db
-import openerp.modules.graph
-import openerp.modules.migration
-import openerp.modules.registry
-import openerp.tools as tools
+import odoo
+import odoo.modules.db
+import odoo.modules.graph
+import odoo.modules.migration
+import odoo.modules.registry
+import odoo.tools as tools
 
-from openerp import api, SUPERUSER_ID
-from openerp.modules.module import adapt_version, initialize_sys_path, \
-                                   load_openerp_module, runs_post_install
+from odoo import api, SUPERUSER_ID
+from odoo.modules.module import adapt_version, initialize_sys_path, \
+                                load_openerp_module, runs_post_install
 
 _logger = logging.getLogger(__name__)
-_test_logger = logging.getLogger('openerp.tests')
+_test_logger = logging.getLogger('odoo.tests')
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
@@ -50,7 +50,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             else:
                 cr.rollback()
                 # avoid keeping stale xml_id, etc. in cache
-                openerp.registry(cr.dbname).clear_caches()
+                odoo.registry(cr.dbname).clear_caches()
 
 
     def _get_files_of_kind(kind):
@@ -99,8 +99,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     processed_modules = []
     loaded_modules = []
-    registry = openerp.registry(cr.dbname)
-    migrations = openerp.modules.migration.MigrationManager(cr, graph)
+    registry = odoo.registry(cr.dbname)
+    migrations = odoo.modules.migration.MigrationManager(cr, graph)
     module_count = len(graph)
     _logger.info('loading %d modules...', module_count)
 
@@ -108,7 +108,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     # register, instantiate and initialize models for each modules
     t0 = time.time()
-    t0_sql = openerp.sql_db.sql_counter
+    t0_sql = odoo.sql_db.sql_counter
 
     for index, package in enumerate(graph, 1):
         module_name = package.name
@@ -123,7 +123,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         new_install = package.state == 'to install'
         if new_install:
-            py_module = sys.modules['openerp.addons.%s' % (module_name,)]
+            py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
             if pre_init:
                 getattr(py_module, pre_init)(cr)
@@ -163,7 +163,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             migrations.migrate_module(package, 'post')
 
             # Update translations for all installed languages
-            overwrite = openerp.tools.config["overwrite_existing_translations"]
+            overwrite = odoo.tools.config["overwrite_existing_translations"]
             module.with_context(overwrite=overwrite).update_translations()
 
             registry._init_modules.add(package.name)
@@ -183,7 +183,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     report.record_result(load_test(module_name, idref, mode))
                     # Python tests
                     env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-                    report.record_result(openerp.modules.module.run_unit_tests(module_name, cr.dbname))
+                    report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
 
             processed_modules.append(package.name)
 
@@ -199,7 +199,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         registry._init_modules.add(package.name)
         cr.commit()
 
-    _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
+    _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
     registry.clear_manual_fields()
 
@@ -248,9 +248,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     cr = db.cursor()
     try:
-        if not openerp.modules.db.is_initialized(cr):
+        if not odoo.modules.db.is_initialized(cr):
             _logger.info("init db")
-            openerp.modules.db.initialize(cr)
+            odoo.modules.db.initialize(cr)
             update_module = True # process auto-installed modules
             tools.config["init"]["all"] = 1
             tools.config['update']['all'] = 1
@@ -258,15 +258,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 tools.config["demo"]['all'] = 1
 
         # This is a brand new registry, just created in
-        # openerp.modules.registry.Registry.new().
-        registry = openerp.registry(cr.dbname)
+        # odoo.modules.registry.Registry.new().
+        registry = odoo.registry(cr.dbname)
         env = api.Environment(cr, SUPERUSER_ID, {})
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
-        graph = openerp.modules.graph.Graph()
+        graph = odoo.modules.graph.Graph()
         graph.add_module(cr, 'base', force)
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
@@ -379,7 +379,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 for pkg in pkgs:
                     uninstall_hook = pkg.info.get('uninstall_hook')
                     if uninstall_hook:
-                        py_module = sys.modules['openerp.addons.%s' % (pkg.name,)]
+                        py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
                         getattr(py_module, uninstall_hook)(cr, registry)
 
                 Module = env['ir.module.module']
@@ -389,7 +389,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 api.Environment.reset()
-                return openerp.modules.registry.Registry.new(cr.dbname, force_demo, status, update_module)
+                return odoo.modules.registry.Registry.new(cr.dbname, force_demo, status, update_module)
 
         # STEP 6: verify custom views on every model
         if update_module:
@@ -414,14 +414,14 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         cr.commit()
 
         t0 = time.time()
-        t0_sql = openerp.sql_db.sql_counter
-        if openerp.tools.config['test_enable']:
+        t0_sql = odoo.sql_db.sql_counter
+        if odoo.tools.config['test_enable']:
             if update_module:
                 cr.execute("SELECT name FROM ir_module_module WHERE state='installed' and name = ANY(%s)", (processed_modules,))
             else:
                 cr.execute("SELECT name FROM ir_module_module WHERE state='installed'")
             for module_name in cr.fetchall():
-                report.record_result(openerp.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
-            _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
+                report.record_result(odoo.modules.module.run_unit_tests(module_name[0], cr.dbname, position=runs_post_install))
+            _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()

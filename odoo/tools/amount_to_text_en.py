@@ -89,7 +89,7 @@ def amount_to_text(nbr, lang='en', currency='euro'):
         
             1654: thousands six cent cinquante-quatre.
     """
-    import openerp.loglevels as loglevels
+    import odoo.loglevels as loglevels
 #    if nbr > 10000000:
 #        _logger.warning(_("Number too large '%d', can not translate it"))
 #        return str(nbr)

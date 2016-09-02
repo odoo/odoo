@@ -64,7 +64,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
         return value
 
     # special short-circuit for str, as we still needs to support
-    # str subclasses such as `openerp.tools.unquote`
+    # str subclasses such as `odoo.tools.unquote`
     if ttype is str or issubclass(ttype, str):
 
         # try hint_encoding first, avoids call to get_encoding()

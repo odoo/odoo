@@ -467,7 +467,7 @@ class LazyCursor(object):
     def __getattr__(self, name):
         cr = self._cursor
         if cr is None:
-            from openerp import registry
+            from odoo import registry
             cr = self._cursor = registry(self.dbname).cursor()
             for _ in xrange(self._depth):
                 cr.__enter__()
@@ -682,7 +682,7 @@ def db_connect(to, allow_uri=False):
     return Connection(_Pool, db, info)
 
 def close_db(db_name):
-    """ You might want to call openerp.modules.registry.Registry.delete(db_name) along this function."""
+    """ You might want to call odoo.modules.registry.Registry.delete(db_name) along this function."""
     global _Pool
     if _Pool:
         _Pool.close_all(connection_info_for(db_name)[1])

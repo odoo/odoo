@@ -8,15 +8,15 @@ from os.path import join as opj
 import itertools
 import zipimport
 
-import openerp
+import odoo
 
-import openerp.osv as osv
-import openerp.tools as tools
-import openerp.tools.osutil as osutil
-from openerp.tools.translate import _
+import odoo.osv as osv
+import odoo.tools as tools
+import odoo.tools.osutil as osutil
+from odoo.tools.translate import _
 
 import zipfile
-import openerp.release as release
+import odoo.release as release
 
 import re
 import base64
@@ -77,7 +77,7 @@ class Graph(dict):
             # This will raise an exception if no/unreadable descriptor file.
             # NOTE The call to load_information_from_description_file is already
             # done by db.initialize, so it is possible to not do it again here.
-            info = openerp.modules.module.load_information_from_description_file(module)
+            info = odoo.modules.module.load_information_from_description_file(module)
             if info and info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
             else:

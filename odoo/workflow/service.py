@@ -3,7 +3,7 @@
 from helpers import Session
 from helpers import Record
 
-from openerp.workflow.instance import WorkflowInstance
+from odoo.workflow.instance import WorkflowInstance
 # import instance
 
 

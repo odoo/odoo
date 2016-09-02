@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.workflow.service import WorkflowService
+from odoo.workflow.service import WorkflowService
 
-# The new API is in openerp.workflow.workflow_service
+# The new API is in odoo.workflow.workflow_service
 # OLD API of the Workflow
 
 def clear_cache(cr, uid):

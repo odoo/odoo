@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import workitem
-from openerp.workflow.helpers import Session
-from openerp.workflow.helpers import Record
-from openerp.workflow.workitem import WorkflowItem
+from odoo.workflow.helpers import Session
+from odoo.workflow.helpers import Record
+from odoo.workflow.workitem import WorkflowItem
 
 class WorkflowInstance(object):
     def __init__(self, session, record, values):

@@ -7,7 +7,7 @@ import sys
 
 from lxml import etree
 
-from openerp.report.render.rml2pdf import utils
+from odoo.report.render.rml2pdf import utils
 
 class _flowable(object):
     def __init__(self, template, doc, localcontext = None):

@@ -1,15 +1,15 @@
-#openerp.loggers.handlers. -*- coding: utf-8 -*-
+#odoo.loggers.handlers. -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ConfigParser
 import optparse
 import os
 import sys
-import openerp
-import openerp.conf
-import openerp.loglevels as loglevels
+import odoo
+import odoo.conf
+import odoo.loglevels as loglevels
 import logging
-import openerp.release as release
+import odoo.release as release
 import appdirs
 
 class MyOption (optparse.Option, object):
@@ -154,11 +154,11 @@ class configmanager(object):
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
-        group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.http.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.request:DEBUG')
-        group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.http.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.http.rpc.response:DEBUG')
-        group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.http:DEBUG", help='shortcut for --log-handler=openerp.http:DEBUG')
-        group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
+        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-request', action="append_const", dest="log_handler", const="odoo.http.rpc.request:DEBUG", help='shortcut for --log-handler=odoo.http.rpc.request:DEBUG')
+        group.add_option('--log-response', action="append_const", dest="log_handler", const="odoo.http.rpc.response:DEBUG", help='shortcut for --log-handler=odoo.http.rpc.response:DEBUG')
+        group.add_option('--log-web', action="append_const", dest="log_handler", const="odoo.http:DEBUG", help='shortcut for --log-handler=odoo.http:DEBUG')
+        group.add_option('--log-sql', action="append_const", dest="log_handler", const="odoo.sql_db:DEBUG", help='shortcut for --log-handler=odoo.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
         group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
         # For backward-compatibility, map the old log levels to something
@@ -297,7 +297,7 @@ class configmanager(object):
         """ Parse the configuration file (if any) and the command-line
         arguments.
 
-        This method initializes openerp.tools.config and openerp.conf (the
+        This method initializes odoo.tools.config and openerp.conf (the
         former should be removed in the furture) with library-wide
         configuration values.
 
@@ -306,11 +306,11 @@ class configmanager(object):
 
         Typical usage of this method:
 
-            openerp.tools.config.parse_config(sys.argv[1:])
+            odoo.tools.config.parse_config(sys.argv[1:])
         """
         self._parse_config(args)
-        openerp.netsvc.init_logger()
-        openerp.modules.module.initialize_sys_path()
+        odoo.netsvc.init_logger()
+        odoo.modules.module.initialize_sys_path()
 
     def _parse_config(self, args=None):
         if args is None:
@@ -416,7 +416,7 @@ class configmanager(object):
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
+        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(odoo.__file__))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')
@@ -451,11 +451,11 @@ class configmanager(object):
         if opt.save:
             self.save()
 
-        openerp.conf.addons_paths = self.options['addons_path'].split(',')
+        odoo.conf.addons_paths = self.options['addons_path'].split(',')
         if opt.server_wide_modules:
-            openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
+            odoo.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
         else:
-            openerp.conf.server_wide_modules = ['web','web_kanban']
+            odoo.conf.server_wide_modules = ['web','web_kanban']
 
     def _is_addons_path(self, path):
         for f in os.listdir(path):

@@ -8,14 +8,14 @@
 import logging
 import instance
 
-from openerp.workflow.helpers import Session
-from openerp.workflow.helpers import Record
-from openerp.workflow.helpers import WorkflowActivity
+from odoo.workflow.helpers import Session
+from odoo.workflow.helpers import Record
+from odoo.workflow.helpers import WorkflowActivity
 
 logger = logging.getLogger(__name__)
 
-import openerp
-from openerp.tools.safe_eval import safe_eval
+import odoo
+from odoo.tools.safe_eval import safe_eval
 
 class Environment(dict):
     """
@@ -34,7 +34,7 @@ class Environment(dict):
         self.ids = [record.id]
 
     def __getitem__(self, key):
-        env = openerp.api.Environment(self.cr, self.uid, {})
+        env = odoo.api.Environment(self.cr, self.uid, {})
         records = env[self.model].browse(self.ids)
         if hasattr(records, key):
             return getattr(records, key)
@@ -282,7 +282,7 @@ class WorkflowItem(object):
             'active_id': self.record.id,
             'active_ids': [self.record.id]
         }
-        env = openerp.api.Environment(self.session.cr, self.session.uid, context)
+        env = odoo.api.Environment(self.session.cr, self.session.uid, context)
         action = env['ir.actions.server'].browse(activity['action_id'])
         result = action.run()
         return result
@@ -305,8 +305,8 @@ class WorkflowItem(object):
         if transition['signal'] and signal != transition['signal']:
             return False
 
-        if self.session.uid != openerp.SUPERUSER_ID and transition['group_id']:
-            env = openerp.api.Environment(self.session.cr, self.session.uid, {})
+        if self.session.uid != odoo.SUPERUSER_ID and transition['group_id']:
+            env = odoo.api.Environment(self.session.cr, self.session.uid, {})
             user_groups = env.user.groups_id
             if transition['group_id'] not in user_groups.ids:
                 return False

@@ -55,7 +55,7 @@ from weakref import WeakSet
 from decorator import decorator
 from werkzeug.local import Local, release_local
 
-from openerp.tools import frozendict, classproperty
+from odoo.tools import frozendict, classproperty
 
 _logger = logging.getLogger(__name__)
 
@@ -147,7 +147,7 @@ def constrains(*args):
 
     Invoked on the records on which one of the named fields has been modified.
 
-    Should raise :class:`~openerp.exceptions.ValidationError` if the
+    Should raise :class:`~odoo.exceptions.ValidationError` if the
     validation failed.
 
     .. warning::
@@ -355,7 +355,7 @@ def one(method):
 
             It is strongly recommended to use :func:`~.multi` and either
             iterate on the ``self`` recordset or ensure that the recordset
-            is a single record with :meth:`~openerp.models.Model.ensure_one`.
+            is a single record with :meth:`~odoo.models.Model.ensure_one`.
     """
     def loop(method, self, *args, **kwargs):
         result = [method(rec, *args, **kwargs) for rec in self]
@@ -933,7 +933,7 @@ class Environment(Mapping):
 
     def check_cache(self):
         """ Check the cache consistency. """
-        from openerp.fields import SpecialValue
+        from odoo.fields import SpecialValue
 
         # make a full copy of the cache, and invalidate it
         cache_dump = dict(
@@ -994,6 +994,6 @@ class Environments(object):
 
 
 # keep those imports here in order to handle cyclic dependencies correctly
-from openerp import SUPERUSER_ID
-from openerp.exceptions import UserError, AccessError, MissingError
-from openerp.modules.registry import Registry
+from odoo import SUPERUSER_ID
+from odoo.exceptions import UserError, AccessError, MissingError
+from odoo.modules.registry import Registry

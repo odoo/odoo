@@ -12,7 +12,7 @@ import threading
 
 import psycopg2
 
-import openerp
+import odoo
 import sql_db
 import tools
 
@@ -27,27 +27,27 @@ def log(logger, level, prefix, msg, depth=None):
 
 def LocalService(name):
     """
-    The openerp.netsvc.LocalService() function is deprecated. It still works
+    The odoo.netsvc.LocalService() function is deprecated. It still works
     in two cases: workflows and reports. For workflows, instead of using
-    LocalService('workflow'), openerp.workflow should be used (better yet,
-    methods on openerp.osv.orm.Model should be used). For reports,
-    openerp.report.render_report() should be used (methods on the Model should
+    LocalService('workflow'), odoo.workflow should be used (better yet,
+    methods on odoo.osv.orm.Model should be used). For reports,
+    odoo.report.render_report() should be used (methods on the Model should
     be provided too in the future).
     """
-    assert openerp.conf.deprecation.allow_local_service
+    assert odoo.conf.deprecation.allow_local_service
     _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s')." % name)
 
     if name == 'workflow':
-        return openerp.workflow
+        return odoo.workflow
 
     if name.startswith('report.'):
-        report = openerp.report.interface.report_int._reports.get(name)
+        report = odoo.report.interface.report_int._reports.get(name)
         if report:
             return report
         else:
             dbname = getattr(threading.currentThread(), 'dbname', None)
             if dbname:
-                registry = openerp.registry(dbname)
+                registry = odoo.registry(dbname)
                 with registry.cursor() as cr:
                     return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 
@@ -63,7 +63,7 @@ class PostgreSQLHandler(logging.Handler):
         dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
-        with tools.ignore(Exception), tools.mute_logger('openerp.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
+        with tools.ignore(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
             cr.autocommit(True)
             msg = tools.ustr(record.msg)
             if record.args:
@@ -195,20 +195,20 @@ def init_logger():
         _logger.debug('logger level set: "%s"', logconfig_item)
 
 DEFAULT_LOG_CONFIGURATION = [
-    'openerp.workflow.workitem:WARNING',
-    'openerp.http.rpc.request:INFO',
-    'openerp.http.rpc.response:INFO',
-    'openerp.addons.web.http:INFO',
-    'openerp.sql_db:INFO',
+    'odoo.workflow.workitem:WARNING',
+    'odoo.http.rpc.request:INFO',
+    'odoo.http.rpc.response:INFO',
+    'odoo.addons.web.http:INFO',
+    'odoo.sql_db:INFO',
     ':INFO',
 ]
 PSEUDOCONFIG_MAPPER = {
-    'debug_rpc_answer': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG', 'openerp.http.rpc.response:DEBUG'],
-    'debug_rpc': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG'],
-    'debug': ['openerp:DEBUG'],
-    'debug_sql': ['openerp.sql_db:DEBUG'],
+    'debug_rpc_answer': ['odoo:DEBUG','odoo.http.rpc.request:DEBUG', 'odoo.http.rpc.response:DEBUG'],
+    'debug_rpc': ['odoo:DEBUG','odoo.http.rpc.request:DEBUG'],
+    'debug': ['odoo:DEBUG'],
+    'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
-    'warn': ['openerp:WARNING', 'werkzeug:WARNING'],
-    'error': ['openerp:ERROR', 'werkzeug:ERROR'],
-    'critical': ['openerp:CRITICAL', 'werkzeug:CRITICAL'],
+    'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
+    'error': ['odoo:ERROR', 'werkzeug:ERROR'],
+    'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
 }

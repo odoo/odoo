@@ -8,7 +8,7 @@ import re
 
 from reportlab.lib.utils import ImageReader
 
-from openerp.report.render.rml2pdf import utils
+from odoo.report.render.rml2pdf import utils
 
 _regex = re.compile('\[\[(.+?)\]\]')
 utils._regex = re.compile('\[\[\s*(.+?)\s*\]\]',re.DOTALL)

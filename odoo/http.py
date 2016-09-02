@@ -43,11 +43,11 @@ try:
 except ImportError:
     psutil = None
 
-import openerp
-from openerp.service.server import memory_info
-from openerp.service import security, model as service_model
-from openerp.tools.func import lazy_property
-from openerp.tools import ustr, consteq, frozendict
+import odoo
+from odoo.service.server import memory_info
+from odoo.service import security, model as service_model
+from odoo.tools.func import lazy_property
+from odoo.tools import ustr, consteq, frozendict
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -78,13 +78,13 @@ def replace_request_password(args):
 # don't trigger debugger for those exceptions, they carry user-facing warnings
 # and indications, they're not necessarily indicative of anything being
 # *broken*
-NO_POSTMORTEM = (openerp.osv.orm.except_orm,
-                 openerp.exceptions.AccessError,
-                 openerp.exceptions.ValidationError,
-                 openerp.exceptions.MissingError,
-                 openerp.exceptions.AccessDenied,
-                 openerp.exceptions.Warning,
-                 openerp.exceptions.RedirectWarning)
+NO_POSTMORTEM = (odoo.osv.orm.except_orm,
+                 odoo.exceptions.AccessError,
+                 odoo.exceptions.ValidationError,
+                 odoo.exceptions.MissingError,
+                 odoo.exceptions.AccessDenied,
+                 odoo.exceptions.Warning,
+                 odoo.exceptions.RedirectWarning)
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
@@ -100,18 +100,18 @@ def dispatch_rpc(service_name, method, params):
             if psutil:
                 start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
             if rpc_request and rpc_response_flag:
-                openerp.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
+                odoo.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
 
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
         if service_name == 'common':
-            dispatch = openerp.service.common.dispatch
+            dispatch = odoo.service.common.dispatch
         elif service_name == 'db':
-            dispatch = openerp.service.db.dispatch
+            dispatch = odoo.service.db.dispatch
         elif service_name == 'object':
-            dispatch = openerp.service.model.dispatch
+            dispatch = odoo.service.model.dispatch
         elif service_name == 'report':
-            dispatch = openerp.service.report.dispatch
+            dispatch = odoo.service.report.dispatch
         result = dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
@@ -121,20 +121,20 @@ def dispatch_rpc(service_name, method, params):
                 end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
-                openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
+                odoo.netsvc.log(rpc_response, logging.DEBUG, logline, result)
             else:
-                openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
+                odoo.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
     except NO_POSTMORTEM:
         raise
-    except openerp.exceptions.DeferredException, e:
-        _logger.exception(openerp.tools.exception_to_unicode(e))
-        openerp.tools.debugger.post_mortem(openerp.tools.config, e.traceback)
+    except odoo.exceptions.DeferredException, e:
+        _logger.exception(odoo.tools.exception_to_unicode(e))
+        odoo.tools.debugger.post_mortem(odoo.tools.config, e.traceback)
         raise
     except Exception, e:
-        _logger.exception(openerp.tools.exception_to_unicode(e))
-        openerp.tools.debugger.post_mortem(openerp.tools.config, sys.exc_info())
+        _logger.exception(odoo.tools.exception_to_unicode(e))
+        odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
 
 def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
@@ -198,7 +198,7 @@ class WebRequest(object):
         self._failed = None
 
         # set db/uid trackers - they're cleaned up at the WSGI
-        # dispatching phase in openerp.service.wsgi_server.application
+        # dispatching phase in odoo.service.wsgi_server.application
         if self.db:
             threading.current_thread().dbname = self.db
         if self.session.uid:
@@ -206,7 +206,7 @@ class WebRequest(object):
 
     @property
     def cr(self):
-        """ :class:`~openerp.sql_db.Cursor` initialized for the current method call.
+        """ :class:`~odoo.sql_db.Cursor` initialized for the current method call.
 
         Accessing the cursor when the current request uses the ``none``
         authentication will raise an exception.
@@ -242,9 +242,9 @@ class WebRequest(object):
 
     @property
     def env(self):
-        """ The :class:`~openerp.api.Environment` bound to current request. """
+        """ The :class:`~odoo.api.Environment` bound to current request. """
         if self._env is None:
-            self._env = openerp.api.Environment(self.cr, self.uid, self.context)
+            self._env = odoo.api.Environment(self.cr, self.uid, self.context)
         return self._env
 
     @lazy_property
@@ -291,8 +291,8 @@ class WebRequest(object):
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
-            openerp.tools.debugger.post_mortem(
-                openerp.tools.config, sys.exc_info())
+            odoo.tools.debugger.post_mortem(
+                odoo.tools.config, sys.exc_info())
         raise
 
     def _call_function(self, *args, **kwargs):
@@ -359,7 +359,7 @@ class WebRequest(object):
 
             use :attr:`.env`
         """
-        return openerp.registry(self.db) if self.db else None
+        return odoo.registry(self.db) if self.db else None
 
     @property
     def db(self):
@@ -465,8 +465,8 @@ def route(route=None, **kw):
 
         * if the form is generated in Python, a csrf token is
           available via :meth:`request.csrf_token()
-          <openerp.http.WebRequest.csrf_token`, the
-          :data:`~openerp.http.request` object is available by default
+          <odoo.http.WebRequest.csrf_token`, the
+          :data:`~odoo.http.request` object is available by default
           in QWeb (python) templates, it may have to be added
           explicitly if you are not using QWeb.
 
@@ -634,7 +634,7 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            if not isinstance(exception, (openerp.exceptions.Warning, SessionExpiredException, openerp.exceptions.except_orm)):
+            if not isinstance(exception, (odoo.exceptions.Warning, SessionExpiredException, odoo.exceptions.except_orm)):
                 _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
@@ -695,21 +695,21 @@ def serialize_exception(e):
         "arguments": to_jsonable(e.args),
         "exception_type": "internal_error"
     }
-    if isinstance(e, openerp.exceptions.UserError):
+    if isinstance(e, odoo.exceptions.UserError):
         tmp["exception_type"] = "user_error"
-    elif isinstance(e, openerp.exceptions.Warning):
+    elif isinstance(e, odoo.exceptions.Warning):
         tmp["exception_type"] = "warning"
-    elif isinstance(e, openerp.exceptions.RedirectWarning):
+    elif isinstance(e, odoo.exceptions.RedirectWarning):
         tmp["exception_type"] = "warning"
-    elif isinstance(e, openerp.exceptions.AccessError):
+    elif isinstance(e, odoo.exceptions.AccessError):
         tmp["exception_type"] = "access_error"
-    elif isinstance(e, openerp.exceptions.MissingError):
+    elif isinstance(e, odoo.exceptions.MissingError):
         tmp["exception_type"] = "missing_error"
-    elif isinstance(e, openerp.exceptions.AccessDenied):
+    elif isinstance(e, odoo.exceptions.AccessDenied):
         tmp["exception_type"] = "access_denied"
-    elif isinstance(e, openerp.exceptions.ValidationError):
+    elif isinstance(e, odoo.exceptions.ValidationError):
         tmp["exception_type"] = "validation_error"
-    elif isinstance(e, openerp.exceptions.except_orm):
+    elif isinstance(e, odoo.exceptions.except_orm):
         tmp["exception_type"] = "except_orm"
     return tmp
 
@@ -901,7 +901,7 @@ class ControllerType(type):
         # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
         class_path = name_class[0].split(".")
-        if not class_path[:2] == ["openerp", "addons"]:
+        if not class_path[:2] == ["odoo", "addons"]:
             module = ""
         else:
             # we want to know all modules that have controllers
@@ -934,7 +934,7 @@ def routing_map(modules, nodb_only, converters=None):
 
     def get_subclasses(klass):
         def valid(c):
-            return c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules
+            return c.__module__.startswith('odoo.addons.') and c.__module__.split(".")[2] in modules
         subclasses = klass.__subclasses__()
         result = []
         for subclass in subclasses:
@@ -1242,7 +1242,7 @@ class Response(werkzeug.wrappers.Response):
     def render(self):
         """ Renders the Response's template, returns the result
         """
-        env = request.env(user=self.uid or request.uid or openerp.SUPERUSER_ID)
+        env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
         self.qcontext['request'] = request
         return env["ir.ui.view"].render_template(self.template, self.qcontext)
 
@@ -1285,14 +1285,14 @@ class Root(object):
     @lazy_property
     def session_store(self):
         # Setup http sessions
-        path = openerp.tools.config.session_dir
+        path = odoo.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
     @lazy_property
     def nodb_routing_map(self):
         _logger.info("Generating nondb routing")
-        return routing_map([''] + openerp.conf.server_wide_modules, True)
+        return routing_map([''] + odoo.conf.server_wide_modules, True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -1308,7 +1308,7 @@ class Root(object):
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
 
-        for addons_path in openerp.modules.module.ad_paths:
+        for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
@@ -1319,8 +1319,8 @@ class Root(object):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        if 'openerp.addons' in sys.modules:
-                            m = __import__('openerp.addons.' + module)
+                        if 'odoo.addons' in sys.modules:
+                            m = __import__('odoo.addons.' + module)
                         else:
                             m = None
                         addons_module[module] = m
@@ -1447,9 +1447,9 @@ class Root(object):
             with request:
                 db = request.session.db
                 if db:
-                    openerp.registry(db).check_signaling()
+                    odoo.registry(db).check_signaling()
                     try:
-                        with openerp.tools.mute_logger('openerp.sql_db'):
+                        with odoo.tools.mute_logger('odoo.sql_db'):
                             ir_http = request.registry['ir.http']
                     except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
                         # psycopg2 error or attribute error while constructing
@@ -1482,7 +1482,7 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    dbs = openerp.service.db.list_dbs(force)
+    dbs = odoo.service.db.list_dbs(force)
     return db_filter(dbs, httprequest=httprequest)
 
 def db_filter(dbs, httprequest=None):
@@ -1491,7 +1491,7 @@ def db_filter(dbs, httprequest=None):
     d, _, r = h.partition('.')
     if d == "www" and r:
         d = r.partition('.')[0]
-    r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
+    r = odoo.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
@@ -1588,7 +1588,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     if isinstance(mtime, str):
         try:
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            server_format = odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
             mtime = datetime.datetime.strptime(mtime.split('.')[0], server_format)
         except Exception:
             mtime = None
@@ -1618,7 +1618,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
     return rv
 
 def content_disposition(filename):
-    filename = openerp.tools.ustr(filename)
+    filename = odoo.tools.ustr(filename)
     escaped = urllib2.quote(filename.encode('utf8'))
     browser = request.httprequest.user_agent.browser
     version = int((request.httprequest.user_agent.version or '0').split('.')[0])

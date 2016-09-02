@@ -9,7 +9,7 @@ from lxml import etree
 from collections import OrderedDict
 
 from openerp import api, models, tools
-from openerp.tools import safe_eval
+import openerp.tools.safe_eval as safe_eval
 from openerp.http import request
 from odoo.modules.module import get_resource_path
 import json

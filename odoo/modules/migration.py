@@ -8,10 +8,10 @@ import logging
 import os
 from os.path import join as opj
 
-import openerp
-import openerp.release as release
-import openerp.tools as tools
-from openerp.tools.parse_version import parse_version
+import odoo
+import odoo.release as release
+import odoo.tools as tools
+from odoo.tools.parse_version import parse_version
 
 
 _logger = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ class MigrationManager(object):
             if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade'):
                 continue
 
-            get_module_filetree = openerp.modules.module.get_module_filetree
+            get_module_filetree = odoo.modules.module.get_module_filetree
             self.migrations[pkg.name]['module'] = get_module_filetree(pkg.name, 'migrations') or {}
             self.migrations[pkg.name]['maintenance'] = get_module_filetree('base', 'maintenance/migrations/' + pkg.name) or {}
 

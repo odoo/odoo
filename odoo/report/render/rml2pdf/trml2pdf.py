@@ -24,8 +24,8 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus.doctemplate import ActionFlowable
 from lxml import etree
 
-from openerp.tools.misc import file_open
-from openerp.tools.safe_eval import safe_eval
+from odoo.tools.misc import file_open
+from odoo.tools.safe_eval import safe_eval
 from . import color
 from . import utils
 

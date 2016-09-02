@@ -6,10 +6,10 @@ import time
 
 from lxml import etree
 
-import openerp
-import openerp.tools as tools
-from openerp.report import render
-from openerp.report.interface import report_int
+import odoo
+import odoo.tools as tools
+from odoo.report import render
+from odoo.report.interface import report_int
 
 
 class report_printscreen_list(report_int):
@@ -34,7 +34,7 @@ class report_printscreen_list(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if not context:
             context={}
-        env = openerp.api.Environment(cr, uid, context)
+        env = odoo.api.Environment(cr, uid, context)
         datas['ids'] = ids
         records = env[datas['model']].browse(ids)
         # title come from description of model which are specified in py file.

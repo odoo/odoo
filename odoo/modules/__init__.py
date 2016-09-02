@@ -7,9 +7,9 @@
 
 from . import db, graph, loading, migration, module, registry
 
-from openerp.modules.loading import load_modules
+from odoo.modules.loading import load_modules
 
-from openerp.modules.module import (
+from odoo.modules.module import (
     adapt_version,
     get_module_path,
     get_module_resource,

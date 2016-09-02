@@ -40,7 +40,7 @@ import psycopg2
 from lxml import etree
 from lxml.builder import E
 
-import openerp
+import odoo
 from . import SUPERUSER_ID
 from . import api
 from . import tools
@@ -80,7 +80,7 @@ def make_compute(text, deps):
 
 
 def check_object_name(name):
-    """ Check if the given name is a valid openerp object name.
+    """ Check if the given name is a valid model name.
 
         The _name attribute in osv and osv_memory object is subject to
         some restrictions. This function returns True or False whether
@@ -178,12 +178,12 @@ class MetaModel(api.Meta):
                 val.args = dict(val.args, _module=self._module)
 
     def _get_addon_name(self, full_name):
-        # The (OpenERP) module name can be in the ``openerp.addons`` namespace
+        # The (OpenERP) module name can be in the ``odoo.addons`` namespace
         # or not. For instance, module ``sale`` can be imported as
-        # ``openerp.addons.sale`` (the right way) or ``sale`` (for backward
+        # ``odoo.addons.sale`` (the right way) or ``sale`` (for backward
         # compatibility).
         module_parts = full_name.split('.')
-        if len(module_parts) > 2 and module_parts[:2] == ['openerp', 'addons']:
+        if len(module_parts) > 2 and module_parts[:2] == ['odoo', 'addons']:
             addon_name = full_name.split('.')[2]
         else:
             addon_name = full_name.split('.')[0]
@@ -452,13 +452,13 @@ class BaseModel(object):
 
     def compute_concurrency_field(self):
         for record in self:
-            record[self.CONCURRENCY_CHECK_FIELD] = openerp.fields.Datetime.now()
+            record[self.CONCURRENCY_CHECK_FIELD] = odoo.fields.Datetime.now()
 
     @api.depends('create_date', 'write_date')
     def compute_concurrency_field_with_access(self):
         for record in self:
             record[self.CONCURRENCY_CHECK_FIELD] = \
-                record.write_date or record.create_date or openerp.fields.Datetime.now()
+                record.write_date or record.create_date or odoo.fields.Datetime.now()
 
     #
     # Goal: try to apply inheritance at the instantiation level and
@@ -943,7 +943,7 @@ class BaseModel(object):
         return {'ids': ids, 'messages': messages}
 
     def _add_fake_fields(self, fields):
-        from openerp.fields import Char, Integer
+        from odoo.fields import Char, Integer
         fields[None] = Char('rec_name')
         fields['id'] = Char('External ID')
         fields['.id'] = Integer('Database ID')
@@ -1198,7 +1198,7 @@ class BaseModel(object):
             not preceded by ``!`` and is not member of any of the groups
             preceded by ``!``
         """
-        from openerp.http import request
+        from odoo.http import request
         user = self.env.user
 
         has_groups = []
@@ -1688,7 +1688,7 @@ class BaseModel(object):
             self.browse(present_group_ids),
             domain,
             read_group_order=read_group_order,
-            access_rights_uid=openerp.SUPERUSER_ID,
+            access_rights_uid=odoo.SUPERUSER_ID,
         )
 
         result_template = dict.fromkeys(aggregated_fields, False)
@@ -3340,7 +3340,7 @@ class BaseModel(object):
     @api.multi
     def create_workflow(self):
         """ Create a workflow instance for the given records. """
-        from openerp import workflow
+        from odoo import workflow
         for res_id in self.ids:
             workflow.trg_create(self._uid, self._name, res_id, self._cr)
         return True
@@ -3348,7 +3348,7 @@ class BaseModel(object):
     @api.multi
     def delete_workflow(self):
         """ Delete the workflow instances bound to the given records. """
-        from openerp import workflow
+        from odoo import workflow
         for res_id in self.ids:
             workflow.trg_delete(self._uid, self._name, res_id, self._cr)
         self.invalidate_cache()
@@ -3357,7 +3357,7 @@ class BaseModel(object):
     @api.multi
     def step_workflow(self):
         """ Reevaluate the workflow instances of the given records. """
-        from openerp import workflow
+        from odoo import workflow
         for res_id in self.ids:
             workflow.trg_write(self._uid, self._name, res_id, self._cr)
         return True
@@ -3365,7 +3365,7 @@ class BaseModel(object):
     @api.multi
     def signal_workflow(self, signal):
         """ Send the workflow signal, and return a dict mapping ids to workflow results. """
-        from openerp import workflow
+        from odoo import workflow
         result = {}
         for res_id in self.ids:
             result[res_id] = workflow.trg_validate(self._uid, self._name, res_id, signal, self._cr)
@@ -3376,7 +3376,7 @@ class BaseModel(object):
         """ Rebind the workflow instance bound to the given 'old' record IDs to
             the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
         """
-        from openerp import workflow
+        from odoo import workflow
         for old_id, new_id in old_new_ids:
             workflow.trg_redirect(self._uid, self._name, old_id, new_id, self._cr)
         self.invalidate_cache()
@@ -3487,32 +3487,32 @@ class BaseModel(object):
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
-        * For numeric fields (:class:`~openerp.fields.Integer`,
-          :class:`~openerp.fields.Float`) the value should be of the
+        * For numeric fields (:class:`~odoo.fields.Integer`,
+          :class:`~odoo.fields.Float`) the value should be of the
           corresponding type
-        * For :class:`~openerp.fields.Boolean`, the value should be a
+        * For :class:`~odoo.fields.Boolean`, the value should be a
           :class:`python:bool`
-        * For :class:`~openerp.fields.Selection`, the value should match the
+        * For :class:`~odoo.fields.Selection`, the value should match the
           selection values (generally :class:`python:str`, sometimes
           :class:`python:int`)
-        * For :class:`~openerp.fields.Many2one`, the value should be the
+        * For :class:`~odoo.fields.Many2one`, the value should be the
           database identifier of the record to set
         * Other non-relational fields use a string for value
 
           .. danger::
 
               for historical and compatibility reasons,
-              :class:`~openerp.fields.Date` and
-              :class:`~openerp.fields.Datetime` fields use strings as values
+              :class:`~odoo.fields.Date` and
+              :class:`~odoo.fields.Datetime` fields use strings as values
               (written and read) rather than :class:`~python:datetime.date` or
               :class:`~python:datetime.datetime`. These date strings are
               UTC-only and formatted according to
-              :const:`openerp.tools.misc.DEFAULT_SERVER_DATE_FORMAT` and
-              :const:`openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
+              :const:`odoo.tools.misc.DEFAULT_SERVER_DATE_FORMAT` and
+              :const:`odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
         * .. _openerp/models/relationals/format:
 
-          :class:`~openerp.fields.One2many` and
-          :class:`~openerp.fields.Many2many` use a special "commands" format to
+          :class:`~odoo.fields.One2many` and
+          :class:`~odoo.fields.Many2many` use a special "commands" format to
           manipulate the set of records stored in/associated with the field.
 
           This format is a list of triplets executed sequentially, where each
@@ -3530,21 +3530,21 @@ class BaseModel(object):
           ``(3, id, _)``
               removes the record of id ``id`` from the set, but does not
               delete it. Can not be used on
-              :class:`~openerp.fields.One2many`. Can not be used in
+              :class:`~odoo.fields.One2many`. Can not be used in
               :meth:`~.create`.
           ``(4, id, _)``
               adds an existing record of id ``id`` to the set. Can not be
-              used on :class:`~openerp.fields.One2many`.
+              used on :class:`~odoo.fields.One2many`.
           ``(5, _, _)``
               removes all records from the set, equivalent to using the
               command ``3`` on every record explicitly. Can not be used on
-              :class:`~openerp.fields.One2many`. Can not be used in
+              :class:`~odoo.fields.One2many`. Can not be used in
               :meth:`~.create`.
           ``(6, _, ids)``
               replaces all existing records in the set by the ``ids`` list,
               equivalent to using the command ``5`` followed by a command
               ``4`` for each ``id`` in ``ids``. Can not be used on
-              :class:`~openerp.fields.One2many`.
+              :class:`~odoo.fields.One2many`.
 
           .. note:: Values marked as ``_`` in the list above are ignored and
                     can be anything, generally ``0`` or ``False``.
@@ -4834,7 +4834,7 @@ class BaseModel(object):
             delays while re-fetching from the database.
             The returned recordset has the same prefetch object as ``self``.
 
-        :type env: :class:`~openerp.api.Environment`
+        :type env: :class:`~odoo.api.Environment`
         """
         return self._browse(self._ids, env, self._prefetch)
 

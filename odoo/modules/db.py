@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import openerp.modules
+import odoo.modules
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -23,25 +23,25 @@ def initialize(cr):
     and ir_model_data entries.
 
     """
-    f = openerp.modules.get_module_resource('base', 'base.sql')
+    f = odoo.modules.get_module_resource('base', 'base.sql')
     if not f:
         m = "File not found: 'base.sql' (provided by module 'base')."
         _logger.critical(m)
         raise IOError(m)
-    base_sql_file = openerp.tools.misc.file_open(f)
+    base_sql_file = odoo.tools.misc.file_open(f)
     try:
         cr.execute(base_sql_file.read())
         cr.commit()
     finally:
         base_sql_file.close()
 
-    for i in openerp.modules.get_modules():
-        mod_path = openerp.modules.get_module_path(i)
+    for i in odoo.modules.get_modules():
+        mod_path = odoo.modules.get_module_path(i)
         if not mod_path:
             continue
 
         # This will raise an exception if no/unreadable descriptor file.
-        info = openerp.modules.load_information_from_description_file(i)
+        info = odoo.modules.load_information_from_description_file(i)
 
         if not info:
             continue

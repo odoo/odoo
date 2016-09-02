@@ -9,12 +9,12 @@ from lxml import etree
 from pychart import area, arrow, axis, bar_plot, canvas, category_coord, \
                     fill_style, legend, line_plot, line_style, pie_plot, theme
 
-import openerp
-import openerp.tools as tools
-from openerp.exceptions import UserError
-from openerp.models import BaseModel
-from openerp.tools.safe_eval import safe_eval
-from openerp.tools.translate import _
+import odoo
+import odoo.tools as tools
+from odoo.exceptions import UserError
+from odoo.models import BaseModel
+from odoo.tools.safe_eval import safe_eval
+from odoo.tools.translate import _
 from . import common
 from . import misc
 from . import render
@@ -108,7 +108,7 @@ class report_custom(report_int):
         return result 
 
     def create(self, cr, uid, ids, datas, context=None):
-        env = openerp.api.Environment(cr, uid, context or {})
+        env = odoo.api.Environment(cr, uid, context or {})
         report = env['ir.report.custom'].browse([datas['report_id']])
         datas['model'] = report.model_id.model
         if report.menu_id:
@@ -317,7 +317,7 @@ class report_custom(report_int):
         return True
 
     def _create_lines(self, cr, uid, ids, report, fields, results, context):
-        env = openerp.api.Environment(cr, uid, context or {})
+        env = odoo.api.Environment(cr, uid, context or {})
         pdf_string = cStringIO.StringIO()
 
         can = canvas.init(fname=pdf_string, format='pdf')
@@ -413,7 +413,7 @@ class report_custom(report_int):
         return True
 
     def _create_bars(self, cr, uid, ids, report, fields, results, context):
-        env = openerp.api.Environment(cr, uid, context or {})
+        env = odoo.api.Environment(cr, uid, context or {})
         pdf_string = cStringIO.StringIO()
 
         can = canvas.init(fname=pdf_string, format='pdf')

@@ -117,7 +117,7 @@ else:
             CloseHandle(hProcessSnap)
 
     from contextlib import contextmanager
-    from openerp.release import nt_service_name
+    from odoo.release import nt_service_name
 
     def is_running_as_nt_service():
         @contextmanager

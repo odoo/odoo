@@ -1,8 +1,8 @@
-import openerp.sql_db
+import odoo.sql_db
 
 class Session(object):
     def __init__(self, cr, uid):
-        assert isinstance(cr, openerp.sql_db.Cursor)
+        assert isinstance(cr, odoo.sql_db.Cursor)
         assert isinstance(uid, (int, long))
         self.cr = cr
         self.uid = uid

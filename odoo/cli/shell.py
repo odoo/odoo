@@ -6,7 +6,7 @@ import os
 import signal
 import sys
 
-import openerp
+import odoo
 from . import Command
 
 def raise_keyboard_interrupt(*a):
@@ -27,9 +27,9 @@ class Console(code.InteractiveConsole):
 class Shell(Command):
     """Start odoo in an interactive shell"""
     def init(self, args):
-        openerp.tools.config.parse_config(args)
-        openerp.cli.server.report_configuration()
-        openerp.service.server.start(preload=[], stop=True)
+        odoo.tools.config.parse_config(args)
+        odoo.cli.server.report_configuration()
+        odoo.service.server.start(preload=[], stop=True)
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 
     def console(self, local_vars):
@@ -44,15 +44,15 @@ class Shell(Command):
 
     def shell(self, dbname):
         local_vars = {
-            'openerp': openerp
+            'openerp': odoo
         }
-        with openerp.api.Environment.manage():
+        with odoo.api.Environment.manage():
             if dbname:
-                registry = openerp.registry(dbname)
+                registry = odoo.registry(dbname)
                 with registry.cursor() as cr:
-                    uid = openerp.SUPERUSER_ID
-                    ctx = openerp.api.Environment(cr, uid, {})['res.users'].context_get()
-                    env = openerp.api.Environment(cr, uid, ctx)
+                    uid = odoo.SUPERUSER_ID
+                    ctx = odoo.api.Environment(cr, uid, {})['res.users'].context_get()
+                    env = odoo.api.Environment(cr, uid, ctx)
                     local_vars['env'] = env
                     local_vars['self'] = env.user
                     self.console(local_vars)
@@ -61,5 +61,5 @@ class Shell(Command):
 
     def run(self, args):
         self.init(args)
-        self.shell(openerp.tools.config['db_name'])
+        self.shell(odoo.tools.config['db_name'])
         return 0

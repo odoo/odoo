@@ -23,14 +23,14 @@ import traceback
 import werkzeug.serving
 import werkzeug.contrib.fixers
 
-import openerp
-import openerp.tools.config as config
+import odoo
+import odoo.tools.config as config
 
 _logger = logging.getLogger(__name__)
 
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
-# User code must use the exceptions defined in ``openerp.exceptions`` (not
+# User code must use the exceptions defined in ``odoo.exceptions`` (not
 # create directly ``xmlrpclib.Fault`` objects).
 RPC_FAULT_CODE_CLIENT_ERROR = 1 # indistinguishable from app. error.
 RPC_FAULT_CODE_APPLICATION_ERROR = 1
@@ -47,13 +47,13 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
     and XML-RPC fault codes.
     """
     # Map OpenERP core exceptions to XML-RPC fault codes. Specific exceptions
-    # defined in ``openerp.exceptions`` are mapped to specific fault codes;
+    # defined in ``odoo.exceptions`` are mapped to specific fault codes;
     # all the other exceptions are mapped to the generic
     # RPC_FAULT_CODE_APPLICATION_ERROR value.
     # This also mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for
     # exception handling.
     try:
-        result = openerp.http.dispatch_rpc(service, method, params)
+        result = odoo.http.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
     except Exception, e:
         if string_faultcode:
@@ -64,26 +64,26 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
     return [response]
 
 def xmlrpc_handle_exception_int(e):
-    if isinstance(e, openerp.exceptions.UserError):
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
+    if isinstance(e, odoo.exceptions.UserError):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, odoo.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.RedirectWarning):
+    elif isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.MissingError):
+    elif isinstance(e, odoo.exceptions.MissingError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance (e, openerp.exceptions.AccessError):
+    elif isinstance (e, odoo.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.AccessDenied):
+    elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.DeferredException):
+    elif isinstance(e, odoo.exceptions.DeferredException):
         info = e.traceback
         # Which one is the best ?
         formatted_info = "".join(traceback.format_exception(*info))
-        #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
+        #formatted_info = odoo.tools.exception_to_unicode(e) + '\n' + info
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     else:
@@ -95,36 +95,36 @@ def xmlrpc_handle_exception_int(e):
             info = sys.exc_info()
             # Which one is the best ?
             formatted_info = "".join(traceback.format_exception(*info))
-            #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
+            #formatted_info = odoo.tools.exception_to_unicode(e) + '\n' + info
             fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
             response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     return response
 
 def xmlrpc_handle_exception_string(e):
-    if isinstance(e, openerp.exceptions.UserError):
+    if isinstance(e, odoo.exceptions.UserError):
         fault = xmlrpclib.Fault('warning -- %s\n\n%s' % (e.name, e.value), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.RedirectWarning):
+    elif isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
-    elif isinstance(e, openerp.exceptions.MissingError):
+    elif isinstance(e, odoo.exceptions.MissingError):
         fault = xmlrpclib.Fault('warning -- MissingError\n\n' + str(e), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.AccessError):
+    elif isinstance(e, odoo.exceptions.AccessError):
         fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.AccessDenied):
+    elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault('AccessDenied', str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.DeferredException):
+    elif isinstance(e, odoo.exceptions.DeferredException):
         info = e.traceback
         formatted_info = "".join(traceback.format_exception(*info))
-        fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+        fault = xmlrpclib.Fault(odoo.tools.ustr(e.message), formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     #InternalError
     else:
         info = sys.exc_info()
         formatted_info = "".join(traceback.format_exception(*info))
-        fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
+        fault = xmlrpclib.Fault(odoo.tools.exception_to_unicode(e), formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     return response
 
@@ -156,7 +156,7 @@ def application_unproxied(environ, start_response):
     """ WSGI entry point."""
     # cleanup db/uid trackers - they're set at HTTP dispatch in
     # web.session.OpenERPSession.send() and at RPC dispatch in
-    # openerp.service.web_services.objects_proxy.dispatch().
+    # odoo.service.web_services.objects_proxy.dispatch().
     # /!\ The cleanup cannot be done at the end of this `application`
     # method because werkzeug still produces relevant logging afterwards 
     if hasattr(threading.current_thread(), 'uid'):
@@ -164,9 +164,9 @@ def application_unproxied(environ, start_response):
     if hasattr(threading.current_thread(), 'dbname'):
         del threading.current_thread().dbname
 
-    with openerp.api.Environment.manage():
+    with odoo.api.Environment.manage():
         # Try all handlers until one returns some result (i.e. not None).
-        for handler in [wsgi_xmlrpc, openerp.http.root]:
+        for handler in [wsgi_xmlrpc, odoo.http.root]:
             result = handler(environ, start_response)
             if result is None:
                 continue

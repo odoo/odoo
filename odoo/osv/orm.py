@@ -11,7 +11,7 @@ from ..models import (
     LOG_ACCESS_COLUMNS,
 )
 
-from openerp.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval
 
 # extra definitions for backward compatibility
 browse_record_list = BaseModel
@@ -128,8 +128,8 @@ def test_modifiers(what, expected):
 
 
 # To use this test:
-# import openerp
-# openerp.osv.orm.modifiers_tests()
+# import odoo
+# odoo.osv.orm.modifiers_tests()
 def modifiers_tests():
     test_modifiers('<field name="a"/>', '{}')
     test_modifiers('<field name="a" invisible="1"/>', '{"invisible": true}')
