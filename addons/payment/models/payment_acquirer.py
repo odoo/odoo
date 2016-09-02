@@ -71,9 +71,9 @@ class PaymentAcquirer(models.Model):
         help="Make this payment acquirer available (Customer invoices, etc.)")
     auto_confirm = fields.Selection([
         ('none', 'No automatic confirmation'),
-        ('authorize', 'Authorize the amount and confirm the SO on acquirer confirmation'),
-        ('confirm_so', 'Confirm the SO on acquirer confirmation'),
-        ('generate_and_pay_invoice', 'On acquirer confirmation, confirm the SO, generate the invoice and pay it')],
+        ('authorize', 'Authorize the amount and confirm the SO on acquirer confirmation (capture manually)'),
+        ('confirm_so', 'Authorize & capture the amount and confirm the SO on acquirer confirmation'),
+        ('generate_and_pay_invoice', 'Authorize & capture the amount, confirm the SO and auto-validate the invoice on acquirer confirmation')],
         string='Order Confirmation', default='confirm_so', required=True)
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal',
