@@ -1672,6 +1672,14 @@ class Selection(Field):
                 # use an OrderedDict to update existing values
                 selection_add = field.args['selection_add']
                 self.selection = OrderedDict(self.selection + selection_add).items()
+                if 'selection_add_before' in field.args:
+                    selection_add_before = field.args['selection_add_before']
+                    for index in range(len(self.selection)):
+                        # if index element is found, insert before it
+                        if self.selection[index][0] == selection_add_before:
+                            self.selection = OrderedDict(self.selection[:index] + selection_add + self.selection[index:]).items()
+                            break
+
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
