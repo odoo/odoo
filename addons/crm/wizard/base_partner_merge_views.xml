@@ -93,13 +93,10 @@
                             confirm="Are you sure to execute the list of automatic merges of your contacts ?"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
                         <span class="or_cancel" attrs="{'invisible': [('state', '=', 'finished')]} ">or
-                            <button name="action_close" special="nosave" string="Cancel" type="object" class="oe_link oe_inline"/>
+                            <button special="cancel" string="Cancel" type="object" class="oe_link oe_inline"/>
                         </span>
                         <span class="or_cancel" attrs="{'invisible': [('state', '!=', 'finished')]} ">
-                            <button name="action_close" special="nosave"
-                                string="Close"
-                                type="object"
-                                class="oe_link oe_inline"/>
+                            <button special="cancel" string="Close" type="object" class="oe_link oe_inline"/>
                         </span>
                     </footer>
                 </form>

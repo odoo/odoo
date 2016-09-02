@@ -435,11 +435,6 @@ class MergePartnerAutomatic(models.TransientModel):
     # ----------------------------------------
 
     @api.multi
-    def action_close(self):
-        self.ensure_one()
-        return {'type': 'ir.actions.act_window_close'}
-
-    @api.multi
     def action_skip(self):
         """ Skip this wizard line. Don't compute any thing, and simply redirect to the new step."""
         if self.current_line_id:
