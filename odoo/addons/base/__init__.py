@@ -10,8 +10,8 @@ import tests
 
 def post_init(cr, registry):
     """Rewrite ICP's to force groups"""
-    from openerp import api, SUPERUSER_ID
-    from openerp.addons.base.ir.ir_config_parameter import _default_parameters
+    from odoo import api, SUPERUSER_ID
+    from odoo.addons.base.ir.ir_config_parameter import _default_parameters
 
     env = api.Environment(cr, SUPERUSER_ID, {})
     ICP = env['ir.config_parameter']

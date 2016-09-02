@@ -51,11 +51,11 @@ class IrFieldsConverter(models.AbstractModel):
     @api.model
     def for_model(self, model, fromtype=str):
         """ Returns a converter object for the model. A converter is a
-        callable taking a record-ish (a dictionary representing an openerp
+        callable taking a record-ish (a dictionary representing an odoo
         record with values of typetag ``fromtype``) and returning a converted
-        records matching what :meth:`openerp.osv.orm.Model.write` expects.
+        records matching what :meth:`odoo.osv.orm.Model.write` expects.
 
-        :param model: :class:`openerp.osv.orm.Model` for the conversion base
+        :param model: :class:`odoo.osv.orm.Model` for the conversion base
         :returns: a converter callable
         :rtype: (record: dict, logger: (field, error) -> None) -> dict
         """
@@ -122,10 +122,10 @@ class IrFieldsConverter(models.AbstractModel):
         as ``ValueError`` above.
 
         :param field: field object to generate a value for
-        :type field: :class:`openerp.fields.Field`
+        :type field: :class:`odoo.fields.Field`
         :param fromtype: type to convert to something fitting for ``field``
         :type fromtype: type | str
-        :param context: openerp request context
+        :param context: odoo request context
         :return: a function (fromtype -> field.write_type), if a converter is found
         :rtype: Callable | None
         """

@@ -684,16 +684,16 @@ class Module(models.Model):
                 # extract path is not the same
                 base_path = os.path.dirname(modules.get_module_path('base'))
 
-                # copy all modules in the SERVER/openerp/addons directory to the new "openerp" module (except base itself)
+                # copy all modules in the SERVER/odoo/addons directory to the new "odoo" module (except base itself)
                 for d in os.listdir(base_path):
                     if d != 'base' and os.path.isdir(os.path.join(base_path, d)):
-                        destdir = os.path.join(tmp, OPENERP, 'addons', d)    # XXX 'openerp' subdirectory ?
+                        destdir = os.path.join(tmp, OPENERP, 'addons', d)    # XXX 'odoo' subdirectory ?
                         shutil.copytree(os.path.join(base_path, d), destdir)
 
                 # then replace the server by the new "base" module
                 server_dir = tools.config['root_path']      # XXX or dirname()
                 bck = backup(server_dir)
-                _logger.info('Copy downloaded module `openerp` to `%s`', server_dir)
+                _logger.info('Copy downloaded module `odoo` to `%s`', server_dir)
                 shutil.move(os.path.join(tmp, OPENERP), server_dir)
                 #if bck:
                 #    shutil.rmtree(bck)
@@ -723,7 +723,7 @@ class Module(models.Model):
 
     @api.model
     def get_apps_server(self):
-        return tools.config.get('apps_server', 'https://apps.openerp.com/apps')
+        return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
 
     def _update_dependencies(self, depends=None):
         existing = set(dep.name for dep in self.dependencies_id)

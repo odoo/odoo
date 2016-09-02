@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp.tests import common
+from odoo.tests import common
 
 ANSWER_TO_ULTIMATE_QUESTION = 42
 

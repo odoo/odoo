@@ -1,7 +1,7 @@
 import base64
 import unittest
 
-from openerp.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import guess_mimetype
 
 PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
 GIF = "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="

@@ -3,8 +3,8 @@
 
 import datetime
 
-from openerp import models, fields, api, _
-from openerp.exceptions import AccessError
+from odoo import models, fields, api, _
+from odoo.exceptions import AccessError
 
 
 class Category(models.Model):
