@@ -38,7 +38,7 @@ class TestProjectFlow(TestProjectBase):
         dogs = pigs.copy()
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
-    @mute_logger('openerp.addons.mail.mail_thread')
+    @mute_logger('odoo.addons.mail.mail_thread')
     def test_task_process_without_stage(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Frogs'
         task = self.format_and_process(
@@ -65,7 +65,7 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(task.project_id.id, self.project_pigs.id, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, False, "project_task: shouldn't have a stage, i.e. sequence=False")
 
-    @mute_logger('openerp.addons.mail.mail_thread')
+    @mute_logger('odoo.addons.mail.mail_thread')
     def test_task_process_with_stages(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Cats'
         task = self.format_and_process(

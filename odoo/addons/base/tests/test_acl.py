@@ -59,7 +59,7 @@ class TestACL(TransactionCase):
         self.assertNotEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
                              "Field 'decimal_places' must be found in view definition again")
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
         partner = self.env['res.partner'].browse(1).sudo(self.demo_user)
@@ -85,7 +85,7 @@ class TestACL(TransactionCase):
         self.assert_(partner.read(['bank_ids']))
         self.assert_(partner.write({'bank_ids': []}))
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_fields_browse_restriction(self):
         """Test access to records having restricted fields"""
         partner = self.env['res.partner'].sudo(self.demo_user)
@@ -96,7 +96,7 @@ class TestACL(TransactionCase):
         partner.name
         # ... except if they are restricted
         with self.assertRaises(AccessError):
-            with mute_logger('openerp.models'):
+            with mute_logger('odoo.models'):
                 partner.email
 
     def test_view_create_edit_button_invisibility(self):

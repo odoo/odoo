@@ -555,7 +555,7 @@ class TestFields(common.TransactionCase):
         self.assertEqual(message.name, "[%s] %s" % (discussion.name, ''))
         self.assertEqual(message.size, len(BODY))
 
-    @mute_logger('openerp.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
         # make discussions unreadable for demo user
@@ -577,7 +577,7 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(AccessError):
             message.discussion.name
 
-    @mute_logger('openerp.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_42_new_related(self):
         """ test the behavior of related fields traversing new records. """
         # make discussions unreadable for demo user

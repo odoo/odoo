@@ -11,7 +11,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
 class TestHolidaysFlow(TestHrHolidaysBase):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_leave_request_flow(self):
         """ Testing leave request flow """
         Holidays = self.env['hr.holidays']

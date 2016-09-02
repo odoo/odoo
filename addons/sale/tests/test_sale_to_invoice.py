@@ -8,7 +8,7 @@ from odoo.tools import mute_logger
 
 
 class TestSale(TestMail):
-    @mute_logger('odoo.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.osv.orm')
     def setUp(self):
         super(TestSale, self).setUp()
 

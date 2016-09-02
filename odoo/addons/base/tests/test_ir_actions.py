@@ -324,7 +324,7 @@ class TestServerActions(TestServerActionsBase):
         country = self.test_country.search([('name', 'ilike', 'NewCountry')])
         self.assertEqual(len(country), 1, 'ir_actions_server: TODO')
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_60_multi(self):
         # Data: 2 server actions that will be nested
         action1 = self.action.create({

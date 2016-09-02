@@ -323,7 +323,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                     name="target"),
                 string="Title"))
 
-    @mute_logger('openerp.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
     def test_invalid_position(self):
         spec = E.field(
                 E.field(name="whoops"),
@@ -332,7 +332,7 @@ class TestApplyInheritanceSpecs(ViewCase):
         with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.base_arch, spec, None)
 
-    @mute_logger('openerp.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
     def test_incorrect_version(self):
         # Version ignored on //field elements, so use something else
         arch = E.form(E.element(foo="42"))
@@ -343,7 +343,7 @@ class TestApplyInheritanceSpecs(ViewCase):
         with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(arch, spec, None)
 
-    @mute_logger('openerp.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.ir.ir_ui_view')
     def test_target_not_found(self):
         spec = E.field(name="targut")
 
@@ -813,7 +813,7 @@ class ViewModeField(ViewCase):
         })
         self.assertEqual(view2.mode, 'extension')
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('odoo.sql_db')
     def testModeExplicit(self):
         view = self.View.create({
             'inherit_id': None,
@@ -833,7 +833,7 @@ class ViewModeField(ViewCase):
                 'arch': '<qweb/>'
             })
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('odoo.sql_db')
     def testPurePrimaryToExtension(self):
         """
         A primary view with inherit_id=None can't be converted to extension
