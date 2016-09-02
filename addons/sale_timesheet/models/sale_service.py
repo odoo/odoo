@@ -29,6 +29,16 @@ class procurement_order(osv.osv):
     def _run(self, cr, uid, ids, context=None):
         procurement = self.browse(cr, uid, ids[0], context=context)
         if procurement._is_procurement_task() and not procurement.task_id:
+            # If the SO was confirmed, cancelled, set to draft then confirmed, avoid creating a new
+            # task.
+            if procurement.sale_line_id:
+                existing_task = self.pool['project.task'].search(
+                    cr, uid, [('sale_line_id', '=', procurement.sale_line_id.id)],
+                    context=context
+                )
+                if existing_task:
+                    return existing_task
+
             #create a task for the procurement
             return self._create_service_task(cr, uid, procurement, context=context)
         return super(procurement_order, self)._run(cr, uid, ids, context=context)
