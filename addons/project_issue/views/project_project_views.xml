@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="project_project_view_form_simplified_inherit_issue" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit.issue</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="arch" type="xml">
+            <div name="alias_def" position="after">
+                <field name="use_tasks"/>
+                <field name="use_issues"/>
+            </div>
+        </field>
+    </record>
+
     <record id="view_project_kanban_inherited" model="ir.ui.view">
         <field name="name">project.project.kanban.inherited</field>
         <field name="model">project.project</field>
