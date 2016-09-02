@@ -18,10 +18,10 @@ class TestSurvey(TransactionCase):
     def setUp(self):
         super(TestSurvey, self).setUp()
         User = self.env['res.users'].with_context({'no_reset_password': True})
-        (group_survey_user, group_employee) = (self.ref('base.group_survey_user'), self.ref('base.group_user'))
+        (group_survey_user, group_employee) = (self.ref('survey.group_survey_user'), self.ref('base.group_user'))
         self.survey_manager = User.create({
             'name': 'Gustave Doré', 'login': 'Gustav','email': 'gustav.dore@example.com',
-            'groups_id': [(6, 0, [self.ref('base.group_survey_manager'), group_survey_user, group_employee])]})
+            'groups_id': [(6, 0, [self.ref('survey.group_survey_manager'), group_survey_user, group_employee])]})
 
         self.survey_user = User.create({
             'name': 'Lukas Peeters', 'login': 'Lukas', 'email': 'lukas.petters@example.com',

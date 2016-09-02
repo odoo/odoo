@@ -4,7 +4,7 @@
 
         <menuitem id="menu_hr_payroll_root" name="Payroll" sequence="45" web_icon="hr_payroll,static/description/icon.png"/>
         <menuitem id="menu_hr_payroll_configuration" name="Configuration" parent="menu_hr_payroll_root"
-            sequence="100" groups="base.group_hr_manager"/>
+            sequence="100" groups="hr.group_hr_manager"/>
 
         <!-- Contract View -->
         <record id="hr_contract_form_inherit" model="ir.ui.view">
@@ -369,7 +369,7 @@
             <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
 
-        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_payroll_root" groups="base.group_hr_user"/>
+        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_payroll_root" groups="hr.group_hr_user"/>
 
         <record id="act_hr_employee_payslip_list" model="ir.actions.act_window">
             <field name="res_model">hr.payslip</field>

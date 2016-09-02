@@ -374,7 +374,7 @@ class Slide(models.Model):
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
         # Do not publish slide if user has not publisher rights
-        if not self.user_has_groups('base.group_website_publisher'):
+        if not self.user_has_groups('website.group_website_publisher'):
             values['website_published'] = False
         slide = super(Slide, self).create(values)
         slide.channel_id.message_subscribe_users()

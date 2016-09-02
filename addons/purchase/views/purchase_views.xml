@@ -3,20 +3,20 @@
 
         <!-- Top menu item -->
         <menuitem name="Purchases"
-            id="base.menu_purchase_root"
+            id="menu_purchase_root"
             groups="group_purchase_manager,group_purchase_user"
             web_icon="purchase,static/description/icon.png"
             sequence="25"/>
 
         <menuitem id="menu_procurement_management" name="Purchase"
-            parent="base.menu_purchase_root" sequence="1" />
+            parent="menu_purchase_root" sequence="1" />
 
         <!--Supplier menu-->
         <menuitem id="menu_procurement_management_supplier_name" name="Vendors"
             parent="menu_procurement_management"
             action="base.action_partner_supplier_form" sequence="15"/>
 
-        <menuitem id="menu_purchase_config" name="Configuration" parent="base.menu_purchase_root" sequence="100" groups="group_purchase_manager"/>
+        <menuitem id="menu_purchase_config" name="Configuration" parent="menu_purchase_root" sequence="100" groups="group_purchase_manager"/>
 
         <menuitem
            action="product.product_supplierinfo_type_action" id="menu_product_pricelist_action2_purchase"
@@ -40,7 +40,7 @@
 
 
     <!-- Purchase Control Menu -->
-    <menuitem id="menu_purchase_control" name="Control" parent="base.menu_purchase_root" sequence="4"/>
+    <menuitem id="menu_purchase_control" name="Control" parent="purchase.menu_purchase_root" sequence="4"/>
 
     <!--Inventory control-->
     <menuitem action="stock.action_receipt_picking_move" id="menu_action_picking_tree_in_move"

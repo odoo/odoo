@@ -201,7 +201,7 @@
                     <t t-set="header_object" t-value="category"/>
                 </t>
             </t>
-            <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category and display_channel_settings" class="wrap mt16 mb0" groups="base.group_website_designer">
+            <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category and display_channel_settings" class="wrap mt16 mb0" groups="website.group_website_designer">
                 <div class="container">
                     <div class="alert alert-danger alert-dismissable mb0">
                         <button type="button" class="close o_slides_hide_channel_settings" t-att-data-channel-id="channel.id" data-dismiss="alert">x</button>

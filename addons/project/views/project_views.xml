@@ -3,17 +3,17 @@
 
         <!-- Top menu item -->
         <menuitem name="Project"
-            id="base.menu_main_pm"
+            id="menu_main_pm"
             groups="group_project_manager,group_project_user"
             web_icon="project,static/description/icon.png"
             sequence="50"/>
 
         <menuitem name="Search"
             id="menu_project_management"
-            parent="base.menu_main_pm"
+            parent="menu_main_pm"
             sequence="2" groups="base.group_no_one,group_project_user"/>
 
-        <menuitem id="menu_project_config" name="Configuration" parent="base.menu_main_pm"
+        <menuitem id="menu_project_config" name="Configuration" parent="menu_main_pm"
             sequence="100" groups="project.group_project_manager"/>
 
         <record id="view_task_search_form" model="ir.ui.view">
@@ -680,9 +680,9 @@ action = model.activate_sample_project()
 
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
 
-        <menuitem action="open_task_type_form" id="base.menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="group_project_manager"/>
+        <menuitem action="open_task_type_form" id="menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="group_project_manager"/>
 
-        <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="menu_main_pm" sequence="1"/>
         <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
 
         <!-- User Form -->
@@ -724,9 +724,9 @@ action = model.activate_sample_project()
         <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config" groups="base.group_no_one"/>
 
         <!-- Reporting menus -->
-        <menuitem id="base.menu_project_report" name="Reports"
+        <menuitem id="menu_project_report" name="Reports"
             groups="project.group_project_manager"
             action="project.action_project_task_user_tree"
-            parent="base.menu_main_pm" sequence="99"/>
+            parent="menu_main_pm" sequence="99"/>
 
 </odoo>

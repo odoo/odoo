@@ -166,7 +166,7 @@
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
                     <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
                     <separator />
-                    <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Expenses of Your Team Member"/>
+                    <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr.group_hr_manager" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <separator />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread', '=', True)]"/>
@@ -180,7 +180,7 @@
                         <filter string="Status" domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                     <separator />
-                    <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="base.group_hr_user,base.group_hr_manager"/>
+                    <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr.group_hr_user,hr.group_hr_manager"/>
                 </search>
             </field>
         </record>
@@ -406,11 +406,11 @@
             <field name="arch" type="xml">
                 <form string="Expense Reports" class="o_expense_sheet">
                  <header>
-                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="base.group_hr_user" class="oe_highlight o_expense_sheet_approve"/>
+                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr.group_hr_user" class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_user" class="oe_highlight o_expense_sheet_post"/>
                     <button name="%(hr_expense.hr_expense_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_user"/>
                     <button name="reset_expense_sheets" states="cancel" string="Resubmit" type="object"/>
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit" string="Refuse" type="action" groups="base.group_hr_user" />
+                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit" string="Refuse" type="action" groups="hr.group_hr_user" />
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="account.group_account_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
                 </header>
@@ -549,7 +549,7 @@
                     <filter domain="[('state', '=', 'approve')]" string="To Post" name="to_post" help="Approved Expenses"/>
                     <filter domain="['|', ('state', '=', 'approve'), ('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
                     <separator/>
-                    <filter string="My Team Reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Expenses of Your Team Member"/>
+                    <filter string="My Team Reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr.group_hr_manager" help="Expenses of Your Team Member"/>
                     <filter string="My Reports" domain="[('employee_id.user_id', '=', uid)]"/>
                     <separator />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread', '=', True)]"/>
@@ -561,7 +561,7 @@
                         <filter string="State" domain="[]" context="{'group_by': 'state'}" name="state"/>
                     </group>
                     <separator />
-                    <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="base.group_hr_user,base.group_hr_manager"/>
+                    <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr.group_hr_user,hr.group_hr_manager"/>
                 </search>
             </field>
         </record>
@@ -748,23 +748,23 @@
         <menuitem id="menu_hr_expense_my_expenses_refused" name="Refused Expenses" sequence="2" parent="menu_hr_expense_my_expenses" action="action_hr_expense_refused_expenses"/>
         <menuitem id="menu_hr_expense_sheet_my_reports" name="Expense Reports" sequence="3" parent="menu_hr_expense_my_expenses" action="action_hr_expense_sheet_my_all" load_xmlid="True"/>
 
-        <menuitem id="menu_hr_expense_to_approve" name="To Approve" sequence="2" parent="menu_hr_expense_root" groups="base.group_hr_user"/>
+        <menuitem id="menu_hr_expense_to_approve" name="To Approve" sequence="2" parent="menu_hr_expense_root" groups="hr.group_hr_user"/>
         <menuitem id="menu_hr_expense_sheet_all_to_approve" name="Expense Reports To Approve" sequence="1" parent="menu_hr_expense_to_approve"
             action="action_hr_expense_sheet_all_to_approve"/>
         
-        <menuitem id="menu_hr_expense_accountant" name="Accountant" sequence="3" parent="menu_hr_expense_root" groups="base.group_hr_manager"/>
+        <menuitem id="menu_hr_expense_accountant" name="Accountant" sequence="3" parent="menu_hr_expense_root" groups="hr.group_hr_manager"/>
         <menuitem id="menu_hr_expense_sheet_all_to_post" name="Expense Reports To Post" sequence="2" parent="menu_hr_expense_accountant"
             action="action_hr_expense_sheet_all_to_post"/>
         <menuitem id="menu_hr_expense_sheet_all_to_pay" name="Expense Reports To Pay" sequence="3" parent="menu_hr_expense_accountant"
             action="action_hr_expense_sheet_all_to_pay"/>
 
-        <menuitem id="menu_hr_expense_reports" name="Reports" sequence="4" parent="menu_hr_expense_root" groups="base.group_hr_manager"/>
+        <menuitem id="menu_hr_expense_reports" name="Reports" sequence="4" parent="menu_hr_expense_root" groups="hr.group_hr_manager"/>
         <menuitem id="menu_hr_expense_all_expenses" name="All Expenses" sequence="0" parent="menu_hr_expense_reports" action="hr_expense_actions_all"/>
         <menuitem id="menu_hr_expense_sheet_all_all" name="All Expense Reports" sequence="4" parent="menu_hr_expense_reports"
-            action="action_hr_expense_sheet_all_all" groups="base.group_hr_manager"/>
+            action="action_hr_expense_sheet_all_all" groups="hr.group_hr_manager"/>
 
         <menuitem id="menu_hr_expense_configuration" name="Configuration" parent="menu_hr_expense_root"
             sequence="100"/>
         <menuitem id="menu_hr_product" name="Expense Products" parent="menu_hr_expense_configuration" 
-            action="hr_expense_product" groups="base.group_hr_manager" sequence="10"/>
+            action="hr_expense_product" groups="hr.group_hr_manager" sequence="10"/>
 </odoo>

@@ -1337,7 +1337,7 @@
         <h1 class="mt0 page-header">
             <span t-field="user.name"/>
             <small>profile</small>
-            <t t-call="website.publish_management" groups="base.group_website_publisher">
+            <t t-call="website.publish_management" groups="website.group_website_publisher">
                 <t t-set="object" t-value="user"/>
                 <t t-set="publish_edit" t-value="True"/>
             </t>

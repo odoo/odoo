@@ -30,7 +30,7 @@
         <div id="wrap">
             <div class="oe_structure"/>
             <section class="container">
-                <div class="alert alert-warning alert-dismissable mt16" groups="base.group_website_publisher">
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                    <p>
                    This page is great to improve your <strong>Search Engine Optimization</strong>;
@@ -127,7 +127,7 @@
                   <p class="css_editable_hidden">
                     <h1>No blog post yet.</h1>
                   </p>
-                  <p groups="base.group_website_designer">
+                  <p groups="website.group_website_designer">
                     Click on "Content" on the top menu to write your first blog post.
                   </p>
                 </div>
@@ -487,7 +487,7 @@
         <attribute name="class">col-sm-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
-        <section class="mt32 mb32" groups="base.group_website_designer">
+        <section class="mt32 mb32" groups="website.group_website_designer">
         <h4>Status</h4>
         <ul class="nav nav-pills nav-stacked">
             <t t-set="state" t-value="state_info['state']"/>
@@ -527,7 +527,7 @@
 <!-- User Navbar -->
 <template id="content_new_blogpost" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li groups="base.group_website_designer"><a href="#" data-action="new_blog_post"><i class="fa fa-rss"/><p>New Blog Post</p></a></li>
+        <li groups="website.group_website_designer"><a href="#" data-action="new_blog_post"><i class="fa fa-rss"/><p>New Blog Post</p></a></li>
     </xpath>
 </template>
 

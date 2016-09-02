@@ -6,7 +6,7 @@
             <field name="address_home_id" ref="base.res_partner_address_3"/>
         </record>
 
-        <record id="base.res_partner_address_fp" model="res.partner">
+        <record id="res_partner_address_fp" model="res.partner">
             <field name="name">Pieter Parter's Farm</field>
             <field name="parent_id" eval="ref('base.partner_root')"/>
             <field name="supplier">1</field>
@@ -17,7 +17,7 @@
         </record>
 
         <record id="hr.employee_root" model="hr.employee">
-            <field name="address_home_id" ref="base.res_partner_address_fp"/>
+            <field name="address_home_id" ref="res_partner_address_fp"/>
         </record>
 
         <record id="car_travel" model="product.product">

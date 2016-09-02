@@ -27,13 +27,12 @@
             <field name="html_class">oe_image_full</field>
         </record>
 
-        <record model="crm.team" id="website.salesteam_website_sales">
-            <field name="name">Website Sales</field>
+        <record model="crm.team" id="sales_team.salesteam_website_sales">
             <field name="use_quotations" eval="False"/>
         </record>
 
         <record model="website" id="website.default_website">
-            <field name="salesteam_id" ref="website.salesteam_website_sales"/>
+            <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
         <record id="wlist0" model="website_pricelist">

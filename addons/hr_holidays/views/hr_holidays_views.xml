@@ -29,9 +29,9 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="My Department Leaves" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
-                    <filter string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Leaves of Your Team Member"/>
+                    <filter string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr.group_hr_manager" help="Leaves of Your Team Member"/>
                     <separator/>
-                    <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="base.group_hr_manager"/>
+                    <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr.group_hr_manager"/>
                     <separator/>
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                     <separator/>
@@ -83,9 +83,9 @@
                 <field name="type" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="base.group_hr_manager" class="oe_highlight"/>
-                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="base.group_hr_user"/>
+                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr.group_hr_manager" class="oe_highlight"/>
+                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="hr.group_hr_user"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
@@ -111,14 +111,14 @@
                             </div>
                         </group>
                         <group>
-                            <field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="base.group_hr_user" context="{'employee_id':employee_id}" />
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
+                            <field name="holiday_type" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="hr.group_hr_user" context="{'employee_id':employee_id}" />
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="hr.group_hr_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
-                            <field name="department_id" groups="base.group_hr_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')]}"/>
-                            <field name="payslip_status" groups="base.group_hr_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
+                            <field name="department_id" groups="hr.group_hr_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')]}"/>
+                            <field name="payslip_status" groups="hr.group_hr_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
                         </group>
                         <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'invisible': [('type', '=', 'remove')]}"/>
-                        <div groups="base.group_hr_manager" attrs="{'invisible':[('type','=','add')]}">
+                        <div groups="hr.group_hr_manager" attrs="{'invisible':[('type','=','add')]}">
                             <separator string="Comment by Manager"/>
                             <field name="report_note" placeholder="e.g. Report to the next month..."/>
                         </div>
@@ -169,8 +169,8 @@
                     <field name="number_of_days_temp" string="Allocated Days" sum="Remaining Days"/>
                     <field name="state"/>
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
-                    <field name="report_note" groups="base.group_hr_manager"/>
+                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr.group_hr_manager"/>
+                    <field name="report_note" groups="hr.group_hr_manager"/>
                     <field name="payslip_status" invisible="1"/>
                 </tree>
             </field>
@@ -213,7 +213,7 @@
                     <field name="holiday_status_id"/>
                     <field name="state"/>
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
+                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr.group_hr_manager"/>
                     <field name="report_note"/>
                     <field name="payslip_status" invisible="1"/>
                 </tree>
@@ -236,7 +236,7 @@
                     <field name="state"/>
                     <field name="payslip_status" invisible="1"/>
                     <button name="toggle_payslip_status" field_name="payslip_status" type="object"
-                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="base.group_hr_manager"/>
+                        widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr.group_hr_manager"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="manager_id" invisible="1"/>
@@ -269,7 +269,7 @@
             parent="menu_hr_holidays_root"
             sequence="1"
             action="action_hr_holidays_dashboard"
-            groups="base.group_hr_manager"/>
+            groups="hr.group_hr_manager"/>
 
         <menuitem
             id="menu_hr_holidays_my_leaves"
@@ -282,14 +282,14 @@
             name="Leaves to Approve"
             parent="menu_hr_holidays_root"
             sequence="3"
-            groups="base.group_hr_manager,base.group_hr_user"/>
+            groups="hr.group_hr_manager,hr.group_hr_user"/>
 
         <menuitem
             id="menu_hr_holidays_report"
             name="Reports"
             parent="menu_hr_holidays_root"
             sequence="99"
-            groups="base.group_hr_manager,base.group_hr_user"/>
+            groups="hr.group_hr_manager,hr.group_hr_user"/>
 
         <record id="open_ask_holidays" model="ir.actions.act_window">
             <field name="name">Leaves Request</field>
@@ -518,7 +518,7 @@
             id="menu_open_department_leave_approve"
             name="Leaves"
             parent="menu_hr_holidays_approvals"
-            groups="base.group_hr_manager,base.group_hr_user"
+            groups="hr.group_hr_manager,hr.group_hr_user"
             action="open_department_holidays_approve"
             sequence="1"/>
 
@@ -538,7 +538,7 @@
         </record>
 
         <menuitem
-            id="menu_open_department_leave_allocation_approve" groups="base.group_hr_manager,base.group_hr_user"
+            id="menu_open_department_leave_allocation_approve" groups="hr.group_hr_manager,hr.group_hr_user"
             name="Leaves Allocation"
             parent="menu_hr_holidays_approvals"
             action="open_department_holidays_allocation_approve"
@@ -548,7 +548,7 @@
             id="menu_open_employee_leave"
             name="Leave Details"
             parent="menu_hr_holidays_report"
-            groups="base.group_hr_manager,base.group_hr_user"
+            groups="hr.group_hr_manager,hr.group_hr_user"
             action="open_employee_leaves"
             sequence="4"/>
 
@@ -637,7 +637,7 @@
             name="Configuration"
             parent="menu_hr_holidays_root"
             sequence="100"
-            groups="base.group_hr_manager"
+            groups="hr.group_hr_manager"
             action="open_view_holiday_status"/>
 
         <!-- Shortcuts -->

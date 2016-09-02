@@ -127,15 +127,15 @@
 
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
-            <t t-call-assets="web_editor.summernote" t-js="false" groups="base.group_website_designer"/>
-            <t t-call-assets="web_editor.assets_editor" t-js="false" groups="base.group_website_designer"/>
-            <t t-call-assets="website.assets_editor" t-js="false" groups="base.group_website_publisher"/>
+            <t t-call-assets="web_editor.summernote" t-js="false" groups="website.group_website_designer"/>
+            <t t-call-assets="web_editor.assets_editor" t-js="false" groups="website.group_website_designer"/>
+            <t t-call-assets="website.assets_editor" t-js="false" groups="website.group_website_publisher"/>
 
             <t t-call-assets="web.assets_common" t-css="false"/>
             <t t-call-assets="web.assets_frontend" t-css="false"/>
-            <t t-call-assets="web_editor.summernote" t-css="false" groups="base.group_website_designer"/>
-            <t t-call-assets="web_editor.assets_editor" t-css="false" groups="base.group_website_designer"/>
-            <t t-call-assets="website.assets_editor" t-css="false" groups="base.group_website_publisher"/>
+            <t t-call-assets="web_editor.summernote" t-css="false" groups="website.group_website_designer"/>
+            <t t-call-assets="web_editor.assets_editor" t-css="false" groups="website.group_website_designer"/>
+            <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher"/>
         </t>
         <t t-set="head" t-value="head_website + (head or '')"/>
 
@@ -351,7 +351,7 @@
             <t t-esc="lg[1].split('/').pop()"/>
           </a>
         </li>
-        <li groups="base.group_website_publisher">
+        <li groups="website.group_website_publisher">
             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
             <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
                 <i class="fa fa-plus-circle"/>
@@ -414,7 +414,7 @@
 
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or None">
+    <div groups="website.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
@@ -433,7 +433,7 @@
 </template>
 
 <template id="publish_short">
-    <t groups="base.group_website_publisher" t-ignore="true">
+    <t groups="website.group_website_publisher" t-ignore="true">
         <div t-attf-class="pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
@@ -566,7 +566,7 @@
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
-                <div class="alert alert-warning alert-dismissable mt16" groups="base.group_website_publisher">
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                    <p>
                      Note: To hide this page, uncheck it from the top Customize menu.

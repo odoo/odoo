@@ -176,7 +176,7 @@ class Employee(models.Model):
 
     @api.multi
     def _compute_show_leaves(self):
-        show_leaves = self.env['res.users'].has_group('base.group_hr_user')
+        show_leaves = self.env['res.users'].has_group('hr.group_hr_user')
         for employee in self:
             if show_leaves or employee.user_id == self.env.user:
                 employee.show_leaves = True

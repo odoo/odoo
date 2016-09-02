@@ -65,7 +65,7 @@
                         <group>
                             <field name="owner_user_id" string="Requested By"/>
                             <field name="equipment_id"  context="{'default_category_id':category_id}"/>
-                            <field name="category_id" groups="base.group_equipment_manager"/>
+                            <field name="category_id" groups="maintenance.group_equipment_manager"/>
                             <field name="request_date" groups="base.group_no_one"/>
                             <field name="close_date" groups="base.group_no_one"/>
                             <field name="archive" invisible="1"/>
@@ -165,7 +165,7 @@
                 <field name="request_date" groups="base.group_no_one"/>
                 <field name="owner_user_id"/>
                 <field name="technician_user_id"/>
-                <field name="category_id" groups="base.group_equipment_manager"/>
+                <field name="category_id" groups="maintenance.group_equipment_manager"/>
                 <field name="stage_id"/>
             </tree>
         </field>
@@ -312,7 +312,7 @@
                                     <field name="model"/>
                                     <field name="serial_no"/>
                                 </group><group>
-                                    <field name="cost" groups="base.group_equipment_manager"/>
+                                    <field name="cost" groups="maintenance.group_equipment_manager"/>
                                     <field name="warranty"/>
                                 </group>
                             </group>
@@ -789,7 +789,7 @@
         id="menu_m_dashboard"
         name="Dashboard"
         parent="menu_maintenance_title"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         action="maintenance_dashboard_action"
         sequence="0"/>
 
@@ -797,7 +797,7 @@
         id="menu_m_request" 
         name="Maintenance"
         parent="menu_maintenance_title"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         sequence="1"/>
 
     <menuitem
@@ -805,7 +805,7 @@
         name="Maintenance Requests"
         parent="menu_m_request"
         action="hr_equipment_request_action"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         sequence="1"/>
 
     <menuitem
@@ -813,7 +813,7 @@
         name="Maintenance Calendar"
         parent="menu_m_request"
         action="hr_equipment_request_action_cal"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         sequence="2"/>
 
     <menuitem
@@ -821,35 +821,35 @@
         name="Equipments"
         parent="menu_maintenance_title"
         action="hr_equipment_action"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         sequence="2"/>
 
     <menuitem
         id="menu_m_reports" 
         name="Reporting"
         parent="menu_maintenance_title"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         sequence="3"/>
 
     <menuitem
         id="menu_m_reports_oee"
         name="Overall Equipment Effectiveness (OEE)"
         parent="menu_m_reports"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         sequence="1"/>
 
     <menuitem
         id="menu_m_reports_losses"
         name="Losses Analysis"
         parent="menu_m_reports"
-        groups="base.group_equipment_manager,base.group_user"
+        groups="group_equipment_manager,base.group_user"
         sequence="2"/>
 
     <menuitem
         id="menu_maintenance_configuration"
         name="Configuration"
         parent="menu_maintenance_title"
-        groups="base.group_equipment_manager"
+        groups="group_equipment_manager"
         sequence="100"/>
 
     <menuitem
@@ -857,7 +857,7 @@
         name="Maintenance Teams"
         parent="menu_maintenance_configuration"
         action="maintenance_team_action_settings"
-        groups="base.group_equipment_manager"
+        groups="group_equipment_manager"
         sequence="1"/>
 
     <menuitem
