@@ -113,7 +113,6 @@
     <li class="divider"/>
     <li><a href="#" data-action="perform_js_tests">Run JS Tests</a></li>
     <li><a href="#" data-action="select_view">Open View</a></li>
-    <li><a href="#" data-action="start_tour">Start tour</a></li>
     <t t-if="manager._events">
         <li class="divider"/>
         <li><a href="#" data-action="show_timelines">Toggle Timelines</a></li>
@@ -121,26 +120,6 @@
     </t>
     <li class="divider o_debug_leave_section"/>
     <li><a href="#" data-action="leave_debug_mode">Leave the Developer Tools</a></li>
-</t>
-
-<t t-name="WebClient.DebugManager.ToursDialog">
-    <div>
-        <table class="table table-condensed table-striped table-responsive">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Path</th>
-                <th/>
-            </tr>
-
-            <tr t-foreach="tours" t-as="tour">
-                <td><t t-esc="tours[tour].id"/></td>
-                <td><t t-esc="tours[tour].name"/></td>
-                <td><t t-esc="tours[tour].path"/></td>
-                <td><button type="button" class="btn btn-sm btn-primary fa fa-play o_start_tour" t-att-data-id="tours[tour].id"/></td>
-            </tr>
-        </table>
-    </div>
 </t>
 <t t-name="WebClient.DebugManager.Action">
     <t t-if="action">

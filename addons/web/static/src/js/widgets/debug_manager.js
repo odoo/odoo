@@ -10,7 +10,6 @@ var framework = require('web.framework');
 var Model = require('web.Model');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
-var Tour = require('web.Tour');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
 var WebClient = require('web.WebClient');
@@ -158,19 +157,6 @@ var DebugManager = Widget.extend({
                 manager: this,
             }));
         return $.when();
-    },
-    start_tour: function() {
-        var dialog = new Dialog(this, {
-            title: 'Tours',
-            $content: QWeb.render('WebClient.DebugManager.ToursDialog', {
-                tours: Tour.tours
-            }),
-        }).open();
-
-        dialog.$('.o_start_tour').on('click', function(e) {
-            e.preventDefault();
-            odoo.__DEBUG__.services['web.Tour'].run($(e.target).data('id'));
-        });
     },
     select_view: function () {
         var self = this;
@@ -341,7 +327,7 @@ DebugManager.include({
         if (!this._active_view.controller.get_selected_ids().length) {
             console.warn(_t("No metadata available"));
             return
-        }        
+        }
         ds.call('get_metadata', [this._active_view.controller.get_selected_ids()]).done(function(result) {
             new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), ds.model),

@@ -1,7 +1,9 @@
 odoo.define('web_tour.DebugManager', function (require) {
 "use strict";
 
+var core = require("web.core");
 var DebugManager = require('web.DebugManager');
+var Dialog = require("web.Dialog");
 var Model = require('web.Model');
 
 var tour = require('web_tour.tour');
@@ -22,6 +24,19 @@ DebugManager.include({
                 window.location.reload();
             });
         }
+    },
+    start_tour: function() {
+        var dialog = new Dialog(this, {
+            title: 'Tours',
+            $content: core.qweb.render('WebClient.DebugManager.ToursDialog', {
+                tours: tour.tours
+            }),
+        }).open();
+
+        dialog.$('.o_start_tour').on('click', function(e) {
+            e.preventDefault();
+            tour.run($(e.target).data('name'));
+        });
     },
 });
 
