@@ -1565,7 +1565,7 @@ var FieldStatus = common.AbstractField.extend({
                 });
             }
         }
-    }, 300),
+    }, 300, true),
 });
 
 var FieldMonetary = FieldFloat.extend({
