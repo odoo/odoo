@@ -34,6 +34,28 @@
                                 </div>
                             </div>
                         </group>
+                        <group string="Language">
+                            <label for="language_ids"/>
+                            <div name="language_ids">
+                                <div>
+                                    <div name="language_ids" class="oe_inline">
+                                        <field name="language_ids" widget="many2many_checkboxes"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="default_lang_id"/>
+                            <div name="default_lang_id">
+                                <div>
+                                    <div name="default_lang_id" class="oe_inline">
+                                        <field name="default_lang_id" widget="selection"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="id" string="New Language"/>
+                            <div>
+                                <button type="action" name="%(base.action_view_base_language_install)d" string="Install a language" class="oe_link"/>
+                            </div>
+                        </group>
                         <group name="social" string="Social Media">
                             <label for="social_twitter"/>
                             <div name="social_twitter">
@@ -74,28 +96,6 @@
                         </group>
                         <group>
 
-                        </group>
-                        <group string="Language">
-                            <label for="language_ids"/>
-                            <div name="language_ids">
-                                <div>
-                                    <div name="language_ids" class="oe_inline">
-                                        <field name="language_ids" widget="many2many_checkboxes"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <label for="default_lang_id"/>
-                            <div name="default_lang_id">
-                                <div>
-                                    <div name="default_lang_id" class="oe_inline">
-                                        <field name="default_lang_id" widget="selection"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <label for="id" string="New Language"/>
-                            <div>
-                                <button type="action" name="%(base.action_view_base_language_install)d" string="Install a language" class="oe_link"/>
-                            </div>
                         </group>
                         <group string="Menu" groups="base.group_no_one">
                             <button type="action"

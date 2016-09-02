@@ -20,8 +20,8 @@ class WebsiteConfigSettings(models.TransientModel):
     # field used to have a nice radio in form view, resuming the 2 fields above
     sale_delivery_settings = fields.Selection([
         ('none', 'No shipping management on website'),
-        ('internal', 'Shipping methods not selectable in the customer checkout but managed internally'),
-        ('website', 'Shipping methods available in the customer checkout (adds shipping costs to orders)'),
+        ('internal', "Delivery methods are only used internally: the customer doesn't pay for shipping costs"),
+        ('website', "Delivery methods are selectable on the website: the customer pays for shipping costs"),
         ], string="Shipping Management")
     module_delivery_dhl = fields.Boolean("DHL integration")
     module_delivery_fedex = fields.Boolean("Fedex integration")
@@ -29,7 +29,10 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
     module_sale_ebay = fields.Boolean("eBay connector")
-    group_website_multiimage = fields.Boolean('Multi Image', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
+    group_website_multiimage = fields.Selection([
+        (0, 'One image per product'),
+        (1, 'Several images per product')
+        ], string='Multi Image', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
     module_website_sale_options = fields.Selection([
         (0, 'One-step "add to cart"'),
         (1, 'Suggest optional products when adding to cart (e.g. for a computer: warranty, software, etc.)')
@@ -58,7 +61,7 @@ class WebsiteConfigSettings(models.TransientModel):
         implied_group='product.group_pricelist_item')
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
-    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Mail', readonly=True, default=_default_order_mail_template)
+    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Mail', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
