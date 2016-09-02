@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import functools
 import imp
 import importlib
@@ -22,7 +23,6 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
-from odoo.tools.safe_eval import safe_eval
 
 MANIFEST = '__openerp__.py'
 README = ['README.rst', 'README.md', 'README.txt']
@@ -316,7 +316,7 @@ def load_information_from_description_file(module, mod_path=None):
 
             f = tools.file_open(terp_file)
             try:
-                info.update(safe_eval(f.read()))
+                info.update(ast.literal_eval(f.read()))
             finally:
                 f.close()
 
