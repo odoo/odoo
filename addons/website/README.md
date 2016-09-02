@@ -36,7 +36,7 @@ Enterprise-Ready, out-of-the-box
 Activate ready-to-use enterprise features in just a click; e-commerce,
 call-to-actions, jobs announces, events, customer references, blogs, etc.
 
-Traditional eCommerce and CMS have poorly designed backends as it's not their
+Traditional e-Commerce and CMS have poorly designed backends as it's not their
 core focus. With the Odoo integration, you benefit from the best management
 software to follow-up on your orders, your jobs applicants, your leads, etc.
 

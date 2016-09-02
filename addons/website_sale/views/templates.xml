@@ -1326,7 +1326,7 @@
                                   <li>
                                     <label t-if="acquirer.button">
                                         <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
-                                        <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-field-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
+                                        <span t-field="acquirer.image_small" t-options='{"widget": "image", "alt-field": "name", "style":"display: inline-block;"}'/>
                                         <span t-field="acquirer.name" />
                                         <span t-if="acquirer.fees_active">(processing fees apply)</span>
                                     </label>
@@ -1701,7 +1701,7 @@
             <div class="container mt16 mb8">
                 <div class="pull-right" t-ignore="true" t-if="not editable">
                                                       Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
-                                                      the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source eCommerce</a>.
+                                                      the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source e-Commerce</a>.
                                                     </div>
                 <div class="pull-left text-muted">
                                                       Copyright &amp;copy; <span t-field="res_company.name">Company name</span></div>
