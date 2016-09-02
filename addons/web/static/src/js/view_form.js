@@ -6220,7 +6220,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 });
             }
         }
-    }, 300),
+    }, 300, true),
 });
 
 instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
