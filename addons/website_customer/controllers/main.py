@@ -85,6 +85,7 @@ class WebsiteCustomer(http.Controller):
                                          context=request.context)
         google_map_partner_ids = ','.join(map(str, partner_ids))
         partners = partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids, request.context)
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         tag_obj = request.registry['res.partner.tag']
         tag_ids = tag_obj.search(cr, uid, [('website_published', '=', True), ('partner_ids', 'in', partner_ids)],
@@ -103,6 +104,7 @@ class WebsiteCustomer(http.Controller):
             'search_path': "?%s" % werkzeug.url_encode(post),
             'tag': tag,
             'tags': tags,
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.website.render("website_customer.index", values)
 

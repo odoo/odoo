@@ -14,6 +14,7 @@ from operator import itemgetter
 import json
 import werkzeug
 from lxml import etree
+from lxml.etree import LxmlError
 from lxml.builder import E
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
@@ -330,7 +331,13 @@ actual arch.
             if values.get('inherit_id'):
                 values['type'] = self.browse(values['inherit_id']).type
             else:
-                values['type'] = etree.fromstring(values['arch']).tag
+
+                try:
+                    values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
+                except LxmlError:
+                    # don't raise here, the constraint that runs `self._check_xml` will
+                    # do the job properly.
+                    pass
 
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
@@ -342,7 +349,7 @@ actual arch.
     def write(self, vals):
         # If view is modified we remove the arch_fs information thus activating the arch_db
         # version. An `init` of the view will restore the arch_fs for the --dev mode
-        if 'arch' in vals and 'install_mode_data' not in self._context:
+        if ('arch' in vals or 'arch_base' in vals) and 'install_mode_data' not in self._context:
             vals['arch_fs'] = False
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise

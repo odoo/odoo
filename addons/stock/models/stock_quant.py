@@ -177,11 +177,13 @@ class Quant(models.Model):
 
         quants_reconcile_sudo = self.env['stock.quant'].sudo()
         quants_move_sudo = self.env['stock.quant'].sudo()
+        check_lot = False
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
                 quant = self._quant_create_from_move(
                     qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=location_from, force_location_to=location_to)
+                check_lot = True
             else:
                 quant._quant_split(qty)
                 quants_move_sudo |= quant
@@ -200,6 +202,24 @@ class Quant(models.Model):
             """, (move.product_id.id, location_to.parent_left, location_to.parent_right, location_to.id))
             if self._cr.fetchone():
                 quants_reconcile_sudo._quant_reconcile_negative(move)
+
+        # In case of serial tracking, check if the product does not exist somewhere internally already
+        # Checking that a positive quant already exists in an internal location is too restrictive.
+        # Indeed, if a warehouse is configured with several steps (e.g. "Pick + Pack + Ship") and
+        # one step is forced (creates a quant of qty = -1.0), it is not possible afterwards to
+        # correct the inventory unless the product leaves the stock.
+        picking_type = move.picking_id and move.picking_id.picking_type_id or False
+        if check_lot and lot_id and move.product_id.tracking == 'serial' and (not picking_type or (picking_type.use_create_lots or picking_type.use_existing_lots)):
+            other_quants = self.search([('product_id', '=', move.product_id.id), ('lot_id', '=', lot_id),
+                                        ('qty', '>', 0.0), ('location_id.usage', '=', 'internal')])
+            if other_quants:
+                # We raise an error if:
+                # - the total quantity is strictly larger than 1.0
+                # - there are more than one negative quant, to avoid situations where the user would
+                #   force the quantity at several steps of the process
+                if sum(other_quants.mapped('qty')) > 1.0 or len([q for q in other_quants.mapped('qty') if q < 0]) > 1:
+                    lot_name = self.env['stock.production.lot'].browse(lot_id).name
+                    raise UserError(_('The serial number %s is already in stock.') % lot_name + _("Otherwise make sure the right stock/owner is set."))
 
     @api.model
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False,
@@ -234,16 +254,10 @@ class Quant(models.Model):
             negative_quant_id = self.sudo().create(negative_vals)
             vals.update({'propagated_from_id': negative_quant_id.id})
 
-        # In case of serial tracking, check if the product does not exist somewhere internally already
         picking_type = move.picking_id and move.picking_id.picking_type_id or False
         if lot_id and move.product_id.tracking == 'serial' and (not picking_type or (picking_type.use_create_lots or picking_type.use_existing_lots)):
             if qty != 1.0:
                 raise UserError(_('You should only receive by the piece with the same serial number'))
-            other_quants = self.search([('product_id', '=', move.product_id.id), ('lot_id', '=', lot_id),
-                                        ('qty', '>', 0.0), ('location_id.usage', '=', 'internal')])
-            if other_quants:
-                lot_name = self.env['stock.production.lot'].browse(lot_id).name
-                raise UserError(_('The serial number %s is already in stock.') % lot_name + _("Otherwise make sure the right stock/owner is set."))
 
         # create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         return self.sudo().create(vals)
@@ -423,7 +437,9 @@ class Quant(models.Model):
 
         if pack_operation_id:
             pack_operation = self.env['stock.pack.operation'].browse(pack_operation_id)
-            domain += [('owner_id', '=', pack_operation.owner_id.id), ('location_id', '=', pack_operation.location_id.id)]
+            domain += [('location_id', '=', pack_operation.location_id.id)]
+            if pack_operation.owner_id:
+                domain += [('owner_id', '=', pack_operation.owner_id.id)]
             if pack_operation.package_id and not pack_operation.product_id:
                 domain += [('package_id', 'child_of', pack_operation.package_id.id)]
             elif pack_operation.package_id and pack_operation.product_id:
@@ -431,7 +447,9 @@ class Quant(models.Model):
             else:
                 domain += [('package_id', '=', False)]
         else:
-            domain += [('owner_id', '=', move.restrict_partner_id.id), ('location_id', 'child_of', move.location_id.id)]
+            domain += [('location_id', 'child_of', move.location_id.id)]
+            if move.restrict_partner_id:
+                domain += [('owner_id', '=', move.restrict_partner_id.id)]
 
         if company_id:
             domain += [('company_id', '=', company_id)]
