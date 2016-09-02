@@ -71,6 +71,6 @@
 
 
         <!-- Confirm some Sale Orders-->
-        <workflow action="order_confirm" model="sale.order" ref="sale_order_2"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_2')]]"/>
 
 </odoo>

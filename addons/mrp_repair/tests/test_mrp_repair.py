@@ -35,11 +35,11 @@ class TestMrpRepair(AccountingTestCase):
     def test_00_mrp_repair_afterinv(self):
 
         # I confirm Repair order taking Invoice Method 'After Repair'.
-        self.mrp_repair_rmrp0.sudo(self.res_mrp_repair_user.id).signal_workflow('repair_confirm')
+        self.mrp_repair_rmrp0.sudo(self.res_mrp_repair_user.id).action_repair_confirm()
 
         # I check the state is in "Confirmed".
         self.assertEqual(self.mrp_repair_rmrp0.state, "confirmed", 'Mrp repair order should be in "Confirmed" state.')
-        self.mrp_repair_rmrp0.signal_workflow('repair_ready')
+        self.mrp_repair_rmrp0.action_repair_start()
 
         # I check the state is in "Under Repair".
         self.assertEqual(self.mrp_repair_rmrp0.state, "under_repair", 'Mrp repair order should be in "Under_repair" state.')
@@ -64,37 +64,34 @@ class TestMrpRepair(AccountingTestCase):
 
     def test_01_mrp_repair_b4inv(self):
 
-        # I confirm Repair order for Invoice Method 'Before Repair'.!workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rmrp2}
-        self.mrp_repair_rmrp2.sudo(self.res_mrp_repair_user.id).signal_workflow('repair_confirm')
-
-        # I change Repair order state to 'Ready'.
-        self.mrp_repair_rmrp2.action_repair_ready()
+        # I confirm Repair order for Invoice Method 'Before Repair'.
+        self.mrp_repair_rmrp2.sudo(self.res_mrp_repair_user.id).action_repair_confirm()
 
         # I click on "Create Invoice" button of this wizard to make invoice.
-        self.mrp_repair_rmrp2.signal_workflow('action_invoice_create')
+        self.mrp_repair_rmrp2.action_repair_invoice_create()
 
         # I check that invoice is created for this Repair order.
         self.assertEqual(len(self.mrp_repair_rmrp2.invoice_id), 1, "No invoice exists for this repair order")
 
         # I start the Repairing process by clicking on "Start Repair" button.
-        self.mrp_repair_rmrp2.signal_workflow('repair_ready')
+        self.mrp_repair_rmrp2.action_repair_start()
 
         # Repairing process for this product is in Done state and I end this process by clicking on "End Repair" button for Invoice Method 'Before Repair'.
-        self.mrp_repair_rmrp2.signal_workflow('action_repair_end')
+        self.mrp_repair_rmrp2.action_repair_end()
 
     def test_02_mrp_repair_noneinv(self):
 
         # I confirm Repair order for Invoice Method 'No Invoice'.
-        self.mrp_repair_rmrp1.sudo(self.res_mrp_repair_user.id).signal_workflow('repair_confirm')
+        self.mrp_repair_rmrp1.sudo(self.res_mrp_repair_user.id).action_repair_confirm()
 
         # I start the repairing process by clicking on "Start Repair" button for Invoice Method 'No Invoice'.
-        self.mrp_repair_rmrp1.signal_workflow('repair_ready')
+        self.mrp_repair_rmrp1.action_repair_start()
 
         # I check its state which is in "Under Repair".
         self.assertEqual(self.mrp_repair_rmrp1.state, "under_repair", 'Mrp repair order should be in "Under_repair" state.')
 
         # Repairing process for product is in Done state and I end this process by clicking on "End Repair" button.
-        self.mrp_repair_rmrp1.signal_workflow('action_repair_end')
+        self.mrp_repair_rmrp1.action_repair_end()
 
         # I define Invoice Method 'No Invoice' option in this repair order.
         # So, I check that Invoice has not been created for this repair order.

@@ -22,7 +22,7 @@ class PaymentTransaction(models.Model):
             _logger.info('<%s> transaction completed, auto-generated invoice %s (ID %s) for %s (ID %s)',
                          acquirer_name, created_invoice.name, created_invoice.id, tx.sale_order_id.name, tx.sale_order_id.id)
 
-            created_invoice.signal_workflow('invoice_open')
+            created_invoice.action_invoice_open()
             if tx.acquirer_id.journal_id:
                 created_invoice.pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
                 if created_invoice.payment_ids:

@@ -157,11 +157,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
         self.assertFalse(self.pos_order_pos1.invoice_id, 'Invoice should not be attached to order.')
 
-        # I set the order as invoiced
-        self.pos_order_pos1.signal_workflow('invoice')
-
         # I generate an invoice from the order
-        self.invoice = self.pos_order_pos1.action_invoice()
+        self.invoice = self.pos_order_pos1.action_pos_order_invoice()
 
         # I test that the total of the attached invoice is correct
         self.amount_total = self.pos_order_pos1.amount_total

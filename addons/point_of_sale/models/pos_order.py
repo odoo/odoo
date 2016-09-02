@@ -80,7 +80,7 @@ class PosOrder(models.Model):
             _logger.warning('attempting to create new session for order %s', order['name'])
             new_session = PosSession.create({'config_id': closed_session.config_id.id})
             # bypass opening_control (necessary when using cash control)
-            new_session.signal_workflow('open')
+            new_session.action_pos_session_open()
             return new_session
 
     def _match_payment_to_invoice(self, order):
@@ -412,10 +412,6 @@ class PosOrder(models.Model):
         return super(PosOrder, self).create(values)
 
     @api.multi
-    def action_invoice_state(self):
-        self.write({'state': 'invoiced'})
-
-    @api.multi
     def action_view_invoice(self):
         return {
             'name': _('Customer Invoice'),
@@ -428,7 +424,14 @@ class PosOrder(models.Model):
         }
 
     @api.multi
-    def action_invoice(self):
+    def action_pos_order_paid(self):
+        if not self.test_paid():
+            raise UserError(_("Order is not paid."))
+        self.write({'state': 'paid'})
+        return self.create_picking()
+
+    @api.multi
+    def action_pos_order_invoice(self):
         Invoice = self.env['account.invoice']
 
         for order in self:
@@ -448,7 +451,7 @@ class PosOrder(models.Model):
             inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
             new_invoice = Invoice.with_context(local_context).sudo().create(inv)
             message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_invoice.message_post(body=message)            
+            new_invoice.message_post(body=message)
             order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
             Invoice += new_invoice
 
@@ -456,8 +459,10 @@ class PosOrder(models.Model):
                 self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
-            order.sudo().signal_workflow('invoice')
-            new_invoice.sudo().signal_workflow('validate')
+            order.sudo().write({'state': 'invoiced'})
+            # this workflow signal didn't exist on account.invoice -> should it have been 'invoice_open' ? (and now method .action_invoice_open())
+            # shouldn't the created invoice be marked as paid, seing the customer paid in the POS?
+            # new_invoice.sudo().signal_workflow('validate')
 
         if not Invoice:
             return {}
@@ -475,18 +480,14 @@ class PosOrder(models.Model):
             'res_id': Invoice and Invoice.ids[0] or False,
         }
 
+    # this method is unused, and so is the state 'cancel'
     @api.multi
-    def action_paid(self):
-        self.write({'state': 'paid'})
-        self.create_picking()
+    def action_pos_order_cancel(self):
+        return self.write({'state': 'cancel'})
 
     @api.multi
-    def action_cancel(self):
-        self.write({'state': 'cancel'})
-
-    @api.multi
-    def action_done(self):
-        self._create_account_move_line()
+    def action_pos_order_done(self):
+        return self._create_account_move_line()
 
     @api.model
     def create_from_ui(self, orders):
@@ -507,7 +508,7 @@ class PosOrder(models.Model):
             order_ids.append(pos_order.id)
 
             try:
-                pos_order.signal_workflow('paid')
+                pos_order.action_pos_order_paid()
             except psycopg2.OperationalError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
@@ -515,8 +516,8 @@ class PosOrder(models.Model):
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
             if to_invoice:
-                pos_order.action_invoice()
-                pos_order.invoice_id.sudo().signal_workflow('invoice_open')
+                pos_order.action_pos_order_invoice()
+                pos_order.invoice_id.sudo().action_invoice_open()
         return order_ids
 
     def test_paid(self):
@@ -525,7 +526,7 @@ class PosOrder(models.Model):
         """
         for order in self:
             if order.lines and not order.amount_total:
-                return True
+                continue
             if (not order.lines) or (not order.statement_ids) or (abs(order.amount_total - order.amount_paid) > 0.00001):
                 return False
         return True
@@ -562,7 +563,7 @@ class PosOrder(models.Model):
                     'location_dest_id': destination_id if pos_qty else location_id,
                 })
                 message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-                picking_id.message_post(body=message)                
+                picking_id.message_post(body=message)
                 order.write({'picking_id': picking_id.id})
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):

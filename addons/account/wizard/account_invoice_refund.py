@@ -71,7 +71,7 @@ class AccountInvoiceRefund(models.TransientModel):
                             to_reconcile_ids.setdefault(line.account_id.id, []).append(line.id)
                         if line.reconciled:
                             line.remove_move_reconcile()
-                    refund.signal_workflow('invoice_open')
+                    refund.action_invoice_open()
                     for tmpline in refund.move_id.line_ids:
                         if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_lines += tmpline

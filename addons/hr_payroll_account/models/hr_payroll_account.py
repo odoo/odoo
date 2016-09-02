@@ -45,14 +45,14 @@ class HrPayslip(models.Model):
         self.journal_id = self.contract_id.journal_id.id or (not self.contract_id and self.default_get(['journal_id'])['journal_id'])
 
     @api.multi
-    def cancel_sheet(self):
+    def action_payslip_cancel(self):
         moves = self.mapped('move_id')
         moves.filtered(lambda x: x.state == 'posted').button_cancel()
         moves.unlink()
-        return super(HrPayslip, self).cancel_sheet()
+        return super(HrPayslip, self).action_payslip_cancel()
 
     @api.multi
-    def process_sheet(self):
+    def action_payslip_done(self):
         precision = self.env['decimal.precision'].precision_get('Payroll')
 
         for slip in self:
@@ -138,7 +138,7 @@ class HrPayslip(models.Model):
             move = self.env['account.move'].create(move_dict)
             slip.write({'move_id': move.id, 'date': date})
             move.post()
-        return super(HrPayslip, self).process_sheet()
+        return super(HrPayslip, self).action_payslip_done()
 
 
 class HrSalaryRule(models.Model):
