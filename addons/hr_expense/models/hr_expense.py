@@ -132,7 +132,6 @@ class HrExpense(models.Model):
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency')) or - abs(line.get('amount_currency')),
             'currency_id': line.get('currency_id'),
             'tax_line_id': line.get('tax_line_id'),
-            'ref': line.get('ref'),
             'quantity': line.get('quantity', 1.00),
             'product_id': line.get('product_id'),
             'product_uom_id': line.get('uom_id'),
@@ -175,15 +174,18 @@ class HrExpense(models.Model):
         for expense in self:
             acc_date = expense.sheet_id.accounting_date or fields.Date.context_today(self)
             jrn = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
-            journal_dict.setdefault(jrn, [])
-            journal_dict[jrn].append(expense)
+            journal_dict.setdefault(jrn, self.env['hr.expense'])
+            journal_dict[jrn] |= expense
 
         for journal, expense_list in journal_dict.items():
             #create the move that will contain the accounting entries
+            # reference if the same for every expense
+            ref = len(expense_list.mapped('employee_id.address_home_id.ref')) == 1 and expense_list[0].employee_id.address_home_id.ref or False
             move = self.env['account.move'].create({
                 'journal_id': journal.id,
                 'company_id': self.env.user.company_id.id,
                 'date': acc_date,
+                'ref': ref
             })
             for expense in expense_list:
                 company_currency = expense.company_id.currency_id
@@ -210,7 +212,6 @@ class HrExpense(models.Model):
                         'date_maturity': acc_date,
                         'amount_currency': diff_currency_p and total_currency or False,
                         'currency_id': diff_currency_p and expense.currency_id.id or False,
-                        'ref': expense.employee_id.address_home_id.ref or False
                         })
 
                 #convert eml into an osv-valid format
