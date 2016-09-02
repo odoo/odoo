@@ -32,7 +32,7 @@ class WebsiteConfigSettings(models.TransientModel):
     group_website_multiimage = fields.Selection([
         (0, 'One image per product'),
         (1, 'Several images per product')
-        ], string='Multi Image', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
+        ], string='Multi Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
     module_website_sale_options = fields.Selection([
         (0, 'One-step "add to cart"'),
         (1, 'Suggest optional products when adding to cart (e.g. for a computer: warranty, software, etc.)')
@@ -61,7 +61,7 @@ class WebsiteConfigSettings(models.TransientModel):
         implied_group='product.group_pricelist_item')
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
-    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Mail', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
+    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
