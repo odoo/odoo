@@ -287,6 +287,33 @@ class Pricelist(models.Model):
         """ Mono pricelist, multi product - return price per product """
         return pricelist.get_products_price(zip(**products_by_qty_by_partner))
 
+    def _get_partner_pricelist(self, partner_id, company_id=None):
+        """ Retrieve the applicable pricelist for a given partner in a given company.
+
+            :param company_id: if passed, used for looking up properties,
+             instead of current user's company
+        """
+        Partner = self.env['res.partner']
+        Property = self.env['ir.property'].with_context(force_company=company_id or self.env.user.company_id.id)
+
+        p = Partner.browse(partner_id)
+        pl = Property.get('property_product_pricelist', Partner._name, '%s,%s' % (Partner._name, p.id))
+
+        if not pl:
+            if p.country_id.code:
+                pls = self.env['product.pricelist'].search([('country_group_ids.country_ids.code', '=', p.country_id.code)], limit=1)
+                pl = pls and pls[0].id
+
+        if not pl:
+            pl = Property.get('property_product_pricelist', 'res.partner').id
+
+        if not pl:
+            # search pl where no country
+            pls = self.env['product.pricelist'].search([('country_group_ids', '=', False)], limit=1)
+            pl = pls and pls[0].id
+
+        return pl
+
 
 class ResCountryGroup(models.Model):
     _inherit = 'res.country.group'
@@ -427,3 +454,4 @@ class PricelistItem(models.Model):
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
             })
+
