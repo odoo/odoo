@@ -70,7 +70,7 @@ class TableExporter(http.Controller):
         # Step 3: writing data
         x = 0
         for row in jdata['rows']:
-            worksheet.write(y, x, row['indent'] * '     ' + row['title'], header_plain)
+            worksheet.write(y, x, row['indent'] * '     ' + str(row['title']), header_plain)
             for cell in row['cells']:
                 x = x + 1
                 if cell.get('is_bold', False):
