@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <group name="social" position="before">
                 <group name="delivery" string="eCommerce">
+                    <field name="group_website_multiimage" widget="radio"/>
                     <field name="module_website_sale_options" widget="radio"/>
                     <field name="sale_pricelist_setting_split_1" widget="radio"/>
                     <field name="sale_pricelist_setting_split_2" widget="radio" attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}"/>
@@ -46,7 +47,6 @@
                     <div groups="base.group_no_one" class="oe_inline">
                         <field name="salesperson_id"/>
                     </div>
-                    <field name="group_website_multiimage"/>
                     <field name="order_mail_template"/>
                 </group>
             </group>
