@@ -95,7 +95,7 @@ The complete tree should look like
 
     addons/<my_module_name>/
     |-- __init__.py
-    |-- __openerp__.py
+    |-- __manifest__.py
     |-- controllers/
     |   |-- __init__.py
     |   |-- <inherited_module_name>.py

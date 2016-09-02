@@ -24,7 +24,7 @@ import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
 
-MANIFEST = '__openerp__.py'
+MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
 
 _logger = logging.getLogger(__name__)
@@ -253,6 +253,14 @@ def get_module_icon(module):
         return ('/' + module + '/') + '/'.join(iconpath)
     return '/base/'  + '/'.join(iconpath)
 
+def module_manifest(path):
+    """Returns path to module manifest if one can be found under `path`, else `None`."""
+    if not path:
+        return None
+    for manifest_name in MANIFEST_NAMES:
+        if os.path.isfile(opj(path, manifest_name)):
+            return opj(path, manifest_name)
+
 def get_module_root(path):
     """
     Get closest module's root begining from path
@@ -273,8 +281,8 @@ def get_module_root(path):
 
     @return:  Module root path or None if not found
     """
-    while not os.path.exists(os.path.join(path, MANIFEST)):
-        new_path = os.path.abspath(os.path.join(path, os.pardir))
+    while not module_manifest(path):
+        new_path = os.path.abspath(opj(path, os.pardir))
         if path == new_path:
             return None
         path = new_path
@@ -285,58 +293,53 @@ def load_information_from_description_file(module, mod_path=None):
     :param module: The name of the module (sale, purchase, ...)
     :param mod_path: Physical path of module, if not providedThe name of the module (sale, purchase, ...)
     """
-
     if not mod_path:
         mod_path = get_module_path(module)
-    terp_file = mod_path and opj(mod_path, MANIFEST) or False
-    if terp_file:
-        info = {}
-        if os.path.isfile(terp_file):
-            # default values for descriptor
-            info = {
-                'application': False,
-                'author': 'Odoo S.A.',
-                'auto_install': False,
-                'category': 'Uncategorized',
-                'depends': [],
-                'description': '',
-                'icon': get_module_icon(module),
-                'installable': True,
-                'license': 'LGPL-3',
-                'post_load': None,
-                'version': '1.0',
-                'web': False,
-                'website': 'https://www.odoo.com',
-                'sequence': 100,
-                'summary': '',
-            }
-            info.update(itertools.izip(
-                'depends data demo test init_xml update_xml demo_xml'.split(),
-                iter(list, None)))
+    manifest_file = module_manifest(mod_path)
+    if manifest_file:
+        # default values for descriptor
+        info = {
+            'application': False,
+            'author': 'Odoo S.A.',
+            'auto_install': False,
+            'category': 'Uncategorized',
+            'depends': [],
+            'description': '',
+            'icon': get_module_icon(module),
+            'installable': True,
+            'license': 'LGPL-3',
+            'post_load': None,
+            'version': '1.0',
+            'web': False,
+            'website': 'https://www.odoo.com',
+            'sequence': 100,
+            'summary': '',
+        }
+        info.update(itertools.izip(
+            'depends data demo test init_xml update_xml demo_xml'.split(),
+            iter(list, None)))
 
-            f = tools.file_open(terp_file)
-            try:
-                info.update(ast.literal_eval(f.read()))
-            finally:
-                f.close()
+        f = tools.file_open(manifest_file)
+        try:
+            info.update(ast.literal_eval(f.read()))
+        finally:
+            f.close()
 
-            if not info.get('description'):
-                readme_path = [opj(mod_path, x) for x in README
-                               if os.path.isfile(opj(mod_path, x))]
-                if readme_path:
-                    readme_text = tools.file_open(readme_path[0]).read()
-                    info['description'] = readme_text
+        if not info.get('description'):
+            readme_path = [opj(mod_path, x) for x in README
+                           if os.path.isfile(opj(mod_path, x))]
+            if readme_path:
+                readme_text = tools.file_open(readme_path[0]).read()
+                info['description'] = readme_text
 
-            if 'active' in info:
-                # 'active' has been renamed 'auto_install'
-                info['auto_install'] = info['active']
+        if 'active' in info:
+            # 'active' has been renamed 'auto_install'
+            info['auto_install'] = info['active']
 
-            info['version'] = adapt_version(info['version'])
-            return info
+        info['version'] = adapt_version(info['version'])
+        return info
 
-    #TODO: refactor the logger in this file to follow the logging guidelines
-    #      for 6.0
-    _logger.debug('module %s: no %s file found.', module, MANIFEST)
+    _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
     return {}
 
 def load_openerp_module(module_name):
@@ -353,7 +356,6 @@ def load_openerp_module(module_name):
 
     initialize_sys_path()
     try:
-        mod_path = get_module_path(module_name)
         __import__('odoo.addons.' + module_name)
 
         # Call the module's post-load hook. This can done before any model or
@@ -382,9 +384,9 @@ def get_modules():
             return name
 
         def is_really_module(name):
-            manifest_name = opj(dir, name, MANIFEST)
-            zipfile_name = opj(dir, name)
-            return os.path.isfile(manifest_name)
+            for mname in MANIFEST_NAMES:
+                if os.path.isfile(opj(dir, name, mname)):
+                    return True
         return map(clean, filter(is_really_module, os.listdir(dir)))
 
     plist = []
