@@ -12,7 +12,7 @@ import odoo.addons.decimal_precision as dp
 class Pricelist(models.Model):
     _name = "product.pricelist"
     _description = "Pricelist"
-    _order = 'name'
+    _order = "sequence asc, id desc"
 
     def _get_default_currency_id(self):
         return self.env.user.company_id.currency_id.id
@@ -28,6 +28,7 @@ class Pricelist(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency', default=_get_default_currency_id, required=True)
     company_id = fields.Many2one('res.company', 'Company')
 
+    sequence = fields.Integer(default=16)
     country_group_ids = fields.Many2many('res.country.group', 'res_country_group_pricelist_rel',
                                          'pricelist_id', 'res_country_group_id', string='Country Groups')
 

@@ -101,6 +101,7 @@
             <field name="model">product.pricelist</field>
             <field name="arch" type="xml">
                 <tree string="Products Price List">
+                    <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                 </tree>
