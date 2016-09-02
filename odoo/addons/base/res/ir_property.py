@@ -172,9 +172,15 @@ class Property(models.Model):
         return result
 
     @api.model
-    def set_multi(self, name, model, values):
+    def set_multi(self, name, model, values, default_value=None):
         """ Assign the property field `name` for the records of model `model`
             with `values` (dictionary mapping record ids to their value).
+            If the value for a given record is the same as the default
+            value, the property entry will not be stored, to avoid bloating
+            the database.
+            If `default_value` is provided, that value will be used instead
+            of the computed default value, to determine whether the value
+            for a record should be stored or not.
         """
         def clean(value):
             return value.id if isinstance(value, models.BaseModel) else value
@@ -182,12 +188,12 @@ class Property(models.Model):
         if not values:
             return
 
-        domain = self._get_domain(name, model)
-        if domain is None:
-            raise Exception()
-
-        # retrieve the default value for the field
-        default_value = clean(self.get(name, model))
+        if not default_value:
+            domain = self._get_domain(name, model)
+            if domain is None:
+                raise Exception()
+            # retrieve the default value for the field
+            default_value = clean(self.get(name, model))
 
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
