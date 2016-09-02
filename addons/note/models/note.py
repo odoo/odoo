@@ -45,8 +45,9 @@ class Note(models.Model):
     memo = fields.Html('Note Content')
     sequence = fields.Integer('Sequence')
     stage_id = fields.Many2one('note.stage', compute='_compute_stage_id',
-        inverse='_inverse_stage_id', default=_get_default_stage_id, string='Stage')
-    stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id', string='Stages of Users')
+        inverse='_inverse_stage_id', string='Stage')
+    stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id',
+        string='Stages of Users',  default=_get_default_stage_id)
     open = fields.Boolean(string='Active', track_visibility='onchange', default=True)
     date_done = fields.Date('Date done')
     color = fields.Integer(string='Color Index')

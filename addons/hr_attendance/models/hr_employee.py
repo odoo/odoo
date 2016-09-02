@@ -27,7 +27,7 @@ class HrEmployee(models.Model):
     last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id')
     attendance_state = fields.Selection(string="Attendance", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
     manual_attendance = fields.Boolean(string='Manual Attendance', compute='_compute_manual_attendance', inverse='_inverse_manual_attendance',
-                                       help='The employee will have access to the "My Attendances" menu to perform his check in and out from his session', default=False)
+                                       help='The employee will have access to the "My Attendances" menu to perform his check in and out from his session')
 
     _sql_constraints = [('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee.")]
 
