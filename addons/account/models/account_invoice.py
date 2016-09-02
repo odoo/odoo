@@ -345,6 +345,17 @@ class AccountInvoice(models.Model):
 
         return invoice
 
+    @api.multi
+    def _write(self, vals):
+        pre_not_reconciled = self.filtered(lambda invoice: not invoice.reconciled)
+        pre_reconciled = self - pre_not_reconciled
+        res = super(AccountInvoice, self)._write(vals)
+        reconciled = self.filtered(lambda invoice: invoice.reconciled)
+        not_reconciled = self - reconciled
+        (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
+        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_cancel()
+        return res
+
     @api.model
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
         def get_view_id(xid, name):
@@ -426,10 +437,6 @@ class AccountInvoice(models.Model):
 
         # dummy write on self to trigger recomputations
         return self.with_context(ctx).write({'invoice_line_ids': []})
-
-    @api.multi
-    def confirm_paid(self):
-        return self.write({'state': 'paid'})
 
     @api.multi
     def unlink(self):
@@ -517,11 +524,11 @@ class AccountInvoice(models.Model):
             self.date_due = max(line[0] for line in pterm_list)
 
     @api.multi
-    def action_cancel_draft(self):
+    def action_invoice_draft(self):
+        if self.filtered(lambda inv: inv.state != 'cancel'):
+            raise UserError(_("Invoice must be cancelled in order to reset it to draft."))
         # go from canceled state to draft state
         self.write({'state': 'draft', 'date': False})
-        self.delete_workflow()
-        self.create_workflow()
         # Delete former printed invoice
         try:
             report_invoice = self.env['report']._get_report_from_name('account.report_invoice')
@@ -535,6 +542,44 @@ class AccountInvoice(models.Model):
                 if attachment:
                     attachment.unlink()
         return True
+
+    @api.multi
+    def action_invoice_proforma2(self):
+        if self.filtered(lambda inv: inv.state != 'draft'):
+            raise UserError(_("Invoice must be a draft in order to set it to Pro-forma."))
+        return self.write({'state': 'proforma2'})
+
+    @api.multi
+    def action_invoice_open(self):
+        # lots of duplicate calls to action_invoice_open, so we remove those already open
+        to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
+        if to_open_invoices.filtered(lambda inv: inv.state not in ['proforma2', 'draft']):
+            raise UserError(_("Invoice must be in draft or Pro-forma state in order to validate it."))
+        to_open_invoices.action_date_assign()
+        to_open_invoices.action_move_create()
+        return to_open_invoices.invoice_validate()
+
+    @api.multi
+    def action_invoice_paid(self):
+        # lots of duplicate calls to action_invoice_paid, so we remove those already paid
+        to_pay_invoices = self.filtered(lambda inv: inv.state != 'paid')
+        if to_pay_invoices.filtered(lambda inv: inv.state != 'open'):
+            raise UserError(_('Invoice must be validated in order to set it to register payemnt.'))
+        if to_pay_invoices.filtered(lambda inv: not inv.reconciled):
+            raise UserError(_('You cannot pay an invoice which is partially paid. You need to reconcile payment entries first.'))
+        return to_pay_invoices.write({'state': 'paid'})
+
+    @api.multi
+    def action_invoice_re_open(self):
+        if self.filtered(lambda inv: inv.state != 'paid'):
+            raise UserError(_('Invoice must be paid in order to set it to register payemnt.'))
+        return self.write({'state': 'open'})
+
+    @api.multi
+    def action_invoice_cancel(self):
+        if self.filtered(lambda inv: inv.state not in ['proforma2', 'draft', 'open']):
+            raise UserError(_("Invoice must be in draft or Pro-forma state in order to validate it."))
+        return self.action_cancel()
 
     @api.multi
     def get_formview_id(self):

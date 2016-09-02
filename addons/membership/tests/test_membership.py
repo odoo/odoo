@@ -44,7 +44,7 @@ class TestMembership(TestMembershipCommon):
             'membership: new membership should be in waiting state')
 
         # the invoice is open -> customer goes to invoiced status
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
         self.assertEqual(
             self.partner_1.membership_state, 'invoiced',
             'membership: after opening the invoice, customer should be in invoiced status')
@@ -77,6 +77,6 @@ class TestMembership(TestMembershipCommon):
         invoice = self.env['account.invoice'].search([('partner_id', '=', self.partner_1.id)], limit=1)
 
         # the invoice is canceled -> membership state of the customer goes to canceled
-        invoice.signal_workflow('invoice_cancel')
+        invoice.action_invoice_cancel()
         self.assertEqual(invoice.state, 'cancel')
         self.assertEqual(self.partner_1.membership_state, 'canceled')

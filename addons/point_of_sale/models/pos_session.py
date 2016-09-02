@@ -8,9 +8,9 @@ class PosSession(models.Model):
     _order = 'id desc'
 
     POS_SESSION_STATE = [
-        ('opening_control', 'Opening Control'),  # Signal open
-        ('opened', 'In Progress'),               # Signal closing
-        ('closing_control', 'Closing Control'),  # Signal close
+        ('opening_control', 'Opening Control'),  # method action_pos_session_open
+        ('opened', 'In Progress'),               # method action_pos_session_closing_control
+        ('closing_control', 'Closing Control'),  # method action_pos_session_close
         ('closed', 'Closed & Posted'),
     ]
 
@@ -23,7 +23,7 @@ class PosSession(models.Model):
             for order in session.order_ids.filtered(lambda o: o.state != 'done'):
                 if order.state not in ('paid', 'invoiced'):
                     raise UserError(_("You cannot confirm all orders of this session, because they have not the 'paid' status"))
-                order.signal_workflow('done')
+                order.action_pos_order_done()
 
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
@@ -45,7 +45,7 @@ class PosSession(models.Model):
     state = fields.Selection(
         POS_SESSION_STATE, string='Status',
         required=True, readonly=True,
-        index=True, copy=False, default='opening_control')        
+        index=True, copy=False, default='opening_control')
 
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
@@ -183,7 +183,11 @@ class PosSession(models.Model):
             'config_id': config_id
         })
 
-        return super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
+        res = super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
+        if not pos_config.cash_control:
+            res.action_pos_session_open()
+
+        return res
 
     @api.multi
     def unlink(self):
@@ -198,9 +202,11 @@ class PosSession(models.Model):
             'login_number': self.login_number + 1,
         })
 
-    def wkf_action_open(self):
+    @api.multi
+    def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
-        for session in self:
+        # we only open sessions that haven't already been opened
+        for session in self.filtered(lambda session: session.state == 'opening_control'):
             values = {}
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
@@ -209,17 +215,18 @@ class PosSession(models.Model):
             session.statement_ids.button_open()
         return True
 
-    def wkf_action_opening_control(self):
-        return self.write({'state': 'opening_control'})
-
-    def wkf_action_closing_control(self):
+    @api.multi
+    def action_pos_session_closing_control(self):
         for session in self:
             for statement in session.statement_ids:
                 if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
+            if not session.config_id.cash_control:
+                session.action_pos_session_close()
 
-    def wkf_action_close(self):
+    @api.multi
+    def action_pos_session_close(self):
         # Close CashBox
         for session in self:
             company_id = session.config_id.company_id.id

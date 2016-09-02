@@ -36,7 +36,6 @@ input segments, workflow.
         'security/ir.model.access.csv',
         'views/marketing_campaign_views.xml',
         'data/marketing_campaign_data.xml',
-        'data/marketing_campaign_workflow.xml',
         'report/campaign_analysis_view.xml',
     ],
     'demo': ['data/marketing_campaign_demo.xml'],
