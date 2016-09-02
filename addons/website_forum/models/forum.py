@@ -803,7 +803,20 @@ class Post(models.Model):
 
     @api.multi
     def message_post(self, message_type='notification', subtype=None, **kwargs):
+        question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
+            # add followers of comments on the parent post
+            if self.parent_id:
+                partner_ids = kwargs.get('partner_ids', [])
+                comment_subtype = self.sudo().env.ref('mail.mt_comment')
+                question_followers = self.env['mail.followers'].sudo().search([
+                    ('res_model', '=', self._name),
+                    ('res_id', '=', self.parent_id.id),
+                    ('partner_id', '!=', False),
+                ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
+                partner_ids += [(4, partner.id) for partner in question_followers]
+                kwargs['partner_ids'] = partner_ids
+
             self.ensure_one()
             if not self.can_comment:
                 raise KarmaError('Not enough karma to comment')
@@ -819,6 +832,7 @@ class Post(models.Model):
         if message.message_type == 'comment':
             return {
                 'needaction_partner_ids': [],
+                'partner_ids': [],
             }
         return {}
 
