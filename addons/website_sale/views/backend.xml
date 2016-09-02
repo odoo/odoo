@@ -89,7 +89,7 @@
     <!-- Configuration sub-menus -->
     <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="e-Commerce"/>
     <menuitem id="menu_ecommerce_payment_acquirers" parent="menu_ecommerce_settings" name="Payment Acquirers" action="payment.action_payment_acquirer"/>
-    <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_ecommerce_settings" action="product.product_pricelist_action2" sequence="3"/>
+    <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_ecommerce_settings" action="product.product_pricelist_action2" groups="product.group_pricelist_item" sequence="3"/>
 
 
 </odoo>
