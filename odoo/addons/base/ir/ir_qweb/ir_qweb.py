@@ -8,9 +8,9 @@ from .assetsbundle import AssetsBundle
 from lxml import etree
 from collections import OrderedDict
 
-from openerp import api, models, tools
-import openerp.tools.safe_eval as safe_eval
-from openerp.http import request
+from odoo import api, models, tools
+from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
+from odoo.http import request
 from odoo.modules.module import get_resource_path
 import json
 from time import time
@@ -290,14 +290,14 @@ class IrQWeb(models.AbstractModel, QWeb):
         # string must be stripped otherwise whitespace before the start for
         # formatting purpose are going to break parse/compile
         st = ast.parse(expr.strip(), mode='eval')
-        safe_eval.assert_valid_codeobj(
-            safe_eval._SAFE_OPCODES,
+        assert_valid_codeobj(
+            _SAFE_OPCODES,
             compile(st, '<>', 'eval'), # could be expr, but eval *should* be fine
             expr
         )
 
         # ast.Expression().body -> expr
-        return Contextifier(safe_eval._BUILTINS).visit(st).body
+        return Contextifier(_BUILTINS).visit(st).body
 
     def _get_attr_bool(self, attr, default=False):
         if attr:

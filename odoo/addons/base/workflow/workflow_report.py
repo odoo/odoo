@@ -4,7 +4,7 @@ import logging
 from operator import itemgetter
 import os
 
-from openerp import report, tools
+from odoo import report, tools
 
 _logger = logging.getLogger(__name__)
 

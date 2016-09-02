@@ -6,9 +6,9 @@
 from contextlib import contextmanager
 import unittest
 
-from openerp import api, registry, SUPERUSER_ID
-from openerp.tests import common
-from openerp.modules.registry import Registry
+from odoo import api, registry, SUPERUSER_ID
+from odoo.tests import common
+from odoo.modules.registry import Registry
 
 
 @contextmanager
@@ -28,7 +28,7 @@ MODEL = 'test_uninstall.model'
 class TestUninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in
-    `openerp.tests` which should be present in the addons-path.
+    `odoo.tests` which should be present in the addons-path.
     """
 
     def test_01_install(self):

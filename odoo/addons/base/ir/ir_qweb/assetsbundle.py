@@ -9,11 +9,11 @@ import uuid
 from datetime import datetime
 from subprocess import Popen, PIPE
 from odoo import fields, tools
-from openerp.http import request
+from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
 import werkzeug
-from openerp.tools import func, misc
+from odoo.tools import func, misc
 
 import logging
 _logger = logging.getLogger(__name__)

@@ -495,7 +495,7 @@ class QWeb(object):
             from collections import OrderedDict
             import itertools
             from itertools import repeat, imap
-            from openerp.addons.base.ir.ir_qweb.qweb import escape, unicodifier, foreach_iterator
+            from odoo.addons.base.ir.ir_qweb.qweb import escape, unicodifier, foreach_iterator
             """))
 
     def _create_def(self, options, body, prefix='fn', lineno=None):

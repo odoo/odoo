@@ -79,7 +79,7 @@ class IrFilters(models.Model):
         This method should only be called if ``vals`` is trying to set
         ``is_default``
 
-        :raises openerp.exceptions.UserError: if there is an existing default and
+        :raises odoo.exceptions.UserError: if there is an existing default and
                                             we're not updating it
         """
         domain = self._get_action_domain(vals.get('action_id'))

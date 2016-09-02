@@ -3,9 +3,9 @@
 #
 from datetime import date, datetime
 
-from openerp.exceptions import AccessError, except_orm
-from openerp.tests import common
-from openerp.tools import mute_logger
+from odoo.exceptions import AccessError, except_orm
+from odoo.tests import common
+from odoo.tools import mute_logger
 
 
 class TestFields(common.TransactionCase):

@@ -3,7 +3,7 @@
 
 import time
 
-from openerp import models, api
+from odoo import models, api
 
 class m(models.Model):
     """ This model exposes a few methods that will consume between 'almost no

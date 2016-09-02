@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from PIL import Image
 from cStringIO import StringIO
 import babel
-from openerp.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils
+from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils
 from .qweb import unicodifier
 
 import logging

@@ -2,7 +2,7 @@
 import os.path
 import unittest
 
-from openerp.tools.mimetypes import guess_mimetype
+from odoo.tools.mimetypes import guess_mimetype
 
 def contents(extension):
     with open(os.path.join(
