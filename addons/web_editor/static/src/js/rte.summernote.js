@@ -405,18 +405,22 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-var fn_is_void = dom.isVoid;
+var fn_is_void = dom.isVoid || function () {};
 dom.isVoid = function (node) {
     return fn_is_void(node) || dom.isImgFont(node) || (node && node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i));
 };
+var fn_is_img = dom.isImg || function () {};
 dom.isImg = function (node) {
-    return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)(media_iframe_video|o_image)(\s|$)/i)) ));
+    return fn_is_img(node) || dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)(media_iframe_video|o_image)(\s|$)/i)) ));
 };
+var fn_is_forbidden_node = dom.isForbiddenNode || function () {};
 dom.isForbiddenNode = function (node) {
-    return $(node).is(".media_iframe_video, .fa, img");
+    return fn_is_forbidden_node(node) || $(node).is(".media_iframe_video");
 };
-
+var fn_is_img_font = dom.isImgFont || function () {};
 dom.isImgFont = function (node) {
+    if (fn_is_img_font(node)) return true;
+
     var nodeName = node && node.nodeName.toUpperCase();
     var className = (node && node.className || "");
     if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
@@ -429,17 +433,16 @@ dom.isImgFont = function (node) {
     }
     return false;
 };
-// re-overwrite font to include theme icons
-var isFont = dom.isFont;
+var fn_is_font = dom.isFont; // re-overwrite font to include theme icons
 dom.isFont = function (node) {
-    return dom.isImgFont(node) || isFont(node);
+    return fn_is_font(node) || dom.isImgFont(node);
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var fn_visible = $.summernote.pluginEvents.visible;
 $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
-    var res = fn_visible.call(this, event, editor, layoutInfo);
+    var res = fn_visible.apply(this, arguments);
     var rng = range.create();
     if(!rng) return res;
     var $node = $(dom.node(rng.sc));
