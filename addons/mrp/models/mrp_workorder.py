@@ -121,6 +121,7 @@ class MrpWorkorder(models.Model):
     next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order")
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
+    production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True)
     color = fields.Integer('Color', compute='_compute_color')
     capacity = fields.Float(
         'Capacity', default=1.0,

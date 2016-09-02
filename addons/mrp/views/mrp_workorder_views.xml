@@ -419,4 +419,43 @@
           </p>
         </field>
     </record>
+
+    <record id="view_workcenter_load_pivot" model="ir.ui.view">
+        <field name="name">report.workcenter.load.pivot</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <pivot string="Work Center Loads">
+                <field name="duration_expected" type="measure"/>
+                <field name="workcenter_id" type="row"/>
+                <field name="production_date" type="row" interval="day"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_work_center_load_graph" model="ir.ui.view">
+        <field name="name">report.workcenter.load.graph</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <graph string="Work Center load" type="bar">
+                <field name="production_date" interval="day"/>
+                <field name="workcenter_id"/>
+                <field name="duration_expected" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_mrp_workcenter_load_report_graph" model="ir.actions.act_window">
+        <field name="name">Work Center Loads</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="view_id" ref="view_workcenter_load_pivot"/>
+    </record>
+
+    <record id="action_mrp_workcenter_load_report_pivot" model="ir.actions.act_window.view">
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_work_center_load_graph"/>
+        <field name="act_window_id" ref="action_mrp_workcenter_load_report_graph"/>
+    </record>
 </odoo>

@@ -49,24 +49,29 @@ class MrpWorkcenter(models.Model):
     oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
     oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
+    workcenter_load = fields.Float('Work Center Load', compute='_compute_workorder_count')
 
-    @api.depends('order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
+    @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
     def _compute_workorder_count(self):
         MrpWorkorder = self.env['mrp.workorder']
         result = {wid: {} for wid in self.ids}
+        result_duration_expected = {wid: 0 for wid in self.ids}
         #Count Late Workorder
         data = MrpWorkorder.read_group([('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'ready')), ('date_planned_start', '<', datetime.datetime.now().strftime('%Y-%m-%d'))], ['workcenter_id'], ['workcenter_id'])
         count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
         #Count All, Pending, Ready, Progress Workorder
         res = MrpWorkorder.read_group(
             [('workcenter_id', 'in', self.ids)],
-            ['workcenter_id', 'state'], ['workcenter_id', 'state'],
+            ['workcenter_id', 'state', 'duration_expected'], ['workcenter_id', 'state'],
             lazy=False)
         for res_group in res:
             result[res_group['workcenter_id'][0]][res_group['state']] = res_group['__count']
+            if res_group['state'] in ('pending', 'ready', 'progress'):
+                result_duration_expected[res_group['workcenter_id'][0]] += res_group['duration_expected']
         for workcenter in self:
             workcenter.workorder_count = sum(count for state, count in result[workcenter.id].items() if state not in ('done', 'cancel'))
             workcenter.workorder_pending_count = result[workcenter.id].get('pending', 0)
+            workcenter.workcenter_load = result_duration_expected[workcenter.id]
             workcenter.workorder_ready_count = result[workcenter.id].get('ready', 0)
             workcenter.workorder_progress_count = result[workcenter.id].get('progress', 0)
             workcenter.workorder_late_count = count_data.get(workcenter.id, 0)
