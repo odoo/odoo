@@ -134,7 +134,7 @@ class SaleOrder(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_get_invoiced', store=True, readonly=True, default='no')
+        ], string='Invoice Status', compute='_get_invoiced', store=True, readonly=True)
 
     note = fields.Text('Terms and conditions', default=_default_note)
 
@@ -741,10 +741,10 @@ class SaleOrderLine(models.Model):
     qty_delivered = fields.Float(string='Delivered', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice', store=True, readonly=True,
-        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'))
     qty_invoiced = fields.Float(
         compute='_get_invoice_qty', string='Invoiced', store=True, readonly=True,
-        digits=dp.get_precision('Product Unit of Measure'), default=0.0)
+        digits=dp.get_precision('Product Unit of Measure'))
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)

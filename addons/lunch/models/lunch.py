@@ -39,7 +39,7 @@ class LunchOrder(models.Model):
     state = fields.Selection([('new', 'New'),
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
-                             'Status', readonly=True, index=True, copy=False, default='new',
+                             'Status', readonly=True, index=True, copy=False,
                              compute='_compute_order_state', store=True)
     alerts = fields.Text(compute='_compute_alerts_get', string="Alerts")
     previous_order_ids = fields.Many2many('lunch.order.line', compute='_compute_previous_order_ids',
