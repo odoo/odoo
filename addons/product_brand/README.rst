@@ -1,32 +1,32 @@
-Product Brand Manager [product_brand]
-=====================================
+.. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
+   :target: https://www.gnu.org/licenses/agpl.html
+   :alt: License: AGPL-3
 
-This module allows odoo users to easily manage product brands. You can
-define brands, attach a logo and a description to them. 
-It also allows to attach a partner to a brand.
+=====================
+Product Brand Manager
+=====================
+
+This module introduce the following features:
+
+* This module allows odoo users to easily manage product brands.
+
+* You can define brands, attach a logo and a description to them.
+
+* It also allows to attach a partner to a brand.
 
 Installation
-============
+=============
 
-To install this module, you need to:
-
- * git clone https://github.com/OCA/product_attribute --branch 8.0
- * make it available to odoo by adding its location to the addons_path in 
-   /etc/odoo-server.conf
+ No external library is used.
 
 Configuration
 =============
 
-To configure this module, you need to:
-
- * no configuration required
+ No configuration is required.
 
 Usage
 =====
 
-To use this module, you need to:
-
- * go to ...
 
 For further information, please visit:
 
@@ -35,11 +35,27 @@ For further information, please visit:
 Known issues / Roadmap
 ======================
 
-* add a field with brands assiciated to a Customer or Supplier on 
-  the Customers/Suppliers Form View
+* Add a field with brands assiciated to a Customer or Supplier on 
+  the Customers/Suppliers Form View.
+
+
+Bug Tracker
+===========
+
+Bugs are tracked on `GitHub Issues
+<https://github.com/OCA/product-attribute/issues>`_. In case of trouble, please
+check there if your issue has already been reported. If you spotted it first,
+help us smashing it by providing a detailed and welcomed feedback
+`here <https://github.com/OCA/product-attribute/issues/new?body=module:%20product_brand%0Aversion:%208.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+
 
 Credits
 =======
+
+Images
+------
+
+* Odoo Community Association: `Icon <https://github.com/OCA/maintainer-tools/blob/master/template/module/static/description/icon.svg>`_.
 
 Contributors
 ------------
@@ -49,6 +65,7 @@ Contributors
 * Seraphine Lantible <s.lantible@gmail.com>
 * Gunnar Wagner <vrms@netcologne.de>
 * Leonardo Donelli <donelli@webmonks.it>
+* Serpent Consulting Services Pvt. Ltd. <jay.vora@serpentcs.com>
 
 Maintainer
 ----------

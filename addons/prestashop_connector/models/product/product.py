@@ -1,12 +1,14 @@
-# -*- coding: utf-8 -*-
+import logging
 from openerp.osv import fields, orm
 
-class product_product(orm.Model):
-    _inherit = 'product.product'
+_logger = logging.getLogger(__name__)
+
+class product_template(orm.Model):
+    _inherit = 'product.template'
 
     _columns = {
         'prestashop_bind_ids': fields.one2many(
-            'prestashop.product.product',
+            'prestashop.product.template',
             'openerp_id',
             string='PrestaShop Bindings'
         ),
@@ -16,28 +18,29 @@ class product_product(orm.Model):
         if default is None:
             default = {}
         default['prestashop_bind_ids'] = []
-        return super(product_product, self).copy(
+        return super(product_template, self).copy(
             cr, uid, id, default=default, context=context
         )
 
     def update_prestashop_quantities(self, cr, uid, ids, context=None):
-        for product in self.browse(cr, uid, ids, context=context):
-            for prestashop_product in product.prestashop_bind_ids:
-                prestashop_product.recompute_prestashop_qty()
-            prestashop_combinations = product.prestashop_combinations_bind_ids
+        for template in self.browse(cr, uid, ids, context=context):
+            for prestashop_template in template.prestashop_bind_ids:
+                prestashop_template.recompute_prestashop_qty()
+            prestashop_combinations = template.product_variant_ids
             for prestashop_combination in prestashop_combinations:
                 prestashop_combination.recompute_prestashop_qty()
         return True
-    
-class prestashop_product_product(orm.Model):
-    _name = 'prestashop.product.product'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.product': 'openerp_id'}
 
+
+class prestashop_product_template(orm.Model):
+    _name = 'prestashop.product.template'
+    _inherit = 'prestashop.binding'
+    _inherits = {'product.template': 'openerp_id'}
+        
     _columns = {
         'openerp_id': fields.many2one(
-            'product.product',
-            string='Product',
+            'product.template',
+            string='Template',
             required=True,
             ondelete='cascade'
         ),
@@ -75,14 +78,25 @@ class prestashop_product_product(orm.Model):
             translate=True,
             required=False,
         ),
+        'available_for_order': fields.boolean(
+            'Available For Order'
+        ),
+        'show_price': fields.boolean(
+            'Show Price'
+        ),
         'combinations_ids': fields.one2many(
             'prestashop.product.combination',
-            'main_product_id',
+            'main_template_id',
             string='Combinations'
         ),
         'reference': fields.char('Original reference'),
     }
 
+    _defaults = {
+        'available_for_order': True,
+        'show_price': True,
+        'always_available': True
+    }
     _sql_constraints = [
         ('prestashop_uniq', 'unique(backend_id, prestashop_id)',
          "A product with the same ID on Prestashop already exists")
@@ -106,15 +120,10 @@ class prestashop_product_product(orm.Model):
             context = {}
         backend = product.backend_id
         stock = backend.warehouse_id.lot_stock_id
-        stock_field = 'qty_available'
+        stock_field = backend.quantity_field        
         location_ctx = context.copy()
         location_ctx['location'] = stock.id
         product_stk = self.read(
             cr, uid, product.id, [stock_field], context=location_ctx
         )
         return product_stk[stock_field]
-
-class prestashop_product_attribute(orm.Model):
-    _name='prestashop.product.attribute'
-    _inherit = 'prestashop.binding'
-    _inherits = {'product.attribute': 'openerp_id'}

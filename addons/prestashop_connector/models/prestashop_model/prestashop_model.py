@@ -9,7 +9,7 @@ from openerp import api, models
 
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.connector.session import ConnectorSession
-from ..unit.import_synchronizer import (
+from ...unit.import_synchronizer import (
     import_batch,
     import_customers_since,
     import_orders_since,
@@ -20,10 +20,10 @@ from ..unit.import_synchronizer import (
     import_record,
     export_product_quantities,
 )
-from ..unit.direct_binder import DirectBinder
-from ..connector import get_environment
+from ...unit.direct_binder import DirectBinder
+from ...connector import get_environment
 
-from ..product import import_inventory
+# from ..product import import_inventory
 
 _logger = logging.getLogger(__name__)
 
@@ -90,9 +90,6 @@ class prestashop_backend(orm.Model):
         for backend_id in ids:
             for model in ('prestashop.shop.group',
                           'prestashop.shop',):
-                # import directly, do not delay because this
-                # is a fast operation, a direct return is fine
-                # and it is simpler to import them sequentially
                 import_batch(session, model, backend_id)
             
         return True
@@ -110,6 +107,7 @@ class prestashop_backend(orm.Model):
                 directBinder.run()
 
             import_product_attribute(session, 'prestashop.product.attribute', backend_id)
+            import_batch(session, 'prestashop.product.attribute.value', backend_id, None)
             #import_batch(session, 'prestashop.sale.order.state', backend_id)
         return True
 
@@ -162,7 +160,7 @@ class prestashop_backend(orm.Model):
             since_date = self._date_as_user_tz(
                 cr, uid, backend_record.import_products_since
             )
-            import_products(session, 'prestashop.product.product', backend_record.id, since_date)
+            import_products(session, 'prestashop.product.template', backend_record.id, since_date)
         return True
 
     def update_product_stock_qty(self, cr, uid, ids, context=None):
@@ -176,8 +174,8 @@ class prestashop_backend(orm.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         session = ConnectorSession(cr, uid, context=context)
-        for backend_id in ids:
-            import_inventory.delay(session, backend_id)
+        # for backend_id in ids:
+        #     import_inventory.delay(session, backend_id)
 
     def import_sale_orders(self, cr, uid, ids, context=None):
         if not hasattr(ids, '__iter__'):
