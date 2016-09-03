@@ -275,7 +275,10 @@ class QWeb(object):
         astmod = self._base_module()
         try:
             body = self._compile_node(element, _options)
+            ast_calls = _options['ast_calls']
+            _options['ast_calls'] = []
             def_name = self._create_def(_options, body, prefix='template_%s' % name.replace('.', '_'))
+            _options['ast_calls'] += ast_calls
         except QWebException, e:
             raise e
         except Exception, e:
@@ -371,6 +374,9 @@ class QWeb(object):
 
     def _profiling(self, astmod, options):
         """ Add profiling code into the givne module AST. """
+        if not astor:
+            _logger.warning("Please install astor to display the code profiling")
+            return
         code_line = astor.to_source(astmod)
 
         # code = $code_lines.split(u"\n")
@@ -887,18 +893,16 @@ class QWeb(object):
             if body:
                 def_name = self._create_def(options, body, prefix='set', lineno=el.sourceline)
                 return [
-                    # $varset = []
+                    # content = []
                     ast.Assign(
-                        targets=[
-                            self._values_var(ast.Str(varname), ctx=ast.Store())
-                        ],
+                        targets=[ast.Name(id='content', ctx=ast.Store())],
                         value=ast.List(elts=[], ctx=ast.Load())
                     ),
                     # set(self, $varset.append)
                     ast.Expr(self._call_def(
                         def_name,
                         append=ast.Attribute(
-                            value=self._values_var(ast.Str(varname), ctx=ast.Load()),
+                            value=ast.Name(id='content', ctx=ast.Load()),
                             attr='append',
                             ctx=ast.Load()
                         )
@@ -908,7 +912,7 @@ class QWeb(object):
                         targets=[self._values_var(ast.Str(varname), ctx=ast.Store())],
                         value=ast.Call(
                             func=ast.Attribute(value=ast.Str(u''), attr='join', ctx=ast.Load()),
-                            args=[self._values_var(ast.Str(varname), ctx=ast.Load())], keywords=[],
+                            args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
                             starargs=None, kwargs=None
                         )
                     )

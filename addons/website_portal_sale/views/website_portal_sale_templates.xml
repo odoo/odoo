@@ -381,19 +381,4 @@
       </t>
     </template>
 
-    <template id="sale_backend_link" inherit_id='website_portal_sale.portal_my_orders' customize_show="True" name="Link to Sales Backend" active="False">
-        <xpath expr="//h3[@class='page-header']" position="inside">
-            <a href="/web#action=portal_sale.action_orders_portal" target="_blank" class="btn btn-default btn-xs pull-right"> Access the complete Sale application</a>
-        </xpath>
-    </template>
-
-    <template id="sales_backend_access" inherit_id='website_portal_sale.orders_followup' customize_show="True" name="Backend Access" active="False">
-        <xpath expr="//div[@id='optional_placeholder']" position="inside">
-            <h4 class="text-muted text-center mt64 mb64">
-                If you wish to access the complete application to manage your orders, you can follow
-                <a href="/web#action=portal_sale.action_orders_portal">this link</a>.
-            </h4>
-        </xpath>
-    </template>
-
 </odoo>

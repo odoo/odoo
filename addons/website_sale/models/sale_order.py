@@ -153,6 +153,17 @@ class SaleOrder(models.Model):
             accessory_products -= order.website_order_line.mapped('product_id')
             return random.sample(accessory_products, len(accessory_products))
 
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        """ Override the method to place the portal customers in the 'user' group data as a portal view now exists"""
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and all(recipient.user_ids.mapped('share')):
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
+        return super(SaleOrder, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+
 
 class Website(models.Model):
     _inherit = 'website'

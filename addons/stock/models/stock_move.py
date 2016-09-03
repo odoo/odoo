@@ -910,6 +910,7 @@ class StockMove(models.Model):
         :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
         :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
         :returns: id of the backorder move created """
+        self = self.with_prefetch() # This makes the ORM only look for one record and not 300 at a time, which improves performance
         if self.state in ('done', 'cancel'):
             raise UserError(_('You cannot split a move done'))
         elif self.state == 'draft':
@@ -918,7 +919,6 @@ class StockMove(models.Model):
             raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
         if float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) or self.product_qty <= qty:
             return self.id
-
         # HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
         uom_qty = self.product_id.uom_id._compute_quantity(qty, self.product_uom, rounding_method='HALF-UP')
         defaults = {
@@ -937,12 +937,11 @@ class StockMove(models.Model):
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
         new_move = self.copy(defaults)
-
         # ctx = context.copy()
         # TDE CLEANME: used only in write in this file, to clean
         # ctx['do_not_propagate'] = True
         self.with_context(do_not_propagate=True).write({'product_uom_qty': self.product_uom_qty - uom_qty})
-
+        
         if self.move_dest_id and self.propagate and self.move_dest_id.state not in ('done', 'cancel'):
             new_move_prop = self.move_dest_id.split(qty)
             new_move.write({'move_dest_id': new_move_prop})
@@ -971,10 +970,5 @@ class StockMove(models.Model):
     # ----------------------------------------------------------------------
 
     def quants_unreserve(self):
-        # TDE FIXME: do in batch
-        for move in self:
-            if move.reserved_quant_ids:
-                # if move has a picking_id, write on that picking that pack_operation might have changed and need to be recomputed
-                if move.partially_available:
-                    move.write({'partially_available': False})
-                move.reserved_quant_ids.sudo().write({'reservation_id': False})
+        self.filtered(lambda x: x.partially_available).write({'partially_available': False})
+        self.mapped('reserved_quant_ids').sudo().write({'reservation_id': False})

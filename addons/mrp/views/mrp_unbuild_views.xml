@@ -76,7 +76,8 @@
                                 <field name="mo_id"/>
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
-                                <field name="lot_id" groups="stock.group_production_lot"/>
+                                <field name="has_tracking" invisible="1"/>
+                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
                             </group>
                         </group>
                     </sheet>

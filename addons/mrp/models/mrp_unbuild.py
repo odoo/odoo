@@ -39,6 +39,7 @@ class MrpUnbuild(models.Model):
         'stock.production.lot', 'Lot',
         domain="[('product_id', '=', product_id)]",
         states={'done': [('readonly', True)]})
+    has_tracking=fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         default=_get_default_location_id,
