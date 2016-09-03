@@ -97,30 +97,16 @@ class project_issue(osv.Model):
         return None
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('project.task.type')
-        order = stage_obj._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
-        # retrieve section_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
-        # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
-        if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
         # perform search
-        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+        stage_ids = stage_obj.search(cr, uid, search_domain, context=context)
+        result = stage_obj.name_get(cr, uid, stage_ids, context=context)
 
         fold = {}
-        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
-            fold[stage.id] = stage.fold or False
+        for stage in stage_obj.browse(cr, uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold
         return result, fold
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
