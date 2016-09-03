@@ -19,18 +19,17 @@ class MrpBomCost(models.AbstractModel):
                 for value in product.attribute_value_ids:
                     attributes += [(value.attribute_id.name, value.name)]
                 result, result2 = bom.explode(product, 1)
-                product_line = {'name': product.name, 'lines': [], 'total': 0.0,
+                product_line = {'bom': bom, 'name': product.name, 'lines': [], 'total': 0.0,
                                 'currency': self.env.user.company_id.currency_id,
                                 'product_uom_qty': bom.product_qty,
                                 'product_uom': bom.product_uom_id,
                                 'attributes': attributes}
                 total = 0.0
                 for bom_line, line_data in result2:
-                    line_product = line_data['product']
-                    price_uom = line_product.uom_id._compute_quantity(line_product.standard_price, bom_line.product_uom_id)
+                    price_uom = self.env['product.uom']._compute_qty(bom_line.product_id.uom_id.id, bom_line.product_id.standard_price, bom_line.product_uom_id.id)
                     line = {
-                        'product_id': line_product,
-                        'product_uom_qty': line_data['qty'],
+                        'product_id': bom_line.product_id,
+                        'product_uom_qty': line_data['qty'], #line_data needed for phantom bom explosion
                         'product_uom': bom_line.product_uom_id,
                         'price_unit': price_uom,
                         'total_price': price_uom * line_data['qty'],

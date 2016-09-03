@@ -149,6 +149,8 @@ class MrpProduction(models.Model):
     has_moves = fields.Boolean(compute='_has_moves')
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
+    priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
+                                readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
 
     @api.multi
     @api.depends('workorder_ids')
@@ -294,10 +296,13 @@ class MrpProduction(models.Model):
         self.ensure_one()
         moves = self.env['stock.move']
         for bom_line, line_data in exploded_lines:
-            moves += self._generate_raw_move(bom_line, line_data['qty'])
+            moves += self._generate_raw_move(bom_line, line_data)
         return moves
 
-    def _generate_raw_move(self, bom_line, quantity):
+    def _generate_raw_move(self, bom_line, line_data):
+        quantity = line_data['qty']
+        # alt_op needed for the case when you explode phantom bom and all the lines will be consumed in the operation given by the parent bom line
+        alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
         if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
             return self.env['stock.move']
         if bom_line.product_id.type not in ['product', 'consu']:
@@ -319,7 +324,7 @@ class MrpProduction(models.Model):
             'location_dest_id': self.product_id.property_stock_production.id,
             'raw_material_production_id': self.id,
             'company_id': self.company_id.id,
-            'operation_id': bom_line.operation_id.id,
+            'operation_id': bom_line.operation_id.id or alt_op,
             'price_unit': bom_line.product_id.standard_price,
             'procure_method': 'make_to_stock',
             'origin': self.name,
@@ -385,15 +390,18 @@ class MrpProduction(models.Model):
     def _generate_workorders(self, exploded_boms):
         workorders = self.env['mrp.workorder']
         for bom, bom_data in exploded_boms:
-            workorders += self._workorders_create(bom, bom_data['qty'])
+            # If the routing of the parent BoM and phantom BoM are the same, don't recreate work orders, but use one master routing
+            if bom.routing_id.id and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.routing_id.id != bom.routing_id.id):
+                workorders += self._workorders_create(bom, bom_data)
         return workorders
 
-    def _workorders_create(self, bom, qty):
+    def _workorders_create(self, bom, bom_data):
         """
         :param bom: in case of recursive boms: we could create work orders for child
                     BoMs
         """
         workorders = self.env['mrp.workorder']
+        qty = bom_data['qty']
 
         use_serial = any(product.tracking == 'serial' for product in self.mapped('move_finished_ids.product_id'))
         if use_serial:

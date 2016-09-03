@@ -111,13 +111,13 @@ class MrpBom(models.Model):
         return self.search(domain, order='sequence, product_id', limit=1)
 
     def explode(self, product, quantity, picking_type=False):
-        boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity})]
+        boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
         templates_done = product.product_tmpl_id
 
-        bom_lines = [(bom_line, product, quantity) for bom_line in self.bom_line_ids]
+        bom_lines = [(bom_line, product, quantity, False) for bom_line in self.bom_line_ids]
         while bom_lines:
-            current_line, current_product, current_qty = bom_lines[0]
+            current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
 
             if current_line._skip_bom_line(current_product):
@@ -126,15 +126,14 @@ class MrpBom(models.Model):
                 raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
 
             line_quantity = current_qty * current_line.product_qty / current_line.bom_id.product_qty
-
             bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id)
             if bom.type == 'phantom':
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity, bom.product_uom_id)
-                bom_lines = [(line, current_line.product_id, line_quantity) for line in bom.bom_line_ids] + bom_lines
+                bom_lines = [(line, current_line.product_id, line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
                 templates_done |= current_line.product_id.product_tmpl_id
-                boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity}))
+                boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
-                lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity}))
+                lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
 
         return boms_done, lines_done
 

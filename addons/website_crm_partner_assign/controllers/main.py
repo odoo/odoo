@@ -279,7 +279,6 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
         country_id = post.get('country_id')
-        print post
         if grade_id:
             current_grade = request.env['res.partner.grade'].browse(int(grade_id)).exists()
         if country_id:

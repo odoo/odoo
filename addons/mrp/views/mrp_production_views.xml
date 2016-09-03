@@ -117,7 +117,7 @@
                     <notebook>
                         <page string="Consumed Materials">
                             <field name="move_raw_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-danger="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" create="0">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">
                                     <field name="product_id" required="1"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="has_tracking" invisible="1"/>
@@ -136,7 +136,7 @@
                         </page>
                         <page string="Finished Products">
                             <field name="move_finished_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-danger="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" create="0">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" create="0">
                                     <field name="product_id" required="1"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="is_done" invisible="1"/>

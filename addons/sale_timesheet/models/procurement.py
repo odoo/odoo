@@ -25,6 +25,14 @@ class ProcurementOrder(models.Model):
     def _run(self):
         self.ensure_one()
         if self._is_procurement_task() and not self.task_id:
+            # If the SO was confirmed, cancelled, set to draft then confirmed, avoid creating a new
+            # task.
+            if self.sale_line_id:
+                existing_task = self.env['project.task'].search(
+                    [('sale_line_id', '=', self.sale_line_id.id)]
+                )
+                if existing_task:
+                    return existing_task
             # create a task for the procurement
             return self._create_service_task()
         return super(ProcurementOrder, self)._run()
