@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-17 08:21+0000\n"
-"PO-Revision-Date: 2016-08-24 08:55+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-30 17:05+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +110,7 @@ msgstr "Aantal decimalen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "# Regels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -120,7 +120,7 @@ msgstr "# van de transactie"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} factuur (Ref ${object.number or 'n/b'})"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -155,12 +155,12 @@ msgstr ", indien boekhouding of inkoop is geïnstalleerd."
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> Afletteren"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View reconciled entries"
-msgstr ""
+msgstr "-> Bekijk afgeletterde boekingen"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:322
@@ -328,7 +328,7 @@ msgstr "<span class=\"panel-title\">\n                                        <s
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Balans in GB</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -348,7 +348,7 @@ msgstr "<span> Tot </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "<span>Duplicate</span>"
-msgstr "<span>Dubbele</span>"
+msgstr "<span>Kopie factuur</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1909,7 +1909,7 @@ msgstr "Bankafschriften zijn volledig afgeletterd"
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Base"
-msgstr ""
+msgstr "Grondslag"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1948,7 +1948,7 @@ msgstr "Facturatie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr ""
+msgstr "Facturen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2297,7 +2297,7 @@ msgstr "Controleer eindsaldo"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_is_difference_zero
 msgid "Check if difference is zero."
-msgstr ""
+msgstr "Controleer of het verschil nul is."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_reconcile
@@ -2711,7 +2711,7 @@ msgstr "Toegangscontrole"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "Kosten van de omzet"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:388
@@ -3117,7 +3117,7 @@ msgstr "Data"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "Dag(en) na het einde van factuurmaand (Net EOM)"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -4761,7 +4761,7 @@ msgstr "Is een volger"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr ""
+msgstr "Is nul"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5251,17 +5251,17 @@ msgstr "Legale naam"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr ""
+msgstr "Juridische notities"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Juridische notities welke op de factuur moeten worden afgedrukt."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Cost of Revenue"
-msgstr ""
+msgstr "Minus kosten van de omzet"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5985,7 +5985,7 @@ msgid ""
 "Operation not allowed. You can only reconcile entries that share the same "
 "secondary currency or that don't have one. Edit your journal items or make "
 "another selection before proceeding any further."
-msgstr ""
+msgstr "Bewerking niet toegestaan. U kunt alleen boekingen afletteren welke dezelfde tweede valuta hebben of welke geen tweede valuta hebben. Bewerk uw boekingen of maak een andere selectie voordat u verder gaat. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -8728,7 +8728,7 @@ msgstr "Maateenheid"
 #: code:addons/account/report/account_aged_partner_balance.py:264
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
+msgstr "Onbekende relatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9026,7 +9026,7 @@ msgstr "Weergave"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "View reconciled entries"
-msgstr ""
+msgstr "Bekijk afgeletterde boekingen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9219,7 +9219,7 @@ msgstr "Hier kunt u opgeven in welk formaat u de regel wilt weergeven. Indien u 
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
-msgstr ""
+msgstr "Het is niet mogelijk om een boeking toe te voegen of te wijzigen op een datum gelijk of na de blokkeerdatum %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:183
