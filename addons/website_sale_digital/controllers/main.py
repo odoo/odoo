@@ -4,6 +4,7 @@
 import base64
 from cStringIO import StringIO
 from werkzeug.utils import redirect
+
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_portal.controllers.main import website_account

@@ -83,13 +83,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         core.bus.on('clear_uncommitted_changes', this, function(chain_callbacks) {
             var self = this;
             chain_callbacks(function() {
-                var def = $.Deferred();
-                self.can_be_discarded().then(function() {
-                    def.resolve();
-                }).fail(function() {
-                    def.reject();
-                });
-                return def;
+                return self.can_be_discarded();
             });
         });
     },
@@ -717,7 +711,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     def.resolve();
                 });
             } else {
-                $.async_when().done(function () {
+                utils.async_when().done(function () {
                     def.reject();
                 });
             }

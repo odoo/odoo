@@ -1,3 +1,4 @@
+# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account
@@ -10,18 +11,34 @@
 # ook rio <riokoko5@gmail.com>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# #-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account
+#
+# Translators:
+# kent_ocean <ke.tanabe@gmail.com>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016
+# ook rio <riokoko5@gmail.com>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-20 12:20+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-07-22 08:38+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account
@@ -47,7 +64,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
+"amounting <strong>${object.amount_total} ${object.currency_id.name}</"
 "strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
@@ -81,7 +98,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1522
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1502
 #, python-format
 msgid " seconds"
 msgstr "秒"
@@ -110,13 +127,13 @@ msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:469
+#: code:addons/account/models/account_bank_statement.py:322
 #, python-format
 msgid "%d transactions were automatically reconciled."
 msgstr "%d の取引が自動消込されました。"
 
 #. module: account
-#: code:addons/account/models/account.py:576
+#: code:addons/account/models/account.py:575
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (コピー)"
@@ -125,9 +142,13 @@ msgstr "%s (コピー)"
 #: code:addons/account/models/account.py:152
 #: code:addons/account/models/account.py:310
 #: code:addons/account/models/account.py:311
-#, python-format
+#, fuzzy, python-format
 msgid "%s (copy)"
-msgstr "%s (コピー)"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"%s (コピー)\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"%s（コピー）"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.external_layout_footer
@@ -152,7 +173,7 @@ msgid "-> View partially reconciled entries"
 msgstr "自動消し込み項目"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:470
+#: code:addons/account/models/account_bank_statement.py:323
 #, python-format
 msgid "1 transaction was automatically reconciled."
 msgstr "1つの取引が自動消込されました。"
@@ -263,15 +284,22 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
+#, fuzzy
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Advisor</strong> (Full "
 "access)\n"
 "                                    </span>"
 msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "<span class=\"panel-title\">\n"
 "                                        <strong>アドバイザー</strong> (全アク"
 "セス権)\n"
+"                                    </span>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span class=\"panel-title\">\n"
+"                                        <strong>アドバイザー</strong> (フルア"
+"クセス)\n"
 "                                    </span>"
 
 #. module: account
@@ -352,13 +380,23 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
+#, fuzzy
 msgid "<span> From </span>"
-msgstr "<span>請求者</span>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>請求者</span>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>から</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
+#, fuzzy
 msgid "<span> To </span>"
-msgstr "<span>請求先</span>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>請求先</span>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>へ</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -367,13 +405,23 @@ msgstr "<span>重複</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "<span>New Bill</span>"
-msgstr "<span>新規仕入先請求書</span>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>新規仕入先請求書</span>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>新規費用</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "<span>New Invoice</span>"
-msgstr "<span>新規顧客請求書</span>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>新規顧客請求書</span>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>新しい請求書</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -388,7 +436,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
-msgstr "<span>処理</span>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -402,8 +450,13 @@ msgstr "<span>レポート</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "<span>View</span>"
-msgstr "<span>ビュー</span>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>ビュー</span>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<span>照会</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -473,8 +526,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "<strong>Comment:</strong>"
-msgstr "<strong>コメント:</strong>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>コメント:</strong>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>コメント：</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -555,8 +613,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "<strong>Due Date:</strong>"
-msgstr "<strong>期限:</strong>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>期限:</strong>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>期限：</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -580,8 +643,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>請求日:</strong>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>請求日:</strong>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>請求日：</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -712,8 +780,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
+#, fuzzy
 msgid "<strong>Sorted By:</strong>"
-msgstr "<strong>並び替え:</strong>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>並び替え:</strong>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>並び替え：</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -727,8 +800,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#, fuzzy
 msgid "<strong>Sub-Total :</strong>"
-msgstr "<strong>小計:</strong>"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>小計:</strong>\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"<strong>小計：</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -789,19 +867,19 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1335
+#: code:addons/account/models/account_invoice.py:1312
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1338
+#: code:addons/account/models/account_invoice.py:1315
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:503
+#: code:addons/account/models/account.py:502
 #, python-format
 msgid "A bank account can only belong to one journal."
 msgstr ""
@@ -854,14 +932,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:743
+#: code:addons/account/models/account_move.py:732
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:867
-#: code:addons/account/models/account_bank_statement.py:870
+#: code:addons/account/models/account_bank_statement.py:836
+#: code:addons/account/models/account_bank_statement.py:839
 #, python-format
 msgid "A selected move line was already reconciled."
 msgstr ""
@@ -878,7 +956,7 @@ msgid "A tax fiscal position could be defined only once time on same taxes."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:384
+#: code:addons/account/models/account_bank_statement.py:388
 #, python-format
 msgid "A transaction can't have a 0 amount."
 msgstr ""
@@ -893,16 +971,11 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:res.groups,name:account.group_warning_account
-msgid "A warning can be set on a partner (Account)"
-msgstr ""
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:100
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:105
-#: code:addons/account/static/src/xml/account_reconciliation.xml:141
-#: code:addons/account/static/src/xml/account_reconciliation.xml:267
+#: code:addons/account/static/src/xml/account_reconciliation.xml:140
+#: code:addons/account/static/src/xml/account_reconciliation.xml:266
 #: model:ir.model,name:account.model_account_account
 #: model:ir.model.fields,field_description:account.field_account_invoice_account_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_account_id
@@ -917,14 +990,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_search
-#, python-format
+#, fuzzy, python-format
 msgid "Account"
-msgstr "勘定科目"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"勘定科目\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"口座"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
+#, fuzzy
 msgid "Account Aged Trial balance Report"
-msgstr "勘定仕入支払予測レポート"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"勘定仕入支払予測レポート\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"アカウント年齢試算表レポート"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -959,8 +1041,13 @@ msgstr "勘定共通取引先レポート"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
+#, fuzzy
 msgid "Account Common Report"
-msgstr "勘定共通レポート"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"勘定共通レポート\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"アカウント共通レポート"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_currency_id
@@ -998,7 +1085,7 @@ msgstr "アカウント行"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_account_ids
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "勘定科目マッピング"
+msgstr "アカウントマッピング"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -1053,13 +1140,20 @@ msgstr "会計表"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_account_report_id
+#: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
 msgstr "アカウントレポート"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 #: model:ir.ui.view,arch_db:account.view_account_report_tree_hierarchy
+#, fuzzy
 msgid "Account Reports Hierarchy"
-msgstr "勘定科目レポート階層"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"勘定科目レポート階層\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"アカウントレポート階層"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
@@ -1162,8 +1256,13 @@ msgstr "アカウント移動行消し込み"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
+#, fuzzy
 msgid "Account move line reconcile (writeoff)"
-msgstr "仕訳明細の消込 (償却)"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕訳明細の消込 (償却)\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"アカウント移動行の消し込み（償却）"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -1200,7 +1299,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
 msgid "Account to Use Instead"
-msgstr "適用する勘定科目"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_account_type
@@ -1209,8 +1308,13 @@ msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
+#, fuzzy
 msgid "Accountant"
-msgstr "会計担当"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"会計担当\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"会計士"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1244,7 +1348,7 @@ msgstr "会計ダッシュボード"
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr "会計日"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1292,7 +1396,7 @@ msgstr "アカウント会計ポジション"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr "勘定科目マッピング"
+msgstr "アカウントマッピング"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1344,8 +1448,13 @@ msgstr "住所"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
+#, fuzzy
 msgid "Advanced Options"
-msgstr "高度オプション"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"高度オプション\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"高度なオプション"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1371,6 +1480,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.actions.report.xml,name:account.action_report_aged_partner_balance
+#: model:ir.ui.menu,name:account.menu_aged_trial_balance
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 msgid "Aged Partner Balance"
 msgstr "取引先残高年齢表"
@@ -1394,7 +1504,7 @@ msgstr ""
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:298
+#: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "All"
 msgstr "全て"
@@ -1451,8 +1561,8 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:310
-#: code:addons/account/static/src/xml/account_reconciliation.xml:317
+#: code:addons/account/static/src/xml/account_reconciliation.xml:309
+#: code:addons/account/static/src/xml/account_reconciliation.xml:316
 #, python-format
 msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
@@ -1466,6 +1576,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_state
+#, fuzzy
 msgid ""
 "All manually created new journal entries are usually in the status "
 "'Unposted', but you can set the option to skip that status on the related "
@@ -1473,10 +1584,16 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "通常、マニュアルで作成されたすべての新しい仕訳は「未記帳」状態ですが、関連す"
 "る仕訳でその状態をスキップするためのオプションを設定できます。その場合、ド"
 "キュメント検証システムによって請求書や銀行取引明細書などの仕訳は自動で作成さ"
-"れ、「記帳済」状態になります。"
+"れ、「記帳済」状態になります。\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"通常、マニュアルで作成されたすべての新しい仕訳は「未転記」状態ですが、関連す"
+"る仕訳でその状態をスキップするためのオプションを設定できます。その場合、ド"
+"キュメント検証システムによって請求書や銀行取引明細書などの仕訳は自動で作成さ"
+"れ、「転記」状態になります。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
@@ -1491,11 +1608,6 @@ msgstr ""
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
-
-#. module: account
-#: selection:account.config.settings,group_warning_account:0
-msgid "All the partners can be used in invoices"
 msgstr ""
 
 #. module: account
@@ -1521,7 +1633,7 @@ msgstr "現金基準で税計上"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_l10n_us_check_printing
 msgid "Allow check printing and deposits"
-msgstr "小切手印刷およびデポジットを使用"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_multi_currency
@@ -1530,8 +1642,13 @@ msgstr "多通貨を許可"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_proforma_invoices
+#, fuzzy
 msgid "Allow pro-forma invoices"
-msgstr "見積送状を使用"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"見積送状を使用\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"見積送り状を許可"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
@@ -1553,8 +1670,8 @@ msgstr "分析会計を使用。"
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:140
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:144
-#: code:addons/account/static/src/xml/account_reconciliation.xml:150
-#: code:addons/account/static/src/xml/account_reconciliation.xml:266
+#: code:addons/account/static/src/xml/account_reconciliation.xml:149
+#: code:addons/account/static/src/xml/account_reconciliation.xml:265
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
@@ -1646,11 +1763,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: selection:account.config.settings,group_warning_account:0
-msgid "An informative or blocking warning can be set on a partner"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
 msgstr "分析"
@@ -1691,8 +1803,6 @@ msgid "Analytic Cost"
 msgstr "原価分析"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.analytic_line_reporting_pivot
-#: model:ir.ui.menu,name:account.menu_action_analytic_lines_reporting
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Entries"
 msgstr "分析エントリー"
@@ -1704,14 +1814,14 @@ msgid "Analytic Lines"
 msgstr "分析行"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
-msgid "Analytic Tags"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
+#, fuzzy
 msgid "Analytic account"
-msgstr "分析勘定"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"分析勘定\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"分析アカウント"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_analytic_accounting
@@ -1722,11 +1832,6 @@ msgstr "分析会計"
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_line_ids
 msgid "Analytic lines"
 msgstr "分析行"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
-msgid "Analytic tags"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -1824,14 +1929,7 @@ msgid "Automatic formatting"
 msgstr "自動フォーマット"
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:15
-#, python-format
-msgid "Automatic reconciliation"
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_bank_statement.py:475
+#: code:addons/account/models/account_bank_statement.py:328
 #, python-format
 msgid "Automatically reconciled items"
 msgstr "自動消し込み項目"
@@ -1840,18 +1938,27 @@ msgstr "自動消し込み項目"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_price_average
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_user_currency_price_average
 msgid "Average Price"
-msgstr "平均価格"
+msgstr "移動平均原価"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "Awaiting payments"
-msgstr "入金待ち"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"入金待ち\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"未払い金"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:178
-#, python-format
+#, fuzzy, python-format
 msgid "BILL"
-msgstr "BILL"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"BILL\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払い"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -1871,6 +1978,7 @@ msgstr "残高"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
 #: model:ir.actions.act_window,name:account.action_account_report_bs
+#: model:ir.ui.menu,name:account.menu_account_report_bs
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Balance Sheet"
 msgstr "貸借対照表"
@@ -1939,8 +2047,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_yodlee
+#, fuzzy
 msgid "Bank Interface - Sync your bank feeds automatically"
-msgstr "銀行インターフェイス - 銀行口座を自動的に同期"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"銀行インターフェイス - 銀行口座を自動的に同期\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"銀行のインターフェイス （銀行口座を自動的に同期）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_bank_journal_ids
@@ -1950,14 +2063,18 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Bank Operations"
-msgstr "銀行処理"
+msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1116
-#, python-format
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1118
+#, fuzzy, python-format
 msgid "Bank Reconciliation"
-msgstr "銀行消込"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"銀行消込\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"銀行消し込み"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_tree
@@ -1983,8 +2100,13 @@ msgstr "銀行取引明細書行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_line
+#, fuzzy
 msgid "Bank Statement Lines"
-msgstr "銀行取引明細書行"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"銀行取引明細書行\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"銀行明細行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
@@ -1992,11 +2114,6 @@ msgstr "銀行取引明細書行"
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Bank Statements"
 msgstr "銀行取引明細書"
-
-#. module: account
-#: selection:account.journal,bank_statements_source:0
-msgid "Bank Synchronization"
-msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -2030,7 +2147,7 @@ msgstr "銀行取引明細書"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:205
+#: code:addons/account/static/src/xml/account_reconciliation.xml:204
 #, python-format
 msgid "Bank statements are fully reconciled."
 msgstr "銀行取引明細書は完全に一致しています。"
@@ -2083,8 +2200,13 @@ msgstr "仕入先請求書明細"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
+#, fuzzy
 msgid "Billing"
-msgstr "請求担当"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"請求担当\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"課金"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2102,11 +2224,6 @@ msgstr "仕入先請求書分析"
 #, python-format
 msgid "Bills to pay"
 msgstr "未払仕入先請求書"
-
-#. module: account
-#: selection:res.partner,invoice_warn:0
-msgid "Blocking Message"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2231,8 +2348,13 @@ msgstr "選択した請求書のキャンセル"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
+#, fuzzy
 msgid "Cancel: create refund and reconcile"
-msgstr "取消: 返金を作成し消込"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"取消: 返金を作成し消込\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"キャンセル：払い戻しと消し込みを作成"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2245,7 +2367,7 @@ msgid "Cancelled Invoice"
 msgstr "キャンセル済請求書"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1056
+#: code:addons/account/models/account_move.py:1045
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -2274,7 +2396,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:324
+#: code:addons/account/models/account_move.py:314
 #, python-format
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should "
@@ -2289,7 +2411,7 @@ msgid "Cannot generate an unused account code."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:423
+#: code:addons/account/models/account.py:422
 #, python-format
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
@@ -2333,7 +2455,7 @@ msgstr "現金制御"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Cash Operations"
-msgstr "現金処理"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -2514,7 +2636,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1887
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1867
 #, python-format
 msgid "Choose counterpart"
 msgstr ""
@@ -2527,11 +2649,6 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Click to add a journal."
-msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,help:account.account_tag_action
-msgid "Click to add a new tag."
 msgstr ""
 
 #. module: account
@@ -2582,19 +2699,24 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_payments
 #: model:ir.actions.act_window,help:account.action_account_payments_payable
+#, fuzzy
 msgid "Click to register a payment"
-msgstr "クリックして支払を記帳してください。"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"クリックして支払を記帳してください。\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"クリックして支払い情報を記帳する"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:41
+#: code:addons/account/static/src/xml/account_reconciliation.xml:40
 #, python-format
 msgid "Close"
 msgstr "閉じる"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:227
+#: code:addons/account/static/src/xml/account_reconciliation.xml:226
 #, python-format
 msgid "Close the statement"
 msgstr ""
@@ -2649,8 +2771,13 @@ msgstr "共通レポート"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#, fuzzy
 msgid "Communication"
-msgstr "コミュニケーション"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"コミュニケーション\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"通信"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -2850,7 +2977,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1526
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1506
 #, python-format
 msgid "Congrats, you're all done !"
 msgstr "よくできました！"
@@ -2902,7 +3029,7 @@ msgstr "国"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
 msgid "Country Group"
-msgstr "国グループ"
+msgstr "国別グループ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
@@ -2926,7 +3053,7 @@ msgstr "仕入先を作成"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1884
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1864
 #, python-format
 msgid "Create Write-off"
 msgstr ""
@@ -2937,20 +3064,20 @@ msgid "Create a draft refund"
 msgstr "ドラフト返金を作成"
 
 #. module: account
-#: code:addons/account/models/account_journal_dashboard.py:248
+#: code:addons/account/models/account_journal_dashboard.py:247
 #, python-format
 msgid "Create cash statement"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_journal_dashboard.py:234
+#: code:addons/account/models/account_journal_dashboard.py:233
 #, python-format
 msgid "Create invoice/bill"
 msgstr "請求書を作成"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2486
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2466
 #, python-format
 msgid "Create writeoff"
 msgstr ""
@@ -3160,8 +3287,8 @@ msgid "Currency as per company's country."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1356
-#: code:addons/account/models/account_move.py:1366
+#: code:addons/account/models/account_move.py:1337
+#: code:addons/account/models/account_move.py:1347
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr ""
@@ -3169,8 +3296,13 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
+#, fuzzy
 msgid "Current Assets"
-msgstr "流動資産"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"流動資産\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"現有資産"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -3243,7 +3375,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
+#: code:addons/account/static/src/xml/account_reconciliation.xml:294
 #: model:ir.ui.menu,name:account.menu_account_customer
 #, python-format
 msgid "Customers"
@@ -3259,8 +3391,8 @@ msgstr "ダッシュボード"
 #: selection:account.print.journal,sort_selection:0
 #: selection:account.report.general.ledger,sortby:0
 #: selection:accounting.report,filter_cmp:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:143
-#: code:addons/account/static/src/xml/account_reconciliation.xml:262
+#: code:addons/account/static/src/xml/account_reconciliation.xml:142
+#: code:addons/account/static/src/xml/account_reconciliation.xml:261
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_date
@@ -3315,7 +3447,7 @@ msgstr "借方"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
 msgid "Debit Methods"
-msgstr "入金方法"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
@@ -3378,13 +3510,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_template_tax_ids
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
 #: model:ir.ui.view,arch_db:account.view_account_template_form
+#, fuzzy
 msgid "Default Taxes"
-msgstr "デフォルト税"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"デフォルト税\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"デフォルト税金"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_id
+#, fuzzy
 msgid "Default company currency"
-msgstr "デフォルトの会社通貨"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"デフォルトの会社通貨\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"デフォルトの企業通貨"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_purchase_tax_id
@@ -3435,7 +3577,7 @@ msgstr "キャッシュレジスタから現金を取り出した理由を説明
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:265
+#: code:addons/account/static/src/xml/account_reconciliation.xml:264
 #: model:ir.model.fields,field_description:account.field_account_account_type_note
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_name
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -3458,7 +3600,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_auto_apply
 msgid "Detect Automatically"
-msgstr "自動検知"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template_type_tax_use
@@ -3624,7 +3766,10 @@ msgid "Don't hesitate to"
 msgstr ""
 
 #. module: account
+#. openerp-web
 #: selection:account.invoice.report,state:0
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2453
+#, python-format
 msgid "Done"
 msgstr "完了"
 
@@ -3666,8 +3811,13 @@ msgstr "ドラフト返金"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "Draft bills"
-msgstr "ドラフト仕入先請求書"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"ドラフト仕入先請求書\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"為替手形"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -3681,7 +3831,7 @@ msgstr "期日"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:144
+#: code:addons/account/static/src/xml/account_reconciliation.xml:143
 #: model:ir.model.fields,field_description:account.field_account_invoice_date_due
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_date_due
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -3701,6 +3851,11 @@ msgid "Due Month"
 msgstr ""
 
 #. module: account
+#: model:ir.actions.report.xml,name:account.action_report_print_overdue
+msgid "Due Payments"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 msgid "Due Type"
 msgstr ""
@@ -3711,7 +3866,7 @@ msgid "Due date"
 msgstr "期日"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:843
+#: code:addons/account/models/account_invoice.py:821
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -3733,13 +3888,13 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1530
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1510
 #, python-format
 msgid "Efficiency at its finest"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:896
+#: code:addons/account/models/account_move.py:885
 #, python-format
 msgid "Either pass both debit and credit or none."
 msgstr ""
@@ -3762,7 +3917,7 @@ msgstr "比較を有効化"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports_followup
 msgid "Enable payment followup management"
-msgstr "滞納インボイスフォロー"
+msgstr "支払フォローアップマネジメントを利用可能にする"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3820,7 +3975,7 @@ msgstr ""
 "エントリー： "
 
 #. module: account
-#: code:addons/account/models/account_move.py:861
+#: code:addons/account/models/account_move.py:850
 #, python-format
 msgid "Entries are not of the same account!"
 msgstr ""
@@ -3828,13 +3983,17 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Entries to Review"
-msgstr "要確認仕訳"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:58
-#, python-format
+#, fuzzy, python-format
 msgid "Entries: "
-msgstr "エントリ:"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"エントリ:\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"エントリー： "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -3844,7 +4003,7 @@ msgstr "仕訳ラベル"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_sequence_id
 msgid "Entry Sequence"
-msgstr "仕訳採番"
+msgstr "エントリーの順序"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_move_line_ids
@@ -3938,7 +4097,7 @@ msgstr "追加機能"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1537
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1517
 #, python-format
 msgid "Fast reconciler"
 msgstr ""
@@ -3985,7 +4144,7 @@ msgstr "フィルタ"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:69
+#: code:addons/account/static/src/xml/account_reconciliation.xml:68
 #, python-format
 msgid "Filter..."
 msgstr ""
@@ -3997,6 +4156,11 @@ msgid "Financial Account"
 msgstr "財務会計勘定科目"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_account_report
+msgid "Financial Report"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
 msgid "Financial Report Style"
 msgstr "財務レポートのスタイル"
@@ -4004,6 +4168,7 @@ msgstr "財務レポートのスタイル"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_financial_report_tree
 #: model:ir.actions.act_window,name:account.action_account_report
+#: model:ir.ui.menu,name:account.menu_account_reports
 msgid "Financial Reports"
 msgstr "財務レポート"
 
@@ -4191,9 +4356,14 @@ msgstr "消込"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
+#, fuzzy
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
-msgstr "包括的な会計機能: 仕訳、財務諸表、勘定科目表など。"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"包括的な会計機能: 仕訳、財務諸表、勘定科目表など。\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"完全な会計機能：仕訳、法的な計算書、勘定科目表など。"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:103
@@ -4220,6 +4390,7 @@ msgstr "一般情報"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.action_report_general_ledger
+#: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
 msgstr "総勘定元帳"
 
@@ -4235,8 +4406,13 @@ msgstr "入金/支払消込時に現金基準の税仕訳を生成"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports
+#, fuzzy
 msgid "Get dynamic accounting reports"
-msgstr "ダイナミック会計レポートを使用"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"ダイナミック会計レポートを使用\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"動的会計諸表を取得"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4252,14 +4428,6 @@ msgid ""
 msgstr ""
 "plaid.com経由で銀行の取引明細をインポートする\n"
 "- account_plaidモジュールをインストールしてください。"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
-msgid ""
-"Get your bank statements from your bank and import them in Odoo in the .CSV "
-"format.\n"
-"-This installs the module account_bank_statement_import_csv."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -4316,14 +4484,14 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:226
+#: code:addons/account/static/src/xml/account_reconciliation.xml:225
 #, python-format
 msgid "Go to bank statements"
 msgstr "銀行取引明細書へ"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:465
-#: code:addons/account/models/account_move.py:325
+#: code:addons/account/models/account_move.py:315
 #, python-format
 msgid "Go to the configuration panel"
 msgstr ""
@@ -4336,9 +4504,9 @@ msgstr "よく出来ました！"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:205
-#: code:addons/account/static/src/xml/account_reconciliation.xml:309
-#: code:addons/account/static/src/xml/account_reconciliation.xml:316
+#: code:addons/account/static/src/xml/account_reconciliation.xml:204
+#: code:addons/account/static/src/xml/account_reconciliation.xml:308
+#: code:addons/account/static/src/xml/account_reconciliation.xml:315
 #, python-format
 msgid "Good Job!"
 msgstr "よく出来ました！"
@@ -4397,8 +4565,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_hide_payment_method
 #: model:ir.model.fields,field_description:account.field_account_payment_hide_payment_method
 #: model:ir.model.fields,field_description:account.field_account_register_payments_hide_payment_method
+#, fuzzy
 msgid "Hide payment method"
-msgstr "支払方法を非表示"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払方法を非表示\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払い方法を非表示"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -4482,7 +4655,7 @@ msgid "INV"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:390
+#: code:addons/account/models/account_bank_statement.py:394
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
 msgstr ""
@@ -4665,11 +4838,6 @@ msgid "Import .qif files"
 msgstr ".qif ファイルをインポート"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
-msgid "Import in .csv format"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
 msgstr ".ofx フォーマットをインポート"
@@ -4692,14 +4860,18 @@ msgid "In Odoo,"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:410
-#, python-format
+#: code:addons/account/models/account_bank_statement.py:414
+#, fuzzy, python-format
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete "
 "related journal items."
 msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "銀行取引明細書行を削除するには、まず取り消しのうえ、関連する仕訳明細が削除で"
-"きるようにしてください。"
+"きるようにしてください。\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"銀行取引明細書行を削除するには、最初に関連する仕訳項目の削除をキャンセルしな"
+"ければなりません。"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:200
@@ -4773,7 +4945,7 @@ msgstr "製品テンプレート上の収益勘定"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1810
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1790
 #, python-format
 msgid "Incorrect Operation"
 msgstr ""
@@ -4856,10 +5028,9 @@ msgid "Invite Users"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:893
+#: code:addons/account/models/account_invoice.py:870
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_invoice_id
-#: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -4939,7 +5110,7 @@ msgid "Invoice refund"
 msgstr "請求書返金"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1424
+#: code:addons/account/models/account_invoice.py:1401
 #, python-format
 msgid "Invoice sent"
 msgstr ""
@@ -4982,7 +5153,7 @@ msgstr "請求書"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2119
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2099
 #, python-format
 msgid "Invoices & Payments Matching"
 msgstr "請求書 & 支払照合"
@@ -5010,8 +5181,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "Invoices to validate"
-msgstr "ドラフト請求書"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"ドラフト請求書\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"請求書照合"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -5057,7 +5233,7 @@ msgid "It indicates that the invoice has been sent."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:894
+#: code:addons/account/models/account_move.py:883
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
@@ -5065,7 +5241,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:213
+#: code:addons/account/static/src/xml/account_reconciliation.xml:212
 #, python-format
 msgid "It took you"
 msgstr ""
@@ -5093,8 +5269,13 @@ msgstr ""
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
+#, fuzzy
 msgid "Italic Text (smaller)"
-msgstr "斜体テキスト (小)"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"斜体テキスト (小)\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"斜体テキスト（小）"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5114,9 +5295,9 @@ msgstr "1月"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2155
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2160
-#: code:addons/account/static/src/xml/account_reconciliation.xml:142
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2135
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2140
+#: code:addons/account/static/src/xml/account_reconciliation.xml:141
 #: model:ir.model,name:account.model_account_journal
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_id
@@ -5138,8 +5319,13 @@ msgstr "仕訳帳"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
+#, fuzzy
 msgid "Journal & Partner"
-msgstr "仕訳帳と取引先"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕訳帳と取引先\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕訳帳・取引先"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_journal_line
@@ -5176,8 +5362,13 @@ msgstr "仕訳"
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
+#, fuzzy
 msgid "Journal Item"
-msgstr "仕訳明細"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕訳明細\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕訳項目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_label
@@ -5199,6 +5390,7 @@ msgstr "仕訳明細ラベル"
 #: model:ir.actions.act_window,name:account.action_move_line_select
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_partner
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_type
+#: model:ir.actions.act_window,name:account.action_move_line_select_posted
 #: model:ir.model.fields,field_description:account.field_account_move_line_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_issued_total
 #: model:ir.model.fields,field_description:account.field_res_partner_journal_item_count
@@ -5214,11 +5406,15 @@ msgstr "仕訳明細"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2118
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2098
 #: model:ir.actions.client,name:account.action_manual_reconcile
-#, python-format
+#, fuzzy, python-format
 msgid "Journal Items to Reconcile"
-msgstr "調整する仕訳明細"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"調整する仕訳明細\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"調整する仕訳項目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_name
@@ -5378,7 +5574,7 @@ msgstr "最終更新日"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:330
+#: code:addons/account/static/src/xml/account_reconciliation.xml:329
 #, python-format
 msgid "Last Reconciliation :"
 msgstr "最終消込:"
@@ -5561,13 +5757,6 @@ msgid "Less Payment"
 msgstr "減算 支払"
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:15
-#, python-format
-msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
 msgid "Level"
 msgstr "レベル"
@@ -5608,13 +5797,23 @@ msgstr "会計年度最終日"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
+#, fuzzy
 msgid "Lock Date for Non-Advisers"
-msgstr "アドバイザ以外のロック日"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"アドバイザ以外のロック日\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"会計顧問以外の会計年度最終日"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
+#, fuzzy
 msgid "Lock Entries"
-msgstr "仕訳ロック"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕訳ロック\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"最終登録日"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5630,7 +5829,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_loss_account_id
 msgid "Loss Account"
-msgstr "費用勘定"
+msgstr "損失勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_expense_currency_exchange_account_id
@@ -5651,8 +5850,13 @@ msgstr "基本通貨"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
+#, fuzzy
 msgid "Main Title 1 (bold, underlined)"
-msgstr "メインタイトル1 (太字、下線)"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"メインタイトル1 (太字、下線)\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"メインタイトル1（太字、アンダーライン）"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_currency_id
@@ -5692,7 +5896,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_manual
 msgid "Manual"
-msgstr "手動"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_invoice_tax_form
@@ -5782,11 +5986,6 @@ msgid "Memo:"
 msgstr "メモ:"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn_msg
-msgid "Message for Invoice"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
 msgstr ""
@@ -5827,11 +6026,11 @@ msgstr "その他"
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr "その他処理"
+msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:82
+#: code:addons/account/static/src/xml/account_reconciliation.xml:81
 #, python-format
 msgid "Modify presets"
 msgstr ""
@@ -5844,11 +6043,11 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
 msgid "Monthly Turnover"
-msgstr "月次売上高"
+msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:105
+#: code:addons/account/static/src/xml/account_reconciliation.xml:104
 #, python-format
 msgid "More"
 msgstr ""
@@ -5857,11 +6056,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "さらに <i class=\"fa fa-caret-down\"/>"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_config_settings
-msgid "More Info"
-msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5891,14 +6085,9 @@ msgid "Move line ids"
 msgstr "仕訳明細"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1181
+#: code:addons/account/models/account_move.py:1172
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_config_settings
-msgid "Multi Currencies"
 msgstr ""
 
 #. module: account
@@ -5923,8 +6112,13 @@ msgstr "正味資産"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
+#, fuzzy
 msgid "NET PROFIT"
-msgstr "当期利益"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"当期利益\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"純利益"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_name
@@ -5942,20 +6136,31 @@ msgstr "名称"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:52
-#, python-format
+#, fuzzy, python-format
 msgid "Name:"
-msgstr "名称:"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"名称:\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"名前："
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_net
 #: model:ir.actions.act_window,name:account.act_account_tax_net_posted
 msgid "Net Tax Lines"
-msgstr "税仕訳明細"
+msgstr ""
 
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
 msgstr "新規"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:88
+#, python-format
+msgid "New Operation"
+msgstr "新規オペレーション"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5968,14 +6173,14 @@ msgid "New Transactions"
 msgstr "新規取引"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1158
+#: code:addons/account/models/account_move.py:1149
 #, python-format
 msgid "New expected payment date: "
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:81
+#: code:addons/account/static/src/xml/account_reconciliation.xml:80
 #, python-format
 msgid "New preset"
 msgstr ""
@@ -5996,12 +6201,7 @@ msgid "No Follow-up"
 msgstr "要フォロー"
 
 #. module: account
-#: selection:res.partner,invoice_warn:0
-msgid "No Message"
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:1011
+#: code:addons/account/models/account_invoice.py:988
 #, python-format
 msgid "No appropriate payment method enabled on journal %s"
 msgstr ""
@@ -6013,7 +6213,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:124
+#: code:addons/account/static/src/xml/account_reconciliation.xml:123
 #, python-format
 msgid "No result matching '"
 msgstr ""
@@ -6040,12 +6240,17 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
 msgid "Non-current Assets"
-msgstr "非流動資産"
+msgstr "その他資産"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
+#, fuzzy
 msgid "Non-current Liabilities"
-msgstr "非流動負債"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"その他負債\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"固定負債"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -6077,7 +6282,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:268
+#: code:addons/account/static/src/xml/account_reconciliation.xml:267
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
 #, python-format
 msgid "Note"
@@ -6130,7 +6335,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:193
+#: code:addons/account/static/src/xml/account_reconciliation.xml:192
 #, python-format
 msgid "OK"
 msgstr "OK"
@@ -6265,7 +6470,7 @@ msgstr "管理者のみ設定変更が可能です。"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1531
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1511
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
 msgstr ""
@@ -6293,9 +6498,9 @@ msgstr "支払を開く"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1890
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1922
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2057
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1870
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1902
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2037
 #, python-format
 msgid "Open balance"
 msgstr "期首残高"
@@ -6367,7 +6572,7 @@ msgstr "その他情報"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "OtherAccounts"
 msgstr ""
@@ -6427,6 +6632,11 @@ msgid "Overdue invoices, maturity date passed"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_finance_legal_statement
+msgid "PDF Reports"
+msgstr "PDFレポート"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PRO-FORMA"
@@ -6480,8 +6690,8 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1751
-#: code:addons/account/static/src/xml/account_reconciliation.xml:263
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1731
+#: code:addons/account/static/src/xml/account_reconciliation.xml:262
 #: model:ir.model,name:account.model_res_partner
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_id
@@ -6551,8 +6761,13 @@ msgstr "取引先タイプ"
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
 #: model:ir.model.fields,field_description:account.field_account_common_partner_report_result_selection
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_result_selection
+#, fuzzy
 msgid "Partner's"
-msgstr "取引先のもの"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"取引先のもの\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"パートナ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -6623,9 +6838,13 @@ msgstr "支払方法"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:60
-#, python-format
+#, fuzzy, python-format
 msgid "Payment Method:"
-msgstr "支払方法:"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払方法:\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払方法："
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
@@ -6636,7 +6855,7 @@ msgstr "支払方法"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
 msgid "Payment Reference"
-msgstr "支払参照"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term
@@ -6670,8 +6889,13 @@ msgstr "支払条件"
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_type
+#, fuzzy
 msgid "Payment Type"
-msgstr "支払タイプ"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払タイプ\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払い形式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_difference
@@ -6681,7 +6905,7 @@ msgstr "支払差額"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_reference
 msgid "Payment reference"
-msgstr "支払参照"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_form
@@ -6720,8 +6944,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_method_payment_type
+#, fuzzy
 msgid "Payment type"
-msgstr "支払タイプ"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払タイプ\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払い形式"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments
@@ -6766,6 +6995,31 @@ msgid "Payments widget"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company_paypal_account
+msgid "Paypal Account"
+msgstr "Paypal アカウント"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_config_settings_paypal_account
+msgid "Paypal account"
+msgstr "Paypal アカウント"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_paypal_account
+msgid ""
+"Paypal account (email) for receiving online payments (credit card, etc.)\n"
+"             If you set a paypal account, the customer  will be able to pay "
+"your invoices or quotations\n"
+"             with a button \"Pay with  Paypal\" in automated emails or "
+"through the Odoo portal."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_company_paypal_account
+msgid "Paypal username (usually email) for receiving online payments."
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
 msgid "Pending Invoice"
 msgstr ""
@@ -6803,7 +7057,7 @@ msgid "Percentage of balance"
 msgstr "残高のパーセント"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1406
+#: code:addons/account/models/account_invoice.py:1383
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
 msgstr ""
@@ -6815,8 +7069,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_period_length
+#, fuzzy
 msgid "Period Length (days)"
-msgstr "期間の長さ (日数)"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"期間の長さ (日数)\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"期間の長さ（日数）"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_plaid
@@ -6841,7 +7100,7 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:747
+#: code:addons/account/models/account_invoice.py:725
 #, python-format
 msgid "Please create some invoice lines."
 msgstr ""
@@ -6853,7 +7112,7 @@ msgid "Please define a sequence on the journal."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:745
+#: code:addons/account/models/account_invoice.py:723
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
@@ -6876,22 +7135,32 @@ msgstr "加算 当期利益"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Non-Current Assets"
-msgstr "加算 非流動資産"
+msgstr "加算 その他資産"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
+#, fuzzy
 msgid "Plus Other Income"
-msgstr "加算 その他収益"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"加算 その他収益\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"その他収益を追加"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
 msgid "Post"
-msgstr "記帳"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"記帳\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"投稿"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr "全仕訳を記帳"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
@@ -6941,8 +7210,13 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
+#, fuzzy
 msgid "Prepayments"
-msgstr "前払金"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"前払金\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"前払い"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -6953,6 +7227,11 @@ msgstr ""
 #: model:ir.model,name:account.model_account_operation_template
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Price"
 msgstr ""
 
 #. module: account
@@ -7004,8 +7283,13 @@ msgstr "製品"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_categ_id
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
+#, fuzzy
 msgid "Product Category"
-msgstr "製品カテゴリ"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"製品カテゴリ\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"商品カテゴリ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
@@ -7030,23 +7314,37 @@ msgstr "損益計算書"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
+#, fuzzy
 msgid "Profit (Loss) to report"
-msgstr "収益 (損失)"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"収益 (損失)\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"損益計算書"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_profit_account_id
 msgid "Profit Account"
-msgstr "収益勘定"
+msgstr ""
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 #: model:ir.actions.act_window,name:account.action_account_report_pl
+#: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit and Loss"
 msgstr "損益計算書"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Proforma"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:593
+#, python-format
+msgid ""
+"Programmation error : domain_maker_move_line_amount requires comparator '=' "
+"or '<'"
 msgstr ""
 
 #. module: account
@@ -7175,9 +7473,9 @@ msgstr "入金"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1872
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2470
-#: code:addons/account/static/src/xml/account_reconciliation.xml:323
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1852
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2450
+#: code:addons/account/static/src/xml/account_reconciliation.xml:322
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7189,7 +7487,7 @@ msgstr "消込"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "仕訳明細消込"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7223,11 +7521,6 @@ msgid "Reconciled Entries"
 msgstr "未消込仕訳"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_move_form
-msgid "Reconciled entries"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Reconciliation"
 msgstr "消込"
@@ -7257,7 +7550,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2183
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2163
 #, python-format
 msgid "Reconciling "
 msgstr ""
@@ -7325,7 +7618,7 @@ msgid "Reference/Description"
 msgstr "参照/内容"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:895
+#: code:addons/account/models/account_invoice.py:872
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -7457,8 +7750,12 @@ msgid "Report Value"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+msgid "Reporting"
+msgstr "レポーティング"
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_report_folder
 msgid "Reports"
 msgstr "レポート"
 
@@ -7469,7 +7766,7 @@ msgstr "ドラフトに再設定"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:150
+#: code:addons/account/static/src/xml/account_reconciliation.xml:149
 #, python-format
 msgid "Residual"
 msgstr ""
@@ -7489,11 +7786,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
 msgstr "担当者"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_deferred_revenue
-msgid "Revenue Recognition"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
@@ -7602,13 +7894,6 @@ msgid "Salesperson"
 msgstr "販売担当者"
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:89
-#, python-format
-msgid "Save and New"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Search Account Journal"
 msgstr ""
@@ -7675,14 +7960,14 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1779
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1759
 #, python-format
 msgid "Select Partner"
 msgstr "取引先を選択"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:235
+#: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
 msgstr ""
@@ -7709,20 +7994,17 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_res_partner_invoice_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-
-#. module: account
 #: selection:account.abstract.payment,payment_type:0
 #: selection:account.payment,payment_type:0
 #: selection:account.register.payments,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "Send Money"
-msgstr "支払"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"支払\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"送金"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7741,7 +8023,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_sent
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
-msgstr "送付済"
+msgstr ""
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -7806,7 +8088,7 @@ msgstr "略称"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:290
+#: code:addons/account/static/src/xml/account_reconciliation.xml:289
 #, python-format
 msgid "Show"
 msgstr ""
@@ -7823,7 +8105,7 @@ msgstr "仕訳帳をダッシュボードに表示"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:20
+#: code:addons/account/static/src/xml/account_reconciliation.xml:19
 #, python-format
 msgid "Show more... ("
 msgstr ""
@@ -7838,13 +8120,6 @@ msgstr ""
 msgid ""
 "Simplify your cash, checks, or credit cards deposits with an integrated "
 "batch payment function."
-msgstr ""
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2473
-#, python-format
-msgid "Skip"
 msgstr ""
 
 #. module: account
@@ -7926,8 +8201,13 @@ msgstr "取引明細書"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_move_line_form
+#, fuzzy
 msgid "States"
-msgstr "状態"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"状態\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"州"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_states_count
@@ -7967,11 +8247,8 @@ msgid "TOTAL EQUITY"
 msgstr "純資産"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.account_tag_action
 #: model:ir.model.fields,field_description:account.field_account_account_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
-#: model:ir.ui.menu,name:account.account_tag_menu
-#: model:ir.ui.view,arch_db:account.account_tag_view_form
 msgid "Tags"
 msgstr "タグ"
 
@@ -7983,7 +8260,7 @@ msgstr "現金取出"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1538
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1518
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
 msgstr ""
@@ -8071,11 +8348,6 @@ msgid "Tax Description"
 msgstr "税詳細"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "Tax Excluded Price"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tax_group_id
 msgid "Tax Group"
@@ -8098,13 +8370,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_tax_ids
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "税マッピング"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_name
 #: model:ir.model.fields,field_description:account.field_account_tax_template_name
+#, fuzzy
 msgid "Tax Name"
-msgstr "税名"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"税名\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"税種"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_type_tax_use
@@ -8150,7 +8427,7 @@ msgstr "製品の税"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_tax_dest_id
 msgid "Tax to Apply"
-msgstr "適用する税"
+msgstr ""
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -8176,7 +8453,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Taxes Mapping"
-msgstr "税マッピング"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -8306,7 +8583,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:213
+#: code:addons/account/static/src/xml/account_reconciliation.xml:212
 #, python-format
 msgid "That's on average"
 msgstr ""
@@ -8336,7 +8613,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:863
+#: code:addons/account/models/account_move.py:852
 #, python-format
 msgid "The account %s (%s) is not marked as reconciliable !"
 msgstr ""
@@ -8362,7 +8639,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:432
+#: code:addons/account/models/account_move.py:421
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account "
@@ -8370,7 +8647,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:572
+#: code:addons/account/models/account.py:571
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -8522,7 +8799,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:865
+#: code:addons/account/models/account_move.py:854
 #, python-format
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
@@ -8554,7 +8831,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:417
+#: code:addons/account/models/account_move.py:406
 #, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
@@ -8562,7 +8839,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1268
+#: code:addons/account/models/account_invoice.py:1245
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -8599,15 +8876,15 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:309
-#: code:addons/account/static/src/xml/account_reconciliation.xml:316
+#: code:addons/account/static/src/xml/account_reconciliation.xml:308
+#: code:addons/account/static/src/xml/account_reconciliation.xml:315
 #, python-format
 msgid "There is nothing to reconcile."
 msgstr "未消込レコードはありません。"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1514
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1494
 #, python-format
 msgid "There you go, it's all done !"
 msgstr ""
@@ -8696,15 +8973,6 @@ msgid ""
 "This allows you to group received checks before you deposit them to the "
 "bank.\n"
 "-This installs the module account_batch_deposit."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_config_settings_module_account_deferred_revenue
-msgid ""
-"This allows you to manage the revenue recognition on selling products. It "
-"keeps track of the installments occurred on those revenue recognitions, and "
-"creates account moves for those installment lines\n"
-"-This installs the module account_deferred_revenue."
 msgstr ""
 
 #. module: account
@@ -8834,7 +9102,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:206
+#: code:addons/account/static/src/xml/account_reconciliation.xml:205
 #, python-format
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
@@ -8843,7 +9111,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:154
+#: code:addons/account/static/src/xml/account_reconciliation.xml:153
 #, python-format
 msgid "This payment is registered but not reconciled."
 msgstr ""
@@ -8902,7 +9170,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:21
+#: code:addons/account/static/src/xml/account_reconciliation.xml:20
 #, fuzzy, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
 msgstr ""
@@ -8937,7 +9205,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:859
+#: code:addons/account/models/account_move.py:848
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
 msgstr ""
@@ -8949,7 +9217,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:146
+#: code:addons/account/static/src/xml/account_reconciliation.xml:145
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_company_signed
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
@@ -8995,13 +9263,13 @@ msgstr "合計売掛金/未収金"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_residual
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_user_currency_residual
 msgid "Total Residual"
-msgstr "残額合計"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_user_currency_price_total
 msgid "Total Without Tax"
-msgstr "税抜合計"
+msgstr "税抜き合計"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_company_signed
@@ -9031,7 +9299,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:264
+#: code:addons/account/static/src/xml/account_reconciliation.xml:263
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Transaction"
@@ -9084,6 +9352,7 @@ msgstr "移動"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_balance_menu
 #: model:ir.actions.report.xml,name:account.action_report_trial_balance
+#: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
 msgstr "試算表"
 
@@ -9127,16 +9396,10 @@ msgid "Unit of Measure"
 msgstr "単位"
 
 #. module: account
-#: code:addons/account/report/account_aged_partner_balance.py:174
+#: code:addons/account/report/account_aged_partner_balance.py:264
 #, fuzzy, python-format
 msgid "Unknown Partner"
 msgstr "取引先"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable_no_partner
-#: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable_no_partner
-msgid "Unknown Partner Ledger"
-msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9164,8 +9427,13 @@ msgstr "未記帳仕訳"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+#, fuzzy
 msgid "Unposted Journal Items"
-msgstr "未記帳仕訳明細"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"未記帳仕訳明細\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"未転記仕訳項目"
 
 #. module: account
 #. openerp-web
@@ -9178,7 +9446,7 @@ msgstr "消込取消"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "仕訳明細消込取消"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -9225,7 +9493,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_sepa
 msgid "Use SEPA payments"
-msgstr "SEPA支払を使用"
+msgstr "SEPA自動引き落としを使用"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
@@ -9317,11 +9585,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_vat_required
 msgid "VAT required"
-msgstr "要VAT番号"
+msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1889
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1869
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -9365,7 +9633,7 @@ msgstr "仕入先"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:894
+#: code:addons/account/models/account_invoice.py:871
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -9405,7 +9673,7 @@ msgstr "仕入先参照"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:896
+#: code:addons/account/models/account_invoice.py:873
 #: code:addons/account/models/account_payment.py:486
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -9419,16 +9687,26 @@ msgstr "仕入先税"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #: model:ir.ui.menu,name:account.menu_account_supplier
-#, python-format
+#, fuzzy, python-format
 msgid "Vendors"
-msgstr "仕入先"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"仕入先\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"外注先"
 
 #. module: account
 #: selection:account.financial.report,type:0
 msgid "View"
 msgstr "ビュー"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
+msgid "View reconciled entries"
+msgstr "未消込仕訳"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9441,25 +9719,8 @@ msgid "Volume"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_config_settings_group_warning_account
-#: selection:res.partner,invoice_warn:0
-msgid "Warning"
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:484
-#, python-format
-msgid "Warning for %s"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.partner_view_buttons
-msgid "Warning on the Invoice"
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:1207
-#: code:addons/account/models/account_invoice.py:1267
+#: code:addons/account/models/account_invoice.py:1183
+#: code:addons/account/models/account_invoice.py:1244
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -9511,7 +9772,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1525
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1505
 #, python-format
 msgid "Whew, that was fast !"
 msgstr ""
@@ -9528,8 +9789,13 @@ msgstr "基本通貨"
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#, fuzzy
 msgid "With balance is not equal to 0"
-msgstr "残高が0でないもの"
+msgstr ""
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"残高が0でないもの\n"
+"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
+"残高があるもの(<>0)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -9552,7 +9818,7 @@ msgid "With tax"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:900
+#: code:addons/account/models/account_move.py:889
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
@@ -9584,7 +9850,7 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:857
+#: code:addons/account/models/account_move.py:846
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr ""
@@ -9604,7 +9870,7 @@ msgid ""
 msgstr "発注もしくは入荷に基づき、仕入先からの請求書を管理することができます。"
 
 #. module: account
-#: code:addons/account/models/res_config.py:245
+#: code:addons/account/models/res_config.py:238
 #, python-format
 msgid ""
 "You can not change a company chart of account once it has been installed"
@@ -9655,7 +9921,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:875
+#: code:addons/account/models/account_invoice.py:852
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -9671,7 +9937,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:424
+#: code:addons/account/models/account_move.py:1138
+#, python-format
+msgid "You cannot change the tax, you should remove and recreate lines."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:413
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -9702,7 +9974,7 @@ msgid "You cannot do that on an account that contains journal items."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1183
+#: code:addons/account/models/account_move.py:1174
 #, python-format
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just "
@@ -9712,7 +9984,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1185
+#: code:addons/account/models/account_move.py:1176
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -9745,7 +10017,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1811
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1791
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr ""
@@ -9774,14 +10046,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1024
-#: code:addons/account/models/account_move.py:1149
+#: code:addons/account/models/account_move.py:1013
+#: code:addons/account/models/account_move.py:1140
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1080
+#: code:addons/account/models/account_move.py:1069
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -9801,7 +10073,7 @@ msgid "You must define a Start Date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1208
+#: code:addons/account/models/account_invoice.py:1184
 #, python-format
 msgid "You must first select a partner!"
 msgstr "取引先を選択してください。"
@@ -9819,7 +10091,7 @@ msgid "You must set a start date."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1340
+#: code:addons/account/models/account_move.py:1321
 #, python-format
 msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings, "
@@ -9828,7 +10100,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1342
+#: code:addons/account/models/account_move.py:1323
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -9837,7 +10109,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1344
+#: code:addons/account/models/account_move.py:1325
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -9856,7 +10128,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:215
+#: code:addons/account/static/src/xml/account_reconciliation.xml:214
 #, python-format
 msgid "You validated"
 msgstr ""
@@ -9953,7 +10225,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:298
+#: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "all"
 msgstr ""
@@ -9992,7 +10264,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
+#: code:addons/account/static/src/xml/account_reconciliation.xml:294
 #, python-format
 msgid "customers"
 msgstr ""
@@ -10001,6 +10273,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "e.g. Bank Fees"
 msgstr "例: 銀行手数料"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_config_settings
+msgid "e.g. sales@odoo.com"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10030,7 +10307,7 @@ msgstr "または"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "others"
 msgstr ""
@@ -10047,14 +10324,14 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:215
+#: code:addons/account/static/src/xml/account_reconciliation.xml:214
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:20
+#: code:addons/account/static/src/xml/account_reconciliation.xml:19
 #, python-format
 msgid "remaining)"
 msgstr ""
@@ -10104,7 +10381,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:213
+#: code:addons/account/static/src/xml/account_reconciliation.xml:212
 #, python-format
 msgid "seconds per transaction."
 msgstr ""
@@ -10126,7 +10403,7 @@ msgstr "あなたの銀行口座を設定します"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #, python-format
 msgid "suppliers"
 msgstr ""
@@ -10153,7 +10430,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:213
+#: code:addons/account/static/src/xml/account_reconciliation.xml:212
 #, python-format
 msgid "to reconcile"
 msgstr ""
@@ -10165,7 +10442,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:213
+#: code:addons/account/static/src/xml/account_reconciliation.xml:212
 #, python-format
 msgid "transactions."
 msgstr ""
@@ -10180,14 +10457,8 @@ msgstr ""
 msgid "→ Count"
 msgstr ""
 
-#~ msgid "# of Invoices"
-#~ msgstr "請求書数"
-
 #~ msgid "Action Needed"
 #~ msgstr "必要なアクション"
-
-#~ msgid "Allows you multi currency environment"
-#~ msgstr "多通貨を許可します。"
 
 #~ msgid "Analytic Line"
 #~ msgstr "分析行"
@@ -10207,14 +10478,6 @@ msgstr ""
 #~ msgid "Followers (Partners)"
 #~ msgstr "フォロワー(取引先)"
 
-#~ msgid ""
-#~ "Get your bank statements from you bank and import them through plaid."
-#~ "com.\n"
-#~ "-that installs the module account_plaid."
-#~ msgstr ""
-#~ "plaid.com経由で銀行の取引明細をインポートする\n"
-#~ "- account_plaidモジュールをインストールしてください。"
-
 #~ msgid "Invoices &amp; Refunds"
 #~ msgstr "請求書 &amp; 返金"
 
@@ -10230,44 +10493,14 @@ msgstr ""
 #~ msgid "Less Current Liabilities"
 #~ msgstr "減算 流動負債"
 
-#~ msgid "Less Expenses"
-#~ msgstr "減算 経費"
-
-#~ msgid "Less Non-Current Liabilities"
-#~ msgstr "減算 非流動負債"
-
-#~ msgid "Less Payable Accounts"
-#~ msgstr "減算 買掛金"
-
-#~ msgid "New Operation"
-#~ msgstr "新規オペレーション"
-
 #~ msgid "Number of Actions"
 #~ msgstr "アクションの数"
 
 #~ msgid "Number of unread messages"
 #~ msgstr "未読メッセージの件数"
 
-#~ msgid "PDF Reports"
-#~ msgstr "PDFレポート"
-
-#~ msgid "Paypal Account"
-#~ msgstr "Paypal アカウント"
-
-#~ msgid "Paypal account"
-#~ msgstr "Paypal アカウント"
-
-#~ msgid "Reporting"
-#~ msgstr "レポーティング"
-
 #~ msgid "Sales Team"
 #~ msgstr "販売チーム"
-
-#~ msgid ""
-#~ "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-#~ msgstr ""
-#~ "ヒント: Ctrl+Enterでシート内全ての貸借一致した明細を消し込むことができま"
-#~ "す。"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "未読メッセージカウンター"
@@ -10277,7 +10510,3 @@ msgstr ""
 
 #~ msgid "Website communication history"
 #~ msgstr "ウェブサイトコミュニケーション履歴"
-
-#, fuzzy
-#~ msgid "View reconciled entries"
-#~ msgstr "未消込仕訳"

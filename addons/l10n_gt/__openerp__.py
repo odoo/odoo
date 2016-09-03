@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+#-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2009-2010 Soluciones Tecnologócias Prisma S.A. All Rights Reserved.
@@ -32,10 +32,8 @@ taxes and the Quetzal currency.""",
     'website': 'http://solucionesprisma.com/',
     'depends': ['base', 'account'],
     'data': [
-        'account_chart.xml',
-        'l10n_gt_base.xml',
-        'account_chart_template.yml',
+        'data/l10n_gt_chart_data.xml',
+        'data/account_chart_template_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'installable': True,
 }

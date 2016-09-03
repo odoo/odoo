@@ -12,7 +12,7 @@ function genericJsonRpc (fct_name, params, fct) {
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
-    var xhr = fct(data);    
+    var xhr = fct(data);
     var result = xhr.pipe(function(result) {
         core.bus.trigger('rpc:result', data, result);
         if (result.error !== undefined) {
@@ -117,6 +117,11 @@ function jsonpRpc(url, fct_name, params, settings) {
             return deferred;
         }
     });
+}
+
+// helper function to make a rpc with a function name hardcoded to 'call'
+function rpc(url, params, settings) {
+    return jsonRpc(url, 'call', params, settings);
 }
 
 // helper
@@ -363,6 +368,7 @@ var loadXML = (function () {
 return {
     jsonRpc: jsonRpc,
     jsonpRpc: jsonpRpc,
+    rpc: rpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
     loadXML: loadXML,

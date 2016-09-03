@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- MEMBERSHIP -->
+
+        <!-- MEMBERSHIP/MEMBERSHIP PRODUCTS -->
+
+        <record model="ir.ui.view" id="membership_product_search_form_view">
+            <field name="name">membership.product.search.form</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <search string="Membership Products">
+                    <field name="name" string="Membership Product"/>
+                    <filter string="Inactive" domain="[('active','=',0)]"/>
+                    <field name="categ_id" operator="child_of"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='From Month' domain="[]" context="{'group_by' : 'membership_date_from'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="membership_products_tree">
+            <field name="name">Membership products</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Membership products">
+                    <field name="name"/>
+                    <field name="membership_date_from"/>
+                    <field name="membership_date_to"/>
+                    <field name="list_price" string="Membership Fee"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="uom_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="membership_products_form">
+            <field name="name">Membership Products</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Membership products">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="default_code"/>
+                            <field name="categ_id"/>
+                            <field name="membership" invisible="1"/>
+                            <field name="company_id"
+                                groups="base.group_multi_company"
+                                options="{'no_create': True}"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <label for="membership_date_from" string="Membership Duration"/>
+                            <div>
+                                <field name="membership_date_from" required="1" class="oe_inline"/> -
+                                <field name="membership_date_to" required="1" class="oe_inline"/>
+                            </div>
+                            <field name="list_price" string="Membership Fee"/>
+                            <field
+                                name="property_account_income_id"/>
+                            <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
+                        </group>
+                    </group>
+                    <label for="description"/>
+                    <field colspan="4" name="description" placeholder="Add a description..."/>
+                    <label for="description_sale"/>
+                    <field colspan="4" name="description_sale" placeholder="This note will be displayed on quotations..."/>
+                 </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_membership_products">
+            <field name="name">Membership Products</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
+            <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_type': 'service'}</field>
+            <field name="search_view_id" ref="membership_product_search_form_view"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_product_view_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="membership_products_tree"/>
+            <field name="act_window_id" ref="action_membership_products"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_product_view_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="membership_products_form"/>
+            <field name="act_window_id" ref="action_membership_products"/>
+        </record>
+
+        <menuitem name="Members" id="menu_association" sequence="15" web_icon="membership,static/description/icon.png"/>
+        <menuitem name="Configuration" id="menu_marketing_config_association"
+            parent="menu_association" sequence="100" action="action_membership_products"/>
+
+</odoo>

@@ -12,7 +12,7 @@ class StockPickingToWave(models.TransientModel):
 
     @api.multi
     def attach_pickings(self):
-        #use active_ids to add picking line to the selected wave
+        # use active_ids to add picking line to the selected wave
         self.ensure_one()
         picking_ids = self.env.context.get('active_ids')
         return self.env['stock.picking'].browse(picking_ids).write({'wave_id': self.wave_id.id})

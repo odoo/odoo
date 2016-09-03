@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!--
@@ -18,9 +18,9 @@
             </xpath>
         </template>
         <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
-            <xpath expr="//body" position="inside">
+            <xpath expr="//div[@id='wrapwrap']" position="after">
                 <t t-if="website and website.channel_id">
-                     <script>
+                    <script>
                         <t t-call="im_livechat.loader">
                             <t t-set="channel" t-value="website.channel_id.id"/>
                         </t>
@@ -88,7 +88,7 @@
                                         <div class="col-md-3">
                                             <div class="panel panel-danger">
                                                 <div class="panel-body text-center bg-danger">
-                                                    <img src="/rating/static/src/img/rating_0.png" style="height:40px"/>
+                                                    <img src="/rating/static/src/img/rating_1.png" style="height:40px"/>
                                                 </div>
                                                 <div class="panel-body text-center bg-danger">
                                                     <h2 style="margin: 0">
@@ -174,4 +174,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>

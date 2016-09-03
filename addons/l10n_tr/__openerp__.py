@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Turkey - Accounting',
     'version': '1.0',
@@ -20,10 +21,8 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'base_vat',
     ],
     'data': [
-        'account_tdhp_turkey.xml',
-        'account_tax_template.xml',
-        'account_chart_template.yml',
+        'data/l10n_tr_chart_data.xml',
+        'data/account_tax_template_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'installable': True,
 }

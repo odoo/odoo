@@ -402,11 +402,8 @@ var Configurator = Dialog.extend({
         ajax.jsonRpc('/web/dataset/call_kw', 'call', {
             model: 'website',
             method: 'get_languages',
-            args: [],
-            kwargs: {
-                ids: [base.get_context().website_id],
-                context: base.get_context()
-            }
+            args: [[base.get_context().website_id]],
+            kwargs: {context: base.get_context()}
         }).then( function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, tools
+from odoo import api, fields, models
+
 
 class TimesheetAttendance(models.Model):
     _name = 'hr.timesheet.attendance.report'
@@ -12,8 +14,9 @@ class TimesheetAttendance(models.Model):
     total_attendance = fields.Float()
     total_difference = fields.Float()
 
-    def init(self, cr):
-        cr.execute("""CREATE OR REPLACE VIEW %s AS (
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""CREATE OR REPLACE VIEW %s AS (
             SELECT
                 max(id) AS id,
                 t.user_id,
@@ -27,11 +30,10 @@ class TimesheetAttendance(models.Model):
                     resource_resource.user_id AS user_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
-                    date_trunc('day', hr_attendance.name) AS date
+                    date_trunc('day', hr_attendance.check_in) AS date
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
                 LEFT JOIN resource_resource on resource_resource.id = hr_employee.resource_id
-                WHERE hr_attendance.action = 'sign_out'
             UNION ALL
                 SELECT
                     ts.id AS id,

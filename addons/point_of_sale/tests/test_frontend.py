@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.api import Environment
+
 import odoo.tests
-from openerp.api import Environment
+
 
 class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):
@@ -53,8 +58,8 @@ class TestUi(odoo.tests.HttpCase):
         cr.release()
 
         self.phantom_js("/pos/web",
-                        "odoo.__DEBUG__.services['web.Tour'].run('pos_basic_order', 'test')",
-                        "odoo.__DEBUG__.services['web.Tour'].tours.pos_basic_order",
+                        "odoo.__DEBUG__.services['web_tour.tour'].run('pos_basic_order')",
+                        "odoo.__DEBUG__.services['web_tour.tour'].tours.pos_basic_order.ready",
                         login="admin")
 
         for order in env['pos.order'].search([]):

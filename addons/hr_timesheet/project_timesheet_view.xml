@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
             <field name="name">Activities</field>
@@ -89,6 +89,7 @@
                      <group class="oe_subtotal_footer oe_right" name="project_hours">
                         <field name="effective_hours" widget="float_time" />
                         <field name="children_hours" widget="float_time" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
+                        <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
                         <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" readonly="1"/>
                      </group>
                     </group>
@@ -149,5 +150,17 @@
              </field>
          </record>
 
+         <act_window id="project_task_action_view_timesheet"
+            name="Timesheet Entries"
+            src_model="project.task"
+            res_model="account.analytic.line"
+            view_mode="tree"
+            view_id="hr_timesheet_line_tree"
+            context="{
+                'search_default_task_id': [active_id],
+                'default_task_id': active_id,
+            }"
+        />
+
     </data>
-</openerp>
+</odoo>

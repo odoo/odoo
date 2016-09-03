@@ -13,21 +13,13 @@ related requisition. This new object will regroup and will allow you to easily
 keep track and order all your purchase orders.
 """,
     'depends' : ['purchase'],
-    'demo': ['purchase_requisition_demo.xml'],
+    'demo': ['data/purchase_requisition_demo.xml'],
     'data': [
         'security/purchase_tender.xml',
-        'purchase_requisition_data.xml',
-        'purchase_requisition_view.xml',
-        'purchase_requisition_report.xml',
         'security/ir.model.access.csv',
-        'views/report_purchaserequisition.xml',
+        'data/purchase_requisition_data.xml',
+        'views/purchase_requisition_views.xml',
+        'report/purchase_requisition_report.xml',
+        'report/report_purchaserequisition.xml',
     ],
-    'auto_install': False,
-    'test': [
-        'test/purchase_requisition_users.yml',
-        'test/purchase_requisition_demo.yml',
-        'test/cancel_purchase_requisition.yml',
-        'test/purchase_requisition.yml',
-    ],
-    'installable': True,
 }

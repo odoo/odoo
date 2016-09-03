@@ -42,24 +42,21 @@ Wizards provided by this module:
         'l10n_multilang',
     ],
     'data': [
-        'account_chart_template.xml',
-        'account_pcmn_belgium.xml',
-        'account_tax_template.xml',
-        'l10n_be_sequence.xml',
-        'fiscal_templates.xml',
-        'account_fiscal_position_tax_template.xml',
-        'account_chart_template.yml',
-        'security/ir.model.access.csv',
-        'menuitem.xml'
+        'data/account_chart_template_data.xml',
+        'data/account_pcmn_belgium_data.xml',
+        'data/account_tax_template_data.xml',
+        'data/l10n_be_sequence_data.xml',
+        'data/fiscal_templates_data.xml',
+        'data/account_fiscal_position_tax_template_data.xml',
+        'data/account_reconcile_model_template.xml',
+        'data/account_chart_template_data.yml',
+        'data/menuitem_data.xml',
     ],
     'demo': [
         'demo/l10n_be_demo.yml',
         '../account/demo/account_bank_statement.yml',
         '../account/demo/account_invoice_demo.yml',
     ],
-    'test': [
-    ],
-    'installable': True,
     'website': 'https://www.odoo.com/page/accounting',
     'post_init_hook': 'load_translations',
 }

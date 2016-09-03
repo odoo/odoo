@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.mail.tests.common import TestMail
-from openerp.tools import mute_logger
 from datetime import datetime
+
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools import mute_logger
 
 
 class TestSale(TestMail):
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.osv.orm')
     def setUp(self):
         super(TestSale, self).setUp()
 
     def test_sale_to_invoice(self):
-        """ Testing for invoice create,validate and pay with invoicing and payment user.""" 
+        """ Testing for invoice create,validate and pay with invoicing and payment user."""
         # Usefull models
         IrModelData = self.env['ir.model.data']
         partner_obj = self.env['res.partner']

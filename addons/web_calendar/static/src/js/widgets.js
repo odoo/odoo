@@ -174,53 +174,35 @@ var Sidebar = Widget.extend({
     template: 'CalendarView.sidebar',
     
     start: function() {
-        this._super();
         this.filter = new SidebarFilter(this, this.getParent());
-        this.filter.appendTo(this.$('.o_calendar_filter'));
+        return $.when(this._super(), this.filter.appendTo(this.$el));
     }
 });
 var SidebarFilter = Widget.extend({
-    className: 'o_calendar_all_responsibles',
     events: {
-        'change input:checkbox': 'filter_click',
-        'click span.color_filter': 'select_previous',
-
+        'click .o_calendar_contact': 'on_click',
     },
+    template: 'CalendarView.sidebar.filters',
+
     init: function(parent, view) {
         this._super(parent);
         this.view = view;
     },
-    set_filters: function() {
+    render: function() {
         var self = this;
-        _.forEach(self.view.all_filters, function(o) {
-            if (_.contains(self.view.now_filter_ids, o.value)) {
-                self.$('div.o_calendar_responsible input[value=' + o.value + ']').prop('checked',o.is_checked);
-            }
+        var filters = _.filter(this.view.get_all_filters_ordered(), function(filter) {
+            return _.contains(self.view.now_filter_ids, filter.value);
         });
+        this.$('.o_calendar_contacts').html(QWeb.render('CalendarView.sidebar.contacts', { filters: filters }));
     },
-    events_loaded: function(filters) {
-        var self = this;
-        if (!filters) {
-            filters = [];
-            _.forEach(self.view.get_all_filters_ordered(), function(o) {
-                if (_.contains(self.view.now_filter_ids, o.value)) {
-                    filters.push(o);
-                }
-            });
-        }            
-        this.$el.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
-    },
-    filter_click: function(e) {
-        if (this.view.all_filters[0] && e.target.value === this.view.all_filters[0].value) {
-            this.view.all_filters[0].is_checked = e.target.checked;
-        } else {
-            this.view.all_filters[e.target.value].is_checked = e.target.checked;
+    on_click: function(e) {
+        if (e.target.tagName !== 'INPUT') {
+            $(e.currentTarget).find('input').click();
+            return;
         }
-        this.view.$calendar.fullCalendar('refetchEvents');
+        this.view.all_filters[e.target.value].is_checked = e.target.checked;
+        this.trigger_up('reload_events');
     },
-    select_previous: function(e) {
-        $(e.target).siblings('input').trigger('click');
-    }
 });
 
 return {

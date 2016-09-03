@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -19,11 +19,12 @@ team. Once you get back your migrated database, you restore it and reverse the
 anonymization process to recover your previous data.
     """,
     'depends': ['base'],
-    'demo': ['anonymization_demo.xml'],
+    'demo': ['data/anonymization_demo.xml'],
     'data': [
-        'ir.model.fields.anonymization.csv',
+        'data/ir.model.fields.anonymization.csv',
         'security/ir.model.access.csv',
-        'anonymization_view.xml',
+        'views/anonymization_views.xml',
+        'wizard/anonymize_wizard_views.xml'
     ],
     'installable': True,
     'auto_install': False,

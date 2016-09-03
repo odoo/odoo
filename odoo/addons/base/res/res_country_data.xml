@@ -1,0 +1,1786 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ad" model="res.country">
+            <field name="name">Andorra, Principality of</field>
+            <field name="code">ad</field>
+            <field file="base/static/img/country_flags/ad.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="376" name="phone_code" />
+        </record>
+        <record id="ae" model="res.country">
+            <field name="name">United Arab Emirates</field>
+            <field name="code">ae</field>
+            <field file="base/static/img/country_flags/ae.png" name="image" type="base64" />
+            <field name="currency_id" ref="AED" />
+            <field eval="971" name="phone_code" />
+        </record>
+        <record id="af" model="res.country">
+            <field name="name">Afghanistan, Islamic State of</field>
+            <field name="code">af</field>
+            <field file="base/static/img/country_flags/af.png" name="image" type="base64" />
+            <field name="currency_id" ref="AFN" />
+            <field eval="93" name="phone_code" />
+        </record>
+        <record id="ag" model="res.country">
+            <field name="name">Antigua and Barbuda</field>
+            <field name="code">ag</field>
+            <field file="base/static/img/country_flags/ag.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="ai" model="res.country">
+            <field name="name">Anguilla</field>
+            <field name="code">ai</field>
+            <field file="base/static/img/country_flags/ai.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="al" model="res.country">
+            <field name="name">Albania</field>
+            <field name="code">al</field>
+            <field file="base/static/img/country_flags/al.png" name="image" type="base64" />
+            <field name="currency_id" ref="ALL" />
+            <field eval="355" name="phone_code" />
+        </record>
+        <record id="am" model="res.country">
+            <field name="name">Armenia</field>
+            <field name="code">am</field>
+            <field file="base/static/img/country_flags/am.png" name="image" type="base64" />
+            <field name="currency_id" ref="AMD" />
+            <field eval="374" name="phone_code" />
+        </record>
+        <record id="an" model="res.country">
+            <field name="name">Netherlands Antilles</field>
+            <field name="code">an</field>
+            <field file="base/static/img/country_flags/an.png" name="image" type="base64" />
+            <field name="currency_id" ref="NOK" />
+            <field eval="599" name="phone_code" />
+        </record>
+        <record id="ao" model="res.country">
+            <field name="name">Angola</field>
+            <field name="code">ao</field>
+            <field file="base/static/img/country_flags/ao.png" name="image" type="base64" />
+            <field name="currency_id" ref="AOA" />
+            <field eval="244" name="phone_code" />
+        </record>
+        <record id="aq" model="res.country">
+            <field name="name">Antarctica</field>
+            <field name="code">aq</field>
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="ar" model="res.country">
+            <field name="name">Argentina</field>
+            <field name="code">ar</field>
+            <field file="base/static/img/country_flags/ar.png" name="image" type="base64" />
+            <field name="currency_id" ref="ARS" />
+            <field eval="54" name="phone_code" />
+        </record>
+        <record id="as" model="res.country">
+            <field name="name">American Samoa</field>
+            <field name="code">as</field>
+            <field file="base/static/img/country_flags/as.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="at" model="res.country">
+            <field name="name">Austria</field>
+            <field name="code">at</field>
+            <field file="base/static/img/country_flags/at.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="43" name="phone_code" />
+        </record>
+        <record id="au" model="res.country">
+            <field name="name">Australia</field>
+            <field name="code">au</field>
+            <field file="base/static/img/country_flags/au.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="AUD" />
+            <field eval="61" name="phone_code" />
+        </record>
+        <record id="aw" model="res.country">
+            <field name="name">Aruba</field>
+            <field name="code">aw</field>
+            <field file="base/static/img/country_flags/aw.png" name="image" type="base64" />
+            <field name="currency_id" ref="AWG" />
+            <field eval="297" name="phone_code" />
+        </record>
+        <record id="ax" model="res.country">
+            <field name="name">Åland Islands</field>
+            <field name="code">ax</field>
+            <field file="base/static/img/country_flags/ax.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="az" model="res.country">
+            <field name="name">Azerbaijan</field>
+            <field name="code">az</field>
+            <field file="base/static/img/country_flags/az.png" name="image" type="base64" />
+            <field name="currency_id" ref="AZN" />
+            <field eval="994" name="phone_code" />
+        </record>
+        <record id="ba" model="res.country">
+            <field name="name">Bosnia-Herzegovina</field>
+            <field name="code">ba</field>
+            <field file="base/static/img/country_flags/ba.png" name="image" type="base64" />
+            <field name="currency_id" ref="BAM" />
+            <field eval="387" name="phone_code" />
+        </record>
+        <record id="bb" model="res.country">
+            <field name="name">Barbados</field>
+            <field name="code">bb</field>
+            <field file="base/static/img/country_flags/bb.png" name="image" type="base64" />
+            <field name="currency_id" ref="BBD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="bd" model="res.country">
+            <field name="name">Bangladesh</field>
+            <field name="code">bd</field>
+            <field file="base/static/img/country_flags/bd.png" name="image" type="base64" />
+            <field name="currency_id" ref="BDT" />
+            <field eval="880" name="phone_code" />
+        </record>
+        <record id="be" model="res.country">
+            <field name="name">Belgium</field>
+            <field name="code">be</field>
+            <field file="base/static/img/country_flags/be.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="32" name="phone_code" />
+        </record>
+        <record id="bf" model="res.country">
+            <field name="name">Burkina Faso</field>
+            <field name="code">bf</field>
+            <field file="base/static/img/country_flags/bf.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="226" name="phone_code" />
+        </record>
+        <record id="bg" model="res.country">
+            <field name="name">Bulgaria</field>
+            <field name="code">bg</field>
+            <field file="base/static/img/country_flags/bg.png" name="image" type="base64" />
+            <field name="currency_id" ref="BGN" />
+            <field eval="359" name="phone_code" />
+        </record>
+        <record id="bh" model="res.country">
+            <field name="name">Bahrain</field>
+            <field name="code">bh</field>
+            <field file="base/static/img/country_flags/bh.png" name="image" type="base64" />
+            <field name="currency_id" ref="BHD" />
+            <field eval="973" name="phone_code" />
+        </record>
+        <record id="bi" model="res.country">
+            <field name="name">Burundi</field>
+            <field name="code">bi</field>
+            <field file="base/static/img/country_flags/bi.png" name="image" type="base64" />
+            <field name="currency_id" ref="BIF" />
+            <field eval="257" name="phone_code" />
+        </record>
+        <record id="bj" model="res.country">
+            <field name="name">Benin</field>
+            <field name="code">bj</field>
+            <field file="base/static/img/country_flags/bj.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="229" name="phone_code" />
+        </record>
+        <record id="bl" model="res.country">
+            <field name="name">Saint Barthélémy</field>
+            <field name="code">bl</field>
+            <field file="base/static/img/country_flags/bl.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="bm" model="res.country">
+            <field name="name">Bermuda</field>
+            <field name="code">bm</field>
+            <field file="base/static/img/country_flags/bm.png" name="image" type="base64" />
+            <field name="currency_id" ref="BMD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="bn" model="res.country">
+            <field name="name">Brunei Darussalam</field>
+            <field name="code">bn</field>
+            <field file="base/static/img/country_flags/bn.png" name="image" type="base64" />
+            <field name="currency_id" ref="BND" />
+            <field eval="673" name="phone_code" />
+        </record>
+        <record id="bo" model="res.country">
+            <field name="name">Bolivia</field>
+            <field name="code">bo</field>
+            <field file="base/static/img/country_flags/bo.png" name="image" type="base64" />
+            <field name="currency_id" ref="BOB" />
+            <field eval="591" name="phone_code" />
+        </record>
+        <record id="bq" model="res.country">
+            <field name="name">Bonaire, Sint Eustatius and Saba</field>
+            <field name="code">bq</field>
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="br" model="res.country">
+            <field name="name">Brazil</field>
+            <field name="code">br</field>
+            <field file="base/static/img/country_flags/br.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s\n%(zip)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="BRL" />
+            <field eval="55" name="phone_code" />
+        </record>
+        <record id="bs" model="res.country">
+            <field name="name">Bahamas</field>
+            <field name="code">bs</field>
+            <field file="base/static/img/country_flags/bs.png" name="image" type="base64" />
+            <field name="currency_id" ref="BSD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="bt" model="res.country">
+            <field name="name">Bhutan</field>
+            <field name="code">bt</field>
+            <field file="base/static/img/country_flags/bt.png" name="image" type="base64" />
+            <field name="currency_id" ref="BTN" />
+            <field eval="975" name="phone_code" />
+        </record>
+        <record id="bv" model="res.country">
+            <field name="name">Bouvet Island</field>
+            <field name="code">bv</field>
+            <field name="currency_id" ref="NOK" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="bw" model="res.country">
+            <field name="name">Botswana</field>
+            <field name="code">bw</field>
+            <field file="base/static/img/country_flags/bw.png" name="image" type="base64" />
+            <field name="currency_id" ref="BWP" />
+            <field eval="267" name="phone_code" />
+        </record>
+        <record id="by" model="res.country">
+            <field name="name">Belarus</field>
+            <field name="code">by</field>
+            <field file="base/static/img/country_flags/by.png" name="image" type="base64" />
+            <field name="currency_id" ref="BYR" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="bz" model="res.country">
+            <field name="name">Belize</field>
+            <field name="code">bz</field>
+            <field file="base/static/img/country_flags/bz.png" name="image" type="base64" />
+            <field name="currency_id" ref="BZD" />
+            <field eval="501" name="phone_code" />
+        </record>
+        <record id="ca" model="res.country">
+            <field name="name">Canada</field>
+            <field name="code">ca</field>
+            <field file="base/static/img/country_flags/ca.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="CAD" />
+            <field eval="1" name="phone_code" />
+        </record>
+        <record id="cc" model="res.country">
+            <field name="name">Cocos (Keeling) Islands</field>
+            <field name="code">cc</field>
+            <field file="base/static/img/country_flags/cc.png" name="image" type="base64" />
+            <field name="currency_id" ref="AUD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="cf" model="res.country">
+            <field name="name">Central African Republic</field>
+            <field name="code">cf</field>
+            <field file="base/static/img/country_flags/cf.png" name="image" type="base64" />
+            <field name="currency_id" ref="XAF" />
+            <field eval="236" name="phone_code" />
+        </record>
+        <record id="cd" model="res.country">
+            <field name="name">Congo, Democratic Republic of the</field>
+            <field name="code">cd</field>
+            <field file="base/static/img/country_flags/cd.png" name="image" type="base64" />
+            <field name="currency_id" ref="CDF" />
+            <field eval="242" name="phone_code" />
+        </record>
+        <record id="cg" model="res.country">
+            <field name="name">Congo</field>
+            <field name="code">cg</field>
+            <field file="base/static/img/country_flags/cg.png" name="image" type="base64" />
+            <field name="currency_id" ref="XAF" />
+            <field eval="243" name="phone_code" />
+        </record>
+        <record id="ch" model="res.country">
+            <field name="name">Switzerland</field>
+            <field name="code">ch</field>
+            <field file="base/static/img/country_flags/ch.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="CHF" />
+            <field eval="41" name="phone_code" />
+        </record>
+        <record id="ci" model="res.country">
+            <field name="name">Ivory Coast (Cote D'Ivoire)</field>
+            <field name="code">ci</field>
+            <field file="base/static/img/country_flags/ci.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="225" name="phone_code" />
+        </record>
+        <record id="ck" model="res.country">
+            <field name="name">Cook Islands</field>
+            <field name="code">ck</field>
+            <field file="base/static/img/country_flags/ck.png" name="image" type="base64" />
+            <field name="currency_id" ref="NZD" />
+            <field eval="682" name="phone_code" />
+        </record>
+        <record id="cl" model="res.country">
+            <field name="name">Chile</field>
+            <field name="code">cl</field>
+            <field file="base/static/img/country_flags/cl.png" name="image" type="base64" />
+            <field name="currency_id" ref="CLP" />
+            <field eval="56" name="phone_code" />
+        </record>
+        <record id="cm" model="res.country">
+            <field name="name">Cameroon</field>
+            <field name="code">cm</field>
+            <field file="base/static/img/country_flags/cm.png" name="image" type="base64" />
+            <field name="currency_id" ref="XAF" />
+            <field eval="237" name="phone_code" />
+        </record>
+        <record id="cn" model="res.country">
+            <field name="name">China</field>
+            <field name="code">cn</field>
+            <field file="base/static/img/country_flags/cn.png" name="image" type="base64" />
+            <field eval="'%(country_name)s%(state_name)s%(city)s%(street)s%(street2)s %(zip)s'" name="address_format" />
+            <field name="currency_id" ref="CNY" />
+            <field eval="86" name="phone_code" />
+        </record>
+        <record id="co" model="res.country">
+            <field name="name">Colombia</field>
+            <field name="code">co</field>
+            <field file="base/static/img/country_flags/co.png" name="image" type="base64" />
+            <field name="currency_id" ref="COP" />
+            <field eval="57" name="phone_code" />
+        </record>
+        <record id="cr" model="res.country">
+            <field name="name">Costa Rica</field>
+            <field name="code">cr</field>
+            <field file="base/static/img/country_flags/cr.png" name="image" type="base64" />
+            <field name="currency_id" ref="CRC" />
+            <field eval="506" name="phone_code" />
+        </record>
+        <record id="cu" model="res.country">
+            <field name="name">Cuba</field>
+            <field name="code">cu</field>
+            <field file="base/static/img/country_flags/cu.png" name="image" type="base64" />
+            <field name="currency_id" ref="CUP" />
+            <field eval="53" name="phone_code" />
+        </record>
+        <record id="cv" model="res.country">
+            <field name="name">Cape Verde</field>
+            <field name="code">cv</field>
+            <field file="base/static/img/country_flags/cv.png" name="image" type="base64" />
+            <field name="currency_id" ref="CVE" />
+            <field eval="238" name="phone_code" />
+        </record>
+        <record id="cw" model="res.country">
+            <field name="name">Curaçao</field>
+            <field name="code">cw</field>
+            <field file="base/static/img/country_flags/cw.png" name="image" type="base64" />
+            <field name="currency_id" ref="ANG" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="cx" model="res.country">
+            <field name="name">Christmas Island</field>
+            <field name="code">cx</field>
+            <field file="base/static/img/country_flags/cx.png" name="image" type="base64" />
+            <field name="currency_id" ref="AUD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="cy" model="res.country">
+            <field name="name">Cyprus</field>
+            <field name="code">cy</field>
+            <field file="base/static/img/country_flags/cy.png" name="image" type="base64" />
+            <field name="currency_id" ref="CYP" />
+            <field eval="357" name="phone_code" />
+        </record>
+        <record id="cz" model="res.country">
+            <field name="name">Czech Republic</field>
+            <field name="code">cz</field>
+            <field file="base/static/img/country_flags/cz.png" name="image" type="base64" />
+            <field name="currency_id" ref="CZK" />
+            <field eval="420" name="phone_code" />
+        </record>
+        <record id="de" model="res.country">
+            <field name="name">Germany</field>
+            <field name="code">de</field>
+            <field file="base/static/img/country_flags/de.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="49" name="phone_code" />
+        </record>
+        <record id="dj" model="res.country">
+            <field name="name">Djibouti</field>
+            <field name="code">dj</field>
+            <field file="base/static/img/country_flags/dj.png" name="image" type="base64" />
+            <field name="currency_id" ref="DJF" />
+            <field eval="253" name="phone_code" />
+        </record>
+        <record id="dk" model="res.country">
+            <field name="name">Denmark</field>
+            <field name="code">dk</field>
+            <field file="base/static/img/country_flags/dk.png" name="image" type="base64" />
+            <field name="currency_id" ref="DKK" />
+            <field eval="45" name="phone_code" />
+        </record>
+        <record id="dm" model="res.country">
+            <field name="name">Dominica</field>
+            <field name="code">dm</field>
+            <field file="base/static/img/country_flags/dm.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="do" model="res.country">
+            <field name="name">Dominican Republic</field>
+            <field name="code">do</field>
+            <field file="base/static/img/country_flags/do.png" name="image" type="base64" />
+            <field name="currency_id" ref="DOP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="dz" model="res.country">
+            <field name="name">Algeria</field>
+            <field name="code">dz</field>
+            <field file="base/static/img/country_flags/dz.png" name="image" type="base64" />
+            <field name="currency_id" ref="DZD" />
+            <field eval="213" name="phone_code" />
+        </record>
+        <record id="ec" model="res.country">
+            <field name="name">Ecuador</field>
+            <field name="code">ec</field>
+            <field file="base/static/img/country_flags/ec.png" name="image" type="base64" />
+            <field name="currency_id" ref="ECS" />
+            <field eval="593" name="phone_code" />
+        </record>
+        <record id="ee" model="res.country">
+            <field name="name">Estonia</field>
+            <field name="code">ee</field>
+            <field file="base/static/img/country_flags/ee.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="372" name="phone_code" />
+        </record>
+        <record id="eg" model="res.country">
+            <field name="name">Egypt</field>
+            <field name="code">eg</field>
+            <field file="base/static/img/country_flags/eg.png" name="image" type="base64" />
+            <field name="currency_id" ref="EGP" />
+            <field eval="20" name="phone_code" />
+        </record>
+        <record id="eh" model="res.country">
+            <field name="name">Western Sahara</field>
+            <field name="code">eh</field>
+            <field name="currency_id" ref="MAD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="er" model="res.country">
+            <field name="name">Eritrea</field>
+            <field name="code">er</field>
+            <field file="base/static/img/country_flags/er.png" name="image" type="base64" />
+            <field name="currency_id" ref="ERN" />
+            <field eval="291" name="phone_code" />
+        </record>
+        <record id="es" model="res.country">
+            <field name="name">Spain</field>
+            <field name="code">es</field>
+            <field file="base/static/img/country_flags/es.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="34" name="phone_code" />
+        </record>
+        <record id="et" model="res.country">
+            <field name="name">Ethiopia</field>
+            <field name="code">et</field>
+            <field file="base/static/img/country_flags/et.png" name="image" type="base64" />
+            <field name="currency_id" ref="ETB" />
+            <field eval="251" name="phone_code" />
+        </record>
+        <record id="fi" model="res.country">
+            <field name="name">Finland</field>
+            <field name="code">fi</field>
+            <field file="base/static/img/country_flags/fi.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="358" name="phone_code" />
+        </record>
+        <record id="fj" model="res.country">
+            <field name="name">Fiji</field>
+            <field name="code">fj</field>
+            <field file="base/static/img/country_flags/fj.png" name="image" type="base64" />
+            <field name="currency_id" ref="FJD" />
+            <field eval="679" name="phone_code" />
+        </record>
+        <record id="fk" model="res.country">
+            <field name="name">Falkland Islands</field>
+            <field name="code">fk</field>
+            <field file="base/static/img/country_flags/fk.png" name="image" type="base64" />
+            <field name="currency_id" ref="FKP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="fm" model="res.country">
+            <field name="name">Micronesia</field>
+            <field name="code">fm</field>
+            <field file="base/static/img/country_flags/fm.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="691" name="phone_code" />
+        </record>
+        <record id="fo" model="res.country">
+            <field name="name">Faroe Islands</field>
+            <field name="code">fo</field>
+            <field file="base/static/img/country_flags/fo.png" name="image" type="base64" />
+            <field name="currency_id" ref="DKK" />
+            <field eval="298" name="phone_code" />
+        </record>
+        <record id="fr" model="res.country">
+            <field name="name">France</field>
+            <field name="code">fr</field>
+            <field file="base/static/img/country_flags/fr.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="33" name="phone_code" />
+        </record>
+        <record id="ga" model="res.country">
+            <field name="name">Gabon</field>
+            <field name="code">ga</field>
+            <field file="base/static/img/country_flags/ga.png" name="image" type="base64" />
+            <field name="currency_id" ref="XAF" />
+            <field eval="241" name="phone_code" />
+        </record>
+        <record id="gd" model="res.country">
+            <field name="name">Grenada</field>
+            <field name="code">gd</field>
+            <field file="base/static/img/country_flags/gd.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="ge" model="res.country">
+            <field name="name">Georgia</field>
+            <field name="code">ge</field>
+            <field file="base/static/img/country_flags/ge.png" name="image" type="base64" />
+            <field name="currency_id" ref="GEL" />
+            <field eval="995" name="phone_code" />
+        </record>
+        <record id="gf" model="res.country">
+            <field name="name">French Guyana</field>
+            <field name="code">gf</field>
+            <field name="currency_id" ref="EUR" />
+            <field eval="594" name="phone_code" />
+        </record>
+        <record id="gh" model="res.country">
+            <field name="name">Ghana</field>
+            <field name="code">gh</field>
+            <field file="base/static/img/country_flags/gh.png" name="image" type="base64" />
+            <field name="currency_id" ref="GHS" />
+            <field eval="233" name="phone_code" />
+        </record>
+        <record id="gi" model="res.country">
+            <field name="name">Gibraltar</field>
+            <field name="code">gi</field>
+            <field file="base/static/img/country_flags/gi.png" name="image" type="base64" />
+            <field name="currency_id" ref="GIP" />
+            <field eval="350" name="phone_code" />
+        </record>
+        <record id="gg" model="res.country">
+            <field name="name">Guernsey</field>
+            <field name="code">gg</field>
+            <field file="base/static/img/country_flags/gg.png" name="image" type="base64" />
+            <field name="currency_id" ref="GBP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="gl" model="res.country">
+            <field name="name">Greenland</field>
+            <field name="code">gl</field>
+            <field file="base/static/img/country_flags/gl.png" name="image" type="base64" />
+            <field name="currency_id" ref="DKK" />
+            <field eval="299" name="phone_code" />
+        </record>
+        <record id="gm" model="res.country">
+            <field name="name">Gambia</field>
+            <field name="code">gm</field>
+            <field file="base/static/img/country_flags/gm.png" name="image" type="base64" />
+            <field name="currency_id" ref="GMD" />
+            <field eval="220" name="phone_code" />
+        </record>
+        <record id="gn" model="res.country">
+            <field name="name">Guinea</field>
+            <field name="code">gn</field>
+            <field file="base/static/img/country_flags/gn.png" name="image" type="base64" />
+            <field name="currency_id" ref="GNF" />
+            <field eval="224" name="phone_code" />
+        </record>
+        <record id="gp" model="res.country">
+            <field name="name">Guadeloupe (French)</field>
+            <field name="code">gp</field>
+            <field name="currency_id" ref="EUR" />
+            <field eval="590" name="phone_code" />
+        </record>
+        <record id="gq" model="res.country">
+            <field name="name">Equatorial Guinea</field>
+            <field name="code">gq</field>
+            <field file="base/static/img/country_flags/gq.png" name="image" type="base64" />
+            <field name="currency_id" ref="XAF" />
+            <field eval="240" name="phone_code" />
+        </record>
+        <record id="gr" model="res.country">
+            <field name="name">Greece</field>
+            <field name="code">gr</field>
+            <field file="base/static/img/country_flags/gr.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="30" name="phone_code" />
+        </record>
+        <record id="gs" model="res.country">
+            <field name="name">South Georgia and the South Sandwich Islands</field>
+            <field name="code">gs</field>
+            <field file="base/static/img/country_flags/gs.png" name="image" type="base64" />
+            <field name="currency_id" ref="GBP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="gt" model="res.country">
+            <field name="name">Guatemala</field>
+            <field name="code">gt</field>
+            <field file="base/static/img/country_flags/gt.png" name="image" type="base64" />
+            <field name="currency_id" ref="QTQ" />
+            <field eval="502" name="phone_code" />
+        </record>
+        <record id="gu" model="res.country">
+            <field name="name">Guam (USA)</field>
+            <field name="code">gu</field>
+            <field file="base/static/img/country_flags/gu.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="gw" model="res.country">
+            <field name="name">Guinea Bissau</field>
+            <field name="code">gw</field>
+            <field file="base/static/img/country_flags/gw.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="245" name="phone_code" />
+        </record>
+        <record id="gy" model="res.country">
+            <field name="name">Guyana</field>
+            <field name="code">gy</field>
+            <field file="base/static/img/country_flags/gy.png" name="image" type="base64" />
+            <field name="currency_id" ref="GYD" />
+            <field eval="592" name="phone_code" />
+        </record>
+        <record id="hk" model="res.country">
+            <field name="name">Hong Kong</field>
+            <field name="code">hk</field>
+            <field file="base/static/img/country_flags/hk.png" name="image" type="base64" />
+            <field name="currency_id" ref="HKD" />
+            <field eval="852" name="phone_code" />
+        </record>
+        <record id="hm" model="res.country">
+            <field name="name">Heard and McDonald Islands</field>
+            <field name="code">hm</field>
+            <field name="currency_id" ref="AUD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="hn" model="res.country">
+            <field name="name">Honduras</field>
+            <field name="code">hn</field>
+            <field file="base/static/img/country_flags/hn.png" name="image" type="base64" />
+            <field name="currency_id" ref="HNL" />
+            <field eval="504" name="phone_code" />
+        </record>
+        <record id="hr" model="res.country">
+            <field name="name">Croatia</field>
+            <field name="code">hr</field>
+            <field file="base/static/img/country_flags/hr.png" name="image" type="base64" />
+            <field name="currency_id" ref="HRK" />
+            <field eval="385" name="phone_code" />
+        </record>
+        <record id="ht" model="res.country">
+            <field name="name">Haiti</field>
+            <field name="code">ht</field>
+            <field file="base/static/img/country_flags/ht.png" name="image" type="base64" />
+            <field name="currency_id" ref="HTG" />
+            <field eval="509" name="phone_code" />
+        </record>
+        <record id="hu" model="res.country">
+            <field name="name">Hungary</field>
+            <field name="code">hu</field>
+            <field file="base/static/img/country_flags/hu.png" name="image" type="base64" />
+            <field name="currency_id" ref="HUF" />
+            <field eval="36" name="phone_code" />
+        </record>
+        <record id="id" model="res.country">
+            <field name="name">Indonesia</field>
+            <field name="code">id</field>
+            <field file="base/static/img/country_flags/id.png" name="image" type="base64" />
+            <field name="currency_id" ref="IDR" />
+            <field eval="62" name="phone_code" />
+        </record>
+        <record id="ie" model="res.country">
+            <field name="name">Ireland</field>
+            <field name="code">ie</field>
+            <field file="base/static/img/country_flags/ie.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="353" name="phone_code" />
+        </record>
+        <record id="il" model="res.country">
+            <field name="name">Israel</field>
+            <field name="code">il</field>
+            <field file="base/static/img/country_flags/il.png" name="image" type="base64" />
+            <field name="currency_id" ref="ILS" />
+            <field eval="972" name="phone_code" />
+        </record>
+        <record id="im" model="res.country">
+            <field name="name">Isle of Man</field>
+            <field name="code">im</field>
+            <field file="base/static/img/country_flags/im.png" name="image" type="base64" />
+            <field name="currency_id" ref="GBP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="in" model="res.country">
+            <field name="name">India</field>
+            <field name="code">in</field>
+            <field file="base/static/img/country_flags/in.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="INR" />
+            <field eval="91" name="phone_code" />
+        </record>
+        <record id="io" model="res.country">
+            <field name="name">British Indian Ocean Territory</field>
+            <field name="code">io</field>
+            <field file="base/static/img/country_flags/io.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="iq" model="res.country">
+            <field name="name">Iraq</field>
+            <field name="code">iq</field>
+            <field file="base/static/img/country_flags/iq.png" name="image" type="base64" />
+            <field name="currency_id" ref="IQD" />
+            <field eval="964" name="phone_code" />
+        </record>
+        <record id="ir" model="res.country">
+            <field name="name">Iran</field>
+            <field name="code">ir</field>
+            <field file="base/static/img/country_flags/ir.png" name="image" type="base64" />
+            <field name="currency_id" ref="IRR" />
+            <field eval="98" name="phone_code" />
+        </record>
+        <record id="is" model="res.country">
+            <field name="name">Iceland</field>
+            <field name="code">is</field>
+            <field file="base/static/img/country_flags/is.png" name="image" type="base64" />
+            <field name="currency_id" ref="ISK" />
+            <field eval="354" name="phone_code" />
+        </record>
+        <record id="it" model="res.country">
+            <field name="name">Italy</field>
+            <field name="code">it</field>
+            <field file="base/static/img/country_flags/it.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="39" name="phone_code" />
+        </record>
+        <record id="je" model="res.country">
+            <field name="name">Jersey</field>
+            <field name="code">je</field>
+            <field file="base/static/img/country_flags/je.png" name="image" type="base64" />
+            <field name="currency_id" ref="GBP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="jm" model="res.country">
+            <field name="name">Jamaica</field>
+            <field name="code">jm</field>
+            <field file="base/static/img/country_flags/jm.png" name="image" type="base64" />
+            <field name="currency_id" ref="JMD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="jo" model="res.country">
+            <field name="name">Jordan</field>
+            <field name="code">jo</field>
+            <field file="base/static/img/country_flags/jo.png" name="image" type="base64" />
+            <field name="currency_id" ref="JOD" />
+            <field eval="962" name="phone_code" />
+        </record>
+        <record id="jp" model="res.country">
+            <field name="name">Japan</field>
+            <field name="code">jp</field>
+            <field file="base/static/img/country_flags/jp.png" name="image" type="base64" />
+            <field name="currency_id" ref="JPY" />
+            <field eval="81" name="phone_code" />
+        </record>
+        <record id="ke" model="res.country">
+            <field name="name">Kenya</field>
+            <field name="code">ke</field>
+            <field file="base/static/img/country_flags/ke.png" name="image" type="base64" />
+            <field name="currency_id" ref="KES" />
+            <field eval="254" name="phone_code" />
+        </record>
+        <record id="kg" model="res.country">
+            <field name="name">Kyrgyz Republic (Kyrgyzstan)</field>
+            <field name="code">kg</field>
+            <field file="base/static/img/country_flags/kg.png" name="image" type="base64" />
+            <field name="currency_id" ref="KGS" />
+            <field eval="996" name="phone_code" />
+        </record>
+        <record id="kh" model="res.country">
+            <field name="name">Cambodia, Kingdom of</field>
+            <field name="code">kh</field>
+            <field file="base/static/img/country_flags/kh.png" name="image" type="base64" />
+            <field name="currency_id" ref="KHR" />
+            <field eval="855" name="phone_code" />
+        </record>
+        <record id="ki" model="res.country">
+            <field name="name">Kiribati</field>
+            <field name="code">ki</field>
+            <field file="base/static/img/country_flags/ki.png" name="image" type="base64" />
+            <field name="currency_id" ref="AUD" />
+            <field eval="686" name="phone_code" />
+        </record>
+        <record id="km" model="res.country">
+            <field name="name">Comoros</field>
+            <field name="code">km</field>
+            <field file="base/static/img/country_flags/km.png" name="image" type="base64" />
+            <field name="currency_id" ref="KMF" />
+            <field eval="269" name="phone_code" />
+        </record>
+        <record id="kn" model="res.country">
+            <field name="name">Saint Kitts &amp; Nevis Anguilla</field>
+            <field name="code">kn</field>
+            <field file="base/static/img/country_flags/kn.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="kp" model="res.country">
+            <field name="name">North Korea</field>
+            <field name="code">kp</field>
+            <field file="base/static/img/country_flags/kp.png" name="image" type="base64" />
+            <field name="currency_id" ref="KPW" />
+            <field eval="850" name="phone_code" />
+        </record>
+        <record id="kr" model="res.country">
+            <field name="name">South Korea</field>
+            <field name="code">kr</field>
+            <field file="base/static/img/country_flags/kr.png" name="image" type="base64" />
+            <field name="currency_id" ref="KRW" />
+            <field eval="82" name="phone_code" />
+        </record>
+        <record id="kw" model="res.country">
+            <field name="name">Kuwait</field>
+            <field name="code">kw</field>
+            <field file="base/static/img/country_flags/kw.png" name="image" type="base64" />
+            <field name="currency_id" ref="KWD" />
+            <field eval="965" name="phone_code" />
+        </record>
+        <record id="ky" model="res.country">
+            <field name="name">Cayman Islands</field>
+            <field name="code">ky</field>
+            <field file="base/static/img/country_flags/ky.png" name="image" type="base64" />
+            <field name="currency_id" ref="KYD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="kz" model="res.country">
+            <field name="name">Kazakhstan</field>
+            <field name="code">kz</field>
+            <field file="base/static/img/country_flags/kz.png" name="image" type="base64" />
+            <field name="currency_id" ref="KZT" />
+            <field eval="7" name="phone_code" />
+        </record>
+        <record id="la" model="res.country">
+            <field name="name">Laos</field>
+            <field name="code">la</field>
+            <field file="base/static/img/country_flags/la.png" name="image" type="base64" />
+            <field name="currency_id" ref="LAK" />
+            <field eval="856" name="phone_code" />
+        </record>
+        <record id="lb" model="res.country">
+            <field name="name">Lebanon</field>
+            <field name="code">lb</field>
+            <field file="base/static/img/country_flags/lb.png" name="image" type="base64" />
+            <field name="currency_id" ref="LBP" />
+            <field eval="961" name="phone_code" />
+        </record>
+        <record id="lc" model="res.country">
+            <field name="name">Saint Lucia</field>
+            <field name="code">lc</field>
+            <field file="base/static/img/country_flags/lc.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="li" model="res.country">
+            <field name="name">Liechtenstein</field>
+            <field name="code">li</field>
+            <field file="base/static/img/country_flags/li.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="CHF" />
+            <field eval="423" name="phone_code" />
+        </record>
+        <record id="lk" model="res.country">
+            <field name="name">Sri Lanka</field>
+            <field name="code">lk</field>
+            <field file="base/static/img/country_flags/lk.png" name="image" type="base64" />
+            <field name="currency_id" ref="LKR" />
+            <field eval="94" name="phone_code" />
+        </record>
+        <record id="lr" model="res.country">
+            <field name="name">Liberia</field>
+            <field name="code">lr</field>
+            <field file="base/static/img/country_flags/lr.png" name="image" type="base64" />
+            <field name="currency_id" ref="LRD" />
+            <field eval="231" name="phone_code" />
+        </record>
+        <record id="ls" model="res.country">
+            <field name="name">Lesotho</field>
+            <field name="code">ls</field>
+            <field file="base/static/img/country_flags/ls.png" name="image" type="base64" />
+            <field name="currency_id" ref="LSL" />
+            <field eval="266" name="phone_code" />
+        </record>
+        <record id="lt" model="res.country">
+            <field name="name">Lithuania</field>
+            <field name="code">lt</field>
+            <field file="base/static/img/country_flags/lt.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR"/>
+            <field eval="370" name="phone_code" />
+        </record>
+        <record id="lu" model="res.country">
+            <field name="name">Luxembourg</field>
+            <field name="code">lu</field>
+            <field file="base/static/img/country_flags/lu.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="352" name="phone_code" />
+        </record>
+        <record id="lv" model="res.country">
+            <field name="name">Latvia</field>
+            <field name="code">lv</field>
+            <field file="base/static/img/country_flags/lv.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR"/>
+            <field eval="371" name="phone_code" />
+        </record>
+        <record id="ly" model="res.country">
+            <field name="name">Libya</field>
+            <field name="code">ly</field>
+            <field file="base/static/img/country_flags/ly.png" name="image" type="base64" />
+            <field name="currency_id" ref="LYD" />
+            <field eval="218" name="phone_code" />
+        </record>
+        <record id="ma" model="res.country">
+            <field name="name">Morocco</field>
+            <field name="code">ma</field>
+            <field file="base/static/img/country_flags/ma.png" name="image" type="base64" />
+            <field name="currency_id" ref="MAD" />
+            <field eval="212" name="phone_code" />
+        </record>
+        <record id="mc" model="res.country">
+            <field name="name">Monaco</field>
+            <field name="currency_id" ref="EUR" />
+            <field name="code">mc</field>
+            <field file="base/static/img/country_flags/mc.png" name="image" type="base64" />
+            <field eval="377" name="phone_code" />
+        </record>
+        <record id="md" model="res.country">
+            <field name="name">Moldavia</field>
+            <field name="code">md</field>
+            <field file="base/static/img/country_flags/md.png" name="image" type="base64" />
+            <field name="currency_id" ref="MDL" />
+            <field eval="373" name="phone_code" />
+        </record>
+        <record id="me" model="res.country">
+            <field name="name">Montenegro</field>
+            <field name="code">me</field>
+            <field file="base/static/img/country_flags/me.png" name="image" type="base64" />
+            <field name="currency_id" ref="LYD" />
+            <field eval="382" name="phone_code" />
+        </record>
+        <record id="mf" model="res.country">
+            <field name="name">Saint Martin (French part)</field>
+            <field name="code">mf</field>
+            <field name="currency_id" ref="EUR" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="mg" model="res.country">
+            <field name="name">Madagascar</field>
+            <field name="code">mg</field>
+            <field file="base/static/img/country_flags/mg.png" name="image" type="base64" />
+            <field name="currency_id" ref="MGA" />
+            <field eval="261" name="phone_code" />
+        </record>
+        <record id="mh" model="res.country">
+            <field name="name">Marshall Islands</field>
+            <field name="code">mh</field>
+            <field file="base/static/img/country_flags/mh.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="692" name="phone_code" />
+        </record>
+        <record id="mk" model="res.country">
+            <field name="name">Macedonia, the former Yugoslav Republic of</field>
+            <field name="code">mk</field>
+            <field file="base/static/img/country_flags/mk.png" name="image" type="base64" />
+            <field name="currency_id" ref="MKD" />
+            <field eval="389" name="phone_code" />
+        </record>
+        <record id="ml" model="res.country">
+            <field name="name">Mali</field>
+            <field name="code">ml</field>
+            <field file="base/static/img/country_flags/ml.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="223" name="phone_code" />
+        </record>
+        <record id="mm" model="res.country">
+            <field name="name">Myanmar</field>
+            <field name="code">mm</field>
+            <field file="base/static/img/country_flags/mm.png" name="image" type="base64" />
+            <field name="currency_id" ref="MMK" />
+            <field eval="95" name="phone_code" />
+        </record>
+        <record id="mn" model="res.country">
+            <field name="name">Mongolia</field>
+            <field name="code">mn</field>
+            <field file="base/static/img/country_flags/mn.png" name="image" type="base64" />
+            <field name="currency_id" ref="MNT" />
+            <field eval="976" name="phone_code" />
+        </record>
+        <record id="mo" model="res.country">
+            <field name="name">Macau</field>
+            <field name="code">mo</field>
+            <field file="base/static/img/country_flags/mo.png" name="image" type="base64" />
+            <field name="currency_id" ref="MOP" />
+            <field eval="853" name="phone_code" />
+        </record>
+        <record id="mp" model="res.country">
+            <field name="name">Northern Mariana Islands</field>
+            <field name="code">mp</field>
+            <field file="base/static/img/country_flags/mp.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="mq" model="res.country">
+            <field name="name">Martinique (French)</field>
+            <field name="code">mq</field>
+            <field file="base/static/img/country_flags/mq.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="596" name="phone_code" />
+        </record>
+        <record id="mr" model="res.country">
+            <field name="name">Mauritania</field>
+            <field name="code">mr</field>
+            <field file="base/static/img/country_flags/mr.png" name="image" type="base64" />
+            <field name="currency_id" ref="MRO" />
+            <field eval="222" name="phone_code" />
+        </record>
+        <record id="ms" model="res.country">
+            <field name="name">Montserrat</field>
+            <field name="code">ms</field>
+            <field file="base/static/img/country_flags/ms.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="mt" model="res.country">
+            <field name="name">Malta</field>
+            <field name="code">mt</field>
+            <field file="base/static/img/country_flags/mt.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="356" name="phone_code" />
+        </record>
+        <record id="mu" model="res.country">
+            <field name="name">Mauritius</field>
+            <field name="code">mu</field>
+            <field file="base/static/img/country_flags/mu.png" name="image" type="base64" />
+            <field name="currency_id" ref="MUR" />
+            <field eval="230" name="phone_code" />
+        </record>
+        <record id="mv" model="res.country">
+            <field name="name">Maldives</field>
+            <field name="code">mv</field>
+            <field file="base/static/img/country_flags/mv.png" name="image" type="base64" />
+            <field name="currency_id" ref="MVR" />
+            <field eval="960" name="phone_code" />
+        </record>
+        <record id="mw" model="res.country">
+            <field name="name">Malawi</field>
+            <field name="code">mw</field>
+            <field file="base/static/img/country_flags/mw.png" name="image" type="base64" />
+            <field name="currency_id" ref="MWK" />
+            <field eval="265" name="phone_code" />
+        </record>
+        <record id="mx" model="res.country">
+            <field name="name">Mexico</field>
+            <field name="code">mx</field>
+            <field file="base/static/img/country_flags/mx.png" name="image" type="base64" />
+            <field name="currency_id" ref="MXN" />
+            <field eval="52" name="phone_code" />
+        </record>
+        <record id="my" model="res.country">
+            <field name="name">Malaysia</field>
+            <field name="code">my</field>
+            <field file="base/static/img/country_flags/my.png" name="image" type="base64" />
+            <field name="currency_id" ref="MYR" />
+            <field eval="60" name="phone_code" />
+        </record>
+        <record id="mz" model="res.country">
+            <field name="name">Mozambique</field>
+            <field name="code">mz</field>
+            <field file="base/static/img/country_flags/mz.png" name="image" type="base64" />
+            <field name="currency_id" ref="MZN" />
+            <field eval="258" name="phone_code" />
+        </record>
+        <record id="na" model="res.country">
+            <field name="name">Namibia</field>
+            <field name="code">na</field>
+            <field file="base/static/img/country_flags/na.png" name="image" type="base64" />
+            <field name="currency_id" ref="NAD" />
+            <field eval="264" name="phone_code" />
+        </record>
+        <record id="nc" model="res.country">
+            <field name="name">New Caledonia (French)</field>
+            <field name="code">nc</field>
+            <field file="base/static/img/country_flags/nc.png" name="image" type="base64" />
+            <field name="currency_id" ref="XPF" />
+            <field eval="687" name="phone_code" />
+        </record>
+        <record id="ne" model="res.country">
+            <field name="name">Niger</field>
+            <field name="code">ne</field>
+            <field file="base/static/img/country_flags/ne.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="227" name="phone_code" />
+        </record>
+        <record id="nf" model="res.country">
+            <field name="name">Norfolk Island</field>
+            <field name="code">nf</field>
+            <field file="base/static/img/country_flags/nf.png" name="image" type="base64" />
+            <field name="currency_id" ref="AUD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="ng" model="res.country">
+            <field name="name">Nigeria</field>
+            <field name="code">ng</field>
+            <field file="base/static/img/country_flags/ng.png" name="image" type="base64" />
+            <field name="currency_id" ref="NGN" />
+            <field eval="234" name="phone_code" />
+        </record>
+        <record id="ni" model="res.country">
+            <field name="name">Nicaragua</field>
+            <field name="code">ni</field>
+            <field file="base/static/img/country_flags/ni.png" name="image" type="base64" />
+            <field name="currency_id" ref="NIO" />
+            <field eval="505" name="phone_code" />
+        </record>
+        <record id="nl" model="res.country">
+            <field name="name">Netherlands</field>
+            <field name="code">nl</field>
+            <field file="base/static/img/country_flags/nl.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="31" name="phone_code" />
+        </record>
+        <record id="no" model="res.country">
+            <field name="name">Norway</field>
+            <field name="code">no</field>
+            <field file="base/static/img/country_flags/no.png" name="image" type="base64" />
+            <field name="currency_id" ref="NOK" />
+            <field eval="47" name="phone_code" />
+        </record>
+        <record id="np" model="res.country">
+            <field name="name">Nepal</field>
+            <field name="code">np</field>
+            <field file="base/static/img/country_flags/np.png" name="image" type="base64" />
+            <field name="currency_id" ref="NPR" />
+            <field eval="977" name="phone_code" />
+        </record>
+        <record id="nr" model="res.country">
+            <field name="name">Nauru</field>
+            <field name="code">nr</field>
+            <field file="base/static/img/country_flags/nr.png" name="image" type="base64" />
+            <field name="currency_id" ref="AUD" />
+            <field eval="674" name="phone_code" />
+        </record>
+        <record id="nt" model="res.country">
+            <field name="name">Neutral Zone</field>
+            <field name="code">nt</field>
+            <field name="currency_id" ref="IQD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="nu" model="res.country">
+            <field name="name">Niue</field>
+            <field name="code">nu</field>
+            <field file="base/static/img/country_flags/nu.png" name="image" type="base64" />
+            <field name="currency_id" ref="NZD" />
+            <field eval="683" name="phone_code" />
+        </record>
+        <record id="nz" model="res.country">
+            <field name="name">New Zealand</field>
+            <field name="code">nz</field>
+            <field file="base/static/img/country_flags/nz.png" name="image" type="base64" />
+            <field name="currency_id" ref="NZD" />
+            <field eval="64" name="phone_code" />
+        </record>
+        <record id="om" model="res.country">
+            <field name="name">Oman</field>
+            <field name="code">om</field>
+            <field file="base/static/img/country_flags/om.png" name="image" type="base64" />
+            <field name="currency_id" ref="OMR" />
+            <field eval="968" name="phone_code" />
+        </record>
+        <record id="pa" model="res.country">
+            <field name="name">Panama</field>
+            <field name="code">pa</field>
+            <field file="base/static/img/country_flags/pa.png" name="image" type="base64" />
+            <field name="currency_id" ref="PAB" />
+            <field eval="507" name="phone_code" />
+        </record>
+        <record id="pe" model="res.country">
+            <field name="name">Peru</field>
+            <field name="code">pe</field>
+            <field file="base/static/img/country_flags/pe.png" name="image" type="base64" />
+            <field name="currency_id" ref="PEN" />
+            <field eval="51" name="phone_code" />
+        </record>
+        <record id="pf" model="res.country">
+            <field name="name">Polynesia (French)</field>
+            <field name="code">pf</field>
+            <field file="base/static/img/country_flags/pf.png" name="image" type="base64" />
+            <field name="currency_id" ref="XPF" />
+            <field eval="689" name="phone_code" />
+        </record>
+        <record id="pg" model="res.country">
+            <field name="name">Papua New Guinea</field>
+            <field name="code">pg</field>
+            <field file="base/static/img/country_flags/pg.png" name="image" type="base64" />
+            <field name="currency_id" ref="PGK" />
+            <field eval="675" name="phone_code" />
+        </record>
+        <record id="ph" model="res.country">
+            <field name="name">Philippines</field>
+            <field name="code">ph</field>
+            <field file="base/static/img/country_flags/ph.png" name="image" type="base64" />
+            <field name="currency_id" ref="PHP" />
+            <field eval="63" name="phone_code" />
+        </record>
+        <record id="pk" model="res.country">
+            <field name="name">Pakistan</field>
+            <field name="code">pk</field>
+            <field file="base/static/img/country_flags/pk.png" name="image" type="base64" />
+            <field name="currency_id" ref="PKR" />
+            <field eval="92" name="phone_code" />
+        </record>
+        <record id="pl" model="res.country">
+            <field name="name">Poland</field>
+            <field name="code">pl</field>
+            <field file="base/static/img/country_flags/pl.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="PLN" />
+            <field eval="48" name="phone_code" />
+        </record>
+        <record id="pm" model="res.country">
+            <field name="name">Saint Pierre and Miquelon</field>
+            <field name="code">pm</field>
+            <field file="base/static/img/country_flags/pm.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="508" name="phone_code" />
+        </record>
+        <record id="pn" model="res.country">
+            <field name="name">Pitcairn Island</field>
+            <field name="code">pn</field>
+            <field file="base/static/img/country_flags/pn.png" name="image" type="base64" />
+            <field name="currency_id" ref="NZD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="pr" model="res.country">
+            <field name="name">Puerto Rico</field>
+            <field name="code">pr</field>
+            <field file="base/static/img/country_flags/pr.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="ps" model="res.country">
+            <field name="name">Palestinian Territory, Occupied</field>
+            <field name="code">ps</field>
+            <field name="currency_id" ref="ILS" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="pt" model="res.country">
+            <field name="name">Portugal</field>
+            <field name="code">pt</field>
+            <field file="base/static/img/country_flags/pt.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="351" name="phone_code" />
+        </record>
+        <record id="pw" model="res.country">
+            <field name="name">Palau</field>
+            <field name="code">pw</field>
+            <field file="base/static/img/country_flags/pw.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="680" name="phone_code" />
+        </record>
+        <record id="py" model="res.country">
+            <field name="name">Paraguay</field>
+            <field name="code">py</field>
+            <field file="base/static/img/country_flags/py.png" name="image" type="base64" />
+            <field name="currency_id" ref="PYG" />
+            <field eval="595" name="phone_code" />
+        </record>
+        <record id="qa" model="res.country">
+            <field name="name">Qatar</field>
+            <field name="code">qa</field>
+            <field file="base/static/img/country_flags/qa.png" name="image" type="base64" />
+            <field name="currency_id" ref="QAR" />
+            <field eval="974" name="phone_code" />
+        </record>
+        <record id="re" model="res.country">
+            <field name="name">Reunion (French)</field>
+            <field name="code">re</field>
+            <field name="currency_id" ref="EUR" />
+            <field eval="262" name="phone_code" />
+        </record>
+        <record id="ro" model="res.country">
+            <field name="name">Romania</field>
+            <field name="code">ro</field>
+            <field file="base/static/img/country_flags/ro.png" name="image" type="base64" />
+            <field name="currency_id" ref="RON" />
+            <field eval="40" name="phone_code" />
+        </record>
+        <record id="rs" model="res.country">
+            <field name="name">Serbia</field>
+            <field name="code">rs</field>
+            <field file="base/static/img/country_flags/rs.png" name="image" type="base64" />
+            <field name="currency_id" ref="RSD" />
+            <field eval="381" name="phone_code" />
+        </record>
+        <record id="ru" model="res.country">
+            <field name="name">Russian Federation</field>
+            <field name="code">ru</field>
+            <field file="base/static/img/country_flags/ru.png" name="image" type="base64" />
+            <field name="currency_id" ref="RUB" />
+            <field eval="7" name="phone_code" />
+        </record>
+        <record id="rw" model="res.country">
+            <field name="name">Rwanda</field>
+            <field name="code">rw</field>
+            <field file="base/static/img/country_flags/rw.png" name="image" type="base64" />
+            <field name="currency_id" ref="RWF" />
+            <field eval="250" name="phone_code" />
+        </record>
+        <record id="sa" model="res.country">
+            <field name="name">Saudi Arabia</field>
+            <field name="code">sa</field>
+            <field file="base/static/img/country_flags/sa.png" name="image" type="base64" />
+            <field name="currency_id" ref="SAR" />
+            <field eval="966" name="phone_code" />
+        </record>
+        <record id="sb" model="res.country">
+            <field name="name">Solomon Islands</field>
+            <field name="code">sb</field>
+            <field file="base/static/img/country_flags/sb.png" name="image" type="base64" />
+            <field name="currency_id" ref="SBD" />
+            <field eval="677" name="phone_code" />
+        </record>
+        <record id="sc" model="res.country">
+            <field name="name">Seychelles</field>
+            <field name="code">sc</field>
+            <field file="base/static/img/country_flags/sc.png" name="image" type="base64" />
+            <field name="currency_id" ref="SCR" />
+            <field eval="248" name="phone_code" />
+        </record>
+        <record id="sd" model="res.country">
+            <field name="name">Sudan</field>
+            <field name="code">sd</field>
+            <field file="base/static/img/country_flags/sd.png" name="image" type="base64" />
+            <field name="currency_id" ref="SDD" />
+            <field eval="249" name="phone_code" />
+        </record>
+        <record id="se" model="res.country">
+            <field name="name">Sweden</field>
+            <field name="code">se</field>
+            <field file="base/static/img/country_flags/se.png" name="image" type="base64" />
+            <field name="currency_id" ref="SEK" />
+            <field eval="46" name="phone_code" />
+        </record>
+        <record id="sg" model="res.country">
+            <field name="name">Singapore</field>
+            <field name="code">sg</field>
+            <field file="base/static/img/country_flags/sg.png" name="image" type="base64" />
+            <field name="currency_id" ref="SGD" />
+            <field eval="65" name="phone_code" />
+        </record>
+        <record id="sh" model="res.country">
+            <field name="name">Saint Helena</field>
+            <field name="code">sh</field>
+            <field file="base/static/img/country_flags/sh.png" name="image" type="base64" />
+            <field name="currency_id" ref="SHP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="si" model="res.country">
+            <field name="name">Slovenia</field>
+            <field name="code">si</field>
+            <field file="base/static/img/country_flags/si.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="386" name="phone_code" />
+        </record>
+        <record id="sj" model="res.country">
+            <field name="name">Svalbard and Jan Mayen Islands</field>
+            <field name="code">sj</field>
+            <field name="currency_id" ref="NOK" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="sk" model="res.country">
+            <field name="name">Slovakia</field>
+            <field name="code">sk</field>
+            <field file="base/static/img/country_flags/sk.png" name="image" type="base64" />
+            <field name="currency_id" ref="SKK" />
+            <field eval="421" name="phone_code" />
+        </record>
+        <record id="sl" model="res.country">
+            <field name="name">Sierra Leone</field>
+            <field name="code">sl</field>
+            <field file="base/static/img/country_flags/sl.png" name="image" type="base64" />
+            <field name="currency_id" ref="SLL" />
+            <field eval="232" name="phone_code" />
+        </record>
+        <record id="sm" model="res.country">
+            <field name="name">San Marino</field>
+            <field name="code">sm</field>
+            <field file="base/static/img/country_flags/sm.png" name="image" type="base64" />
+            <field name="currency_id" ref="ITL" />
+            <field eval="378" name="phone_code" />
+        </record>
+        <record id="sn" model="res.country">
+            <field name="name">Senegal</field>
+            <field name="code">sn</field>
+            <field file="base/static/img/country_flags/sn.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="221" name="phone_code" />
+        </record>
+        <record id="so" model="res.country">
+            <field name="name">Somalia</field>
+            <field name="code">so</field>
+            <field file="base/static/img/country_flags/so.png" name="image" type="base64" />
+            <field name="currency_id" ref="SOD" />
+            <field eval="252" name="phone_code" />
+        </record>
+        <record id="sr" model="res.country">
+            <field name="name">Suriname</field>
+            <field name="code">sr</field>
+            <field file="base/static/img/country_flags/sr.png" name="image" type="base64" />
+            <field name="currency_id" ref="SRG" />
+            <field eval="597" name="phone_code" />
+        </record>
+        <record id="ss" model="res.country">
+            <field name="name">South Sudan</field>
+            <field name="code">ss</field>
+            <field file="base/static/img/country_flags/ss.png" name="image" type="base64" />
+            <field name="currency_id" ref="SSP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="st" model="res.country">
+            <field name="name">Saint Tome (Sao Tome) and Principe</field>
+            <field name="code">st</field>
+            <field file="base/static/img/country_flags/st.png" name="image" type="base64" />
+            <field name="currency_id" ref="STD" />
+            <field eval="239" name="phone_code" />
+        </record>
+        <record id="sv" model="res.country">
+            <field name="name">El Salvador</field>
+            <field name="code">sv</field>
+            <field file="base/static/img/country_flags/sv.png" name="image" type="base64" />
+            <field name="currency_id" ref="SVC" />
+            <field eval="503" name="phone_code" />
+        </record>
+        <record id="sx" model="res.country">
+            <field name="name">Sint Maarten (Dutch part)</field>
+            <field name="code">sx</field>
+            <field file="base/static/img/country_flags/sx.png" name="image" type="base64" />
+            <field name="currency_id" ref="ANG" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="sy" model="res.country">
+            <field name="name">Syria</field>
+            <field name="code">sy</field>
+            <field file="base/static/img/country_flags/sy.png" name="image" type="base64" />
+            <field name="currency_id" ref="SYP" />
+            <field eval="963" name="phone_code" />
+        </record>
+        <record id="sz" model="res.country">
+            <field name="name">Swaziland</field>
+            <field name="code">sz</field>
+            <field file="base/static/img/country_flags/sz.png" name="image" type="base64" />
+            <field name="currency_id" ref="SZL" />
+            <field eval="268" name="phone_code" />
+        </record>
+        <record id="tc" model="res.country">
+            <field name="name">Turks and Caicos Islands</field>
+            <field name="code">tc</field>
+            <field file="base/static/img/country_flags/tc.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="td" model="res.country">
+            <field name="name">Chad</field>
+            <field name="code">td</field>
+            <field file="base/static/img/country_flags/td.png" name="image" type="base64" />
+            <field name="currency_id" ref="XAF" />
+            <field eval="235" name="phone_code" />
+        </record>
+        <record id="tf" model="res.country">
+            <field name="name">French Southern Territories</field>
+            <field name="code">tf</field>
+            <field file="base/static/img/country_flags/tf.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="tg" model="res.country">
+            <field name="name">Togo</field>
+            <field name="code">tg</field>
+            <field file="base/static/img/country_flags/tg.png" name="image" type="base64" />
+            <field name="currency_id" ref="XOF" />
+            <field eval="228" name="phone_code" />
+        </record>
+        <record id="th" model="res.country">
+            <field name="name">Thailand</field>
+            <field name="code">th</field>
+            <field file="base/static/img/country_flags/th.png" name="image" type="base64" />
+            <field name="currency_id" ref="THB" />
+            <field eval="66" name="phone_code" />
+        </record>
+        <record id="tj" model="res.country">
+            <field name="name">Tajikistan</field>
+            <field name="code">tj</field>
+            <field file="base/static/img/country_flags/tj.png" name="image" type="base64" />
+            <field name="currency_id" ref="TJS" />
+            <field eval="992" name="phone_code" />
+        </record>
+        <record id="tk" model="res.country">
+            <field name="name">Tokelau</field>
+            <field name="code">tk</field>
+            <field file="base/static/img/country_flags/tk.png" name="image" type="base64" />
+            <field name="currency_id" ref="NZD" />
+            <field eval="690" name="phone_code" />
+        </record>
+        <record id="tm" model="res.country">
+            <field name="name">Turkmenistan</field>
+            <field name="code">tm</field>
+            <field file="base/static/img/country_flags/tm.png" name="image" type="base64" />
+            <field name="currency_id" ref="TMM" />
+            <field eval="993" name="phone_code" />
+        </record>
+        <record id="tn" model="res.country">
+            <field name="name">Tunisia</field>
+            <field name="code">tn</field>
+            <field file="base/static/img/country_flags/tn.png" name="image" type="base64" />
+            <field name="currency_id" ref="TND" />
+            <field eval="216" name="phone_code" />
+        </record>
+        <record id="to" model="res.country">
+            <field name="name">Tonga</field>
+            <field name="code">to</field>
+            <field file="base/static/img/country_flags/to.png" name="image" type="base64" />
+            <field name="currency_id" ref="TOP" />
+            <field eval="676" name="phone_code" />
+        </record>
+        <record id="tp" model="res.country">
+            <field name="name">East Timor</field>
+            <field name="code">tp</field>
+            <field file="base/static/img/country_flags/tp.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="tr" model="res.country">
+            <field name="name">Turkey</field>
+            <field name="code">tr</field>
+            <field file="base/static/img/country_flags/tr.png" name="image" type="base64" />
+            <field name="currency_id" ref="TRY" />
+            <field eval="90" name="phone_code" />
+        </record>
+        <record id="tt" model="res.country">
+            <field name="name">Trinidad and Tobago</field>
+            <field name="code">tt</field>
+            <field file="base/static/img/country_flags/tt.png" name="image" type="base64" />
+            <field name="currency_id" ref="TTD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="tv" model="res.country">
+            <field name="name">Tuvalu</field>
+            <field name="code">tv</field>
+            <field file="base/static/img/country_flags/tv.png" name="image" type="base64" />
+            <field name="currency_id" ref="AUD" />
+            <field eval="688" name="phone_code" />
+        </record>
+        <record id="tw" model="res.country">
+            <field name="name">Taiwan</field>
+            <field name="code">tw</field>
+            <field name="currency_id" ref="TWD" />
+            <field eval="886" name="phone_code" />
+        </record>
+        <record id="tz" model="res.country">
+            <field name="name">Tanzania</field>
+            <field name="code">tz</field>
+            <field file="base/static/img/country_flags/tz.png" name="image" type="base64" />
+            <field name="currency_id" ref="TZS" />
+            <field eval="255" name="phone_code" />
+        </record>
+        <record id="ua" model="res.country">
+            <field name="name">Ukraine</field>
+            <field name="code">ua</field>
+            <field file="base/static/img/country_flags/ua.png" name="image" type="base64" />
+            <field name="currency_id" ref="UAH" />
+            <field eval="380" name="phone_code" />
+        </record>
+        <record id="ug" model="res.country">
+            <field name="name">Uganda</field>
+            <field name="code">ug</field>
+            <field file="base/static/img/country_flags/ug.png" name="image" type="base64" />
+            <field name="currency_id" ref="UGX" />
+            <field eval="256" name="phone_code" />
+        </record>
+        <record id="uk" model="res.country">
+            <field name="name">United Kingdom</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" name="address_format" />
+            <field name="code">gb</field>
+            <field file="base/static/img/country_flags/gb.png" name="image" type="base64" />
+            <field name="currency_id" ref="GBP" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="um" model="res.country">
+            <field name="name">USA Minor Outlying Islands</field>
+            <field name="code">um</field>
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="us" model="res.country">
+            <field name="name">United States</field>
+            <field name="code">us</field>
+            <field file="base/static/img/country_flags/us.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
+            <field name="currency_id" ref="USD" />
+            <field eval="1" name="phone_code" />
+        </record>
+        <record id="uy" model="res.country">
+            <field name="name">Uruguay</field>
+            <field name="code">uy</field>
+            <field file="base/static/img/country_flags/uy.png" name="image" type="base64" />
+            <field name="currency_id" ref="UYU" />
+            <field eval="598" name="phone_code" />
+        </record>
+        <record id="uz" model="res.country">
+            <field name="name">Uzbekistan</field>
+            <field name="code">uz</field>
+            <field file="base/static/img/country_flags/uz.png" name="image" type="base64" />
+            <field name="currency_id" ref="UZS" />
+            <field eval="998" name="phone_code" />
+        </record>
+        <record id="va" model="res.country">
+            <field name="name">Holy See (Vatican City State)</field>
+            <field name="code">va</field>
+            <field file="base/static/img/country_flags/va.png" name="image" type="base64" />
+            <field name="currency_id" ref="EUR" />
+            <field eval="379" name="phone_code" />
+        </record>
+        <record id="vc" model="res.country">
+            <field name="name">Saint Vincent &amp; Grenadines</field>
+            <field name="code">vc</field>
+            <field file="base/static/img/country_flags/vc.png" name="image" type="base64" />
+            <field name="currency_id" ref="XCD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="ve" model="res.country">
+            <field name="name">Venezuela</field>
+            <field name="code">ve</field>
+            <field file="base/static/img/country_flags/ve.png" name="image" type="base64" />
+            <field name="currency_id" ref="VEF" />
+            <field eval="58" name="phone_code" />
+        </record>
+        <record id="vg" model="res.country">
+            <field name="name">Virgin Islands (British)</field>
+            <field name="code">vg</field>
+            <field file="base/static/img/country_flags/vg.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="vi" model="res.country">
+            <field name="name">Virgin Islands (USA)</field>
+            <field name="code">vi</field>
+            <field file="base/static/img/country_flags/vi.png" name="image" type="base64" />
+            <field name="currency_id" ref="USD" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="vn" model="res.country">
+            <field name="name">Vietnam</field>
+            <field name="code">vn</field>
+            <field file="base/static/img/country_flags/vn.png" name="image" type="base64" />
+            <field name="currency_id" ref="VND" />
+            <field eval="84" name="phone_code" />
+        </record>
+        <record id="vu" model="res.country">
+            <field name="name">Vanuatu</field>
+            <field name="code">vu</field>
+            <field file="base/static/img/country_flags/vu.png" name="image" type="base64" />
+            <field name="currency_id" ref="VUV" />
+            <field eval="678" name="phone_code" />
+        </record>
+        <record id="wf" model="res.country">
+            <field name="name">Wallis and Futuna Islands</field>
+            <field name="code">wf</field>
+            <field name="currency_id" ref="XPF" />
+            <field eval="681" name="phone_code" />
+        </record>
+        <record id="ws" model="res.country">
+            <field name="name">Samoa</field>
+            <field name="code">ws</field>
+            <field file="base/static/img/country_flags/ws.png" name="image" type="base64" />
+            <field name="currency_id" ref="WST" />
+            <field eval="685" name="phone_code" />
+        </record>
+        <record id="ye" model="res.country">
+            <field name="name">Yemen</field>
+            <field name="code">ye</field>
+            <field file="base/static/img/country_flags/ye.png" name="image" type="base64" />
+            <field name="currency_id" ref="YER" />
+            <field eval="967" name="phone_code" />
+        </record>
+        <record id="yt" model="res.country">
+            <field name="name">Mayotte</field>
+            <field name="code">yt</field>
+            <field name="currency_id" ref="EUR" />
+            <field eval="262" name="phone_code" />
+        </record>
+        <record id="yu" model="res.country">
+            <field name="name">Yugoslavia</field>
+            <field name="code">yu</field>
+            <field name="currency_id" ref="YUM" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="za" model="res.country">
+            <field name="name">South Africa</field>
+            <field name="code">za</field>
+            <field file="base/static/img/country_flags/za.png" name="image" type="base64" />
+            <field name="currency_id" ref="ZAR" />
+            <field eval="27" name="phone_code" />
+        </record>
+        <record id="zm" model="res.country">
+            <field name="name">Zambia</field>
+            <field name="code">zm</field>
+            <field file="base/static/img/country_flags/zm.png" name="image" type="base64" />
+            <field name="currency_id" ref="ZMK" />
+            <field eval="260" name="phone_code" />
+        </record>
+        <record id="zr" model="res.country">
+            <field name="name">Zaire</field>
+            <field name="code">zr</field>
+            <field name="currency_id" ref="ZRZ" />
+            <field eval="0" name="phone_code" />
+        </record>
+        <record id="zw" model="res.country">
+            <field name="name">Zimbabwe</field>
+            <field name="code">zw</field>
+            <field file="base/static/img/country_flags/zw.png" name="image" type="base64" />
+            <field name="currency_id" ref="ZWD" />
+            <field eval="263" name="phone_code" />
+        </record>
+
+        <record id="europe" model="res.country.group">
+            <field name="name">Europe</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('at'),ref('be'),ref('bg'),ref('hr'),ref('cy'),
+                ref('cz'),ref('dk'),ref('ee'),ref('fi'),ref('fr'),
+                ref('de'),ref('gr'),ref('hu'),ref('ie'),ref('it'),
+                ref('lv'),ref('lt'),ref('lu'),ref('mt'),ref('nl'),
+                ref('pl'),ref('pt'),ref('ro'),ref('sk'),ref('si'),
+                ref('es'),ref('se'),ref('uk')])]"/>
+        </record>
+    </data>
+</odoo>

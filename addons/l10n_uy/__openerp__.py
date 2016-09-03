@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -16,10 +16,8 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay.
 """,
     'depends': ['account'],
     'data': [
-        'account_chart_template.xml',
-        'taxes_template.xml',
-        'account_chart_template.yml',
+        'data/l10n_uy_chart_data.xml',
+        'data/account_tax_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'installable': True,
 }

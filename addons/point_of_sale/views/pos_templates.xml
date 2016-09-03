@@ -23,6 +23,13 @@
 
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
 
+        <script type="text/javascript">
+            var odoo = {
+                csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                session_info: <t t-raw="session_info"/>,
+            };
+        </script>
+
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="web.assets_backend" t-css="false"/>
         <t t-call-assets="web_editor.summernote" t-css="false"/>
@@ -36,7 +43,7 @@
 
                 web_client._title_changed = function() {};
                 web_client.show_application = function() {
-                    web_client.action_manager.do_action("pos.ui");
+                    return web_client.action_manager.do_action("pos.ui");
                 };
 
                 $(function () {
@@ -44,12 +51,6 @@
                     web_client.start();
                 });
                 return web_client;
-            });
-
-            odoo.define('web.csrf', function (require) {
-                var token = "<t t-esc="request.csrf_token(None)"/>";
-                require('web.core').csrf_token = token;
-                require('qweb').default_dict.csrf_token = token;
             });
         </script>
     </head>

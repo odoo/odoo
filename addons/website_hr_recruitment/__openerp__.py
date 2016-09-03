@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Online Jobs',
-    'category': 'Human Resources',
+    'category': 'Website',
     'version': '1.0',
     'summary': 'Job Descriptions And Application Forms',
     'description': """
@@ -13,9 +16,8 @@ Odoo Contact Form
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
         'data/config_data.xml',
-        'views/hr_job_views.xml',
-        'views/templates.xml',
-        'views/hr_recruitment_view.xml',
+        'views/website_hr_recruitment_templates.xml',
+        'views/hr_recruitment_views.xml',
     ],
     'demo': [
         'data/hr_job_demo.xml',

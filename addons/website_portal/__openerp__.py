@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Website Portal',
     'category': 'Website',
@@ -10,7 +13,6 @@ Allows your customers to manage their account from a beautiful web interface.
         'website',
     ],
     'data': [
-        'views/templates.xml',
+        'views/website_portal_templates.xml',
     ],
-    'installable': True,
 }

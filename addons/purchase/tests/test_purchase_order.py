@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tests import common
 
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+
 
 class TestPurchaseOrder(AccountingTestCase):
 
@@ -63,7 +63,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         self.assertTrue(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id), 'Purchase: the partner should be in the list of the product suppliers')
 
-        seller = self.product_id_2._select_seller(self.product_id_2, partner_id=self.partner_id, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
+        seller = self.product_id_2._select_seller(partner_id=self.partner_id, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
         price_unit = seller.price if seller else 0.0
         if price_unit and seller and self.po.currency_id and seller.currency_id != self.po.currency_id:
             price_unit = seller.currency_id.compute(price_unit, self.po.currency_id)

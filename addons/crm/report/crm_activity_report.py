@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models
-from openerp import tools
+from odoo import fields, models, tools
 
 
-class crm_activity_report(models.Model):
+class ActivityReport(models.Model):
     """ CRM Lead Analysis """
+
     _name = "crm.activity.report"
     _auto = False
     _description = "CRM Activity Analysis"
     _rec_name = 'id'
 
     date = fields.Datetime('Date', readonly=True)
-    author_id = fields.Many2one('res.partner', 'Author', readonly=True)
-    user_id = fields.Many2one('res.users', 'Responsible', readonly=True)
+    author_id = fields.Many2one('res.partner', 'Created By', readonly=True)
+    user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     lead_id = fields.Many2one('crm.lead', "Lead", readonly=True)
     subject = fields.Char('Summary', readonly=True)
@@ -30,10 +30,10 @@ class crm_activity_report(models.Model):
     active = fields.Boolean('Active', readonly=True)
     probability = fields.Float('Probability', group_operator='avg', readonly=True)
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'crm_activity_report')
-        cr.execute("""
-            CREATE OR REPLACE VIEW crm_activity_report AS (
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'crm_activity_report')
+        self._cr.execute("""
+            CREATE VIEW crm_activity_report AS (
                 select
                     m.id,
                     m.subtype_id,

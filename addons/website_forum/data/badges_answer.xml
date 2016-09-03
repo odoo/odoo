@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- QUALITY (VOTES) -->
@@ -216,47 +216,6 @@
             <field name="challenge_id" eval="ref('challenge_guru')" />
         </record>
 
-        <!-- Necromancer: 30 days old question -->
-<!--         <record id="badge_a_7" model="gamification.badge">
-            <field name="name">Necromancer</field>
-            <field name="description">Answered a question more than 30 days later with at least 2 votes</field>
-            <field name="level">silver</field>
-        </record>
-        <record model="gamification.goal.definition" id="definition_necromancer">
-            <field name="name">Necromancer</field>
-            <field name="description">Answered a question more than 30 days later with at least 2 votes</field>
-            <field name="computation_mode">python</field>
-            <field name="compute_code">
-result = 1
-Post = self.pool['website.forum.post']
-user_posts = Post.search(cr, uid, [('create_uid','=',object.user_id.id), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
-for post in Post.browse(cr, uid, user_posts, context=context):
-    print post.parent_id.create_date
-    question_date = datetime.strptime(post.parent_id.create_date, "%Y-%m-%d %H:%M:%S")
-    answer_date = datetime.strptime(post.create_date, "%Y-%m-%d %H:%M:%S")
-    if ((question_date - answer_date).days) >= 30:
-        result += 1
-            </field>
-            <field name="display_mode">boolean</field>
-            <field name="condition">higher</field>
-        </record>
-        <record model="gamification.challenge" id="challenge_necromancer">
-            <field name="name">Necromancer</field>
-            <field name="period">once</field>
-            <field name="visibility_mode">personal</field>
-            <field name="report_message_frequency">never</field>
-            <field name="reward_id" eval="ref('badge_18')" />
-            <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')"/>
-            <field name="state">inprogress</field>
-            <field name="category">forum</field>
-        </record>
-        <record model="gamification.challenge.line" id="line_necromancer">
-            <field name="definition_id" eval="ref('definition_necromancer')"/>
-            <field name="challenge_id" eval="ref('challenge_necromancer')"/>
-            <field name="target_goal">2</field>
-        </record> -->
-
         <!-- Sealf Leaner: own question, 3+ upvotes -->
         <record id="badge_a_8" model="gamification.badge">
             <field name="name">Self-Learner</field>
@@ -294,4 +253,4 @@ for post in Post.browse(cr, uid, user_posts, context=context):
         </record>
 
     </data>
-</openerp>
+</odoo>

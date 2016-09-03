@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
+        <xpath expr="//div[@id='order_total_untaxed']" position="before">
+            <div class="row" id="order_delivery" t-if="website_sale_order and website_sale_order.has_delivery">
+                  <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
+                  <span class="col-xs-6 text-left text-muted">
+                      <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-options='{
+                              "widget": "monetary",
+                              "display_currency": website_sale_order.currency_id,
+                          }'/>
+                  </span>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+      <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
+      </xpath>
+    </template>
+
+    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div t-if="deliveries" class="row" id="delivery_carrier">
+                <div class="col-lg-5 col-sm-6">
+                <h4>Choose your Delivery Method</h4>
+                    <ul class="list-unstyled">
+                        <li t-foreach="deliveries" t-as="delivery">
+                            <t t-if="delivery.available">
+                                <label>
+                                    <input t-att-value="delivery.id" type="radio" name="delivery_type"
+                                        t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
+                                    <abbr t-att-title="delivery.website_description"><span t-field="delivery.name"/></abbr>
+                                    <span class="badge" t-field="delivery.price"
+                                        t-options='{
+                                            "widget": "monetary",
+                                            "from_currency": delivery.product_id.company_id.currency_id,
+                                            "display_currency": website_sale_order.currency_id
+                                        }'/>
+                                    <div t-field="delivery.website_description" class="text-muted"/>
+                                </label>
+                            </t>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="shipping_tracking" name="Shipping tracking on orders followup" inherit_id="website_sale_stock.orders_followup_shipping">
+        <xpath expr="//div[@id='picking_info']" position="after">
+            <div t-if="i.carrier_tracking_ref">
+                Tracking: <span t-field="i.carrier_id.name"/>
+                <t t-if="i.carrier_id and i.carrier_id.delivery_type not in ['fixed', 'base_on_rule']">
+                    <a t-att-href="i.carrier_id.get_tracking_link(i)[0]" target="_blank"><span t-field="i.carrier_tracking_ref"/></a>
+                </t>
+                <t t-if="not i.carrier_id or i.carrier_id.delivery_type in ['fixed', 'base_on_rule']">
+                    <span t-field="i.carrier_tracking_ref"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

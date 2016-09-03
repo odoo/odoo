@@ -12,9 +12,9 @@
     """,
     'depends': ['payment'],
     'data': [
-        'views/payumoney.xml',
-        'views/payment_acquirer.xml',
-        'data/payment_payumoney_data.xml',
+        'views/payment_views.xml',
+        'views/payment_payumoney_templates.xml',
+        'data/payment_acquirer_data.xml',
     ],
     'license': 'OEEL-1',
 }

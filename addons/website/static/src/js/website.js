@@ -2,11 +2,11 @@ odoo.define('website.website', function (require) {
     "use strict";
 
     var ajax = require('web.ajax');
+    var Dialog = require("web.Dialog");
     var core = require('web.core');
     var Widget = require('web.Widget');
     var session = require('web.session');
     var base = require('web_editor.base');
-    var Tour = require('web.Tour');
 
     var qweb = core.qweb;
     var _t = core._t;
@@ -37,7 +37,7 @@ odoo.define('website.website', function (require) {
 
     /* ----------------------------------------------------
        Widgets
-       ---------------------------------------------------- */ 
+       ---------------------------------------------------- */
     var prompt = function (options, _qweb) {
         /**
          * A bootstrapped version of prompt() albeit asynchronous
@@ -165,10 +165,10 @@ odoo.define('website.website', function (require) {
         form.submit();
     };
 
+    ajax.loadXML('/web/static/src/xml/base_common.xml', qweb).then(function () {
+        ajax.loadXML('/website/static/src/xml/website.xml', qweb);
+    });
 
-    ajax.loadXML('/website/static/src/xml/website.xml', qweb);
-    ajax.loadXML('/web/static/src/xml/base_common.xml', qweb);
-    
     base.ready().then(function () {
         data.topBar = new TopBar();
         return data.topBar.attachTo($("#oe_main_menu_navbar"));
@@ -264,6 +264,13 @@ odoo.define('website.website', function (require) {
 
             return this._super.apply(this, arguments);
         }
+    });
+
+    Dialog.include({
+        init: function () {
+            this._super.apply(this, arguments);
+            this.$modal.addClass("o_website_modal");
+        },
     });
 
     var data = {

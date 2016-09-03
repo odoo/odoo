@@ -16,7 +16,7 @@ class Event(models.Model):
         if not product:
             return self.env['event.event.ticket']
         return [{
-            'name': _('Subscription'),
+            'name': _('Registration'),
             'product_id': product.id,
             'price': 0,
         }]
@@ -36,8 +36,7 @@ class EventTicket(models.Model):
     name = fields.Char(string='Name', required=True, translate=True)
     event_id = fields.Many2one('event.event', string="Event", required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product',
-        required=True, domain=[("event_type_id", "!=", False)],
-        default=_default_product_id)
+        required=True, domain=[("event_ok", "=", True)], default=_default_product_id)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
     price = fields.Float(string='Price', digits=dp.get_precision('Product Price'))
     deadline = fields.Date(string="Sales End")
@@ -142,11 +141,9 @@ class EventRegistration(models.Model):
     def create(self, vals):
         res = super(EventRegistration, self).create(vals)
         if res.origin or res.sale_order_id:
-            message = _("The registration has been created for event %(event_name)s%(ticket)s from sale order %(order)s") % ({
-                'event_name': '<i>%s</i>' % res.event_id.name,
-                'ticket': res.event_ticket_id and _(' with ticket %s') % (('<i>%s</i>') % res.event_ticket_id.name) or '',
-                'order': res.origin or res.sale_order_id.name})
-            res.message_post(body=message)
+            res.message_post_with_view('mail.message_origin_link',
+                values={'self': res, 'origin': res.sale_order_id},
+                subtype_id=self.env.ref('mail.mt_note').id)
         return res
 
     @api.model

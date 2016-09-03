@@ -1,6 +1,7 @@
 odoo.define('web.form_widgets', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
@@ -32,11 +33,7 @@ var WidgetButton = common.FormWidget.extend({
             this.view.default_focus_button = this;
         }
         if (this.node.attrs.icon) {
-            // if the icon isn't a font-awesome one, find it in the icons folder
             this.fa_icon = this.node.attrs.icon.indexOf('fa-') === 0;
-            if (!this.fa_icon && (! /\//.test(this.node.attrs.icon))) {
-                this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
-            }
         }
     },
     start: function() {
@@ -639,22 +636,17 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.hover_false = _t("Activate");
                 break;
             case "archive":
-                this.string_true = _t("Not Archived");
+                this.string_true = _t("Active");
                 this.hover_true = _t("Archive");
                 this.string_false = _t("Archived");
                 this.hover_false = _t("Unarchive");
                 break;
-            case "prod_environment":
-                this.string_true = _t("Production Environment");
-                this.hover_true = _t("Switch to test environment");
-                this.string_false = _t("Test Environment");
-                this.hover_false = _t("Switch to production environment");
-                break;
             default:
-                this.string_true = _t("On");
-                this.hover_true = _t("Switch Off");
-                this.string_false = _t("Off");
-                this.hover_false = _t("Switch On");
+                var terms = typeof this.options["terminology"] === 'string' ? {} : this.options["terminology"];
+                this.string_true = _t(terms.string_true || "On");
+                this.hover_true = _t(terms.hover_true || terms.string_false || "Switch Off");
+                this.string_false = _t(terms.string_false || "Off");
+                this.hover_false = _t(terms.hover_false || terms.string_true || "Switch On");
         }
     },
     render_value: function() {
@@ -1086,7 +1078,6 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         this.$('.o_select_file_button').click(function() {
             self.$inputFile.click();
         });
-        this.$('.o_save_file_button').click(this.on_save_as);
         this.$('.o_clear_file_button').click(this.on_clear);
     },
     on_file_change: function(e) {
@@ -1555,9 +1546,8 @@ var FieldToggleBoolean = common.AbstractField.extend({
         'click': 'set_toggle_button'
     },
     render_value: function () {
-        var $img = this.$('img');
-        var src = $img.attr('src');
-        $img.attr('src', src.substr(0, src.lastIndexOf('/')+1) + (this.get_value() ? 'gtk-yes.png' : 'gtk-normal.png'));
+        var class_name = this.get_value() ? 'o_toggle_button_success' : 'text-muted';
+        this.$('i').attr('class', ('fa fa-circle ' + class_name));
     },
     set_toggle_button: function () {
         var self = this;
@@ -1584,6 +1574,102 @@ var FieldToggleBoolean = common.AbstractField.extend({
     },
 });
 
+/**
+    This widget is intended to be used on Text fields. It will provide Ace Editor for editing XML and Python.
+*/
+
+var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+    template: "AceEditor",
+    willStart: function() {
+        if (!window.ace && !this.loadJS_def) {
+            this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
+                return $.when(ajax.loadJS('/web/static/lib/ace/mode-python.js'),
+                    ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
+                    ajax.loadJS('/web/static/lib/ace/theme-monokai.js'));
+            });
+        }
+        return $.when(this._super(), this.loadJS_def);
+    },
+    initialize_content: function () {
+        if (! this.get("effective_readonly")) {
+            var self = this;
+
+            this.aceEditor = ace.edit(this.$('.ace-view-editor')[0]);
+            this.aceEditor.setOptions({"maxLines": Infinity});
+            this.aceEditor.setTheme("ace/theme/monokai");
+            this.aceEditor.$blockScrolling = true;
+
+            var scrollIntoViewIfNeeded = _.throttle(function () {
+                var node = self.aceEditor.renderer.textarea;
+                if (node.scrollIntoViewIfNeeded) {
+                    node.scrollIntoViewIfNeeded(false);
+                } else {
+                    var offsetParent = node.offsetParent;
+                    while (offsetParent) {
+                        var elY = 0;
+                        var elH = node.offsetHeight+20;
+                        var parent = node;
+                        while (offsetParent && parent) {
+                            elY += node.offsetTop;
+                            // get if a parent have a scrollbar
+                            parent = node.parentNode;
+                            while (parent != offsetParent &&
+                                (parent.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(parent).overflowY) === -1)) {
+                                parent = parent.parentNode;
+                            }
+                            node = parent;
+                            if (parent !== offsetParent) {
+                                elY -= parent.offsetTop;
+                                parent = null;
+                            }
+                            offsetParent = node.offsetParent;
+                        }
+
+                        if ((node.tagName === "BODY" || ["auto", "scroll"].indexOf(window.getComputedStyle(node).overflowY) !== -1) &&
+                            (node.scrollTop + node.clientHeight) < (elY + elH)) {
+                            node.scrollTop = (elY + elH) - node.clientHeight;
+                        }
+                    }
+                }
+            });
+            var $moveTextAreaToCursor = this.aceEditor.renderer.$moveTextAreaToCursor;
+            self.aceEditor.renderer.$moveTextAreaToCursor = function() {
+                $moveTextAreaToCursor.call(this);
+                if (parseInt($(self.aceEditor.renderer.textarea).css('top'), 10) >= 0) {
+                    scrollIntoViewIfNeeded();
+                }
+            };
+
+            this.aceSession = this.aceEditor.getSession();
+            this.aceSession.setUseWorker(false);
+            this.aceSession.setMode("ace/mode/"+(this.options.mode || 'xml'));
+
+            this.aceEditor.on("blur", function() {
+                if (self.aceSession.getUndoManager().hasUndo()) {
+                    self.set_value(self.aceSession.getValue());
+                }
+            });
+        }
+    },
+    destroy_content: function() {
+        if (this.aceEditor) {
+            this.aceEditor.destroy();
+        }
+    },
+    render_value: function() {
+        if (! this.get("effective_readonly")) {
+            var value = formats.format_value(this.get('value'), this);
+            this.aceSession.setValue(value);
+
+        } else {
+            var txt = this.get("value") || '';
+            this.$(".oe_form_text_content").text(txt);
+        }
+    },
+    focus: function() {
+        return this.aceEditor.focus();
+    },
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -1619,8 +1705,8 @@ core.form_widget_registry
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)
-    .add('label_selection', LabelSelection);
-
+    .add('label_selection', LabelSelection)
+    .add('ace', AceEditor);
 
 /**
  * Registry of widgets usable in the form view that can substitute to any possible

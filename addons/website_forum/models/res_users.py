@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import hashlib
 
 from datetime import datetime
-import hashlib
 from urllib import urlencode
 
-from openerp import models, fields, api
+from odoo import api, fields, models
 
 
 class Users(models.Model):
@@ -110,15 +112,6 @@ class Users(models.Model):
         for user in self:
             user.karma += karma
         return True
-
-    @api.model
-    def get_serialised_gamification_summary(self, excluded_categories=None):
-        if isinstance(excluded_categories, list):
-            if 'forum' not in excluded_categories:
-                excluded_categories.append('forum')
-        else:
-            excluded_categories = ['forum']
-        return super(Users, self).get_serialised_gamification_summary(excluded_categories=excluded_categories)
 
     # Wrapper for call_kw with inherits
     @api.multi

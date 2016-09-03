@@ -27,17 +27,26 @@ class WebsiteSaleOptions(WebsiteSale):
             if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in option_ids:
                 optional_product_ids.append(int(v))
 
+        attributes = self._filter_attributes(**kw)
+
         value = {}
         if add_qty or set_qty:
-            value = order._cart_update(product_id=int(product_id),
-                add_qty=int(add_qty), set_qty=int(set_qty),
-                optional_product_ids=optional_product_ids)
+            value = order._cart_update(
+                product_id=int(product_id),
+                add_qty=int(add_qty),
+                set_qty=int(set_qty),
+                attributes=attributes,
+                optional_product_ids=optional_product_ids
+            )
 
         # options have all time the same quantity
         for option_id in optional_product_ids:
-            order._cart_update(product_id=option_id,
+            order._cart_update(
+                product_id=option_id,
                 set_qty=value.get('quantity'),
-                linked_line_id=value.get('line_id'))
+                attributes=attributes,
+                linked_line_id=value.get('line_id')
+            )
 
         return str(order.cart_quantity)
 
@@ -46,7 +55,7 @@ class WebsiteSaleOptions(WebsiteSale):
         pricelist = request.website.get_current_pricelist()
         product_context = dict(request.context)
         if not product_context.get('pricelist'):
-            product_context['pricelist'] = int(pricelist)
+            product_context['pricelist'] = pricelist.id
         # fetch quantity from custom context
         product_context.update(kw.get('kwargs', {}).get('context', {}))
 
@@ -54,7 +63,7 @@ class WebsiteSaleOptions(WebsiteSale):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: request.env['res.currency']._compute(from_currency, to_currency, price)
         product = request.env['product.product'].with_context(product_context).browse(int(product_id))
-        return request.website._render("website_sale_options.modal", {
+        return request.env['ir.ui.view'].render_template("website_sale_options.modal", {
             'product': product,
             'compute_currency': compute_currency,
             'get_attribute_value_ids': self.get_attribute_value_ids,

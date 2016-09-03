@@ -1471,7 +1471,7 @@ ListView.Groups = Class.extend({
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
         var options = { offset: current_min - 1, limit: view._limit, context: {bin_size: true} };
-        return $.async_when().then(function() {
+        return utils.async_when().then(function() {
             return dataset.read_slice(fields, options).then(function (records) {
                 // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
                 if (self.records.length) {
@@ -1537,7 +1537,7 @@ ListView.Groups = Class.extend({
                     seq = to ? list.records.at(to - 1).get(seqname) : 0;
                 var defs = [];
                 var fct = function (dataset, id, seq) {
-                    defs.push($.async_when().then(function () {
+                    defs.push(utils.async_when().then(function () {
                         var attrs = {};
                         attrs[seqname] = seq;
                         return dataset.write(id, attrs, {internal_dataset_changed: true});
@@ -1922,7 +1922,7 @@ var ColumnHandle = Column.extend({
 var ColumnMany2OneButton = Column.extend({
     _format: function (row_data, options) {
         this.has_value = !!row_data[this.id].value;
-        this.icon = this.has_value ? 'gtk-yes' : 'gtk-no';
+        this.icon = this.has_value ? 'fa-circle o_toggle_button_success' : 'fa-circle text-danger';
         this.string = this.has_value ? _t('View') : _t('Create');
         return QWeb.render('Many2OneButton.cell', {
             'widget': this,
@@ -2009,7 +2009,7 @@ var ColumnToggleButton = Column.extend({
         var button_tips = JSON.parse(this.options);
         var fieldname = this.field_name;
         var has_value = row_data[fieldname] && !!row_data[fieldname].value;
-        this.icon = has_value ? 'gtk-yes' : 'gtk-normal';
+        this.icon = has_value ? 'fa-circle o_toggle_button_success' : 'fa-circle text-muted';
         this.string = has_value ? _t(button_tips ? button_tips['active']: ''): _t(button_tips ? button_tips['inactive']: '');
         return QWeb.render('toggle_button', {
             widget: this,
@@ -2059,5 +2059,3 @@ function for_ (id, field, node) {
 
 return ListView;
 });
-
-

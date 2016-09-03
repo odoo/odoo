@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import tools
-from openerp.tests import common
-from openerp.modules.module import get_module_resource
+from odoo import tools
+from odoo.tests import common
+from odoo.modules.module import get_resource_path
 
 
 class TestAccountAsset(common.TransactionCase):
 
     def _load(self, module, *args):
         tools.convert_file(self.cr, 'account_asset',
-                           get_module_resource(module, *args),
+                           get_resource_path(module, *args),
                            {}, 'init', False, 'test', self.registry._assertion_report)
 
     def test_00_account_asset_asset(self):

@@ -1,4 +1,5 @@
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- Mails & quote templates is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
@@ -92,7 +93,7 @@
         </record>
 
         <record id="confirmation_mail" model="mail.template">
-            <field name="name">Website Quote: confirmation e-mail</field>
+            <field name="name">Online Quote: confirmation e-mail</field>
             <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
             <field name="subject">Your order ${object.name} is confirmed</field>
             <field name="email_to">${ctx.get('email_to') or object.partner_id.email}</field>
@@ -148,4 +149,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

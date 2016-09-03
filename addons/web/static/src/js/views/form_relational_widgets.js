@@ -803,13 +803,13 @@ var FieldX2Many = AbstractManyField.extend({
         this.viewmanager.on("switch_mode", self, function(n_mode) {
             $.when(self.commit_value()).done(function() {
                 if (n_mode === "list") {
-                    $.async_when().done(function() {
+                    utils.async_when().done(function() {
                         self.reload_current_view();
                     });
                 }
             });
         });
-        $.async_when().done(function () {
+        utils.async_when().done(function () {
             self.$el.addClass('o_view_manager_content');
             self.alive(self.viewmanager.attachTo(self.$el));
         });
@@ -865,7 +865,7 @@ var FieldX2Many = AbstractManyField.extend({
         }
         return true;
     },
-    is_false: function () {
+    is_false: function() {
         return _(this.dataset.ids).isEmpty();
     },
 });
@@ -1283,6 +1283,8 @@ var Many2ManyListView = X2ManyListView.extend({
         this.options = _.extend(this.options, {
             ListType: X2ManyList,
         });
+        this.on('edit:after', this, this.proxy('_after_edit'));
+        this.on('save:before cancel:before', this, this.proxy('_before_unedit'));
     },
     do_add_record: function () {
         var self = this;
@@ -1329,6 +1331,20 @@ var Many2ManyListView = X2ManyListView.extend({
             });
         }
     },
+    _after_edit: function () {
+        this.editor.form.on('blurred', this, this._on_blur_many2many);
+    },
+    _before_unedit: function () {
+        this.editor.form.off('blurred', this, this._on_blur_many2many);
+    },
+    _on_blur_many2many: function() {
+        return this.save_edition().done(function () {
+            if (self._dataset_changed) {
+                self.dataset.trigger('dataset_changed');
+            }
+        });
+    },
+
 });
 
 var FieldMany2Many = FieldX2Many.extend({

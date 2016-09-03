@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
   <data noupdate="1">
 
     <record model="hr.recruitment.stage" id="stage_job1">
@@ -25,37 +25,26 @@
         <field name="fold" eval="True"/>
     </record>
 
-        <!--Manage the job_id to get in hr.applicant-->
+    <!--Manage the job_id to get in hr.applicant-->
     <record id="hr.job_developer" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">4</field>
-        <field name="survey_id" ref="recruitment_form"/>
-    </record>
-    <record id="hr.job_ceo" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
-    </record>
-    <record id="hr.job_cto" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_consultant" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">1</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_hrm" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="state">recruit</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_marketing" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">3</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_trainee" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">6</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
 
     <record id="hr_case_salesman0" model="hr.applicant">
@@ -247,4 +236,4 @@
     </record>
 
   </data>
-</openerp>
+</odoo>

@@ -27,9 +27,9 @@ It provides the following features:
     'depends': ['web'],
     'data': [
         'data/barcodes_data.xml',
-        'barcodes_view.xml',
+        'views/barcodes_view.xml',
         'security/ir.model.access.csv',
-        'views/templates.xml',
+        'views/barcodes_templates.xml',
     ],
     'installable': True,
     'auto_install': False,

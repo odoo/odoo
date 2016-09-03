@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_event_configuration" model="ir.ui.view">
             <field name="name">Configure Event</field>
@@ -16,7 +16,11 @@
                         <field name="module_website_event_track" widget="radio"/>
                         <field name="module_website_event_questions" widget="radio"/>
                         <field name="auto_confirmation" widget="radio"/>
-                        <field name="group_email_scheduling" widget="radio"/>
+                        <label  for="id" string="Barcode Interface"/>
+                        <div class="o_row">
+                            <field name="module_event_barcode" widget="upgrade_boolean"/>
+                            <label for="module_event_barcode"/>
+                        </div>
                     </group>
                 </form>
             </field>
@@ -30,6 +34,6 @@
         </record>
 
         <menuitem id="menu_event_global_settings" name="Settings" 
-            parent="menu_event_configuration" sequence="0" action="action_event_configuration" groups="base.group_no_one"/>
+            parent="menu_event_configuration" sequence="0" action="action_event_configuration" groups="base.group_system"/>
     </data>
-</openerp>
+</odoo>

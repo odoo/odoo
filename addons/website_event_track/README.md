@@ -28,7 +28,7 @@ Manage Sponsors
 
 Add sponsors to your events and publish sponsors per level (e.g. bronze, silver, gold) on the bottom of every page of the event.
 
-Sell sponsorship packages online through the Odoo eCommerce for a full sales cycle integration.
+Sell sponsorship packages online through the Odoo e-Commerce for a full sales cycle integration.
 
 Communicate Efficiently
 -----------------------

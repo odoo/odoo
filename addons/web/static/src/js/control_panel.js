@@ -31,7 +31,7 @@ return ControlPanelMixin;
 odoo.define('web.ControlPanel', function (require) {
 "use strict";
 
-var core = require('web.core');
+var Bus = require('web.Bus');
 var data = require('web.data');
 var Widget = require('web.Widget');
 
@@ -47,7 +47,7 @@ var ControlPanel = Widget.extend({
             this.template = template;
         }
 
-        this.bus = new core.Bus();
+        this.bus = new Bus();
         this.bus.on("update", this, this.update);
     },
     /**
@@ -196,7 +196,7 @@ var ControlPanel = Widget.extend({
     _render_breadcrumbs_li: function (bc, index, length) {
         var self = this;
         var is_last = (index === length-1);
-        var li_content = _.escape(bc.title.trim()) || data.noDisplayContent;
+        var li_content = bc.title && _.escape(bc.title.trim()) || data.noDisplayContent;
         var $bc = $('<li>')
             .append(is_last ? li_content : $('<a>').html(li_content))
             .toggleClass('active', is_last);

@@ -1,4 +1,4 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 import time
 
 class TestPayment(AccountingTestCase):
@@ -55,7 +55,7 @@ class TestPayment(AccountingTestCase):
             'name': 'something',
             'account_id': self.account_revenue.id,
         })
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
         return invoice
 
     def reconcile(self, liquidity_aml, amount=0.0, amount_currency=0.0, currency_id=None):

@@ -4,6 +4,7 @@ odoo.define('mail.chat_manager', function (require) {
 var bus = require('bus.bus').bus;
 var utils = require('mail.utils');
 var config = require('web.config');
+var Bus = require('web.Bus');
 var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
@@ -131,6 +132,8 @@ function make_message (data) {
         attachment_ids: data.attachment_ids || [],
         subject: data.subject,
         email_from: data.email_from,
+        customer_email_status: data.customer_email_status,
+        customer_email_data: data.customer_email_data,
         record_name: data.record_name,
         tracking_value_ids: data.tracking_value_ids,
         channel_ids: data.channel_ids,
@@ -856,7 +859,7 @@ var chat_manager = {
             return message.channel_ids.length === 0 && message.model === model;
         });
     },
-    bus: new core.Bus(),
+    bus: new Bus(),
 
     create_channel: function (name, type) {
         var method = type === "dm" ? "channel_get" : "channel_create";

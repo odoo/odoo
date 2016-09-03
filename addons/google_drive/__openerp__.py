@@ -9,12 +9,13 @@
     'auto_install': False,
     'data': [
         'security/ir.model.access.csv',
-        'res_config_user_view.xml',
-        'google_drive_data.xml',
-        'views/google_drive.xml',
+        'data/google_drive_data.xml',
+        'views/google_drive_views.xml',
+        'views/google_drive_templates.xml',
+        'views/res_config_views.xml',
     ],
     'demo': [
-        'google_drive_demo.xml'
+        'data/google_drive_demo.xml'
     ],
     'depends': ['base_setup', 'google_account'],
     'description': """

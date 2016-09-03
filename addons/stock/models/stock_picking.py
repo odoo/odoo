@@ -8,7 +8,7 @@ import time
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
-from odoo.addons.procurement import procurement
+from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
 
 
@@ -35,11 +35,11 @@ class PickingType(models.Model):
         default=lambda self: self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1))
     active = fields.Boolean('Active', default=True)
     use_create_lots = fields.Boolean(
-        'Create New Lots', default=True,
-        help="If this is checked only, it will suppose you want to create new Serial Numbers / Lots, so you can provide them in a text field. ")
+        'Create New Lots/Serial Numbers', default=True,
+        help="If this is checked only, it will suppose you want to create new Lots/Serial Numbers, so you can provide them in a text field. ")
     use_existing_lots = fields.Boolean(
-        'Use Existing Lots', default=True,
-        help="If this is checked, you will be able to choose the Serial Number / Lots. You can also decide to not put lots in this picking type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
+        'Use Existing Lots/Serial Numbers', default=True,
+        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this picking type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -227,6 +227,8 @@ class Picking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
     move_lines = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
+    has_scrap_move = fields.Boolean(
+        'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Picking Type',
         required=True,
@@ -340,6 +342,11 @@ class Picking(models.Model):
     @api.one
     def _set_min_date(self):
         self.move_lines.write({'date_expected': self.min_date})
+
+    @api.one
+    def _has_scrap_move(self):
+        # TDE FIXME: better implementation
+        self.has_scrap_move = bool(self.env['stock.move'].search_count([('picking_id', '=', self.id), ('scrapped', '=', True)]))
 
     @api.one
     def _compute_quant_reserved_exist(self):
@@ -550,7 +557,7 @@ class Picking(models.Model):
             uom = product_to_uom[mapping.product.id]
             val_dict = {
                 'picking_id': self.id,
-                'product_qty': Uom._compute_qty_obj(mapping.product.uom_id, qty, uom),
+                'product_qty': mapping.product.uom_id._compute_quantity(qty, uom),
                 'product_id': mapping.product.id,
                 'package_id': mapping.package.id,
                 'owner_id': mapping.owner.id,
@@ -668,7 +675,7 @@ class Picking(models.Model):
                 prod2move_ids[move.product_id.id].append({'move': move, 'remaining_qty': move.product_qty})
 
         need_rereserve = False
-        # sort the operations in order to give higher priority to those with a package, then a serial number
+        # sort the operations in order to give higher priority to those with a package, then a lot/serial number
         operations = self.pack_operation_ids
         operations = sorted(operations, key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.pack_lot_ids and -1 or 0))
         # delete existing operations to start again from scratch
@@ -679,7 +686,7 @@ class Picking(models.Model):
         for ops in operations:
             lot_qty = {}
             for packlot in ops.pack_lot_ids:
-                lot_qty[packlot.lot_id.id] = Uom._compute_qty_obj(ops.product_uom_id, packlot.qty, ops.product_id.uom_id)
+                lot_qty[packlot.lot_id.id] = ops.product_uom_id._compute_quantity(packlot.qty, ops.product_id.uom_id)
             # for each operation, create the links with the stock move by seeking on the matching reserved quants,
             # and deffer the operation if there is some ambiguity on the move to select
             if ops.package_id and not ops.product_id and (not done_qtys or ops.qty_done):
@@ -697,7 +704,7 @@ class Picking(models.Model):
             elif ops.product_id.id:
                 # Check moves with same product
                 product_qty = ops.qty_done if done_qtys else ops.product_qty
-                qty_to_assign = Uom._compute_qty_obj(ops.product_uom_id, product_qty, ops.product_id.uom_id)
+                qty_to_assign = ops.product_uom_id._compute_quantity(product_qty, ops.product_id.uom_id)
                 precision_rounding = ops.product_id.uom_id.rounding
                 for move_dict in prod2move_ids.get(ops.product_id.id, []):
                     move = move_dict['move']
@@ -777,7 +784,7 @@ class Picking(models.Model):
                 if (picking_type.use_create_lots or picking_type.use_existing_lots):
                     for pack in pick.pack_operation_ids:
                         if pack.product_id and pack.product_id.tracking != 'none':
-                            raise UserError(_('Some products require lots, so you need to specify those first!'))
+                            raise UserError(_('Some products require lots/serial numbers, so you need to specify those first!'))
                 view = self.env.ref('stock.view_immediate_transfer')
                 wiz = self.env['stock.immediate.transfer'].create({'pick_id': pick.id})
                 # TDE FIXME: a return in a loop, what a good idea. Really.
@@ -922,7 +929,7 @@ class Picking(models.Model):
             if op.product_uom_id.factor > product.uom_id.factor:  # If the pack operation's is a smaller unit
                 uom_id = op.product_uom_id.id
                 # HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
-                qty = Uom._compute_qty_obj(product.uom_id, remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
+                qty = product.uom_id._compute_quantity(remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
         picking = op.picking_id
         ref = product.default_code
         name = '[' + ref + ']' + ' ' + product.name if ref else product.name
@@ -1000,3 +1007,25 @@ class Picking(models.Model):
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
+
+    @api.multi
+    def button_scrap(self):
+        self.ensure_one()
+        return {
+            'name': _('Scrap'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.scrap',
+            'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
+            'type': 'ir.actions.act_window',
+            'context': {'default_picking_id': self.id, 'product_ids': self.pack_operation_product_ids.mapped('product_id').ids},
+            'target': 'new',
+        }
+
+    @api.multi
+    def action_see_move_scrap(self):
+        self.ensure_one()
+        action = self.env.ref('stock.action_stock_scrap').read()[0]
+        scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
+        action['domain'] = [('id', 'in', scraps.ids)]
+        return action

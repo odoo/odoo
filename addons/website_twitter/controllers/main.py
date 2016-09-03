@@ -3,8 +3,8 @@
 
 import json
 from odoo import _
-from odoo.addons.web import http
-from odoo.addons.web.http import request
+from odoo import http
+from odoo.http import request
 
 
 class Twitter(http.Controller):
@@ -17,7 +17,7 @@ class Twitter(http.Controller):
         key = request.website.twitter_api_key
         secret = request.website.twitter_api_secret
         screen_name = request.website.twitter_screen_name
-        debug = request.env['res.users'].has_group('base.group_website_publisher')
+        debug = request.env['res.users'].has_group('website.group_website_publisher')
         if not key or not secret:
             if debug:
                 return {"error": _("Please set the Twitter API Key and Secret in the Website Settings.")}

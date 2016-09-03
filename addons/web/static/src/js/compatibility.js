@@ -261,5 +261,28 @@ ListView.include({
      },
 });
 
+// IE patch
+//-------------------------------------------------------------------------
+if (typeof(console) === "undefined") {
+    // Even IE9 only exposes console object if debug window opened
+    window.console = {};
+    ('log error debug info warn assert clear dir dirxml trace group'
+        + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
+        + ' exception').split(/\s+/).forEach(function(property) {
+            console[property] = _.identity;
+    });
+}
+
+/**
+    Some hack to make placeholders work in ie9.
+*/
+if (!('placeholder' in document.createElement('input'))) {
+    document.addEventListener("DOMNodeInserted",function(event){
+        var nodename =  event.target.nodeName.toLowerCase();
+        if ( nodename === "input" || nodename === "textarea" ) {
+            $(event.target).placeholder();
+        }
+    });
+}
 
 });

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from ast import literal_eval
 
-from openerp import models, fields, api
-from openerp.tools import pickle as cPickle
+from odoo import models, fields, api
+from odoo.tools import pickle as cPickle
 
 
 class pos_cache(models.Model):
     _name = 'pos.cache'
 
-    cache = fields.Binary()
+    cache = fields.Binary(attachment=True)
     product_domain = fields.Text(required=True)
     product_fields = fields.Text(required=True)
 

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2011 Cubic ERP - Teradata SAC. (http://cubicerp.com)
@@ -18,11 +18,8 @@ Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
     'category': 'Localization',
     'depends': ['base', 'account'],
     'data':[
-        'l10n_ar_chart.xml',
-        'account_tax.xml',
-        'account_chart_template.yml',
+        'data/l10n_ar_chart_data.xml',
+        'data/account_tax_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'active': False,
-    'installable': True,
 }

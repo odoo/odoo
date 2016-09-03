@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_config" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <separator name="analytic_account" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </separator>
+                <group name="analytic_account_sale" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <xpath expr="//group[@name='analytic_account_sale']" position="inside">
+                    <div>
+                        <field name="group_analytic_account_for_sales" class="oe_inline"/>
+                        <label for="group_analytic_account_for_sales"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+</odoo>

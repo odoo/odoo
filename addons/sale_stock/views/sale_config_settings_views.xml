@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sales_config_inherit_sale_stock" model="ir.ui.view">
+        <field name="name">sale settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sale.view_sales_config"/>
+        <field name="arch" type="xml">
+            <group name="customers" position="inside">
+                <field name="security_lead"/>
+            </group>
+            <xpath expr="//div[@id='main']" position="inside">
+                <group string="Shipping">
+                    <field name="module_delivery" widget="radio"/>
+                    <field name="default_picking_policy" widget="radio"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@id='sale']" position="inside">
+                <field name="group_route_so_lines" widget="radio"/>
+                <field name="group_mrp_properties" widget="radio" groups="base.group_no_one"/>
+            </xpath>
+            <field name="group_sale_delivery_address" position="after">
+                <field name="group_display_incoterm" widget="radio"/>
+            </field>
+            <group name="quotations_sales" position="inside">
+                <label for="module_sale_order_dates"/>
+                <div>
+                    <field name="module_sale_order_dates" class="oe_inline" widget="radio"/>
+                </div>
+            </group>
+        </field>
+    </record>
+</odoo>

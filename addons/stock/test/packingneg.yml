@@ -11,7 +11,6 @@
       - delay: 1
         name: base.res_partner_2
         min_qty: 2.0
-        qty: 5.0
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
 - 
@@ -29,32 +28,48 @@
 - 
   Confirm and assign picking and prepare partial
 - 
-  !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('pick_neg')], context=context)
+  !python {model: stock.picking, id: pick_neg}: |
+    self.action_confirm()
 - 
   Put 120 pieces on Palneg 1 (package), 120 pieces on Palneg 2 with lot A and 60 pieces on Palneg 3
 - 
-  !python {model: stock.picking}: |
+  !python {model: stock.picking, id: pick_neg}: |
     #Change quantity of first to 120 and create 2 others quant operations
-    record = self.browse(cr, uid, ref('pick_neg'), context=context)
-    stock_pack = self.pool.get('stock.pack.operation')
-    stock_quant_pack = self.pool.get('stock.quant.package')
+    stock_pack = self.env['stock.pack.operation']
+    stock_quant_pack = self.env['stock.quant.package']
     #create lot A
-    lot_a = self.pool.get('stock.production.lot').create(cr, uid, {'name': 'Lot neg', 'product_id': ref('product_neg')}, context=context)
+    lot_a = self.env['stock.production.lot'].create({'name': 'Lot neg', 'product_id': ref('product_neg')})
     #create package
-    package1 = stock_quant_pack.create(cr, uid, {'name': 'Palneg 1'}, context=context)
-    package2 = stock_quant_pack.create(cr, uid, {'name': 'Palneg 2'}, context=context)
-    package3 = stock_quant_pack.create(cr, uid, {'name': 'Palneg 3'}, context=context)
+    package1 = stock_quant_pack.create({'name': 'Palneg 1'})
+    package2 = stock_quant_pack.create({'name': 'Palneg 2'})
+    package3 = stock_quant_pack.create({'name': 'Palneg 3'})
     #Create package for each line and assign it as result_package_id
     #create pack operation
-    stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'result_package_id': package1, 'product_qty': 120})
-    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product_neg'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick_neg'), 'pack_lot_ids': [(0, 0, {'lot_id': lot_a, 'qty': 120})], 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
-    new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product_neg'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick_neg'), 'result_package_id': package3, 'product_qty': 60, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
+    self.pack_operation_ids[0].write({'result_package_id': package1.id, 'product_qty': 120})
+    new_pack1 = stock_pack.create({
+      'product_id': ref('product_neg'),
+      'product_uom_id': ref('product.product_uom_unit'),
+      'picking_id': ref('pick_neg'),
+      'pack_lot_ids': [(0, 0, {'lot_id': lot_a.id, 'qty': 120})],
+      'result_package_id': package2.id,
+      'product_qty': 120,
+      'location_id': ref('stock_location_suppliers'),
+      'location_dest_id': ref('stock_location_stock')
+    })
+    new_pack2 = stock_pack.create({
+      'product_id': ref('product_neg'),
+      'product_uom_id': ref('product.product_uom_unit'),
+      'picking_id': ref('pick_neg'),
+      'result_package_id': package3.id,
+      'product_qty': 60,
+      'location_id': ref('stock_location_suppliers'),
+      'location_dest_id': ref('stock_location_stock')
+    })
 - 
   Transfer the receipt
 - 
-  !python {model: stock.picking}: |
-    self.do_transfer(cr, uid, [ref('pick_neg')], context=context)
+  !python {model: stock.picking, id: pick_neg}: |
+    self.do_transfer()
 - 
   Make a delivery order of 300 pieces to the customer
 - 
@@ -70,33 +85,40 @@
 - 
   Assign and confirm
 - 
-  !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('delivery_order_neg')], context=context)
-    self.action_assign(cr, uid, [ref('delivery_order_neg')])
+  !python {model: stock.picking, id: delivery_order_neg}: |
+    self.action_confirm()
+    self.action_assign()
 - 
   Instead of doing the 300 pieces, you decide to take pallet 1 (do not mention product in operation here) and 140 pieces from lot A/pallet 2 and 10 pieces from pallet 3
 - 
-  !python {model: stock.picking}: |
-    stock_pack = self.pool.get('stock.pack.operation')
-    delivery_id = self.browse(cr, uid, ref('delivery_order_neg'), context=context)
-    for rec in delivery_id.pack_operation_ids:
+  !python {model: stock.picking, id: delivery_order_neg}: |
+    for rec in self.pack_operation_ids:
       if rec.package_id.name == 'Palneg 2':
-        lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product_neg')), ('name','=','Lot neg')])
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'), 'product_qty': 140, 'pack_lot_ids': [(0, 0, {'lot_id': lot_ids[0], 'qty': 140})], 'product_uom_id': ref('product.product_uom_unit')}, context=context)
+        lot_id = self.env["stock.production.lot"].search([('product_id', '=', ref('product_neg')), ('name','=','Lot neg')], limit=1).id
+        rec.write({
+          'product_id': ref('product_neg'),
+          'product_qty': 140,
+          'pack_lot_ids': [(0, 0, {'lot_id': lot_id, 'qty': 140})],
+          'product_uom_id': ref('product.product_uom_unit')
+        })
       if rec.package_id.name == 'Palneg 3':
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'),'product_qty': 10, 'product_uom_id': ref('product.product_uom_unit')}, context=context)
+        rec.write({
+          'product_id': ref('product_neg'),
+          'product_qty': 10,
+          'product_uom_id': ref('product.product_uom_unit')
+        })
 - 
   Process this picking
 - 
-  !python {model: stock.picking}: |
-    self.do_transfer(cr, uid, [ref('delivery_order_neg')], context=context)
+  !python {model: stock.picking, id: delivery_order_neg}: |
+    self.do_transfer()
 - 
   Check the quants that you have 120 pieces pallet 1 in customers, -20 pieces pallet 2 in stock, 120 + 20 pieces 2 in customer with lot, and a total quantity of 50 in stock from pallet 3 (should be 20+30, as it has been split by reservation), finally 10 in customers from pallet 3
 - 
-  !python {model: stock.quant}: |
-    reco_id = self.search(cr ,uid , [('product_id','=',ref('product_neg'))], context=context)
+  !python {model: stock.quant, id: False}: |
+    records = self.search([('product_id','=',ref('product_neg'))])
     pallet_3_stock_qty = 0
-    for rec in self.browse(cr, uid, reco_id, context=context):
+    for rec in records:
       if rec.package_id.name == 'Palneg 1' and rec.location_id.id == ref('stock_location_customers'):
         assert rec.qty == 120, "Should have 120 pieces on pallet 1"
       elif rec.package_id.name == 'Palneg 2' and rec.location_id.id == ref('stock_location_stock'):
@@ -126,21 +148,24 @@
 - 
   Receive 20 products with lot neg in stock with a new incoming shipment that should be on pallet 2
 - 
-  !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref("delivery_reconcile")])
-    pick = self.browse(cr, uid, ref("delivery_reconcile"))
-    ops_obj = self.pool.get("stock.pack.operation")
-    pack_obj = self.pool.get("stock.quant.package")
-    lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product_neg')), ('name','=','Lot neg')])
-    pack_ids = pack_obj.search(cr, uid, [('name', '=', 'Palneg 2')])
-    ops_obj.write(cr, uid, [pick.pack_operation_ids[0].id], {'pack_lot_ids': {'lot_id': lot_ids[0], 'qty': 20.0}, 'result_package_id': pack_ids[0]})
-    self.do_transfer(cr, uid, [ref("delivery_reconcile")])
+  !python {model: stock.picking, id: delivery_reconcile}: |
+    self.action_confirm()
+    pack_obj = self.env["stock.quant.package"]
+    lot = self.env["stock.production.lot"].search([('product_id', '=', ref('product_neg')), ('name','=','Lot neg')], limit=1)
+    pack = pack_obj.search([('name', '=', 'Palneg 2')], limit=1)
+    self.pack_operation_ids[0].write({'pack_lot_ids': {'lot_id': lot.id, 'qty': 20.0}, 'result_package_id': pack.id})
+    self.do_transfer()
 - 
   Check the negative quant was reconciled and the 20 pieces of lot neg at customers have the incoming shipments in the history_ids
 - 
-  !python {model: stock.quant}: |
-    neg_quants = self.search(cr, uid, [('product_id','=', ref('product_neg')), ('qty', '<', 0)])
-    assert len(neg_quants) == 0, "Negative quants should have been reconciled"
-    pick = self.pool.get('stock.picking').browse(cr, uid, ref('delivery_reconcile'))
-    customer_quant = self.search(cr, uid, [('product_id', '=', ref('product_neg')), ('location_id', '=', ref('stock_location_customers')), ('lot_id.name','=', 'Lot neg'), ('qty','=', 20)])
-    assert pick.move_lines[0].id in [x.id for x in self.browse(cr, uid, customer_quant[0]).history_ids]
+  !python {model: stock.quant, id: False}: |
+    neg_quants = self.search([('product_id','=', ref('product_neg')), ('qty', '<', 0)])
+    assert len(neg_quants.ids) == 0, "Negative quants should have been reconciled"
+    pick = self.env['stock.picking'].browse(ref('delivery_reconcile'))
+    customer_quant = self.search([
+      ('product_id', '=', ref('product_neg')),
+      ('location_id', '=', ref('stock_location_customers')),
+      ('lot_id.name','=', 'Lot neg'),
+      ('qty','=', 20)
+    ])
+    assert pick.move_lines[0].id in [x.id for x in customer_quant[0].history_ids]

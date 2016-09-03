@@ -19,10 +19,11 @@ class PosOrder(models.Model):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def _amount_line_tax(self, cr, uid, line, fiscal_position_id, context=None):
+    @api.model
+    def _amount_line_tax(self, line, fiscal_position_id):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         if fiscal_position_id:
-            taxes = fiscal_position_id.map_tax(taxes)
+            taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         taxes = taxes.compute_all(price, line.order_id.pricelist_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
         return sum(tax.get('amount', 0.0) for tax in taxes)
@@ -79,7 +80,7 @@ class PosOrder(models.Model):
             _logger.warning('attempting to create new session for order %s', order['name'])
             new_session = PosSession.create({'config_id': closed_session.config_id.id})
             # bypass opening_control (necessary when using cash control)
-            new_session.signal_workflow('open')
+            new_session.action_pos_session_open()
             return new_session
 
     def _match_payment_to_invoice(self, order):
@@ -184,7 +185,7 @@ class PosOrder(models.Model):
         invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id).ids
         fiscal_position_id = line.order_id.fiscal_position_id
         if fiscal_position_id:
-            invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids)
+            invoice_line.invoice_line_tax_ids = fiscal_position_id.map_tax(invoice_line.invoice_line_tax_ids, line.product_id, line.order_id.partner_id)
         invoice_line.invoice_line_tax_ids = invoice_line.invoice_line_tax_ids.ids
         # We convert a new id object back to a dictionary to write to
         # bridge between old and new api
@@ -237,18 +238,10 @@ class PosOrder(models.Model):
                     if not grouped_data[key]:
                         grouped_data[key].append(values)
                     else:
-                        for line in grouped_data[key]:
-                            if line.get('tax_code_id') == values.get('tax_code_id'):
-                                current_value = line
-                                current_value['quantity'] = current_value.get(
-                                    'quantity', 0.0) + values.get('quantity', 0.0)
-                                current_value['credit'] = current_value.get(
-                                    'credit', 0.0) + values.get('credit', 0.0)
-                                current_value['debit'] = current_value.get(
-                                    'debit', 0.0) + values.get('debit', 0.0)
-                                break
-                        else:
-                            grouped_data[key].append(values)
+                        current_value = grouped_data[key][0]
+                        current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
+                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
+                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
                 else:
                     grouped_data[key].append(values)
 
@@ -419,11 +412,26 @@ class PosOrder(models.Model):
         return super(PosOrder, self).create(values)
 
     @api.multi
-    def action_invoice_state(self):
-        self.write({'state': 'invoiced'})
+    def action_view_invoice(self):
+        return {
+            'name': _('Customer Invoice'),
+            'view_mode': 'form',
+            'view_id': self.env.ref('account.invoice_form').id,
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice'}",
+            'type': 'ir.actions.act_window',
+            'res_id': self.invoice_id.id,
+        }
 
     @api.multi
-    def action_invoice(self):
+    def action_pos_order_paid(self):
+        if not self.test_paid():
+            raise UserError(_("Order is not paid."))
+        self.write({'state': 'paid'})
+        return self.create_picking()
+
+    @api.multi
+    def action_pos_order_invoice(self):
         Invoice = self.env['account.invoice']
 
         for order in self:
@@ -442,6 +450,8 @@ class PosOrder(models.Model):
 
             inv = invoice._convert_to_write({name: invoice[name] for name in invoice._cache})
             new_invoice = Invoice.with_context(local_context).sudo().create(inv)
+            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
+            new_invoice.message_post(body=message)
             order.write({'invoice_id': new_invoice.id, 'state': 'invoiced'})
             Invoice += new_invoice
 
@@ -449,8 +459,10 @@ class PosOrder(models.Model):
                 self.with_context(local_context)._action_create_invoice_line(line, new_invoice.id)
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
-            order.sudo().signal_workflow('invoice')
-            new_invoice.sudo().signal_workflow('validate')
+            order.sudo().write({'state': 'invoiced'})
+            # this workflow signal didn't exist on account.invoice -> should it have been 'invoice_open' ? (and now method .action_invoice_open())
+            # shouldn't the created invoice be marked as paid, seing the customer paid in the POS?
+            # new_invoice.sudo().signal_workflow('validate')
 
         if not Invoice:
             return {}
@@ -468,18 +480,14 @@ class PosOrder(models.Model):
             'res_id': Invoice and Invoice.ids[0] or False,
         }
 
+    # this method is unused, and so is the state 'cancel'
     @api.multi
-    def action_paid(self):
-        self.write({'state': 'paid'})
-        self.create_picking()
+    def action_pos_order_cancel(self):
+        return self.write({'state': 'cancel'})
 
     @api.multi
-    def action_cancel(self):
-        self.write({'state': 'cancel'})
-
-    @api.multi
-    def action_done(self):
-        self._create_account_move_line()
+    def action_pos_order_done(self):
+        return self._create_account_move_line()
 
     @api.model
     def create_from_ui(self, orders):
@@ -500,7 +508,7 @@ class PosOrder(models.Model):
             order_ids.append(pos_order.id)
 
             try:
-                pos_order.signal_workflow('paid')
+                pos_order.action_pos_order_paid()
             except psycopg2.OperationalError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
@@ -508,8 +516,8 @@ class PosOrder(models.Model):
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
             if to_invoice:
-                pos_order.action_invoice()
-                pos_order.invoice_id.sudo().signal_workflow('invoice_open')
+                pos_order.action_pos_order_invoice()
+                pos_order.invoice_id.sudo().action_invoice_open()
         return order_ids
 
     def test_paid(self):
@@ -518,7 +526,7 @@ class PosOrder(models.Model):
         """
         for order in self:
             if order.lines and not order.amount_total:
-                return True
+                continue
             if (not order.lines) or (not order.statement_ids) or (abs(order.amount_total - order.amount_paid) > 0.00001):
                 return False
         return True
@@ -554,6 +562,8 @@ class PosOrder(models.Model):
                     'location_id': location_id if pos_qty else destination_id,
                     'location_dest_id': destination_id if pos_qty else location_id,
                 })
+                message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
+                picking_id.message_post(body=message)
                 order.write({'picking_id': picking_id.id})
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
@@ -571,15 +581,41 @@ class PosOrder(models.Model):
             if picking_id:
                 picking_id.action_confirm()
                 picking_id.force_assign()
-                # Mark pack operations as done
-                for pack in picking_id.pack_operation_ids:
-                    pack.write({'qty_done': pack.product_qty})
+                order.set_pack_operation_lot()
                 picking_id.action_done()
             elif Move:
                 Move.action_confirm()
                 Move.force_assign()
                 Move.action_done()
         return True
+
+    def set_pack_operation_lot(self):
+        """Set Serial/Lot number in pack operations to mark the pack operation done."""
+
+        StockProductionLot = self.env['stock.production.lot']
+        PosPackOperationLot = self.env['pos.pack.operation.lot']
+
+        for order in self:
+            for pack_operation in order.picking_id.pack_operation_ids:
+                qty = 0
+                qty_done = 0
+                pack_lots = []
+                pos_pack_lots = PosPackOperationLot.search([('order_id', '=',  order.id), ('product_id', '=', pack_operation.product_id.id)])
+                pack_lot_names = [pos_pack.lot_name for pos_pack in pos_pack_lots]
+
+                if pack_lot_names:
+                    for lot_name in list(set(pack_lot_names)):
+                        stock_production_lot = StockProductionLot.search([('name', '=', lot_name), ('product_id', '=', pack_operation.product_id.id)])
+                        if stock_production_lot:
+                            if stock_production_lot.product_id.tracking == 'lot':
+                                qty = pack_lot_names.count(lot_name)
+                            else:
+                                qty = 1.0
+                            qty_done += qty
+                            pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
+                else:
+                    qty_done = pack_operation.product_qty
+                pack_operation.write({'pack_lot_ids': map(lambda x: (0, 0, x), pack_lots), 'qty_done': qty_done})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -686,6 +722,7 @@ class PosOrderLine(models.Model):
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes')
+    pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
 
     @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _compute_amount_line_all(self):
@@ -694,7 +731,7 @@ class PosOrderLine(models.Model):
             taxes = line.tax_ids.filtered(lambda tax: tax.company_id.id == line.order_id.company_id.id)
             fiscal_position_id = line.order_id.fiscal_position_id
             if fiscal_position_id:
-                taxes = fiscal_position_id.map_tax(taxes)
+                taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             line.price_subtotal = line.price_subtotal_incl = price * line.qty
             if taxes:
@@ -712,8 +749,8 @@ class PosOrderLine(models.Model):
                 raise UserError(
                     _('You have to select a pricelist in the sale form !\n'
                       'Please set one before choosing a product.'))
-            price = self.order_id.pricelist_id.price_get(
-                self.product_id.id, self.qty or 1.0, self.order_id.partner_id.id)[self.order_id.pricelist_id.id]
+            price = self.order_id.pricelist_id.get_product_price(
+                self.product_id, self.qty or 1.0, self.order_id.partner_id)
             self._onchange_qty()
             self.price_unit = price
             self.tax_ids = self.product_id.taxes_id
@@ -733,4 +770,14 @@ class PosOrderLine(models.Model):
     @api.multi
     def _get_tax_ids_after_fiscal_position(self):
         for line in self:
-            line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
+            line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
+
+
+class PosOrderLineLot(models.Model):
+    _name = "pos.pack.operation.lot"
+    _description = "Specify product lot/serial number in pos order line"
+
+    pos_order_line_id = fields.Many2one('pos.order.line')
+    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id")
+    lot_name = fields.Char('Lot Name')
+    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id')

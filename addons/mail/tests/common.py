@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp.tests import common
+from odoo import api
+from odoo.tests import common
 
 
 class TestMail(common.SavepointCase):
@@ -33,11 +34,13 @@ class TestMail(common.SavepointCase):
             cls._mails.append(kwargs)
             return build_email.origin(self, *args, **kwargs)
 
-        def send_email(self, cr, uid, message, *args, **kwargs):
+        @api.model
+        def send_email(self, message, *args, **kwargs):
             return message['Message-Id']
 
-        def mail_group_message_get_recipient_values(self, cr, uid, ids, notif_message=None, recipient_ids=None, context=None):
-            return self.pool['mail.thread'].message_get_recipient_values(cr, uid, ids, notif_message=notif_message, recipient_ids=recipient_ids, context=context)
+        @api.multi
+        def mail_group_message_get_recipient_values(self, notif_message=None, recipient_ids=None):
+            return self.env['mail.thread'].message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
 
         cls.env['ir.mail_server']._patch_method('build_email', build_email)
         cls.env['ir.mail_server']._patch_method('send_email', send_email)
@@ -53,7 +56,6 @@ class TestMail(common.SavepointCase):
         cls.user_employee = Users.create({
             'name': 'Ernest Employee',
             'login': 'ernest',
-            'alias_name': 'ernest',
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
             'notify_email': 'always',
@@ -61,7 +63,6 @@ class TestMail(common.SavepointCase):
         cls.user_public = Users.create({
             'name': 'Bert Tartignole',
             'login': 'bert',
-            'alias_name': 'bert',
             'email': 'b.t@example.com',
             'signature': 'SignBert',
             'notify_email': 'always',
@@ -69,7 +70,6 @@ class TestMail(common.SavepointCase):
         cls.user_portal = Users.create({
             'name': 'Chell Gladys',
             'login': 'chell',
-            'alias_name': 'chell',
             'email': 'chell@gladys.portal',
             'signature': 'SignChell',
             'notify_email': 'always',

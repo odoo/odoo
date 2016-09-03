@@ -14,7 +14,7 @@ class MailMessage(models.Model):
     def default_get(self, fields_list):
         defaults = super(MailMessage, self).default_get(fields_list)
 
-        # Note: explicitly implemented in default_get() instead of _defaults,
+        # Note: explicitly implemented in default_get() instead of field default,
         # to avoid setting to True for all existing messages during upgrades.
         # TODO: this default should probably be dynamic according to the model
         # on which the messages are attached, thus moved to create().
@@ -39,10 +39,8 @@ class MailMessage(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to restrict
         messages to published messages for public users. """
-        if self.env.uid != SUPERUSER_ID:
-            group_user = self.env.ref('base.group_public')
-            if group_user in self.env.user.groups_id:
-                args = expression.AND([[('website_published', '=', True)], list(args)])
+        if self.user_has_groups('base.group_public'):
+            args = expression.AND([[('website_published', '=', True)], list(args)])
 
         return super(MailMessage, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=count, access_rights_uid=access_rights_uid)
@@ -53,10 +51,8 @@ class MailMessage(models.Model):
             - read:
                 - raise if the type is comment and subtype NULL (internal note)
         """
-        if self.env.uid != SUPERUSER_ID:
-            group_user = self.env.ref('base.group_public')
-            if group_user in self.env.user.groups_id:
-                self.env.cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (self.ids,))
-                if self.env.cr.fetchall():
-                    raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
+        if self.user_has_groups('base.group_public'):
+            self.env.cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (self.ids,))
+            if self.env.cr.fetchall():
+                raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
         return super(MailMessage, self).check_access_rule(operation=operation)

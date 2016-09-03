@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="im_livechat_channel_action" model="ir.actions.act_window">
@@ -48,7 +48,7 @@
                                         </p>
                                     </div>
                                     <div class="o_kanban_button">
-                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-sm btn-primary">Quit</button>
+                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-sm btn-primary">Leave</button>
                                         <button t-if="!record.are_you_inside.raw_value" name="action_join" type="object" class="btn btn-sm btn-primary">Join</button>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@
         <!-- Menu items -->
         <menuitem
             id="menu_livechat_root"
-            name="Website Live Chat"
+            name="Live Chat"
             web_icon="im_livechat,static/description/icon.png"
             groups="im_livechat_group_user"
             sequence="205"/>
@@ -221,20 +221,34 @@
             sequence="5"/>
 
         <menuitem
-            id="session_history"
-            name="History"
+            id="menu_reporting_livechat"
+            name="Report"
             parent="menu_livechat_root"
+            sequence="50"
+            groups="im_livechat_group_manager"/>
+
+
+        <menuitem
+            id="session_history"
+            name="Sessions History"
+            parent="menu_reporting_livechat"
             action="mail_channel_action"
             groups="im_livechat_group_user"
-            sequence="10"/>
+            sequence="1"/>
+
+        <menuitem
+            id="livechat_config"
+            name="Configuration"
+            parent="menu_livechat_root"
+            sequence="55"/>
 
         <menuitem
             id="canned_responses"
             name="Canned Responses"
-            parent="menu_livechat_root"
+            parent="livechat_config"
             action="im_livechat_canned_response_action"
             groups="im_livechat_group_user"
             sequence="15"/>
 
     </data>
-</openerp>
+</odoo>

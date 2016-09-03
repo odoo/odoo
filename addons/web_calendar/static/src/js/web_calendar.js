@@ -7,10 +7,13 @@ odoo.define('web_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.form_common');
+var formats = require('web.formats');
 var Model = require('web.DataModel');
 var time = require('web.time');
+var utils = require('web.utils');
 var View = require('web.View');
 var widgets = require('web_calendar.widgets');
+var local_storage = require('web.local_storage');
 
 var CompoundDomain = data.CompoundDomain;
 
@@ -84,10 +87,18 @@ function isNullOrUndef(value) {
 }
 
 var CalendarView = View.extend({
+    custom_events: {
+        reload_events: function () {
+            this.$calendar.fullCalendar('refetchEvents');
+        },
+    },
     defaults: _.extend({}, View.prototype.defaults, {
         confirm_on_delete: true,
     }),
     display_name: _lt('Calendar'),
+    events: {
+        'click .o_calendar_sidebar_toggler': 'toggle_full_width',
+    },
     icon: 'fa-calendar',
     quick_create_instance: widgets.QuickCreate,
     template: "CalendarView",
@@ -103,9 +114,9 @@ var CalendarView = View.extend({
         this.title = (this.options.action)? this.options.action.name : '';
 
         this.shown = $.Deferred();
-        self.current_start = null;
-        self.current_end = null;
-        self.previous_ids = [];
+        this.current_start = null;
+        this.current_end = null;
+        this.previous_ids = [];
 
         var attrs = this.fields_view.arch.attrs;
         if (!attrs.date_start) {
@@ -128,14 +139,14 @@ var CalendarView = View.extend({
         //if quick_add = not specified in view, we use the default quick_create_instance
         //if quick_add = is NOT False and IS specified in view, we this one for quick_create_instance'   
 
-        this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || _.str.toBoolElse(attrs.quick_add, true));
+        this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || utils.toBoolElse(attrs.quick_add, true));
         // The display format which will be used to display the event where fields are between "[" and "]"
         if (!isNullOrUndef(attrs.display)) {
             this.how_display_event = attrs.display; // String with [FIELD]
         }
 
         // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
-        if (isNullOrUndef(attrs.event_open_popup) || !_.str.toBoolElse(attrs.event_open_popup, true)) {
+        if (isNullOrUndef(attrs.event_open_popup) || !utils.toBoolElse(attrs.event_open_popup, true)) {
             this.open_popup_action = false;
         } else {
             this.open_popup_action = attrs.event_open_popup;
@@ -145,7 +156,7 @@ var CalendarView = View.extend({
 
         // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
         // The color is the color of the attendee, so don't need to show again that it will be present
-        this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true));
+        this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !utils.toBoolElse(attrs.color_is_attendee, true));
 
         // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
         if (isNullOrUndef(this.options.sidebar)) {
@@ -211,6 +222,7 @@ var CalendarView = View.extend({
     },
     start: function () {
         this.$calendar = this.$(".o_calendar_widget");
+        this.$sidebar_container = this.$(".o_calendar_sidebar_container");
         this.$el.addClass(this.fields_view.arch.attrs.class);
         this.shown.done(this._do_show_init.bind(this));
         return this._super();
@@ -248,7 +260,7 @@ var CalendarView = View.extend({
 
         var bindCalendarButton = function(selector, arg1, arg2) {
             self.$buttons.on('click', selector, _.bind(self.$calendar.fullCalendar, self.$calendar, arg1, arg2));
-        }
+        };
         bindCalendarButton('.o_calendar_button_prev', 'prev');
         bindCalendarButton('.o_calendar_button_today', 'today');
         bindCalendarButton('.o_calendar_button_next', 'next');
@@ -263,6 +275,20 @@ var CalendarView = View.extend({
         } else {
             this.$('.o_calendar_buttons').replaceWith(this.$buttons);
         }
+    },
+    toggle_full_width: function () {
+        var full_width = (local_storage.getItem('web_calendar_full_width') !== 'true');
+        local_storage.setItem('web_calendar_full_width', full_width);
+        this.toggle_sidebar(!full_width);
+        this.$calendar.fullCalendar('render'); // to reposition the events
+    },
+    toggle_sidebar: function (display) {
+        this.sidebar.do_toggle(display);
+        this.$('.o_calendar_sidebar_toggler')
+            .toggleClass('fa-close', display)
+            .toggleClass('fa-chevron-left', !display)
+            .attr('title', display ? _('Close Sidebar') : _('Open Sidebar'));
+        this.$sidebar_container.toggleClass('o_sidebar_hidden', !display);
     },
     get_fc_init_options: function () {
         //Documentation here : http://arshaw.com/fullcalendar/docs/
@@ -348,10 +374,11 @@ var CalendarView = View.extend({
     },
 
     init_calendar: function() {
+        var defs = [];
         if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
-            this.sidebar.appendTo(this.$('.o_calendar_sidebar_container'));
+            defs.push(this.sidebar.appendTo(this.$sidebar_container));
 
             this.$small_calendar = this.$(".o_calendar_mini");
             this.$small_calendar.datepicker({ 
@@ -361,11 +388,15 @@ var CalendarView = View.extend({
                 firstDay: translate.firstDay,
             });
 
-            this.extraSideBar();                
+            defs.push(this.extraSideBar());
+
+            // Add show/hide button and possibly hide the sidebar
+            this.$sidebar_container.append($('<i>').addClass('o_calendar_sidebar_toggler fa'));
+            this.toggle_sidebar((local_storage.getItem('web_calendar_full_width') !== 'true'));
         }
         this.$calendar.fullCalendar(this.get_fc_init_options());
 
-        return $.when();
+        return $.when.apply($, defs);
     },
     extraSideBar: function() {
         return $.when();
@@ -531,7 +562,7 @@ var CalendarView = View.extend({
                         temp_ret[fieldname] = value[1]; // no name_get to make
                     }
                     else if (_.contains(["date", "datetime"], self.fields[fieldname].type)) {
-                        temp_ret[fieldname] = instance.web.format_value(value, self.fields[fieldname]);
+                        temp_ret[fieldname] = formats.format_value(value, self.fields[fieldname]);
                     }
                     else {
                         throw new Error("Incomplete data received from dataset for record " + evt.id);
@@ -699,9 +730,9 @@ var CalendarView = View.extend({
     },
     _do_search: function(domain, context, _group_by) {
         var self = this;
-       if (! self.all_filters) {
+        if (! self.all_filters) {
             self.all_filters = {};
-       }
+        }
 
         if (! _.isUndefined(this.event_source)) {
             this.$calendar.fullCalendar('removeEventSource', this.event_source);
@@ -777,7 +808,7 @@ var CalendarView = View.extend({
                                     value: key,
                                     label: val[1],
                                     color: self.get_color(key),
-                                    avatar_model: (_.str.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
+                                    avatar_model: (utils.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
                                     is_checked: true
                                 };
                                 self.all_filters[key] = filter_item;
@@ -788,8 +819,7 @@ var CalendarView = View.extend({
                         });
 
                         if (self.sidebar) {
-                            self.sidebar.filter.events_loaded();
-                            self.sidebar.filter.set_filters();
+                            self.sidebar.filter.render();
 
                             events = $.map(events, function (e) {
                                 var key = color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];

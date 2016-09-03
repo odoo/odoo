@@ -157,11 +157,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
         self.assertFalse(self.pos_order_pos1.invoice_id, 'Invoice should not be attached to order.')
 
-        # I set the order as invoiced
-        self.pos_order_pos1.signal_workflow('invoice')
-
         # I generate an invoice from the order
-        self.invoice = self.pos_order_pos1.action_invoice()
+        self.invoice = self.pos_order_pos1.action_pos_order_invoice()
 
         # I test that the total of the attached invoice is correct
         self.amount_total = self.pos_order_pos1.amount_total
@@ -188,6 +185,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'date': time.strftime('%Y-%m-%d'),
             'journal_id': journal.id,
             'company_id': self.company_id,
+            'name': 'pos session test',
         })
         # I create bank statement line
         account_statement_line = self.AccountBankStatementLine.create({
@@ -209,8 +207,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'debit': 0.0,
         }]
 
-        self.AccountBankStatementLine._model.process_reconciliations(
-            self.env.cr, self.env.uid, [account_statement_line.id], [{'new_aml_dicts': new_aml_dicts}])
+        account_statement_line.process_reconciliations([{'new_aml_dicts': new_aml_dicts}])
 
         # I confirm the bank statement using Confirm button
 

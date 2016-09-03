@@ -1,6 +1,6 @@
 -
-  !python {model: ir.model.data}: |
-    chicago_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock_warehouse_shop0'), context=context)
+  !python {model: ir.model.data, id: False}: |
+    chicago_warehouse = self.env['stock.warehouse'].browse(ref('stock_warehouse_shop0'))
 
     #create xml ids for demo data that are widely used in tests or in other codes, for more convenience
     xml_references = [
@@ -9,11 +9,11 @@
         {'name':'stock_location_shop0','module':'stock', 'model':'stock.location','res_id': chicago_warehouse.lot_stock_id.id},
     ]
     for xml_record in xml_references:
-        xml_ids = self.search(cr, uid, [('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])], context=context)
+        xml_ids = self.search([('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])]).ids
         if not xml_ids:
-            self.create(cr, uid, xml_record, context=context)
+            self.create(xml_record)
         #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
-        self._update_dummy(cr, uid, xml_record['model'], xml_record['module'], xml_record['name'])
+        self._update_dummy(xml_record['model'], xml_record['module'], xml_record['name'])
 -
  !record {model: stock.location, id: location_refrigerator_small}:
     name: Small Refrigerator
@@ -33,11 +33,11 @@
     description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 -
  !record {model: stock.production.lot, id: lot_icecream_0}:
-    name: Lot0 for Ice cream
+    name: '0000000000017'
     product_id: product_icecream
 -
  !record {model: stock.production.lot, id: lot_icecream_1}:
-    name: Lot1 for Ice cream
+    name: '0000000000024'
     product_id: product_icecream
 -
  !record {model: stock.inventory, id: stock_inventory_icecream}:
@@ -331,11 +331,31 @@
         location_id: stock.stock_location_shop0
         location_dest_id: stock.stock_location_customers
 -
- !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('outgoing_shipment_main_warehouse'),ref('outgoing_shipment_main_warehouse1'),ref('incomming_shipment2'),ref('incomming_shipment1'),ref('incomming_shipment3'),ref('outgoing_chicago_warehouse3'),ref('outgoing_chicago_warehouse2'),ref('outgoing_chicago_warehouse1'),ref('incomming_chicago_warehouse1'),ref('incomming_chicago_warehouse2'),ref('incomming_chicago_warehouse3')], context=context)
-    record = self.browse(cr, uid, ref('outgoing_shipment_main_warehouse1'), context=context)
-    record_chi_in = self.browse(cr, uid, ref('incomming_chicago_warehouse1'), context=context)
-    record_chi_out = self.browse(cr, uid, ref('outgoing_chicago_warehouse1'), context=context)
+ !python {model: stock.picking, id: False}: |
+    self.browse([
+        ref('outgoing_shipment_main_warehouse'),
+        ref('outgoing_shipment_main_warehouse1'),
+        ref('incomming_shipment2'),
+        ref('incomming_shipment1'),
+        ref('incomming_shipment3'),
+        ref('outgoing_chicago_warehouse3'),
+        ref('outgoing_chicago_warehouse2'),
+        ref('outgoing_chicago_warehouse1'),
+        ref('incomming_chicago_warehouse1'),
+        ref('incomming_chicago_warehouse2'),
+        ref('incomming_chicago_warehouse3')
+    ]).action_confirm()
+    record = self.browse(ref('outgoing_shipment_main_warehouse1'))
+    record_chi_in = self.browse(ref('incomming_chicago_warehouse1'))
+    record_chi_out = self.browse(ref('outgoing_chicago_warehouse1'))
     if record.state != 'done' and record_chi_in.state != 'done' and record_chi_out.state != 'done':
-      self.force_assign(cr, uid, [ref('outgoing_shipment_main_warehouse'),ref('outgoing_chicago_warehouse3'),ref('outgoing_shipment_main_warehouse2')], context=context)
-      self.do_transfer(cr, uid, [ref('outgoing_shipment_main_warehouse1'),ref('incomming_chicago_warehouse1'),ref('outgoing_chicago_warehouse1')], context=context)
+        self.browse([
+            ref('outgoing_shipment_main_warehouse'),
+            ref('outgoing_chicago_warehouse3'),
+            ref('outgoing_shipment_main_warehouse2')
+        ]).force_assign()
+        self.browse([
+            ref('outgoing_shipment_main_warehouse1'),
+            ref('incomming_chicago_warehouse1'),
+            ref('outgoing_chicago_warehouse1')
+        ]).do_transfer()

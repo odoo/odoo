@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import fields, models, tools
-from ..models import hr_recruitment
+from odoo import api, fields, models, tools
+from odoo.addons.hr_recruitment.models import hr_recruitment
 
 
-class hr_recruitment_report(models.Model):
+class HrRecruitmentReport(models.Model):
     _name = "hr.recruitment.report"
     _description = "Recruitments Statistics"
     _auto = False
     _rec_name = 'date_create'
     _order = 'date_create desc'
 
+    active = fields.Boolean('Active')
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     date_create = fields.Datetime('Create Date', readonly=True)
@@ -32,12 +33,14 @@ class hr_recruitment_report(models.Model):
     medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True, help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad")
     source_id = fields.Many2one('utm.source', 'Source', readonly=True, help="This is the source of the link Ex: Search Engine, another domain, or name of email list")
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'hr_recruitment_report')
-        cr.execute("""
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'hr_recruitment_report')
+        self._cr.execute("""
             create or replace view hr_recruitment_report as (
                  select
                      min(s.id) as id,
+                     s.active,
                      s.create_date as date_create,
                      date(s.date_closed) as date_closed,
                      s.date_last_stage_update as date_last_stage_update,
@@ -60,6 +63,7 @@ class hr_recruitment_report(models.Model):
                      count(*) as nbr
                  from hr_applicant s
                  group by
+                     s.active,
                      s.date_open,
                      s.create_date,
                      s.write_date,

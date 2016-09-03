@@ -20,16 +20,14 @@ Odoo Blog
         'views/website_blog_templates.xml',
         'views/snippets.xml',
         'security/ir.model.access.csv',
-        'security/website_blog.xml',
+        'security/website_blog_security.xml',
     ],
     'demo': [
         'data/website_blog_demo.xml'
     ],
     'test': [
-        'tests/test_website_blog.yml'
     ],
     'qweb': [
-        'static/src/xml/*.xml'
     ],
     'installable': True,
     'application': True,

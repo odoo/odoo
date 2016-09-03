@@ -9,6 +9,7 @@ var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var Pager = require('web.Pager');
 var pyeval = require('web.pyeval');
+var QWeb = require('web.QWeb');
 var session = require('web.session');
 var utils = require('web.utils');
 var View = require('web.View');
@@ -18,7 +19,7 @@ var quick_create = require('web_kanban.quick_create');
 var KanbanRecord = require('web_kanban.Record');
 var kanban_widgets = require('web_kanban.widgets');
 
-var QWeb = core.qweb;
+var qweb = core.qweb;
 var _lt = core._lt;
 var _t = core._t;
 var ColumnQuickCreate = quick_create.ColumnQuickCreate;
@@ -59,10 +60,7 @@ var KanbanView = View.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        // qweb setup
-        this.qweb = new QWeb2.Engine();
-        this.qweb.debug = session.debug;
-        this.qweb.default_dict = _.clone(QWeb.default_dict);
+        this.qweb = new QWeb(session.debug, {_s: session.origin});
 
         this.limit = this.options.limit || 40;
         this.fields = {};
@@ -70,6 +68,7 @@ var KanbanView = View.extend({
         this.grouped = undefined;
         this.group_by_field = undefined;
         this.default_group_by = this.fields_view.arch.attrs.default_group_by;
+        this.on_create = this.fields_view.arch.attrs.on_create;
         this.grouped_by_m2o = undefined;
         this.relation = undefined;
         this.is_empty = undefined;
@@ -148,6 +147,7 @@ var KanbanView = View.extend({
                 self.data = data;
             })
             .then(this.proxy('render'))
+            .then(this.proxy('update_buttons'))
             .then(this.proxy('update_pager'));
     },
 
@@ -157,7 +157,8 @@ var KanbanView = View.extend({
     },
 
     do_reload: function() {
-        this.do_search(this.search_domain, this.search_context, [this.group_by_field]);
+        var group_by = this.group_by_field ? [this.group_by_field] : [];
+        this.do_search(this.search_domain, this.search_context, group_by);
     },
 
     load_records: function (offset, dataset) {
@@ -319,10 +320,34 @@ var KanbanView = View.extend({
      * $node may be undefined, in which case the ListView inserts them into this.options.$buttons
      */
     render_buttons: function($node) {
+        var self = this;
         if (this.options.action_buttons !== false && this.is_action_enabled('create')) {
-            this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
-            this.$buttons.on('click', 'button.o-kanban-button-new', this.add_record.bind(this));
+            this.$buttons = $(qweb.render("KanbanView.buttons", {'widget': this}));
+            this.$buttons.on('click', 'button.o-kanban-button-new', function () {
+                if (self.grouped && self.widgets.length && self.on_create === 'quick_create') {
+                    // Activate the quick create in the first column
+                    self.widgets[0].add_quick_create();
+                } else if (self.on_create && self.on_create !== 'quick_create') {
+                    // Execute the given action
+                    self.do_action(self.on_create, {
+                        on_close: self.do_reload.bind(self),
+                    });
+                } else {
+                    // Open the form view
+                    self.add_record();
+                }
+            });
+            this.update_buttons();
             this.$buttons.appendTo($node);
+        }
+    },
+    update_buttons: function() {
+        if (this.$buttons) {
+            // In grouped mode, set 'Create' button as btn-default if there is no column
+            var create_muted = !!this.grouped && this.widgets.length === 0 && this.is_action_enabled('group_create') && this.grouped_by_m2o;
+            this.$buttons.find('.o-kanban-button-new')
+                .toggleClass('btn-primary', !create_muted)
+                .toggleClass('btn-default', create_muted);
         }
     },
 
@@ -363,7 +388,7 @@ var KanbanView = View.extend({
         // cleanup
         this.$el.css({display:'-webkit-flex'});
         this.$el.css({display:'flex'});
-        this.$el.removeClass('o_kanban_ungrouped o_kanban_grouped');
+        this.$el.removeClass('o_kanban_ungrouped o_kanban_grouped o_kanban_nocontent');
         _.invoke(this.widgets, 'destroy');
         this.$el.empty();
         this.widgets = [];
@@ -386,18 +411,21 @@ var KanbanView = View.extend({
         if (this.data.grouped) {
             this.$el.addClass('o_kanban_grouped');
             this.render_grouped(fragment);
-        } else if (this.data.is_empty) {
-            this.$el.addClass('o_kanban_ungrouped');
-            this.render_no_content(fragment);
         } else {
             this.$el.addClass('o_kanban_ungrouped');
             this.render_ungrouped(fragment);
         }
+        if (this.data.is_empty && this.widgets.length === 0 && (!this.data.grouped || !this.is_action_enabled('group_create') || !this.grouped_by_m2o)) {
+            this.$el.css("display", "block");
+            this.$el.addClass("o_kanban_nocontent");
+            this.render_no_content(fragment);
+        }
+
         this.$el.append(fragment);
     },
 
     render_no_content: function (fragment) {
-        var content = QWeb.render('KanbanView.nocontent', {content: this.no_content_msg});
+        var content = qweb.render('KanbanView.nocontent', {content: this.no_content_msg});
         $(content).appendTo(fragment);
     },
 
@@ -616,6 +644,7 @@ var KanbanView = View.extend({
                 var index = self.widgets.indexOf(column);
                 self.widgets.splice(index,1);
                 column.destroy();
+                self.update_buttons();
             } else {
                 self.do_reload();
             }
@@ -730,6 +759,7 @@ var KanbanView = View.extend({
             var column = new KanbanColumn(self, group_data, options, record_options);
             column.insertBefore(self.$('.o_column_quick_create'));
             self.widgets.push(column);
+            self.update_buttons();
             self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         });
     },
@@ -761,10 +791,10 @@ var KanbanView = View.extend({
 });
 
 function qweb_add_if(node, condition) {
-    if (node.attrs[QWeb.prefix + '-if']) {
-        condition = _.str.sprintf("(%s) and (%s)", node.attrs[QWeb.prefix + '-if'], condition);
+    if (node.attrs[qweb.prefix + '-if']) {
+        condition = _.str.sprintf("(%s) and (%s)", node.attrs[qweb.prefix + '-if'], condition);
     }
-    node.attrs[QWeb.prefix + '-if'] = condition;
+    node.attrs[qweb.prefix + '-if'] = condition;
 }
 
 function transform_qweb_template (node, fvg, many2manys) {
@@ -788,8 +818,8 @@ function transform_qweb_template (node, fvg, many2manys) {
             } else if (fields_registry.contains(ftype)) {
                 // do nothing, the kanban record will handle it
             } else {
-                node.tag = QWeb.prefix;
-                node.attrs[QWeb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                node.tag = qweb.prefix;
+                node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
             }
             break;
         case 'button':
@@ -805,22 +835,20 @@ function transform_qweb_template (node, fvg, many2manys) {
                 if (node.attrs['data-string']) {
                     node.attrs.title = node.attrs['data-string'];
                 }
-                if (node.attrs['data-icon']) {
-                    node.children = [{
-                        tag: 'img',
-                        attrs: {
-                            src: session.prefix + '/web/static/src/img/icons/' + node.attrs['data-icon'] + '.png',
-                            width: '16',
-                            height: '16'
-                        }
-                    }];
-                }
                 if (node.tag == 'a' && node.attrs['data-type'] != "url") {
                     node.attrs.href = '#';
                 } else {
                     node.attrs.type = 'button';
                 }
-                node.attrs['class'] = (node.attrs['class'] || '') + ' oe_kanban_action oe_kanban_action_' + node.tag;
+
+                var action_classes = " oe_kanban_action oe_kanban_action_" + node.tag;
+                if (node.attrs['t-attf-class']) {
+                    node.attrs['t-attf-class'] += action_classes;
+                } else if (node.attrs['t-att-class']) {
+                    node.attrs['t-att-class'] += " + '" + action_classes + "'";
+                } else {
+                    node.attrs['class'] = (node.attrs['class'] || '') + action_classes;
+                }
             }
             break;
     }

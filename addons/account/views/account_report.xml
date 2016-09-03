@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <!-- QWeb Reports -->
         <report 
@@ -71,21 +71,21 @@
 
         <report 
             id="action_report_journal"
-            model="account_extra_reports.report.journal"
+            model="account.report.journal"
             string="Sale/Purchase Journal"
             report_type="qweb-pdf"
-            name="account_extra_reports.report_journal"
-            file="account_extra_reports.report_journal"
+            name="account.report_journal"
+            file="account.report_journal"
             />
 
         <report 
             id="action_report_partnerledger"
-            model="account_extra_reports.report_partnerledger"
+            model="account.report_partnerledger"
             string="Partner Ledger"
             report_type="qweb-pdf"
-            name="account_extra_reports.report_partnerledger"
-            file="account_extra_reports.report_partnerledger"
+            name="account.report_partnerledger"
+            file="account.report_partnerledger"
             />
 
     </data>
-</openerp>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="crm_activity_report_view_graph" model="ir.ui.view">
+            <field name="name">crm.activity.report.graph</field>
+            <field name="model">crm.activity.report</field>
+            <field name="arch" type="xml">
+                <graph string="Activities Analysis" stacked="True">
+                    <field name="subtype_id" type="col"/>
+                    <field name="date" interval="month" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="crm_activity_report_view_pivot" model="ir.ui.view">
+            <field name="name">crm.activity.report.pivot</field>
+            <field name="model">crm.activity.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Activities Analysis" disable_linking="True">
+                    <field name="subtype_id" type="col"/>
+                    <field name="date" interval="month" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="crm_activity_report_view_search" model="ir.ui.view">
+            <field name="name">crm.activity.report.search</field>
+            <field name="model">crm.activity.report</field>
+            <field name="arch" type="xml">
+                <search string="Activities Analysis">
+                    <filter name="lead" string="Leads" domain="[('lead_type','=', 'lead')]" help="Show only lead"/>
+                    <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
+                    <separator/>
+                    <filter string="Won" name="won"
+                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                    <field name="team_id" context="{'invisible_team': False}"/>
+                    <field name="author_id" string="Created By"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Created By" name="group_by_salesperson" context="{'group_by':'author_id'}"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}"/>
+                        <filter string="Country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Month" context="{'group_by':'date:month'}" name="month"/>
+                        <filter string="Leads" name="group_by_opportunity" context="{'group_by':'lead_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+       <record id="crm_activity_report_action" model="ir.actions.act_window">
+           <field name="name">Activities Analysis</field>
+           <field name="res_model">crm.activity.report</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">pivot,graph</field>
+           <field name="context">{}</field>
+           <field name="domain">[]</field>
+       </record>
+
+       <menuitem
+            id="crm_activity_report_menu"
+            name="Activities"
+            groups="sales_team.group_sale_manager"
+            parent="sales_team.menu_sale_report"
+            action="crm_activity_report_action"
+            sequence="7"/>
+
+       <record id="crm_activity_report_action_team" model="ir.actions.act_window">
+           <field name="name">Activities Analysis</field>
+           <field name="res_model">crm.activity.report</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">pivot,graph</field>
+           <field name="context">{'search_default_team_id': active_id}</field>
+           <field name="domain">[]</field>
+       </record>
+
+</odoo>

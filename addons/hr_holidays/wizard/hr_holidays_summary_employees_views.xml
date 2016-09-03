@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_hr_holidays_summary_employee" model="ir.ui.view">
+            <field name="name">hr.holidays.summary.employee.form</field>
+            <field name="model">hr.holidays.summary.employee</field>
+            <field name="arch" type="xml">
+                <form string="Leaves Summary">
+                    <group col="4" colspan="6">
+                        <field name="date_from"/>
+                        <newline/>
+                        <field name="holiday_type"/>
+                        <newline/>
+                        <field name="emp" invisible="True"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hr_holidays_summary_employee" model="ir.actions.act_window">
+            <field name="name">Leaves Summary</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.holidays.summary.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="hr_holidays_summary_employee_value" model="ir.values">
+            <field name="model_id" ref="hr.model_hr_employee" />
+            <field name="name">Leaves Summary</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_holidays_summary_employee'))" />
+            <field name="key">action</field>
+            <field name="model">hr.employee</field>
+        </record>
+
+</odoo>

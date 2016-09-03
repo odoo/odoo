@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, api, fields, models
+from odoo import _, api, fields, models
 
 
 class Invite(models.TransientModel):
@@ -17,7 +18,7 @@ class Invite(models.TransientModel):
         if self._context.get('mail_invite_follower_channel_only'):
             result['send_mail'] = False
         if 'message' in fields and model and res_id:
-            model_name = self.env['ir.model'].search([('model', '=', self.pool[model]._name)]).name_get()[0][1]
+            model_name = self.env['ir.model'].search([('model', '=', model)]).name_get()[0][1]
             document_name = self.env[model].browse(res_id).name_get()[0][1]
             message = _('<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>') % (user_name, model_name, document_name)
             result['message'] = message
@@ -59,6 +60,6 @@ class Invite(models.TransientModel):
                     'res_id': wizard.res_id,
                     'no_auto_thread': True,
                 })
-                new_partners.with_context(auto_delete=True)._notify(message, force_send=True, user_signature=True)
+                new_partners.with_context(auto_delete=True)._notify(message, force_send=True, send_after_commit=False, user_signature=True)
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}

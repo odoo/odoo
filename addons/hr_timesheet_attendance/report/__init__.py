@@ -1,2 +1,4 @@
 # -*- coding: utf-8 -*-
-from . import hr_timesheet_attendance_report
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import hr_timesheet_attendance_report

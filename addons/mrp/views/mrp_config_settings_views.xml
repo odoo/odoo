@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_mrp_config" model="ir.ui.view">
+            <field name="name">mrp settings</field>
+            <field name="model">mrp.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Manufacturing" class= "oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Logistics" name="logistics">
+                        <field name="company_id" invisible="1"/>
+                        <field name="manufacturing_lead"/>
+                    </group>
+                    <group string="Manufacturing Order">
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="module_mrp_byproduct" widget="radio"/>
+                        <field name="group_mrp_routings" widget="radio"/>
+                    </group>
+                    <group string="Extra Features">
+                        <field name="module_mrp_mps" widget="upgrade_radio"/>
+                        <field name="module_mrp_plm" widget="upgrade_radio"/>
+                        <field name="module_mrp_maintenance" widget="upgrade_radio"/>
+                        <field name="module_quality_mrp" widget="upgrade_radio"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_mrp_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Manufacturing</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_mrp_config" name="Settings" parent="menu_mrp_configuration"
+            sequence="0" action="action_mrp_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

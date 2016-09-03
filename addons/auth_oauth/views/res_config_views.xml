@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">base.config.settings.form.inherit</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+            <xpath expr="//group[@name='google']/label" position="before">
+                <label for="id" string="Authentication" attrs="{'invisible':[('module_auth_oauth','=',False)]}"/>
+                <div attrs="{'invisible':[('module_auth_oauth','=',False)]}">
+                    <div name="google" id="top">
+                        <div>
+                            <field name="auth_oauth_google_enabled"/>
+                            <label for="auth_oauth_google_enabled" string="Allow users to sign in with Google"/>
+                        </div>
+                        <div attrs="{'invisible':[('auth_oauth_google_enabled','=',False)]}">
+                            <div>
+                                <label for="auth_oauth_tutorial_enabled" string="Show Tutorial"/>
+                                <field name="auth_oauth_tutorial_enabled"/>
+                            </div>
+                            <div attrs="{'invisible':[('auth_oauth_tutorial_enabled','=',False)]}">
+                                <h2>
+                                    To setup the sign in process with Google, you have to perform 
+                                    the following steps first.
+                                </h2>
+                                <ol>
+                                    <li>
+                                        Connect to your Google account and go to 
+                                        <a href="https://console.developers.google.com/">
+                                            https://console.developers.google.com/</a>
+                                    </li>
+                                    <li>
+                                        Click on <b>Create Project</b> and enter the project name and 
+                                        other details.
+                                        <div class="mb8">
+                                            <img src='/auth_oauth/static/src/img/steps_1.png'/>
+                                        </div>
+                                        <div class="mb8">
+                                            <img src='/auth_oauth/static/src/img/steps_2.png'/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        Click on <b>Use Google APIs</b>
+                                        <div class="mb8">
+                                            <img src='/auth_oauth/static/src/img/steps_3.png'/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        On the left side menu, select the sub menu <b>Credentials</b> 
+                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>.
+                                        <div class="mb8">
+                                            <img src='/auth_oauth/static/src/img/steps_4.png'/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        Fill in your address, email and the product name (for example odoo) 
+                                        and then save.
+                                        <div class="mb8">
+                                            <img src='/auth_oauth/static/src/img/steps_5.png'/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        Then click on <b>Add Credentials</b> and select the second option 
+                                        (OAuth 2.0 Client ID).
+                                        <div class="mb8">
+                                            <img src='/auth_oauth/static/src/img/steps_6.png'/>
+                                        </div>
+                                        <div class="mb8">
+                                            <img class="mt8" src='/auth_oauth/static/src/img/steps_7.png'/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        Check that the application type is set on <b>Web Application</b>. 
+                                        Now configure the allowed pages on which you will be redirected.
+                                    </li>
+                                    <li>
+                                        To achieve this, complete the field <b>Authorized redirect URIs</b>.
+                                        Copy paste the following link in the box<b>:
+                                        <field name="server_uri_google"/></b>
+                                        <div class="clearfix"></div>Then click on <b>Create</b>.
+                                        <div class="mb8">
+                                            <img class="mt8" src='/auth_oauth/static/src/img/steps_8.png'/>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        Once done, you receive two information (your <b>Client ID</b> and <b>
+                                        Client Secret</b>). You have to insert your <b>Client ID</b> in 
+                                        the field below.
+                                        <div class="mb8">
+                                            <img src='/auth_oauth/static/src/img/steps_9.png'/>
+                                        </div>
+                                    </li>
+                                    <div>
+                                        <a onclick="document.getElementById('top').scrollIntoView();">
+                                            Return to Top</a>
+                                    </div>
+                               </ol>
+                            </div>
+                            <div class="o_row">
+                                <label for="auth_oauth_google_client_id" string="Google Client ID:"/>
+                                <field name="auth_oauth_google_client_id" placeholder="e.g. 1234-xyz.apps.googleusercontent.com"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            </field>
+        </record>
+</odoo>

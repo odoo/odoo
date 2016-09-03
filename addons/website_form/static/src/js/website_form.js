@@ -100,7 +100,7 @@ odoo.define('website_form.animation', function (require) {
             }
 
             // Post form and handle result
-            ajax.post(this.$target.attr('action') + this.$target.data('model_name'), form_values)
+            ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
             .then(function(result_data) {
                 result_data = $.parseJSON(result_data);
                 if(!result_data.id) {

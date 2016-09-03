@@ -1,1 +1,2 @@
-# Debian packaging removes blank files, so this comment is added.
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.

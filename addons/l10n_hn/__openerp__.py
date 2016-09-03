@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2009-2010 Salvatore Josué Trimarchi Pinto <salvatore@trigluu.com>
@@ -32,10 +32,8 @@ and the Lempira currency.""",
     'website': 'http://trigluu.com',
     'depends': ['base', 'account'],
     'data': [
-        'account_chart.xml',
-        'l10n_hn_base.xml',
-        'account_chart_template.yml',
+        'data/l10n_hn_chart_data.xml',
+        'data/account_chart_template_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'demo': [],
-    'installable': True,
 }

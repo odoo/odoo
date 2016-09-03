@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import tools
-from openerp import models, fields, api
+from odoo import tools
+from odoo import models, fields, api
 
 
 class AccountInvoiceReport(models.Model):
@@ -32,7 +32,7 @@ class AccountInvoiceReport(models.Model):
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_qty = fields.Float(string='Product Quantity', readonly=True)
     uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
-    payment_term_id = fields.Many2one('account.payment.term', string='Payment Term', oldname='payment_term', readonly=True)
+    payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term', readonly=True)
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
@@ -114,7 +114,7 @@ class AccountInvoiceReport(models.Model):
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM ((invoice_type.sign * ail.quantity) / (u.factor * u2.factor)) AS product_qty,
-                    SUM(invoice_type.sign * ABS(ail.price_subtotal_signed)) AS price_total,
+                    SUM(ail.price_subtotal_signed) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                             WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
                                THEN SUM(ail.quantity / u.factor * u2.factor)
@@ -160,10 +160,11 @@ class AccountInvoiceReport(models.Model):
         """
         return group_by_str
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         # self._table = account_invoice_report
-        tools.drop_view_if_exists(cr, self._table)
-        cr.execute("""CREATE or REPLACE VIEW %s as (
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
             WITH currency_rate AS (%s)
             %s
             FROM (
@@ -175,5 +176,5 @@ class AccountInvoiceReport(models.Model):
                  cr.date_start <= COALESCE(sub.date, NOW()) AND
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
         )""" % (
-                    self._table, self.pool['res.currency']._select_companies_rates(),
+                    self._table, self.env['res.currency']._select_companies_rates(),
                     self._select(), self._sub_select(), self._from(), self._group_by()))

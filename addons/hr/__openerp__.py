@@ -32,7 +32,6 @@ You can manage:
         'mail',
         'resource',
         'web_kanban',
-        'web_tip',
     ],
     'data': [
         'security/hr_security.xml',
@@ -40,7 +39,6 @@ You can manage:
         'views/hr_views.xml',
         'views/hr_templates.xml',
         'data/hr_data.xml',
-        'data/web_tip_data.xml',
     ],
     'demo': [
         'data/hr_demo.xml'

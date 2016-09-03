@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
-    'name': 'eCommerce Optional Products',
+    'name': 'e-Commerce Optional Products',
     'category': 'Website',
     'version': '1.0',
     'website': 'https://www.odoo.com/page/e-commerce',
@@ -10,11 +13,11 @@ Odoo E-Commerce
         """,
     'depends': ['website_sale'],
     'data': [
-        'views/views.xml',
-        'views/templates.xml',
+        'views/product_views.xml',
+        'views/website_sale_options_templates.xml',
     ],
     'demo': [
-        'data/demo.xml',
+        'data/product_demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

@@ -5,8 +5,7 @@ import random
 
 from odoo import api, models, fields, tools, _
 from odoo.http import request
-from odoo.exceptions import UserError
-import odoo.addons.decimal_precision as dp
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -45,6 +44,12 @@ class SaleOrder(models.Model):
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         self.ensure_one()
+        product = self.env['product.product'].browse(product_id)
+
+        # split lines with the same product if it has untracked attributes
+        if product and product.mapped('attribute_line_ids').filtered(lambda r: not r.attribute_id.create_variant) and not line_id:
+            return self.env['sale.order.line']
+
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
         if line_id:
             domain += [('id', '=', line_id)]
@@ -63,20 +68,43 @@ class SaleOrder(models.Model):
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
 
-        values = {
+        return {
             'product_id': product_id,
-            'name': product.display_name,
             'product_uom_qty': qty,
             'order_id': order_id,
             'product_uom': product.uom_id.id,
             'price_unit': product.price,
         }
-        if product.description_sale:
-            values['name'] += '\n %s' % (product.description_sale)
-        return values
 
     @api.multi
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
+    def _get_line_description(self, order_id, product_id, attributes=None):
+        if not attributes:
+            attributes = {}
+
+        order = self.sudo().browse(order_id)
+        product_context = dict(self.env.context)
+        product_context.setdefault('lang', order.partner_id.lang)
+        product = self.env['product.product'].with_context(product_context).browse(product_id)
+
+        name = product.display_name
+
+        # add untracked attributes in the name
+        untracked_attributes = []
+        for k, v in attributes.items():
+            # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
+            attribute_value = self.env['product.attribute.value'].sudo().browse(int(v))
+            if attribute_value and not attribute_value.attribute_id.create_variant:
+                untracked_attributes.append(attribute_value.name)
+        if untracked_attributes:
+            name += '\n%s' % (', '.join(untracked_attributes))
+
+        if product.description_sale:
+            name += '\n%s' % (product.description_sale)
+
+        return name
+
+    @api.multi
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, attributes=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
@@ -92,8 +120,13 @@ class SaleOrder(models.Model):
         # Create line if no line with product_id can be located
         if not order_line:
             values = self._website_product_id_change(self.id, product_id, qty=1)
+            values['name'] = self._get_line_description(self.id, product_id, attributes=attributes)
             order_line = SaleOrderLineSudo.create(values)
-            order_line._compute_tax_id()
+            try:
+                order_line._compute_tax_id()
+            except ValidationError as e:
+                # The validation may occur in backend (eg: taxcloud) but should fail silently in frontend
+                _logger.debug("ValidationError occurs during tax compute. %s" % (e))
             if add_qty:
                 add_qty -= 1
 
@@ -118,18 +151,18 @@ class SaleOrder(models.Model):
         for order in self:
             accessory_products = order.website_order_line.mapped('product_id.accessory_product_ids').filtered(lambda product: product.website_published)
             accessory_products -= order.website_order_line.mapped('product_id')
-            return random.sample(accessory_products, min(len(accessory_products), 3))
+            return random.sample(accessory_products, len(accessory_products))
 
-
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-
-    discounted_price = fields.Float(compute='_compute_discounted_price', digits=dp.get_precision('Product Price'))
-
-    @api.depends('price_unit', 'discount')
-    def _compute_discounted_price(self):
-        for line in self:
-            line.discounted_price = line.price_unit * (1.0 - line.discount / 100.0)
+    @api.multi
+    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+        """ Override the method to place the portal customers in the 'user' group data as a portal view now exists"""
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and all(recipient.user_ids.mapped('share')):
+                group_data['user'] |= recipient
+            done_ids.add(recipient.id)
+        return super(SaleOrder, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
 
 class Website(models.Model):
@@ -145,7 +178,9 @@ class Website(models.Model):
     @api.multi
     def _compute_pricelist_id(self):
         for website in self:
-            website.pricelist_id = website.with_context(website_id=website.id).get_current_pricelist()
+            if website._context.get('website_id') != website.id:
+                website = website.with_context(website_id=website.id)
+            website.pricelist_id = website.get_current_pricelist()
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
@@ -172,7 +207,7 @@ class Website(models.Model):
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.pricelist_id.id in (current_pl, order_pl)).mapped('pricelist_id')
 
         partner = self.env.user.partner_id
-        if not pricelists or partner.property_product_pricelist.id != website_pl:
+        if not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl:
             pricelists |= partner.property_product_pricelist
 
         # This method is cached, must not return records! See also #8795
@@ -277,14 +312,18 @@ class Website(models.Model):
             # Do not reload the cart of this user last visit if the cart is no longer draft or uses a pricelist no longer available.
             sale_order_id = last_order.state == 'draft' and last_order.pricelist_id in available_pricelists and last_order.id
 
-        # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
         pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist().id
 
         if self.env['product.pricelist'].browse(force_pricelist).exists():
             pricelist_id = force_pricelist
             request.session['website_sale_current_pl'] = pricelist_id
             update_pricelist = True
+
+        if not self._context.get('pricelist'):
+            self = self.with_context(pricelist=pricelist_id)
+
+        # Test validity of the sale_order_id
+        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         # create so if needed
         if not sale_order and (force_create or code):
@@ -443,6 +482,16 @@ class WebsitePricelist(models.Model):
         res = super(WebsitePricelist, self).unlink()
         self.clear_cache()
         return res
+
+
+class ResCountry(models.Model):
+    _inherit = 'res.country'
+
+    def get_website_sale_countries(self, mode='billing'):
+        return self.sudo().search([])
+
+    def get_website_sale_states(self, mode='billing'):
+        return self.sudo().state_ids
 
 
 class ResCountryGroup(models.Model):

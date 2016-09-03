@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
-    'name' : 'Procurements',
-    'version' : '1.0',
+    'name': 'Procurements',
+    'version': '1.0',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category' : 'Hidden',
     'depends' : ['base', 'product'],
@@ -32,14 +31,13 @@ Procurements in exception should be checked manually and can be re-run.
     'data': [
         'security/ir.model.access.csv',
         'security/procurement_security.xml',
-        'procurement_data.xml',
-        'wizard/schedulers_all_view.xml',
-        'procurement_view.xml',
-        'company_view.xml',
-        'product_product_view.xml',
+        'data/procurement_data.xml',
+        'wizard/procurement_order_compute_all_views.xml',
+        'views/procurement_views.xml',
+        'views/product_views.xml',
     ],
     'demo': [],
-    'test': ['test/procurement.yml'],
+    'test': [],
     'installable': True,
     'auto_install': True,
 }

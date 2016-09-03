@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="project_issue_form_view" model="ir.ui.view">
+            <field name="name">project.issue.form.inherited</field>
+            <field name="model">project.issue</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+            <field name="inherit_id" ref="project_issue.project_issue_form_view" />
+            <field name="arch" type="xml">
+                <field name="task_id"  position="after">
+                    <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
+                </field>
+                <xpath expr="//notebook/page[@name='extra_info']" position="before">
+                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                        <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_project_id': project_id}"
+                                groups="base.group_user">
+                            <tree editable="top" string="Timesheet Activities">
+                                <field name="date"/>
+                                <field name="user_id" required="1"/>
+                                <field name="name"/>
+                                <field name="project_id" invisible="1" required="1"/>
+                                <field name="unit_amount" string="Duration" widget="float_time"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_issue_tree_view_inherited" model="ir.ui.view">
+            <field name="name">projet.issue.tree.inherited</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_tree_view" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
+                </field>
+            </field>
+        </record>
+
+</odoo>

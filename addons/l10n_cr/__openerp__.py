@@ -1,4 +1,6 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 ##############################################################################
 #
 #    __openerp__.py
@@ -34,7 +36,6 @@
 
 {
     'name': 'Costa Rica - Accounting',
-    'version': '1.0',
     'url': 'https://github.com/CLEARCORP/odoo-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
@@ -54,12 +55,11 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
     """,
     'depends': ['account'],
     'data': [
-        'data/l10n_cr_base_data.xml',
-        'data/account_chart_template.xml',
-        'data/account_account_template.xml',
-        'data/account_chart_template_after.xml',
-        'data/account_tax_template.xml',
-        'data/account.chart.template.yml',
+        'data/l10n_cr_state_data.xml',
+        'data/l10n_cr_chart_data.xml',
+        'data/account_template_data.xml',
+        'data/account_chart_template_data.xml',
+        'data/account_tax_template_data.xml',
+        'data/account_chart_template_data.yml',
     ],
-    'installable': True,
 }

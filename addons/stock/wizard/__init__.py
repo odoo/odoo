@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import stock_move_scrap
 import stock_picking_return
 import stock_change_product_qty
 import make_procurement

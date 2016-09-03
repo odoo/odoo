@@ -801,7 +801,7 @@ class Orderpoint(models.Model):
         for orderpoint_id, procurement_id, product_uom_id, procurement_qty, template_uom_id, move_qty in self._cr.fetchall():
             if procurement_id not in procurements_done:  # count procurement once, if multiple move in this orderpoint/procurement combo
                 procurements_done.add(procurement_id)
-                res[orderpoint_id] += UoM._compute_qty(product_uom_id, procurement_qty, template_uom_id, round=False)
+                res[orderpoint_id] += UoM.browse(product_uom_id)._compute_quantity(procurement_qty, UoM.browse(template_uom_id), round=False)
             if move_qty:
                 res[orderpoint_id] -= move_qty
         return res
@@ -810,7 +810,7 @@ class Orderpoint(models.Model):
         days = self.lead_days or 0.0
         if self.lead_type == 'purchase':
             # These days will be substracted when creating the PO
-            days += self.product_id._select_seller(self.product_id).delay or 0.0
+            days += self.product_id._select_seller().delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 

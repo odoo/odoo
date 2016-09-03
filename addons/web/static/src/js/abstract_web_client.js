@@ -31,13 +31,10 @@ var WebClient = Widget.extend({
             this.toggle_fullscreen(event.data.fullscreen);
         },
     },
-    init: function(parent, client_options) {
+    init: function(parent) {
         this.client_options = {};
         this._super(parent);
         this.origin = undefined;
-        if (client_options) {
-            _.extend(this.client_options, client_options);
-        }
         this._current_state = null;
         this.menu_dm = new utils.DropMisordered();
         this.action_mutex = new utils.Mutex();
@@ -49,7 +46,7 @@ var WebClient = Widget.extend({
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 
-        return session.session_bind(this.origin)
+        return session.is_bound
             .then(function () {
                 self.bind_events();
                 return $.when(
@@ -66,10 +63,8 @@ var WebClient = Widget.extend({
                     return $.when();
                 }
             }).then(function () {
-                if (self.client_options.action) {
-                    self.do_action(self.client_options.action);
-                    delete(self.client_options.action);
-                }
+                // Listen to 'scroll' event and propagate it on main bus
+                self.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
                 core.bus.trigger('web_client_ready');
             });
     },

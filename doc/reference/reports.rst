@@ -161,7 +161,7 @@ For example, let's look at the Sale Order report from the Sale module::
                     <div class="col-xs-6">
                         <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoice and shipping address:</strong>
                         <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoice address:</strong>
-                        <div t-field="doc.partner_invoice_id" t-field-options="{&quot;no_marker&quot;: true}"/>
+                        <div t-field="doc.partner_invoice_id" t-options="{&quot;no_marker&quot;: True}"/>
                     <...>
                 <div class="oe_structure"/>
             </div>
@@ -290,12 +290,12 @@ the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
     class ParticularReport(models.AbstractModel):
         _name = 'report.module.report_name'
-        @api.multi
-        def render_html(self, data=None):
+        @api.model
+        def render_html(self, docids, data=None):
             report_obj = self.env['report']
             report = report_obj._get_report_from_name('module.report_name')
             docargs = {
-                'doc_ids': self._ids,
+                'doc_ids': docids,
                 'doc_model': report.model,
                 'docs': self,
             }

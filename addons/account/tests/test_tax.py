@@ -1,6 +1,6 @@
-from openerp.addons.account.tests.account_test_users import AccountTestUsers
-from openerp.tests.common import TransactionCase
-from openerp.tools import float_compare
+from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.tests.common import TransactionCase
+from odoo.tools import float_compare
 import time
 
 

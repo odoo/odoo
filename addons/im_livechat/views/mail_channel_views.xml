@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="mail_channel_view_search" model="ir.ui.view">
@@ -27,6 +27,7 @@
                 <tree string="History" create="false">
                     <field name="create_date" string="Session Date"/>
                     <field name="name" string="Attendees"/>
+                    <field name="rating_count" string="Has a Rating"/>
                 </tree>
             </field>
         </record>
@@ -84,6 +85,11 @@
             <field name="search_view_id" ref="im_livechat.mail_channel_view_search"/>
             <field name="domain">[('livechat_channel_id', '!=', None)]</field>
             <field name="context">{}</field>
+            <field name="help" type="html">
+                <p>
+                    Your chatter history is empty. Create a channel and start chatting to fill up your history.
+                </p>
+            </field>
         </record>
         <record id="mail_channel_action_tree" model="ir.actions.act_window.view">
             <field name="sequence">1</field>
@@ -103,7 +109,7 @@
         <record id="mail_channel_action_from_livechat_channel" model="ir.actions.act_window">
             <field name="name">Sessions</field>
             <field name="res_model">mail.channel</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
             <field name="context">{
                 'search_default_livechat_channel_id': [active_id],
@@ -111,6 +117,20 @@
             }</field>
             <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>
+        <record id="mail_channel_action_livechat_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_tree"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action_from_livechat_channel"/>
+        </record>
+
+        <record id="mail_channel_action_livechat_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_form"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action_from_livechat_channel"/>
+        </record>
+
 
     </data>
-</openerp>
+</odoo>

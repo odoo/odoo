@@ -10,8 +10,6 @@ from odoo import api, fields, models, registry, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 
-import openerp
-
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -32,7 +30,10 @@ class ProcurementRule(models.Model):
         default='make_to_stock', required=True,
         help="""Determines the procurement method of the stock move that will be generated: whether it will need to 'take from the available stock' in its source location or needs to ignore its stock and create a procurement over there.""")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
-    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', help="Picking Type determines the way the picking should be shown in the view, reports, ...")
+    picking_type_id = fields.Many2one(
+        'stock.picking.type', 'Picking Type',
+        required=True,
+        help="Picking Type determines the way the picking should be shown in the view, reports, ...")
     delay = fields.Integer('Number of Days', default=0)
     partner_address_id = fields.Many2one('res.partner', 'Partner Address')
     propagate = fields.Boolean(
@@ -332,6 +333,9 @@ class ProcurementOrder(models.Model):
                                     new_procurement = ProcurementAutorundefer.create(
                                         orderpoint._prepare_procurement_values(qty_rounded, **group['procurement_values']))
                                     procurement_list.append(new_procurement)
+                                    new_procurement.message_post_with_view('mail.message_origin_link',
+                                        values={'self': new_procurement, 'origin': orderpoint},
+                                        subtype_id=self.env.ref('mail.mt_note').id)
                                     self._procurement_from_orderpoint_post_process([orderpoint.id])
                                 if use_new_cursor:
                                     cr.commit()

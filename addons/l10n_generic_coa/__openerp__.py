@@ -15,18 +15,16 @@ Install some generic chart of accounts.
         'account',
     ],
     'data': [
-        'data/configurable_account_chart.xml',
-        'account_chart_template.yml',
+        'data/l10n_generic_coa_chart_data.xml',
+        'data/account_chart_template_data.yml',
     ],
     'test': [
         '../account/test/account_bank_statement.yml',
-        #'../account/test/account_cash_statement.yml',
         '../account/test/account_invoice_state.yml',
     ],
     'demo': [
         '../account/demo/account_bank_statement.yml',
         '../account/demo/account_invoice_demo.yml',
     ],
-    'installable': True,
     'website': 'https://www.odoo.com/page/accounting',
 }

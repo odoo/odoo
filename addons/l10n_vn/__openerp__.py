@@ -5,7 +5,6 @@
 
 {
     "name" : "Vietnam - Accounting",
-    "version" : "1.0",
     "author" : "General Solutions",
     'website': 'http://gscom.vn',
     'category': 'Localization',
@@ -18,7 +17,7 @@ This module applies to companies based in Vietnamese Accounting Standard (VAS).
 **Credits:** General Solutions.
 """,
     "depends" : ["account","base_vat","base_iban"],
-    "data" : ["account_chart.xml","account_tax.xml","account_chart_template.yml"],
-    "demo" : [],
-    "installable": True,
+    "data": ['data/l10n_vn_chart_data.xml',
+             'data/account_tax_data.xml',
+             'data/account_chart_template_data.yml'],
 }

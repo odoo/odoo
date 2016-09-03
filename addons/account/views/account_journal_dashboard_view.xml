@@ -99,7 +99,7 @@
                                     <span t-if="dashboard.number_to_reconcile == 0" class="text-muted">Nothing to Reconcile</span>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_account_operation_template', 'use_domain': True}" groups="account.group_account_manager">Reconciliation Models</a>
+                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_account_reconcile_model', 'use_domain': True}" groups="account.group_account_manager">Reconciliation Models</a>
                                 </div>
                             </div>
                         </div>
@@ -252,10 +252,16 @@
                     </t>
                     <t t-name="JournalBodySalePurchase">
                         <div class="col-xs-6 o_kanban_primary_left">
-                            <button type="object" name="action_create_new" class="btn btn-primary btn-sm">
-                                <t t-if="journal_type == 'sale'"><span>New Invoice</span></t>
-                                <t t-if="journal_type == 'purchase'"><span>New Bill</span></t>
-                            </button>
+                            <t t-if="journal_type == 'sale'">
+                                <button type="object" name="action_create_new" class="btn btn-primary btn-sm o_invoice_new">
+                                    <span>New Invoice</span>
+                                </button>
+                            </t>
+                            <t t-if="journal_type == 'purchase'">
+                                <button type="object" name="action_create_new" class="btn btn-primary btn-sm">
+                                    <span>New Bill</span>
+                                </button>
+                            </t>
                         </div>
                         <div class="col-xs-6 o_kanban_primary_right">
                             <div class="row">

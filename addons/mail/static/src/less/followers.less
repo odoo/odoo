@@ -4,12 +4,42 @@
         display: none !important; // Hide the followers in mobile
     }
 
+    .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
+
     .o_followers_actions {
         position: relative;
         float: right;
 
+        .dropdown-toggle {
+            opacity: 0.3;
+            border: none;
+            display: none;
+
+            &:hover, &:focus, &[aria-expanded="true"] {
+                opacity: 1;
+            }
+
+            > .fa {
+                font-size: inherit;
+            }
+
+            &.o_followers_following {
+                display: block;
+            }
+        }
+
+        &:hover .dropdown-toggle {
+            opacity: 1;
+        }
+
         .o_followers_follow_button {
-            width: 120px;
+            width: 85px;
+            padding-right: 0;
+            color: @text-color;
+            font-weight: bold;
 
             .o_follow, .o_followers_unfollow, .o_followers_following {
                 display: none;
@@ -29,24 +59,32 @@
             &.o_followers_notfollow .o_follow {
                 display: inline;
             }
+
+            .fa {
+                &.fa-times {
+                    color: @brand-warning;
+                }
+                &.fa-check {
+                    color: @brand-success;
+                }
+            }
         }
 
         .o_subtype {
             padding-left: 10px;
         }
-
     }
 
     .o_followers_title_box {
         position: relative;
         float: right;
-        margin-left: 5px;
-        > button {
-            width: 140px;
-        }
+        margin-left: 25px;
 
-        .o_followers_count {
-            padding-right: 5px;
+        .dropdown-toggle {
+            .o_followers_count {
+                padding-right: 5px;
+                font-weight: bold;
+            }
         }
 
         .o_followers_list {

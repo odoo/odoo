@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from odoo.addons.web import http
-from odoo.addons.web.http import request
+from odoo import http
+from odoo.http import request
 from odoo.tools import html_escape as escape
 
 
@@ -58,4 +58,4 @@ class GoogleMap(http.Controller):
             'partner_data': json.dumps(partner_data),
             'google_maps_api_key': google_maps_api_key,
         }
-        return request.website.render("website_google_map.google_map", values)
+        return request.render("website_google_map.google_map", values)

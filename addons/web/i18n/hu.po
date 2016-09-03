@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web
-#
+# 
 # Translators:
-# Kris Krnacs, 2015-2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:16+0000\n"
-"PO-Revision-Date: 2016-02-22 19:08+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-18 08:38+0000\n"
+"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: web
@@ -24,19 +26,19 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_common.js:874
 #, python-format
 msgid " & Close"
-msgstr " & Lezár"
+msgstr " & Lezárás"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:554
-#: code:addons/web/static/src/js/views/search_view.js:205
+#: code:addons/web/static/src/js/views/search_view.js:206
 #, python-format
 msgid " or "
 msgstr "vagy"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:434
+#: code:addons/web/static/src/js/views/form_widgets.js:430
 #, python-format
 msgid " selected records"
 msgstr "kiválasztott rekordok"
@@ -50,15 +52,15 @@ msgstr "nézetet nem lehetett betölteni"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:115
-#: code:addons/web/static/src/js/views/search_filters.js:297
+#: code:addons/web/static/src/js/views/search_filters.js:107
+#: code:addons/web/static/src/js/views/search_filters.js:333
 #, python-format
 msgid "%(field)s %(operator)s"
 msgstr "%(field)s %(operator)s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:116
+#: code:addons/web/static/src/js/views/search_filters.js:108
 #, python-format
 msgid "%(field)s %(operator)s \"%(value)s\""
 msgstr "%(field)s %(operator)s \"%(value)s\""
@@ -72,42 +74,42 @@ msgstr "%(view_type)s nézet"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:134
+#: code:addons/web/static/src/js/framework/translation.js:105
 #, python-format
 msgid "%d days ago"
 msgstr "%d nappal ezelőtt"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:132
+#: code:addons/web/static/src/js/framework/translation.js:103
 #, python-format
 msgid "%d hours ago"
 msgstr "%d órával ezelőtt"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:130
+#: code:addons/web/static/src/js/framework/translation.js:101
 #, python-format
 msgid "%d minutes ago"
 msgstr "%d perccel ezelőtt"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:136
+#: code:addons/web/static/src/js/framework/translation.js:107
 #, python-format
 msgid "%d months ago"
 msgstr "%d hónapja"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:140
+#: code:addons/web/static/src/js/widgets/debug_manager.js:138
 #, python-format
 msgid "%d requests (%d ms) %d queries (%d ms)"
 msgstr "%d kérelmek (%d ms) %d elérések (%d ms)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:138
+#: code:addons/web/static/src/js/framework/translation.js:109
 #, python-format
 msgid "%d years ago"
 msgstr "%d éve"
@@ -118,14 +120,6 @@ msgstr "%d éve"
 #, python-format
 msgid "%s (%d)"
 msgstr "%s (%d)"
-
-#. module: web
-#: model:ir.ui.view,arch_db:web.webclient_bootstrap
-msgid ""
-"&lt;!--[if lt IE 10]&gt;\n"
-"                        &lt;body class=\"ie9\"&gt;\n"
-"                    &lt;![endif]--&gt;"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -185,7 +179,7 @@ msgstr "(%d records)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1299
+#: code:addons/web/static/src/xml/base.xml:1298
 #, python-format
 msgid "(Community Edition)"
 msgstr "(Közösségi kiadás)"
@@ -206,7 +200,7 @@ msgstr "(cimke nélkül)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:914
+#: code:addons/web/static/src/xml/base.xml:913
 #, python-format
 msgid "...Upload in progress..."
 msgstr "...Feltöltés folyamatban..."
@@ -223,32 +217,32 @@ msgstr "<span>Odoo</span>"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/user_menu.js:71
-#: code:addons/web/static/src/xml/base.xml:1280
+#: code:addons/web/static/src/js/widgets/user_menu.js:66
+#: code:addons/web/static/src/xml/base.xml:1279
 #, python-format
 msgid "About"
 msgstr "Névjegy"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:25
+#: code:addons/web/static/src/js/framework/crash_manager.js:19
 #, python-format
 msgid "Access Denied"
 msgstr "Hozzáférés megtagadva"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:21
+#: code:addons/web/static/src/js/framework/crash_manager.js:15
 #, python-format
 msgid "Access Error"
 msgstr "Hozzáférés hiba"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1338
+#: code:addons/web/static/src/xml/base.xml:1337
 #, python-format
 msgid "Access to all Enterprise Apps"
-msgstr "Összes Nagyvállalati alkalamzás elérése"
+msgstr "Összes Vállalati alkalamzás elérése"
 
 #. module: web
 #. openerp-web
@@ -273,7 +267,7 @@ msgstr "Művelet azonosító:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:639
+#: code:addons/web/static/src/js/views/form_widgets.js:634
 #, python-format
 msgid "Activate"
 msgstr "Működésbe hoz"
@@ -287,36 +281,37 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1327
+#: code:addons/web/static/src/xml/base.xml:1326
 #, python-format
 msgid "Activate the developer mode"
 msgstr "Fejlesztői nézet aktiválása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:636
+#: code:addons/web/static/src/js/views/form_widgets.js:631
+#: code:addons/web/static/src/js/views/form_widgets.js:637
 #, python-format
 msgid "Active"
 msgstr "Aktív"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1353
-#: code:addons/web/static/src/xml/base.xml:1130
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1369
+#: code:addons/web/static/src/xml/base.xml:1129
 #, python-format
 msgid "Add"
-msgstr "Hozzáadás"
+msgstr "Hozzáad"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:955
+#: code:addons/web/static/src/xml/base.xml:954
 #, python-format
 msgid "Add Custom Filter"
 msgstr "Egyéni szűrés hozzáadás"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:959
+#: code:addons/web/static/src/xml/base.xml:958
 #, python-format
 msgid "Add a condition"
 msgstr "Feltétel hozzáadása"
@@ -330,7 +325,7 @@ msgstr "Elem hozzáadása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1065
+#: code:addons/web/static/src/xml/base.xml:1064
 #, python-format
 msgid "Add custom group"
 msgstr "Egyéni csoport hozzáadás"
@@ -344,14 +339,14 @@ msgstr "Hozzáadás…"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1294
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1296
 #, python-format
 msgid "Add: "
 msgstr "Hozzátesz: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:931
+#: code:addons/web/static/src/xml/base.xml:930
 #, python-format
 msgid "Advanced Search..."
 msgstr "Részletes keresés…"
@@ -365,29 +360,29 @@ msgstr "Figyelmeztetés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:501
+#: code:addons/web/static/src/xml/base.xml:500
 #, python-format
 msgid "All users"
 msgstr "Minden felhasználó"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1343
+#: code:addons/web/static/src/xml/base.xml:1342
 #, python-format
 msgid "And more"
 msgstr "És tovább"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:958
-#: code:addons/web/static/src/xml/base.xml:1076
+#: code:addons/web/static/src/xml/base.xml:957
+#: code:addons/web/static/src/xml/base.xml:1075
 #, python-format
 msgid "Apply"
 msgstr "Alkalmaz"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:643
+#: code:addons/web/static/src/js/views/form_widgets.js:638
 #: code:addons/web/static/src/js/views/list_view.js:289
 #, python-format
 msgid "Archive"
@@ -395,7 +390,7 @@ msgstr "Archívum"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:644
+#: code:addons/web/static/src/js/views/form_widgets.js:639
 #, python-format
 msgid "Archived"
 msgstr "Archivált"
@@ -416,14 +411,14 @@ msgstr "Melléklet :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1126
+#: code:addons/web/static/src/xml/base.xml:1125
 #, python-format
 msgid "Available fields"
 msgstr "Elérhető mezők"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:568
+#: code:addons/web/static/src/xml/base.xml:567
 #, python-format
 msgid "Bar Chart"
 msgstr "Oszlopdiagram"
@@ -437,7 +432,7 @@ msgstr "Bináris fájl"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1342
+#: code:addons/web/static/src/xml/base.xml:1341
 #, python-format
 msgid "Bugfixes guarantee"
 msgstr "Hibajavítási garancia"
@@ -472,7 +467,7 @@ msgstr "Nem lehet az %s értéket összefűzni"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:177
+#: code:addons/web/static/src/js/framework/crash_manager.js:171
 #: code:addons/web/static/src/js/framework/dialog.js:183
 #: code:addons/web/static/src/js/views/form_common.js:1046
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:42
@@ -480,14 +475,14 @@ msgstr "Nem lehet az %s értéket összefűzni"
 #: code:addons/web/static/src/xml/base.xml:56
 #, python-format
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr "Mégse"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/controllers/main.py:741
-#: code:addons/web/controllers/main.py:743
-#: code:addons/web/controllers/main.py:749
-#: code:addons/web/controllers/main.py:750
+#: code:addons/web/controllers/main.py:724
+#: code:addons/web/controllers/main.py:726
+#: code:addons/web/controllers/main.py:732
+#: code:addons/web/controllers/main.py:733
 #: code:addons/web/static/src/js/widgets/change_password.js:15
 #: code:addons/web/static/src/xml/base.xml:55
 #, python-format
@@ -503,15 +498,15 @@ msgstr "Alapértelmezett megváltoztatása:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:439
+#: code:addons/web/static/src/js/views/form_widgets.js:435
 #, python-format
 msgid "Change selection "
 msgstr "Kiválasztás módosítása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:835
-#: code:addons/web/static/src/xml/base.xml:865
+#: code:addons/web/static/src/xml/base.xml:834
+#: code:addons/web/static/src/xml/base.xml:864
 #, python-format
 msgid "Clear"
 msgstr "Törlés"
@@ -525,8 +520,8 @@ msgstr "Események törlése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/abstract_web_client.js:117
-#: code:addons/web/static/src/js/framework/crash_manager.js:130
+#: code:addons/web/static/src/js/abstract_web_client.js:112
+#: code:addons/web/static/src/js/framework/crash_manager.js:124
 #, python-format
 msgid "Client Error"
 msgstr "Kliens hiba"
@@ -534,15 +529,15 @@ msgstr "Kliens hiba"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:868
-#: code:addons/web/static/src/js/views/form_view.js:1103
+#: code:addons/web/static/src/js/views/form_view.js:1097
 #: code:addons/web/static/src/js/widgets/data_export.js:203
 #, python-format
 msgid "Close"
-msgstr "Bezár"
+msgstr "Bezárás"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:475
+#: code:addons/web/static/src/xml/base.xml:474
 #, python-format
 msgid "Condition:"
 msgstr "Feltétel:"
@@ -563,14 +558,14 @@ msgstr "Megerősítés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/abstract_web_client.js:212
+#: code:addons/web/static/src/js/abstract_web_client.js:207
 #, python-format
 msgid "Connection lost"
 msgstr "Kapcsolat megszakadt"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/abstract_web_client.js:221
+#: code:addons/web/static/src/js/abstract_web_client.js:216
 #, python-format
 msgid "Connection restored"
 msgstr "Újra kapcsolódott"
@@ -584,14 +579,14 @@ msgstr "Összefüggés:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1309
+#: code:addons/web/static/src/xml/base.xml:1308
 #, python-format
 msgid "Copyright © 2004-2015 Odoo S.A."
-msgstr "Copyright © 2004-2015 Odoo S.A."
+msgstr "Copyright © 2004-2016 Odoo S.A."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1257
+#: code:addons/web/static/src/js/views/form_widgets.js:1252
 #, python-format
 msgid "Could not display the selected image."
 msgstr "A kiválasztott ábra nem megjeleníthető."
@@ -615,8 +610,8 @@ msgstr "Nem tudja sorbarendezni az XML"
 #: code:addons/web/static/src/js/views/graph_view.js:87
 #: code:addons/web/static/src/js/views/graph_widget.js:22
 #: code:addons/web/static/src/js/views/pivot_view.js:182
-#: code:addons/web/static/src/xml/base.xml:564
-#: code:addons/web/static/src/xml/base.xml:593
+#: code:addons/web/static/src/xml/base.xml:563
+#: code:addons/web/static/src/xml/base.xml:592
 #, python-format
 msgid "Count"
 msgstr "Számlál"
@@ -627,10 +622,10 @@ msgstr "Számlál"
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:28
 #: code:addons/web/static/src/js/views/list_view.js:49
 #: code:addons/web/static/src/js/views/list_view.js:1926
-#: code:addons/web/static/src/xml/base.xml:437
+#: code:addons/web/static/src/xml/base.xml:436
 #, python-format
 msgid "Create"
-msgstr "Létrehoz"
+msgstr "Létrehozás"
 
 #. module: web
 #. openerp-web
@@ -704,37 +699,37 @@ msgstr "Adatbázis"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1303
+#: code:addons/web/static/src/xml/base.xml:1302
 #, python-format
 msgid "Database expiration:"
 msgstr "Adatbázis lejárta:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:612
+#: code:addons/web/static/src/xml/base.xml:611
 #, python-format
 msgid "Day"
 msgstr "Nap"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:637
+#: code:addons/web/static/src/js/views/form_widgets.js:632
 #, python-format
 msgid "Deactivate"
 msgstr "Hatástalanít"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:458
+#: code:addons/web/static/src/xml/base.xml:457
 #, python-format
 msgid "Default:"
 msgstr "Alapértelmezett:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:169
+#: code:addons/web/static/src/js/views/form_view.js:163
 #: code:addons/web/static/src/js/views/list_view.js:291
-#: code:addons/web/static/src/xml/base.xml:1171
+#: code:addons/web/static/src/xml/base.xml:1170
 #, python-format
 msgid "Delete"
 msgstr "Törlés"
@@ -744,11 +739,11 @@ msgstr "Törlés"
 #: code:addons/web/static/src/xml/base.xml:261
 #, python-format
 msgid "Delete this attachment"
-msgstr "Melléklet törlése"
+msgstr "Törli ezt a mellékletet"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:919
+#: code:addons/web/static/src/xml/base.xml:918
 #, python-format
 msgid "Delete this file"
 msgstr "Törölje ezt a fájlt"
@@ -764,7 +759,7 @@ msgstr "Műszaki tulajdonságok kikapcsolása"
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:868
 #: code:addons/web/static/src/xml/base.xml:368
-#: code:addons/web/static/src/xml/base.xml:447
+#: code:addons/web/static/src/xml/base.xml:446
 #, python-format
 msgid "Discard"
 msgstr "Elvetés"
@@ -778,7 +773,7 @@ msgstr "Valóban törölni szeretné ezt a mellékletet?"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:709
+#: code:addons/web/static/src/js/views/form_view.js:703
 #, python-format
 msgid "Do you really want to delete this record?"
 msgstr "Biztos, hogy törölni akarja ezt a rekordot?"
@@ -792,7 +787,7 @@ msgstr "Biztos, hogy törölni akarja ezeket a rekordokat?"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1278
+#: code:addons/web/static/src/xml/base.xml:1277
 #, python-format
 msgid "Documentation"
 msgstr "Dokumentáció"
@@ -827,26 +822,26 @@ msgstr "\"%s\" letöltése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:599
+#: code:addons/web/static/src/xml/base.xml:598
 #, python-format
 msgid "Download xls"
 msgstr "xls letöltés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:170
+#: code:addons/web/static/src/js/views/form_view.js:164
 #, python-format
 msgid "Duplicate"
-msgstr "Duplikálás"
+msgstr "Többszörözés"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:180
-#: code:addons/web/static/src/xml/base.xml:433
-#: code:addons/web/static/src/xml/base.xml:834
+#: code:addons/web/static/src/xml/base.xml:432
+#: code:addons/web/static/src/xml/base.xml:833
 #, python-format
 msgid "Edit"
-msgstr "Szerkeszt"
+msgstr "Szerkesztés"
 
 #. module: web
 #. openerp-web
@@ -864,7 +859,7 @@ msgstr "Keresési nézet szerkesztése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:281
+#: code:addons/web/static/src/js/widgets/debug_manager.js:279
 #: code:addons/web/static/src/xml/base.xml:152
 #, python-format
 msgid "Edit Workflow"
@@ -873,7 +868,7 @@ msgstr "Folyamat szerkesztése"
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: web
 #. openerp-web
@@ -899,14 +894,14 @@ msgid "Error"
 msgstr "Hiba"
 
 #. module: web
-#: code:addons/web/controllers/main.py:750
+#: code:addons/web/controllers/main.py:733
 #, python-format
 msgid "Error, password not changed !"
 msgstr "Hiba, a jelszó nem változott meg!"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:429
+#: code:addons/web/static/src/js/views/form_widgets.js:425
 #, python-format
 msgid "Error: Bad domain"
 msgstr "Hiba: rossz domén elérés"
@@ -920,7 +915,7 @@ msgstr "Értékelési hiba"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:598
+#: code:addons/web/static/src/xml/base.xml:597
 #, python-format
 msgid "Expand all"
 msgstr "Összes kibontása"
@@ -941,7 +936,7 @@ msgstr "Adatok exportálása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1119
+#: code:addons/web/static/src/xml/base.xml:1118
 #, python-format
 msgid "Export Formats :"
 msgstr "Export formátumok :"
@@ -955,14 +950,14 @@ msgstr "Exportálás fájlba"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1112
+#: code:addons/web/static/src/xml/base.xml:1111
 #, python-format
 msgid "Export Type :"
 msgstr "Exportálás típusa :"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1115
+#: code:addons/web/static/src/xml/base.xml:1114
 #, python-format
 msgid "Export all Data"
 msgstr "Összes adat exportálása"
@@ -976,14 +971,14 @@ msgstr "Nem sikerült kiértékelni a keresési kritériumokat"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1082
+#: code:addons/web/static/src/xml/base.xml:1081
 #, python-format
 msgid "Favorites"
 msgstr "Kedvencek"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:1276
+#: code:addons/web/static/src/js/views/form_view.js:1270
 #, python-format
 msgid "Field '%s' specified in view could not be found."
 msgstr "'%s' a nézetben előírt mező nem található."
@@ -997,7 +992,7 @@ msgstr "Mező:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:362
+#: code:addons/web/static/src/js/widgets/debug_manager.js:360
 #: code:addons/web/static/src/xml/base.xml:178
 #, python-format
 msgid "Fields View Get"
@@ -1005,28 +1000,28 @@ msgstr "Bevétel mezők nézete"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:259
+#: code:addons/web/static/src/js/widgets/debug_manager.js:257
 #, python-format
 msgid "Fields of %s"
 msgstr "Ezek mezői %s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1138
+#: code:addons/web/static/src/xml/base.xml:1137
 #, python-format
 msgid "Fields to export"
 msgstr "Exportálandó mezők:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1120
+#: code:addons/web/static/src/js/views/form_widgets.js:1115
 #, python-format
 msgid "File Upload"
-msgstr "File feltöltés"
+msgstr "Fájl feltöltés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1100
+#: code:addons/web/static/src/js/views/form_widgets.js:1095
 #, python-format
 msgid "File upload"
 msgstr "Fájl feltöltés"
@@ -1061,14 +1056,14 @@ msgstr "Már létező nevekkel szűr."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:951
+#: code:addons/web/static/src/xml/base.xml:950
 #, python-format
 msgid "Filters"
 msgstr "Szűrők"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:597
+#: code:addons/web/static/src/xml/base.xml:596
 #, python-format
 msgid "Flip axis"
 msgstr "Tengelyek megcserélése"
@@ -1078,15 +1073,14 @@ msgstr "Tengelyek megcserélése"
 #: code:addons/web/static/src/js/views/pivot_view.js:821
 #, python-format
 msgid ""
-"For Excel compatibility, data cannot be exported if there is more than 256 "
-"columns.\n"
+"For Excel compatibility, data cannot be exported if there is more than 256 columns.\n"
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1312
+#: code:addons/web/static/src/xml/base.xml:1311
 #, python-format
 msgid "For more information visit"
 msgstr "További információért látogassa meg"
@@ -1094,21 +1088,21 @@ msgstr "További információért látogassa meg"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_view.js:33
-#: code:addons/web/static/src/js/views/form_view.js:306
+#: code:addons/web/static/src/js/views/form_view.js:300
 #, python-format
 msgid "Form"
 msgstr "Űrlap"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1311
+#: code:addons/web/static/src/xml/base.xml:1310
 #, python-format
 msgid "GNU Lesser General Public License"
 msgstr "GNU Lesser General Public Licensz"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1335
+#: code:addons/web/static/src/xml/base.xml:1334
 #, python-format
 msgid "Get this feature and much more with Odoo Enterprise!"
 msgstr ""
@@ -1116,7 +1110,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:24
+#: code:addons/web/static/src/js/framework/crash_manager.js:18
 #, python-format
 msgid "Global Business Error"
 msgstr "Teljes üzleti hiba"
@@ -1131,10 +1125,10 @@ msgstr "Grafikon"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:699
-#: code:addons/web/static/src/xml/base.xml:1060
+#: code:addons/web/static/src/xml/base.xml:1059
 #, python-format
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: web
 #. openerp-web
@@ -1142,6 +1136,11 @@ msgstr "Csoportosítás..."
 #, python-format
 msgid "Group by: %s"
 msgstr "Csoportosítás: %s"
+
+#. module: web
+#: model:ir.model,name:web.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP útválasztás"
 
 #. module: web
 #. openerp-web
@@ -1166,21 +1165,21 @@ msgstr "ID:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1257
+#: code:addons/web/static/src/js/views/form_widgets.js:1252
 #, python-format
 msgid "Image"
 msgstr "Kép"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1114
+#: code:addons/web/static/src/xml/base.xml:1113
 #, python-format
 msgid "Import-Compatible Export"
 msgstr "Import-kompatibilis Export"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:638
+#: code:addons/web/static/src/js/views/form_widgets.js:633
 #, python-format
 msgid "Inactive"
 msgstr "Inaktív"
@@ -1195,13 +1194,13 @@ msgstr "Érvénytelen adat"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:201
+#: code:addons/web/static/src/js/widgets/debug_manager.js:199
 #, python-format
 msgid "JS Tests"
 msgstr "JS Teszt"
 
 #. module: web
-#: code:addons/web/controllers/main.py:757
+#: code:addons/web/controllers/main.py:740
 #, python-format
 msgid "Languages"
 msgstr "Nyelvek"
@@ -1229,14 +1228,14 @@ msgstr "Fejlesztői eszközök elhagyása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1311
+#: code:addons/web/static/src/xml/base.xml:1310
 #, python-format
 msgid "Licenced under the terms of"
 msgstr "Engedély ezen feltételek alapján"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:569
+#: code:addons/web/static/src/xml/base.xml:568
 #, python-format
 msgid "Line Chart"
 msgstr "Vonaldiagram"
@@ -1291,7 +1290,7 @@ msgstr "Bejelentkezés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1284
+#: code:addons/web/static/src/xml/base.xml:1283
 #, python-format
 msgid "Log out"
 msgstr "Kijelentkezés"
@@ -1309,7 +1308,8 @@ msgstr "Alacsony"
 #, python-format
 msgid "M2O search fields do not currently handle multiple default values"
 msgstr ""
-"M2O kereső mező nem támogatja jelenleg a többszörös alapértelmezett értékeket"
+"M2O kereső mező nem támogatja jelenleg a többszörös alapértelmezett "
+"értékeket"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login_layout
@@ -1318,7 +1318,7 @@ msgstr "Adatbázisok kezelése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:269
+#: code:addons/web/static/src/js/widgets/debug_manager.js:267
 #: code:addons/web/static/src/xml/base.xml:151
 #, python-format
 msgid "Manage Filters"
@@ -1333,15 +1333,15 @@ msgstr "Talán töltse újra az alkalmazást az F5 megnyomásával..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:556
-#: code:addons/web/static/src/xml/base.xml:585
+#: code:addons/web/static/src/xml/base.xml:555
+#: code:addons/web/static/src/xml/base.xml:584
 #, python-format
 msgid "Measures"
 msgstr "Mérések"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:349
+#: code:addons/web/static/src/js/widgets/debug_manager.js:347
 #, python-format
 msgid "Metadata (%s)"
 msgstr "Metaadat (%s)"
@@ -1355,14 +1355,14 @@ msgstr "Módzser:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:22
+#: code:addons/web/static/src/js/framework/crash_manager.js:16
 #, python-format
 msgid "Missing Record"
 msgstr "Nem található  adatbázis belyegyzés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1340
+#: code:addons/web/static/src/xml/base.xml:1339
 #, python-format
 msgid "Mobile support"
 msgstr "Mobil támogatás"
@@ -1383,14 +1383,14 @@ msgstr "Módosítók:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:614
+#: code:addons/web/static/src/xml/base.xml:613
 #, python-format
 msgid "Month"
 msgstr "Hónap"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:814
+#: code:addons/web/static/src/xml/base.xml:813
 #, python-format
 msgid "More"
 msgstr "Egyebek"
@@ -1402,21 +1402,21 @@ msgstr "Tovább <b class=\"caret\"/>"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1134
+#: code:addons/web/static/src/xml/base.xml:1133
 #, python-format
 msgid "Move Down"
 msgstr "Mozgatás lefelé"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1133
+#: code:addons/web/static/src/xml/base.xml:1132
 #, python-format
 msgid "Move Up"
 msgstr "Mozgatás felfelé"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1283
+#: code:addons/web/static/src/xml/base.xml:1282
 #, python-format
 msgid "My Odoo.com account"
 msgstr "Az Odoo.com fiókom"
@@ -1430,14 +1430,14 @@ msgstr "Név"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1188
+#: code:addons/web/static/src/xml/base.xml:1187
 #, python-format
 msgid "Name:"
 msgstr "Név:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:320
+#: code:addons/web/static/src/js/views/form_view.js:314
 #, python-format
 msgid "New"
 msgstr "Új"
@@ -1451,7 +1451,7 @@ msgstr "Új jelszó"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1339
+#: code:addons/web/static/src/xml/base.xml:1338
 #, python-format
 msgid "New design"
 msgstr "Új felépítés"
@@ -1475,27 +1475,22 @@ msgstr "Nincs frissítés:"
 #: code:addons/web/static/src/js/views/graph_widget.js:96
 #, python-format
 msgid ""
-"No data available for this chart. Try to add some records, or make sure that "
-"there is no active filter in the search bar."
+"No data available for this chart. Try to add some records, or make sure that"
+" there is no active filter in the search bar."
 msgstr ""
-"Nincs adat ehhez a grafikonhoz. Próbáljon hozzáadna egy pár jegyzetet, vagy "
-"győződjön\n"
+"Nincs adat ehhez a grafikonhoz. Próbáljon hozzáadna egy pár jegyzetet, vagy győződjön\n"
 "                    meg, hogy nincs aktív szűrő a keresés sávban."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:629
+#: code:addons/web/static/src/xml/base.xml:628
 #, python-format
 msgid ""
-"No data available for this pivot table.  Try to add some records, or make "
-"sure\n"
-"        that there is at least one measure and no active filter in the "
-"search bar."
+"No data available for this pivot table.  Try to add some records, or make sure\n"
+"        that there is at least one measure and no active filter in the search bar."
 msgstr ""
-"Nincs adat ehhez a pivot kimutatás táblához. Próbáljon hozzáadna egy pár "
-"jegyzetet, vagy győződjön\n"
-"                    meg, hogy legalább egy méret van és nincs aktív szűrő a "
-"keresés sávban."
+"Nincs adat ehhez a pivot kimutatás táblához. Próbáljon hozzáadna egy pár jegyzetet, vagy győződjön\n"
+"                    meg, hogy legalább egy méret van és nincs aktív szűrő a keresés sávban."
 
 #. module: web
 #. openerp-web
@@ -1506,14 +1501,14 @@ msgstr "Nincs megjeleníthető adat."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:628
+#: code:addons/web/static/src/xml/base.xml:627
 #, python-format
 msgid "No data to display."
 msgstr "Nincs megjeleníthatő adat."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:344
+#: code:addons/web/static/src/js/widgets/debug_manager.js:342
 #, python-format
 msgid "No metadata available"
 msgstr ""
@@ -1527,7 +1522,7 @@ msgstr "Nincs megjeleníthető eredmény..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:449
+#: code:addons/web/static/src/js/views/form_widgets.js:444
 #, python-format
 msgid "No selected record"
 msgstr "Nincsenek kiválasztott rekordok"
@@ -1555,13 +1550,6 @@ msgstr "Normál"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:642
-#, python-format
-msgid "Not Archived"
-msgstr "Nem archivált"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/views/graph_widget.js:239
 #, python-format
 msgid "Not enough data points"
@@ -1569,7 +1557,7 @@ msgstr "Nincs elég adat pont."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:766
+#: code:addons/web/static/src/xml/base.xml:765
 #, python-format
 msgid "Not shown in kanban"
 msgstr "Kanban-ban nem muntatja"
@@ -1584,15 +1572,13 @@ msgstr "Objektum:"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/dialog.js:37
-#: model:ir.ui.view,arch_db:web.layout
-#: model:ir.ui.view,arch_db:web.webclient_bootstrap
 #, python-format
 msgid "Odoo"
 msgstr "Odoo"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1294
+#: code:addons/web/static/src/xml/base.xml:1293
 #, python-format
 msgid "Odoo (Formerly OpenERP)"
 msgstr "Odoo (régebben mint OpenERP)"
@@ -1609,37 +1595,32 @@ msgstr "Az Odoo alkalmazások rövidesen elérhetők lesznek"
 #: code:addons/web/static/src/js/views/form_upgrade_widgets.js:53
 #, python-format
 msgid "Odoo Enterprise"
-msgstr "Odoo vállalati"
+msgstr "Odoo Nagyvállalati"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1310
+#: code:addons/web/static/src/xml/base.xml:1309
 #, python-format
 msgid "Odoo S.A."
 msgstr "Odoo S.A."
 
 #. module: web
-#: model:ir.ui.view,arch_db:web.qunit_suite
-msgid "Odoo Web Tests"
-msgstr "Odoo Web Teszt"
-
-#. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1310
+#: code:addons/web/static/src/xml/base.xml:1309
 #, python-format
 msgid "Odoo is a trademark of"
 msgstr "Odoo a védjegye ennek"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1312
+#: code:addons/web/static/src/xml/base.xml:1311
 #, python-format
 msgid "Odoo.com"
 msgstr "Odoo.com"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:656
+#: code:addons/web/static/src/js/views/form_widgets.js:651
 #, python-format
 msgid "Off"
 msgstr "Ki"
@@ -1649,7 +1630,7 @@ msgstr "Ki"
 #: code:addons/web/static/src/js/framework/dialog.js:41
 #: code:addons/web/static/src/js/framework/dialog.js:159
 #: code:addons/web/static/src/js/framework/dialog.js:177
-#: code:addons/web/static/src/xml/base.xml:1161
+#: code:addons/web/static/src/xml/base.xml:1160
 #, python-format
 msgid "Ok"
 msgstr "Rendben"
@@ -1663,10 +1644,10 @@ msgstr "Régi jelszó:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:654
+#: code:addons/web/static/src/js/views/form_widgets.js:649
 #, python-format
 msgid "On"
-msgstr "Be"
+msgstr "Ekkor"
 
 #. module: web
 #. openerp-web
@@ -1684,7 +1665,7 @@ msgstr "Kizárólag egész érték lehet érvényes."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:494
+#: code:addons/web/static/src/xml/base.xml:493
 #, python-format
 msgid "Only you"
 msgstr "csak saját"
@@ -1708,7 +1689,7 @@ msgstr "Nézet megnyitás: "
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:150
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:918
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:1098
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1310
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1312
 #, python-format
 msgid "Open: "
 msgstr "Megnyitás: "
@@ -1727,7 +1708,7 @@ msgstr "Útvonal"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:570
+#: code:addons/web/static/src/xml/base.xml:569
 #, python-format
 msgid "Pie Chart"
 msgstr "Torta(szelet) diagram"
@@ -1770,15 +1751,16 @@ msgstr "Kérem megadni a mentés mező lista nevét"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1149
+#: code:addons/web/static/src/xml/base.xml:1148
 #, python-format
 msgid "Please note that only the selected ids will be exported."
 msgstr ""
-"Kérem vegye figyelembe, csak a kiválasztott ID azonosítók lesznek exportálva."
+"Kérem vegye figyelembe, csak a kiválasztott ID azonosítók lesznek "
+"exportálva."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1148
+#: code:addons/web/static/src/xml/base.xml:1147
 #, python-format
 msgid ""
 "Please pay attention that all records matching your search filter will be "
@@ -1813,10 +1795,10 @@ msgstr "Támogatja az <span>Odoo</span>"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1282
+#: code:addons/web/static/src/xml/base.xml:1281
 #, python-format
 msgid "Preferences"
-msgstr "Beállítások"
+msgstr "Elő beállítások"
 
 #. module: web
 #. openerp-web
@@ -1834,14 +1816,14 @@ msgstr "Folyamatlista nyomtatása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:648
+#: code:addons/web/static/src/js/views/form_widgets.js:643
 #, python-format
 msgid "Production Environment"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:615
+#: code:addons/web/static/src/xml/base.xml:614
 #, python-format
 msgid "Quarter"
 msgstr "Negyed"
@@ -1855,14 +1837,14 @@ msgstr "Kapcsolat:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1131
+#: code:addons/web/static/src/xml/base.xml:1130
 #, python-format
 msgid "Remove"
 msgstr "Eltávolítás"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1132
+#: code:addons/web/static/src/xml/base.xml:1131
 #, python-format
 msgid "Remove All"
 msgstr "Összes eltávolítása"
@@ -1885,8 +1867,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:874
 #: code:addons/web/static/src/xml/base.xml:365
-#: code:addons/web/static/src/xml/base.xml:443
-#: code:addons/web/static/src/xml/base.xml:1099
+#: code:addons/web/static/src/xml/base.xml:442
+#: code:addons/web/static/src/xml/base.xml:1098
 #, python-format
 msgid "Save"
 msgstr "Mentés"
@@ -1900,43 +1882,43 @@ msgstr "Mentés & Új"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1137
-#: code:addons/web/static/src/xml/base.xml:864
+#: code:addons/web/static/src/js/views/form_widgets.js:1132
+#: code:addons/web/static/src/xml/base.xml:863
 #, python-format
 msgid "Save As..."
 msgstr "Mentés másként..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1161
+#: code:addons/web/static/src/xml/base.xml:1160
 #, python-format
 msgid "Save as:"
 msgstr "Mentés mint:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1087
+#: code:addons/web/static/src/xml/base.xml:1086
 #, python-format
 msgid "Save current search"
 msgstr "Aktuális keresés mentése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:1104
+#: code:addons/web/static/src/js/views/form_view.js:1098
 #, python-format
 msgid "Save default"
 msgstr "Alapértelmezés mentése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1138
+#: code:addons/web/static/src/xml/base.xml:1137
 #, python-format
 msgid "Save fields list"
 msgstr "Mezőlisták mentése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1164
+#: code:addons/web/static/src/xml/base.xml:1163
 #, python-format
 msgid "Saved exports:"
 msgstr "Mentett exportálások:"
@@ -1966,7 +1948,7 @@ msgstr "Még több keresése..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:933
+#: code:addons/web/static/src/xml/base.xml:932
 #, python-format
 msgid "Search..."
 msgstr "Keresés..."
@@ -1980,7 +1962,7 @@ msgstr "Keresés: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:436
+#: code:addons/web/static/src/js/views/form_widgets.js:432
 #, python-format
 msgid "See selection "
 msgstr "Nézze meg a kiválasztást"
@@ -1988,8 +1970,8 @@ msgstr "Nézze meg a kiválasztást"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:1054
+#: code:addons/web/static/src/xml/base.xml:861
 #: code:addons/web/static/src/xml/base.xml:862
-#: code:addons/web/static/src/xml/base.xml:863
 #, python-format
 msgid "Select"
 msgstr "Kiválaszt"
@@ -2001,21 +1983,21 @@ msgstr "Kiválasztás <i class=\"fa fa-database\"/>"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:181
+#: code:addons/web/static/src/js/widgets/debug_manager.js:179
 #, python-format
 msgid "Select a view"
 msgstr "Egy nézet kiválasztása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:451
+#: code:addons/web/static/src/js/views/form_widgets.js:446
 #, python-format
 msgid "Select records "
 msgstr "Rekordok kiválasztása"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:461
+#: code:addons/web/static/src/js/views/form_widgets.js:456
 #, python-format
 msgid "Select records..."
 msgstr "Rekordok kiválasztása..."
@@ -2029,7 +2011,7 @@ msgstr "Kiválasztott domain név"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:461
+#: code:addons/web/static/src/js/views/form_widgets.js:456
 #, python-format
 msgid "Selected records"
 msgstr "Kiválasztott rekordok"
@@ -2043,7 +2025,7 @@ msgstr "Kiválasztás:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:1101
+#: code:addons/web/static/src/js/views/form_view.js:1095
 #, python-format
 msgid "Set Default"
 msgstr "Alapértelmezett értékek beállítása"
@@ -2064,7 +2046,7 @@ msgstr "'id' tulajdonság beállítása a meglévő %s rekordon"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1096
+#: code:addons/web/static/src/xml/base.xml:1095
 #, python-format
 msgid "Share with all users"
 msgstr "Mindenkinek elérhető"
@@ -2084,7 +2066,7 @@ msgid "Size:"
 msgstr "Méret:"
 
 #. module: web
-#: code:addons/web/controllers/main.py:1053
+#: code:addons/web/controllers/main.py:1036
 #, python-format
 msgid "Something horrible happened"
 msgstr "Valami szörnyű történt"
@@ -2119,35 +2101,35 @@ msgstr "Még tölt...<br />Várjon türelemmel."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1279
+#: code:addons/web/static/src/xml/base.xml:1278
 #, python-format
 msgid "Support"
 msgstr "Támogatás"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:655
+#: code:addons/web/static/src/js/views/form_widgets.js:650
 #, python-format
 msgid "Switch Off"
 msgstr "Kikapcsol"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:657
+#: code:addons/web/static/src/js/views/form_widgets.js:652
 #, python-format
 msgid "Switch On"
 msgstr "Bekapcsol"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:651
+#: code:addons/web/static/src/js/views/form_widgets.js:646
 #, python-format
 msgid "Switch to production environment"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:649
+#: code:addons/web/static/src/js/views/form_widgets.js:644
 #, python-format
 msgid "Switch to test environment"
 msgstr ""
@@ -2168,28 +2150,28 @@ msgstr "Műszaki fordítás"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:650
+#: code:addons/web/static/src/js/views/form_widgets.js:645
 #, python-format
 msgid "Test Environment"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:429
+#: code:addons/web/static/src/js/views/form_widgets.js:425
 #, python-format
 msgid "The domain is wrong."
 msgstr "A domén elérés hibás."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1137
+#: code:addons/web/static/src/js/views/form_widgets.js:1132
 #, python-format
 msgid "The field is empty, there's nothing to save !"
 msgstr "A mező üres, nincs mit menteni !"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:863
+#: code:addons/web/static/src/js/views/form_view.js:857
 #, python-format
 msgid "The following fields are invalid:"
 msgstr "A következő mezők érvénytelenek:"
@@ -2199,14 +2181,14 @@ msgstr "A következő mezők érvénytelenek:"
 #: code:addons/web/static/src/js/views/list_view_editable.js:123
 #, python-format
 msgid ""
-"The line has been modified, your changes will be discarded. Are you sure you "
-"want to discard the changes ?"
+"The line has been modified, your changes will be discarded. Are you sure you"
+" want to discard the changes ?"
 msgstr ""
-"Tételsort megváltoztatta, a változtatás el lesz utasítva. Biztos el szeretné "
-"utasítani a változtatásokat ?"
+"Tételsort megváltoztatta, a változtatás el lesz utasítva. Biztos el szeretné"
+" utasítani a változtatásokat ?"
 
 #. module: web
-#: code:addons/web/controllers/main.py:743
+#: code:addons/web/controllers/main.py:726
 #, python-format
 msgid "The new password and its confirmation must be identical."
 msgstr "Az új jelszónak és a jelszó megerősítésnek azonosnak kell lennie"
@@ -2219,7 +2201,7 @@ msgid "The o2m record must be saved before an action can be used"
 msgstr "Az o2m rekordot menteni kell mielőtt cselekvéshez használná"
 
 #. module: web
-#: code:addons/web/controllers/main.py:749
+#: code:addons/web/controllers/main.py:732
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
@@ -2227,14 +2209,14 @@ msgstr "A régi jelszó amit beírt nem megfelelő, a jelszava nem változott me
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:306
+#: code:addons/web/static/src/js/views/form_view.js:300
 #, python-format
 msgid "The record could not be found in the database."
 msgstr "A rekord nem található az adatbázisban"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:732
+#: code:addons/web/static/src/js/views/form_view.js:726
 #, python-format
 msgid ""
 "The record has been modified, your changes will be discarded. Are you sure "
@@ -2245,25 +2227,25 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1099
+#: code:addons/web/static/src/js/views/form_widgets.js:1094
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "A kiválasztott fájl meghaladja a maximális %s fájlméretet."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1570
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1586
 #, python-format
 msgid ""
-"The type of the field '%s' must be a many2many field with a relation to 'ir."
-"attachment' model."
+"The type of the field '%s' must be a many2many field with a relation to "
+"'ir.attachment' model."
 msgstr ""
 "A '%s' mező típusnak many2many mezőnek kell lennie az 'ir.attachment' "
 "modellhez való kapcsolattal."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1120
+#: code:addons/web/static/src/js/views/form_widgets.js:1115
 #, python-format
 msgid "There was a problem while uploading your file"
 msgstr "Probléma merült fel a fájl feltöltése közben"
@@ -2278,22 +2260,18 @@ msgstr "Ez egy globális szűrő és mindenkitől el lesz távolítva, ha folyta
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1105
+#: code:addons/web/static/src/xml/base.xml:1104
 #, python-format
 msgid ""
-"This wizard will export all data that matches the current search criteria to "
-"a CSV file.\n"
-"        You can export all data or only the fields that can be reimported "
-"after modification."
+"This wizard will export all data that matches the current search criteria to a CSV file.\n"
+"        You can export all data or only the fields that can be reimported after modification."
 msgstr ""
-"Ez a varázsló exportálja az aktuális keresési feltételeknek megfelelő összes "
-"adatot egy CSV fájlba.\n"
-"            Lehetőség van valamennyi adat exportálására vagy csak azon "
-"mezőkére, amelyek  változtatások után visszaimportálásra kerülnek."
+"Ez a varázsló exportálja az aktuális keresési feltételeknek megfelelő összes adatot egy CSV fájlba.\n"
+"            Lehetőség van valamennyi adat exportálására vagy csak azon mezőkére, amelyek  változtatások után visszaimportálásra kerülnek."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:869
+#: code:addons/web/static/src/js/views/form_widgets.js:864
 #, python-format
 msgid ""
 "Timezone Mismatch : The timezone of your browser doesn't match the selected "
@@ -2319,7 +2297,7 @@ msgstr "Összesen"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/abstract_web_client.js:119
+#: code:addons/web/static/src/js/abstract_web_client.js:114
 #, python-format
 msgid "Traceback:"
 msgstr "Visszakövet:"
@@ -2333,7 +2311,7 @@ msgstr "Fa"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/abstract_web_client.js:213
+#: code:addons/web/static/src/js/abstract_web_client.js:208
 #, python-format
 msgid "Trying to reconnect..."
 msgstr "Újrakapcsolási próbálkozás..."
@@ -2347,7 +2325,7 @@ msgstr "Típus:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:645
+#: code:addons/web/static/src/js/views/form_widgets.js:640
 #: code:addons/web/static/src/js/views/list_view.js:290
 #, python-format
 msgid "Unarchive"
@@ -2365,21 +2343,21 @@ msgid "Undefined"
 msgstr "Nincs meghatározva"
 
 #. module: web
-#: code:addons/web/controllers/main.py:870
+#: code:addons/web/controllers/main.py:853
 #, python-format
 msgid "Underscore prefixed methods cannot be remotely called"
 msgstr "Aláhúzott előtagú módokat nem lehet távolról lehívni"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:636
+#: code:addons/web/static/src/xml/base.xml:635
 #, python-format
 msgid "Unhandled widget"
 msgstr "Nem támogatott vezérlők"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:808
+#: code:addons/web/static/src/js/views/form_widgets.js:803
 #, python-format
 msgid "Unknown"
 msgstr "Ismeretlen"
@@ -2428,7 +2406,7 @@ msgstr "Nem támogatott operátor %s ebben a domainban %s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1266
+#: code:addons/web/static/src/xml/base.xml:1265
 #, python-format
 msgid "Update translations"
 msgstr ""
@@ -2442,21 +2420,21 @@ msgstr "Frissítés most"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1341
+#: code:addons/web/static/src/xml/base.xml:1340
 #, python-format
 msgid "Upgrade to future versions"
 msgstr "Jövőbeni verziókra frissítés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:862
+#: code:addons/web/static/src/xml/base.xml:861
 #, python-format
 msgid "Upload your file"
 msgstr "Fáljai feltöltése"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1629
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1645
 #: code:addons/web/static/src/js/widgets/sidebar.js:170
 #, python-format
 msgid "Uploading Error"
@@ -2465,29 +2443,29 @@ msgstr "Feltöltési hiba"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/sidebar.js:196
-#: code:addons/web/static/src/xml/base.xml:837
-#: code:addons/web/static/src/xml/base.xml:867
+#: code:addons/web/static/src/xml/base.xml:836
+#: code:addons/web/static/src/xml/base.xml:866
 #, python-format
 msgid "Uploading..."
 msgstr "Feltöltés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1093
+#: code:addons/web/static/src/xml/base.xml:1092
 #, python-format
 msgid "Use by default"
 msgstr "Alapértelmezésben használt"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:23
+#: code:addons/web/static/src/js/framework/crash_manager.js:17
 #, python-format
 msgid "Validation Error"
 msgstr "Érvényesítési hiba"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1298
+#: code:addons/web/static/src/xml/base.xml:1297
 #, python-format
 msgid "Version"
 msgstr "Verzió"
@@ -2497,7 +2475,7 @@ msgstr "Verzió"
 #: code:addons/web/static/src/js/widgets/priority.js:51
 #, python-format
 msgid "Very High"
-msgstr "Nagyon magas"
+msgstr "Nagyon nagy"
 
 #. module: web
 #. openerp-web
@@ -2530,26 +2508,26 @@ msgstr "'%s' nézet típus nem támogatott a X2Many által."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:19
-#: code:addons/web/static/src/js/framework/crash_manager.js:20
-#: code:addons/web/static/src/js/framework/crash_manager.js:114
-#: code:addons/web/static/src/js/views/form_view.js:737
+#: code:addons/web/static/src/js/framework/crash_manager.js:13
+#: code:addons/web/static/src/js/framework/crash_manager.js:14
+#: code:addons/web/static/src/js/framework/crash_manager.js:108
+#: code:addons/web/static/src/js/views/form_view.js:731
 #: code:addons/web/static/src/js/views/list_view.js:673
 #: code:addons/web/static/src/js/widgets/sidebar.js:128
 #, python-format
 msgid "Warning"
-msgstr "Figyelem"
+msgstr "Figyelmeztetés"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:613
+#: code:addons/web/static/src/xml/base.xml:612
 #, python-format
 msgid "Week"
 msgstr "Hét"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:1280
+#: code:addons/web/static/src/js/views/form_view.js:1274
 #, python-format
 msgid "Widget type '%s' is not implemented"
 msgstr "'%s' vezérő típus nem beillesztett"
@@ -2562,7 +2540,7 @@ msgid "Widget:"
 msgstr "Grafikus vezérlő elem:"
 
 #. module: web
-#: code:addons/web/controllers/main.py:484
+#: code:addons/web/controllers/main.py:482
 #, python-format
 msgid "Wrong login/password"
 msgstr ""
@@ -2583,7 +2561,7 @@ msgstr "XML azonosító:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:616
+#: code:addons/web/static/src/xml/base.xml:615
 #, python-format
 msgid "Year"
 msgstr "Év"
@@ -2598,7 +2576,7 @@ msgstr "Igen"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/abstract_web_client.js:222
+#: code:addons/web/static/src/js/abstract_web_client.js:217
 #, python-format
 msgid "You are back online"
 msgstr "Ismét online vagy"
@@ -2611,14 +2589,14 @@ msgid "You are creating a new %s, are you sure it does not exist yet?"
 msgstr "Egy új %s hoz létre, biztos benne, hogy még nem létezik?"
 
 #. module: web
-#: code:addons/web/controllers/main.py:741
+#: code:addons/web/controllers/main.py:724
 #, python-format
 msgid "You cannot leave any password empty."
 msgstr "Nem hagyhat egyetlen jelszót sem üresen"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1264
+#: code:addons/web/static/src/xml/base.xml:1263
 #, python-format
 msgid "You have updated"
 msgstr ""
@@ -2627,7 +2605,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/framework/misc.js:17
 #, python-format
-msgid "You may not believe it,<br />but the application is actually loading..."
+msgid ""
+"You may not believe it,<br />but the application is actually loading..."
 msgstr "Nem fogja elhinni,<br />de az alkalmazás most töltődik..."
 
 #. module: web
@@ -2646,7 +2625,7 @@ msgstr "Legalább egy a rekordot válasszon ki."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/crash_manager.js:64
+#: code:addons/web/static/src/js/framework/crash_manager.js:58
 #, python-format
 msgid "Your Odoo session expired. Please refresh the current web page."
 msgstr ""
@@ -2654,138 +2633,145 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:133
+#: code:addons/web/static/src/js/framework/translation.js:104
 #, python-format
 msgid "a day ago"
 msgstr "egy napja"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:129
+#: code:addons/web/static/src/js/framework/translation.js:100
 #, python-format
 msgid "about a minute ago"
 msgstr "kb. egy perce"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:135
+#: code:addons/web/static/src/js/framework/translation.js:106
 #, python-format
 msgid "about a month ago"
 msgstr "kb. egy hónapja"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:137
+#: code:addons/web/static/src/js/framework/translation.js:108
 #, python-format
 msgid "about a year ago"
 msgstr "kb. egy éve"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:131
+#: code:addons/web/static/src/js/framework/translation.js:102
 #, python-format
 msgid "about an hour ago"
 msgstr "körülbelül egy órája"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:163
+#: code:addons/web/static/src/js/views/search_filters.js:162
 #, python-format
 msgid "contains"
 msgstr "tartalmazza"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:164
+#: code:addons/web/static/src/js/views/search_filters.js:163
 #, python-format
 msgid "doesn't contain"
 msgstr "nem tartalmazza"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:180
-#: code:addons/web/static/src/js/views/search_filters.js:218
-#: code:addons/web/static/src/js/views/search_filters.js:247
+#: code:addons/web/static/src/js/views/search_filters.js:182
+#: code:addons/web/static/src/js/views/search_filters.js:254
+#: code:addons/web/static/src/js/views/search_filters.js:283
 #, python-format
 msgid "greater than"
 msgstr "nagyobb, mint"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:182
-#: code:addons/web/static/src/js/views/search_filters.js:220
-#: code:addons/web/static/src/js/views/search_filters.js:249
+#: code:addons/web/static/src/js/views/search_filters.js:184
+#: code:addons/web/static/src/js/views/search_filters.js:256
+#: code:addons/web/static/src/js/views/search_filters.js:285
 #, python-format
 msgid "greater than or equal to"
 msgstr "nagyobb vagy egyenlő, mint"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:239
-#: code:addons/web/static/src/js/views/search_filters.js:274
+#: code:addons/web/static/src/js/views/search_filters.js:275
+#: code:addons/web/static/src/js/views/search_filters.js:310
 #, python-format
 msgid "is"
 msgstr "egyenlő"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:165
-#: code:addons/web/static/src/js/views/search_filters.js:178
-#: code:addons/web/static/src/js/views/search_filters.js:216
-#: code:addons/web/static/src/js/views/search_filters.js:245
+#: code:addons/web/static/src/js/views/search_filters.js:186
+#, python-format
+msgid "is between"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/search_filters.js:164
+#: code:addons/web/static/src/js/views/search_filters.js:180
+#: code:addons/web/static/src/js/views/search_filters.js:252
+#: code:addons/web/static/src/js/views/search_filters.js:281
 #, python-format
 msgid "is equal to"
 msgstr "egyenlő"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:293
+#: code:addons/web/static/src/js/views/search_filters.js:329
 #, python-format
 msgid "is false"
 msgstr "hamis"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:275
+#: code:addons/web/static/src/js/views/search_filters.js:311
 #, python-format
 msgid "is not"
 msgstr "nem egyenlő"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:166
-#: code:addons/web/static/src/js/views/search_filters.js:179
-#: code:addons/web/static/src/js/views/search_filters.js:217
-#: code:addons/web/static/src/js/views/search_filters.js:246
+#: code:addons/web/static/src/js/views/search_filters.js:165
+#: code:addons/web/static/src/js/views/search_filters.js:181
+#: code:addons/web/static/src/js/views/search_filters.js:253
+#: code:addons/web/static/src/js/views/search_filters.js:282
 #, python-format
 msgid "is not equal to"
 msgstr "nem egyenlő"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:168
-#: code:addons/web/static/src/js/views/search_filters.js:185
-#: code:addons/web/static/src/js/views/search_filters.js:223
-#: code:addons/web/static/src/js/views/search_filters.js:252
-#: code:addons/web/static/src/js/views/search_filters.js:277
+#: code:addons/web/static/src/js/views/search_filters.js:167
+#: code:addons/web/static/src/js/views/search_filters.js:188
+#: code:addons/web/static/src/js/views/search_filters.js:259
+#: code:addons/web/static/src/js/views/search_filters.js:288
+#: code:addons/web/static/src/js/views/search_filters.js:313
 #, python-format
 msgid "is not set"
 msgstr "nincs beállítva"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:167
-#: code:addons/web/static/src/js/views/search_filters.js:184
-#: code:addons/web/static/src/js/views/search_filters.js:222
-#: code:addons/web/static/src/js/views/search_filters.js:251
-#: code:addons/web/static/src/js/views/search_filters.js:276
+#: code:addons/web/static/src/js/views/search_filters.js:166
+#: code:addons/web/static/src/js/views/search_filters.js:187
+#: code:addons/web/static/src/js/views/search_filters.js:258
+#: code:addons/web/static/src/js/views/search_filters.js:287
+#: code:addons/web/static/src/js/views/search_filters.js:312
 #, python-format
 msgid "is set"
 msgstr "beállítva"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:292
+#: code:addons/web/static/src/js/views/search_filters.js:328
 #, python-format
 msgid "is true"
 msgstr "igaz"
@@ -2799,25 +2785,25 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:181
-#: code:addons/web/static/src/js/views/search_filters.js:219
-#: code:addons/web/static/src/js/views/search_filters.js:248
+#: code:addons/web/static/src/js/views/search_filters.js:183
+#: code:addons/web/static/src/js/views/search_filters.js:255
+#: code:addons/web/static/src/js/views/search_filters.js:284
 #, python-format
 msgid "less than"
 msgstr "kisebb, mint"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/core.js:128
+#: code:addons/web/static/src/js/framework/translation.js:99
 #, python-format
 msgid "less than a minute ago"
 msgstr "kevesebb, mint egy perce"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/search_filters.js:183
-#: code:addons/web/static/src/js/views/search_filters.js:221
-#: code:addons/web/static/src/js/views/search_filters.js:250
+#: code:addons/web/static/src/js/views/search_filters.js:185
+#: code:addons/web/static/src/js/views/search_filters.js:257
+#: code:addons/web/static/src/js/views/search_filters.js:286
 #, python-format
 msgid "less than or equal to"
 msgstr "kisebb vagy egyenlő, mint"
@@ -2838,129 +2824,8 @@ msgstr "nem érvényes szám"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1028
+#: code:addons/web/static/src/xml/base.xml:1027
 #: code:addons/web/static/src/xml/website.tour.xml:14
 #, python-format
 msgid "or"
 msgstr "vagy"
-
-#~ msgid "%(page)d/%(page_count)d"
-#~ msgstr "%(page)d/%(page_count)d"
-
-#~ msgid "%d / %d"
-#~ msgstr "%d / %d"
-
-#~ msgid "%d-%d of %d"
-#~ msgstr "%d-%d ebből %d"
-
-#~ msgid "&lt;!--[if lte IE 9]&gt;"
-#~ msgstr "&lt;!--[if lte IE 9]&gt;"
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid "&lt;![endif]--&gt;"
-#~ msgstr "&lt;![endif]--&gt;"
-
-#~ msgid ",k,M"
-#~ msgstr ",k,M"
-
-#~ msgid "Can't send email to invalid e-mail address"
-#~ msgstr "Nem tud e-mailt küldeni az érvénytelen e-mail-re"
-
-#~ msgid "Confirm New Password:"
-#~ msgstr "Új jelszó megerősítése:"
-
-#~ msgid "E-mail Error"
-#~ msgstr "E-mail hiba"
-
-#~ msgid "Export Formats"
-#~ msgstr "Export formátumok"
-
-#~ msgid "Export Type:"
-#~ msgstr "Exportálás típusa"
-
-#~ msgid "Group"
-#~ msgstr "Csoport"
-
-#~ msgid "Leave Debug Mode"
-#~ msgstr "Hibakeresési mód elhagyása"
-
-#~ msgid "Measure"
-#~ msgstr "Mérések"
-
-#~ msgid "Model %s fields"
-#~ msgstr "Minta %s területek"
-
-#~ msgid "Move your mouse"
-#~ msgstr "Mozgassa az egeret"
-
-#~ msgid "Move your mouse here to open the insert block"
-#~ msgstr "Mozgassa az egerét ide a beillesztő blokk megnyitásához"
-
-#~ msgid "New Password:"
-#~ msgstr "Új jelszó:"
-
-#~ msgid ""
-#~ "No data available for this pivot table.  Try to add some records, or make "
-#~ "sure\n"
-#~ "                that there is at least one measure and no active filter "
-#~ "in the search bar."
-#~ msgstr ""
-#~ "Nincs adat ehhez a pivot kimutatás táblához. Próbáljon hozzáadna egy pár "
-#~ "jegyzetet, vagy győződjön\n"
-#~ "                    meg, hogy legalább egy méret van és nincs aktív szűrő "
-#~ "a keresés sávban."
-
-#~ msgid "No data provided."
-#~ msgstr "Nincs adat szolgáltatva."
-
-#~ msgid "No value found for the field  for value "
-#~ msgstr "Nem talált értéket az érték mezőhöz "
-
-#~ msgid "Old Password:"
-#~ msgstr "Régi jelszó:"
-
-#~ msgid "Open Debug Menu"
-#~ msgstr "Open Hibakereső Menü"
-
-#~ msgid "Quantity"
-#~ msgstr "Mennyiség"
-
-#~ msgid "Resource Error"
-#~ msgstr "Forrás hiba"
-
-#~ msgid "Save As"
-#~ msgstr "Mentés másként"
-
-#~ msgid "Search Again"
-#~ msgstr "Keresés ismét"
-
-#~ msgid "This resource is empty"
-#~ msgstr "Ez a forrás üres"
-
-#~ msgid ""
-#~ "This wizard will export all data that matches the current search criteria "
-#~ "to a CSV file.\n"
-#~ "            You can export all data or only the fields that can be "
-#~ "reimported after modification."
-#~ msgstr ""
-#~ "Ez a varázsló exportálja az aktuális keresési feltételeknek megfelelő "
-#~ "összes adatot egy CSV fájlba.\n"
-#~ "            Lehetőség van valamennyi adat exportálására vagy csak azon "
-#~ "mezőkére, amelyek  változtatások után visszaimportálásra kerülnek."
-
-#~ msgid "Toggle Form Layout Outline"
-#~ msgstr "Kiemelés elrendezési forma átkapcsolás"
-
-#~ msgid "Trying to reconnect... "
-#~ msgstr "Újrakapcsolási próbálkozás..."
-
-#~ msgid "Unlimited"
-#~ msgstr "Korlátlan"
-
-#~ msgid "Uploading ..."
-#~ msgstr "Feltöltés..."
-
-#~ msgid "HTTP routing"
-#~ msgstr "HTTP útválasztás"

@@ -60,6 +60,8 @@
 
 <template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
     <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+        <script type="text/javascript" src="/web_editor/static/src/js/ace.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
     </xpath>
@@ -153,6 +155,14 @@
             <button data-color="info">Info</button>
             <button data-color="warning">Warning</button>
             <button data-color="danger">Danger</button>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-icon-class="fa fa-eye-slash">
+            <button data-color="black-25">25% Black</button>
+            <button data-color="black-50">50% Black</button>
+            <button data-color="black-75">75% Black</button>
+            <button data-color="white-25">25% White</button>
+            <button data-color="white-50">50% White</button>
+            <button data-color="white-75">75% White</button>
         </div>
     </colorpicker>
 </template>

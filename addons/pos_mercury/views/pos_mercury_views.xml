@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_pos_mercury_configuration_form" model="ir.ui.view" >
             <field name="name">Mercury Configurations</field>
@@ -92,21 +92,7 @@
           </field>
         </record>
 
-        <!-- Cron job to delete mercury tokens older than 6 months -->
-        <record forcecreate="True" id="ir_cron_mercury_cleanup" model="ir.cron">
-            <field name="name">Mercury token cleaning</field>
-            <field eval="True" name="active"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall"/>
-            <field eval="'pos_mercury.mercury_transaction'" name="model"/>
-            <field eval="'cleanup_old_tokens'" name="function"/>
-            <field eval="'()'" name="args"/>
-        </record>
-
         <menuitem parent="point_of_sale.menu_point_config_product" action="pos_mercury.action_configuration_form" id="menu_pos_pos_mercury_config"
             sequence="35"/>
     </data>
-</openerp>
+</odoo>

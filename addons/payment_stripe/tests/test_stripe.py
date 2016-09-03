@@ -1,39 +1,37 @@
 # -*- coding: utf-8 -*-
-
+import unittest
 import odoo
 from odoo import fields
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(True)
+@odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
 class StripeCommon(PaymentAcquirerCommon):
 
     def setUp(self):
         super(StripeCommon, self).setUp()
-        self.currency_euro = self.env['res.currency'].search([('name', '=', 'EUR')], limit=1)
-        # get the stripe account
-        self.stripe_id = self.env.ref('payment.payment_acquirer_stripe').id
+        self.stripe = self.env.ref('payment.payment_acquirer_stripe')
 
 
-@odoo.tests.common.at_install(True)
+@odoo.tests.common.at_install(False)
 @odoo.tests.common.post_install(True)
 class StripeTest(StripeCommon):
 
+    @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")
     def test_10_stripe_s2s(self):
-        stripe = self.env['payment.acquirer'].browse(self.stripe_id)
-        self.assertEqual(stripe.environment, 'test', 'test without test environment')
+        self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
 
         # Add Stripe credentials
-        stripe.write({
+        self.stripe.write({
             'stripe_secret_key': 'sk_test_bldAlqh1U24L5HtRF9mBFpK7',
             'stripe_publishable_key': 'pk_test_0TKSyYSZS9AcS4keZ2cxQQCW',
         })
 
         # Create payment meethod for Stripe
-        payment_method = self.env['payment.method'].create({
-            'acquirer_id': self.stripe_id,
+        payment_token = self.env['payment.token'].create({
+            'acquirer_id': self.stripe.id,
             'partner_id': self.buyer_id,
             'cc_number': '4242424242424242',
             'cc_expiry': '02 / 26',
@@ -46,9 +44,9 @@ class StripeTest(StripeCommon):
         tx = self.env['payment.transaction'].create({
             'reference': 'test_ref_%s' % fields.date.today(),
             'currency_id': self.currency_euro.id,
-            'acquirer_id': self.stripe_id,
+            'acquirer_id': self.stripe.id,
             'partner_id': self.buyer_id,
-            'payment_method_id': payment_method.id,
+            'payment_token_id': payment_token.id,
             'type': 'server2server',
             'amount': 115.0
         })
@@ -57,9 +55,9 @@ class StripeTest(StripeCommon):
         # Check state
         self.assertEqual(tx.state, 'done', 'Stripe: Transcation has been discarded.')
 
+    @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")
     def test_20_stripe_form_render(self):
-        stripe = self.env['payment.acquirer'].browse(self.stripe_id)
-        self.assertEqual(stripe.environment, 'test', 'test without test environment')
+        self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -77,7 +75,7 @@ class StripeTest(StripeCommon):
         }
 
         # render the button
-        res = stripe.render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values)
+        res = self.stripe.render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values)
         post_url = "https://checkout.stripe.com/checkout.js"
         email = "norbert.buyer@example.com"
         # check form result
@@ -90,9 +88,9 @@ class StripeTest(StripeCommon):
                 'Stripe: wrong value for input %s: received %s instead of %s' % (email, email, form_values.get('email'))
             )
 
+    @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")
     def test_30_stripe_form_management(self):
-        stripe = self.env['payment.acquirer'].browse(self.stripe_id)
-        self.assertEqual(stripe.environment, 'test', 'test without test environment')
+        self.assertEqual(self.stripe.environment, 'test', 'test without test environment')
 
         # typical data posted by Stripe after client has successfully paid
         stripe_post_data = {
@@ -153,11 +151,11 @@ class StripeTest(StripeCommon):
 
         tx = self.env['payment.transaction'].create({
             'amount': 4700,
-            'acquirer_id': self.stripe_id,
+            'acquirer_id': self.stripe.id,
             'currency_id': self.currency_euro.id,
             'reference': 'SO100',
             'partner_name': 'Norbert Buyer',
-            'partner_country_id': self.country_france_id})
+            'partner_country_id': self.country_france.id})
 
         # validate it
         tx.form_feedback(stripe_post_data, 'stripe')
@@ -168,7 +166,7 @@ class StripeTest(StripeCommon):
         # simulate an error
         stripe_post_data['status'] = 'error'
         stripe_post_data.update({u'error': {u'message': u"Your card's expiration year is invalid.", u'code': u'invalid_expiry_year', u'type': u'card_error', u'param': u'exp_year'}})
-        with mute_logger('openerp.addons.payment_stripe.models.payment_transaction'):
+        with mute_logger('odoo.addons.payment_stripe.models.payment'):
             tx.form_feedback(stripe_post_data, 'stripe')
         # check state
         self.assertEqual(tx.state, 'error', 'Stipe: erroneous validation did not put tx into error state')

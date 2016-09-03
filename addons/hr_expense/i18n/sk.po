@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-17 08:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-02-21 14:55+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,9 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
 msgid "<strong>Currency:</strong>"
-msgstr ""
+msgstr "<strong>Dátum:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -31,13 +32,15 @@ msgstr "<strong>Zamestnanec:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
 msgid "<strong>Manager:</strong>"
-msgstr ""
+msgstr "<strong>Dátum:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Dátum:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -49,11 +52,6 @@ msgstr "<strong>Celkom</strong>"
 #, fuzzy
 msgid "Account"
 msgstr "Analytický účet"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
-msgid "Accounting Date"
-msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -173,6 +171,7 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -289,13 +288,13 @@ msgid "Expenses by Month"
 msgstr "Výdavky podľa mesiaca"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:210
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Výdavky musia patriť rovnakému zamestnancovi."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:213
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -337,8 +336,9 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
+#, fuzzy
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "Vytvoriť jediný účtovný vstup"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -360,11 +360,6 @@ msgstr "HR výdavky"
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
 msgstr "Hotelové ubytovanie"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "Hr Department"
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -440,7 +435,7 @@ msgid "New Mail"
 msgstr "Nová pošta"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:278
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -450,13 +445,13 @@ msgstr ""
 "nakonfigurujte ho."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:246
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr "Adresa domov nenájdná pre zamestnanca %s, prosím nakonfigurujte ju."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:242
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -492,7 +487,7 @@ msgid "Payment By"
 msgstr "Zaplatil"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:282
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -561,8 +556,8 @@ msgstr "Zamietnuté"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reports"
-msgstr ""
+msgid "Reporting"
+msgstr "Výkazy"
 
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_1
@@ -570,7 +565,7 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr "Vyberte riadky, ktoré chcete odoslať aby boli uhradené."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:78
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -591,7 +586,6 @@ msgstr "Špecifikujte či produkt môže byť zvolený ako HR výdavky."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Stav"
 
@@ -718,25 +712,25 @@ msgstr ""
 "'Čakajúca platba'."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:112
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr "Môžte zmazať iba koncept alebo zamietnuté výdavky."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:207
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Môžte vytvoriť účtovný vstup iba pre potvrdené výdavky."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:118
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr "Môžete odoslať iba koncept výdavkov!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:129
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -761,6 +755,12 @@ msgstr "alebo"
 #: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
 msgid "report.hr_expense.report_expense"
 msgstr ""
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Popis:</strong>"
+
+#~ msgid "<strong>Validated By:</strong>"
+#~ msgstr "<strong>Overil:</strong>"
 
 #~ msgid "Action Needed"
 #~ msgstr "Potrebná akcia"
@@ -810,20 +810,11 @@ msgstr ""
 #~ msgid "Open Expense Menu"
 #~ msgstr "Otvoriť menu výdavkov"
 
-#~ msgid "Reporting"
-#~ msgstr "Výkazy"
-
 #~ msgid "Unread Messages"
 #~ msgstr "Neprečítané správy"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Počítadlo neprečítaných správ"
-
-#~ msgid "<strong>Description:</strong>"
-#~ msgstr "<strong>Popis:</strong>"
-
-#~ msgid "<strong>Validated By:</strong>"
-#~ msgstr "<strong>Overil:</strong>"
 
 #~ msgid "Website Messages"
 #~ msgstr "Správy webovej stránky"

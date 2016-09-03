@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="0">
 
     <record id="group_purchase_user" model="res.groups">
@@ -13,10 +13,6 @@
         <field name="category_id" ref="base.module_category_purchase_management"/>
         <field name="implied_ids" eval="[(4, ref('group_purchase_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
-    </record>
-
-    <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
     </record>
 
     <record id="group_analytic_accounting" model="res.groups">
@@ -37,6 +33,9 @@
 
 </data>
 <data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
+    </record>
 
     <record model="ir.rule" id="purchase_order_comp_rule">
         <field name="name">Purchase Order multi-company</field>
@@ -53,4 +52,4 @@
     </record>
 
 </data>
-</openerp>
+</odoo>

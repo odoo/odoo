@@ -48,7 +48,7 @@
                 <div class="col-md-9" id="middle_column">
                     <div class="text-center text-muted" t-if="not event_ids">
                       <h1>No event found</h1>
-                      <t groups="base.group_website_publisher">
+                      <t groups="website.group_website_publisher">
                           <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
                       </t>
                     </div>
@@ -59,7 +59,7 @@
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="event.is_participating" class="label label-info">Participating</small>
                                     <small t-if="not event.address_id" class="label label-info">Online</small>
-                                    <small t-if="not event.website_published" class="label label-danger">not published</small>
+                                    <small t-if="not event.website_published" class="label label-danger">unpublished</small>
                                 </h4>
                                 <div>
                                     <t t-if="event.organizer_id">
@@ -67,9 +67,9 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                                 </div>
-                                <div itemprop="location" t-field="event.address_id" t-field-options='{
+                                <div itemprop="location" t-field="event.address_id" t-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
@@ -150,7 +150,7 @@
         <div class="col-md-3 css_noprint" id="left_column">
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
-                    <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
+                    <li t-att-class="searches.get('date') == date[0] and 'active' or None" t-if="date[3] or (date[0] in ('old','all'))">
                         <a t-attf-href="/event?{{ keep_query('country', 'type', date=date[0]) }}"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
@@ -166,7 +166,7 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types" t-as="type">
                 <li t-if="type['event_type_id']"
-                    t-att-class="searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active' or ''">
+                    t-att-class="searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active' or None">
                     <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['event_type_id'][0]) }}"><t t-esc="type['event_type_id'][1]"/>
                         <span class="badge pull-right"><t t-esc="type['event_type_id_count']"/></span>
                     </a>
@@ -180,12 +180,12 @@
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries" t-as="country">
-                <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or ''">
+                <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or None">
                     <a t-attf-href="/event?{{ keep_query('type', 'date', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
-                <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or ''">
+                <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or None">
                     <a t-attf-href="/event?{{ keep_query('type', 'date', country='online') }}">
                         <span>Online Events</span>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
@@ -241,7 +241,7 @@
             <h1 class="text-center">Event Location</h1>
         </section>
         <h4 class="text-center text-muted"
-            t-field="event.address_id" t-field-options='{
+            t-field="event.address_id" t-options='{
                 "widget": "contact",
                 "fields": ["address", "phone", "mobile", "fax"]
             }'/>
@@ -272,12 +272,12 @@
                 <small t-if="event.is_participating" class="label label-info">Participating</small>
             </div>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'/> to
-                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'/>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
-                t-field="event.address_id" t-field-options='{
+                t-field="event.address_id" t-options='{
                 "widget": "contact",
                 "fields": ["city"]
                 }'/>
@@ -320,7 +320,7 @@
                         <t t-raw="comment.body"/>
                         <small class="pull-right muted text-right">
                             <div t-field="comment.author_id"/>
-                            <div t-field="comment.date" t-field-options='{"hide_seconds":"True"}'/>
+                            <div t-field="comment.date" t-options='{"hide_seconds":"True"}'/>
                         </small>
                     </div>
                 </li>
@@ -334,16 +334,15 @@
                     <h4>Where</h4>
                 </div>
                 <div class="panel-body">
-                    <!-- FORWARD-PORT UP TO SAAS-12 -->
-                    <t t-if="'key=' in event.google_map_img()">
+                    <t t-if="event.google_map_img()">
                         <a t-att-href="event.google_map_link()" target="_BLANK">
-                           <img class="thumbnail img-responsive" t-att-src="event.google_map_img()" />
+                           <img t-att-src="event.google_map_img()" width="100%%"/>
                         </a>
                     </t>
-                    <t t-if="'key=' not in event.google_map_img()">
+                    <t t-else="1">
                         <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
                     </t>
-                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                         "widget": "contact",
                         "fields": ["address", "phone", "mobile", "fax", "email"]
                         }'/>
@@ -355,8 +354,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 
@@ -364,7 +363,7 @@
                 <div class="panel-heading">
                     <h4>Organizer</h4>
                 </div>
-                <div class="panel-body" t-field="event.organizer_id" t-field-options='{
+                <div class="panel-body" t-field="event.organizer_id" t-options='{
                     "widget": "contact",
                     "fields": ["name", "phone", "mobile", "fax", "email"]
                     }'/>
@@ -400,14 +399,14 @@
             <thead>
                 <tr>
                     <th class="col-sm-4 col-md-6">Ticket Type</th>
-                    <th>End of Subscription</th>
+                    <th>End of Registration</th>
                     <th class="o_th_price">Price</th>
                     <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
                 <tr t-if="event.state == 'confirm'">
-                    <td>Event Subscription</td>
+                    <td>Event Registration</td>
                     <td>
                         <t t-if="event.date_begin">
                             <span t-esc="event.date_begin_located[:-3]"/>
@@ -431,7 +430,12 @@
         <button type="submit" t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
             class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
         <div t-if="not event.state == 'confirm'" class="alert alert-info">
-            Event registration not yet started. 
+            <t t-if="event.state == 'draft'">
+                Event registration not yet started.
+            </t>
+            <t t-if="event.state != 'draft'">
+                Event registration is closed.
+            </t>
             <t t-if="uid">
                 <i class="fa fa-plus-circle"><a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> <em>Configure and Launch Event Registration</em></a></i>
             </t>
@@ -458,7 +462,7 @@
                                     <strong>
                                         Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
                                         <t t-if="ticket['price'] > 0">
-                                            <t t-esc="ticket['price']" t-esc-options='{"widget": "monetary", "display_currency": "website.pricelist_id.currency_id"}'/>
+                                            <t t-esc="ticket['price']" t-options='{"widget": "monetary", "display_currency": website.pricelist_id.currency_id}'/>
                                         </t>
                                         <t t-if="ticket['price'] == 0">Free</t>)
                                     </strong>
@@ -497,7 +501,7 @@
 <template id="registration_complete" name="Registration Completed">
     <t t-call="website.layout">
         <div class="container">
-            <h3>We are glad to confirm your subscription to our event</h3>
+            <h3>We are glad to confirm your registration to our event</h3>
             <div class="row">
                 <div class="col-md-3 mt16">
                     <h4>Event Details</h4>
@@ -505,13 +509,13 @@
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
                     <i class="fa fa-clock-o"/> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span>
-                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["address", "phone", "mobile", "fax", "email"]
                             }'/>
                 </div>
                 <div class="col-md-3 mt16">
-                    <h4>Your subscription</h4>
+                    <h4>Your registration</h4>
                 </div>
                 <div class="col-md-9 mt16">
                     <table class='table table-bordered table-striped'>
@@ -628,9 +632,9 @@
 
 
 <!-- User Navbar -->
-<template id="content_new_event" inherit_id="website.user_navbar" groups="event.group_event_manager">
+<template id="content_new_event" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
+        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
     </xpath>
 </template>
 </odoo>

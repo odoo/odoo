@@ -1,5 +1,5 @@
 {
-    'name': 'eCommerce Delivery',
+    'name': 'e-Commerce Delivery',
     'category': 'Website',
     'summary': 'Add Delivery Costs to Online Sales',
     'website': 'https://www.odoo.com/page/e-commerce',
@@ -10,9 +10,9 @@ Delivery Costs
 """,
     'depends': ['website_sale', 'delivery', 'website_sale_stock'],
     'data': [
-        'views/website_sale_delivery.xml',
-        'views/website_sale_delivery_view.xml',
-        'demo/website_sale_delivery_data.xml'
+        'views/website_sale_delivery_templates.xml',
+        'views/website_sale_delivery_views.xml',
+        'data/website_sale_delivery_data.xml'
     ],
     'demo': [
         'data/website_sale_delivery_demo.xml'

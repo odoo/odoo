@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_general_configuration_form_inherit_pad" model="ir.ui.view">
+        <field name="name">base.config.settings.form.inherit</field>
+        <field name="model">base.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='google']" position="before">
+                <group string="Pads">
+                    <label for="pad_server"/>
+                    <div>
+                        <field name="pad_server" placeholder="e.g. beta.primarypad.com" class="oe_inline"/>
+                    </div>
+                    <label for="pad_key"/>
+                    <div>
+                        <field name="pad_key" class="oe_inline"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

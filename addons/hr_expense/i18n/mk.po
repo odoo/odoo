@@ -4,25 +4,30 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-17 08:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-12 11:14+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
 "Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
 msgid "<strong>Currency:</strong>"
-msgstr ""
+msgstr "<strong>Датум:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -31,13 +36,15 @@ msgstr "<strong>Вработен:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
 msgid "<strong>Manager:</strong>"
-msgstr ""
+msgstr "<strong>Датум:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
+#, fuzzy
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Датум:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -49,11 +56,6 @@ msgstr "<strong>Вкупно</strong>"
 #, fuzzy
 msgid "Account"
 msgstr "Аналитичка сметка"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_accounting_date
-msgid "Accounting Date"
-msgstr ""
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -173,6 +175,7 @@ msgid "Date"
 msgstr "Датум"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Department"
@@ -289,13 +292,13 @@ msgid "Expenses by Month"
 msgstr "Трошоци по месец"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:210
+#: code:addons/hr_expense/models/hr_expense.py:209
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Трошоците мора да припаѓаат на истиот вработен."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:213
+#: code:addons/hr_expense/models/hr_expense.py:212
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -358,11 +361,6 @@ msgstr "Трошоци за човечки ресурси"
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
 msgstr "Хотелско сместување"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "Hr Department"
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -438,7 +436,7 @@ msgid "New Mail"
 msgstr "Нова пошта"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:278
+#: code:addons/hr_expense/models/hr_expense.py:276
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -446,13 +444,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:246
+#: code:addons/hr_expense/models/hr_expense.py:244
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:242
+#: code:addons/hr_expense/models/hr_expense.py:240
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -488,7 +486,7 @@ msgid "Payment By"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:282
+#: code:addons/hr_expense/models/hr_expense.py:280
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -555,8 +553,8 @@ msgstr "Одбиено"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense
-msgid "Reports"
-msgstr ""
+msgid "Reporting"
+msgstr "Известување"
 
 #. module: hr_expense
 #: model:web.tip,description:hr_expense.expense_tip_1
@@ -564,7 +562,7 @@ msgid "Select the lines you want to submit to be reimbursed."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:78
+#: code:addons/hr_expense/models/hr_expense.py:77
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -586,7 +584,6 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_state
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Status"
 msgstr "Статус"
 
@@ -707,25 +704,25 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:112
+#: code:addons/hr_expense/models/hr_expense.py:111
 #, python-format
 msgid "You can only delete draft or refused expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:207
+#: code:addons/hr_expense/models/hr_expense.py:206
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:118
+#: code:addons/hr_expense/models/hr_expense.py:117
 #, python-format
 msgid "You can only submit draft expenses!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:129
+#: code:addons/hr_expense/models/hr_expense.py:128
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -747,6 +744,9 @@ msgstr "или"
 #: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
 msgid "report.hr_expense.report_expense"
 msgstr ""
+
+#~ msgid "<strong>Description:</strong>"
+#~ msgstr "<strong>Опис:</strong>"
 
 #~ msgid "Action Needed"
 #~ msgstr "Потребна е акција"
@@ -793,17 +793,11 @@ msgstr ""
 #~ msgid "Number of unread messages"
 #~ msgstr "Број на непрочитани пораки"
 
-#~ msgid "Reporting"
-#~ msgstr "Известување"
-
 #~ msgid "Unread Messages"
 #~ msgstr "Непрочитани Пораки"
 
 #~ msgid "Unread Messages Counter"
 #~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid "<strong>Description:</strong>"
-#~ msgstr "<strong>Опис:</strong>"
 
 #~ msgid "Website Messages"
 #~ msgstr "Пораки на веб сајт"

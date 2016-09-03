@@ -2,12 +2,12 @@
 
 from datetime import datetime
 import time
-from openerp import api, models
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo import api, models
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class ReportPartnerLedger(models.AbstractModel):
-    _name = 'report.account_extra_reports.report_partnerledger'
+    _name = 'report.account.report_partnerledger'
 
     def _lines(self, data, partner):
         full_account = []
@@ -65,8 +65,8 @@ class ReportPartnerLedger(models.AbstractModel):
             result = contemp[0] or 0.0
         return result
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def render_html(self, docids, data=None):
         data['computed'] = {}
 
         obj_partner = self.env['res.partner']

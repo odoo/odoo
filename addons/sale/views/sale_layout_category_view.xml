@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- Report configuration -->
         <record id="report_configuration_form_view" model="ir.ui.view">
             <field name="name">report.configuration.form.view</field>
@@ -54,10 +53,9 @@
         <menuitem
             action="report_configuration_action"
             id="Report_configuration"
-            parent="base.menu_sales_config"
+            parent="menu_sales_config"
             sequence="2"
             name="Report Layout Categories"
             groups="sale.group_sale_layout"
         />
-    </data>
-</openerp>
+</odoo>

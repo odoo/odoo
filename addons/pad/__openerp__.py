@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Collaborative Pads',
     'version': '2.0',
@@ -11,14 +13,12 @@ Lets the company customize which Pad installation should be used to link to new
 pads (by default, http://etherpad.com/).
     """,
     'website': 'https://www.odoo.com/page/notes',
-    'depends': ['web'],
+    'depends': ['web', 'base_setup'],
     'data': [
-        'res_company.xml',
         'views/pad.xml',
+        'views/res_config_view.xml',
     ],
-    'demo': ['pad_demo.xml'],
-    'installable': True,
-    'auto_install': False,
+    'demo': ['data/pad_demo.xml'],
     'web': True,
-    'qweb' : ['static/src/xml/*.xml'],
+    'qweb': ['static/src/xml/pad.xml']
 }

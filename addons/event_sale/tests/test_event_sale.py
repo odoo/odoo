@@ -15,7 +15,6 @@ class EventSaleTest(common.TransactionCase):
             'name': 'test_formation',
             'type': 'service',
             'event_ok': True,
-            'event_type_id': 1,
         })
 
         # I create an event from the same type than my product

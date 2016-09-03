@@ -80,7 +80,8 @@ class TestStockCommon(common.TestProductCommon):
             'name': 'TestLocation1',
             'posx': 3,
             'location_id': cls.warehouse_1.lot_stock_id.id,
-            })
+        })
+
         # Existing data
         cls.existing_inventories = cls.env['stock.inventory'].search([])
         cls.existing_quants = cls.env['stock.quant'].search([])

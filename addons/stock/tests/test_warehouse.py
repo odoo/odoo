@@ -19,7 +19,7 @@ class TestInventory(TestStockCommon):
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 50.0)
         self.assertEqual(inventory.line_ids.product_id, self.product_1)
-        self.assertEqual(inventory.line_ids.product_uom_id, self.uom_unit)
+        self.assertEqual(inventory.line_ids.product_uom_id, self.product_1.uom_id)
 
         # Update the line, set to 35
         inventory.line_ids.write({'product_qty': 35.0})
@@ -70,7 +70,7 @@ class TestInventory(TestStockCommon):
         customer_move = self._create_move(product, self.warehouse_1.lot_stock_id, self.env.ref('stock.stock_location_customers'), product_uom_qty=5)
 
         # test move values
-        self.assertEqual(customer_move.product_uom, self.uom_kunit)
+        self.assertEqual(customer_move.product_uom, product.uom_id)
         self.assertEqual(customer_move.location_id, self.warehouse_1.lot_stock_id)
         self.assertEqual(customer_move.location_dest_id, self.env.ref('stock.stock_location_customers'))
 

@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     "name" : "Product extension to track sales and purchases",
     "version" : "1.0",
-    "depends" : ["product", "purchase", "sale", "mrp", "stock_account"],
+    "depends" : ["mrp", "stock_account"],
     "category" : "Manufacturing",
     "description": """
 Product extension. This module adds:
@@ -11,7 +13,7 @@ Product extension. This module adds:
 """,
     "init_xml" : [],
     "demo_xml" : [],
-    "data" : ["product_extended_wizard.xml","product_extended_view.xml","mrp_view.xml", 'security/ir.model.access.csv'],
+    "data": ["views/product_views.xml"],
     "active": False,
     "installable": True
 }

@@ -13,6 +13,6 @@
     ],
     'auto_install': True,
     'data': [
-        'views/templates.xml',
+        'views/website_sale_stock_templates.xml',
     ]
 }

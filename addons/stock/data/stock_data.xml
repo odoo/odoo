@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         
         <record id="removal_fifo" model="product.removal">
@@ -86,7 +86,7 @@
             <field name="message_type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Inventory Management application installed!</field>
-            <field name="body"><![CDATA[<p>Manage your product inventoy and stock locations: you can control stock moves history and planning,
+            <field name="body"><![CDATA[<p>Manage your product inventory and stock locations: you can control stock moves history and planning,
 watch your stock valuation, and track production lots (based on serial numbers).</p>]]></field>
         </record>
 
@@ -95,7 +95,7 @@ watch your stock valuation, and track production lots (based on serial numbers).
     Request link
     -->
         <record id="req_link_tracking" model="res.request.link">
-            <field name="name">Serial Number</field>
+            <field name="name">Lot/Serial Number</field>
             <field name="object">stock.production.lot</field>
         </record>
 
@@ -159,5 +159,14 @@ watch your stock valuation, and track production lots (based on serial numbers).
             <field name="number_increment">1</field>
         </record>
 
+        <record id="sequence_stock_scrap" model="ir.sequence">
+            <field name="name">Scrap</field>
+            <field name="code">stock.scrap</field>
+            <field name="prefix">SP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
     </data>
-</openerp>
+</odoo>

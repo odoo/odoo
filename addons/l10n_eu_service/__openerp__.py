@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'EU Mini One Stop Shop (MOSS)',
-    'version': '1.0',
     'category': 'Localization',
     'description': """
 EU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services
@@ -56,10 +56,6 @@ References
     'data': [
         'security/ir.model.access.csv',
         'wizard/wizard.xml',
-        'wizard/l10n_eu_service.service_tax_rate.csv'
+        'data/l10n_eu_service.service_tax_rate.csv'
     ],
-    'test': [],
-    'demo': [],
-    'auto_install': False,
-    'installable': True,
 }

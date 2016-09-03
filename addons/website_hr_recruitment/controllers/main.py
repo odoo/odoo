@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.tools.translate import _
-from openerp.http import request
+from odoo import http, _
+from odoo.addons.website.models.website import slug
+from odoo.http import request
 
-from openerp.addons.website.models.website import slug
 
-class website_hr_recruitment(http.Controller):
+class WebsiteHrRecruitment(http.Controller):
     @http.route([
         '/jobs',
         '/jobs/country/<model("res.country"):country>',
@@ -58,7 +56,7 @@ class website_hr_recruitment(http.Controller):
             office_id = False
 
         # Render page
-        return request.website.render("website_hr_recruitment.index", {
+        return request.render("website_hr_recruitment.index", {
             'jobs': jobs,
             'countries': countries,
             'departments': departments,
@@ -71,7 +69,7 @@ class website_hr_recruitment(http.Controller):
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
         job = request.env['hr.job'].create({
-            'name': _('New Job Offer'),
+            'name': _('Job Title'),
         })
         return request.redirect("/jobs/detail/%s?enable_editor=1" % slug(job))
 

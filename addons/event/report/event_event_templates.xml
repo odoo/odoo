@@ -18,7 +18,7 @@
                                         <img t-att-src="'data:image/png;base64,%s' % o.event_id.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
                                     </span>
                                     <h5 t-field="o.event_id.name"/>
-                                    <h5>( <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="o.event_id.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="o.event_id.date_end" t-field-options='{"hide_seconds":"True"}'> </span> )</h5>
+                                    <h5>( <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="o.event_id.date_begin" t-options='{"hide_seconds": True}'> </span> <i>to</i> <span itemprop="endDate" t-field="o.event_id.date_end" t-options='{"hide_seconds": True}'> </span> )</h5>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12 text-center" id="o_event_name">
@@ -69,7 +69,7 @@
                                         </div>
                                     </span>
                                     <h4 t-field="event.name"/>
-                                    <h5>( <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-field-options='{"hide_seconds":"True"}'> </span> )</h5>
+                                    <h5>( <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.date_begin" t-options='{"hide_seconds": True}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.date_end" t-options='{"hide_seconds": True}'> </span> )</h5>
                                 </div>
                             </div>
                             <div class="row" t-ignore="true">

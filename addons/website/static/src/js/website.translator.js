@@ -7,6 +7,7 @@ var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var translate = require('web_editor.translate');
 var website = require('website.website');
+var local_storage = require('web.local_storage');
 
 var qweb = core.qweb;
 
@@ -62,14 +63,14 @@ var Translate = translate.Class.include({
     },
     edit: function () {
         $("#oe_main_menu_navbar").hide();
-        if (!localStorage[nodialog]) {
+        if (!local_storage.getItem(nodialog)) {
             var dialog = new TranslatorDialog();
             dialog.appendTo($(document.body));
             dialog.on('activate', this, function () {
                 if (dialog.$('input[name=do_not_show]').prop('checked')) {
-                    localStorage.removeItem(nodialog);
+                    local_storage.removeItem(nodialog);
                 } else {
-                    localStorage.setItem(nodialog, true);
+                    local_storage.setItem(nodialog, true);
                 }
                 dialog.$el.modal('hide');
             });

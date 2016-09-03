@@ -113,7 +113,6 @@
     <li class="divider"/>
     <li><a href="#" data-action="perform_js_tests">Run JS Tests</a></li>
     <li><a href="#" data-action="select_view">Open View</a></li>
-    <li><a href="#" data-action="start_tour">Start tour</a></li>
     <t t-if="manager._events">
         <li class="divider"/>
         <li><a href="#" data-action="show_timelines">Toggle Timelines</a></li>
@@ -121,26 +120,6 @@
     </t>
     <li class="divider o_debug_leave_section"/>
     <li><a href="#" data-action="leave_debug_mode">Leave the Developer Tools</a></li>
-</t>
-
-<t t-name="WebClient.DebugManager.ToursDialog">
-    <div>
-        <table class="table table-condensed table-striped table-responsive">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Path</th>
-                <th/>
-            </tr>
-
-            <tr t-foreach="tours" t-as="tour">
-                <td><t t-esc="tours[tour].id"/></td>
-                <td><t t-esc="tours[tour].name"/></td>
-                <td><t t-esc="tours[tour].path"/></td>
-                <td><button type="button" class="btn btn-sm btn-primary fa fa-play o_start_tour" t-att-data-id="tours[tour].id"/></td>
-            </tr>
-        </table>
-    </div>
 </t>
 <t t-name="WebClient.DebugManager.Action">
     <t t-if="action">
@@ -234,7 +213,7 @@
                 <t t-esc="section.label"/> <span class="caret"/>
             </button>
             <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                <a t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
+                <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
                     <t t-raw="item.label"/>
                 </a>
             </t>
@@ -256,7 +235,7 @@
                             <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
                         </t>
                     </t>
-                    <a t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
+                    <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
                         <t t-raw="item.label"/>
                         <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment"/>
                     </a>
@@ -414,8 +393,7 @@
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-attf-class="o_icon_button #{disabled ? 'oe_list_button_disabled' : ''}"
-        ><img t-if="!widget.icon.indexOf('fa-') == 0" t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-        t-att-alt="widget.string"/><i t-if="widget.icon.indexOf('fa-') == 0" t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
+        ><i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
 </button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
@@ -745,7 +723,7 @@
     </div>
 </t>
 <t t-name="Many2OneButton.cell">
-    <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
+    <i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
 </t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
@@ -861,7 +839,6 @@
 
         <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
         <button type="button" class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select"/>
-        <button type="button" class="btn btn-sm btn-default fa fa-download o_save_file_button" title="Save As..."/>
         <button type="button" class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear"/>
 
         <span class="o_form_binary_progress">Uploading...</span>
@@ -1216,7 +1193,7 @@
 
 <t t-name="toggle_button">
     <button type="button" class="o_icon_button" t-att-title="widget.string">
-        <img t-attf-src="#{prefix || _s}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string"/>
+        <i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
     </button>
 </t>
 
@@ -1251,6 +1228,19 @@
     </div>
 </t>
 
+<t t-name="AceEditor">
+    <t t-if="!widget.get('effective_readonly')">
+        <div class="oe_form_field o_ace_view_editor oe_ace_open">
+            <div class="ace-view-editor"/>
+        </div>
+    </t>
+    <t t-if="widget.get('effective_readonly')">
+        <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
+            <span class="oe_form_text_content"></span>
+        </div>
+    </t>
+</t>
+
 <t t-name="notification-box">
     <div t-att-class="'alert alert-dismissible alert-' + type" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -1277,7 +1267,6 @@
         <ul class="dropdown-menu" role="menu">
             <li><a href="#" data-menu="documentation">Documentation</a></li>
             <li><a href="#" data-menu="support">Support</a></li>
-            <li><a href="#" data-menu="about">About</a></li>
             <li class="divider"/>
             <li><a href="#" data-menu="settings">Preferences</a></li>
             <li><a href="#" data-menu="account">My Odoo.com account</a></li>
@@ -1285,50 +1274,6 @@
         </ul>
     </li>
 </t>
-
-<div t-name="UserMenu.about">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-offset-2 col-sm-8">
-                <div class="text-center">
-                    <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
-                </div>
-                <div class="text-center">
-                    <div class="user-heading">
-                        <h3>
-                            Version <t t-esc="db_info.server_version"/>
-                            (Community Edition)
-                        </h3>
-                        <t t-if="db_info.expiration_date">
-                            <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
-                        </t>
-                    </div>
-                    <div>
-                        <div class="tab-content">
-                            <div id="settings" class="tab-pane active">
-                                <h4>Copyright © 2004-2015 Odoo S.A.</h4>
-                                <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
-                                <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
-                                <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
-                                <p>
-                                  <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
-                                  <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
-                                  <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
-                                  <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" t-if="!debug">
-            <div class="col-md-12">
-                <a class="oe_activate_debug_mode pull-right" href="?debug" >Activate the developer mode</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <t t-name="EnterpriseUpgrade">
     <div class="row">

@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- ir.actions -->
+
+        <record id="action_view" model="ir.ui.view">
+            <field name="name">ir.actions.actions</field>
+            <field name="model">ir.actions.actions</field>
+            <field name="arch" type="xml">
+                <form string="Action">
+                    <group>
+                        <field name="name"/>
+                        <field name="type"/>
+                        <field name="usage"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_view_tree" model="ir.ui.view">
+            <field name="name">ir.actions.actions.tree</field>
+            <field name="model">ir.actions.actions</field>
+            <field name="arch" type="xml">
+                <tree string="Action">
+                    <field name="name"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_view_search" model="ir.ui.view">
+            <field name="name">ir.actions.actions.search</field>
+            <field name="model">ir.actions.actions</field>
+            <field name="arch" type="xml">
+                <search string="Action">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]" string="Action"/>
+                </search>
+            </field>
+        </record>
+        <record id="ir_sequence_actions" model="ir.actions.act_window">
+            <field name="name">Actions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.actions.actions</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="action_view_tree"/>
+            <field name="search_view_id" ref="action_view_search"/>
+        </record>
+        <menuitem id="next_id_6" name="Actions" parent="base.menu_custom" sequence="2"/>
+        <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
+
+        <!-- ir.actions.report.xml -->
+
+        <record id="act_report_xml_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="arch" type="xml">
+                <form string="Report">
+                    <field name="ir_values_id" invisible="1"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="create_action" string="Add in the 'Print' menu" type="object"
+                                    attrs="{'invisible':[('ir_values_id','!=',False)]}" icon="fa-plus-square"
+                                    help="Display an option on related documents to print this report" class="oe_stat_button"/>
+                            <button name="unlink_action" string="Remove from the 'Print' menu" type="object"
+                                    attrs="{'invisible':[('ir_values_id','=',False)]}" icon="fa-minus-square"
+                                    help="Remove the contextual action related this report" class="oe_stat_button"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="report_type"/>
+                            </group>
+                            <group>
+                                <field name="model"/>
+                                <field name="report_name" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                                <field name="report_rml" attrs="{'invisible':[('report_type','!=', 'controller')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="security" string="Security">
+                                <field name="groups_id"/>
+                            </page>
+                            <page name='rml' string="RML Configuration" attrs="{'invisible':[('report_type','not in',['pdf','sxw'])]}">
+                                <group>
+                                    <group string="RML Report">
+                                        <field name="header"/>
+                                        <field name="report_file"/>
+                                        <field name="auto"/>
+                                        <field name="parser"/>
+                                        <field name="usage"/>
+                                    </group>
+                                    <group string="XML Report">
+                                        <field name="report_xsl"/>
+                                        <field name="report_xml"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name='advanced' string="Advanced Properties">
+                                <group>
+                                    <field name="multi"/>
+                                    <field name="attachment_use" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                                    <field name="attachment" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="act_report_xml_view_tree" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml.tree</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="arch" type="xml">
+                <tree string="Report xml">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="type"/>
+                    <field name="report_name"/>
+                    <field name="report_type"/>
+                    <field name="attachment"/>
+                </tree>
+            </field>
+        </record>
+        <record id="act_report_xml_search_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml.search</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="arch" type="xml">
+                <search string="Report Xml">
+                    <field name="name"
+                        filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
+                        string="Report"/>
+                    <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="Report Type" domain="[]" context="{'group_by':'report_type'}"/>
+                        <filter string="Report Model" domain="[]" context="{'group_by':'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="ir_action_report_xml" model="ir.actions.act_window">
+            <field name="name">Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.actions.report.xml</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="act_report_xml_view_tree"/>
+            <field name="search_view_id" ref="act_report_xml_search_view"/>
+        </record>
+        <menuitem action="ir_action_report_xml" id="menu_ir_action_report_xml" parent="base.next_id_6"/>
+
+        <!-- ir.actions.act_window -->
+
+        <record id="view_window_action_tree" model="ir.ui.view">
+            <field name="name">ir.actions.windows.tree</field>
+            <field name="model">ir.actions.act_window</field>
+            <field name="arch" type="xml">
+                <tree string="Open Window">
+                    <field name="name"/>
+                    <field name="res_model"/>
+                    <field name="view_type"/>
+                    <field name="view_id"/>
+                    <field name="domain"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_window_action_form" model="ir.ui.view">
+            <field name="name">ir.actions.windows.form</field>
+            <field name="model">ir.actions.act_window</field>
+            <field name="arch" type="xml">
+                <form string="Open a Window">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="xml_id" string="External ID"/>
+                            <field name="res_model" string="Object"/>
+                            <field name="src_model" string="Source Object"/>
+                        </group>
+                        <group>
+                            <field name="usage"/>
+                            <field name="type" readonly="1"/>
+                            <field name="target"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General Settings">
+                            <group>
+                                <group string="Views">
+                                    <field name="view_type"/>
+                                    <field name="view_mode"/>
+                                    <field name="view_id"/>
+                                    <field name="search_view_id"/>
+                                </group>
+                                <group string="Filters">
+                                    <field name="domain"/>
+                                    <field name="context"/>
+                                    <field name="limit"/>
+                                    <field name="auto_search"/>
+                                    <field name="filter"/>
+                                    <field name="multi"/>
+                                </group>
+                            </group>
+                            <group string="Help">
+                                <field colspan="2" name="help" nolabel="1"/>
+                            </group>
+                            <group string="Views">
+                                <field colspan="2" name="view_ids" nolabel="1">
+                                    <form string="Views">
+                                        <group>
+                                            <field colspan="4" name="sequence"/>
+                                            <field name="view_mode"/>
+                                            <field domain="[('type', '=', view_mode)]" name="view_id"/>
+                                        </group>
+                                    </form>
+                                    <tree string="Views">
+                                        <field name="sequence"/>
+                                        <field name="view_mode"/>
+                                        <field name="view_id"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Security">
+                            <field name="groups_id"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id="view_window_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.windows.search</field>
+            <field name="model">ir.actions.act_window</field>
+            <field name="arch" type="xml">
+                <search string="Open a Window">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
+                    <field name="view_type"/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="View Type" domain="[]" context="{'group_by':'view_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="ir_action_window" model="ir.actions.act_window">
+            <field name="name">Window Actions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_window_action_search"/>
+        </record>
+        <record id="ir_action_window_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_window_action_tree"/>
+            <field name="act_window_id" ref="ir_action_window"/>
+        </record>
+        <record id="ir_action_window_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_window_action_form"/>
+            <field name="act_window_id" ref="ir_action_window"/>
+        </record>
+        <menuitem action="ir_action_window" id="menu_ir_action_window" parent="base.next_id_6"/>
+
+        <!-- ir.actions.server -->
+
+        <record id="view_server_action_form" model="ir.ui.view">
+            <field name="name">Server Action</field>
+            <field name="model">ir.actions.server</field>
+            <field name="arch" type="xml">
+                <form string="Server Action">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="menu_ir_values_id" invisible="1"/>
+                            <button name="create_action" string="Add in the 'More' menu" type="object"
+                                    attrs="{'invisible':[('menu_ir_values_id','!=',False)]}"
+                                    help="Display an option on related documents to run this sever action"/>
+                            <button name="unlink_action" string="Remove from the 'More' menu" type="object" 
+                                    attrs="{'invisible':[('menu_ir_values_id','=',False)]}"
+                                    help="Remove the contextual action related to this server action"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="e.g. Update order quantity"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type" invisible="1"/>
+                                <field name="model_id"/>
+                                <field name="state"/>
+                            </group>
+                            <group>
+                                <field name="condition"/>
+                                <field name="sequence"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Python Code" name='code' autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'code')]}">
+                                <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
+                            </page>
+
+                            <page string="Worflow Signal" autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'trigger')]}">
+                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
+                                    Please set the Base Model before setting the action details.
+                                </p>
+                                <group attrs="{'invisible': [('model_id', '=', False)]}">
+                                    <field name="use_relational_model" widget="radio"
+                                            attrs="{'readonly': [('model_id', '=', False)]}"/>
+                                    <field name="wkf_field_id" context="{'key': ''}"
+                                            attrs="{'required': [('state', '=', 'trigger'), ('use_relational_model', '=', 'relational')],
+                                                    'invisible': [('use_relational_model', '=', 'base')]}"
+                                            domain="[('model_id', '=', model_id), ('ttype', 'in', ['many2one'])]"/>
+                                    <field name="wkf_model_id" invisible="1"/>
+                                    <field name="wkf_model_name" invisible="1"/>
+                                    <field name="wkf_transition_id" attrs="{'required': [('state', '=', 'trigger')]}"
+                                            domain="[('wkf_id.osv', '=', wkf_model_name)]"/>
+                                </group>
+                            </page>
+
+                            <page string="Client" autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'client_action')]}">
+                                <group>
+                                    <field name="action_id" attrs="{'required':[('state', '=', 'client_action')]}"/>
+                                </group>
+                            </page>
+
+
+                            <page string="Create / Write / Copy" autofocus="autofocus"
+                                    attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
+                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
+                                    Please set the Base Model before setting the action details.
+                                </p>
+                                <group attrs="{'invisible': [('model_id', '=', False)]}">
+                                    <field name="use_create" widget="radio"
+                                            attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
+
+                                    <field name="use_write" widget="radio"
+                                            attrs="{'invisible': [('state', '!=', 'object_write')]}"/>
+
+                                    <label for="ref_object" string=" "
+                                            attrs="{'invisible': ['&amp;', 
+                                                                    '|', ('state', '!=', 'object_write'), ('use_write', '!=', 'other'),
+                                                                    '|', ('state', '!=', 'object_create'), ('use_create', '!=', 'copy_other')]}"/>
+                                    <div style="margin-left: 24px;" 
+                                            attrs="{'invisible': ['&amp;', 
+                                                                    '|', ('state', '!=', 'object_write'), ('use_write', '!=', 'other'),
+                                                                    '|', ('state', '!=', 'object_create'), ('use_create', '!=', 'copy_other')]}">
+                                        <field name="ref_object" nolabel="1"/>
+                                    </div>
+
+                                    <field name="crud_model_id"
+                                            attrs="{'invisible': ['|', ('state', '!=', 'object_create'), ('use_create', '!=', 'new_other')]}"/>
+                                    <field name="crud_model_name" invisible="1"/>
+
+                                    <label for="link_new_record" attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
+                                    <div attrs="{'invisible': [('state', '!=', 'object_create')]}">
+                                        <field name="link_new_record" nolabel="1" style="display: inline-block;"/>
+                                        <p class="oe_grey oe_edit_only" style="display: inline-block; margin: 0px 0px 0px 8px;">
+                                            Check to attach the newly created record to the record on which the server action runs.
+                                        </p>
+                                        <group>
+                                            <field name="model_name" invisible="1"/>
+                                            <field name="link_field_id"
+                                                    domain="[('model_id', '=', crud_model_id), ('relation', '=', model_name), ('ttype', 'in', ['many2one'])]"
+                                                    attrs="{'required': [('state', '=', 'object_create'), ('link_new_record', '=', True)],
+                                                            'invisible': ['|', ('state', '!=', 'object_create'), ('link_new_record', '=', False)]}"/>
+                                        </group>
+                                    </div>
+
+                                    <label for="link_new_record" attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}"/>
+                                    <div attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}">
+                                        <p class="oe_grey oe_edit_only" style="margin: 0px;">
+                                            Write a python expression, beginning with object, that gives the record to update. An expression builder is available in the help tab. Examples:
+                                        </p>
+                                        <ul class="oe_grey oe_edit_only">
+                                            <li>object.partner_id</li>
+                                            <li>object.partner_id.currency_id</li>
+                                        </ul>
+                                        <field name="write_expression"
+                                                attrs="{'required': [('state', '=', 'object_write'), ('use_write', '=', 'expression')]}"/>
+                                    </div>
+
+                                    <field name="fields_lines">
+                                        <tree string="Field Mappings" editable="top">
+                                            <field name="col1" domain="[('model_id', '=', parent.crud_model_id)]"/>
+                                            <field name="type"/>
+                                            <field name="value"/>
+                                        </tree>
+                                        <form string="Field Mapping">
+                                            <group >
+                                                <field name="col1" domain="[('model_id', '=', parent.crud_model_id)]"/>
+                                                <field name="type"/>
+                                                <field name="value"/>
+                                            </group>
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
+
+                            <page string="Execute several actions" autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'multi')]}">
+                                <p class="oe_grey">
+                                    If several child actions return an action, only the last one will be executed.
+                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action.
+                                </p>
+                                <field name="child_ids"
+                                        domain="[('model_id', '=', model_id)]"/>
+                            </page>
+
+                            <page string="Help">
+                                <group>
+                                    <div style="margin-top: 4px;">
+                                        <h3>Help with Python expressions.</h3>
+                                        <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
+                                        <ul>
+                                            <li>self: ORM model of the record on which the action is triggered</li>
+                                            <li>object or obj: browse_record of the record on which the action is triggered</li>
+                                            <li>pool: ORM model pool (i.e. self.pool)</li>
+                                            <li>time: Python time module</li>
+                                            <li>cr: database cursor</li>
+                                            <li>uid: current user id</li>
+                                            <li>context: current context</li>
+                                            <li>workflow: Workflow engine</li>
+                                            <li>log(message, level='info'): a logging function to create ir_logging records</li>
+                                        </ul>
+                                        <div>
+                                            <p>Example of condition expression using Python</p>
+                                            <ul>
+                                                <li>condition: True</li>
+                                                <li>condition: object.list_price > 5000</li>
+                                            </ul>
+                                        </div>
+                                        <div attrs="{'invisible': [('state', '!=', 'code')]}">
+                                            <p>Example of python code</p>
+                                            <code>
+                                                partner_name = obj.name + '_code'
+                                                env["res.partner"].create({"name": partner_name})
+                                            </code>
+                                        </div>
+                                    </div>
+                                    <group>
+                                        <h3 colspan="2">Dynamic expression builder</h3>
+                                        <p colspan="2" attrs="{'invisible': [('model_id', '!=', False)]}">
+                                            Please set the Base Model of the action to enable the dynamic expression buidler.
+                                        </p>
+                                        <field name="model_object_field"
+                                                attrs="{'invisible': [('model_id', '=', False)]}"
+                                                domain="[('model_id', '=', model_id), ('ttype', '!=', 'one2many'), ('ttype', '!=', 'many2many')]"/>
+                                        <field name="sub_object" readonly="1" attrs="{'invisible': [('model_id', '=', False)]}"/>
+                                        <field name="sub_model_object_field"
+                                                domain="[('model_id', '=', sub_object), ('ttype', '!=', 'one2many'), ('ttype', '!=', 'many2many')]"
+                                                attrs="{'readonly':[('sub_object','=',False)],
+                                                        'required':[('sub_object','!=',False)],
+                                                        'invisible': [('model_id', '=', False)]}"/>
+                                        <field name="copyvalue" attrs="{'invisible': [('model_id', '=', False)]}"/>
+                                        <h3 colspan="2">Find the ID of a record in the database</h3>
+                                        <field name="id_object"/>
+                                        <field name="id_value" />
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_server_action_tree" model="ir.ui.view">
+            <field name="name">Server Actions</field>
+            <field name="model">ir.actions.server</field>
+            <field name="arch" type="xml">
+                <tree string="Server Actions">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="model_id"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_server_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.server.search</field>
+            <field name="model">ir.actions.server</field>
+            <field name="arch" type="xml">
+                <search string="Server Actions">
+                    <field name="name" string="Server Action"/>
+                    <field name="model_id"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By" colspan="4" col="4">
+                        <filter string="Action Type" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_server_action" model="ir.actions.act_window">
+            <field name="name">Server Actions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.actions.server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_server_action_tree"/>
+            <field name="search_view_id" ref="view_server_action_search"/>
+            <field name="context">{'key':'server_action'}</field>
+        </record>
+        <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
+
+        <!-- ir.actions.todo -->
+
+        <record id="ir_actions_todo_tree" model="ir.ui.view">
+            <field name="model">ir.actions.todo</field>
+            <field name="name">Config Wizard Steps</field>
+            <field name="arch" type="xml">
+                <tree string="Config Wizard Steps">
+                    <field name="sequence"/>
+                    <field name="action_id"/>
+                    <field name="type"/>
+                    <field name="state" readonly="1"/>
+                    <button name="action_launch" states="open" string="Launch" type="object" icon="fa-cogs" help="Launch Configuration Wizard"/>
+                    <button name="action_open" states="done"
+                            string="Todo" type="object" help="Set as Todo"
+                            icon="fa-exchange"/>
+                </tree>
+            </field>
+        </record>
+        <record id="config_wizard_step_view_form" model="ir.ui.view">
+            <field name="model">ir.actions.todo</field>
+            <field name="name">Config Wizard Steps</field>
+            <field name="arch" type="xml">
+                <form string="Config Wizard Steps">
+                  <header>
+                        <button name="action_launch"
+                            states="open" string="Launch"
+                            type="object" icon="fa-cogs" class="oe_highlight" 
+                            help="Launch Configuration Wizard"/>
+                        <button name="action_open" states="done"
+                            string="Set as Todo" type="object"
+                            icon="fa-exchange" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="open,done" nolabel="1" readonly="1" />
+                  </header>
+                  <sheet>
+                    <group col="4">
+                        <field name="action_id"/>
+                        <field name="type"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group string="Groups">
+                        <field name="groups_id" nolabel="1" colspan="4"/>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="config_wizard_step_view_search" model="ir.ui.view">
+            <field name="model">ir.actions.todo</field>
+            <field name="name">ir.actions.todo.select</field>
+            <field name="arch" type="xml">
+                <search string="Search Actions">
+                    <filter string="To Do" name="todo" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
+                    <field name="action_id"/>
+                    <field name="state"/>
+                </search>
+            </field>
+        </record>
+        <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
+            <field name="name">Configuration Wizards</field>
+            <field name="res_model">ir.actions.todo</field>
+            <field name="view_id" ref="ir_actions_todo_tree"/>
+            <field name="view_type">form</field>
+            <field name="help">The configuration wizards are used to help you configure a new instance of Odoo. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
+        </record>
+        <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="base.next_id_6"/>
+        <record id="action_run_ir_action_todo" model="ir.actions.server">
+            <field name="name">Run Remaining Action Todo</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_res_config"/>
+            <field name="state">code</field>
+            <field name="code">
+config = self.next(cr, uid, [], context=context) or {}
+if config.get('type') not in ('ir.actions.act_window_close',):
+    action = config
+</field>
+        </record>
+
+</odoo>

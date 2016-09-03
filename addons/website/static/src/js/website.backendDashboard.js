@@ -105,7 +105,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     render_dashboards: function() {
         var self = this;
         _.each(this.dashboards_templates, function(template) {
-            self.$el.append(QWeb.render(template, {widget: self}));
+            self.$('.o_website_dashboard').append(QWeb.render(template, {widget: self}));
         });
     },
 
@@ -129,7 +129,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             chart.xAxis
                 .tickFormat(function(d) { return d3.time.format("%m/%d/%y")(new Date(d)); })
                 .tickValues(_.map(tick_values, function(d) { return self.getDate(d); }))
-                .rotateLabels(-30);
+                .rotateLabels(-45);
 
             chart.yAxis
                 .tickFormat(d3.format('.02f'));
@@ -156,7 +156,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     },
 
     render_graph_analytics: function(client_id) {
-
         if (!this.dashboards_data.visits || !this.dashboards_data.visits.ga_client_id) {
           return;
         }
@@ -203,7 +202,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
         var self = this;
         $.when(this.fetch_data()).then(function() {
-            self.$el.empty();
+            self.$('.o_website_dashboard').empty();
             self.render_dashboards();
             self.render_graphs();
         });
@@ -292,7 +291,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         } else if (this.date_range === 'year') {
             start_date = '365daysAgo';
         }
-        var $analytics_chart_2 = $('<div>').addClass('col-md-6');
+        var $analytics_chart_2 = $('<div>').addClass('col-md-6 col-xs-12');
         var breakdownChart = new gapi.analytics.googleCharts.DataChart({
             query: {
                 'dimensions': 'ga:date',
@@ -312,7 +311,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         $analytics_chart_2.appendTo($analytics_components);
 
         // 5. Chart table
-        var $analytics_chart_1 = $('<div>').addClass('col-md-6');
+        var $analytics_chart_1 = $('<div>').addClass('col-md-6 col-xs-12');
         var mainChart = new gapi.analytics.googleCharts.DataChart({
             query: {
                 'dimensions': 'ga:medium',

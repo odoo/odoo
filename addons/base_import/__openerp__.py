@@ -27,7 +27,7 @@ Re-implement openerp's file import system:
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
-        'views/base_import.xml',
+        'views/base_import_templates.xml',
     ],
-    'qweb': ['static/src/xml/import.xml'],
+    'qweb': ['static/src/xml/base_import.xml'],
 }

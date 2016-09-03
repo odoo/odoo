@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mt_issue_rating" model="mail.message.subtype">
+            <field name="name">Issue Rating</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="True"/>
+            <field name="description">Ratings</field>
+        </record>
+
+        <record id="mt_project_issue_rating" model="mail.message.subtype">
+            <field name="name">Issue Rating</field>
+            <field name="sequence">24</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_issue_rating')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+    </data>
+</odoo>

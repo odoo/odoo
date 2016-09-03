@@ -13,6 +13,7 @@
                     <div>
                         <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
                         <button type="object" name="open_company" string="Configure your company data" icon="fa-cogs" class="oe_inline oe_link"/>
+                        <field name="company_id" invisible="1"/>
                     </div>
                     <group>
                         <label for="id" string="Email" name="email_label"/>
@@ -82,6 +83,10 @@
                     <group string="Shared resources" name="company_share_resources" attrs="{'invisible': [('group_multi_company','=',False)]}">
                         <field name="company_share_partner" class="oe_inline" />
                     </group>
+                    <div>
+                        <label string="New users access rights"/>
+                        <button type="object" name="open_default_user" string="Edit default access rights for new users" class="oe_inline oe_link" icon="fa-cogs"/>
+                    </div>
                     <group string="Google Integration" name="google">
                         <label for="id" string="Google Drive"/>
                         <div name="google_drive">
@@ -105,6 +110,47 @@
                             </div>
                         </div>
                     </group>
+                    <group string="Report Configuration" name="report">
+                        <label for="custom_footer"/>
+                        <div>
+                            <field name="custom_footer" class="oe_inline"/>                                
+                        </div>
+                        <label for="rml_footer"/>
+                        <div>
+                            <field name="rml_footer" class="oe_inline"/>                                
+                        </div>
+                        <label for="rml_footer_readonly"/>
+                        <div>
+                            <field name="rml_footer_readonly" class="oe_inline"/>                                
+                        </div>
+                    </group>
+                    <group string="RML Report Configuration" groups="base.group_no_one">
+                        <button name="%(base.preview_rml_report)d" string="Preview RML Report" type="action" colspan="2"/>
+                        <label for="rml_paper_format"/>
+                        <div>
+                            <field name="rml_paper_format" class="oe_inline"/>                                
+                        </div>
+                        <label for="font"/>
+                        <div>
+                            <field name="font" class="oe_inline"/>
+                            <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
+                        </div>
+                        <label for="rml_header"/>
+                        <div>
+                            <field name="rml_header"/>                                
+                        </div>
+                        <label for="rml_header2"/>
+                        <div>
+                            <field name="rml_header2"/>                                
+                        </div>
+                        <label for="rml_header3"/>
+                        <div>
+                            <field name="rml_header3"/>                                
+                        </div>
+                    </group>
+                    <div name="company_dependent_settings_message">
+                        <span>(*) This configuration value is related to the company you're logged in.</span>
+                    </div>
                 </form>
             </field>
         </record>
@@ -117,36 +163,11 @@
         </record>
 
         <menuitem
-            id="base.menu_config"
+            id="menu_config"
             name="General Settings"
             parent="base.menu_administration"
             sequence="1"
             action="action_general_configuration"
             groups="base.group_system"/>
-
-
-        <!-- Sale config wizard -->
-        <record id="view_sale_config_settings" model="ir.ui.view">
-            <field name="name">sale settings</field>
-            <field name="model">sale.config.settings</field>
-            <field name="arch" type="xml">
-                <form string="Configure Sales" class="oe_form_configuration">
-                    <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-                    </header>
-                    <div id="main"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_sale_config" model="ir.actions.act_window">
-            <field name="name">Configure Sales</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.config.settings</field>
-            <field name="view_id" ref="view_sale_config_settings"/>
-            <field name="view_mode">form</field>
-            <field name="target">inline</field>
-        </record>
 
 </odoo>

@@ -8,7 +8,7 @@ class Mail(models.Model):
     _inherit = 'mail.mail'
 
     @api.multi
-    def _postprocess_sent_message_v9(self, mail_sent=True):
+    def _postprocess_sent_message(self, mail_sent=True):
         for mail in self:
             if mail_sent and mail.model == 'sale.order':
                 order = self.env['sale.order'].browse(mail.res_id)
@@ -20,4 +20,4 @@ class Mail(models.Model):
                 for partner in mail.partner_ids:
                     if partner not in order.message_partner_ids:
                         order.message_subscribe([partner.id])
-        return super(Mail, self)._postprocess_sent_message_v9(mail_sent=mail_sent)
+        return super(Mail, self)._postprocess_sent_message(mail_sent=mail_sent)

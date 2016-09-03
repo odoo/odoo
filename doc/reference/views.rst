@@ -1041,13 +1041,15 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
-``consolidation_label``
+``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used
 ``fold_last_level``
   If a value is set, the last grouping level is folded
 ``round_dnd_dates``
   enables rounding the task's start and end dates to the nearest scale marks
+``drag_resize``
+  resizing of the tasks, default is ``true``
 
 .. ``progress``
     name of a field providing the completion percentage for the record's event,

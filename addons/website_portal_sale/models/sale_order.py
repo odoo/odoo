@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, models
+from odoo import api, models
 
 
-class sale_order(models.Model):
+class SaleOrder(models.Model):
+
     _inherit = 'sale.order'
 
     @api.multi
@@ -13,10 +14,18 @@ class sale_order(models.Model):
         of the classic form view, redirect to the online quote if exists. """
         self.ensure_one()
         if self.state in ['draft', 'cancel']:
-            return super(sale_order, self).get_access_action()
+            return super(SaleOrder, self).get_access_action()
         return {
             'type': 'ir.actions.act_url',
             'url': '/my/orders/%s' % self.id,
             'target': 'self',
             'res_id': self.id,
         }
+
+    def _force_lines_to_invoice_policy_order(self):
+        for line in self.order_line:
+            if self.state in ['sale', 'done']:
+                line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+            else:
+                line.qty_to_invoice = 0
+

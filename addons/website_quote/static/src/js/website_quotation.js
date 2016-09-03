@@ -192,6 +192,13 @@ if(!$('.o_website_quote').length) {
             });
         }
     }
+    
+    $bs_sidebar.affix({
+        offset: {
+            top: 0,
+            bottom: $('body').height() - $('#wrapwrap').outerHeight() + $("footer").outerHeight(),
+        },
+    });
 });
 
 odoo.define('website_quote.payment_method', function (require) {

@@ -1,14 +1,15 @@
 import odoo.tests
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
 class TestUi(odoo.tests.HttpCase):
+
+    post_install = True
+    at_install = False
+
     def test_admin(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('event_buy_tickets', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.event_buy_tickets", login="admin")
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('event_buy_tickets')", "odoo.__DEBUG__.services['web_tour.tour'].tours.event_buy_tickets.ready", login="admin")
 
     def test_demo(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('event_buy_tickets', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.event_buy_tickets", login="demo")
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('event_buy_tickets')", "odoo.__DEBUG__.services['web_tour.tour'].tours.event_buy_tickets.ready", login="demo")
 
-    def test_public(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('event_buy_tickets', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.event_buy_tickets")
+    # TO DO - add public test with new address when convert to web.tour format.

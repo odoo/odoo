@@ -3,6 +3,7 @@ odoo.define('payment_stripe.stripe', function(require) {
     var ajax = require('web.ajax');
     var handler = StripeCheckout.configure({
         key: $("input[name='stripe_key']").val(),
+        image: $("input[name='stripe_image']").val(),
         locale: 'auto',
         closed: function() {
           if (!handler.isTokenGenerate) {

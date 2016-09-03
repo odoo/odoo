@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="open_account_charts_modules" model="ir.actions.act_window">
             <field name="name">Chart Templates</field>
@@ -48,7 +48,7 @@
                                     domain="[('visible','=', True)]"
                                     class="oe_inline" attrs="{'readonly': [('has_chart_of_accounts','!=',False)]}"/>
                                 <button string="Install more chart templates"
-                                    icon="gtk-go-forward"
+                                    icon="fa-arrow-right text-success"
                                     name="%(open_account_charts_modules)d"
                                     type="action"
                                     class="oe_link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     </group>
-                    <group string="Accounting &amp; Finance">
+                    <group string="Accounting &amp; Finance" name="accounting">
                         <label for="id" string="Options"/>
                         <div name="account_config">
                             <div>
@@ -250,6 +250,27 @@
                             <div name='payment_acquirer'/>
                         </div>
                     </group>
+                    <!-- Invisible section which is inherited in other modules -->
+                    <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
+                    <group name="analytic_account_sale" invisible="1">
+                        <label for="id" string="Sale"/>
+                    </group>
+                    <group name="analytic_account_purchase" invisible="1">
+                        <label for="id" string="Purchase"/>
+                    </group>
+                    <group name="followup" position="before">
+                        <field name="use_anglo_saxon"/>
+                        <field name="bank_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="cash_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="code_digits" groups="base.group_no_one"/>
+                        <field name="tax_calculation_rounding_method" groups="base.group_no_one"/>
+                    </group>
+                    <group string="Overdue Payments" name="followup">
+                        <field name="overdue_msg"/>
+                    </group>
+                    <div>
+                        <span>(*) This configuration value is related to the company you're logged in.</span>
+                    </div>
                 </form>
             </field>
         </record>
@@ -265,4 +286,4 @@
         <menuitem id="menu_account_config" name="Settings" parent="menu_finance_configuration"
             sequence="0" action="action_account_config" groups="base.group_system"/>
     </data>
-</openerp>
+</odoo>

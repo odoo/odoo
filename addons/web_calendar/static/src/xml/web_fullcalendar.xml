@@ -1,39 +1,39 @@
 <template>
-    <div t-name="CalendarView" class="container-fluid o_calendar_container">
-        <div class="row">
-            <div class="o_calendar_view col-sm-9">
-                <div class="o_calendar_buttons"/>
-                <div class="o_calendar_widget" />
-            </div>
-            <div class="o_calendar_sidebar_container col-sm-3 hidden-xs"/>
+    <div t-name="CalendarView" class="o_calendar_container">
+        <div class="o_calendar_view">
+            <div class="o_calendar_buttons"/>
+            <div class="o_calendar_widget" />
         </div>
+        <div class="o_calendar_sidebar_container hidden-xs"/>
     </div>
 
-     <t t-name="CalendarView.sidebar">
+    <t t-name="CalendarView.sidebar">
         <div class="o_calendar_sidebar">
             <div class="o_calendar_mini"/>
-            <div class="o_calendar_filter">
-                <h3 t-if="widget.getParent().color_string"><t t-esc="widget.getParent().color_string"/></h3>
-            </div>
         </div>
-     </t>
+    </t>
+    <t t-name="CalendarView.sidebar.filters">
+        <div class="o_calendar_filter">
+            <div class="o_calendar_contacts"/>
+        </div>
+    </t>
 
-     <t t-name="CalendarView.sidebar.responsible">
-        <div t-foreach="filters" class="o_calendar_responsible" >
+    <t t-name="CalendarView.sidebar.contacts">
+        <div t-foreach="filters" class="o_calendar_contact">
             <t t-if="filters_value.value"><!-- don't display if no value given (or undefined) -->
                 <div class="o_checkbox">
-                    <input type="checkbox" name="selection" t-att-value="filters_value.value" checked="checked" /><span/>
+                    <input type="checkbox" name="selection" t-att-value="filters_value.value" t-att-checked="(filters_value.is_checked ? true : undefined)"/><span/>
                 </div>
                 <t t-if="filters_value.value == -1">
-                    <span><i class="fa fa-users fa-fw o_cal_avatar"></i></span>
+                    <span><i class="fa fa-users fa-fw o_cal_avatar"/></span>
                 </t>
-                <t t-if="(filters_value.value != -1) &amp;&amp; filters_value.avatar_model ">
-                  <img t-attf-src="/web/image/#{filters_value.avatar_model}/#{filters_value.value}/image_small"  class="o_cal_avatar"/>
+                <t t-if="(filters_value.value != -1) &amp;&amp; filters_value.avatar_model">
+                    <img t-attf-src="/web/image/#{filters_value.avatar_model}/#{filters_value.value}/image_small" class="o_cal_avatar"/>
                 </t>
-                <span t-attf-class="color_filter o_underline_color_#{filters_value.color}" ><t t-esc="filters_value.label" /></span>
+                <span t-attf-class="color_filter o_underline_color_#{filters_value.color}"><t t-esc="filters_value.label"/></span>
             </t>
         </div>
-     </t>
+    </t>
 
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
