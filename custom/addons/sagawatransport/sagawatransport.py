@@ -59,6 +59,4 @@ class crm_lead(models.Model):
     reason_to_fail = fields.Text('Reason to fail')
     co_sales_ids = fields.Many2many('res.users', 'crm_lead_user_rel', 'lead_id', 'user_id', 'Co Sale man')
     co_partner_ids = fields.One2many('res.partner', 'crm_lead_id')
-class res_users(models.Model):
-    _inherit = 'res.users'
-    crm_lead_id = fields.Integer('CRM Lead')
+
