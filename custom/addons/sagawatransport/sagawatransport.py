@@ -58,5 +58,5 @@ class crm_lead(models.Model):
     sale_revenue = fields.Float('Revenue')
     reason_to_fail = fields.Text('Reason to fail')
     co_sales_ids = fields.Many2many('res.users', 'crm_lead_user_rel', 'lead_id', 'user_id', 'Co Sale man')
-    co_partner_ids = fields.One2many('res.partner', 'crm_lead_id')
+   
 
