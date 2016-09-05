@@ -15,7 +15,7 @@ from odoo.exceptions import UserError
 class PickingType(models.Model):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     name = fields.Char('Picking Type Name', required=True, translate=True)
     color = fields.Integer('Color')
