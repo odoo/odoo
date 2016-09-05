@@ -310,7 +310,7 @@ var Chatter = form_common.AbstractField.extend({
         this.followers = this.field_manager.fields.message_follower_ids;
         if (this.followers) {
             this.$('.o_chatter_topbar').append(this.followers.$el);
-            this.followers.on('redirect', this, this.on_redirect);
+            this.followers.on('redirect', chat_manager, chat_manager.redirect);
             this.followers.on('followers_update', this, this.on_followers_update);
         }
 
@@ -324,7 +324,7 @@ var Chatter = form_common.AbstractField.extend({
         this.thread.on('toggle_star_status', this, function (message_id) {
             chat_manager.toggle_star_status(message_id);
         });
-        this.thread.on('redirect', this, this.on_redirect);
+        this.thread.on('redirect', chat_manager, chat_manager.redirect);
         this.thread.on('redirect_to_channel', this, this.on_channel_redirect);
 
         this.ready = $.Deferred();
@@ -402,17 +402,6 @@ var Chatter = form_common.AbstractField.extend({
         $.when(def).then(function () {
             // Execute Discuss client action with 'channel' as default channel
             self.do_action('mail.mail_channel_action_client_chat', {active_id: channel_id});
-        });
-    },
-
-    on_redirect: function (res_model, res_id) {
-        this.do_action({
-            type:'ir.actions.act_window',
-            view_type: 'form',
-            view_mode: 'form',
-            res_model: res_model,
-            views: [[false, 'form']],
-            res_id: res_id,
         });
     },
 
