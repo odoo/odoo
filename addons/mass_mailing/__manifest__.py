@@ -36,10 +36,6 @@ professional emails and reuse templates in a few clicks.
         'views/editor_field_html.xml',
         'views/snippets_themes.xml',
         'views/snippets_themes_options.xml',
-        'views/odoo_template.xml',
-        'views/airmail_template.xml',
-        'views/lemon_template.xml',
-        'views/tech_template.xml',
     ],
     'demo': [
         'data/mass_mailing_demo.xml',

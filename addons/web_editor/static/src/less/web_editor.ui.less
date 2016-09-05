@@ -125,10 +125,6 @@ html[lang] > body.editor_enable{
                 margin-right: 5px;
             }
         }
-        .o_snippet_section {
-            background-color: @o-we-color-darker;
-            text-transform: uppercase;
-        }
         .o_panel_body {
             &:after {
                 content: " ";
@@ -1063,14 +1059,13 @@ body.editor_enable {
 
     &.editor_enable #wrapwrap {
         height: 100%;
-        padding-top: @odoo-navbar-height;
         > main {
             height: 100%;
             #editable_area {
                 position: relative;
                 overflow: hidden;
                 min-height: 100%;
-                margin: 0 auto 50px auto;
+                margin: 0 auto;
 
                 background-color: white;
             }

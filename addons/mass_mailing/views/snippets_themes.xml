@@ -1,39 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//div[@id='o_scroll']" position="replace">
         <div id="o_scroll">
-            <div id="email_designer_layout" class="o_panel">
-                <!-- <div class="o_panel_header o_snippet_section">
-                    <span class="fa-stack">
-                        <i class="fa fa-paint-brush fa-stack-1x"></i>
-                    </span> Choose Template
-                </div> -->
-
-                <!-- Templates -->
-
+            <div id="email_designer_themes">
+                <div data-class="o_default_theme" data-img="/mass_mailing/static/src/img/theme_imgs/default_template_thumb.png"/>
+                <div data-class="o_airmail_theme" data-img="/mass_mailing/static/src/img/theme_imgs/airmail_template_thumb.png"/>
+                <div data-class="o_tech_theme" data-img="/mass_mailing/static/src/img/theme_imgs/tech_template_thumb.png"/>
+                <div data-class="o_lemon_theme" data-img="/mass_mailing/static/src/img/theme_imgs/lemon_template_thumb.png"/>
+            </div>
             <div id="email_designer_default_headers" class="o_panel">
                 <div class="o_panel_header">
                     <i class="fa fa-angle-double-up"/> Headers
                 </div>
                 <div class="o_panel_body">
-                    <!-- Default Template -->
-                    <!-- <div name="Default" class="o_mail_block_default_template">
-                        <div class="o_layout"></div>
-                    </div> -->
-
-                    <!-- Odoo Template -->
-                    <!-- <t t-call="mass_mailing.odoo_email_template"></t> -->
-                    
-                    <!-- Lemon Template -->
-                    <!-- <t t-call="mass_mailing.lemon_email_template"></t> -->
-
-                    <!-- Tech Template -->
-                    <!-- <t t-call="mass_mailing.tech_email_template"></t> -->              
-
-                    <!-- Airmail Template -->
-                    <!-- <t t-call="mass_mailing.airmail_email_template"></t> -->
-
                     <t t-snippet="mass_mailing.s_mail_block_header_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_header_text_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_text_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_banner" t-thumbnail="/mass_mailing/static/src/img/blocks/block_banner.png"/>
