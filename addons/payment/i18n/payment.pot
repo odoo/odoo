@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-05 14:11+0000\n"
+"PO-Revision-Date: 2016-09-05 14:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -104,11 +104,6 @@ msgid "Account journal used for automatic payment reconciliation."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
-msgid "Accounting Journal"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
 msgstr ""
@@ -151,15 +146,40 @@ msgid "Adyen"
 msgstr ""
 
 #. module: payment
+#: selection:payment.acquirer,save_token:0
+msgid "Always"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
 #: model:ir.model.fields,help:payment.field_payment_transaction_amount
 msgid "Amount"
 msgstr ""
 
 #. module: payment
+#: selection:payment.acquirer,auto_confirm:0
+msgid "Authorize & capture the amount and confirm the SO on acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,auto_confirm:0
+msgid "Authorize & capture the amount, confirm the SO and auto-validate the invoice on acquirer confirmation"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,auto_confirm:0
+msgid "Authorize the amount and confirm the SO on acquirer confirmation (capture manually)"
+msgstr ""
+
+#. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Authorized"
 msgstr ""
 
 #. module: payment
@@ -176,6 +196,11 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Canceled"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Capture Transaction"
 msgstr ""
 
 #. module: payment
@@ -212,11 +237,6 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
 msgid "Configure payment acquiring methods"
-msgstr ""
-
-#. module: payment
-#: selection:payment.acquirer,auto_confirm:0
-msgid "Confirm the SO on acquirer confirmation"
 msgstr ""
 
 #. module: payment
@@ -281,6 +301,11 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
 msgid "Description"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
+msgid "Determine if card data is saved as a token automatically or not. Payment tokens allow your customer to reuse their cards in the e-commerce or allow you to charge an invoice directly on a credit card. If set to 'let the customer decide', ecommerce customers will have a checkbox displayed on the payment page."
 msgstr ""
 
 #. module: payment
@@ -378,7 +403,7 @@ msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,type:0
-msgid "Form with credentials storage"
+msgid "Form with tokenization"
 msgstr ""
 
 #. module: payment
@@ -448,6 +473,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,save_token:0
+msgid "Let the customer decide"
 msgstr ""
 
 #. module: payment
@@ -525,18 +555,23 @@ msgid "Name of the payment token"
 msgstr ""
 
 #. module: payment
+#: selection:payment.acquirer,save_token:0
+msgid "Never"
+msgstr ""
+
+#. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "No automatic confirmation"
 msgstr ""
 
 #. module: payment
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
+#: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
+msgid "Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available."
 msgstr ""
 
 #. module: payment
-#: selection:payment.acquirer,auto_confirm:0
-msgid "On acquirer confirmation, confirm the SO, generate the invoice and pay it"
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
 msgstr ""
 
 #. module: payment
@@ -576,6 +611,11 @@ msgid "Payment Acquirers"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
+msgid "Payment Journal"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
 msgid "Payment Token"
 msgstr ""
@@ -606,7 +646,7 @@ msgid "Payment Transactions"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/account_payment.py:56
+#: code:addons/payment/models/account_payment.py:60
 #, python-format
 msgid "Payment transaction failed (%s)"
 msgstr ""
@@ -688,6 +728,11 @@ msgid "Saved payment token"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
+msgid "Saving Card Data supported"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
 msgid "Sequence"
 msgstr ""
@@ -695,6 +740,11 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token_short_name
+msgid "Short name"
 msgstr ""
 
 #. module: payment
@@ -719,6 +769,11 @@ msgid "Status"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
+msgid "Store Card Data"
+msgstr ""
+
+#. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
@@ -740,7 +795,7 @@ msgid "Thanks Message"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:441
+#: code:addons/payment/models/payment_acquirer.py:472
 #, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr ""
@@ -784,6 +839,11 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Void Transaction"
 msgstr ""
 
 #. module: payment

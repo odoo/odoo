@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:37+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"POT-Creation-Date: 2016-09-05 14:11+0000\n"
+"PO-Revision-Date: 2016-09-05 14:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,12 @@ msgstr ""
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,help:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
+#: model:ir.model.fields,help:hr_timesheet_attendance.field_res_company_timesheet_max_difference
+msgid "Allowed difference in hours between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
 
 #. module: hr_timesheet_attendance
@@ -131,6 +137,16 @@ msgid "Timesheet Activities"
 msgstr ""
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_res_company_timesheet_max_difference
+msgid "Timesheet allowed difference(Hours)"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
+msgid "Timesheet allowed difference(Hours) *"
+msgstr ""
+
+#. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
 msgstr ""
@@ -225,6 +241,11 @@ msgstr ""
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
 msgid "hr.timesheet.attendance.report"
+msgstr ""
+
+#. module: hr_timesheet_attendance
+#: model:ir.model,name:hr_timesheet_attendance.model_project_config_settings
+msgid "project.config.settings"
 msgstr ""
 
 #. module: hr_timesheet_attendance

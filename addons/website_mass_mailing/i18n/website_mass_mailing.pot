@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-05 14:11+0000\n"
+"PO-Revision-Date: 2016-09-05 14:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,11 @@ msgid "Add a Newsletter Subscribe Popup"
 msgstr ""
 
 #. module: website_mass_mailing
+#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
+msgid "Allow the use of a pop-up snippet on website to encourage visitors to sign up on a mass mailing list"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
 #: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_options
 msgid "Change Newsletter"
@@ -61,8 +66,18 @@ msgid "Choose your mailing subscriptions."
 msgstr ""
 
 #. module: website_mass_mailing
+#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
+msgid "Do not add extra content on website pages to encourage visitors to sign up"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
 msgid "Here To Edit Dialog Content"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
+msgid "Mailing List"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -76,6 +91,11 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:22
 #, python-format
 msgid "Newsletter"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
+msgid "Popup Content"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -102,6 +122,26 @@ msgid "Type Here ..."
 msgstr ""
 
 #. module: website_mass_mailing
+#: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
+msgid "Use subscription pop up on the website"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
+msgid "Website Pop-up"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
+msgid "Website Popup Content"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
+msgid "Website Popup Redirect URL"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
 msgid "You are not subscribed to any of our mailing list."
 msgstr ""
@@ -109,6 +149,11 @@ msgstr ""
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
 msgid "Your changes have been saved."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mass_mailing_config_settings
+msgid "mass.mailing.config.settings"
 msgstr ""
 
 #. module: website_mass_mailing
