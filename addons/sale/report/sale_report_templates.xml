@@ -81,7 +81,10 @@
                             <!-- Lines associated -->
                             <t t-foreach="layout_category['lines']" t-as="l">
                                 <tr>
-                                    <td><span t-field="l.name"/></td>
+                                    <td>
+                                        <span t-field="l.product_id"/><br/>
+                                        <span t-if="l.name != l.product_id.name" t-field="l.name"/>
+                                    </td>
                                     <td class="text-right">
                                         <span t-field="l.product_uom_qty"/>
                                         <span t-field="l.product_uom" groups="product.group_uom"/>

@@ -39,7 +39,8 @@
                 <tbody>
                     <tr t-foreach="o.order_line" t-as="order_line">
                         <td>
-                            <span t-field="order_line.name"/>
+                            <span t-field="order_line.product_id"/><br/>
+                            <span t-if="order_line.name != order_line.product_id.display_name" t-field="order_line.name"/>
                         </td>
                         <td class="text-center">
                             <span t-field="order_line.date_planned"/>
