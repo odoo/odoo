@@ -4950,7 +4950,7 @@ class BaseModel(object):
             vals = [func(rec) for rec in self]
             if isinstance(vals[0], BaseModel):
                 # return the union of all recordsets in O(n)
-                ids = set(itertools.chain(*[rec._ids for rec in vals]))
+                ids = OrderedSet(itertools.chain(*[rec._ids for rec in vals]))
                 return vals[0].browse(ids)
             return vals
         else:
@@ -5117,7 +5117,7 @@ class BaseModel(object):
         """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s & %s" % (self, other))
-        return self.browse(set(self._ids) & set(other._ids))
+        return self.browse(OrderedSet(self._ids) & OrderedSet(other._ids))
 
     def __or__(self, other):
         """ Return the union of two recordsets.
@@ -5125,7 +5125,7 @@ class BaseModel(object):
         """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s | %s" % (self, other))
-        return self.browse(set(self._ids) | set(other._ids))
+        return self.browse(OrderedSet(self._ids) | OrderedSet(other._ids))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """

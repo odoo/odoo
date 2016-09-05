@@ -1091,6 +1091,12 @@ class OrderedSet(OrderedDict):
     def discard(self, elem):
         self.pop(elem, None)
 
+    def __or__(self, other):
+        return OrderedSet(self.keys() + list(other))
+
+    def __and__(self, other):
+        return OrderedSet(e for e in self.keys() if e in other)
+
 class LastOrderedSet(OrderedSet):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
