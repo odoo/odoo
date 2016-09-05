@@ -25,8 +25,6 @@ class ProjectIssueReport(models.Model):
     project_id = fields.Many2one('project.project', 'Project', readonly=True)
     user_id = fields.Many2one('res.users', 'Assigned to', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Contact')
-    channel = fields.Char('Channel', readonly=True, help="Communication Channel.")
-    task_id = fields.Many2one('project.task', 'Task')
     email = fields.Integer('# Emails', readonly=True)
 
     @api.model_cr
@@ -49,11 +47,9 @@ class ProjectIssueReport(models.Model):
                     c.project_id as project_id,
                     1 as nbr_issues,
                     c.partner_id,
-                    c.channel,
-                    c.task_id,
                     c.day_open as delay_open,
                     c.day_close as delay_close,
-                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
+                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND message_type IN ('email', 'comment') AND res_id=c.id) AS email
 
                 FROM
                     project_issue c

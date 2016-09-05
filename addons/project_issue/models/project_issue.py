@@ -41,7 +41,7 @@ class ProjectIssue(models.Model):
     date_closed = fields.Datetime(string='Closed', readonly=True, index=True)
     date = fields.Datetime('Date')
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
-    channel = fields.Char(string='Channel', help="Communication channel.")
+    channel = fields.Char(string='Channel', help="Communication channel.")  # TDE note: is it still used somewhere ?
     tag_ids = fields.Many2many('project.tags', string='Tags')
     priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', index=True, default='0')
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
