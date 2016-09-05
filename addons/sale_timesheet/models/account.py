@@ -39,7 +39,8 @@ class AccountAnalyticLine(models.Model):
             # Nominal employee cost = 1 * company project UoM (project_time_mode_id)
             return {
                 'amount': -unit_amount * cost,
-                'product_uom_id': uom.id
+                'product_uom_id': uom.id,
+                'account_id': emp.account_id,
             }
         return {}
 
