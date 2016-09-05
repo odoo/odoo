@@ -504,7 +504,7 @@ class ProductTemplate(models.Model):
         action = self.env.ref('stock.act_product_stock_move_open').read()[0]
         if self:
             action['context'] = {'default_product_id': products.ids[0]}
-        action['domain'] = [('product_id.product_tmpl_id', 'in', products.ids)]
+        action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action
 
 
