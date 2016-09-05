@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2016-09-05 14:12+0000\n"
+"PO-Revision-Date: 2016-09-05 14:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid "%<br/>\n"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:452
+#: code:addons/mass_mailing/models/mass_mailing.py:431
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -75,15 +75,9 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
-msgid "<div class=\"modal-header text-center\">\n"
-"    <h3 class=\"modal-title mt8\">Odoo Presents</h3>\n"
-"</div>\n"
-"<div class=\"o_popup_message\">\n"
-"    <font>7</font>\n"
+msgid "<font>7</font>\n"
 "    <strong>Business Hacks</strong>\n"
-"    <span> to<br/>boost your marketing</span>\n"
-"</div>\n"
-"<p class=\"o_message_paragraph\">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>"
+"    <span> to<br>boost your marketing</span>"
 msgstr ""
 
 #. module: mass_mailing
@@ -148,11 +142,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_active
 msgid "Active"
-msgstr ""
-
-#. module: mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid "Allow the use of a pop-up snippet on website to encourage visitors to sign up on a mass mailing list"
 msgstr ""
 
 #. module: mass_mailing
@@ -239,7 +228,7 @@ msgid "Bounced ratio"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3637
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3673
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr ""
@@ -516,11 +505,6 @@ msgid "Display Name"
 msgstr ""
 
 #. module: mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid "Do not add extra content on website pages to encourage visitors to sign up"
-msgstr ""
-
-#. module: mass_mailing
 #: selection:mass.mailing.config.settings,group_mass_mailing_campaign:0
 msgid "Do not organize and schedule mail campaigns (easy)"
 msgstr ""
@@ -541,7 +525,7 @@ msgid "Domain"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:460
+#: code:addons/mass_mailing/models/mass_mailing.py:439
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
 #, python-format
@@ -716,7 +700,7 @@ msgid "If checked, recipients will be mailed only once, allowing to send various
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:460
+#: code:addons/mass_mailing/models/mass_mailing.py:439
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
@@ -730,6 +714,11 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_hr_job
 msgid "Job Position"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+msgid "Join our Marketing newsletter and get <strong>this white paper instantly</strong>"
 msgstr ""
 
 #. module: mass_mailing
@@ -851,7 +840,7 @@ msgid "Mailing"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:304
+#: code:addons/mass_mailing/models/mass_mailing.py:283
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_id
@@ -1100,6 +1089,11 @@ msgid "Number of clicks"
 msgstr ""
 
 #. module: mass_mailing
+#: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
+msgid "Odoo Presents"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Open Date"
 msgstr ""
@@ -1154,14 +1148,9 @@ msgid "Percentage of the contacts that will be mailed. Recipients will be taken 
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:578
+#: code:addons/mass_mailing/models/mass_mailing.py:557
 #, python-format
 msgid "Please select recipients."
-msgstr ""
-
-#. module: mass_mailing
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
-msgid "Popup Content"
 msgstr ""
 
 #. module: mass_mailing
@@ -1354,14 +1343,14 @@ msgid "Send to All"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:460
+#: code:addons/mass_mailing/models/mass_mailing.py:439
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "Sending"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:460
+#: code:addons/mass_mailing/models/mass_mailing.py:439
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
@@ -1499,7 +1488,12 @@ msgid "Templates"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:515
+#: model:ir.model,name:mass_mailing.model_mail_test
+msgid "Test Mail Model"
+msgstr ""
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:494
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -1538,7 +1532,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3637
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3673
 msgid "This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 
@@ -1579,11 +1573,6 @@ msgid "Unsubscription Date"
 msgstr ""
 
 #. module: mass_mailing
-#: model:res.groups,name:mass_mailing.group_website_popup_on_exit
-msgid "Use subscription pop up on the website"
-msgstr ""
-
-#. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_user
 msgid "User"
 msgstr ""
@@ -1596,21 +1585,6 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "We would like you to know that your order has shipped! To track your order or make any changes please click the \"my order\" button below."
-msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
-msgid "Website Pop-up"
-msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_popup_content
-msgid "Website Popup Content"
-msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
-msgid "Website Popup Redirect URL"
 msgstr ""
 
 #. module: mass_mailing

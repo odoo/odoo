@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-05 14:10+0000\n"
+"PO-Revision-Date: 2016-09-05 14:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,9 +18,9 @@ msgstr ""
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
 msgid "\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
 "% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
@@ -145,9 +145,9 @@ msgstr ""
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
 msgid "\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
 "% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
@@ -478,7 +478,7 @@ msgid "Click to add a new event."
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:218
+#: code:addons/event/models/event.py:220
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr ""
@@ -492,7 +492,7 @@ msgid "Company"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:414
+#: code:addons/event/models/event.py:416
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -590,13 +590,13 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:391
+#: code:addons/event/models/event.py:393
 #, python-format
 msgid "Customer"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:393
+#: code:addons/event/models/event.py:395
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -1068,7 +1068,7 @@ msgid "New"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:441
+#: code:addons/event/models/event.py:442
 #, python-format
 msgid "Next month"
 msgstr ""
@@ -1084,13 +1084,13 @@ msgid "No mini website per event"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:212
+#: code:addons/event/models/event.py:214
 #, python-format
 msgid "No more available seats."
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:312
+#: code:addons/event/models/event.py:314
 #, python-format
 msgid "No more seats available for this event."
 msgstr ""
@@ -1345,13 +1345,13 @@ msgid "This field contains the template of the mail that will be automatically s
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:439
+#: code:addons/event/models/event.py:440
 #, python-format
 msgid "This month"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:437
+#: code:addons/event/models/event.py:438
 #, python-format
 msgid "This week"
 msgstr ""
@@ -1367,13 +1367,13 @@ msgid "Timezone"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:433
+#: code:addons/event/models/event.py:434
 #, python-format
 msgid "Today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:435
+#: code:addons/event/models/event.py:436
 #, python-format
 msgid "Tomorrow"
 msgstr ""
@@ -1447,13 +1447,13 @@ msgid "When to Run "
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:244
+#: code:addons/event/models/event.py:246
 #, python-format
 msgid "You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:369
+#: code:addons/event/models/event.py:371
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
