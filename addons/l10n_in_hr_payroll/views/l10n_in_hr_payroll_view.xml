@@ -191,16 +191,18 @@
         </record>
 
         <record id="view_res_company_da" model="ir.ui.view">
-            <field name="name">res.company.inherit</field>
+            <field name="name">res.company.form.l10n_in_hr_payroll.inherit</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
             <data>
-                 <page name="configuration" position="inside">
-                    <group name="rule" string="Payroll">
-                        <field name="dearness_allowance"/>
-                    </group>
-                 </page>
+                 <xpath expr="//notebook" position="inside">
+                    <page name="indian_payroll" string="Indian Payroll">
+                        <group>
+                            <field name="dearness_allowance"/>
+                        </group>
+                    </page>
+                 </xpath>
             </data>
             </field>
         </record>
