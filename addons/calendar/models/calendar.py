@@ -345,7 +345,7 @@ class AlarmManager(models.AbstractModel):
             if meeting.recurrency:
                 at_least_one = False
                 last_found = False
-                for one_date in current_event._get_recurrent_date_by_event():
+                for one_date in meeting._get_recurrent_date_by_event():
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                     for alert in last_found:
@@ -376,7 +376,7 @@ class AlarmManager(models.AbstractModel):
             if meeting.recurrency:
                 b_found = False
                 last_found = False
-                for one_date in current_event.get_recurrent_date_by_event():
+                for one_date in meeting.get_recurrent_date_by_event():
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
                     if last_found:
@@ -919,7 +919,7 @@ class Meeting(models.Model):
                     attendee._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
 
             if meeting_attendees:
-                meeting.write({'attendee_ids': [(4, attendee.id) for attendee in meeting_attendees]})
+                meeting.write({'attendee_ids': [(4, meeting_attendee.id) for meeting_attendee in meeting_attendees]})
             if meeting_partners:
                 meeting.message_subscribe(partner_ids=meeting_partners.ids)
 
