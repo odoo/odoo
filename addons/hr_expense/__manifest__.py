@@ -28,6 +28,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'website': 'https://www.odoo.com/page/expenses',
     'depends': ['hr_contract', 'account_accountant', 'report', 'web_tour'],
     'data': [
+        'security/hr_expense_security.xml',
         'security/ir.model.access.csv',
         'data/hr_expense_data.xml',
         'data/hr_expense_sequence.xml',
