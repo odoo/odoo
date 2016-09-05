@@ -701,9 +701,7 @@ class PurchaseOrderLine(models.Model):
             'lang': self.partner_id.lang,
             'partner_id': self.partner_id.id,
         })
-        self.name = product_lang.display_name
-        if product_lang.description_purchase:
-            self.name += '\n' + product_lang.description_purchase
+        self.name = product_lang.description_purchase or product_lang.display_name
 
         fpos = self.order_id.fiscal_position_id
         if self.env.uid == SUPERUSER_ID:
