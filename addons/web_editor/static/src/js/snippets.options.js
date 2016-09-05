@@ -263,12 +263,14 @@ odoo.define('web_editor.snippets.options', function (require) {
             }
 
             var classes = [];
-            this.$el.find(".colorpicker button").map(function () {
+            this.$el.find(".colorpicker button").each(function () {
                 var $color = $(this);
+                if (!$color.data("color")) {
+                    return;
+                }
+
                 var className = 'bg-' + $color.data('color');
-
                 $color.addClass(className);
-
                 if (self.$target.hasClass(className)) {
                     self.color = className;
                     $color.addClass("selected");
@@ -285,14 +287,19 @@ odoo.define('web_editor.snippets.options', function (require) {
             var $colors = this.$el.find(".colorpicker button");
             $colors
                 .mouseenter(function (e) {
-                    self.$target.removeClass(self.classes).addClass('bg-' + $(this).data("color"));
+                    self.$target.removeClass(self.classes);
+                    var color = $(this).data("color");
+                    if (color) {
+                        self.$target.addClass('bg-' + color);
+                    }
                     self.$target.trigger("background-color-event", e.type);
                 })
                 .mouseleave(function (e) {
                     self.$target.removeClass(self.classes);
                     var $selected = $colors.filter(".selected");
-                    if ($selected.length) {
-                        self.$target.addClass('bg-' + $selected.data("color"));
+                    var color = $selected.length && $selected.data("color");
+                    if (color) {
+                        self.$target.addClass('bg-' + color);
                     }
                     self.$target.trigger("background-color-event", e.type);
                 })
