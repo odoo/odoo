@@ -61,8 +61,15 @@ class IrUiMenu(models.Model):
 
     @api.depends('web_icon')
     def _compute_web_icon(self):
+        """ Returns the image associated to `web_icon`.
+            `web_icon` can either be:
+              - an image icon [module, path]
+              - a built icon [icon_class, icon_color, background_color]
+            and it only has to call `read_image` if it's an image.
+        """
         for menu in self:
-            menu.web_icon_data = self.read_image(menu.web_icon)
+            if menu.web_icon and len(menu.web_icon.split(',')) == 2:
+                menu.web_icon_data = self.read_image(menu.web_icon)
 
     def read_image(self, path):
         if not path:
@@ -257,7 +264,7 @@ class IrUiMenu(models.Model):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'web_icon_data']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
