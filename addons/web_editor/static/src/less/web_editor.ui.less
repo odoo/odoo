@@ -835,6 +835,7 @@ html[lang] > body.editor_enable{
                 float: left;
                 margin: 1px 1px 0 0;
                 border-color: black;
+                .o_alpha_button_preview();
 
                 &.o_small {
                     width: 16px;
@@ -845,6 +846,10 @@ html[lang] > body.editor_enable{
 
                 &.o_clear {
                     clear: both;
+                }
+
+                &.o_btn_transparent {
+                    display: none;
                 }
             }
         }
@@ -973,16 +978,10 @@ table.colorpicker {
             font-size: 12px;
             font-weight: bold;
             text-align: left;
+            .o_alpha_button_preview();
+
             &:hover, &.selected {
                 box-shadow: 0px 0px 2px 2px @o-we-color-light;
-            }
-            &.selected:before {
-                content: "\f00c";
-                font-family: "FontAwesome";
-                color: @odoo-brand-optional;
-                .o-position-absolute(@top: 0, @left: 3px);
-                font-size: 13px;
-                line-height: 28px;
             }
 
             &:after {
@@ -990,8 +989,14 @@ table.colorpicker {
                 .o-position-absolute(0, 0);
                 width: 25px;
                 text-align: center;
+                font-size: 13px;
                 line-height: 28px;
                 font-weight: normal;
+            }
+            &.selected:after {
+                content: "\f00c";
+                font-family: "FontAwesome";
+                color: @brand-success;
             }
 
             &[data-event="foreColor"] {
@@ -1008,6 +1013,10 @@ table.colorpicker {
                 padding: 0;
                 margin-right: 5px;
             }
+
+            &.o_btn_transparent::before {
+                background-color: transparent;
+            }
         }
     }
     .note-palette-title {
@@ -1022,7 +1031,7 @@ table.colorpicker {
         .note-color-reset {
             font-size: 20px!important;
             color: desaturate(fade(@o-we-color-danger, 60%), 40%);
-            margin: 3px 0 0;
+            margin: 1px 0 0;
             padding: 0;
             cursor: pointer;
             &:hover {
@@ -1073,5 +1082,21 @@ body.editor_enable {
     }
     .note-color-palette .colorpicker {
         display: none;
+    }
+}
+
+// Mixins for buttons with alpha bg-color
+.o_alpha_button_preview () {
+    position: relative;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAClJREFUeNpivHnzJgMSUFNTQ+YyMeAFNJVm/P//PzL/1q1bg8VpAAEGAMiICJs4Ce8uAAAAAElFTkSuQmCC');
+    background-size: 10px auto;
+    z-index: 1;
+
+    // Place an overlay that inherit the button's bg-color.
+    &::before {
+        content: "";
+        .o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background-color: inherit;
     }
 }
