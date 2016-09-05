@@ -423,6 +423,7 @@ return core.Class.extend({
     _set_running_tour_timeout: function (tour_name, step) {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
+            console.log($('html').html());
             this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
         }).bind(this), RUNNING_TOUR_TIMEOUT + this.running_step_delay);
     },
