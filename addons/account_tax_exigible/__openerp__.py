@@ -5,6 +5,7 @@
     'version': '1.0',
     'category': 'Accounting',
     'description': """
+    This is a bugfix-module backporting 39d68ac and adding the concept of tax exigibility on journal items.
     """,
     'depends': ['account_tax_cash_basis'],
     'data': [],
