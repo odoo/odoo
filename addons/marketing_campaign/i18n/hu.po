@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:37+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"POT-Creation-Date: 2016-08-26 10:26+0000\n"
+"PO-Revision-Date: 2016-08-26 10:26+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -681,6 +681,8 @@ msgstr "Mód"
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
 msgstr ""
+"A szűrő modelljének ugyanannak kell lennie mint a kampány erőforrás modellje"
+" "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -761,6 +763,9 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"Odoo rendszer marketing kampánya lehetővé teszi az automatikus kommunikációt\n"
+"            a hallgatóival. Meghatározhat egy szegmenst (beállíthat egy feltételt) az\n"
+"            érdeklődésein és partnerein a kampány végrehajtásához."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -1000,6 +1005,10 @@ msgid ""
 " validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Teszt - Ez közvetlenül, automatikusan létrehozza és futtatja az összes tevékenységet  (anélkül, hogy az átmenetek késésére várakozna) de nem küld e-maileket és nem készít jelentéseket.\n"
+"Valós idejű teszt - Ez közvetlenül létrehozza és futtatja tevékenységeket de nem küld e-maileket és nem készít jelentéseket.\n"
+"Kézi visszaigazolással - a kampány normál futása, de a felhasználónak kézzel kell érvényesítenie a feladatelemet.\n"
+"Normál - a kampány normál futása és automatikus email küldések és jelentés készítések (legyen nagyon óvatos ezzel a móddal, élőben tesz mindent!)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1021,6 +1030,7 @@ msgstr "Valós idejű teszt"
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
+"A tól/hoz átvezetési tevékenységnek ugyanahhoz a kampányhoz kell tartoznia. "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1093,6 +1103,11 @@ msgid ""
 "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
 "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
 msgstr ""
+"A művelet típusa melyet elvégez, amikor ehhez a tevékenységhez bevisz egy tételt, úgy mint:\n"
+"   - Email: email küldése az előre definiált sablonból\n"
+"   - Jelentés: a erőforrás tételnél meghatározott jelentés nyomtatása és elmentése egy konkrét könyvtárba\n"
+"   - Egyedi művelet: előre meghatározott művelet végrehajtása, pl.: erőforrás rekord mező módosítása\n"
+"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start

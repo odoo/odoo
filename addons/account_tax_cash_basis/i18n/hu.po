@@ -7,10 +7,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -28,11 +28,17 @@ msgstr "Könyvelési tétel"
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Account use when creating entry for tax cash basis"
 msgstr ""
+"Könyvelési számlát használjon, ha adó bejegyzést készít készpénz alapon"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
 msgid "Companies"
 msgstr "Vállalatok"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move_line
+msgid "Journal Item"
+msgstr "Könyvelési tételsor"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_partial_reconcile
@@ -45,6 +51,9 @@ msgid ""
 "Select this if the tax should use cash basis,which will create an entry for "
 "this tax on a given account during reconciliation"
 msgstr ""
+"Válassza ezt ha az adónak készpénz alapot kell használni, ami létre fog "
+"hozni egy főkönyvi bejegyzést erre az adóra egy megadott főkönyvi számlára a"
+" főkönyvi egyeztetés során"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -74,9 +83,13 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Technikai mező a készpénz alap adók főkönyvi egyeztetésének nyomon "
+"követéséhez. Erre akkor van szükség ha a forrást törlik: ez az ellen oldali "
+"főkönyvi bejegyzést is könyvelésre küldi, hogy az az oldal is törlésre "
+"kerüljön."
 
 #. module: account_tax_cash_basis
-#: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:55
+#: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80
 #, python-format
 msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"

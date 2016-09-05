@@ -13,10 +13,10 @@
 # Eric Geens <eric.geens@vitabiz.be>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Eric Geens <eric.geens@vitabiz.be>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -412,7 +412,7 @@ msgstr "Kostenplaatsen voor verkopen"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Aan kosten"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -1199,7 +1199,7 @@ msgid "Never allow to modify a confirmed sale order"
 msgstr "Sta nooit het wijzigen van een bevestigde verkooporder toe"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:101
+#: code:addons/sale/models/sale.py:102
 #, python-format
 msgid "New"
 msgstr "Nieuw"
@@ -1434,13 +1434,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:277
+#: code:addons/sale/models/sale.py:278
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "U dient een verkoop dagboek aan te maken voor dit bedrijf."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:782
+#: code:addons/sale/models/sale.py:783
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1545,10 +1545,13 @@ msgstr "Productsjabloon"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_variant
+#: model:ir.ui.menu,name:sale.menu_product
+#: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
 msgstr "Productvarianten"
 
 #. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.prod_config_main
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Products"
@@ -1672,7 +1675,7 @@ msgstr "Offerte analyse"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr ""
+msgstr "Offertes verstuurt"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1683,7 +1686,7 @@ msgstr "Offertes en verkooporders"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Her-factureer declaraties"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -1738,7 +1741,7 @@ msgstr "Verkoopprijs"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_layout
 msgid "Sale Reports Layout"
-msgstr ""
+msgstr "Verkoop layout"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
@@ -1988,12 +1991,12 @@ msgstr "Toon prijslijsten aan klanten"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
 msgid "Show subtotal"
-msgstr ""
+msgstr "Subtotaal weergeven"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_total
 msgid "Show total"
-msgstr ""
+msgstr "Totaal weergeven"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -2132,7 +2135,7 @@ msgstr ""
 "grootboek aanmaken in de boekhoudinstellingen."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:367 code:addons/sale/models/sale.py:371
+#: code:addons/sale/models/sale.py:368 code:addons/sale/models/sale.py:372
 #, python-format
 msgid "There is no invoicable line."
 msgstr "Er is geen factureerbare lijn."
@@ -2190,7 +2193,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Urenstaten op projecten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2267,7 +2270,7 @@ msgstr "Onbelast bedrag"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total"
-msgstr ""
+msgstr "Totaal excl. BTW"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2317,7 +2320,7 @@ msgid "Warning"
 msgstr "Waarschuwing"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:862
+#: code:addons/sale/models/sale.py:863
 #, python-format
 msgid "Warning for %s"
 msgstr "Waarschuwing voor %s"
@@ -2352,7 +2355,7 @@ msgid "Wrong value entered!"
 msgstr "Verkeerde waarde ingevoerd!"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:164
+#: code:addons/sale/models/sale.py:165
 #, python-format
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
@@ -2360,7 +2363,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:891
+#: code:addons/sale/models/sale.py:892
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

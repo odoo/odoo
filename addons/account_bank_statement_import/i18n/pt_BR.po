@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_bank_statement_import
-#
+# 
 # Translators:
+# Cezar <cezar.santanna@gmail.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# grazziano <g.negocios@outlook.com.br>, 2016
+# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# Gideoni Willian da Silva <gd.willian@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Gideoni Willian da Silva <gd.willian@gmail.com>, 2015
-# grazziano <g.negocios@outlook.com.br>, 2015
-# Mateus Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-18 21:31+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
-"language/pt_BR/)\n"
-"Language: pt_BR\n"
+"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2016\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_bank_statement_import
@@ -105,7 +107,7 @@ msgstr "Arquivo de Extrato Bancário"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Linha extrato bancário"
+msgstr "Linha de Extrato Bancário"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
@@ -122,8 +124,8 @@ msgstr "Cancelar"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
 #, python-format
 msgid ""
-"Cannot find in which journal import this statement. Please manually select a "
-"journal."
+"Cannot find in which journal import this statement. Please manually select a"
+" journal."
 msgstr ""
 "Não foi possível encontrar em qual diário importar este extrato. Por favor, "
 "selecione manualmente um diário."
@@ -131,11 +133,11 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and "
-"refunds made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and"
+" refunds made from this journal"
 msgstr ""
-"Marque esta caixa se você não quer compartilhar a mesma sequência de faturas "
-"e reembolsos feitos a partir deste diário"
+"Marque esta caixa se você não quer compartilhar a mesma sequência de faturas"
+" e reembolsos feitos a partir deste diário"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -212,7 +214,7 @@ msgstr "Conta de débito padrão"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_display_name
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_name
 msgid "Display Name"
-msgstr "Nome de Exibição"
+msgstr "Nome para Exibição"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
@@ -229,7 +231,8 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
-"Baixe um extrato bancário do seu banco e importe-o aqui. Formatos suportados:"
+"Baixe um extrato bancário do seu banco e importe-o aqui. Formatos "
+"suportados:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -239,7 +242,7 @@ msgstr "Sequencia de lançamento"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
 msgid "Filename"
-msgstr ""
+msgstr "Nome de arquivo"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -355,7 +358,7 @@ msgstr "Painel Kanban Gráfico"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation___last_update
 msgid "Last Modified on"
-msgstr "Última modificação em"
+msgstr "Última Modificação em"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_uid
@@ -382,8 +385,8 @@ msgid ""
 "order to manage payments outside of the software."
 msgstr ""
 "Meios de pagamento para recolher dinheiro. Módulos Odoo oferece várias "
-"facilidades de manipulação de pagamentos, mas você sempre pode usar o método "
-"de pagamento 'Manual', a fim de gerir os pagamentos fora do software."
+"facilidades de manipulação de pagamentos, mas você sempre pode usar o método"
+" de pagamento 'Manual', a fim de gerir os pagamentos fora do software."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -393,8 +396,8 @@ msgid ""
 "order to manage payments outside of the software."
 msgstr ""
 "Meios de pagamento para enviar dinheiro. Módulos Odoo oferece várias "
-"facilidades de manipulação de pagamentos, mas você sempre pode usar o método "
-"de pagamento 'Manual', a fim de gerir os pagamentos fora do software."
+"facilidades de manipulação de pagamentos, mas você sempre pode usar o método"
+" de pagamento 'Manual', a fim de gerir os pagamentos fora do software."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
@@ -424,19 +427,12 @@ msgstr "Sequência de Reembolso de Entrada"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
-#, fuzzy
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
-"Select 'Cash' or 'Bank' for journals that are used in customer or vendor "
-"payments.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Escolha 'Venda' para diários de faturas de clientes. Escolha 'Compra' para "
-"diários de faturas de fornecedores. Escolha 'Dinheiro' ou 'Banco' para "
-"diários que são usados nos pagamentos de clientes ou fornecedores. Escolha "
-"'Geral' para diários de operações diversas. Escolha 'Situação de Abertura/"
-"Fechamento' para entradas geradas em um novo ano fiscal."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -470,14 +466,15 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
-"A conta do extrato que você está tentando importar ainda não está registrada "
-"no Odoo. A fim de prosseguir com a importação, você precisa criar um diário "
-"de banco para esta conta."
+"A conta do extrato que você está tentando importar ainda não está registrada"
+" no Odoo. A fim de prosseguir com a importação, você precisa criar um diário"
+" de banco para esta conta."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
-msgid "The account of this statement (%s) is not the same as the journal (%s)."
+msgid ""
+"The account of this statement (%s) is not the same as the journal (%s)."
 msgstr "A conta deste extrato (%s) não é a mesma que o diário (%s)."
 
 #. module: account_bank_statement_import
@@ -545,14 +542,14 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Usado para registrar uma perda quando o saldo final em caixa difere do que o "
-"sistema calcula"
+"Usado para registrar uma perda quando o saldo final em caixa difere do que o"
+" sistema calcula"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs "
-"from what the system computes"
+"Used to register a profit when the ending balance of a cash register differs"
+" from what the system computes"
 msgstr ""
 "Usado para registrar um lucro quando o saldo final em caixa difere do que o "
 "sistema calcula"

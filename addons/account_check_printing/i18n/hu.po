@@ -8,10 +8,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 14:07+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -21,20 +21,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:57
+#: code:addons/account_check_printing/account_journal.py:56
 #, python-format
 msgid " : Check Number Sequence"
 msgstr " : Csekk szám sorrendje"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:37
-#: code:addons/account_check_printing/models/account_payment.py:74
+#: code:addons/account_check_printing/account_payment.py:35
+#: code:addons/account_check_printing/account_payment.py:72
 #, python-format
 msgid " and %s/100"
 msgstr " és %s/100"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:83
+#: code:addons/account_check_printing/account_payment.py:81
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Egy csekk feljegyzés nem lehet hosszabb 60 karakternél."
@@ -96,7 +96,7 @@ msgid "Checks numbering sequence."
 msgstr "Csekkek sorszámozási sorrendje"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:96
+#: code:addons/account_check_printing/account_journal_dashboard.py:23
 #, python-format
 msgid "Checks to Print"
 msgstr "Nyomtatásra váró csekkek"
@@ -127,7 +127,7 @@ msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:103
+#: code:addons/account_check_printing/account_payment.py:101
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
@@ -186,7 +186,7 @@ msgid "Payments"
 msgstr "Vevői befizetések"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:100
+#: code:addons/account_check_printing/account_payment.py:98
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
@@ -218,7 +218,7 @@ msgid "Print Checks"
 msgstr "Csekkek nyomtatása"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: code:addons/account_check_printing/account_payment.py:114
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -245,7 +245,7 @@ msgstr ""
 "módként került beállításra."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/account_journal.py:25
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
@@ -267,7 +267,7 @@ msgstr ""
 "oldalán."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:137
+#: code:addons/account_check_printing/account_payment.py:135
 #, python-format
 msgid ""
 "There is no check layout configured.\n"

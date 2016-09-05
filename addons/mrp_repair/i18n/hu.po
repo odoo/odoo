@@ -9,10 +9,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:38+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"POT-Creation-Date: 2016-08-26 10:27+0000\n"
+"PO-Revision-Date: 2016-08-26 10:27+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+" * A 'Terv' állapotot akkor használja, ha egy felhasználó bevitt egy még nem megerősített és új javítási megrendelést.             \n"
+"* A 'Visszaigazol' állapotot akkor használja, ha egy felhasználó visszaigazolja a javítási megrendelést.             \n"
+"* A 'Javításra kész' állapotot a javítás elindítására használja, csak akkor ha a javítás már vissza lett igazolva.             \n"
+"* A 'Számlázható' állapotot a számla generálására használja mielőtt a javítás kész vagy a javítás után.             \n"
+"* Az 'Elvégezve' állapot van beállítva, ha a javítást befejezték.            \n"
+"* A 'Visszavonva' állapot van beállítva, ha egy felhasználó visszavonta a javítást."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -50,7 +56,7 @@ msgstr "<i>(Hozzáad)</i>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Fees Line(s)</strong>"
-msgstr "<strong>Illeték tételsor(ok)</strong>"
+msgstr "<strong>Illeték díjtételsor(ok)</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -80,7 +86,7 @@ msgstr "<strong>Javítandó termék:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>Szállítási cím :</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -218,7 +224,7 @@ msgstr "Szállítás innen"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default address id"
-msgstr ""
+msgstr "Alapértelmezett cím id azonosító"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -675,7 +681,7 @@ msgstr "Javítási mgrendelések"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Javítás/Szervíz rendelések keresése"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -767,6 +773,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"Egy javítási tétel sor állapota automatikusan áll be a hozzárendelt egyik "
+"javítási megbízás alapján."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -865,3 +873,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"A javítási űrlapon ki kell választania egy árlistát !\n"
+"Válasszon ki egyet mielőtt terméket választana."

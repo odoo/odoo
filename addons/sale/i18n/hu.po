@@ -10,10 +10,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,42 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object.get_signup_url()\n"
+"<p>Tisztelt ${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Itt találja az Ön ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(hivatkozása: ${object.origin} )\n"
+"% endif\n"
+"összegezve ebben <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"innen ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(vagy nézze meg a mellékelt PDF-et)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"\n"
+"<p>Kérdés esetén válaszolhat erre az emailre.</p>\n"
+"<p>Köszönjük,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -115,7 +151,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
 msgid "${object.subject}"
-msgstr ""
+msgstr "${object.subject}"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -136,6 +172,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
+"<b>Hívjon meg értékesítőt vagy vezetőket</b> emailen.<br/><i>Soronként egy "
+"emailt adjon meg.</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -211,6 +249,76 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" class=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${user.company_id.name}<br/>\n"
+"                                ${user.company_id.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if user.company_id.email:\n"
+"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if user.company_id.website:\n"
+"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${user.company_id.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Támogatja <a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -219,6 +327,9 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Példa: előre-fizetendő szolgáltatás ajánlatok, melyekre a vevőnek \n"
+"extra                óra csomagokat kell vásárolnia, mivel az összes támogatási óráit\n"
+"                elhasználta.</i>"
 
 #. module: sale
 #. openerp-web
@@ -228,6 +339,9 @@ msgid ""
 "<p><b>Confirm the order</b> if the customer purchases.</p><p><i>The customer"
 " can also confirm the order directly from the email he received.</i></p>"
 msgstr ""
+"<p><b>Erősítse meg a vásárlói megrendelést</b> ha a vevő "
+"vásárolt.</p><p><i>A vásárló megerősítheti a rendelését közvetlenül a hozzá "
+"érkezett email-en is.</i></p>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -280,6 +394,7 @@ msgstr "Egy egyedi ár termékekként"
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
+"Egy figyelmeztetést állíthat be egy terméken vagy egy vásárlón (Értékesítés)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -320,12 +435,12 @@ msgstr "Előre árazás a képlet alapján"
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
 msgid "All the products and the customers can be used in sale orders"
-msgstr ""
+msgstr "Az összes termék és vevő használható a vevői megrendeléseken"
 
 #. module: sale
 #: selection:sale.config.settings,module_product_visible_discount:0
 msgid "Allow discount policy on sale order line"
-msgstr ""
+msgstr "Engedélyezi a vásárlói megrendelés tételeire az árengedmény szabályt"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -346,6 +461,8 @@ msgstr ""
 msgid ""
 "Allow to modify the sale order dates to postpone deliveries and procurements"
 msgstr ""
+"Engedélyezi a vevői megrendeléseken a dátumok módosítását a kiszállítások és"
+" a beszerzések elhalasztásához"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -353,6 +470,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Lehetővé teszi a vásárlói kategóriák szabályai szerinti különböző árak használatát.\n"
+"                Példa: 10% a kiskereskedőknek, befektetésösztönzés 5 EUR ezen a terméken, stb."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -379,6 +498,8 @@ msgstr "Számlázandó értékesítések mennyisége"
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
 msgstr ""
+"Egy információs vagy blokkoló figyelmeztetés állítható be az egyes "
+"termékekre vagy egy vevőre"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -410,12 +531,12 @@ msgstr "Analitikus/elemző könyvelési gyűjtőkód az értékesítésekhez"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Költségen"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At sale price"
-msgstr ""
+msgstr "Eladási áron"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -436,7 +557,7 @@ msgstr "Blokkoló üzenet"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr ""
+msgstr "Megszakítások oldala"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -489,6 +610,8 @@ msgstr ""
 #, python-format
 msgid "Click the <i>Home icon</i> to navigate across apps."
 msgstr ""
+"Kattintson a <i>Kezdőlap ikonra</i> az alkalmazásokon keresztüli "
+"navigációhoz."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -518,7 +641,7 @@ msgstr "Vállalat"
 #: code:addons/sale/static/src/js/tour.js:40
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -632,7 +755,7 @@ msgstr "Vásárlói megrendelés létrehozásának dátuma."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
 msgid "Date on which the sale order is confirmed."
-msgstr ""
+msgstr "A vevői megrendelés megerősítésének dátuma."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
@@ -683,7 +806,7 @@ msgstr "Kiszállítás átfutási idő"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "A jelenlegi vásárlói megrendelés szállítási címe."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -765,7 +888,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sale orders and invoice reports"
-msgstr ""
+msgstr "Ne tegye személyessé a vevői megrendeléseket és számla kimutatásokat"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:85
@@ -1205,7 +1328,7 @@ msgid "Never allow to modify a confirmed sale order"
 msgstr "Soha ne hagyjon egy visszaigazolt vásárlói megrendelést módosítani"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:101
+#: code:addons/sale/models/sale.py:102
 #, python-format
 msgid "New"
 msgstr "Új"
@@ -1442,7 +1565,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:277
+#: code:addons/sale/models/sale.py:278
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr ""
@@ -1450,7 +1573,7 @@ msgstr ""
 "vállalathoz."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:782
+#: code:addons/sale/models/sale.py:783
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1555,10 +1678,13 @@ msgstr "Terméksablon"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_variant
+#: model:ir.ui.menu,name:sale.menu_product
+#: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
 msgstr "Termékváltozatok"
 
 #. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.prod_config_main
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Products"
@@ -2144,7 +2270,7 @@ msgstr ""
 "menüjéből."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:367 code:addons/sale/models/sale.py:371
+#: code:addons/sale/models/sale.py:368 code:addons/sale/models/sale.py:372
 #, python-format
 msgid "There is no invoicable line."
 msgstr "Nincs számlázandó tételsor."
@@ -2332,7 +2458,7 @@ msgid "Warning"
 msgstr "Figyelmeztetés"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:862
+#: code:addons/sale/models/sale.py:863
 #, python-format
 msgid "Warning for %s"
 msgstr "Figyelmeztetés erre %s"
@@ -2367,7 +2493,7 @@ msgid "Wrong value entered!"
 msgstr "Rosszérték lett megadva!"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:164
+#: code:addons/sale/models/sale.py:165
 #, python-format
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
@@ -2375,7 +2501,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:891
+#: code:addons/sale/models/sale.py:892
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

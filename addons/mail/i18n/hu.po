@@ -10,10 +10,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -107,12 +107,93 @@ msgid ""
 "    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #a24689;\">Odoo</a>.\n"
 "</p>\n"
 msgstr ""
+"\n"
+"% if ctx.get('button_access'):\n"
+"<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
+"    </div>\n"
+"</div>\n"
+"% endif\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access') or ctx.get('is_accessible'):\n"
+"<div summary=\"o_mail_notification\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 100%; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        % if ctx.get('button_access') or ctx.get('button_follow') or ctx.get('button_unfollow'):\n"
+"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; text-decoration: none; color: #FFFFFF; text-decoration:none !important; font-weight: 400; background-color: #a24689; border: 0px solid #a24689; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('button_follow'):\n"
+"        % if ctx.get('actions'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_follow']['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${ctx['button_follow']['title']}</a>\n"
+"        % elif ctx.get('button_unfollow'):\n"
+"        % if ctx.get('actions'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${ctx['button_unfollow']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('actions'):\n"
+"        % for action in ctx['actions']:\n"
+"        |\n"
+"        <a href=\"${action['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${action['title']}</a>\n"
+"        % endfor\n"
+"        % endif\n"
+"    </td>\n"
+"    <td valign=\"center\" align=\"right\">\n"
+"        <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"    </td>\n"
+"</tr>\n"
+"<tr>\n"
+"    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"        <hr width=\"100%\"\n"
+"            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
+"        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
+"        <span style=\"background-color: #f2dede; padding: 5px;\">\n"
+"            <strong>Belső megjegyzés</strong>: válasz nem lessz a követőknek kiküldve.\n"
+"        </span>\n"
+"        % endif\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"% endif\n"
+"${object.body | safe}\n"
+"% if ctx.get('tracking'):\n"
+"    <ul>\n"
+"    % for tracking in ctx['tracking']\n"
+"        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
+"    % endfor\n"
+"    </ul>\n"
+"% endif\n"
+"\n"
+"% if ctx.get('signature'):\n"
+"    ${ctx['signature'] | safe}\n"
+"% endif\n"
+"<br/>\n"
+"<p style=\"color: #555555;\">\n"
+"    Sent by\n"
+"    % if ctx.get('website_url'):\n"
+"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #a24689;\">\n"
+"    % endif\n"
+"    ${ctx.get('company_name')}\n"
+"    % if ctx.get('website_url'):\n"
+"    </a>\n"
+"    % endif\n"
+"    felhasználva\n"
+"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #a24689;\">Odoo rendszer</a>.\n"
+"</p>\n"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:627
 #, python-format
 msgid " This channel is private. People must be invited to join it."
-msgstr ""
+msgstr "Ez egy privát csatorna. Meghívottként csatlakozhat hozzá."
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -160,18 +241,13 @@ msgid "(from"
 msgstr "(feladó"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:38
-#, python-format
-msgid "(no email address)"
-msgstr "(hiányzó email címek)"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
+"* Smile-k csak a HTML kódban használhatók kép megjelenítésre * Szöveg "
+"(alapértelmezett érték) használatával helyettesíthető egy másik szöveg"
 
 #. module: mail
 #. openerp-web
@@ -190,6 +266,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+"            Megemlíthet valakit ide írva <b>@felhasznalonev</b>, ez felhívja a figyelmét.<br>\n"
+"            Csatornát is megemlíthet ide írva <b>#csatorna</b>.<br>\n"
+"            Parancsot hajthat végre ide írva <b>/parancs</b>.<br>\n"
+"            Beilleszthet régebbi válaszokat az üzenetébe ide írva <b>:hivatkozas</b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:538
@@ -248,6 +329,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Társalogjon a munkatársakkal</b> élőben a közvetlen "
+"üzenetküldővel.</p><p><i>Először talán meg kell hívnia felhasználókat az "
+"alkalmazás Beállításából.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -258,6 +342,9 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
+"<p><b>Írjon egy üzenetet</b> itt a csatorna tagoknak.</p> <p>Értesíteni tud "
+"valakit ezzel <i>'@'</i> vagy hivatkozzon másik csatornára ezzel <i>'#'</i>."
+" Kezdje az üzenetét ezzel <i>'/'</i> a lehetséges parancsok listáihoz.</p>"
 
 #. module: mail
 #. openerp-web
@@ -268,6 +355,10 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
+"<p>Csatornák könnyűvé teszik az információk  szervezését a különböző "
+"kapcsolódó témák és csoportok közt.</p> <p>Próbálja meg <b>létrehozni első "
+"csatornáját</b> (pl. értékesítés, marketing, XYZ termék, munka utáni "
+"összejövetel, stb).</p>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -622,6 +713,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"A mellékletek a modell / res_id és ennek a mezőnek az üzenetével lesznek a "
+"dokumentumhoz hozzáfűzve."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -952,7 +1045,7 @@ msgstr "Párbeszéd lapozási állapot"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "Párbeszéd lecsökkentése"
 
 #. module: mail
 #. openerp-web
@@ -1145,19 +1238,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "E-mailek törlése"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Üzenet másolat törlése"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "Elküldött e-mailek törlése (kizárólag tömeges levélküldés)"
 
 #. module: mail
 #. openerp-web
@@ -1246,6 +1339,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Ne tartsa az e-mail másolatát a kommunikációs történet dokumentumban "
+"(kizárólag tömeges levélküldés)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1983,6 +2078,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs"
+" beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -1991,6 +2088,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs"
+" beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül. Jinja2 "
+"üres mező kitöltést használhat."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -2173,7 +2273,7 @@ msgstr "Ez egy üzenet"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "Feliratkozott"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -2362,7 +2462,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:651
 #, python-format
 msgid "List users in the current channel"
-msgstr ""
+msgstr "A jelenlegi csatornát használók listázása"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
@@ -2388,7 +2488,7 @@ msgstr "Napló"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:60
+#: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log a note. Followers will not be notified."
 msgstr "Naplózzon egy jegyzetet. Követőket nem értesíti."
@@ -2401,7 +2501,7 @@ msgstr "Egy Belső megjegyzés rögzítése"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:60
+#: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log an internal note"
 msgstr "Egy belső megjegyzés rögzítése"
@@ -2682,6 +2782,8 @@ msgstr "Üzenetek keresése"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
+"Üzenetek lehetnek <b>kedvencek</b> emlékeztessenek a későbbi "
+"visszatekintésre."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_internal
@@ -2801,7 +2903,7 @@ msgstr "Szöveg új értéke"
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:58
 #: code:addons/mail/static/src/js/window_manager.js:139
-#: code:addons/mail/static/src/xml/chatter.xml:57
+#: code:addons/mail/static/src/xml/chatter.xml:56
 #: code:addons/mail/static/src/xml/systray.xml:24
 #, python-format
 msgid "New message"
@@ -3136,6 +3238,8 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
+"Miután kedvencnek jelölt egy üzenetet, visszatérhet és felülvizsgálhatja azt"
+" ide visszatérve."
 
 #. module: mail
 #. openerp-web
@@ -3467,7 +3571,7 @@ msgstr "Privát csatornák"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Nyilvános csatornák"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3648,7 +3752,7 @@ msgstr "Tervezett dátum"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Tervezett elküldési dátum"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3702,7 +3806,7 @@ msgstr "Küldés most"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/chatter.xml:57
+#: code:addons/mail/static/src/xml/chatter.xml:56
 #, python-format
 msgid "Send a message"
 msgstr "Üzenet küldése"
@@ -3768,7 +3872,7 @@ msgstr "Gyorsbillentyű"
 #: code:addons/mail/models/mail_channel.py:620
 #, python-format
 msgid "Show an helper message"
-msgstr ""
+msgstr "Mutass egy súgó üzenetet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3907,7 +4011,7 @@ msgstr "Helyettesít"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_subtype_id
 #: model:ir.model.fields,field_description:mail.field_mail_followers_subtype_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_subtype_id
-#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_2117
+#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_2118
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_subtype_id
 #: model:ir.ui.view,arch_db:mail.view_message_subtype_tree
 msgid "Subtype"
@@ -3952,7 +4056,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "A kivett html kód helyettesíti a gyorsbillentyűt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4013,13 +4117,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "Gyorsbillentyű mely a társalgások menüben ki lesz cserélve"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Ennek a sablonnak a dokumentum típusát használhatja ezzel"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4033,7 +4137,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "Ez"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
@@ -4119,6 +4223,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"A követett értékek külön modellben vannak tárolva. Ez a mező lehetővé teszi "
+"a követést és a statisztika generálását a modellhez."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4394,7 +4500,7 @@ msgstr "Felhasználók"
 #: code:addons/mail/models/mail_channel.py:664
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr ""
+msgstr "Felhasználók ebben a csatornában: %s %s és Ön."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:654
@@ -4405,7 +4511,7 @@ msgstr "Nézet"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/followers.js:328
+#: code:addons/mail/static/src/js/followers.js:330
 #, python-format
 msgid ""
 "Warning! \n"
@@ -4472,19 +4578,19 @@ msgstr "Hozzáadta a <b>%s</b> ehhez a beszélgetéshez."
 #: code:addons/mail/models/mail_channel.py:661
 #, python-format
 msgid "You are alone in this channel."
-msgstr ""
+msgstr "Egyedül van ebben a csatornában."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:630
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
-msgstr ""
+msgstr "Privát megbeszélése van vele: <b>@%s</b>."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:625
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr ""
+msgstr "Ebben a csatornában van: <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -4548,7 +4654,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:497
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
-msgstr ""
+msgstr "Rögzítetlenné tette a megbeszélését vele <b>%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -4585,7 +4691,7 @@ msgstr "által"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "created"
-msgstr ""
+msgstr "létrehozta"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:319
@@ -4610,7 +4716,7 @@ msgstr "követők"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "from:"
-msgstr ""
+msgstr "feladó:"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -4620,7 +4726,7 @@ msgstr "általános"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "lett"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -4635,7 +4741,7 @@ msgstr "ir.autovacuum"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -4652,7 +4758,7 @@ msgstr "megemlítés(ek) elolvasottként jelölve."
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
-msgstr ""
+msgstr "módosítva"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
