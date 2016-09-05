@@ -10,10 +10,10 @@
 # Volluta <volluta@tutanota.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -223,7 +223,7 @@ msgstr "<b>Geen website module gevonden!</b>"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<b>Set Custom Image...</b>"
-msgstr ""
+msgstr "<b>Kies een afbeelding...</b>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_sign_in
@@ -421,13 +421,13 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-msgid "<span class=\"fa fa-pencil\"/> EDIT PAGE"
-msgstr "<span class=\"fa fa-pencil\"/> WIJZIG PAGINA"
+msgid "<span class=\"fa fa-pencil\"/>Edit"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-msgid "<span class=\"fa fa-plus\"/> NEW PAGE"
-msgstr "<span class=\"fa fa-plus\"/> NIEUWE PAGINA"
+msgid "<span class=\"fa fa-plus\"/>New"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1025,6 +1025,11 @@ msgstr ""
 "dan pagina A. Uiteraard kiest u nu om pagina B te gebruiken als nieuwe pagina."
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.view_general_configuration_inherit_website
+msgid "API Key"
+msgstr "API-code"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 #: model:ir.ui.view,arch_db:website.footer_default
 msgid "About us"
@@ -1095,7 +1100,7 @@ msgstr "Trefwoord toevoegen:"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:66
+#: code:addons/website/static/src/js/website.contentMenu.js:72
 #, python-format
 msgid "Add page in menu"
 msgstr "Pagina toevoegen in menu"
@@ -1510,6 +1515,13 @@ msgid "Configure your Gengo API key in"
 msgstr "Configureer uw Gengo API sleutel in"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.snippets.editor.js:31
+#, python-format
+msgid "Confirmation"
+msgstr "Bevestiging"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Congratulations, you're done !"
 msgstr "Gefeliciteerd, u bent helemaal klaar!"
@@ -1566,7 +1578,7 @@ msgstr "Inhoud om te vertalen"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:179
+#: code:addons/website/static/src/js/website.contentMenu.js:185
 #: code:addons/website/static/src/xml/website.xml:56
 #, python-format
 msgid "Continue"
@@ -1627,6 +1639,13 @@ msgstr ""
 "U moet uw navigatiemenu bouwen voor uw bezoekers en niet voor uw eigen doeleinden of objectieven."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:28
+#, python-format
+msgid "Currently there is no data available."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Customize"
 msgstr "Wijzigen"
@@ -1671,7 +1690,7 @@ msgstr "Verwijder blokken"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:127
+#: code:addons/website/static/src/js/website.contentMenu.js:133
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Delete Page"
@@ -1753,6 +1772,13 @@ msgid "Do not show this dialog later."
 msgstr "Laat dit dialoog later niet zien."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.snippets.editor.js:78
+#, python-format
+msgid "Do you want to edit the company data ?"
+msgstr "Wilt u de bedrijfsgegevens bewerken?"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Does it works offline?"
 msgstr "Werkt dit offline?"
@@ -1823,7 +1849,7 @@ msgstr "Bewerken"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:201
+#: code:addons/website/static/src/js/website.contentMenu.js:207
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Edit Menu"
@@ -1841,10 +1867,10 @@ msgstr "Wijzigen in backend"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:29
+#: code:addons/website/static/src/xml/website.backend.xml:21
 #, python-format
 msgid "Edit my Analytics Client ID"
-msgstr ""
+msgstr "Bewerk mijn Analytics Client ID"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
@@ -1854,6 +1880,13 @@ msgid ""
 msgstr ""
 "Wijzig de inhoud onder deze lijn om de standaard \"pagina niet gevonden\" "
 "pagina aan te passen."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.snippets.editor.js:35
+#, python-format
+msgid "Edit the menu"
+msgstr "Bewerk het menu"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -2015,6 +2048,11 @@ msgid "Folded list"
 msgstr "Gevouwen lijst"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.view_general_configuration_inherit_website
+msgid "Follow"
+msgstr "Volgen"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:22
 #, python-format
@@ -2125,7 +2163,14 @@ msgstr "GitHub Account"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:42
+#: code:addons/website/static/src/js/website.snippets.editor.js:34
+#, python-format
+msgid "Go to Link"
+msgstr "Ga naar link"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:44
 #, python-format
 msgid "Go to our"
 msgstr "Ga naar onze"
@@ -2166,6 +2211,16 @@ msgstr "Google Analytics."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Google Business"
 msgstr "Google Business"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_general_configuration_inherit_website
+msgid "Google Maps"
+msgstr "Google Maps"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_base_config_settings_google_maps_api_key
+msgid "Google Maps API Key"
+msgstr "Google Maps API Key"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2226,7 +2281,7 @@ msgstr "HTTP routing"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_cover
 msgid "Headline"
-msgstr ""
+msgstr "Kop"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2581,7 +2636,7 @@ msgstr "Gelimiteerde personalisering"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:25
+#: code:addons/website/static/src/xml/website.backend.xml:29
 #, python-format
 msgid "Link my Analytics Account"
 msgstr "Link mijn analytisch account"
@@ -2646,7 +2701,7 @@ msgstr ""
 "Ontmoet uw bestaande klanten en moedig hen aan om 'herhalend te kopen'."
 
 #. module: website
-#: code:addons/website/models/website.py:320
+#: code:addons/website/models/website.py:322
 #: model:ir.model.fields,field_description:website.field_website_menu_name
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
 #, python-format
@@ -2667,7 +2722,7 @@ msgstr "Modus"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:48
+#: code:addons/website/static/src/xml/website.backend.xml:50
 #, python-format
 msgid "Month"
 msgstr "Maand"
@@ -2733,7 +2788,7 @@ msgstr "Nieuwe taal"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:58
+#: code:addons/website/static/src/js/website.contentMenu.js:64
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "New Page"
@@ -2961,21 +3016,21 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/models/website.py:299
+#: code:addons/website/models/website.py:301
 #: code:addons/website/static/src/xml/website.editor.xml:10
 #, python-format
 msgid "Page"
 msgstr "Pagina"
 
 #. module: website
-#: code:addons/website/models/website.py:305
+#: code:addons/website/models/website.py:307
 #, python-format
 msgid "Page <b>%s</b> contains a link to this page"
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:59
+#: code:addons/website/static/src/js/website.contentMenu.js:65
 #, python-format
 msgid "Page Title"
 msgstr "Pagina titel"
@@ -3207,7 +3262,7 @@ msgstr "Hernoem pagina naar:"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:93
+#: code:addons/website/static/src/js/website.contentMenu.js:99
 #, python-format
 msgid "Rename This Page"
 msgstr "Hernoem deze pagina"
@@ -3283,7 +3338,7 @@ msgstr "Bekijk en koop uw producten"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:178
+#: code:addons/website/static/src/js/website.contentMenu.js:184
 #, python-format
 msgid "Select a Menu"
 msgstr "Selecteer een menu"
@@ -3433,6 +3488,13 @@ msgid "Static"
 msgstr "Statisch"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/website.snippets.editor.js:43
+#, python-format
+msgid "Stay on this page"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "Still in the left-side menu, go to <strong>APIs and auth &gt; "
@@ -3490,14 +3552,14 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr "Vertel wat de waarde is van deze optie voor de<br/>klant."
 
 #. module: website
-#: code:addons/website/models/website.py:310
+#: code:addons/website/models/website.py:312
 #, python-format
 msgid "Template <b>%s (id:%s)</b> contains a link to this page"
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.ace.js:247
+#: code:addons/website/static/src/js/website.ace.js:256
 #, python-format
 msgid "Template ID: %s"
 msgstr "Sjabloon ID: %s"
@@ -3726,7 +3788,7 @@ msgstr ""
 "site."
 
 #. module: website
-#: code:addons/website/models/website.py:324
+#: code:addons/website/models/website.py:326
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
 msgstr ""
@@ -3778,7 +3840,7 @@ msgstr "Om meer te leren, neem een kijkje bij hun"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.contentMenu.js:173
+#: code:addons/website/static/src/js/website.contentMenu.js:179
 #: model:website.menu,name:website.main_menu
 #, python-format
 msgid "Top Menu"
@@ -3791,7 +3853,7 @@ msgstr "Fout herleiden"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:641
+#: code:addons/website/static/src/js/website.snippets.editor.js:717
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3956,7 +4018,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:42
+#: code:addons/website/static/src/xml/website.backend.xml:44
 #, python-format
 msgid "User Documentation"
 msgstr "Gebruikersdocumentatie"
@@ -4021,10 +4083,15 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:16
+#: code:addons/website/static/src/xml/website.backend.xml:18
 #, python-format
 msgid "Visits"
 msgstr "Bezoeken"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.company_description
+msgid "Visualize on Google Maps"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -4259,7 +4326,7 @@ msgstr "Websites om te vertalen"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:47
+#: code:addons/website/static/src/xml/website.backend.xml:49
 #, python-format
 msgid "Week"
 msgstr "Week"
@@ -4275,6 +4342,13 @@ msgstr "Welko"
 #, python-format
 msgid "Welcome to your"
 msgstr "Welkom op uw"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:26
+#, python-format
+msgid "What do you want to do?"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4387,7 +4461,7 @@ msgstr "Schrijf wat de klant graag wilt weten,<br/> niet wat u wilt tonen."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:49
+#: code:addons/website/static/src/xml/website.backend.xml:51
 #, python-format
 msgid "Year"
 msgstr "Jaar"
@@ -4464,7 +4538,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:37
+#: code:addons/website/static/src/xml/website.backend.xml:39
 #, python-format
 msgid "You do not seem to have access to this Analytics Account."
 msgstr "U lijkt geen toegang te hebben tot deze analytische rekening."
@@ -4480,7 +4554,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:36
+#: code:addons/website/static/src/xml/website.backend.xml:38
 #, python-format
 msgid "You need to log in to your Google Account before:"
 msgstr "U moet uw eigen eerst aanmelden op uw Google account voor:"
@@ -4516,7 +4590,7 @@ msgstr "Uw voettekst"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:40
+#: code:addons/website/static/src/xml/website.backend.xml:42
 #, python-format
 msgid "Your Google Analytic Client ID:"
 msgstr "Uw Google Analytic cliënt ID:"
@@ -4540,6 +4614,13 @@ msgstr "Uw doelstellingen"
 #: model:ir.ui.view,arch_db:website.s_title
 msgid "Your Website Title"
 msgstr "Uw website titel"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:27
+#, python-format
+msgid "Your current changes will be saved automatically."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4597,6 +4678,11 @@ msgstr "en evalueer de volgende uitdrukking:"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "and we'll configure your website and/or email for you."
 msgstr "en wij configureren uw website en/of e-mail voor u."
+
+#. module: website
+#: model:ir.model,name:website.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4810,6 +4896,16 @@ msgid "the classic Odoo interface"
 msgstr "de klassieke Odoo interface"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.view_general_configuration_inherit_website
+msgid "the instructions"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_general_configuration_inherit_website
+msgid "to create your key."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "to describe\n"
@@ -4829,7 +4925,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:42
+#: code:addons/website/static/src/xml/website.backend.xml:44
 #, python-format
 msgid "to get more information."
 msgstr "om meer informatie te krijgen."

@@ -14,10 +14,10 @@
 # Eddie Lim <bhweelim@yahoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:38+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"POT-Creation-Date: 2016-08-26 10:27+0000\n"
+"PO-Revision-Date: 2016-08-26 10:27+0000\n"
 "Last-Translator: Eddie Lim <bhweelim@yahoo.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -423,7 +423,7 @@ msgstr "接受一个答案"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
-msgstr "活跃"
+msgstr "有效"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -652,7 +652,7 @@ msgstr "返回"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:323
-#: code:addons/website_forum/controllers/main.py:387
+#: code:addons/website_forum/controllers/main.py:394
 #, python-format
 msgid "Bad Request"
 msgstr "不好的请求"
@@ -1000,14 +1000,14 @@ msgstr "生成一个标签并被15个问题使用"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_4
@@ -1754,14 +1754,14 @@ msgid "Nofollow links"
 msgstr "不能跟贴的链接"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:835
-#: code:addons/website_forum/models/forum.py:855
+#: code:addons/website_forum/models/forum.py:848
+#: code:addons/website_forum/models/forum.py:868
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "不能给自己的贴子投票"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:899
+#: code:addons/website_forum/models/forum.py:912
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr ""
@@ -1902,7 +1902,7 @@ msgstr "热门问题(500)"
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "登帐"
+msgstr "过账"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -2505,7 +2505,7 @@ msgstr "标题不能为空"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:323
-#: code:addons/website_forum/controllers/main.py:387
+#: code:addons/website_forum/controllers/main.py:394
 #, python-format
 msgid "Title should not be empty."
 msgstr "标题不能为空"
@@ -2514,11 +2514,6 @@ msgstr "标题不能为空"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
 msgid "To"
 msgstr "至"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.new_question
-msgid "To improve your chance getting an answer:"
-msgstr "为了提高你得到一个答案的机会："
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2639,7 +2634,7 @@ msgid "Validate question"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:788
+#: code:addons/website_forum/models/forum.py:801
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "View"
@@ -2671,6 +2666,11 @@ msgstr "等待验证"
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
 msgstr "等待验证"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
+msgid "Waiting post"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2725,11 +2725,23 @@ msgid "Why can other people edit my questions/answers?"
 msgstr "为什么其他人能编辑我的问题/回答？"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"You already have one pending post.<br/>\n"
+"            Please wait for a moderator to validate your previous post before continuing."
+msgstr ""
+
+#. module: website_forum
 #: code:addons/website_forum/models/forum.py:139
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
 msgstr "你不能选择%s作为默认帖子，论坛不允许这样做。"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
+msgid "You cannot post an empty answer"
+msgstr ""
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
