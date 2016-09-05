@@ -5,7 +5,7 @@
 
 {
     "name": "Slovenian - Accounting",
-    "version": "1.0",
+    "version": "1.1",
     "author": "Mentis d.o.o.",
     "website": "http://www.mentis.si",
     'category': 'Localization',
