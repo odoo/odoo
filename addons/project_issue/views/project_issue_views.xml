@@ -195,6 +195,19 @@
             </field>
         </record>
 
+        <record id="project_issue_view_kanban_inherit_no_group_create" model="ir.ui.view">
+            <field name="name">project.issue.view.kanban.inherit.no.group.create</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_kanban_view"/>
+            <field name="mode">primary</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="group_create">false</attribute>
+                </kanban>
+            </field>
+        </record>
+
         <record id="project_issue_pivot_view" model="ir.ui.view">
             <field name="name">project.issue.pivot.view</field>
             <field name="model">project.issue</field>
@@ -277,6 +290,14 @@
             <field name="domain" eval=""/>
             <field name="context">{'search_default_my_issues': 1}</field>
             <field name="search_view_id" ref="view_project_issue_filter"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('project_issue_view_kanban_inherit_no_group_create')}),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('project_issue_tree_view')}),
+                          (0, 0, {'view_mode': 'calendar', 'view_id': ref('project_issue_calendar_view')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('project_issue_form_view')}),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('project_issue_graph_view')}),
+                          ]"/>
             <field name="help" type="html">
                 <p>
                     The Odoo issues tracker allows you to efficiently manage things
@@ -284,41 +305,6 @@
                     complaints, project troubles, material breakdowns, etc.
                 </p>
             </field>
-        </record>
-
-        <record id="action_crm_tag_kanban_view0" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="project_issue_kanban_view"/>
-            <field name="act_window_id" ref="project_issue_categ_act0"/>
-        </record>
-
-        <record id="action_crm_tag_tree_view0" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="project_issue_tree_view"/>
-            <field name="act_window_id" ref="project_issue_categ_act0"/>
-        </record>
-
-        <record id="action_crm_tag_calendar_view0" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="project_issue_calendar_view"/>
-            <field name="act_window_id" ref="project_issue_categ_act0"/>
-        </record>
-
-        <record id="action_crm_tag_form_view0" model="ir.actions.act_window.view">
-            <field name="sequence" eval="3"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="project_issue_form_view"/>
-            <field name="act_window_id" ref="project_issue_categ_act0"/>
-        </record>
-
-        <record id="action_crm_tag_graph_view0" model="ir.actions.act_window.view">
-            <field name="sequence" eval="4"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="project_issue_graph_view"/>
-            <field name="act_window_id" ref="project_issue_categ_act0"/>
         </record>
 
         <menuitem id="menu_project_issue_track" name="Issues" parent="project.menu_project_management"
