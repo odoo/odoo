@@ -4949,9 +4949,7 @@ class BaseModel(object):
         if self:
             vals = [func(rec) for rec in self]
             if isinstance(vals[0], BaseModel):
-                # return the union of all recordsets in O(n)
-                ids = OrderedSet(itertools.chain(*[rec._ids for rec in vals]))
-                return vals[0].browse(ids)
+                return vals[0].union(*vals)         # union of all recordsets
             return vals
         else:
             vals = func(self)
@@ -5100,12 +5098,23 @@ class BaseModel(object):
 
     def __add__(self, other):
         """ Return the concatenation of two recordsets. """
-        if not isinstance(other, BaseModel) or self._name != other._name:
-            raise TypeError("Mixing apples and oranges: %s + %s" % (self, other))
-        return self.browse(self._ids + other._ids)
+        return self.concat(other)
+
+    def concat(self, *args):
+        """ Return the concatenation of ``self`` with all the arguments (in
+            linear time complexity).
+        """
+        ids = list(self._ids)
+        for arg in args:
+            if not (isinstance(arg, BaseModel) and arg._name == self._name):
+                raise TypeError("Mixing apples and oranges: %s.concat(%s)" % (self, arg))
+            ids.extend(arg._ids)
+        return self.browse(ids)
 
     def __sub__(self, other):
-        """ Return the recordset of all the records in ``self`` that are not in ``other``. """
+        """ Return the recordset of all the records in ``self`` that are not in
+            ``other``. Note that recordset order is preserved.
+        """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s - %s" % (self, other))
         other_ids = set(other._ids)
@@ -5113,19 +5122,29 @@ class BaseModel(object):
 
     def __and__(self, other):
         """ Return the intersection of two recordsets.
-            Note that recordset order is not preserved.
+            Note that first occurrence order is preserved.
         """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s & %s" % (self, other))
-        return self.browse(OrderedSet(self._ids) & OrderedSet(other._ids))
+        other_ids = set(other._ids)
+        return self.browse(OrderedSet(id for id in self._ids if id in other_ids))
 
     def __or__(self, other):
         """ Return the union of two recordsets.
-            Note that recordset order is not preserved.
+            Note that first occurrence order is preserved.
         """
-        if not isinstance(other, BaseModel) or self._name != other._name:
-            raise TypeError("Mixing apples and oranges: %s | %s" % (self, other))
-        return self.browse(OrderedSet(self._ids) | OrderedSet(other._ids))
+        return self.union(other)
+
+    def union(self, *args):
+        """ Return the union of ``self`` with all the arguments (in linear time
+            complexity, with first occurrence order preserved).
+        """
+        ids = list(self._ids)
+        for arg in args:
+            if not (isinstance(arg, BaseModel) and arg._name == self._name):
+                raise TypeError("Mixing apples and oranges: %s.union(%s)" % (self, arg))
+            ids.extend(arg._ids)
+        return self.browse(OrderedSet(ids))
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
