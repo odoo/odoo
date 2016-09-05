@@ -32,7 +32,6 @@
                     </a>
                 </a>
             </xpath>
-
             <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
                 <div>
                     <a name="%(action_project_issue_report_filtered)d" type="action">Issues</a>
@@ -47,9 +46,9 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
-            <xpath expr='//div[@name="options_active"]' position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
+            <div name="options_active" position="attributes">
+                <attribute name="class"></attribute>
+            </div>
             <xpath expr='//div[@name="options_active"]' position='inside'>
                 <div>
                     <field name="use_issues" class="oe_inline"/>
