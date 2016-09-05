@@ -9,4 +9,4 @@ class BaseConfigSettings(models.TransientModel):
 
     group_attendance_use_pin = fields.Selection([(0, 'Employees do not need to enter their PIN to check in manually in the "Company Screen".'),
                                                  (1, 'Employees must enter their PIN to check in manually in the "Company Screen".')],
-                                                string='Employee PIN', help='Enable or disable employee PIN identification at check in', implied_group="hr_attenance.group_hr_attendance_use_pin")
+                                                string='Employee PIN', help='Enable or disable employee PIN identification at check in', implied_group="hr_attendance.group_hr_attendance_use_pin")
