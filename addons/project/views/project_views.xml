@@ -179,8 +179,8 @@
             </field>
         </record>
 
-        <record id="edit_project_simplified" model="ir.ui.view">
-            <field name="name">project.project.form.popup</field>
+        <record id="project_project_view_form_simplified" model="ir.ui.view">
+            <field name="name">project.project.view.form.simplified</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <form string="Project">
@@ -208,7 +208,7 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="edit_project_simplified"/>
+            <field name="view_id" ref="project_project_view_form_simplified"/>
             <field name="target">new</field>
         </record>
 
