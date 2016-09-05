@@ -5,8 +5,8 @@
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
@@ -28,10 +28,10 @@
 # Nicolas Seinlet <nicolas@seinlet.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Nicolas Seinlet <nicolas@seinlet.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -76,19 +76,15 @@ msgid "# Work Orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:256
+#: code:addons/mrp/models/mrp_bom.py:262
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                        Documents are attached to the tasks and issues of your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments to link\n"
-"                        documents to your project.\n"
+"                        Click to upload files to your product.\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                        Les documents sont jointes aux tâches et problèmes de votre projet.</p><p>\n"
-"                        Envoyez des messages ou entrez une note interne avec des pièces jointes pour lier des documents à votre projet.\n"
-"                    </p>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -318,7 +314,7 @@ msgid "Archived"
 msgstr "Archivé"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:248
+#: code:addons/mrp/models/mrp_bom.py:254
 #, python-format
 msgid "Attachments"
 msgstr "Pièces jointes"
@@ -500,6 +496,12 @@ msgstr "Lignes de nomenclature"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
 msgid "BoM Type"
 msgstr "Type de nomenclature"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:67
+#, python-format
+msgid "BoM line product %s should not be same as BoM product."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -1345,7 +1347,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Emplacement où le système stockera les produits finis."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9790
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9320
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr ""
@@ -2220,9 +2222,11 @@ msgid "Record Production"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:120
+#: code:addons/mrp/models/mrp_bom.py:126
 #, python-format
-msgid "Recursion error !"
+msgid ""
+"Recursion error!  A product with a Bill of Material should not have itself "
+"in its BoM or child BoMs!"
 msgstr ""
 
 #. module: mrp
@@ -2600,7 +2604,7 @@ msgid "Technical: used in views only."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:70 code:addons/mrp/models/mrp_bom.py:217
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:223
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2980,7 +2984,7 @@ msgid "Warehouse"
 msgstr "Entrepôt"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:70 code:addons/mrp/models/mrp_bom.py:217
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:223
 #, python-format
 msgid "Warning"
 msgstr "Avertissement"
@@ -3289,7 +3293,7 @@ msgid "You can not change the finished work order."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:85
+#: code:addons/mrp/models/mrp_bom.py:91
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"

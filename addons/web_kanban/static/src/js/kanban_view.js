@@ -344,7 +344,7 @@ var KanbanView = View.extend({
     update_buttons: function() {
         if (this.$buttons) {
             // In grouped mode, set 'Create' button as btn-default if there is no column
-            var create_muted = !!this.grouped && this.widgets.length === 0;
+            var create_muted = !!this.grouped && this.widgets.length === 0 && this.is_action_enabled('group_create') && this.grouped_by_m2o;
             this.$buttons.find('.o-kanban-button-new')
                 .toggleClass('btn-primary', !create_muted)
                 .toggleClass('btn-default', create_muted);
@@ -388,7 +388,7 @@ var KanbanView = View.extend({
         // cleanup
         this.$el.css({display:'-webkit-flex'});
         this.$el.css({display:'flex'});
-        this.$el.removeClass('o_kanban_ungrouped o_kanban_grouped');
+        this.$el.removeClass('o_kanban_ungrouped o_kanban_grouped o_kanban_nocontent');
         _.invoke(this.widgets, 'destroy');
         this.$el.empty();
         this.widgets = [];
@@ -411,13 +411,16 @@ var KanbanView = View.extend({
         if (this.data.grouped) {
             this.$el.addClass('o_kanban_grouped');
             this.render_grouped(fragment);
-        } else if (this.data.is_empty) {
-            this.$el.addClass('o_kanban_ungrouped');
-            this.render_no_content(fragment);
         } else {
             this.$el.addClass('o_kanban_ungrouped');
             this.render_ungrouped(fragment);
         }
+        if (this.data.is_empty && this.widgets.length === 0 && (!this.data.grouped || !this.is_action_enabled('group_create') || !this.grouped_by_m2o)) {
+            this.$el.css("display", "block");
+            this.$el.addClass("o_kanban_nocontent");
+            this.render_no_content(fragment);
+        }
+
         this.$el.append(fragment);
     },
 
@@ -837,7 +840,15 @@ function transform_qweb_template (node, fvg, many2manys) {
                 } else {
                     node.attrs.type = 'button';
                 }
-                node.attrs['class'] = (node.attrs['class'] || '') + ' oe_kanban_action oe_kanban_action_' + node.tag;
+
+                var action_classes = " oe_kanban_action oe_kanban_action_" + node.tag;
+                if (node.attrs['t-attf-class']) {
+                    node.attrs['t-attf-class'] += action_classes;
+                } else if (node.attrs['t-att-class']) {
+                    node.attrs['t-att-class'] += " + '" + action_classes + "'";
+                } else {
+                    node.attrs['class'] = (node.attrs['class'] || '') + action_classes;
+                }
             }
             break;
     }

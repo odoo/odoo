@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 9.saas~10c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:37+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,9 +53,19 @@ msgid "Access Groups"
 msgstr "访问用户群组"
 
 #. module: portal
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr "售后服务"
+
+#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "应用"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr "开单"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -75,13 +86,13 @@ msgstr "联系人"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
@@ -146,6 +157,7 @@ msgstr "非门户组"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
+#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
 msgstr "门户"
 
@@ -167,6 +179,11 @@ msgid "Portal User Config"
 msgstr "门户用户配置"
 
 #. module: portal
+#: model:ir.ui.menu,name:portal.portal_projects
+msgid "Projects"
+msgstr "项目"
+
+#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
@@ -178,19 +195,19 @@ msgstr ""
 "    如果需要，可以直接在列表中修改联系人的email地址。"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:106
+#: code:addons/portal/wizard/portal_wizard.py:114
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "多个联系人拥有同一个邮箱："
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:103
+#: code:addons/portal/wizard/portal_wizard.py:111
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "一些联系人没有有效的邮箱："
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:109
+#: code:addons/portal/wizard/portal_wizard.py:117
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr "一个联系人的邮箱和已存在的门户用户的邮箱相同："
@@ -211,7 +228,7 @@ msgid "This text is included in the email sent to new users of the portal."
 msgstr "这段文字会被包含在发给门户网站的新用户的email中。"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:112
+#: code:addons/portal/wizard/portal_wizard.py:120
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -233,7 +250,7 @@ msgid "Wizard"
 msgstr "向导"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:179
+#: code:addons/portal/wizard/portal_wizard.py:189
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."

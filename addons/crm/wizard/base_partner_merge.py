@@ -177,7 +177,7 @@ class MergePartnerAutomatic(models.TransientModel):
                     self._cr.execute(query, (dst_partner.id, partner.id, dst_partner.id))
             else:
                 try:
-                    with mute_logger('openerp.sql_db'), self._cr.savepoint():
+                    with mute_logger('odoo.sql_db'), self._cr.savepoint():
                         query = 'UPDATE "%(table)s" SET %(column)s = %%s WHERE %(column)s IN %%s' % query_dic
                         self._cr.execute(query, (dst_partner.id, tuple(src_partners.ids),))
 
@@ -216,7 +216,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 return
             records = Model.sudo().search([(field_model, '=', 'res.partner'), (field_id, '=', src.id)])
             try:
-                with mute_logger('openerp.sql_db'), self._cr.savepoint():
+                with mute_logger('odoo.sql_db'), self._cr.savepoint():
                     return records.sudo().write({field_id: dst_partner.id})
             except psycopg2.Error:
                 # updating fails, most likely due to a violated unique constraint
@@ -433,11 +433,6 @@ class MergePartnerAutomatic(models.TransientModel):
     # ----------------------------------------
     # Actions
     # ----------------------------------------
-
-    @api.multi
-    def action_close(self):
-        self.ensure_one()
-        return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
     def action_skip(self):

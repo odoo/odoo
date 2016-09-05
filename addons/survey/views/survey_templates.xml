@@ -63,7 +63,7 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="base.group_website_publisher" t-ignore="true" class="pull-right">
+        <div groups="website.group_website_publisher" t-ignore="true" class="pull-right">
             <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-default">Back to Survey</a>
         </div>
     </template>

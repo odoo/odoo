@@ -688,7 +688,7 @@ class WebsitePublishedMixin(models.AbstractModel):
     @api.multi
     def website_publish_button(self):
         self.ensure_one()
-        if self.env.user.has_group('base.group_website_publisher') and self.website_url != '#':
+        if self.env.user.has_group('website.group_website_publisher') and self.website_url != '#':
             return self.open_website_url()
         return self.write({'website_published': not self.website_published})
 

@@ -27,6 +27,8 @@
                         </div>
                     </group>
                     <group string="Quotations &amp; Sales" id="sale" name="quotations_sales">
+                        <field name="company_id" invisible="1"/>
+                        <field name="sale_note"/>
                         <field name="group_sale_delivery_address" widget="radio"/>
                         <field name="group_discount_per_so_line" widget="radio"/>
                         <field name="module_product_visible_discount" widget="radio" attrs="{'invisible': [('group_discount_per_so_line', '=', False)]}"/>
@@ -47,16 +49,16 @@
                             <a href="https://www.odoo.com/page/subscriptions" target="_blank"> More Info</a>
                         </div>
                     </group>
-                    <group string="Customers">
+                    <group string="Customers" name="customers">
                         <field name="module_website_quote" widget="radio"/>
                     </group>
                 </div>
+                <form name="sale_config_form" position="inside">
+                    <div>
+                        <span>(*) This configuration value is related to the company you're logged in.</span>
+                    </div>
+                </form>
             </field>
         </record>
-
-        <menuitem id="sales_team.menu_sale_config" name="Configuration" parent="sales_team.menu_base_partner"
-            sequence="100" groups="sales_team.group_sale_manager"/>
-        <menuitem id="sales_team.menu_sale_general_settings" name="Settings" parent="sales_team.menu_sale_config"
-            sequence="0" action="sales_team.action_sale_config" groups="base.group_system"/>
 
 </odoo>

@@ -107,12 +107,12 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.hr_payslip.with_context(context).compute_sheet()
 
         # I want to check cancel button. So I first cancel the sheet then make it set to draft.
-        self.hr_payslip.cancel_sheet()
+        self.hr_payslip.action_payslip_cancel()
         self.assertEqual(self.hr_payslip.state, 'cancel', "Payslip is rejected.")
-        self.hr_payslip.signal_workflow('draft')
+        self.hr_payslip.action_payslip_draft()
 
         # Confirm Payslip
-        self.hr_payslip.signal_workflow('hr_verify_sheet')
+        self.hr_payslip.action_payslip_done()
 
         # I verify that the Accounting Entries are created.
         self.assertTrue(self.hr_payslip.move_id, 'Accounting Entries has not been created')

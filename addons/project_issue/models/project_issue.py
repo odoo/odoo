@@ -15,7 +15,10 @@ class ProjectIssue(models.Model):
 
     @api.model
     def _get_default_stage_id(self):
-        return self.stage_find(self.env.context.get('default_project_id'), [('fold', '=', False)])
+        project_id = self.env.context.get('default_project_id')
+        if not project_id:
+            return False
+        return self.stage_find(project_id, [('fold', '=', False)])
 
     name = fields.Char(string='Issue', required=True)
     active = fields.Boolean(default=True)
@@ -60,9 +63,9 @@ class ProjectIssue(models.Model):
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True)
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
     date_action_next = fields.Datetime(string='Next Action', readonly=True)
-    legend_blocked = fields.Char(related="stage_id.legend_blocked", string='Kanban Blocked Explanation')
-    legend_done = fields.Char(related="stage_id.legend_done", string='Kanban Valid Explanation')
-    legend_normal = fields.Char(related="stage_id.legend_normal", string='Kanban Ongoing Explanation')
+    legend_blocked = fields.Char(related="stage_id.legend_blocked", string='Kanban Blocked Explanation', readonly=True)
+    legend_done = fields.Char(related="stage_id.legend_done", string='Kanban Valid Explanation', readonly=True)
+    legend_normal = fields.Char(related="stage_id.legend_normal", string='Kanban Ongoing Explanation', readonly=True)
 
     @api.multi
     def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
@@ -136,6 +139,11 @@ class ProjectIssue(models.Model):
         if self.project_id:
             self.partner_id = self.project_id.partner_id.id
             self.email_from = self.project_id.partner_id.email
+            self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+        else:
+            self.partner_id = False
+            self.email_from = False
+            self.stage_id = False
 
     @api.onchange('task_id')
     def _onchange_task_id(self):
@@ -244,6 +252,8 @@ class ProjectIssue(models.Model):
             if recipient.user_ids and group_project_user_id in recipient.user_ids[0].groups_id.ids:
                 group_data['group_project_user'] |= recipient
             elif not recipient.user_ids:
+                group_data['partner'] |= recipient
+            elif all(recipient.user_ids.mapped('share')):
                 group_data['partner'] |= recipient
             else:
                 group_data['user'] |= recipient

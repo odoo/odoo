@@ -8,6 +8,9 @@ class ProjectConfiguration(models.TransientModel):
     _name = 'project.config.settings'
     _inherit = 'res.config.settings'
 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
+    project_time_mode_id = fields.Many2one(related='company_id.project_time_mode_id', string="Project Time Unit *")
     module_pad = fields.Selection([
         (0, "Task description is a plain text"),
         (1, "Collaborative rich text on task description")

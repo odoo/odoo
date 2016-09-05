@@ -40,13 +40,13 @@ class AccountConfigSettings(models.TransientModel):
     has_chart_of_accounts = fields.Boolean(string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='company_id.anglo_saxon_accounting')
-    code_digits = fields.Integer(string='# of Digits', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
+    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting *', related='company_id.anglo_saxon_accounting')
+    code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
     tax_calculation_rounding_method = fields.Selection(
         [
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method',
+        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method *',
         help="""If you select 'Round per line' : for each tax, the tax amount will first be
              computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed,
              leading to the total amount for that tax. If you select 'Round globally': for each tax,
@@ -58,8 +58,8 @@ class AccountConfigSettings(models.TransientModel):
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default purchase tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
-    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname='bank_account_code_char')
-    cash_account_code_prefix = fields.Char(string='Cash Accounts Prefix', related='company_id.cash_account_code_prefix', help='Define the code prefix for the cash accounts')
+    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix *', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname='bank_account_code_char')
+    cash_account_code_prefix = fields.Char(string='Cash Accounts Prefix *', related='company_id.cash_account_code_prefix', help='Define the code prefix for the cash accounts')
     template_transfer_account_id = fields.Many2one('account.account.template', help="Intermediary account used when moving money from a liquidity account to another")
     transfer_account_id = fields.Many2one('account.account',
         related='company_id.transfer_account_id',
@@ -143,6 +143,7 @@ class AccountConfigSettings(models.TransientModel):
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format",
         help='Get your bank statements from your bank and import them in Odoo in the .CSV format.\n'
             '-This installs the module account_bank_statement_import_csv.')
+    overdue_msg = fields.Text(related='company_id.overdue_msg', string='Overdue Payments Message *')
 
 
     @api.model

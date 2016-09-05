@@ -37,6 +37,8 @@ class Channel(models.Model):
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id'}
 
+    MAX_BOUNCE_LIMIT = 10
+
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
@@ -156,14 +158,17 @@ class Channel(models.Model):
 
     @api.multi
     def action_unfollow(self):
-        partner_id = self.env.user.partner_id.id
+        return self._action_unfollow(self.env.user.partner_id)
+
+    @api.multi
+    def _action_unfollow(self, partner):
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
-        result = self.write({'channel_partner_ids': [(3, partner_id)]})
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), channel_info)
+        result = self.write({'channel_partner_ids': [(3, partner.id)]})
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), channel_info)
         if not self.email_send:
             notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
             # post 'channel left' message as root since the partner just unsubscribed from the channel
-            self.sudo().message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner_id)
+            self.sudo().message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
         return result
 
     @api.multi
@@ -200,6 +205,13 @@ class Channel(models.Model):
             headers['X-Forge-To'] = list_to
         res['headers'] = repr(headers)
         return res
+
+    @api.multi
+    def message_receive_bounce(self, email, partner, mail_id=None):
+        """ Override bounce management to unsubscribe bouncing addresses """
+        if partner.message_bounce >= self.MAX_BOUNCE_LIMIT:
+            self._action_unfollow(partner)
+        return super(Channel, self).message_receive_bounce(email, partner, mail_id=mail_id)
 
     @api.multi
     def message_get_recipient_values(self, notif_message=None, recipient_ids=None):

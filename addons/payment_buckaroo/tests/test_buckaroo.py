@@ -98,7 +98,7 @@ class BuckarooForm(BuckarooCommon):
                 'Buckaroo: wrong value for form input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
-    @mute_logger('openerp.addons.payment_buckaroo.models.payment', 'ValidationError')
+    @mute_logger('odoo.addons.payment_buckaroo.models.payment', 'ValidationError')
     def test_20_buckaroo_form_management(self):
         # be sure not to do stupid thing
         self.assertEqual(self.buckaroo.environment, 'test', 'test without test environment')

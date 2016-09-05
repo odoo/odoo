@@ -36,7 +36,7 @@ class ResCompany(models.Model):
             'res_model': 'ir.ui.view',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_id': template_id,
+            'res_id': template_id.id,
         }
 
     @api.multi

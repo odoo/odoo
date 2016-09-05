@@ -3,3 +3,4 @@
 
 import pad
 import res_company
+import res_config

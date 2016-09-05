@@ -30,10 +30,10 @@
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Simon CARRIER <carrier.sim@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -961,7 +961,7 @@ msgstr "Lignes de factures"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr "Ordre de facturation"
+msgstr "Facturer"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1218,7 +1218,7 @@ msgid "Never allow to modify a confirmed sale order"
 msgstr "Ne jamais permettre de modifier un ordre de vente"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:101
+#: code:addons/sale/models/sale.py:102
 #, python-format
 msgid "New"
 msgstr "Nouveau"
@@ -1455,13 +1455,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:277
+#: code:addons/sale/models/sale.py:278
 #, python-format
 msgid "Please define an accounting sale journal for this company."
 msgstr "Veuillez définir un journal de vente pour cette entreprise."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:782
+#: code:addons/sale/models/sale.py:783
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1566,10 +1566,13 @@ msgstr "Modèle d'article"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_variant
+#: model:ir.ui.menu,name:sale.menu_product
+#: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
 msgstr "Variantes d'article"
 
 #. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.prod_config_main
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Products"
@@ -2151,7 +2154,7 @@ msgstr ""
 "Comptabilité, dans le menu de configuration. "
 
 #. module: sale
-#: code:addons/sale/models/sale.py:367 code:addons/sale/models/sale.py:371
+#: code:addons/sale/models/sale.py:368 code:addons/sale/models/sale.py:372
 #, python-format
 msgid "There is no invoicable line."
 msgstr "Il n'y a pas de ligne facturable."
@@ -2338,7 +2341,7 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:862
+#: code:addons/sale/models/sale.py:863
 #, python-format
 msgid "Warning for %s"
 msgstr "Avertissement pour %s"
@@ -2373,7 +2376,7 @@ msgid "Wrong value entered!"
 msgstr "Mauvaise valeur saisie !"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:164
+#: code:addons/sale/models/sale.py:165
 #, python-format
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
@@ -2381,7 +2384,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:891
+#: code:addons/sale/models/sale.py:892
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

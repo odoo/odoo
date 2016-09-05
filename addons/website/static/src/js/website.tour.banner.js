@@ -75,6 +75,6 @@ odoo.define("website.tour.contact", function (require) {
     }, {
         trigger: "li#install_apps",
         content: _t("<b>Install new apps</b> to get more features. Let's install the <i>'Contact form'</i> app."),
-        position: "right",
+        position: "bottom",
     }]);
 });

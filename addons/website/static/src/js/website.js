@@ -7,7 +7,6 @@ odoo.define('website.website', function (require) {
     var Widget = require('web.Widget');
     var session = require('web.session');
     var base = require('web_editor.base');
-    var Tour = require('web.Tour');
 
     var qweb = core.qweb;
     var _t = core._t;

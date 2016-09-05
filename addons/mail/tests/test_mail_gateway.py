@@ -298,6 +298,14 @@ class TestMailgateway(TestMail):
             'alias_model_id': self.mail_channel_model.id,
             'alias_contact': 'everyone'})
 
+        # test@.. will cause the creation of new mail.test
+        self.mail_test_model = self.env['ir.model'].search([('model', '=', 'mail.test')], limit=1)
+        self.alias_2 = self.env['mail.alias'].create({
+            'alias_name': 'test',
+            'alias_user_id': False,
+            'alias_model_id': self.mail_test_model.id,
+            'alias_contact': 'everyone'})
+
         # Set a first message on public group to test update and hierarchy
         self.fake_email = self.env['mail.message'].create({
             'model': 'mail.channel',
@@ -308,7 +316,7 @@ class TestMailgateway(TestMail):
             'message_id': '<123456-openerp-%s-mail.channel@%s>' % (self.group_public.id, socket.gethostname()),
         })
 
-    @mute_logger('openerp.addons.mail.models.mail_thread')
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_parse(self):
         """ Test parsing of various scenarios of incoming emails """
         res = self.env['mail.thread'].message_parse(MAIL_TEMPLATE_PLAINTEXT)
@@ -340,14 +348,14 @@ class TestMailgateway(TestMail):
                       res.get('body', ''),
                       'message_parse: second part of the html version should be in body after parsing multipart/mixed')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread')
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_cid(self):
         new_groups = self.format_and_process(MAIL_MULTIPART_IMAGE, subject='My Frogs', to='groups@example.com')
         message = new_groups.message_ids[0]
         for attachment in message.attachment_ids:
             self.assertIn('/web/image/%s' % attachment.id, message.body)
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_basic(self):
         """ Incoming email on an alias creating a new record + message_new + message details """
         new_groups = self.format_and_process(MAIL_TEMPLATE, subject='My Frogs', to='groups@example.com, other@gmail.com')
@@ -375,7 +383,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(self._mails), 0,
                          'message_process: should create emails without any follower added')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_user_id(self):
         """ Test alias ownership """
         self.alias.write({'alias_user_id': self.user_employee.id})
@@ -387,7 +395,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(res[0], self.user_employee.id,
                          'message_process: group should have been created by alias_user_id')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_email_email_from(self):
         """ Incoming email: not recognized author: email_from, no author_id, no followers """
         new_groups = self.format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
@@ -400,7 +408,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(new_groups.message_partner_ids), 0,
                          'message_process: newly create group should not have any follower')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_email_author(self):
         """ Incoming email: recognized author: email_from, author_id, added as follower """
         new_groups = self.format_and_process(MAIL_TEMPLATE, email_from='Valid Lelitre <valid.lelitre@agrolait.com>', to='groups@example.com, valid.other@gmail.com')
@@ -418,7 +426,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(self._mails), 0,
                          'message_process: no bounce or notificatoin email should be sent with follower = author')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_partners_bounce(self):
         """ Incoming email from an unknown partner on a Partners only alias -> bounce """
         self.alias.write({'alias_contact': 'partners'})
@@ -433,7 +441,7 @@ class TestMailgateway(TestMail):
         self.assertIn('whatever-2a840@postmaster.twitter.com', self._mails[0].get('email_to'),
                       'message_process: bounce email on Partners alias should go to Return-Path address')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_followers_bounce(self):
         """ Incoming email from unknown partner / not follower partner on a Followers only alias -> bounce """
         self.alias.write({
@@ -454,7 +462,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(self._mails), 1,
                          'message_process: incoming email on Followers alias should send a bounce email')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_partner(self):
         """ Incoming email from a known partner on a Partners alias -> ok (+ test on alias.user_id) """
         self.alias.write({'alias_contact': 'partners'})
@@ -467,7 +475,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(new_groups.message_ids), 1,
                          'message_process: newly created group should have the incoming email in message_ids')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_followers(self):
         """ Incoming email from a parent document follower on a Followers only alias -> ok """
         self.alias.write({
@@ -480,7 +488,7 @@ class TestMailgateway(TestMail):
         # Test: one group created by Raoul (or Sylvie maybe, if we implement it)
         self.assertEqual(len(new_groups), 1, 'message_process: a new mail.channel should have been created')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_message_process_alias_update(self):
         """ Incoming email update discussion + notification email """
         self.alias.write({'alias_force_thread_id': self.group_public.id})
@@ -510,9 +518,9 @@ class TestMailgateway(TestMail):
         # self.assertEqual(self.group_public.message_channel_ids, self.env['mail.channel'],
         #                  'message_process: after reply, group should have 2 followers (0 channels)')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_in_reply_to(self):
-        """ Incoming email using in-rely-to should go into the right destination event with a wrong destination """
+        """ Incoming email using in-rely-to should go into the right destination even with a wrong destination """
         self.format_and_process(
             MAIL_TEMPLATE, email_from='valid.other@gmail.com',
             msg_id='<1198923581.41972151344608186800.JavaMail.diff1@agrolait.com>',
@@ -522,9 +530,9 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
         self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_references(self):
-        """ Incoming email using in-rely-to should go into the right destination event with a wrong destination """
+        """ Incoming email using references should go into the right destination even with a wrong destination """
         self.format_and_process(
             MAIL_TEMPLATE, to='erroneous@example.com',
             extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
@@ -533,7 +541,35 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
         self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_references_forward(self):
+        """ Incoming email using references but with alias forward should not go into references destination """
+        res_test = self.format_and_process(
+            MAIL_TEMPLATE, to='test@example.com',
+            subject='My Dear Forward',
+            extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
+            msg_id='<1198923581.41972151344608186800.JavaMail.4@agrolait.com>',
+            target_model='mail.test')
+
+        self.assertEqual(len(self.group_public.message_ids), 1, 'message_process: group should not contain new message')
+        self.assertEqual(len(self.fake_email.child_ids), 0, 'message_process: original email should not contain childs')
+        self.assertEqual(res_test.name, 'My Dear Forward')
+        self.assertEqual(len(res_test.message_ids), 1)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_references_forward_cc(self):
+        """ Incoming email using references but with alias forward should not go into references destination """
+        self.format_and_process(
+            MAIL_TEMPLATE, to='erroneous@example.com', cc='test@example.com',
+            subject='My Dear Forward',
+            extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
+            msg_id='<1198923581.41972151344608186800.JavaMail.4@agrolait.com>',
+            target_model='mail.test')
+
+        self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
+        self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_model_res_id(self):
         """ Incoming email with ref holding model / res_id but that does not match any message in the thread: must raise since OpenERP saas-3 """
         self.assertRaises(ValueError,
@@ -560,18 +596,11 @@ class TestMailgateway(TestMail):
                           to='noone@example.com>', subject='spam',
                           extra='In-Reply-To: <12321321-openerp-%d-mail.channel@neighbor.com>' % frog_groups.id)
 
-        # 4. Subject contains [<ID>] + model passed to message+process -> only attached to group, but not to mail (not in msg1.child_ids)
-        self.format_and_process(
-            MAIL_TEMPLATE,
-            to='erroneous@example.com', email_from='other6@gmail.com',
-            extra='', subject='Re: [%s] 1' % self.group_public.id, model='mail.channel',
-            msg_id='<1198923581.41972151344608186803.JavaMail.5@agrolait.com>')
-
         # Test created messages
-        self.assertEqual(len(self.group_public.message_ids), 3, 'message_process: group should contain 6 messages')
+        self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain 6 messages')
         self.assertEqual(len(self.group_public.message_ids[0].child_ids), 0, 'message_process: msg1 should not have children')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_duplicate(self):
         """ Duplicate emails (same message_id) are not processed """
         self.alias.write({'alias_force_thread_id': self.group_public.id,})
@@ -598,7 +627,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(no_of_msg, 1,
                          'message_process: message with already existing message_id should not have been duplicated')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_partner_find(self):
         """ Finding the partner based on email, based on partner / user / follower """
         from_1 = self.env['res.partner'].create({'name': 'A', 'email': 'from.test@example.com'})
@@ -619,7 +648,7 @@ class TestMailgateway(TestMail):
         self.format_and_process(MAIL_TEMPLATE, to='public@example.com', msg_id='<3>', email_from='Brice Denisse <from.test@example.com>')
         self.assertEqual(self.group_public.message_ids[0].author_id, from_3, 'message_process: email_from -> author_id wrong')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_crash_wrong_model(self):
         """ Incoming email with model that does not accepts incoming emails must raise """
         self.assertRaises(ValueError,
@@ -628,7 +657,7 @@ class TestMailgateway(TestMail):
                           to='noone@example.com', subject='spam', extra='', model='res.country',
                           msg_id='<1198923581.41972151344608186760.JavaMail.new4@agrolait.com>')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_crash_no_data(self):
         """ Incoming email without model and without alias must raise """
         self.assertRaises(ValueError,
@@ -637,7 +666,7 @@ class TestMailgateway(TestMail):
                           to='noone@example.com', subject='spam', extra='',
                           msg_id='<1198923581.41972151344608186760.JavaMail.new5@agrolait.com>')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_fallback(self):
         """ Incoming email with model that accepting incoming emails as fallback """
         frog_groups = self.format_and_process(
@@ -646,7 +675,7 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(frog_groups), 1,
                          'message_process: erroneous email but with a fallback model should have created a new mail.channel')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_plain_text(self):
         """ Incoming email in plaintext should be stored as html """
         frog_groups = self.format_and_process(
@@ -658,7 +687,7 @@ class TestMailgateway(TestMail):
         self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n<span data-o-mail-quote="1">\n--\nSylvie\n</span></pre>', msg.body,
                       'message_process: plaintext incoming email incorrectly parsed')
 
-    @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_private_discussion(self):
         """ Testing private discussion between partners. """
         msg1_pids = [self.env.user.partner_id.id, self.partner_1.id]
@@ -700,21 +729,42 @@ class TestMailgateway(TestMail):
         self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
-        # Do bert forward it to an alias
-        msg = self.env['mail.message'].browse(msg1.id)
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
+    def test_forward_parent_id(self):
+        msg = self.group_pigs.sudo(self.user_employee).message_post(no_auto_thread=True, subtype='mail.mt_comment')
+        self.assertNotIn(msg.model, msg.message_id)
+        self.assertNotIn('-%d-' % msg.res_id, msg.message_id)
+        self.assertIn('reply_to', msg.message_id)
+
         # forward it to a new thread AND an existing thread
-        for i, to in enumerate(['groups', 'public']):
-            fw_msg_id = '<THIS.IS.A.FW.MESSAGE.%d@bert.fr>' % (i,)
-            fw_message = MAIL_TEMPLATE.format(to='%s@example.com' % (to,),
-                                              cc='',
-                                              subject='FW: Re: 1',
-                                              email_from='b.t@example.com',
-                                              extra='References: %s' % msg.message_id,
-                                              msg_id=fw_msg_id)
-            self.env['mail.thread'].message_process(None, fw_message)
+        fw_msg_id = '<THIS.IS.A.FW.MESSAGE.1@bert.fr>'
+        fw_message = MAIL_TEMPLATE.format(to='groups@example.com',
+                                          cc='',
+                                          subject='FW: Re: 1',
+                                          email_from='b.t@example.com',
+                                          extra='In-Reply-To: %s' % msg.message_id,
+                                          msg_id=fw_msg_id)
+        self.env['mail.thread'].message_process(None, fw_message)
+        msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
+        self.assertEqual(len(msg_fw), 1)
+        channel = self.env['mail.channel'].search([('name', "=", msg_fw.subject)])
+        self.assertEqual(len(channel), 1)
+        self.assertEqual(msg_fw.model, 'mail.channel')
+        self.assertFalse(msg_fw.parent_id)
+        self.assertTrue(msg_fw.res_id == channel.id)
 
-            msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
-            self.assertEqual(len(msg_fw), 1)
-
-            self.assertEqual(msg_fw.model, 'mail.channel')
-            self.assertFalse(msg_fw.parent_id)
+        fw_msg_id = '<THIS.IS.A.FW.MESSAGE.2@bert.fr>'
+        fw_message = MAIL_TEMPLATE.format(to='public@example.com',
+                                          cc='',
+                                          subject='FW: Re: 2',
+                                          email_from='b.t@example.com',
+                                          extra='In-Reply-To: %s' % msg.message_id,
+                                          msg_id=fw_msg_id)
+        self.env['mail.thread'].message_process(None, fw_message)
+        msg_fw = self.env['mail.message'].search([('message_id', '=', fw_msg_id)])
+        self.assertEqual(len(msg_fw), 1)
+        channel = self.env['mail.channel'].search([('name', "=", msg_fw.subject)])
+        self.assertEqual(len(channel), 0)
+        self.assertEqual(msg_fw.model, 'mail.channel')
+        self.assertFalse(msg_fw.parent_id)
+        self.assertTrue(msg_fw.res_id == self.group_public.id)

@@ -74,6 +74,15 @@ tour.STEPS.MENU_MORE, {
     trigger: ".o_web_settings_dashboard textarea#user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
+}, tour.STEPS.TOGGLE_APPSWITCHER,
+tour.STEPS.MENU_MORE, {
+    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    content: _t("Good job! Your completed the tour of the CRM. You can continue with the <b>implementation guide</b> to help you setup the CRM in your company."),
+    position: 'bottom',
+}, {
+    trigger: '.o_planner_systray div.progress',
+    content: _t("Use the <b>implementation guide</b> to setup the CRM in your company."),
+    position: 'bottom',
 }]);
 
 });

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -55,6 +55,7 @@ class AccountAnalyticLine(models.Model):
         return price_unit
 
     def _get_sale_order_line_vals(self, order, price):
+
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
@@ -78,6 +79,12 @@ class AccountAnalyticLine(models.Model):
         result = dict(vals or {})
         so_line = result.get('so_line', False) or self.so_line
         if not so_line and self.account_id and self.product_id and (self.product_id.expense_policy != 'no'):
+            order = self.env['sale.order'].search([('project_id', '=', self.account_id.id)], limit=1)
+            if not order:
+                return False
+            if order.state != 'sale':
+                raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.') % order.name)
+
             order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state', '=', 'sale')], limit=1)
             if not order:
                 return result

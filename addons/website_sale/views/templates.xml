@@ -200,7 +200,7 @@
                             <t t-if="not bins">
                                 <div class="text-center text-muted">
                                     <h3 class="css_editable_display">No product defined.</h3>
-                                    <t groups="base.group_website_publisher">
+                                    <t groups="website.group_website_publisher">
                                         <p groups="sales_team.group_sale_manager">Use the <i>'New Page'</i> top menu to create your first product.</p>
                                     </t>
                                 </div>
@@ -1326,7 +1326,7 @@
                                   <li>
                                     <label t-if="acquirer.button">
                                         <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
-                                        <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-field-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
+                                        <span t-field="acquirer.image_small" t-options='{"widget": "image", "alt-field": "name", "style":"display: inline-block;"}'/>
                                         <span t-field="acquirer.name" />
                                         <span t-if="acquirer.fees_active">(processing fees apply)</span>
                                     </label>
@@ -1350,9 +1350,6 @@
                                                 <span t-if="token.acquirer_id.fees_active">(processing fees apply)</span>
                                             </a>
                                         </t>
-                                        <a href="/my/payment_method?redirect=/shop/payment" class="list-group-item" >
-                                            <span class="fa fa-plus-square"/> <b>New card</b>
-                                        </a>
                                     </div>
                                 </li>
                             </ul>
@@ -1361,7 +1358,13 @@
                             <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
                                 <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
                                     <div t-raw="acquirer.button" />
-                                    <div class="pre_msg" t-field="acquirer.pre_msg" />
+                                    <div class="token_hide">
+                                        <div t-if="acquirer.save_token == 'ask'">
+                                            <input type="checkbox" name="odoo_save_token"/>
+                                            <label for="odoo_save_token">Save my payment data</label>
+                                        </div>
+                                        <div class="pre_msg" t-field="acquirer.pre_msg" />
+                                    </div>
                                 </div>
                             </t>
                         </div>
@@ -1535,6 +1538,9 @@
         <t t-if="tx_ids and state == 'done'">
             <p>Your payment has been received.</p>
         </t>
+        <t t-if="tx_ids and state == 'authorized'">
+            <p>Your payment has been authorized.</p>
+        </t>
         <t t-if="tx_ids and state == 'cancel'">
             <p>The payment seems to have been canceled.</p>
         </t>
@@ -1547,7 +1553,7 @@
                 </div>
             </t>
         </t>
-        <t t-if="tx_ids and state not in ['done', 'cancel', 'pending']">
+        <t t-if="tx_ids and state not in ['done', 'cancel', 'pending', 'authorized']">
             <p>Your transaction is waiting confirmation.</p>
         </t>
     </template>
@@ -1695,7 +1701,7 @@
             <div class="container mt16 mb8">
                 <div class="pull-right" t-ignore="true" t-if="not editable">
                                                       Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
-                                                      the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source eCommerce</a>.
+                                                      the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source e-Commerce</a>.
                                                     </div>
                 <div class="pull-left text-muted">
                                                       Copyright &amp;copy; <span t-field="res_company.name">Company name</span></div>

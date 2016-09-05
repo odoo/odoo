@@ -38,7 +38,7 @@ var TimeCounter = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
     start_time_counter: function(){
         var self = this;
-        this.timer = null;
+        clearTimeout(this.timer);
         if (this.field_manager.datarecord.is_user_working) {
             this.duration += 1000;
             this.timer = setTimeout(function() {

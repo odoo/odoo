@@ -11,6 +11,11 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group string="Project Management" name="project_management">
+                        <field name="company_id" invisible="1"/>
+                        <label for="project_time_mode_id" groups="base.group_no_one"/>
+                        <div groups="base.group_no_one">
+                            <field name="project_time_mode_id" domain="[('category_id','=', %(product.uom_categ_wtime)d)]" class="oe_inline"/>
+                        </div>
                         <field name="module_pad" widget="radio"/>
                         <label for="id" string="Forecasts"/>
                         <div>
@@ -23,6 +28,9 @@
                         <field name="module_rating_project" widget="radio"/>
                     </group>
                     <group name="timesheets"/>
+                    <div>
+                        <span>(*) This configuration value is related to the company you're logged in.</span>
+                    </div>
                 </form>
             </field>
         </record>
@@ -35,6 +43,6 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="base.menu_project_general_settings" name="Settings" parent="menu_project_config"
+        <menuitem id="menu_project_general_settings" name="Settings" parent="menu_project_config"
             sequence="0" action="action_config_settings" groups="base.group_system"/>
 </odoo>

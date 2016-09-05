@@ -138,17 +138,11 @@ class AccountVoucher(models.Model):
                     if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
 
     @api.multi
-    def button_proforma_voucher(self):
-        self.signal_workflow('proforma_voucher')
-        return {'type': 'ir.actions.act_window_close'}
-
-    @api.multi
     def proforma_voucher(self):
         self.action_move_line_create()
 
     @api.multi
     def action_cancel_draft(self):
-        self.create_workflow()
         self.write({'state': 'draft'})
 
     @api.multi

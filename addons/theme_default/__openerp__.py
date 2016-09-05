@@ -9,6 +9,7 @@
     'version': '1.0',
     'depends': ['website'],
     'data': [
+        'data/theme_default_data.xml',
         'views/theme_default_templates.xml',
     ],
     'images': [

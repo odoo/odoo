@@ -9,10 +9,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:38+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"POT-Creation-Date: 2016-08-26 10:27+0000\n"
+"PO-Revision-Date: 2016-08-26 10:27+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -59,6 +59,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Emlékeztető ${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>Nem frissítette a folyamatait a céljához ${object.definition_id.name} (most érte el  ${object.completeness}%) legalább ${object.remind_update_delay} nappal. Ne felejtse el megcsinálni.</p>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -134,24 +141,94 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"<p>\n"
+"    <strong>${object.name}</strong>\n"
+"</p>\n"
+"<p class=\"oe_grey\">The following message contains the current progress for the challenge ${object.name}</p>\n"
+"\n"
+"% if object.visibility_mode == 'personal':\n"
+"    <table width=\"100%\" border=\"1\">\n"
+"    <tr>\n"
+"        <th>Cél</th>\n"
+"        <th>Irány</th>\n"
+"        <th>Jelenlegi</th>\n"
+"        <th>Elvégzettség</th>\n"
+"    </tr>\n"
+"    % for line in ctx[\"challenge_lines\"]:\n"
+"        <tr\n"
+"            % if line['completeness'] >= 100:\n"
+"                style=\"font-weight:bold;\"\n"
+"            % endif\n"
+"            >\n"
+"            <td>${line['name']}</td>\n"
+"            <td>${line['target']}\n"
+"            % if line['suffix']:\n"
+"                ${line['suffix']}\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${line['current']}\n"
+"            % if line['suffix']:\n"
+"                ${line['suffix']}\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${line['completeness']} %</td>\n"
+"        </tr>\n"
+"    % endfor\n"
+"    </table>\n"
+"% else:\n"
+"    % for line in ctx[\"challenge_lines\"]:\n"
+"        <table width=\"100%\" border=\"1\">\n"
+"            <tr>\n"
+"                <th colspan=\"4\">${line['name']}</th>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <th>#</th>\n"
+"                <th>Személy</th>\n"
+"                <th>Kitöltöttség</th>\n"
+"                <th>Jelenlegi</th>\n"
+"            </tr>\n"
+"            % célok szerint['goals']:\n"
+"                <tr\n"
+"                    % if goal.completeness >= 100:\n"
+"                        style=\"font-weight:bold;\"\n"
+"                    % endif\n"
+"                    >\n"
+"                    <td>${goal['rank']}</td>\n"
+"                    <td>${goal['name']}</td>\n"
+"                    <td>${goal['completeness']}%</td>\n"
+"                    <td>${goal['current']}/${line['target']}\n"
+"                    % if line['suffix']:\n"
+"                        ${line['suffix']}\n"
+"                    % endif\n"
+"                    </td>\n"
+"                </tr>\n"
+"            % endfor\n"
+"        </table>\n"
+"\n"
+"        <br/><br/>\n"
+"\n"
+"    % endfor\n"
+"% endif\n"
+"            "
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:591
 #, python-format
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%s csatlakozott a felméréshez"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:600
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%s visszautasította a felmérést"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:657
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
-msgstr ""
+msgstr "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:654
@@ -186,6 +263,8 @@ msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                <span class=\"o_stat_text\">Goals</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Kapcsolódó</span>\n"
+"                                <span class=\"o_stat_text\">Célok</span>"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -194,6 +273,9 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
+"A jelvény egy szimbolikus emléktárgy a felhasználónak létrehozva,  jutalmazás kifejezésére.\n"
+"                    Automatikusan is hozzá lehet jutni, ha egy pár kritériumnak megfelel, vagy kézzel is adható.\n"
+"                    Egyes jelvények megszerzése nehezebb a különleges  feltételek miatt."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -201,6 +283,8 @@ msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Egy cél meghatározás az egy technikai modell meghatározása az elérni kívánt célnak.\n"
+"                    Felhasználók vagy a cél eléréséhez az adatok, értékek meghatározása egy cél érdekében."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
@@ -218,6 +302,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
+"A célt egy felhasználó és a cél leírása határozz meg.\n"
+"                    Célokat automatikusan is létrehozhatja a kihívások használatával."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -266,6 +352,9 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"Hozzárendelhet egy, a felhasználók által kiválasztható cél listát, melyből kiértékelheti Őket. \n"
+"A kihívás használhat egy időszakot (heti, havi...) a célok automatikus létrehozásához.\n"
+"A célt az ide vonatkozó felhasználóhoz vagy egy csoport tagjához hozza létre."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
@@ -352,7 +441,7 @@ msgid "Can not grant"
 msgstr "Nem tudja létrehozni"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:410
+#: code:addons/gamification/models/goal.py:409
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr "Egy elkezdett célnak a beállítását nem tudja módosítani"
@@ -664,7 +753,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr ""
+msgstr "Értékelje a hozzászlást a tömeges módhoz"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -709,7 +798,7 @@ msgstr "3. felhasználónak"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
 msgid "For Every Succeeding User"
-msgstr ""
+msgstr "Összes eredményes felhasználónak"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -892,7 +981,7 @@ msgstr "Hogyan számítsa ki a célt?"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "Emberi erőforrás kezelés"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
@@ -914,7 +1003,7 @@ msgstr "Felhasználói ID azonosító mező"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
 msgid "If a maximum is set"
-msgstr ""
+msgstr "Ha a maximumot beállította"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
@@ -1451,7 +1540,7 @@ msgstr "Időzánáját állítja be"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "Gammifikációs/Játékos eszközök beállítása"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
@@ -1729,6 +1818,8 @@ msgid ""
 "There is no goals associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"Nincsenek a keresésének megfelelő, ehhez a felméréshez kapcsolódó célok.\n"
+"                Győződjön meg róla, hogy a felmérései aktívak és legalább egy felhasználóhoz hozzárendeltek."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_closed
@@ -1782,7 +1873,7 @@ msgid "Update"
 msgstr "Frissítés"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:445
+#: code:addons/gamification/models/goal.py:444
 #, python-format
 msgid "Update %s"
 msgstr "%s firssít"
@@ -1808,7 +1899,7 @@ msgstr "Felhasználók"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr ""
+msgstr "Weboldal / Fórum"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1918,6 +2009,8 @@ msgid ""
 "e.g. result = env['mail.followers'].search_count([('res_model', '=', "
 "'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 msgstr ""
+"e.g. result = env['mail.followers'].search_count([('res_model', '=', "
+"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view

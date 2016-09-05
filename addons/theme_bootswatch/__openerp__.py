@@ -10,6 +10,7 @@
     'version': '1.0',
     'depends': ['website'],
     'data': [
+        'data/theme_bootswatch_data.xml',
         'views/theme_bootswatch_templates.xml',
     ],
     'images': ['static/description/bootswatch.png'],

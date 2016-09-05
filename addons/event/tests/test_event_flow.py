@@ -12,7 +12,7 @@ from mock import patch
 
 class TestEventFlow(TestEventCommon):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_basic_event_auto_confirm(self):
         """ Basic event management with auto confirmation """
         event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
@@ -67,7 +67,7 @@ class TestEventFlow(TestEventCommon):
             test_event.button_cancel()
 
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_10_advanced_event_flow(self):
         """ Avanced event flow: no auto confirmation, manage minimum / maximum
         seats, ... """

@@ -3,18 +3,18 @@
 
         <!-- Top menu item -->
         <menuitem name="Project"
-            id="base.menu_main_pm"
+            id="menu_main_pm"
             groups="group_project_manager,group_project_user"
             web_icon="project,static/description/icon.png"
             sequence="50"/>
 
         <menuitem name="Search"
             id="menu_project_management"
-            parent="base.menu_main_pm"
+            parent="menu_main_pm"
             sequence="2" groups="base.group_no_one,group_project_user"/>
 
-        <menuitem id="menu_project_config" name="Configuration" parent="base.menu_main_pm"
-            sequence="100"/>
+        <menuitem id="menu_project_config" name="Configuration" parent="menu_main_pm"
+            sequence="100" groups="project.group_project_manager"/>
 
         <record id="view_task_search_form" model="ir.ui.view">
             <field name="name">project.task.search.form</field>
@@ -149,12 +149,10 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                     <field name="name" string="Project Name"/>
-                    <filter string="My Projects" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
+                    <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
-                    <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
@@ -253,19 +251,14 @@
                                             <div>
                                                 <a name="%(project.action_project_task_user_tree_filtered)d" type="action">Tasks</a>
                                             </div>
-                                            <div>
-                                                <a name="%(project.action_view_task_history_cumulative_filter)d" type="action">Cumulative Flow</a>
-                                            </div>
                                         </div>
                                         <div t-if="widget.editable" class="o_project_kanban_colorpicker">
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
-                                        <div>
-                                            <a type="object" name="toggle_favorite"><i t-attf-class="fa o_dashboard_star #{record.is_favorite.raw_value ? 'fa-star' : 'fa-star-o'}" title="Click to add/remove from favorite"/> Favorite</a>
-                                        </div>
                                     </div>
                                     <div class="o_project_kanban_manage">
-                                        <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                        <a class="o_kanban_manage_toggle_button o_left" href="#">More <i class="fa fa-caret-down"/></a>
+                                        <a type="object" name="toggle_favorite" class="o_right"><i t-attf-class="oe_inline fa o_dashboard_star #{record.is_favorite.raw_value ? 'fa-star' : 'fa-star-o'}" title="Add/remove from favorite"/></a>
                                     </div>
                                 </div>
 
@@ -687,24 +680,10 @@ action = model.activate_sample_project()
 
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
 
-        <menuitem action="open_task_type_form" id="base.menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="group_project_manager"/>
+        <menuitem action="open_task_type_form" id="menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="group_project_manager"/>
 
-        <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="menu_main_pm" sequence="1"/>
         <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
-
-
-        <record id="task_company" model="ir.ui.view">
-            <field name="name">res.company.task.config</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='account_grp']" position="after">
-                    <group name="project_grp" string="Projects">
-                        <field name="project_time_mode_id" domain="[('category_id','=', %(product.uom_categ_wtime)d)]" groups="base.group_no_one"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
 
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
@@ -745,14 +724,9 @@ action = model.activate_sample_project()
         <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config" groups="base.group_no_one"/>
 
         <!-- Reporting menus -->
-        <menuitem id="base.menu_project_report" name="Reports"
+        <menuitem id="menu_project_report" name="Reports"
             groups="project.group_project_manager"
-            parent="base.menu_main_pm" sequence="99"/>
-        <menuitem id="menu_project_task_user_tree" name="Tasks"
             action="project.action_project_task_user_tree"
-            parent="base.menu_project_report"/>
-        <menuitem id="menu_action_view_task_history_cumulative"
-            action="project.action_view_task_history_cumulative"
-            parent="base.menu_project_report"/>
+            parent="menu_main_pm" sequence="99"/>
 
 </odoo>

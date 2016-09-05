@@ -137,6 +137,11 @@ class Project(models.Model):
         if project:
             project.write({'active': True})
 
+        cover_image = self.env.ref('project.msg_task_data_14_attach', False)
+        cover_task = self.env.ref('project.project_task_data_14', False)
+        if cover_image and cover_task:
+            cover_task.write({'displayed_image_id': cover_image.id})
+
         # Change the help message on the action (no more activate project)
         action = self.env.ref('project.open_view_project_all', False)
         action_data = None
@@ -294,7 +299,10 @@ class Task(models.Model):
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
-        return self.stage_find(self.env.context.get('default_project_id'), [('fold', '=', False)])
+        project_id = self.env.context.get('default_project_id')
+        if not project_id:
+            return False
+        return self.stage_find(project_id, [('fold', '=', False)])
 
     @api.multi
     def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
@@ -373,7 +381,7 @@ class Task(models.Model):
     partner_id = fields.Many2one('res.partner',
         string='Customer',
         default=_get_default_partner)
-    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id')
+    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one('res.company',
         string='Company',
         default=lambda self: self.env['res.company']._company_default_get())
@@ -382,14 +390,18 @@ class Task(models.Model):
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments')
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Displayed Image')
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation')
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation')
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation')
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
 
     @api.onchange('project_id')
     def _onchange_project(self):
         if self.project_id:
             self.partner_id = self.project_id.partner_id
+            self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+        else:
+            self.partner_id = False
+            self.stage_id = False
 
     @api.onchange('user_id')
     def _onchange_user(self):
@@ -486,19 +498,6 @@ class Task(models.Model):
         # perform search, return the first found
         return self.env['project.task.type'].search(search_domain, order=order, limit=1).id
 
-    def _store_history(self):
-        for task in self:
-            self.env['project.task.history'].create({
-                'task_id': task.id,
-                'remaining_hours': task.remaining_hours,
-                'planned_hours': task.planned_hours,
-                'kanban_state': task.kanban_state,
-                'type_id': task.stage_id.id,
-                'user_id': task.user_id.id
-
-            })
-        return True
-
     # ------------------------------------------------
     # CRUD overrides
     # ------------------------------------------------
@@ -515,7 +514,6 @@ class Task(models.Model):
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
-        task._store_history()
         return task
 
     @api.multi
@@ -533,8 +531,6 @@ class Task(models.Model):
 
         result = super(Task, self).write(vals)
 
-        if any(item in vals for item in ['stage_id', 'remaining_hours', 'user_id', 'kanban_state']):
-            self._store_history()
         return result
 
     # ---------------------------------------------------
@@ -769,47 +765,6 @@ class AccountAnalyticAccount(models.Model):
         else:
             result = {'type': 'ir.actions.act_window_close'}
         return result
-
-
-class ProjectTaskHistory(models.Model):
-    """
-    Tasks History, used for cumulative flow charts (Lean/Agile)
-    """
-    _name = 'project.task.history'
-    _description = 'History of Tasks'
-    _rec_name = 'task_id'
-    _log_access = False
-
-    @api.depends('date', 'task_id', 'type_id', 'type_id.fold')
-    def _compute_end_date(self):
-        for history in self:
-            if history.type_id and history.type_id.fold:
-                history.end_date = history.date
-                continue
-            self.env.cr.execute('''select
-                    date
-                from
-                    project_task_history
-                where
-                    task_id=%s and
-                    id>%s
-                order by id limit 1''', (history.task_id.id, history.id))
-            res = self.env.cr.fetchone()
-            history.end_date = res and res[0] or False
-
-    task_id = fields.Many2one('project.task', string='Task', ondelete='cascade', required=True, index=True)
-    type_id = fields.Many2one('project.task.type', string='Stage')
-    kanban_state = fields.Selection([
-            ('normal', 'Normal'),
-            ('blocked', 'Blocked'),
-            ('done', 'Ready for next stage')
-        ], string='Kanban State')
-    date = fields.Date(string='Date', index=True, default=fields.Date.context_today)
-    end_date = fields.Date(string='End Date', compute='_compute_end_date', store=True)
-    remaining_hours = fields.Float(string='Remaining Time', digits=(16, 2))
-    planned_hours = fields.Float(string='Planned Time', digits=(16, 2))
-    user_id = fields.Many2one('res.users', string='Responsible')
-
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks (or issues) """

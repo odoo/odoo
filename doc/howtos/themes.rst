@@ -73,7 +73,7 @@ Odoo default theme structure
 
    **Main features:**
 
-   * Basic layouts for pages, blog and eCommerce
+   * Basic layouts for pages, blog and e-Commerce
    * Website Builder integration
    * Basic Snippets
    * Automatic Less/Sass compiling
@@ -258,7 +258,7 @@ The ``data`` property will contain the xml files list. Right now it’s empty, b
 ``category`` defines your module category (always “Theme”) and, after a slash, the subcategory. You can use one subcategory from the Odoo Apps categories list. (https://www.odoo.com/apps/themes)
 
 
-``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website. If you need blogging or eCommerce features as well, you have to add those modules too.
+``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website. If you need blogging or e-Commerce features as well, you have to add those modules too.
 
 .. code-block:: python
 

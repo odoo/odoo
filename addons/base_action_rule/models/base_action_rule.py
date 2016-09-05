@@ -11,7 +11,7 @@ import dateutil
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID
-from odoo.modules.registry import RegistryManager
+from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -128,8 +128,8 @@ class BaseActionRule(models.Model):
             # for the sake of simplicity, simply force the registry to reload
             self._cr.commit()
             self.env.reset()
-            RegistryManager.new(self._cr.dbname)
-            RegistryManager.signal_registry_change(self._cr.dbname)
+            registry = Registry.new(self._cr.dbname)
+            registry.signal_registry_change()
 
     def _get_actions(self, records, kinds):
         """ Return the actions of the given kinds for records' model. The

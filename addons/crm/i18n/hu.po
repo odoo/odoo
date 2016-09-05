@@ -9,10 +9,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:36+0000\n"
-"PO-Revision-Date: 2016-08-18 08:36+0000\n"
+"POT-Creation-Date: 2016-08-26 10:25+0000\n"
+"PO-Revision-Date: 2016-08-26 10:25+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -125,6 +125,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Automatikus belépés</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#a24689;margin:0\" >Hooray!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Az Odoo rendszer CMR alkalmazása él és fut</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Próbáljon meg egy érdeklődést létrehozni egy e-mail küldésével ide </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Kövesse nyomon a lehetőségeit az értékesítési folyamatában egyszerűen a fogd és vidd kártyákkal az oszlopok közt</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM tervező</span></a></span>\n"
+"                                <span> extra jellemzők aktiválásával</span>\n"
+"                                <span style=\"color:#a24689;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Automatikusan rendelje hozzá az érdeklődéseit az értékesítőihez az érdeklődés pontszámozással, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Maradjon kapcsolatban a potenciális ügyfeleivel hatékony e-mail kampányokkal,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Nyerjen magas minőségű betekintést a felmérésekből,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Kapjon okos kimutatásokat és pontos műszerfalakat,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>És még sok más......</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Szüksége van segítségre?</span>\n"
+"                                <span style=\"font-style:italic;\">Nincs egyedül</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Örömmel nyújtunk segítséget útközben. Lépjen kapcsolatba velünk itt \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a>bármely felmerülő kérdéssel. Ugyanakkor felfedezheti hogyan vegye ki a legtöbbet az Odoo CMR ből a mi </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Felhasználói Dokumentációnkbó</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Élvezze az Odoo rendszer felfedezését,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: Emberek szeretik az Odoo rendszert, ellenőrizze </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">mit mondanak erről.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -137,6 +236,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Tisztelt ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Ez a lehetőség: <strong>${object.name}</strong> , az elmúlt 5 napja nem aktív.</p>\n"
+"%if object.description:\n"
+"<p>Itt van a lehetőség leírása : </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Köszönöm!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -173,6 +279,8 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
+"<b>Fogd &amp; vidd lehetőségek</b> az oszlopok közt az értékesítési "
+"ciklusában a folyamatai közt."
 
 #. module: crm
 #. openerp-web
@@ -181,11 +289,13 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
+"<b>Hívjon meg  munkatársakat</b> e-mailen.<br/><i>Soronként egy emailt adjon"
+" meg.</i>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -201,6 +311,10 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
+"<p><b>Üzenetek küldése</b> az esetleges jelöltjének és kapja meg "
+"automatikusan az ehhez a lehetőséghez kapcsolódó válaszokat.</p><p "
+"class=\"mb0\">Típus <i>'@'</i> embereket megemlít - ez olyan mintha cc "
+"/titkos másolat/ az e-maileknél.</p>"
 
 #. module: crm
 #. openerp-web
@@ -212,6 +326,11 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
+"<p>Testre szabhatja a nyomon követés tevékenységét. "
+"Példák:</p><ol><li>Bemutatkozó email</li><li>10 nap után "
+"figyelemfelhívás</li><li>második figyelem felhívás újabb 3 nap után, "
+"...</li></ol><p class='mb0'><i>Válasszon egy alapértelmezett műveletet "
+"mostantól ehhez.</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -689,7 +808,7 @@ msgstr "<strong>Ajánlott műveletek:</strong>"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "<strong>Recommended activities:</strong>"
-msgstr ""
+msgstr "<strong>Ajánlott műveletek:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -915,12 +1034,12 @@ msgstr "Tevékenység"
 #: code:addons/crm/wizard/crm_activity_log.py:80
 #, python-format
 msgid "Activity Done"
-msgstr ""
+msgstr "Művelet elvégezve"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
 msgid "Activity State"
-msgstr ""
+msgstr "Művelet állapota"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -992,6 +1111,9 @@ msgid ""
 "                    create new opportunity. Update your business card, phone book, social media,...\n"
 "                    Send an email right now and see it here."
 msgstr ""
+"Az összes %s -be érkező email automatikusan új\n"
+"lehetőségeket fog létrehozni. Frissíti a névjegykártyákat, telefonkönyvet, szociális médiát,... \n"
+"Küldjön most egy email-t és tekintse meg működését."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1051,7 +1173,7 @@ msgstr "Iktassa ezeket a lehetőséget neki"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Assign this opportunity to"
-msgstr ""
+msgstr "Iktassa hozzá ezeket a lehetőséget"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1237,13 +1359,15 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
+"Kattintson ide <b>első lehetőség létrehozását</b> megtegye és adja hozzá a "
+"folyamatához."
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:54
 #, python-format
 msgid "Click on an opportunity to zoom to it."
-msgstr ""
+msgstr "Kattintson egy lehetőséghez annak megjelenítéséhez."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:883
@@ -1274,7 +1398,7 @@ msgstr "Kattintson egy új értékesítési címke meghatározásához."
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "Kattintson az lehetőségi folyamat új szakaszának megadásához"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1289,7 +1413,7 @@ msgstr "Zárás dátuma"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
 msgid "Closed Date"
-msgstr ""
+msgstr "Zárás dátuma"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:87
@@ -1333,7 +1457,7 @@ msgstr "Konkurencia mátrix az árak összehasonlításához"
 #: code:addons/crm/static/src/js/tour.js:71
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1470,7 +1594,7 @@ msgstr "Új vevő létrehozása"
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create an Opportunity"
-msgstr ""
+msgstr "Egy lehetőség létrehozása"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1513,7 +1637,7 @@ msgstr "Állítsa be az ajánlatok sablonjait"
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Created By"
-msgstr ""
+msgstr "Készítette"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_create_uid
@@ -1612,7 +1736,7 @@ msgstr "Vásárlók"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Customizations"
-msgstr ""
+msgstr "Testreszabás"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1919,7 +2043,7 @@ msgstr "Várható befejezés"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing Date"
-msgstr ""
+msgstr "Várható befejezés dátuma"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_planned_revenue
@@ -2116,6 +2240,8 @@ msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
 msgstr ""
+"Ez a következő tevékenységei listája. Ezek hivatkoznak a lehetőségeire.\n"
+"               Következő tevékenység beállításához menjen az egyik lehetőséghez és adjon hozzá egyet. Ez a listában fel fog tűnni."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
@@ -2191,6 +2317,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales teams."
 msgstr ""
+"Ha a korábbi lépéseket követte, már beállította\n"
+"                        az alapját az erős folyamatoknak, melyek az \n"
+"                        értékesítési csapatai folyamatos fejlődéséhez vezetnek."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2351,7 +2480,6 @@ msgstr "Utoljára frissítve "
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
-#: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2500,7 +2628,7 @@ msgstr "Érdeklődések/lehetőségek"
 #: code:addons/crm/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at your opportunities pipeline."
-msgstr ""
+msgstr "Nézzük meg a lehetőségek folyamatát."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2534,29 +2662,29 @@ msgstr "Lehetséges emlékeztetési pontok listája szakaszonként/profilonként
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log & Schedule Next"
-msgstr ""
+msgstr "Következő Napló & Ütemezés"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Log Activity"
-msgstr ""
+msgstr "Művelet naplózása"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log Only"
-msgstr ""
+msgstr "Csak napló"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log a note..."
-msgstr ""
+msgstr "Naplózzon egy jegyzetet..."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log an Activity"
-msgstr ""
+msgstr "Naplózzon egy műveletet"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2600,7 +2728,7 @@ msgstr "Megnyertnek jelölve"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark as lost"
-msgstr ""
+msgstr "Elveszettnek jelölje"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2825,7 +2953,7 @@ msgstr "Lehetőségeim"
 #: model:ir.actions.server,name:crm.action_your_pipeline
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 msgid "My Pipeline"
-msgstr ""
+msgstr "Folyamatom"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2846,14 +2974,8 @@ msgstr "Új lehetőség"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
-#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action
 msgid "Next Action"
 msgstr "Következő művelet"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action_date
-msgid "Next Action Date"
-msgstr "Következő művelet időpontja"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -2882,17 +3004,17 @@ msgstr "Következő tevékenység összegzése"
 #: code:addons/crm/wizard/crm_activity_log.py:61
 #, python-format
 msgid "Next activity"
-msgstr ""
+msgstr "Következő művelet"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity is planned"
-msgstr ""
+msgstr "Következő művelet megtervezve"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity late"
-msgstr ""
+msgstr "Következő művelet késve"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1123
@@ -2903,12 +3025,12 @@ msgstr "Nincs tárgy"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "No activity"
-msgstr ""
+msgstr "Nincs művelet."
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "No next activity planned"
-msgstr ""
+msgstr "Nincs következő művelet megtervezve"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2924,17 +3046,12 @@ msgstr "Normál"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
 msgid "Not enough stock"
-msgstr ""
+msgstr "Nincs elég raktárkészlet"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
 msgid "Note"
 msgstr "Jegyzet"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_res_users_payment_next_action
-msgid "Note regarding the next action."
-msgstr "Megjegyzés a következő művelethez."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3152,7 +3269,7 @@ msgstr "Lehetőség szintje megváltozott"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Opportunity Title"
-msgstr ""
+msgstr "Lehetőség címe"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_won
@@ -3376,7 +3493,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
 msgid "Preceding Activities"
-msgstr ""
+msgstr "Korábbi műveletek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
@@ -3386,7 +3503,7 @@ msgstr "Előző tevékenység"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Prices"
-msgstr ""
+msgstr "Árak"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3422,7 +3539,7 @@ msgstr "Valószínűség (%)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_expected_revenue
 msgid "Probable Turnover"
-msgstr ""
+msgstr "Valószínű Tényleges árbevétel"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3462,6 +3579,8 @@ msgid ""
 "Ready to boost you sales? Your <b>sales pipeline</b> can be found here, "
 "under this app."
 msgstr ""
+"Készen áll az értékesítésének erősítésére? Az <b>értékesítési folyamata</b> "
+"itt található, ebben az alkalmazásban."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3471,12 +3590,12 @@ msgstr "Érdeklődések meghiúsulásának oka"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
 msgid "Recommended Activities"
-msgstr ""
+msgstr "Ajánlott műveletek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
 msgid "Recommended Next Activities"
-msgstr ""
+msgstr "Ajánlott következő műveletek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3507,6 +3626,8 @@ msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and "
 "object.partner_id.name or object.contact_name}"
 msgstr ""
+"Emlékeztető: Lehetőség ${object.name} ettől ${object.partner_id != False and"
+" object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3532,7 +3653,7 @@ msgstr "Bevételek értékesítő személyenként"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sale Flow"
-msgstr ""
+msgstr "Értékesítés folyamata"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3599,17 +3720,17 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Ütemezett művelet"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Next Activity"
-msgstr ""
+msgstr "Ütemezze a következő műveletet"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
 msgid "Schedule an Activity"
-msgstr ""
+msgstr "Ütemezzen egy művelet"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3729,6 +3850,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
+"Mutassa az összes lehetőséget melyre a következő műveleti dátum a mai nap "
+"előtti"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3779,6 +3902,8 @@ msgid ""
 "Specific team that uses this stage. Other teams will not ne able to see or "
 "use this stage."
 msgstr ""
+"Ezt a szakaszt használó csapat részletezése. Többi csapatnak nem lesz "
+"lehetősége megnézni vagy használni ezt a szakaszt."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_stage_id
@@ -3830,6 +3955,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
+"Szintek lehetővé teszik az értékesítők részére egy  meghatározott érdeklődés\n"
+"                elhelyezkedésének nyomon követését az értékesítési folyamatban."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -3930,11 +4057,6 @@ msgstr "Email-ek sablonjai"
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
 msgstr ""
 "Árajánlatok sablonjai (használja az Odoo rendszer Online javaslatait ehhez)"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_res_users_payment_next_action_date
-msgid "The date before which no action should be taken."
-msgstr "Az a dátum ami előtt nem végezhet műveletet."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -4047,6 +4169,15 @@ msgid ""
 "\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
+"Több útja van a vállalkozásának lehetőségek generálására az Odoo CRM ügyfélkapcsolat-kezelő rendszerében.\n"
+"                        Ezek közül egyik a vállalat alapértelmezett email rendszere, mely indítja \n"
+"                        a rendszerben lévő új lehetőségek létrehozását. Az Odoo rendszerben, minden egyes értékesítési csapat \n"
+"                        hozzárendelt a saját email címéhez melyen keresztül az érdeklődőkkel kommunikálnak.\n"
+"                        Például, ha egy személyes email cím a Direkt értékesítés csoportjának a\n"
+"                        direct@mycompany.example.com, akkor az összes kimenő email egy új\n"
+"                        esetleges jelölttel a automatikusan új lehetőségeket hoz létre ehhez az értékesítési csoporthoz.\n"
+"\n"
+"                        Ez a legkönnyebb módja az Odoo integrálásához a harmadik alkalmazással."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -4091,6 +4222,8 @@ msgid ""
 "This opportunity has <b>no next activity scheduled</b>. <i>Click to set "
 "one.</i>"
 msgstr ""
+"Ez a lehetőségnek <b>nincs következő művelet ütemezve</b>. <i>Kattintson egy"
+" beállításához.</i>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -4150,7 +4283,7 @@ msgstr "Mai napi tevékenységek"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_1
 msgid "Too expensive"
-msgstr ""
+msgstr "Nagyon drága"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue
@@ -4202,11 +4335,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
-msgid "Unreconciled aml ids"
-msgstr "Rendezetlen, párosítatlan aml id azonosítók"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
@@ -4285,6 +4413,8 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
 msgstr ""
+"Használja a morzsákat <b>az értékesítési folyamatához való "
+"visszatéréshez</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_resource_calendar_id
@@ -4344,7 +4474,7 @@ msgstr "VoIP integráció"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Voip integration"
-msgstr ""
+msgstr "Voip integráció"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4415,7 +4545,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
 msgid "We don't have people/skills"
-msgstr ""
+msgstr "Nincs emberünk/szakképzettségek"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4446,6 +4576,8 @@ msgstr ""
 msgid ""
 "What are the main KPIs you need to track for your the sales activities?"
 msgstr ""
+"Melyek a fő KPIs - teljesítménymutatók, melyeket követnie kell az "
+"értékesítési  tevékenységeihez?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4525,7 +4657,7 @@ msgstr ""
 #: code:addons/crm/wizard/base_partner_merge.py:306
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
+msgstr "Nem vonhat össze egy kapcsolatot annak szülőjével."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4589,6 +4721,10 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"Képes lesz lehetőségekből találkozók és telefonálások tervezésére,\n"
+"                    árajánlatokká alakításra, ide vonatkozó dokumentumok\n"
+"                    hozzáfűzésére, beszélgetések nyomon követésére, \n"
+"                    és még több mindenre."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4608,7 +4744,7 @@ msgstr "LinkedIn vagy szociális média oldalai"
 #. module: crm
 #: model:mail.template,subject:crm.mail_template_data_module_install_crm
 msgid "Your Odoo CRM application is running smoothly."
-msgstr ""
+msgstr "Az Odoo rendszer CMR  alkalmazása megfelelően fut."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
@@ -4669,7 +4805,7 @@ msgstr "böngéssze a dokumentációt"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "e.g. Customer Deal"
-msgstr ""
+msgstr "pl. Vásárlói egyezkedés"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form

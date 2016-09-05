@@ -13,10 +13,10 @@ Lets the company customize which Pad installation should be used to link to new
 pads (by default, http://etherpad.com/).
     """,
     'website': 'https://www.odoo.com/page/notes',
-    'depends': ['web'],
+    'depends': ['web', 'base_setup'],
     'data': [
         'views/pad.xml',
-        'views/res_company.xml',
+        'views/res_config_view.xml',
     ],
     'demo': ['data/pad_demo.xml'],
     'web': True,

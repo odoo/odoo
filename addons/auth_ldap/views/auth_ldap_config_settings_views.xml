@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_general_configuration_form_inherit_auth_ldap" model="ir.ui.view">
+        <field name="name">base.config.settings.form.inherit.auth.ldap</field>
+        <field name="model">base.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='google_analytics']" position="after">
+                <group string="LDAP Parameters">
+                    <label for="ldaps"/>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <field name="ldaps">
+                                <form string="LDAP Configuration">
+                                    <group col="4">
+                                        <field name="ldap_server"/>
+                                        <field name="ldap_server_port"/>
+                                        <field name="ldap_binddn"/>
+                                        <field name="ldap_password" password="True"/>
+                                        <field name="ldap_base"/>
+                                        <field name="ldap_filter"/>
+                                        <field name="create_user"/>
+                                        <field name="user"/>
+                                        <newline/>
+                                        <field name="sequence"/>
+                                        <field name="ldap_tls"/>
+                                    </group>
+                                </form>
+                                <tree string="LDAP Configuration">
+                                    <field name="sequence"/>
+                                    <field name="ldap_server"/>
+                                    <field name="ldap_server_port"/>
+                                    <field name="ldap_base"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

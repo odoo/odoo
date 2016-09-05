@@ -42,7 +42,7 @@
     </record>
 
     <!-- Make sure the category Theme/Hidden is created -->
-    <record model="ir.module.category" id="base.module_category_theme_hidden">
+    <record model="ir.module.category" id="module_category_theme_hidden">
         <field name="name">Hidden</field>
     </record>
 
@@ -54,7 +54,7 @@
         <field name="view_id" ref="theme_view_kanban"/>
         <field name="search_view_id" ref="theme_view_search"/>
         <field name="domain" eval="[
-            '|', ('category_id', 'not in', [ref('base.module_category_hidden'), ref('base.module_category_theme_hidden')]), ('name', '=', 'theme_default'),
+            '|', ('category_id', 'not in', [ref('base.module_category_hidden'), ref('module_category_theme_hidden')]), ('name', '=', 'theme_default'),
             '|', ('category_id', '=', ref('base.module_category_theme')), ('category_id.parent_id', '=', ref('base.module_category_theme'))
         ]"/>
     </record>

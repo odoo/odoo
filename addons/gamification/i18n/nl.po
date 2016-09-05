@@ -10,10 +10,10 @@
 # Eric Geens <ericgeens@yahoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:38+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"POT-Creation-Date: 2016-08-26 10:27+0000\n"
+"PO-Revision-Date: 2016-08-26 10:27+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -140,19 +140,19 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:591
 #, python-format
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%s heeft zich aangesloten bij de uitdaging"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:600
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%s heeft de uitdaging geweigerd"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:657
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
-msgstr ""
+msgstr "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:654
@@ -188,6 +188,8 @@ msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                <span class=\"o_stat_text\">Goals</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Gerelateerde</span>\n"
+"<span class=\"o_stat_text\">doelen</span>"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -355,7 +357,7 @@ msgid "Can not grant"
 msgstr "Kan niet toekennen"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:410
+#: code:addons/gamification/models/goal.py:409
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr "Kan de configuratie niet wijzigen van een gestart doel"
@@ -668,7 +670,7 @@ msgstr "Evalueer de expressie in batch in plaats van per gebruiker"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr ""
+msgstr "Geëvalueerde expressie voor batch modus"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -713,7 +715,7 @@ msgstr "Voor derde gebruiker"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
 msgid "For Every Succeeding User"
-msgstr ""
+msgstr "Voor elke geslaagde gebruiker"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -918,7 +920,7 @@ msgstr "ID veld van gebruiker"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
 msgid "If a maximum is set"
-msgstr ""
+msgstr "Indien een maximum is ingesteld"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
@@ -1453,7 +1455,7 @@ msgstr "Stel uw tijdzonde in"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "Instellingen / Gamification hulpmiddelen"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
@@ -1620,6 +1622,9 @@ msgid ""
 "\n"
 "%s not found"
 msgstr ""
+"Het domein voor de definitie %s lijkt niet juist, graag controleren.\n"
+"\n"
+"%s niet gevonden"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:104
@@ -1780,7 +1785,7 @@ msgid "Update"
 msgstr "Bijwerken"
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:445
+#: code:addons/gamification/models/goal.py:444
 #, python-format
 msgid "Update %s"
 msgstr "Bijwerken %s"
@@ -1806,7 +1811,7 @@ msgstr "Gebruikers"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr ""
+msgstr "Website / Forum"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1917,6 +1922,8 @@ msgid ""
 "e.g. result = env['mail.followers'].search_count([('res_model', '=', "
 "'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 msgstr ""
+"Bijv. resultaat = env['mail.followers']..search_count([('res_model', '=', "
+"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view

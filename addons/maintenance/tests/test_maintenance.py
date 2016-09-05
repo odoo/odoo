@@ -16,7 +16,7 @@ class TestEquipment(TransactionCase):
         self.res_users = self.env['res.users']
         self.main_company = self.env.ref('base.main_company')
         res_user = self.env.ref('base.group_user')
-        res_manager = self.env.ref('base.group_equipment_manager')
+        res_manager = self.env.ref('maintenance.group_equipment_manager')
 
         self.user = self.res_users.create(dict(
             name="Normal User/Employee",

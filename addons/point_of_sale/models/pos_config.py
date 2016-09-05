@@ -227,7 +227,8 @@ class PosConfig(models.Model):
     @api.multi
     def open_existing_session_cb_close(self):
         assert len(self.ids) == 1, "you can open only one session at a time"
-        self.current_session_id.signal_workflow('cashbox_control')
+        if self.current_session_id.cash_control:
+            self.current_session_id.action_pos_session_closing_control()
         return self.open_session_cb()
 
     @api.multi

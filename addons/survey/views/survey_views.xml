@@ -115,7 +115,7 @@
                     <field name="id" invisible="1"/>
                     <field name="tot_start_survey" invisible="1"/>
                     <field name="is_closed" invisible="1"/>
-                    <header groups="base.group_survey_manager">
+                    <header groups="survey.group_survey_manager">
                         <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
                         <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
@@ -639,7 +639,7 @@
         <!-- MENU ELEMENTS -->
 
         <!-- Left menu categories-->
-        <menuitem name="Surveys" id="menu_surveys" sequence="70" groups="base.group_survey_user"  web_icon="survey,static/description/icon.png"/>
+        <menuitem name="Surveys" id="menu_surveys" sequence="70" groups="group_survey_user"  web_icon="survey,static/description/icon.png"/>
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>

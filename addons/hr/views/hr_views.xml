@@ -6,7 +6,7 @@
         <menuitem
             id="menu_hr_root"
             name="Employees"
-            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
+            groups="group_hr_manager,group_hr_user,base.group_user"
             web_icon="hr,static/description/icon.png"
             sequence="75"/>
 
@@ -20,14 +20,14 @@
             id="menu_hr_reporting_timesheet"
             name="Reports"
             parent="menu_hr_root"
-            groups="base.group_hr_manager,base.group_hr_user"
+            groups="group_hr_manager,group_hr_user"
             sequence="99"/>
 
         <menuitem
             id="menu_human_resources_configuration"
             name="Configuration"
             parent="menu_hr_root"
-            groups="base.group_hr_manager"
+            groups="group_hr_manager"
             sequence="100"/>
 
         <!-- Employee -->
@@ -37,7 +37,7 @@
             <field name="arch" type="xml">
                 <form string="Employee">
                     <sheet>
-                        <div class="oe_button_box" name="button_box" groups="base.group_hr_user">
+                        <div class="oe_button_box" name="button_box" groups="hr.group_hr_user">
                             <button name="toggle_active" type="object"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
@@ -51,7 +51,7 @@
                                 <field name="name" placeholder="Employee's Name"/>
                             </h1>
                         </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="base.group_hr_user"/>
+                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
                         <notebook>
                             <page name="public" string="Public Information">
                                 <group>
@@ -74,12 +74,12 @@
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
-                            <page string="Personal Information" groups="base.group_hr_user">
+                            <page string="Personal Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Citizenship &amp; Other Information">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id" groups="base.group_hr_user"/>
-                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="identification_id" groups="hr.group_hr_user"/>
+                                        <field name="passport_id" groups="hr.group_hr_user"/>
                                         <field name="bank_account_id"/>
                                     </group>
                                     <group string="Contact Information">
@@ -96,7 +96,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="HR Settings" groups="base.group_hr_user">
+                            <page string="HR Settings" groups="hr.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="company_id" groups="base.group_multi_company"/>
@@ -139,7 +139,7 @@
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
                     <field name="department_id"/>
-                    <field name="category_ids" groups="base.group_hr_user"/>
+                    <field name="category_ids" groups="hr.group_hr_user"/>
                     <field name="job_id" />
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -586,7 +586,7 @@
             id="menu_hr_department_tree"
             parent="menu_hr_root"
             sequence="90"
-            groups="base.group_hr_user"/>
+            groups="group_hr_user"/>
 
     </data>
 </odoo>

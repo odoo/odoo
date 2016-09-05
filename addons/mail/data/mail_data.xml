@@ -39,6 +39,12 @@
             <field name="value">catchall</field>
         </record>
 
+        <!-- Bounce Email Alias -->
+        <record id="icp_mail_bounce_alias" model="ir.config_parameter">
+            <field name="key">mail.bounce.alias</field>
+            <field name="value">bounce</field>
+        </record>
+
         <!-- Discussion subtype for messaging / Chatter -->
         <record id="mt_comment" model="mail.message.subtype">
             <field name="name">Discussions</field>
@@ -70,7 +76,7 @@
     </div>
 </div>
 % endif
-% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access') or ctx.get('is_accessible'):
+% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access'):
 <div summary="o_mail_notification">
 <table cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
 <tbody><tr>

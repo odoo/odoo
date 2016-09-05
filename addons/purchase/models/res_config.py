@@ -8,6 +8,14 @@ class PurchaseConfigSettings(models.TransientModel):
     _name = 'purchase.config.settings'
     _inherit = 'res.config.settings'
 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
+    po_lead = fields.Float(related='company_id.po_lead', string="Purchase Lead Time *")
+    po_lock = fields.Selection(related='company_id.po_lock', string="Purchase Order Modification *")
+    po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *")
+    po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Double validation amount *", currency_field='company_currency_id')
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
+        help='Utility field to express amount currency')
     group_product_variant = fields.Selection([
         (0, "No variants on products"),
         (1, 'Products can have several attributes, defining variants (Example: size, color,...)')

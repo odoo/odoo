@@ -96,7 +96,7 @@ class website_form_model_fields(models.Model):
         if not fields: return False
 
         # only allow users who can change the website structure
-        if not self.env['res.users'].has_group('base.group_website_designer'):
+        if not self.env['res.users'].has_group('website.group_website_designer'):
             return False
 
         # the ORM only allows writing on custom fields and will trigger a

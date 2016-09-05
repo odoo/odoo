@@ -27,7 +27,7 @@ class TestPortalProjectBase(TestPortalProjectBase):
 
 
 class TestPortalIssue(TestPortalProjectBase):
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_project_access_rights(self):
         """ Test basic project access rights, for project and portal_project """
         pigs_id = self.project_pigs.id

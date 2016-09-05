@@ -29,10 +29,10 @@
 # Nicolas JEUDY <nicolas@sudokeys.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:37+0000\n"
-"PO-Revision-Date: 2016-08-18 08:37+0000\n"
+"POT-Creation-Date: 2016-08-26 10:26+0000\n"
+"PO-Revision-Date: 2016-08-26 10:26+0000\n"
 "Last-Translator: Nicolas JEUDY <nicolas@sudokeys.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% remisé et %s surtaxé"
 
 #. module: product
-#: code:addons/product/models/product_template.py:279
+#: code:addons/product/models/product_template.py:278
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -122,7 +122,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:166 sql_constraint:product.product:0
+#: code:addons/product/models/product.py:167 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Un code-barre ne peut être assigné qu'à un seul produit!"
@@ -356,6 +356,11 @@ msgid "Category: %s"
 msgstr "Catégorie : %s"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_create_variant
+msgid "Check this if you want to create multiple variants for this attribute."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
 msgid "Child Categories"
 msgstr "Catégories enfants"
@@ -425,7 +430,7 @@ msgid "Compute price"
 msgstr "Calculer le prix"
 
 #. module: product
-#: code:addons/product/models/product_template.py:43
+#: code:addons/product/models/product_template.py:42
 #: selection:product.template,type:0
 #, python-format
 msgid "Consumable"
@@ -477,6 +482,11 @@ msgid "Cost of the product, in the default unit of measure of the product."
 msgstr ""
 "Le prix de revient calculé est exprimé dans l'unité de mesure par défaut de "
 "l'article."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
+msgid "Create variant"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -644,13 +654,13 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Erreur ! Vous ne pouvez pas créer de catégories récursives."
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:96
+#: code:addons/product/models/product_attribute.py:97
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:292
+#: code:addons/product/models/product.py:293
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -674,7 +684,7 @@ msgstr ""
 "liste de prix principale comme autre liste de prix !"
 
 #. module: product
-#: code:addons/product/models/product_template.py:244
+#: code:addons/product/models/product_template.py:243
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1298,12 +1308,6 @@ msgid "Product Category"
 msgstr "Catégorie d'article"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_product_manager
-#: model:ir.model.fields,field_description:product.field_product_template_product_manager
-msgid "Product Manager"
-msgstr "Responsable article"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
@@ -1349,7 +1353,6 @@ msgstr "Variante d'article"
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
-#: model:ir.ui.menu,name:product.menu_products
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
 msgstr "Variantes d'article"
@@ -1400,7 +1403,7 @@ msgid "Products your store in the inventory"
 msgstr "Produits que vous stockez dans votre inventaire."
 
 #. module: product
-#: code:addons/product/models/product.py:453
+#: code:addons/product/models/product.py:457
 #, python-format
 msgid "Products: "
 msgstr "Articles : "
@@ -1539,7 +1542,7 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: product
-#: code:addons/product/models/product_template.py:44
+#: code:addons/product/models/product_template.py:43
 #: selection:product.template,type:0
 #, python-format
 msgid "Service"
@@ -1725,7 +1728,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:73
+#: code:addons/product/models/product_attribute.py:74
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -1761,6 +1764,13 @@ msgstr ""
 "La fiche article contient des informations pour simplifier les \n"
 "processus de vente: prix, note sur le devis, les données comptables,\n"
 "méthodes d'approvisionnement, etc."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_lst_price
+msgid ""
+"The sale price is managed from the product template. Click on the 'Variant "
+"Prices' button to set the extra attribute prices."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty

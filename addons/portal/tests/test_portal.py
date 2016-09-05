@@ -33,7 +33,7 @@ class TestPortal(TestMail):
             'body': 'Body text'})
         compose.send_mail()
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_invite_email_portal(self):
         group_pigs = self.group_pigs
         base_url = self.env['ir.config_parameter'].get_param('web.base.url', default='')

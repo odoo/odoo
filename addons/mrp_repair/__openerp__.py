@@ -30,7 +30,6 @@ The following topics are covered by this module:
         'wizard/mrp_repair_cancel_views.xml',
         'wizard/mrp_repair_make_invoice_views.xml',
         'views/mrp_repair_views.xml',
-        'data/mrp_repair_data_workflow.xml',
         'report/mrp_repair_reports.xml',
         'report/mrp_repair_templates_repair_order.xml',
     ],

@@ -2,13 +2,13 @@
 
 {
     'name' : 'Authentication via LDAP',
-    'depends' : ['base'],
+    'depends' : ['base', 'base_setup'],
     #'description': < auto-loaded from README file
     'category' : 'Extra Tools',
     'data' : [
-        'views/res_company_views.xml',
         'views/ldap_installer_views.xml',
         'security/ir.model.access.csv',
+        'views/auth_ldap_config_settings_views.xml',
     ],
     'external_dependencies' : {
         'python' : ['ldap'],

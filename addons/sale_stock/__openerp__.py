@@ -29,7 +29,6 @@ You can choose flexible invoicing methods:
     'data': [
         'security/sale_stock_security.xml',
         'security/ir.model.access.csv',
-        'views/res_company_views.xml',
         'views/sale_order_views.xml',
         'views/stock_views.xml',
         'views/sale_config_settings_views.xml',

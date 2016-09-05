@@ -133,8 +133,9 @@ class Employee(models.Model):
                     'holiday_type': 'employee',
                     'number_of_days_temp': difference
                 })
-                for signal in ('confirm', 'validate', 'second_validate'):
-                    leave.signal_workflow(signal)
+                leave.action_approve()
+                if leave.double_validation:
+                    leave.action_validate()
             elif difference < 0:
                 raise UserError(_('You cannot reduce validated allocation requests'))
 
@@ -175,7 +176,7 @@ class Employee(models.Model):
 
     @api.multi
     def _compute_show_leaves(self):
-        show_leaves = self.env['res.users'].has_group('base.group_hr_user')
+        show_leaves = self.env['res.users'].has_group('hr.group_hr_user')
         for employee in self:
             if show_leaves or employee.user_id == self.env.user:
                 employee.show_leaves = True

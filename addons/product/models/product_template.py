@@ -265,6 +265,21 @@ class ProductTemplate(models.Model):
         template = super(ProductTemplate, self).create(vals)
         if "create_product_product" not in self._context:
             template.create_variant_ids()
+
+        # This is needed to set given values to first variant after creation
+        related_vals = {}
+        if vals.get('barcode'):
+            related_vals['barcode'] = vals['barcode']
+        if vals.get('default_code'):
+            related_vals['default_code'] = vals['default_code']
+        if vals.get('standard_price'):
+            related_vals['standard_price'] = vals['standard_price']
+        if vals.get('volume'):
+            related_vals['volume'] = vals['volume']
+        if vals.get('weight'):
+            related_vals['weight'] = vals['weight']
+        if related_vals:
+            template.write(related_vals)
         return template
 
     @api.multi
@@ -389,7 +404,7 @@ class ProductTemplate(models.Model):
             # unlink or inactive product
             for variant in variants_to_activate:
                 try:
-                    with self._cr.savepoint(), tools.mute_logger('openerp.sql_db'):
+                    with self._cr.savepoint(), tools.mute_logger('odoo.sql_db'):
                         variant.unlink()
                 # We catch all kind of exception to be sure that the operation doesn't fail.
                 except (psycopg2.Error, except_orm):

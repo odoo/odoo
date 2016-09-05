@@ -72,6 +72,7 @@ var Thread = Widget.extend({
             display_document_link: true,
             display_avatar: true,
             squash_close_messages: true,
+            display_email_icon: true,
             display_reply_icon: false,
         });
         this.expanded_msg_ids = [];

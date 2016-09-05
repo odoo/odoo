@@ -105,7 +105,7 @@ class PaypalForm(PaypalCommon):
                 self.assertEqual(form_input.get('value'), '1.57', 'paypal: wrong computed fees')
         self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
 
-    @mute_logger('openerp.addons.payment_paypal.models.payment', 'ValidationError')
+    @mute_logger('odoo.addons.payment_paypal.models.payment', 'ValidationError')
     def test_20_paypal_form_management(self):
         # be sure not to do stupid things
         self.assertEqual(self.paypal.environment, 'test', 'test without test environment')

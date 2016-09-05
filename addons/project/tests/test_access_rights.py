@@ -13,7 +13,6 @@ class TestPortalProjectBase(TestProjectBase):
         self.user_noone = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
             'name': 'Noemie NoOne',
             'login': 'noemie',
-            'alias_name': 'noemie',
             'email': 'n.n@example.com',
             'signature': '--\nNoemie',
             'notify_email': 'always',
@@ -31,7 +30,7 @@ class TestPortalProjectBase(TestProjectBase):
 
 class TestPortalProject(TestPortalProjectBase):
 
-    @mute_logger('openerp.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_employee_project_access_rights(self):
         pigs = self.project_pigs
 
@@ -53,7 +52,7 @@ class TestPortalProject(TestPortalProjectBase):
             'project_id': pigs.id})
         tmp_task.sudo(self.user_projectuser).unlink()
 
-    @mute_logger('openerp.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_followers_project_access_rights(self):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
