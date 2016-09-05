@@ -118,6 +118,8 @@ html[lang] > body.editor_enable{
             .o-align-items(center);
             .o-justify-content(center);
             padding: 3%;
+            color: white;
+            margin-bottom: 3%;
 
             i {
                 margin-right: 5px;
@@ -133,7 +135,7 @@ html[lang] > body.editor_enable{
             .oe_snippet {
                 float: left;
                 width: 45.5%;
-                margin: 0 0 3% 3%;
+                margin: 0 0 6% 3%;
                 box-shadow: none;
                 background-color: transparent;
                 .user-select(none);
@@ -201,12 +203,12 @@ html[lang] > body.editor_enable{
         }
         .oe_snippet_thumbnail_title {
             display: block;
-            border: 1px solid @o-we-color-normal;
+            border: 1px solid @o-we-color-dark;
             padding: 5px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 300;
             text-shadow: none;
-            color: @o-we-color-text-normal;
+            color: @o-we-color-text-light;
         }
         &:hover .oe_snippet_thumbnail_title {
             color: white;
@@ -1055,29 +1057,15 @@ body.editor_enable {
 #web_editor_inside_iframe {
     background-color: @odoo-brand-secondary;
 
-    #editable_area {
-        font: inherit !important;
-        line-height: inherit !important;
-        color: inherit !important;
-
-        p {
-            margin: initial;
-        }
-        a, a:hover {
-            color: inherit;
-        }
-    }
     &.editor_enable #wrapwrap {
         height: 100%;
-        padding-top: @odoo-navbar-height;
         > main {
             height: 100%;
             #editable_area {
                 position: relative;
                 overflow: hidden;
-                max-width: 600px;
                 min-height: 100%;
-                margin: auto;
+                margin: 0 auto;
 
                 background-color: white;
             }

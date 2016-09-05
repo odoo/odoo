@@ -36,7 +36,6 @@ professional emails and reuse templates in a few clicks.
         'views/editor_field_html.xml',
         'views/snippets_themes.xml',
         'views/snippets_themes_options.xml',
-        'views/theme_list.xml',
     ],
     'demo': [
         'data/mass_mailing_demo.xml',

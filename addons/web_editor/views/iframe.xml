@@ -40,7 +40,7 @@
                 if (window.top.odoo &amp;&amp; !window.top.odoo[callback+"_updown"]) {
                     window.top.odoo[callback+"_updown"] = function (value, fields_values) {
                         var editable = document.getElementsByClassName("o_editable")[0];
-                        if (value !== editable.innerHTML) {
+                        if (editable &amp;&amp; value !== editable.innerHTML) {
                             editable.innerHTML = value;
                         }
                     };
