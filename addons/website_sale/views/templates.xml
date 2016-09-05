@@ -1333,7 +1333,7 @@
                                     </label>
                                   </li>
                                 </t>
-                                <li t-if="[acq for acq in acquirers if acq.registration_view_template_id]">
+                                <li t-if="tokens">
                                     <label>
                                         <input type="radio" name="acquirer" />
                                         <span class='fa fa-2x fa-credit-card'/>
