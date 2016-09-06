@@ -1,5 +1,5 @@
 {
-    'name': 'e-Commerce',
+    'name': 'eCommerce',
     'category': 'Website',
     'sequence': 55,
     'summary': 'Sell Your Products Online',
