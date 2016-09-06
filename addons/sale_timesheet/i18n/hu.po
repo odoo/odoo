@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2015-11-07 16:57+0000\n"
 "Last-Translator: Kris Krnacs\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -36,6 +36,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must "
 "be set for each company."
 msgstr ""
+"Hozzon létre egy feladatot a vásárlói megrendelés jóváhagyáson lévő projekt "
+"téma alá. Ezt a beállítást be kell állítani a mindegyik vállalathoz."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -45,7 +47,7 @@ msgstr "Alkalmazott"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr "Rendelési sor"
+msgstr "Rendelési tételsor"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
@@ -93,7 +95,7 @@ msgstr "Projekt téma"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Ezzel a értékesítéssel összefüggő projekt téma"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -114,7 +116,7 @@ msgid "Task"
 msgstr "Fladat"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:84
+#: code:addons/sale_timesheet/models/sale_service.py:94
 #, python-format
 msgid "Task created"
 msgstr "Feladat létrehozva"
@@ -137,6 +139,10 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"Ez állítja be a projektekben és a feladatokban használt mértékegységet. \n"
+"Ha használja a projektekhez kapcsolt munkaidő-kimutatást (project_timesheet "
+"modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
+"űrlapon."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
@@ -213,7 +219,7 @@ msgstr ""
 "egy időn és anyagon alapuló szerződést."
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:103
+#: code:addons/sale_timesheet/models/sale_service.py:113
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
@@ -221,6 +227,3 @@ msgid ""
 msgstr ""
 "Nem tud vásárlói megrendeléshez kapcsolódó feladatot törölni. Csak "
 "archiválni tudja a feladatot."
-
-#~ msgid "Timesheet"
-#~ msgstr "Munkaidő-kimutatás"

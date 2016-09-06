@@ -4,6 +4,7 @@
 #
 # Translators:
 # Alex Duan <alex.duan@elico-corp.com>, 2015
+# ChinaMaker <tiexinliu@126.com>, 2016
 # Connie Xiao <connie.xiao@elico-corp.com>, 2015
 # Daniel Shi <mercury1231@gmail.com>, 2015
 # Dong Wei <fatfox21@gmail.com>, 2015
@@ -36,9 +37,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-07-12 01:00+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-08-31 03:07+0000\n"
+"Last-Translator: ChinaMaker <tiexinliu@126.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -57,6 +58,8 @@ msgid ""
 "% set access_url = access_action['type'] == 'ir.actions.act_url' and "
 "access_action['url'] or '/report/pdf/account.report_invoice/' + str(object."
 "id)\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions."
+"act_url'\n"
 "\n"
 "<p>Dear\n"
 "% if object.partner_id.is_company and object.child_ids:\n"
@@ -75,6 +78,7 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
+"% if is_inline:\n"
 "<p style=\"margin-left: 30px;\">\n"
 "    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
 "line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
@@ -84,6 +88,8 @@ msgid ""
 "#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
 "</a>\n"
 "</p>\n"
+"% endif\n"
+"\n"
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
@@ -164,7 +170,7 @@ msgstr ", 如果会计或采购模块已安装"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> 调节"
+msgstr "-> 核销"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -872,13 +878,13 @@ msgstr ""
 "然后当从钱箱中拿出或者放入金额的时候对分录进行过账"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1342
+#: code:addons/account/models/account_invoice.py:1347
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
 msgstr "支付条款的最后一项类型必须是结转余额。 "
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1345
+#: code:addons/account/models/account_invoice.py:1350
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr "付款条款应该只能有一行的类型是余额"
@@ -887,7 +893,7 @@ msgstr "付款条款应该只能有一行的类型是余额"
 #: code:addons/account/models/account.py:503
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr ""
+msgstr "一个银行科目只能属于一个日记账。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -927,7 +933,7 @@ msgstr "通用税和税率的列表"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and supplier payment terms."
-msgstr ""
+msgstr "客户和供应商的付款条款列表。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -982,7 +988,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "可以针对合作伙伴设置警报消息(会计科目)"
 
 #. module: account
 #. openerp-web
@@ -1481,6 +1487,9 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"到期的业务伙伴余额是按区间对应收款进行分析的更详细的报告。Odoo由起始日期计算"
+"信用余额。所以，如果你要求以30天为间隔，Odoo将对过去一月，过去两月，等等，生"
+"成债权人分析。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1593,7 +1602,7 @@ msgstr "所有的分类账分录必须被处理，这样才能关闭结算单"
 #. module: account
 #: selection:account.config.settings,group_warning_account:0
 msgid "All the partners can be used in invoices"
-msgstr ""
+msgstr "所有合作伙伴在发票可用"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -1949,9 +1958,9 @@ msgstr "自动格式化"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
-#, fuzzy, python-format
+#, python-format
 msgid "Automatic reconciliation"
-msgstr "自动调节的项目"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:475
@@ -3019,7 +3028,7 @@ msgstr "Control-Access"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr "主营业务收入成本"
+msgstr "主营业务成本"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:388
@@ -3078,7 +3087,7 @@ msgstr "创建草稿退款"
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr ""
+msgstr "创建并提交移动"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:248
@@ -3456,7 +3465,7 @@ msgstr "日期"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "开票之后的天数"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -4104,7 +4113,7 @@ msgstr "费用"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
 msgid "External Reference"
-msgstr ""
+msgstr "外部引用"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4844,7 +4853,7 @@ msgstr "导入.qif 文件"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
 msgid "Import in .csv format"
-msgstr ""
+msgstr "通过 CSV 文件导入"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -5102,7 +5111,7 @@ msgstr "发票税金"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the refund"
-msgstr ""
+msgstr "退款发票的源发票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
@@ -5121,7 +5130,7 @@ msgid "Invoice refund"
 msgstr "退款发票"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1431
+#: code:addons/account/models/account_invoice.py:1436
 #, python-format
 msgid "Invoice sent"
 msgstr "已送出的发票"
@@ -5353,7 +5362,7 @@ msgstr "日记账分录"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 msgid "Journal Entry Name"
-msgstr "分类账分录名称"
+msgstr "日记账分录名称"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -7029,7 +7038,7 @@ msgid "Percentage of balance"
 msgstr "余额百分比"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1413
+#: code:addons/account/models/account_invoice.py:1418
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
 msgstr "付款条款行的百分比必须是从0到100"
@@ -7836,7 +7845,7 @@ msgstr "销售员"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:89
 #, python-format
 msgid "Save and New"
-msgstr ""
+msgstr "保存并新建"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
@@ -8356,7 +8365,7 @@ msgstr "税说明"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax Excluded Price"
-msgstr ""
+msgstr "不含税单价"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -8866,7 +8875,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1275
+#: code:addons/account/models/account_invoice.py:1280
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -9548,7 +9557,7 @@ msgstr "不含税金额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr ""
+msgstr "按公司本位币计的不含税金额"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9808,8 +9817,8 @@ msgid "Warning on the Invoice"
 msgstr "发票警告"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1214
-#: code:addons/account/models/account_invoice.py:1274
+#: code:addons/account/models/account_invoice.py:1219
+#: code:addons/account/models/account_invoice.py:1279
 #, python-format
 msgid "Warning!"
 msgstr "警告!"
@@ -10173,7 +10182,7 @@ msgid "You must define a Start Date"
 msgstr "需要设置开始日期"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1215
+#: code:addons/account/models/account_invoice.py:1220
 #, python-format
 msgid "You must first select a partner!"
 msgstr "需要先选定业务伙伴"
@@ -10557,423 +10566,3 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ 计数"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "    <p>A new invoice is available for you: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br /"
-#~ ">\n"
-#~ "       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email "
-#~ "or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>  \n"
-#~ "    \n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>It is also possible to directly pay with Paypal:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/"
-#~ "img/btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "    \n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "    <p>您好 ${object.partner_id.name},</p>\n"
-#~ "    <p>您有一张新发票: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>有关信息</strong><br />\n"
-#~ "       &nbsp;&nbsp;发票号: <strong>${object.number}</strong><br />\n"
-#~ "       &nbsp;&nbsp;发票金额: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;开票日期: ${object.date_invoice}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;订单: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;您的联系地址: <a href=\"mailto:${object.user_id.email "
-#~ "or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>  \n"
-#~ "    \n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>您可以直接使用Paypal支付:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/"
-#~ "img/btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "    \n"
-#~ "    <br/>\n"
-#~ "    <p>如果有任何疑问，请与我们直接联系.</p>\n"
-#~ "    <p>感谢您选择${object.company_id.name or 'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                电话:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                网址 :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-
-#~ msgid ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
-#~ "number.\n"
-#~ " * The 'Open' status is used when user create invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-#~ msgstr ""
-#~ " * 当用户编辑一个新的且未确认的发票时, 状态为\"草稿\"\n"
-#~ " * 当发票还没有发票号时, 状态为\"形式发票\"\n"
-#~ " * 当发票有了发票号以后, 状态为\"待支付\".  这个状态一直持续到支付完成.\n"
-#~ " * 当发票付款后, 状态自动改为\"已支付\".  相关的日记账分录可能已调节, 也可"
-#~ "能没有.\n"
-#~ " * 当用户取消发票后, 状态改为\"已取消\""
-
-#~ msgid "# of Invoices"
-#~ msgstr "# 发票"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-#~ msgstr "${object.company_id.name|safe} 发票 (Ref ${object.number or 'n/a'})"
-
-#~ msgid "<span title=\"Balance in Odoo\">Balance in Odoo</span>"
-#~ msgstr "<span title=\"Balance in Odoo\">Odoo中余额</span>"
-
-#~ msgid "<strong>Sub-Total :</strong>"
-#~ msgstr "<strong>小计 :</strong>"
-
-#~ msgid "A bank account can anly belong to one journal."
-#~ msgstr "一个银行科目只能属于一个日记账"
-
-#~ msgid "A list of your customer and suppler payment terms."
-#~ msgstr "一张客户和供应商的付款条款列表"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需动作"
-
-#~ msgid ""
-#~ "Aged Partner Balance is a more detailed report of your receivables by "
-#~ "intervals. When opening that report, Odoo asks for the name of the "
-#~ "company, the Start Date and the size of the interval to be analyzed (in "
-#~ "days). Odoo then calculates a table of credit balance by start Date. So "
-#~ "if you request an interval of 30 days Odoo generates an analysis of "
-#~ "creditors for the past month, past two months, and so on."
-#~ msgstr ""
-#~ "账龄表是应收款账的明细表. 打开报表，选择公司名称 , 显示开始日，一个间隔一"
-#~ "列(按天). Odoo可以计算出开始日后的贷项余额. 如果你设定没30天一个间隔，odoo"
-#~ "将生成过去一个月，过去2个月等等的数据分析."
-
-#~ msgid "Allows you multi currency environment"
-#~ msgstr "允许多币种环境"
-
-#~ msgid ""
-#~ "Asset management: This allows you to manage the assets owned by a company "
-#~ "or a person. It keeps track of the depreciation occurred on those assets, "
-#~ "and creates account move for those depreciation lines.\n"
-#~ "\n"
-#~ "-This installs the module account_asset. If you do not check this box, "
-#~ "you will be able to do invoicing & payments, but not accounting (Journal "
-#~ "Items, Chart of Accounts, ...)"
-#~ msgstr ""
-#~ "资产管理：允许管理由公司或个人所拥有的资产。此模块将跟踪资产的折旧并为折旧"
-#~ "明细产生会计凭证。\n"
-#~ "\n"
-#~ "- 本操作将会安装 account_asset 模块，如果未选中此框，将仅能进行开票和付款"
-#~ "而不能进行专业的会计操作（流水账、账户一览表,...）"
-
-#~ msgid "Bank Synchronization"
-#~ msgstr "银行同步"
-
-#~ msgid "Bills &amp; Refunds"
-#~ msgstr "账单&amp;退款"
-
-#~ msgid ""
-#~ "Chart of Accounts has been\n"
-#~ "                            installed. You should review it and create "
-#~ "any additionnal accounts."
-#~ msgstr "科目表已经安装，你可以检查并添加额外额科目"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Direct Costs"
-#~ msgstr "直接成本"
-
-#~ msgid "Exchange Rate Entry of"
-#~ msgstr "汇率分录"
-
-#~ msgid "Fixed day of the following month"
-#~ msgstr "下月的固定某天"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者(业务伙伴)"
-
-#~ msgid ""
-#~ "Get your bank statements from you bank and import them through plaid."
-#~ "com.\n"
-#~ "-that installs the module account_plaid."
-#~ msgstr "需要安装模块account_plaid从银行得到银行对账单然后从plaid.com导入"
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "OFX format.\n"
-#~ "This installs the module account_bank_statement_import_ofx."
-#~ msgstr ""
-#~ "需要安装模块account_bank_statement_import_ofx从银行得到银行对账单然后用."
-#~ "OFX格式导入"
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "QIF format.\n"
-#~ "This installs the module account_bank_statement_import_qif."
-#~ msgstr ""
-#~ "需要安装模块account_bank_statement_import_qif从银行得到银行对账单然后用."
-#~ "QIF格式导入"
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them through yodlee."
-#~ "com.\n"
-#~ "-that installs the module account_yodlee."
-#~ msgstr ""
-#~ "拿到你的银行对账单然后用过yodlee.com导入系统这个需要安装模块： "
-#~ "account_yodlee"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Invoices &amp; Refunds"
-#~ msgstr "发票&amp;退款"
-
-#~ msgid "Invoicing"
-#~ msgstr "开票"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Less Cost of Sales"
-#~ msgstr "减 销售成本"
-
-#~ msgid "Less Current Liabilities"
-#~ msgstr "减  流动负债"
-
-#~ msgid "Less Expenses"
-#~ msgstr "减 费用"
-
-#~ msgid "Less Non-Current Liabilities"
-#~ msgstr "减  非流动负债"
-
-#~ msgid "Less Payable Accounts"
-#~ msgstr "减  应付账款"
-
-#~ msgid "Messages"
-#~ msgstr "信息"
-
-#~ msgid "Modify presets"
-#~ msgstr "更改预设置"
-
-#~ msgid "New Operation"
-#~ msgstr "新的操作"
-
-#~ msgid "New preset"
-#~ msgstr "新的预设"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open account dashboard menu"
-#~ msgstr "打开会计仪表板菜单"
-
-#~ msgid "Paypal Account"
-#~ msgstr "paypal账户"
-
-#~ msgid "Paypal account"
-#~ msgstr "paypal账户"
-
-#~ msgid ""
-#~ "Paypal account (email) for receiving online payments (credit card, etc.)\n"
-#~ "             If you set a paypal account, the customer  will be able to "
-#~ "pay your invoices or quotations\n"
-#~ "             with a button \"Pay with  Paypal\" in automated emails or "
-#~ "through the Odoo portal."
-#~ msgstr ""
-#~ "用来接收在线付款（信用卡等）的Palpal账户（电子邮件）如果你有设定Paypal账"
-#~ "户，客户就可以通过在自动的电子邮件中或者Odoo门户中点击按钮\"paypal付款\"\n"
-#~ "来给你的发票或者报价单付款"
-
-#~ msgid "Paypal username (usually email) for receiving online payments."
-#~ msgstr "用来在线接收付款的Paypal 用户名称（通常是电子邮件）"
-
-#~ msgid "Price"
-#~ msgstr "价格"
-
-#~ msgid ""
-#~ "Programmation error : domain_maker_move_line_amount requires comparator "
-#~ "'=' or '<'"
-#~ msgstr ""
-#~ "编程错误： domain_maker_move_line_amount requires comparator '='or '<'"
-
-#~ msgid "Reporting"
-#~ msgstr "报告"
-
-#~ msgid "Sales Team"
-#~ msgstr "销售团队"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "给客户发票日记账选择‘销售’，　给供应商发票选‘采购’，在客户或者供应商付款的"
-#~ "日记账中选择‘现金’或者‘银行’。给‘其余操作’的日记账选择‘通用’。给因为新‘财"
-#~ "政年’生成的分录的日记账选择‘开张/关张情况’"
-
-#~ msgid ""
-#~ "Technical field used to keep track of the origin of journal entries "
-#~ "created in case of fluctuation of the currency exchange rate. This is "
-#~ "needed when cancelling the source: it will post the inverse journal entry "
-#~ "to cancel that part too."
-#~ msgstr ""
-#~ "当货币汇率变化时，字段会追踪日记账分录。当原始单据被删除时，同时会冲销这部"
-#~ "分。"
-
-#~ msgid "The bank statement line was already reconciled."
-#~ msgstr "银行对账单行已经被调节"
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or "
-#~ "select a multi-currency view on the journal."
-#~ msgstr ""
-#~ "你的分录的被选择的科目强制提供第二种币种。你需要在科目上移除第二币种或者在"
-#~ "日记账上选择多币种视图"
-
-#~ msgid ""
-#~ "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-#~ msgstr "提示：用快捷键ctrl-enter来调节表单中的所有余额项"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "You cannot change the tax, you should remove and recreate lines."
-#~ msgstr "税不能被更改，你可以移除然后重新创建分录"
-
-#~ msgid "e.g. sales@odoo.com"
-#~ msgstr "例如. sales@odoo.com"

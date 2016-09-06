@@ -3,13 +3,14 @@
 # * hr
 #
 # Translators:
+# Febrasari Almania <febrasari.almania@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-06-24 04:53+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-09-01 09:03+0000\n"
+"Last-Translator: Febrasari Almania <febrasari.almania@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
 "Language: id\n"
@@ -33,7 +34,7 @@ msgstr "%s (copy)"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>Work in a fun atmosphere</i>"
-msgstr "<i>Bekerja dalam menyenangkan suasana</i>"
+msgstr "<i>Bekerja dalam suasana yang menyenangkan</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -44,14 +45,14 @@ msgstr "<i>Bekerja dalam menyenangkan suasana</i>"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>You are passionate</i>"
-msgstr "<i>Anda bergairah</i>"
+msgstr "<i>Anda penuh semangat</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>You autonomously and quickly learn</i>"
-msgstr "<i>Anda secara otonom dan dengan cepat belajar</i>"
+msgstr "<i>Anda belajar dengan cepat dan mandiri</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -59,7 +60,7 @@ msgstr "<i>Anda secara otonom dan dengan cepat belajar</i>"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
-msgstr "<i>Anda dengan mudah mengelola mereka</i>"
+msgstr "<i>Anda mengelola mereka dengan mudah</i>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -68,8 +69,8 @@ msgid ""
 "                                    <span class=\"o_following\">Following</"
 "span>"
 msgstr ""
-"<span class=\"o_unfollow\">Unfollow</span> <span class=\"o_following"
-"\">Berikut</span>"
+"<span class=\"o_unfollow\">Batal Mengikuti</span> <span class=\"o_following"
+"\">Mengikuti</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -115,7 +116,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "A good job in a young and dynamic team"
-msgstr "Pekerjaan yang baik dalam tim muda dan dinamis"
+msgstr "Pekerjaan bagus dalam tim yang muda dan dinamis"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_active
@@ -136,10 +137,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Menganalisis kebutuhan, menulis dokumen spesifikasi dan kutipan"
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Diarsipkan"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -363,6 +374,11 @@ msgid "Departments"
 msgstr "Departemen"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -379,6 +395,16 @@ msgstr "Cerai"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Faktor efisiensi"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -451,6 +477,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Kesalahan! Anda tidak dapat membuat hierarki rekursif Karyawan(s)."
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "Karyawan baru yang diharapkan"
@@ -487,6 +518,16 @@ msgstr "Ikuti dan memeriksa bagian pengembangan"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Pengikut"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -576,9 +617,8 @@ msgstr "Alamat Rumah"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "Departemen HR"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -642,6 +682,11 @@ msgstr "Meningkatkan kesempatan"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
 msgstr "Meningkatkan visibilitas produk"
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -849,9 +894,8 @@ msgstr "Baik untuk memiliki"
 
 #. module: hr
 #: selection:hr.job,state:0
-#, fuzzy
 msgid "Not Recruiting"
-msgstr "Berhenti perekrutan"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -1022,9 +1066,8 @@ msgstr "Sumber Daya"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-#, fuzzy
 msgid "Resource Name"
-msgstr "Jenis sumber daya"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1464,31 +1507,21 @@ msgstr "Anda berbicara dengan fasih Perancis dan Inggris"
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as                     coordinate and supervise "
 "small distributed development teams for specific projects. You will become a "
 "technical                 expert of the product."
 msgstr ""
-"Anda akan bertanggung jawab untuk mengembangkan dan meningkatkan aplikasi, "
-"seperti Anda akan bekerja secara otonom seperti koordinat dan mengawasi tim "
-"pengembangan didistribusikan kecil untuk proyek-proyek tertentu. Anda akan "
-"menjadi seorang ahli teknis produk."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as coordinate and supervise small distributed "
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
-"Anda akan bertanggung jawab untuk mengembangkan dan meningkatkan aplikasi, "
-"seperti Anda akan bekerja secara otonom seperti koordinat dan mengawasi tim "
-"pengembangan didistribusikan kecil untuk proyek-proyek tertentu. Anda akan "
-"menjadi seorang ahli teknis produk."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1550,6 +1583,19 @@ msgid "You will work closely with all trainees"
 msgstr "Anda akan bekerja sama dengan semua peserta pelatihan"
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "Departemen"
@@ -1563,108 +1609,3 @@ msgstr "misal: Paruh Waktu"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "Klik untuk mendefinisikan sebuah departemen baru."
-
-#~ msgid "Create Your Departments"
-#~ msgstr "Buat Departemen Ansa"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Job Name"
-#~ msgstr "Nama Tugas"
-
-#~ msgid "Job Position Name"
-#~ msgstr "Nama posisi pekerjaan"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "JAM buka Menu"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "Perekrutan ditutup"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Langganan"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Bidang ini menggambarkan efisiensi sumber daya untuk menyelesaikan tugas. "
-#~ "misalnya sumber daya menempatkan sendirian di fase 5 hari dengan 5 tugas "
-#~ "yang diberikan kepadanya, akan menunjukkan beban 100% untuk fase ini "
-#~ "secara default, tetapi jika kita menempatkan efisiensi suatu dari 200%, "
-#~ "maka bebannya hanya akan menjadi 50%."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Update Date"
-#~ msgstr "Pembaharuan Tanggal"
-
-#~ msgid ""
-#~ "You will be responsible for developing and improving applications, such "
-#~ "as the You will work autonomously as well as                     "
-#~ "coordinate and supervise small distributed development teams for specific "
-#~ "projects. You will become a technical                 expert of the "
-#~ "product."
-#~ msgstr ""
-#~ "Anda akan bertanggung jawab untuk mengembangkan dan meningkatkan "
-#~ "aplikasi, seperti Anda akan bekerja secara otonom seperti koordinat dan "
-#~ "mengawasi tim pengembangan didistribusikan kecil untuk proyek-proyek "
-#~ "tertentu. Anda akan menjadi seorang ahli teknis produk."
-
-#~ msgid ""
-#~ "You will be responsible for developing and improving applications, such "
-#~ "as the You will work autonomously as well as coordinate and supervise "
-#~ "small distributed development teams for specific projects. You will "
-#~ "become a technical expert of the product."
-#~ msgstr ""
-#~ "Anda akan bertanggung jawab untuk mengembangkan dan meningkatkan "
-#~ "aplikasi, seperti Anda akan bekerja secara otonom seperti koordinat dan "
-#~ "mengawasi tim pengembangan didistribusikan kecil untuk proyek-proyek "
-#~ "tertentu. Anda akan menjadi seorang ahli teknis produk."
-
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents\n"
-#~ "                related to employees by departments: expenses and "
-#~ "timesheets,\n"
-#~ "                leaves and holidays, recruitments, etc."
-#~ msgstr ""
-#~ "Struktur Departemen Anda digunakan untuk mengelola semua dokumen yang "
-#~ "berhubungan dengan karyawan oleh Departemen: biaya dan timesheets, daun "
-#~ "dan liburan, perekrutan, dll."

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-02-23 12:38+0000\n"
 "Last-Translator: José Miguel Andonegi <jm.andonegi@gmail.com>\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
@@ -44,7 +44,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%% %s-ko deskontua eta %s-ko errekargua"
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -1452,7 +1452,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Ezin diozu esleitu barra-kode berdina bi produkturi!"
@@ -1643,9 +1643,8 @@ msgstr "Oinarrizko ordenagaiua"
 #. module: product
 #: model:product.product,name:product.membership_2
 #: model:product.template,name:product.membership_2_product_template
-#, fuzzy
 msgid "Basic Membership"
-msgstr "Oinarrizko ordenagaiua"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -1682,6 +1681,13 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
 msgstr ""
 
 #. module: product
@@ -1780,9 +1786,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Enpresa"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -2981,7 +2986,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Produktuak"
@@ -3016,9 +3021,8 @@ msgstr "Kopurua"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Paketeko Kopurua"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3571,9 +3575,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Pricelist"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3885,63 +3888,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "ezezaguna"
-
-#~ msgid "Action Needed"
-#~ msgstr "Beharrezko ekintza"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "Abiadura handiko inpresora, Fax-a eta Scannerrakin"
-
-#~ msgid "Beautiful widescreen display."
-#~ msgstr "Pantaila panoramiko ederra."
-
-#~ msgid "Blank CD"
-#~ msgstr "CD hutsa"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "DVD-RW hutsa"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date of the last message posted on the record."
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Jarraitzaileak (kanalak)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "If checked new messages require your attention."
-
-#~ msgid "In Development"
-#~ msgstr "Garapenean"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Last Message Date"
-
-#~ msgid "Messages"
-#~ msgstr "Mezuak"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Messages and communication history"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Akzio kopurua"
-
-#~ msgid "Obsolete"
-#~ msgstr "Zaharkitua"
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Pen drive, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Pen drive, SP-4"
-
-#~ msgid "Status"
-#~ msgstr "Egoera"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Irakurri gabeko mezuak"
-
-#~ msgid "Webcam"
-#~ msgstr "Webcam-a"

@@ -35,7 +35,6 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
-#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
@@ -45,11 +44,6 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
-"<p>Здравствуйте, ${object.name},</p>\n"
-"<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id.name}\".\n"
-"Ваш <b>бэйдж участника</b> находится в приложении к данному сообщению.</p>\n"
-"<p>Благодарим за участие!</p>\n"
-"<p>С уважением,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -224,9 +218,8 @@ msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_type:0
-#, fuzzy
 msgid "After each registration"
-msgstr "Каждому новому подписчику"
+msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -321,9 +314,8 @@ msgstr "Автоматическое подтверждение"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
-#, fuzzy
 msgid "Available Seats"
-msgstr "Больше нет доступных посадочных мест."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
@@ -337,9 +329,8 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-#, fuzzy
 msgid "Badge Inner Left"
-msgstr "Значок внутри слева"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -355,9 +346,8 @@ msgstr "Изображение баннера Odoo"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
-#, fuzzy
 msgid "Barcode Interface"
-msgstr "Значок внутри слева"
+msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -731,15 +721,13 @@ msgstr "Дата начала события"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
-#, fuzzy
 msgid "Event Categories"
-msgstr "Дата события"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
-#, fuzzy
 msgid "Event Category"
-msgstr "Дата события"
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -828,9 +816,8 @@ msgstr "Тип события"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
-#, fuzzy
 msgid "Event Types"
-msgstr "Виды событий"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
@@ -1013,9 +1000,8 @@ msgstr "Установка и администрирование собстве�
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
-#, fuzzy
 msgid "Install the event_barcode module"
-msgstr "Понимание различных модулей;"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_sale
@@ -1182,9 +1168,8 @@ msgstr "Руководитель"
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-#, fuzzy
 msgid "Manually confirm every registration"
-msgstr "Подтвердить регистрацию"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_seats_max
@@ -1235,9 +1220,8 @@ msgstr ""
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
-#, fuzzy
 msgid "No extra questions on registrations"
-msgstr "Количество регистраций"
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
@@ -1258,9 +1242,8 @@ msgstr ""
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
-#, fuzzy
 msgid "No validation step on registration"
-msgstr "Событие на регистрации"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbevent
@@ -1298,16 +1281,12 @@ msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
-#, fuzzy
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
 "    track registrations and participations, automate the confirmation "
 "emails,\n"
 "    sell tickets, etc."
 msgstr ""
-"Odoo помогает вам эффективно организовать мероприятия: следить за подписками "
-"и посещением, автоматизировать рассылку подтверждений, продавать билеты и т. "
-"д."
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -1441,9 +1420,8 @@ msgstr "Статус регистрации"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_questions
-#, fuzzy
 msgid "Registration Survey"
-msgstr "Статус регистрации"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1512,9 +1490,8 @@ msgstr ""
 
 #. module: event
 #: model:res.groups,name:event.group_email_scheduling
-#, fuzzy
 msgid "Schedule Emails on Event Registration"
-msgstr "Регистрация события"
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,group_email_scheduling:0
@@ -1705,12 +1682,9 @@ msgstr "Непрочитанные"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_auto_confirmation
-#, fuzzy
 msgid ""
 "Unselect this option to manually manage draft event and draft registration"
 msgstr ""
-"Отключите эту опцию, чтобы вручную управлять черновиком мероприятия и "
-"черновиком подписки"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1790,13 +1764,10 @@ msgstr "Чтобы выполнить это действие, вы должны
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_group_email_scheduling
-#, fuzzy
 msgid ""
 "You will be able to configure emails, and to schedule them to be "
 "automatically sent to the attendees on registration and/or attendance"
 msgstr ""
-"Вы сможете настраивать сообщения и ставить их на автоматическую отправку "
-"подписчикам и/или участникам"
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1805,9 +1776,8 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
-#, fuzzy
 msgid "Your registration at ${object.event_id.name}"
-msgstr "Ваша подписка на \"${object.event_id.name}\""
+msgstr ""
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
@@ -1867,119 +1837,3 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr ""
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
-#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
-#~ "to ${object.event_id.date_end_located}.\n"
-#~ "For any further information please contact our event department.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Здравствуйте, ${object.name},</p>\n"
-#~ "<p>Высылаем вам подтверждение о том, что мероприятие \"${object.event_id."
-#~ "name}\", на которое вы зарегистрировались, будет проходить с ${object."
-#~ "event_id.date_begin_located} до ${object.event_id.date_end_located}.\n"
-#~ "Для более подробной информации, пожалуйста, свяжитесь с нашим отделом "
-#~ "проведения мероприятий.</p>\n"
-#~ "<p>Благодарим за участие!</p>\n"
-#~ "<p>С уважением,</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Здравствуйте, ${object.name},</p>\n"
-#~ "<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id."
-#~ "name}\".\n"
-#~ "Ваш <b>бэйдж участника</b> находится в приложении к данному сообщению.</"
-#~ "p>\n"
-#~ "<p>Благодарим за участие!</p>\n"
-#~ "<p>С уважением,</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "You will automatically receive an email providing you more practical "
-#~ "information (such as the schedule, the agenda...) as soon as the event is "
-#~ "confirmed.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Здравствуйте, ${object.name},</p>\n"
-#~ "<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id."
-#~ "name}\". Мы отправим вам письмо с более подробной информацией "
-#~ "(расписание, план мероприятия...), как только мероприятие будет "
-#~ "подтверждено.</p>\n"
-#~ "<p>Благодарим за участие!</p>\n"
-#~ "<p>С уважением,</p>"
-
-#~ msgid "<small>John Doe, CEO</small>"
-#~ msgstr "<small>Джон Доу, CEO</small>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Badge Innner Left"
-#~ msgstr "Значок внутри слева"
-
-#~ msgid ""
-#~ "Create and manage registrations for this event, send emails to attendees "
-#~ "and print identification badges."
-#~ msgstr ""
-#~ "Создавайте и управляйте регистрацией на это мероприятие, отправляйте "
-#~ "письма участникам и печатайте бэйджи."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Open Event Menu"
-#~ msgstr "Открыть меню событий"
-
-#~ msgid "Thanks for attending ${object.event_id.name}"
-#~ msgstr "Спасибо за участие в \"${object.event_id.name}\""
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"

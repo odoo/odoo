@@ -78,6 +78,60 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
+"5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
+"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
+"\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
+"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Tisztelt ${object.name},</p>\n"
+"                <p>Meghívtuk az email érvényesítésére, hogy hozzáférést "
+"kapjon a \n"
+"                \"${object.company_id.name}\" K/F fórumok eléréséhez.</p>\n"
+"                <p>Email érvényesítéséhez, kérjük kattintson a következő "
+"link elérési útra:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-"
+"radius: 3px; background-color:#a24689; text-align:center; text-decoration:"
+"none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Érvényesítse emailemet a  \"${object.company_id.name}\" "
+"K/F fórumokhoz\n"
+"                </a>\n"
+"                <p>Köszönjük részvételét!</p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_forum
 #. openerp-web
@@ -103,7 +157,7 @@ msgstr "${object.company_id.name} Fórumok jóváhagyása"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -121,6 +175,8 @@ msgid ""
 "(Un)archiving a forum automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
+"Egy fórum (ki)archiválása automatikusan (ki)archiválja a bejegyzéseit. "
+"Folytatja?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -128,6 +184,8 @@ msgid ""
 "(Un)archiving a post automatically (un)archives its answers. Do you want to "
 "proceed?"
 msgstr ""
+"Egy bejegyzés (ki)archiválása automatikusan (ki)archiválja a válaszait. "
+"Folytatja?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -197,6 +255,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
 msgstr ""
+"<b>Válaszok nem adnak hozzá vagy bont ki kérdéseket</b>. Inkább szerkessze a "
+"kérdést vagy adjon hozzá kérdés megjegyzést."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -269,6 +329,12 @@ msgid ""
 "    copy/paste. Links are welcome, but should be complementary to\n"
 "    answer, referring sources or additional reading."
 msgstr ""
+"<b>Válaszok nem lehetnek csak link elérési utak, \n"
+"mint megoldás</b>. Inkább szolgáltasson egy teljes körű\n"
+"    leíró szöveget a válaszában, még akkor is, ha az \n"
+"    egy másolás/beillesztés. Linkeket szívesen vesszük, de\n"
+"    azok legyenek a válaszok kiegészítői, forrásra hivatkozások\n"
+"    vagy további olvasnivalók."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -278,6 +344,12 @@ msgid ""
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
+"<b>Válaszok nem lehetnek csak link elérési utak, \n"
+"mint megoldás</b>. Inkább szolgáltasson egy teljes körű\n"
+"    leíró szöveget a válaszában, még akkor is, ha az \n"
+"    egy másolás/beillesztés. Linkeket szívesen vesszük, de\n"
+"    azok legyenek a válaszok kiegészítői, forrásra hivatkozások\n"
+"    vagy további olvasnivalók."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -432,13 +504,13 @@ msgstr "<span>Által </span>"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "A new answer on"
-msgstr ""
+msgstr "Egy új válasz ekkor"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "A new question"
-msgstr ""
+msgstr "Egy új kérdés"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
@@ -448,6 +520,10 @@ msgid ""
 "            others to find and answer your question. (Hover the mouse to "
 "follow/unfollow tag(s))"
 msgstr ""
+"A címke egy cédula mely a kérdéseket kategorizálja másik,\n"
+"            hasonló kérdésekkel. A megfelelő címke használatával mások \n"
+"            számára megkönnyíti a kérdésére adott válasz megtalálását. "
+"(Húzza föléé az egeret a követés/követés leállítása címké(k)re)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -788,7 +864,7 @@ msgstr "Előresorolás ekkor"
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
 #, python-format
 msgid "By sharing you answer, you will get additional"
-msgstr ""
+msgstr "Válaszának megosztásával, kapni fog további"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_accept
@@ -1141,7 +1217,7 @@ msgstr "Hozz létre egy kérdést"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_tag_create
 msgid "Create new tags"
-msgstr ""
+msgstr "Új címke létrehozása"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_32
@@ -1338,7 +1414,7 @@ msgstr "Kiemelt"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:140
 #, python-format
 msgid "Enter a name for your new forum."
-msgstr ""
+msgstr "Új fórumához adjon meg egy nevet."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1884,6 +1960,8 @@ msgstr "Legtöbb szavazatot kapott"
 msgid ""
 "Move this question to the top of the list by sharing it on social networks."
 msgstr ""
+"Mozgassa ezt a kérdést a lista elejére a közösségi oldalakon történő "
+"megosztáshoz."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_vote
@@ -1983,13 +2061,13 @@ msgstr "Nem lehet saját közzétett bejegyzésre szavazni"
 #: code:addons/website_forum/models/forum.py:923
 #, python-format
 msgid "Not enough karma to create a new Tag"
-msgstr ""
+msgstr "Nincs elég karmája egy új címke létrehozásához"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:497
 #, python-format
 msgid "Not enough karma to retag."
-msgstr ""
+msgstr "Nincs elég karmája újracímkézéshez."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -2429,12 +2507,12 @@ msgstr "Másodszor előforduló paraméter"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See post"
-msgstr ""
+msgstr "Bejegyzés megtekintése"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "See question"
-msgstr ""
+msgstr "Kérdés megtekintése"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2516,7 +2594,7 @@ msgstr "Kihagy"
 #: code:addons/website_forum/static/src/js/website_forum.js:23
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
-msgstr ""
+msgstr "Bocsánat, be kell jelentkeznie ehhez a művelethez"
 
 #. module: website_forum
 #. openerp-web
@@ -2760,17 +2838,16 @@ msgstr "Ez az oldal az új fórumhoz tartozó összes információt tartalmazza.
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:114
-#, fuzzy, python-format
+#, python-format
 msgid "This page contains the newly created questions and its answers."
 msgstr ""
-"Ez az oldal az újonnan létrehozott kérdéseket és válaszokat tartalmazza."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:94
-#, fuzzy, python-format
+#, python-format
 msgid "This page contains the newly created questions."
-msgstr "Ez az oldal az újonnan létrehozott kérdéseket tartalmazza."
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
@@ -2833,7 +2910,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_count
 msgid "Total Votes"
-msgstr ""
+msgstr "Összes szavazás"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2918,13 +2995,11 @@ msgstr "Felértékelt szavazat (6)"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:26
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Use this button to create a new forum like any other document (page, menu, "
 "products, event, ...)."
 msgstr ""
-"Használja a <em>'Tartalom'</em> menüt egy új fórum létrehozásához mint "
-"bármely más dokumentumhoz (oldal, menü, termékek, esemény, ...)."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_user_id
@@ -2948,7 +3023,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
-msgstr ""
+msgstr "Kérdés jóváhagyás"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:803
@@ -2986,9 +3061,8 @@ msgstr "Jóváhagyásra vár"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
-#, fuzzy
 msgid "Waiting post"
-msgstr "Saját közzétett bejegyzés szerkesztése"
+msgstr "Várakozó bejegyzés közzététel"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -3062,6 +3136,9 @@ msgid ""
 "            Please wait for a moderator to validate your previous post "
 "before continuing."
 msgstr ""
+"Már van egy várakozó bejegyzés közzététele.<br/>\n"
+"            Kérem várja meg a felülvizsgálatot az előző bejegyzés "
+"közzétételéhez, mielőtt folytatná."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:142
@@ -3074,7 +3151,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
-msgstr ""
+msgstr "Nem tehet közzé egy üres válasz bejegyzést"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3257,16 +3334,19 @@ msgid ""
 "has been posted and require your validation. Click here to access the "
 "question :"
 msgstr ""
+"bejegyzés közzététele megtörtént és jóváhagyását igényli. Kattintson ide a "
+"kérdés eléréséhez :"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the post :"
 msgstr ""
+"bejegyezés közzététele megtörtént. Kattintson ide a bejegyzés eléréséhez :"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "has been posted. Click here to access the question :"
-msgstr ""
+msgstr "bejegyzés közzététele megtörtént. Kattintson ide a kérdés eléréséhez :"
 
 #. module: website_forum
 #. openerp-web
@@ -3503,219 +3583,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "your biography can be seen as tooltip"
 msgstr "az életrajza felugró ablakban jelenik meg"
-
-#~ msgid ""
-#~ "\n"
-#~ "<p>\n"
-#~ "    Hello ${object.name},\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "    You have been invited to validate your email in order to get access "
-#~ "to \"${object.company_id.name}\" Q/A Forums.\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "    To validate your email, please click on the following link:\n"
-#~ "</p>\n"
-#~ "<ul>\n"
-#~ "    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
-#~ "\"${object.company_id.name}\" Q/A Forums</a></li>\n"
-#~ "</ul>\n"
-#~ "<p>\n"
-#~ "    Thanks,\n"
-#~ "</p>\n"
-#~ "<pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "</pre>"
-#~ msgstr ""
-#~ "\n"
-#~ "<p>\n"
-#~ "    Hello ${object.name},\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "    Kérjük érvényesítse ezzel az email-el a hozzáférését a \"${object."
-#~ "company_id.name}\" Kérdések/Válaszok fórumokhoz.\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "    Az email érvényesítéshez, kérem kattintson a következő elérési útra:\n"
-#~ "</p>\n"
-#~ "<ul>\n"
-#~ "    <li><a href=\"${ctx.get('token_url')}\">Érvényesítem a fiókom a "
-#~ "\"${object.company_id.name}\" K/V fórumokhoz</a></li>\n"
-#~ "</ul>\n"
-#~ "<p>\n"
-#~ "    Köszönjük,\n"
-#~ "</p>\n"
-#~ "<pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "</pre>"
-
-#~ msgid ""
-#~ "<b>Answers should not add or expand questions</b>. Instead either edit "
-#~ "the question edit or add a question comment."
-#~ msgstr ""
-#~ "<b>Válaszok ne adjanak többletet vagy kiegészítést a kérdésekhez</b>. "
-#~ "Inkább\n"
-#~ "    szerkessze a kérdés szerkesztést vagy adjon hozzá egy megjegyzést a "
-#~ "kérdéshez."
-
-#~ msgid ""
-#~ "<b>Answers shouldn't just provide a\n"
-#~ "    link a solution</b>. Instead provide the solution\n"
-#~ "    description text in your answer, even if it's just a\n"
-#~ "    copy/paste. Links are welcome, but should complementary to\n"
-#~ "    answer, referring sources or additional reading."
-#~ msgstr ""
-#~ "<b>Válaszok nem lehetnek csak \n"
-#~ "    hivatkozó elérési utak </b>. Helyette megoldás leírás szöveget\n"
-#~ "    adjon meg a válaszában , még akkor is, ha csak egy\n"
-#~ "    másolás/beillesztés. Elérési linkek elfogadottak, azok a válasz\n"
-#~ "    kiegészítői legyenek, hivatkozó források vagy további olvasmányok."
-
-#~ msgid ""
-#~ "<b>Answers shouldn't just provide a link a solution</b>. Instead provide "
-#~ "the solution description text in your answer, even if it's just a copy/"
-#~ "paste. Links are welcome, but should complementary to answer, referring "
-#~ "sources or additional reading."
-#~ msgstr ""
-#~ "<b>Válaszok nem lehetnek csak \n"
-#~ "    hivatkozó elérési utak </b>. Helyette megoldás leírás szöveget\n"
-#~ "    adjon meg a válaszában , még akkor is, ha csak egy\n"
-#~ "    másolás/beillesztés. Elérési linkek elfogadottak, azok a válasz\n"
-#~ "    kiegészítői legyenek, hivatkozó források vagy további olvasmányok."
-
-#~ msgid ""
-#~ "<p>A new answer for <i>%s</i> has been posted. <a href=\"%s/forum/%s/"
-#~ "question/%s\">Click here to access the post.</a></p>"
-#~ msgstr ""
-#~ "<p>Egy új választ erre <i>%s</i> bejegyeztek. <a href=\"%s/forum/%s/"
-#~ "question/%s\">Kattintson ide a bejegyzés eléréséhez.</a></p>"
-
-#~ msgid ""
-#~ "<p>A new question <i>%s</i> has been asked on %s and require your "
-#~ "validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
-#~ "question.</a></p>"
-#~ msgstr ""
-#~ "<p>Egy új kérdést <i>%s</i> tettek fel erre %s , ami jóváhagyásra vár. <a "
-#~ "href=\"%s/forum/%s/question/%s\">Kattintson ide a kérdés eléréséhez.</a></"
-#~ "p>"
-
-#~ msgid ""
-#~ "<p>A new question <i>%s</i> has been asked on %s. <a href=\"%s/forum/%s/"
-#~ "question/%s\">Click here to access the question.</a></p>"
-#~ msgstr ""
-#~ "<p>Egy új kérdést <i>%s</i> tettek fel erre %s. <a href=\"%s/forum/%s/"
-#~ "question/%s\">Kattintson ide a kérdés eléréséhez.</a></p>"
-
-#~ msgid ""
-#~ "A tag is a label that categorizes your question with other,\n"
-#~ "            similar questions. Using the right tags makes it easier for\n"
-#~ "            others to find and answer your question."
-#~ msgstr ""
-#~ "A címke egy cédula mely a kérdéseket kategorizálja másik,\n"
-#~ "            hasonló kérdésekkel. A megfelelő címke használatával mások "
-#~ "számára megkönnyíti\n"
-#~ "            a kérdésére adott válasz megtalálását."
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Badge \""
-#~ msgstr "Jelvény \""
-
-#~ msgid "By sharing you answer, you will get additionnal"
-#~ msgstr "Válaszának megosztásával, kapni fog további"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Enter a name for your new forum then click 'Continue'."
-#~ msgstr "Írja be az új fórum nevét majd kattintson \"Tovább\"."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ez egy követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Post type in \"Default post\" must be activated"
-#~ msgstr ""
-#~ "\"Alapértelmezett bejegyzés közzététel\" bejegyzés közzététel típust "
-#~ "muszáj bekapcsolni"
-
-#~ msgid ""
-#~ "Put this question back in the top list by sharing it on social networks."
-#~ msgstr ""
-#~ "Helyezze ezt a kérdést a lista elejére a közösségi oldalakon történő "
-#~ "megosztással."
-
-#~ msgid "Send a message to the group"
-#~ msgstr "Üzenet küldése a csoport részére"
-
-#~ msgid "To improve your chance getting an answer:"
-#~ msgstr "Növelni annak lehetőségét, hogy több választ kapjon."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "Website meta description"
-#~ msgstr "Honlap meta leírás"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Honlap meta kulcsszavai"
-
-#~ msgid "Website meta title"
-#~ msgstr "Honlap meta cím"
-
-#~ msgid "received this badge:"
-#~ msgstr "ezt a jelvényt kapta:"
-
-#~ msgid "user"
-#~ msgstr "felhasználó"
-
-#~ msgid "users"
-#~ msgstr "felhasználók"

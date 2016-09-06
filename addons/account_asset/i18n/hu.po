@@ -30,7 +30,7 @@ msgstr " (másolat)"
 #: code:addons/account_asset/account_asset.py:505
 #, python-format
 msgid " (grouped)"
-msgstr ""
+msgstr "(csoportosított)"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -61,6 +61,8 @@ msgstr "Könyvelési tétel"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
+"Értékcsökkenés tételekhez használt Főkönyvi számla, a vagyoni eszközök "
+"értékének csökkentésére."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -68,11 +70,15 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Időszakos tételekhez használt Főkönyvi számla, például a vagyoni eszközök "
+"egy részének adatbejegyzése."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid "Account used to record the purchase of the asset at its original price."
 msgstr ""
+"Vagyoni eszközök eredeti áron történt megvételének adatbejegyzéséhez "
+"használt Főkönyvi számla."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -83,7 +89,7 @@ msgstr "Aktív"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Additional Options"
-msgstr ""
+msgstr "További műveletek"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:562
@@ -217,7 +223,7 @@ msgstr "Eszközök elemzése"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Vagyoni eszközök értékcsökkenés tételsorai"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -247,7 +253,7 @@ msgstr "Futó állapotú eszköz"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Vagyoni eszköz auto-jóváhagyása"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -280,6 +286,8 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Jelölje be ezt, ha kategóriánként kívánja csoportosítani a létrehozott napló "
+"tételeket."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -491,12 +499,12 @@ msgstr "Értékcsökkenés dátuma"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Depreciation Entries: Asset Account"
-msgstr ""
+msgstr "Értékcsökkenő tételek: Vagyoni eszköz főkönyvi számla"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid "Depreciation Entries: Expense Account"
-msgstr ""
+msgstr "Értékcsökkenő tételek: Kiadás, költség főkönyvi számla"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
@@ -650,7 +658,7 @@ msgstr "Csoportosítás..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Könyvelési tételek csoportosítása"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -753,7 +761,7 @@ msgstr "Lineáris"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "Összekapcsolt"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -814,7 +822,7 @@ msgstr "Hónapok száma az időszakban"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Egy tétel mindegyikre"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:564
@@ -905,7 +913,7 @@ msgstr "Ok"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Elismert jövedelem főkönyvi számla"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -1112,71 +1120,3 @@ msgstr "pl.. Laptop iBook"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "hónapok"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Depreciation Account"
-#~ msgstr "Értékcsökkenés összege"
-
-#~ msgid "Entries"
-#~ msgstr "Tételek"
-
-#~ msgid "Every"
-#~ msgstr "Minden"
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Income Account"
-#~ msgstr "Árbevétel főkönyvi számla"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ez egy követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Post Journal Entries"
-#~ msgstr "Napló tételek könyvelése"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid ""
-#~ "You already have assets with the reference %s.\n"
-#~ "Please delete these assets before creating new ones for this invoice."
-#~ msgstr ""
-#~ "Már van vagyoni eszköze ezzel a hivatkozással %s.\n"
-#~ "Kérem törölje ezeket a vagyoni eszközeit, mielőtt újat hozna létre erre a "
-#~ "számlára."

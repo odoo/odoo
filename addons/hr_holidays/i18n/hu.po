@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -49,7 +49,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "%s on %s : %.2f day(s)"
-msgstr ""
+msgstr "%s on %s : %.2f nap(ok)"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -104,6 +104,8 @@ msgid ""
 "Absent Employee(s), Whose leaves request are either confirmed or validated "
 "on today"
 msgstr ""
+"Távol lévő alkalmazott(ak),  távollétüket megerősítették vagy jóváhagyták a "
+"mai nap"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -124,7 +126,7 @@ msgstr "Aktív"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Active Leaves and Allocations"
-msgstr ""
+msgstr "Aktív Távollétek és Kiosztásai"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -196,7 +198,7 @@ msgstr "Kiosztás jóváhagyásra"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Allocations"
-msgstr ""
+msgstr "Kiosztások"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -252,6 +254,12 @@ msgid ""
 "                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
 "                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
 msgstr ""
+"Átlag munkaórák naponta.\n"
+"                Ezt az alkalmazottak távozás igényénél használja az "
+"erőforrás naptár alapján a felhasznált napok kiszámításához.\n"
+"                Különböző kapcsolat típusok kezelésére használhatja, pl.:\n"
+"                - 38 óra/hét, 5 nap/hét: 1 nap = 7.6 óra\n"
+"                - 45 óra/hét, 5 nap/hét: 1 nap = 9.0 óra"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -333,19 +341,19 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
 msgid "Click here to create a new leave allocation request."
-msgstr ""
+msgstr "Kattintson egy új távollét kiosztás igényléshez."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
 msgid "Click here to create a new leave allocation."
-msgstr ""
+msgstr "Kattintson egy új távollét kiosztás létrehozásához."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
 #: model:ir.actions.act_window,help:hr_holidays.open_employee_leaves
 msgid "Click here to create a new leave request."
-msgstr ""
+msgstr "Kattintson ide egy új távollét igényléshez."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -423,7 +431,7 @@ msgstr "Aktuális távollét tipusa"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Current Year"
-msgstr ""
+msgstr "Idei év"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -556,7 +564,7 @@ msgstr "Alkalmazottonkénti Emberi erőforrás HR  összegző jelentés"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
 msgid "Hours per Day"
-msgstr ""
+msgstr "Óra naponta"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_department
@@ -794,17 +802,17 @@ msgstr "Távollétek/Kiosztás visszautasítva"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
 msgid "Leaves/Allocations Confirmed"
-msgstr ""
+msgstr "Távollétek/Kiosztások jóváhagyva"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
 msgid "Leaves/Allocations First Approval"
-msgstr ""
+msgstr "Távollétek/Kiosztások első jóváhagyás"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2016"
-msgstr ""
+msgstr "Törvényes szabadságok 2016"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1136,6 +1144,15 @@ msgid ""
 "Requests' located in Leaves Application to manage the leave days of the "
 "employees if the configuration does not allow to use this field."
 msgstr ""
+"A 'Törvényes szabadságból megmaradt' mező alatti tulajdonság csak akkor "
+"használható ha csak egy távollét típus van, és azon az 'Engedélyezze az "
+"érték hatástalanítását' lehetőség nincs bejelölve. (%s Talált). Egyébként, a "
+"frissítés félreérthető mivel nem tudjuk eldönteni melyik szabadság típuson "
+"kell a frissítést végrehajtani.\n"
+"  Lehet hogy a klasszikus menüt használná 'Szabadság igénylések' és "
+"'Kiosztási igénylések' ami a Távollétek alkalmazásban található és "
+"kezelhetők az alkalmazottak szabadság napjai, ha a beállítás nem engedi "
+"ennek a mezőnek a használatát."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1203,6 +1220,8 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
+"Ezt a színt használja a szabadság összegzésénél amit a Jelentés > "
+"Osztályonkénti távollétek alatt talál."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
@@ -1401,110 +1420,3 @@ msgstr "report.hr_holidays.report_holidayssummary"
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "ig"
-
-#~ msgid "%s on %s"
-#~ msgstr "%s ezen %s"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Current Year Leaves"
-#~ msgstr "Aktív éves távollétek"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "HR Department"
-#~ msgstr "Emberi erőforrás Osztály, részleg"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő egy követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Leaves/Allocations: first approval"
-#~ msgstr "Távollétek/Kiosztások : első jóváhagyás"
-
-#~ msgid "Leaves/Allocations: second approval"
-#~ msgstr "Távollétek/Kiosztások : második jóváhagyás"
-
-#~ msgid "Legal Leaves 2015"
-#~ msgstr "Törvényes szabadságok 2015"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "My Leave Requests"
-#~ msgstr "Távollét igényléseim"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Munkaügy HR menü megnyitása"
-
-#~ msgid ""
-#~ "The feature behind the field 'Remaining Legal Leaves' can only be used "
-#~ "when there is only one leave type with the option 'Allow to Override "
-#~ "Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we "
-#~ "cannot decide on which leave type the update has to be done. \n"
-#~ "You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-#~ "Requests' located in 'Human Resources \\ Leaves' to manage the leave days "
-#~ "of the employees if the configuration does not allow to use this field."
-#~ msgstr ""
-#~ "A 'Törvényes szabadságból megmaradt' mező alatti tulajdonság csak akkor "
-#~ "használható ha csak egy szabadság típus van, és azon  az 'Engedélyezze az "
-#~ "érték hatástalanítását' lehetőség nincs bejelölve. (%s Talált). "
-#~ "Egyébként, a frissítés félreérthető  mivel nem tudjuk eldönteni melyik "
-#~ "szabadság típuson kell a frissítést végrehajtani. \n"
-#~ "Lehet hogy a klasszikus menüt használná 'Szabadság igénylések' és "
-#~ "'Kiosztási igénylések' ami a 'Emberi erőforrások \\ Szabadságok' alatt "
-#~ "található és kezelhetők az alkalmazottak szabadság napjai, ha a beállítás "
-#~ "nem engedi ennek a mezőnek a használatát."
-
-#~ msgid ""
-#~ "This color will be used in the leaves summary located in Reporting"
-#~ "\\Leaves by Department."
-#~ msgstr ""
-#~ "Ez a szín lesz használva a szabadság összagzésénél ami a Jelentés"
-#~ "\\Osztályonkénti szabadságoknál lesz használva."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Warning!"
-#~ msgstr "Figyelem!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "Year"
-#~ msgstr "Év"

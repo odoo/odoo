@@ -3,14 +3,15 @@
 # * delivery
 #
 # Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-06-20 03:26+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-09-02 12:13+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -152,7 +153,7 @@ msgstr "Beloppsgräns för fri frakt i företagets valuta"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
 msgid "Asset Type"
-msgstr "Tillgångs typ"
+msgstr "Tillgångstyp"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
@@ -220,9 +221,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
-#, fuzzy
 msgid "Can be Expensed"
-msgstr "Kan hyras ut"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
@@ -420,15 +420,13 @@ msgstr "Delivery"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-#, fuzzy
 msgid "Delivery Carrier"
-msgstr "Delivery"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#, fuzzy
 msgid "Delivery Information"
-msgstr "Transportörsinformation"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -521,9 +519,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
-#, fuzzy
 msgid "Event Registration"
-msgstr "Evenenangsprenumeration"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
@@ -596,7 +593,7 @@ msgstr "Följare (Kanaler)"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (Partners)"
+msgstr "Följare (kontakter)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -663,9 +660,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
-#, fuzzy
 msgid "Height"
-msgstr "Vikt"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -687,6 +683,7 @@ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
+"Om den är markerad så finns det meddelanden som kräver din uppmärksamhet."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -904,9 +901,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
-#, fuzzy
 msgid "Max Weight"
-msgstr "Vikt"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -950,9 +946,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
-#, fuzzy
 msgid "Message for Sales Order Line"
-msgstr "Orderrad"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -973,9 +968,8 @@ msgstr "Namn"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
-#, fuzzy
 msgid "No carrier integration"
-msgstr "Transportörsinformation"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1008,7 +1002,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
-msgstr "Antalet åtgärder"
+msgstr "Antal åtgärder"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -1023,7 +1017,7 @@ msgstr "Antal meddelanden som kräver en åtgärd"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
 msgid "Number of unread messages"
-msgstr "Antalet olästa meddelanden"
+msgstr "Antal olästa meddelanden"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_method
@@ -1070,7 +1064,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
 msgid "Packages"
-msgstr ""
+msgstr "Emballage"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -1090,7 +1084,7 @@ msgstr "Företag"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "Fysiska emballage"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1217,9 +1211,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
-#, fuzzy
 msgid "Purchase Order Line"
-msgstr "Orderrad"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
@@ -1275,7 +1268,7 @@ msgstr "Kvitto"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Inköpsregler"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
@@ -1453,9 +1446,8 @@ msgstr "Lagerkonto utgående"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
-#, fuzzy
 msgid "Stock move ids"
-msgstr "Lagerflytt"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
@@ -1639,9 +1631,8 @@ msgstr "Tracking"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-#, fuzzy
 msgid "Tracking Reference"
-msgstr "Spårnummer"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1682,7 +1673,7 @@ msgstr "Olästa meddelanden"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Antal olästa meddelande"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1751,9 +1742,8 @@ msgstr "Vikt * Volym"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
-#, fuzzy
 msgid "Weight Unit of Measure"
-msgstr "Enhet"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
@@ -1860,57 +1850,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "okänd"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Transportörsinformation"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Spårnummer"
-
-#~ msgid "Expense Invoice Policy"
-#~ msgstr "Villkor för omkostnadsfakturan"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Bruttovikt"
-
-#~ msgid ""
-#~ "If you invoice at cost, the expense will be invoiced on the sale order at "
-#~ "the cost of the analytic line;if you invoice at sales price, the price of "
-#~ "the product will be used instead."
-#~ msgstr ""
-#~ "Om du fakturerar till självkostnadspris så kommer kostnaden att "
-#~ "faktureras på säljordern på bekostnad av den analytiska raden; om du "
-#~ "fakturerar till försäljningspris så kommer priset på produkten att "
-#~ "användas istället."
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meddelande- och kommunikationshistorik"
-
-#~ msgid "Price Computation"
-#~ msgstr "Prisberäkning"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Template Name"
-#~ msgstr "Mallnamn"
-
-#~ msgid "The partner that is doing the delivery service."
-#~ msgstr "Företaget gör själva leveransservicen."
-
-#~ msgid "Type of Event"
-#~ msgstr "Evenemangstyp"
-
-#~ msgid "Unit of Measure -> UOS Coeff"
-#~ msgstr "Mått -> UOS Coeff"
-
-#~ msgid "Unit of Sale"
-#~ msgstr "Försäljningsenhet"
-
-#, fuzzy
-#~ msgid "Website Messages"
-#~ msgstr "Meddelanden"
-
-#, fuzzy
-#~ msgid "Website communication history"
-#~ msgstr "Meddelande- och kommunikationshistorik"

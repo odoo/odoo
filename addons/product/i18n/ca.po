@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-07-08 07:41+0000\n"
-"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"PO-Revision-Date: 2016-08-24 09:26+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (còpia)"
@@ -1461,7 +1461,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1612,7 +1612,7 @@ msgstr "Preus d'atribut"
 #: model:ir.actions.act_window,name:product.variants_action
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
 msgid "Attribute Values"
-msgstr "Valors d'atributs"
+msgstr "Valors de atribut"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -1701,6 +1701,13 @@ msgstr "L'altaveu Bluetooth portàtil més petit de Bose"
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr ""
 "Calcula els preus del producte segons unitats per una versió de tarifa."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -1798,9 +1805,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Companyia"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -2134,8 +2140,8 @@ msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
 msgstr ""
-"Error! No poden definir una precisió decimal dels comptes que sigui major "
-"que el factor d'arrodoniment de la moneda actual de la companyia."
+"Error! No pot definir una precisió decimal dels comptes que sigui major que "
+"el factor d'arrodoniment de la moneda actual de la companyia."
 
 #. module: product
 #: constraint:product.template:0
@@ -2314,8 +2320,8 @@ msgid ""
 "Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"Com de gran o de petita és aquesta unitat comparada amb la unitat de mesura "
-"de referència d'aquesta categoria: 1 * (aquesta unitat) = rati * (unitat de "
+"Quantes vegades aquesta unitat de mesura és més gran que la unitat de mesura "
+"de referència en aquesta categoria: 1 * (aquesta unitat) = rati * (unitat de "
 "referència)"
 
 #. module: product
@@ -2326,8 +2332,8 @@ msgid ""
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
 "Com de gran o de petita és aquesta unitat comparada amb la unitat de mesura "
-"de referència d'aquesta categoria: 1 * (aquesta unitat) = rati * (unitat de "
-"referència)"
+"de referència d'aquesta categoria: 1 * (unitat de referència) = rati * "
+"(aquesta unitat)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_id
@@ -2375,7 +2381,7 @@ msgid ""
 "preserved."
 msgstr ""
 "Imatge de la variant del producte (Imatge gran de la plantilla del producte "
-"en cas que estigui buit). ES redimensionarà automàticament com una imatge "
+"en cas que estigui buit). Es redimensionarà automàticament com una imatge "
 "1024x1024px, mantenint la proporció."
 
 #. module: product
@@ -2385,7 +2391,7 @@ msgid ""
 "false)."
 msgstr ""
 "Imatge de la variant del producte (Imatge mitjana de la plantilla del "
-"producte en cas que estigui buit)."
+"producte en cas que estigui buida)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
@@ -2654,7 +2660,7 @@ msgstr "Ratolí, òptic"
 #: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
-msgstr "Ratolí sense fils"
+msgstr "Ratolí, sense fils"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_name
@@ -3043,7 +3049,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Productes: "
@@ -3078,9 +3084,8 @@ msgstr "Quantitat"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Quantitat per paquet"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3209,7 +3214,7 @@ msgstr "Servidor "
 #: code:addons/product/product.py:482
 #, python-format
 msgid "Service"
-msgstr ""
+msgstr "Servei"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -3455,9 +3460,8 @@ msgstr "El teclat sense fils d'alumini d'Apple."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "El número total de productes que podeu posar per palet o caixa."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3479,7 +3483,7 @@ msgstr "Aquest valor d'atribut ja existeix!"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
 msgid "This comes from the product form."
-msgstr "Això prové el formulari del producte"
+msgstr "Això prové del formulari del producte."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
@@ -3550,12 +3554,9 @@ msgstr "Tipus"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Si el camp actiu es desmarca, permet ocultar una unitat de mesura sense "
-"eliminar-la."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3670,9 +3671,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Altra tarifa"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3888,7 +3888,7 @@ msgstr "iPod"
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
 msgid "inch(es)"
-msgstr "polzades"
+msgstr "polzada/es"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -3989,191 +3989,3 @@ msgstr "fins"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "desconegut"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Processador Hi-Speed 234Q\n"
-#~ "Teclat QWERTY"
-
-#~ msgid "Action Needed"
-#~ msgstr "Cal fer alguna acció"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "Impressora multifunció d'alta velocitat amb fax i escàner."
-
-#~ msgid "Blank CD"
-#~ msgstr "CD gravable "
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "DVD-RW gravable"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data de l'últim missatge enviat al registre."
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Fi del cicle de vida"
-
-#~ msgid "External Hard disk"
-#~ msgstr "Disc dur extern"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidors"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Canals)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidors (Socis)"
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "Software d'edició d'imatges complet"
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr ""
-#~ "Indica l'ordre de seqüència quan es mostra una llista de categories de "
-#~ "producte."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks Software"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Pes brut"
-
-#~ msgid "HDD SH-2 (mto)"
-#~ msgstr "HDD SH-2 (mto)"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "Disc dur (HDD) sota demanda"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Auriculars mans lliures per a portàtil amb connexió per a micròfon i "
-#~ "auricular."
-
-#~ msgid "Headset USB"
-#~ msgstr "Auriculars USB"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Auriculars per a PC portàtil amb connector USB"
-
-#~ msgid "Headset standard"
-#~ msgstr "Auriculars estàndard"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si està marcat hi ha missatges nous pendents."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
-
-#~ msgid "In Development"
-#~ msgstr "En desenvolupament"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Cartutx de tinta"
-
-#~ msgid "Is Follower"
-#~ msgstr "És seguidor"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Portàtil S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data Últim Missatge"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "Gestionar la segona unitat de mesura"
-
-#~ msgid "Messages"
-#~ msgstr "Missatges"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de missatges i comunicació"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Placa base A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Altaveus multimèdia"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'accions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de missatges que requereixen una atenció"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de missatges no llegits"
-
-#~ msgid "Obsolete"
-#~ msgstr "Obsolet"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "Suite ofimàtica amb processador de text, full de càlcul, presentacions, "
-#~ "gràfics i base de dades..."
-
-#~ msgid "Office Suite"
-#~ msgstr "Suite ofimatica"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr ""
-#~ "Disc dur sota demanda amb la capacitat basada amb els requisits donats."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Llapis de memòria, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Llapis de memòria, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Impresora, Tot en un"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "Processador AMD 8-Core"
-
-#~ msgid "RAM SR3"
-#~ msgstr "RAM SR3"
-
-#~ msgid "Router R430"
-#~ msgstr "Router R430"
-
-#~ msgid "Status"
-#~ msgstr "Estat"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Tarifa de proveïdor"
-
-#~ msgid "Template Name"
-#~ msgstr "Nom de plantilla"
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Cartutx de tòner"
-
-#~ msgid "USB Adapter"
-#~ msgstr "Adaptador USB"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Missatges pendents de llegir"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Comptador de missatges no llegits"
-
-#~ msgid "Webcam"
-#~ msgstr "Webcam"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"

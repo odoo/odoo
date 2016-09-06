@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:07+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-07-06 08:44+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -68,23 +68,22 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:262
+#: code:addons/mrp/models/mrp_bom.py:261
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                        Documents are attached to the tasks and issues of "
-"your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments "
-"to link\n"
-"                        documents to your project.\n"
+"                        Click to upload files to your product.\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                         Dokumentumok vannak mellékelve a projekt témái "
-"feladataihoz és ügyeihez.</p><p>\n"
-"                        Küldjön üzenetet vagy naplózzon belső jegyzeteket "
-"mellékletekkel a projekt\n"
-"                        témákhoz fűzött dokumentumként.\n"
+"                        Kattintson a termékéhez tartozó fájlok "
+"feltöltéséhez.\n"
+"                    </p><p>\n"
+"                        Használja ezt a jellemzőt bármely fájl, mint rajzok "
+"vagy egyéb részletek tárolásához.\n"
 "                    </p>"
 
 #. module: mrp
@@ -237,7 +236,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>Munkaállomás</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:418
+#: code:addons/mrp/models/mrp_workorder.py:419
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr ""
@@ -326,7 +325,7 @@ msgid "Archived"
 msgstr "Archivált"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:254
+#: code:addons/mrp/models/mrp_bom.py:253
 #, python-format
 msgid "Attachments"
 msgstr "Mellékletek"
@@ -554,7 +553,7 @@ msgid "Cancelled"
 msgstr "Törölt"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:258
+#: code:addons/mrp/models/mrp_production.py:260
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
@@ -681,9 +680,8 @@ msgstr ""
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
-#, fuzzy
 msgid "Computer Desk"
-msgstr "Adatok kiszámítása"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1283,6 +1281,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Kit"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_type
 msgid ""
 "Kit (Phantom): When processing a sales order for this product, the delivery "
@@ -1399,7 +1402,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "A késztermékek tárolásának helye a rendszerben."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9450
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9451
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr ""
@@ -1413,6 +1416,7 @@ msgid "Lot"
 msgstr "Résztétel / csomag"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_active_move_lot_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_move_move_lot_ids
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
 msgid "Lots"
@@ -1514,7 +1518,7 @@ msgid "Manufacturing Order"
 msgstr "Gyártási utasítás"
 
 #. module: mrp
-#: code:addons/mrp/models/procurement.py:88
+#: code:addons/mrp/models/procurement.py:87
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Gyártási rendelés <em>%s</em> létrehozva."
@@ -1602,7 +1606,7 @@ msgstr "Üzenet"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid ""
-"Messages can be configurred to appear during any operation: receptions, "
+"Messages can be configured to appear during any operation: receptions, "
 "delivery orders,\n"
 "                manufacturing orders, work orders, etc."
 msgstr ""
@@ -1659,12 +1663,12 @@ msgstr "Név"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:46
-#: code:addons/mrp/models/mrp_production.py:248
+#: code:addons/mrp/models/mrp_production.py:250
 #: code:addons/mrp/models/mrp_routing.py:18
 #: code:addons/mrp/models/mrp_routing.py:34
 #: code:addons/mrp/models/mrp_routing.py:35
 #: code:addons/mrp/models/mrp_unbuild.py:20
-#: code:addons/mrp/models/mrp_unbuild.py:80
+#: code:addons/mrp/models/mrp_unbuild.py:81
 #, python-format
 msgid "New"
 msgstr "Új"
@@ -1686,7 +1690,7 @@ msgid "Next Work Order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/procurement.py:91
+#: code:addons/mrp/models/procurement.py:90
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "Nem létezik anyagjegyzék (BoM) ehhez a termékhez!"
@@ -1757,7 +1761,9 @@ msgid "None"
 msgstr "Egyik sem"
 
 #. module: mrp
-#: selection:ir.attachment,priority:0 selection:mrp.workcenter,working_state:0
+#: selection:ir.attachment,priority:0
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: selection:mrp.production,priority:0 selection:mrp.workcenter,working_state:0
 msgid "Normal"
 msgstr "Normál"
 
@@ -1765,6 +1771,11 @@ msgstr "Normál"
 #: model:ir.model.fields,help:mrp.field_stock_scrap_workorder_id
 msgid "Not to restrict or prefer quants, but informative."
 msgstr ""
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Not urgent"
+msgstr "Nem sürgős"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -1884,7 +1895,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_plm
 msgid "PLM"
-msgstr ""
+msgstr "PLM Termék Életciklus Vezérlés"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
@@ -1955,7 +1966,7 @@ msgid "Planned Date"
 msgstr "Tervezett időpont"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:263
+#: code:addons/mrp/models/mrp_workorder.py:264
 #, python-format
 msgid ""
 "Please set the quantity you produced in the Current Qty field. It can not be "
@@ -1979,6 +1990,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_ir_attachment_priority
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_priority
 msgid "Priority"
 msgstr "Prioritás"
 
@@ -2316,7 +2328,7 @@ msgid "Reference of the document that generated this production order request."
 msgstr "A dokumentum hivatkozása hozta létre ezt a munka megbízás igényt."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:239
+#: code:addons/mrp/models/stock_move.py:244
 #, python-format
 msgid "Register Lots"
 msgstr ""
@@ -2460,8 +2472,8 @@ msgid "Scheduled Month"
 msgstr "Ütemezés hónapja"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:521
-#: code:addons/mrp/models/mrp_workorder.py:427
+#: code:addons/mrp/models/mrp_production.py:529
+#: code:addons/mrp/models/mrp_workorder.py:428
 #: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2559,7 +2571,7 @@ msgid "Ship this product as a set of components (kit)"
 msgstr "Szállítsa ezt a terméket, mint alkatrész szett (készlet)"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:88
+#: code:addons/mrp/models/mrp_unbuild.py:89
 #, python-format
 msgid "Should have a lot for the finished product"
 msgstr ""
@@ -2717,7 +2729,7 @@ msgid "Technical: used in views only."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:223
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:222
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2819,7 +2831,7 @@ msgid "Time Tracking"
 msgstr "Idő követés"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:354
+#: code:addons/mrp/models/mrp_workorder.py:355
 #, python-format
 msgid "Time Tracking: "
 msgstr ""
@@ -2943,6 +2955,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_tracking
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_has_tracking
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_product_tracking
 msgid "Tracking"
 msgstr "Nyomonkövetés"
@@ -2965,7 +2978,7 @@ msgid "Unbuild Order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:75
+#: code:addons/mrp/models/mrp_unbuild.py:76
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
 msgstr ""
@@ -3014,6 +3027,11 @@ msgid "Update"
 msgstr "Frissít"
 
 #. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Urgent"
+msgstr "Sürgős"
+
+#. module: mrp
 #: selection:mrp.config.settings,module_mrp_mps:0
 msgid ""
 "Use Master Production Schedule in order to create procurements based on "
@@ -3060,6 +3078,11 @@ msgid "Very High"
 msgstr "Nagyon nagy"
 
 #. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Very Urgent"
+msgstr "Nagyon sürgős"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,availability:0
@@ -3089,7 +3112,7 @@ msgid "Warehouse"
 msgstr "Raktár"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:223
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:222
 #, python-format
 msgid "Warning"
 msgstr "Figyelem"
@@ -3307,7 +3330,7 @@ msgid "Work Sheet"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:499
+#: code:addons/mrp/models/mrp_production.py:507
 #, python-format
 msgid "Work order %s is still running"
 msgstr ""
@@ -3371,7 +3394,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_message_action_main
 #: model:ir.ui.menu,name:mrp.mrp_message_menu
 msgid "Workorder Messages"
-msgstr ""
+msgstr "Gyártásrendelés üzenetek"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
@@ -3392,13 +3415,13 @@ msgstr ""
 "-Ez a mrp_byproduct modult telepíti."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:437
+#: code:addons/mrp/models/mrp_production.py:445
 #, python-format
 msgid "You can not cancel production order, a work order is still in progress."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:225
+#: code:addons/mrp/models/mrp_workorder.py:226
 #, python-format
 msgid "You can not change the finished work order."
 msgstr ""
@@ -3414,7 +3437,7 @@ msgstr ""
 "Kérem zárja be vagy törölje azokat először."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:121
+#: code:addons/mrp/models/stock_move.py:122
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
@@ -3427,7 +3450,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:347
+#: code:addons/mrp/models/mrp_workorder.py:348
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3436,7 +3459,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:343
+#: code:addons/mrp/models/mrp_workorder.py:344
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3445,7 +3468,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:395
+#: code:addons/mrp/models/mrp_workorder.py:396
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3460,13 +3483,13 @@ msgid "You need to provide a lot for the finished product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:281
+#: code:addons/mrp/models/mrp_workorder.py:282
 #, python-format
 msgid "You should provide a lot for a component"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:266
+#: code:addons/mrp/models/mrp_workorder.py:267
 #, python-format
 msgid "You should provide a lot for the final product"
 msgstr ""
@@ -3543,645 +3566,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_worksheet
 msgid "worksheet"
 msgstr ""
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (másolat)"
-
-#~ msgid "%s produced"
-#~ msgstr "%s legyártott"
-
-#~ msgid ""
-#~ "'Consume only' mode will only consume the products with the quantity "
-#~ "selected.\n"
-#~ "'Consume & Produce' mode will consume as well as produce the products "
-#~ "with the quantity selected and it will finish the production order when "
-#~ "total ordered quantities are produced."
-#~ msgstr ""
-#~ "A \"Csak felhasználás\" mód csak a kijelölt mennyiségű termékeket "
-#~ "használja fel.\n"
-#~ "A \"Felhasználás és gyártás\" mód  a kijelölt mennyiségű termékeket "
-#~ "használja fel és gyártja is, és csak akkor fejezi be a munka  megbízást, "
-#~ "amikor a teljes megrendelt mennyiség legyártásra került."
-
-#~ msgid "<strong>Consumed Products</strong>"
-#~ msgstr "<strong>Felhasznált termékek</strong>"
-
-#~ msgid "<strong>No. Of Cycles</strong>"
-#~ msgstr "<strong>Ciklusok száma</strong>"
-
-#~ msgid "<strong>No. Of Hours</strong>"
-#~ msgstr "<strong>Órák száma</strong>"
-
-#~ msgid "<strong>Sequence</strong>"
-#~ msgstr "<strong>Sorrend</strong>"
-
-#~ msgid "A factor of 0.9 means a loss of 10% during the production process."
-#~ msgstr ""
-#~ "A 0.9 együttható azt jelenti, hogy 10% veszteség keletkezik a gyártási "
-#~ "munkafolyamatok során."
-
-#~ msgid "A factor of 0.9 means a loss of 10% within the production process."
-#~ msgstr "A 0,9-es érték 10%-os veszteséget jelent a gyártási folyamatban."
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Active Id not found"
-#~ msgstr "Aktív azonosító (ID) nem található"
-
-#~ msgid "Allow detailed planning of work orders"
-#~ msgstr "Munka megrendelésekhez megengedi a részletes tervezést"
-
-#~ msgid ""
-#~ "Allow to manage product rounding on quantity and product efficiency "
-#~ "during production process"
-#~ msgstr ""
-#~ "Megengedi a termékek mennyiségén és a termék hatékonyságán a kerekítést a "
-#~ "termék létrehozás folyamatokban"
-
-#~ msgid "Awaiting Raw Materials"
-#~ msgstr "Alapanyagokra várakozás"
-
-#~ msgid ""
-#~ "Because the product %s requires it, you must assign a serial number to "
-#~ "your raw material %s to proceed further in your production. Please use "
-#~ "the 'Produce' button to do so."
-#~ msgstr ""
-#~ "Mert a %s termék megkívánja, ezért egy széria számot kell hozzáadnia a %s "
-#~ "nyersanyaghoz, ahhoz hogy tovább tudjon lépni a gyártási folyamatban. "
-#~ "Kérem használja a 'Gyárts' gombot ehhez."
-
-#~ msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-#~ msgstr ""
-#~ "Anyagjegyzék (BoM) \"%s\" tartalmaz egy ismétlődő terméksort: \"%s\"."
-
-#~ msgid "By Lots"
-#~ msgstr "Tételenként"
-
-#~ msgid "By Unique Serial Number"
-#~ msgstr "Egyedi széria szám szerint"
-
-#~ msgid "Cancel Production"
-#~ msgstr "Termelés visszavonása"
-
-#~ msgid "Cannot consume a move with negative or zero quantity."
-#~ msgstr "Nem tud elhasználni ebből, mivel negatív vagy nulla ma mennyiség."
-
-#~ msgid "Cannot delete a manufacturing order in state '%s'."
-#~ msgstr "Nem lehet a gyártási megrendelést törölni ezen az állapoton '%s'."
-
-#~ msgid "Cannot find a bill of material for this product."
-#~ msgstr "Nem található anyagjegyzék ehhez a termékhez."
-
-#~ msgid "Cannot find bill of material for this product."
-#~ msgstr "Nem található anyagjegyzék ehhez a termékhez."
-
-#~ msgid "Capacity Information"
-#~ msgstr "Kapacitási információ"
-
-#~ msgid "Capacity per Cycle"
-#~ msgstr "Ciklusonkénti kapacitás"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Mennyiség változtatása"
-
-#~ msgid "Click to create a group of properties."
-#~ msgstr "Kattintson egy tulajdonség csoport létrehozásához."
-
-#~ msgid "Click to create a new property."
-#~ msgstr "Kattintson egy új tulajdonság létrehozásához."
-
-#~ msgid "Confirm"
-#~ msgstr "Jóváhagyás"
-
-#~ msgid "Confirm Production"
-#~ msgstr "Gyártás jóváhagyása"
-
-#~ msgid "Consume & Produce"
-#~ msgstr "Felhasználás és gyártás"
-
-#~ msgid "Consume Lines"
-#~ msgstr "Felhasználási sorok"
-
-#~ msgid "Consume Only"
-#~ msgstr "Csak felhasználás"
-
-#~ msgid "Consumed Products"
-#~ msgstr "Felhasznált termékek"
-
-#~ msgid "Consumed for"
-#~ msgstr "Felhasznált ehhez"
-
-#~ msgid "Cost per cycle"
-#~ msgstr "Költség/ciklus"
-
-#~ msgid "Cost per hour"
-#~ msgstr "Költség/óra"
-
-#~ msgid "Costing Information"
-#~ msgstr "Költségszámítási információk"
-
-#~ msgid "Cycle Account"
-#~ msgstr "Munkaciklus gyűjtőkód"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid ""
-#~ "Define specific property groups that can be assigned to your\n"
-#~ "                bill of materials and sales orders. Properties allows "
-#~ "Odoo\n"
-#~ "                to automatically select the right bill of materials "
-#~ "according\n"
-#~ "                to properties selected in the sales order by salesperson."
-#~ msgstr ""
-#~ "Határozzon meg tulajdonság csoportokat, melyeket hozzárendelhet \n"
-#~ "                a anyagjegyzékhez és vásárlói megrendelésekhez. A "
-#~ "tulajdonságok lehetővé teszik \n"
-#~ "                az Odoo rendszer számára a megfelelő darabjegyzék "
-#~ "automatikus kiválasztását \n"
-#~ "                az értékesítő által a vásárlói megrendelésen kiválasztott "
-#~ "tulajdonságok alapján."
-
-#~ msgid ""
-#~ "Description of the Work Center. Explain here what's a cycle according to "
-#~ "this Work Center."
-#~ msgstr ""
-#~ "Munkaállomás leírása. Fejtse ki mit ért ennek a munkaállomásnak a ciklus "
-#~ "idején."
-
-#~ msgid "Destination Loc."
-#~ msgstr "Célállomás helye"
-
-#~ msgid "Do not use a planning for the work orders "
-#~ msgstr "Ne használjon tervezést a munka megrendelésehez"
-
-#~ msgid "Extra Information"
-#~ msgstr "Extra információ"
-
-#~ msgid ""
-#~ "Fill this only if you want automatic analytic accounting entries on "
-#~ "production orders."
-#~ msgstr ""
-#~ "Csak akkor töltse ki, ha automatikus analitikai könyvelési bevitel "
-#~ "feladást szeretne a munka megbízásokon."
-
-#~ msgid ""
-#~ "Fill this product to easily track your production costs in the analytic "
-#~ "accounting."
-#~ msgstr ""
-#~ "Töltse ki ezt a terméket az analitikai könyvelés anyag költség könnyű "
-#~ "nyomon követéséhez."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid ""
-#~ "For instance, in the property group \"Warranty\", you an have\n"
-#~ "                two properties: 1 year warranty, 3 years warranty. "
-#~ "Depending\n"
-#~ "                on the propoerties selected in the sales order, Odoo "
-#~ "will\n"
-#~ "                schedule a production using the matching bill of "
-#~ "materials."
-#~ msgstr ""
-#~ "Például, a tulajdonságok \"Garancia\" csoportban, két\n"
-#~ "                tulajdonság van: 1 éves garancia, 3 éves garancia. A "
-#~ "vásárlói \n"
-#~ "                megrendelésen kiválasztott tulajdonságtól függően, Odoo "
-#~ "rendszer\n"
-#~ "                beütemezi a gyártáshoz a megfelelő anyagjegyzékek "
-#~ "használatát."
-
-#~ msgid "Force Reservation"
-#~ msgstr "Foglalás erőltetése"
-
-#~ msgid "General Account"
-#~ msgstr "Főkönyvi számla"
-
-#~ msgid "Gives the sequence order when displaying a list of work orders."
-#~ msgstr "Megadja a sorrendet, amikor a munka megbízások listáját kiállítjuk."
-
-#~ msgid "Hour Account"
-#~ msgstr "Óra számla"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "In Production"
-#~ msgstr "Termelésben"
-
-#~ msgid "Inactive"
-#~ msgstr "Inaktív"
-
-#~ msgid "Internal Reference"
-#~ msgstr "Belső hivatkozás"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ez egy követő"
-
-#~ msgid ""
-#~ "Keep empty if you produce at the location where the finished products are "
-#~ "needed.Set a location if you produce at a fixed location. This can be a "
-#~ "partner location if you subcontract the manufacturing operations."
-#~ msgstr ""
-#~ "Hagyja üresen, ha a gyártást ugyanazon a helyen végzi, ahol a "
-#~ "késztermékre szüksége van. Válasszon egy helyszínt, ha fix helyen gyárt. "
-#~ "Ez lehet egy partner székhelye is, amennyiben a gyártási eljárást "
-#~ "kiszervezi alvállalkozókhoz."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Manage rounding and efficiency of BoM components"
-#~ msgstr "Kerekítés és hatékonyság kezelés anyagjegyzék elemei alapján"
-
-#~ msgid "Manage rounding and efficiency of bills of materials components"
-#~ msgstr "Kerekítés és hatékonyság kezelés anyagjegyzék elemei alapján"
-
-#~ msgid "Manufacturing Efficiency"
-#~ msgstr "Gyártási hatékonyság"
-
-#~ msgid "Manufacturing Orders which are ready to start production."
-#~ msgstr "Gyártási rendelések, melyek a gyártás elindítására várnak."
-
-#~ msgid "Manufacturing Orders which are waiting for raw materials."
-#~ msgstr "Gyártáasi rendelések, melyek nyersanyagra várnak."
-
-#~ msgid "Manufacturing order cancelled."
-#~ msgstr "Gyártási rendelés visszavonva."
-
-#~ msgid "Mark as Started"
-#~ msgstr "Jelölje meg mint elkezdett"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Mode"
-#~ msgstr "Mód"
-
-#~ msgid "No Tracking"
-#~ msgstr "Nincs nyomonkövetés"
-
-#~ msgid "No rounding and efficiency on bills of materials"
-#~ msgstr "Nincs Kerekítés és hatékonyság az anyagjegyzékekekn"
-
-#~ msgid "Not urgent"
-#~ msgstr "Nem sürgős"
-
-#~ msgid "Not used in computations, for information purpose only."
-#~ msgstr "Nem használt a számításhoz, csak információként szolgál."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of Cycles"
-#~ msgstr "Ciklusok száma"
-
-#~ msgid "Number of Hours"
-#~ msgstr "Órák száma"
-
-#~ msgid ""
-#~ "Number of iterations this work center has to do in the specified "
-#~ "operation of the routing."
-#~ msgstr ""
-#~ "Megadja, hogy az eljárás adott műveletnél ezt a munkaállomást hányszor "
-#~ "kell igénybe venni."
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid ""
-#~ "Number of operations this Work Center can do in parallel. If this Work "
-#~ "Center represents a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "Ez a Munkaállomás ennyi párhuzamos műveletet tud végrehajtani. Ha ez a "
-#~ "Munkaállomás 5 munkavállalót magában foglaló csoportot képvisel, akkor a "
-#~ "kapacitása az 5 per ciklus."
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Open MRP Gyártási erőforrás/ Menü"
-
-#~ msgid "Order Planning"
-#~ msgstr "Megrendelés tervezése"
-
-#~ msgid "Order quantity cannot be negative or zero!"
-#~ msgstr "Megrendelt mennyiség nem lehet negatív vagy nullla!"
-
-#~ msgid "Planning"
-#~ msgstr "Tervezés"
-
-#~ msgid "Please provide proper quantity."
-#~ msgstr "Kérem adjon meg megfelelő mennyiséget."
-
-#~ msgid "Produced Products"
-#~ msgstr "Előállított termékek"
-
-#~ msgid "Product Move"
-#~ msgstr "Termék mozgás"
-
-#~ msgid "Product Produce"
-#~ msgstr "Termék gyártása"
-
-#~ msgid "Product Produce Consume lines"
-#~ msgstr "Termék előállítási felhasználási sorok"
-
-#~ msgid "Product Rounding"
-#~ msgstr "Termék kerekítése"
-
-#~ msgid "Production Order for Produced Products"
-#~ msgstr "Termelési megrendelés a megtermelt termékekhez"
-
-#~ msgid "Production Order for Raw Materials"
-#~ msgstr "Termelési megrendelés a nyersanyagokhoz"
-
-#~ msgid "Production Scheduled Product"
-#~ msgstr "Gyártásra ütemezett termék"
-
-#~ msgid "Production Started"
-#~ msgstr "Termelés elindítva"
-
-#~ msgid "Production Work Centers"
-#~ msgstr "Gyártási munkaállomások"
-
-#~ msgid "Production progress"
-#~ msgstr "Termelési folyamat"
-
-#~ msgid "Products Consumed"
-#~ msgstr "Felhasznált termékek"
-
-#~ msgid "Products to Consume"
-#~ msgstr "Felhasználandó termékek"
-
-#~ msgid "Products to Finish"
-#~ msgstr "Befejezendő termékek"
-
-#~ msgid "Products to Produce"
-#~ msgstr "Termék az előállításhoz"
-
-#~ msgid "Properties"
-#~ msgstr "Jellemzők"
-
-#~ msgid "Properties categories"
-#~ msgstr "Tulajdonságok kategóriái"
-
-#~ msgid "Properties composition"
-#~ msgstr "Összetételek tulajdonságai"
-
-#~ msgid "Property"
-#~ msgstr "Tulajdonság"
-
-#~ msgid "Property Group"
-#~ msgstr "Tulajdonságcsoport"
-
-#~ msgid "Property Groups"
-#~ msgstr "Tulajdonság-csoportok"
-
-#~ msgid "Quantity (in default UoM)"
-#~ msgstr "Mennyiség (az alapértelmezett mértékegységben)"
-
-#~ msgid "Ready for production"
-#~ msgstr "Gyártásra készen áll"
-
-#~ msgid "Ready to Produce"
-#~ msgstr "Gyártásra kész"
-
-#~ msgid "Reference to a position in an external plan."
-#~ msgstr "Hivatkozás egy külső területre."
-
-#~ msgid "Reserve"
-#~ msgstr "Lefoglalás"
-
-#~ msgid "Rounding applied on the product quantity."
-#~ msgstr "A termékmennyiségen alkalmazott kerekítés."
-
-#~ msgid "Rounding efficiency"
-#~ msgstr "Kerekítési hatékonyság"
-
-#~ msgid ""
-#~ "Routings indicates all the Work Centers used, for how long and/or cycles."
-#~ "If Routings is set then,the third tab of a production order (Work "
-#~ "Centers) will be automatically pre-completed."
-#~ msgstr ""
-#~ "Az útvonal az összes használatban lévő Munka Állomást, futási idejét és/"
-#~ "agy ciklusai mutatja. Ha az útvonal be van állítva,  akkor a gyártási "
-#~ "megbízásnál (Munka Állomás) automatikusan előre-gyártást lesz végezve."
-
-#~ msgid "Scheduled Date"
-#~ msgstr "Tervezett dátum"
-
-#~ msgid "Scheduled Products"
-#~ msgstr "Tervezett termékek"
-
-#~ msgid "Scheduled goods"
-#~ msgstr "Tervezett áruk"
-
-#~ msgid "Scrap Products"
-#~ msgstr "Selejt termék"
-
-#~ msgid "Select Quantity"
-#~ msgstr "Mennyiség kiválasztása"
-
-#~ msgid ""
-#~ "Set: When processing a sales order for this product, the delivery order "
-#~ "will contain the raw materials, instead of the finished product."
-#~ msgstr ""
-#~ "Beállítás: ha egy vásárlói megrendelést dolgoz fel erre a termékre "
-#~ "vonatkozólag, a kézbesítési bizonylat/szállítólevél a nyersanyagokat "
-#~ "fogja tartalmazni a késztermék helyett."
-
-#~ msgid "Source Document"
-#~ msgstr "Forrás dokumentum"
-
-#~ msgid "Specify Cost of Work Center per cycle."
-#~ msgstr "Adjon meg munkaállomás költséget."
-
-#~ msgid "Specify Cost of Work Center per hour."
-#~ msgstr "Határozzon meg óránkénti munkaállomás költséget"
-
-#~ msgid "Technical field used to make the traceability of produced products"
-#~ msgstr "Technikai mező a megtermelt termékek nyomon követhetőségéhez."
-
-#~ msgid ""
-#~ "The Properties in Odoo are used to select the right bill of\n"
-#~ "                materials for manufacturing a product when you have "
-#~ "different\n"
-#~ "                ways of building the same product.  You can assign "
-#~ "several\n"
-#~ "                properties to each bill of materials.  When a "
-#~ "salesperson\n"
-#~ "                creates a sales order, they can relate it to several "
-#~ "properties\n"
-#~ "                and Odoo will automatically select the BoM to use "
-#~ "according\n"
-#~ "                the needs."
-#~ msgstr ""
-#~ "A tulajdonságok az Odoo rendszer a gyártáshoz megfelelő \n"
-#~ "                anyagjegyzék kiválasztására használja, ha különböző "
-#~ "termék felépítési \n"
-#~ "                módjai vannak ugyanarra a termékre.  Hozzárendelhet több\n"
-#~ "                tulajdonságot mindegyik anyagjegyzékhez.  Ha egy "
-#~ "értékesítő\n"
-#~ "                létrehoz egy vásárlói megrendelést, kapcsolhatja több "
-#~ "tulajdonsághoz\n"
-#~ "                és az Odoo rendszer automatikusan kiválasztja a "
-#~ "követelményeknek megfelelő \n"
-#~ "                anyagjegyzéket."
-
-#~ msgid "The capacity per cycle must be strictly positive."
-#~ msgstr "A ciklusonkénti kapacitásnak mindenképpen pozitívnak kell lennie."
-
-#~ msgid ""
-#~ "The list of operations (list of work centers) to produce the finished "
-#~ "product. The routing is mainly used to compute work center costs during "
-#~ "operations and to plan future loads on work centers based on production "
-#~ "plannification."
-#~ msgstr ""
-#~ "A késztermék létrehozásához szükséges műveletek (munkaállomások) listája. "
-#~ "A gyártási eljárások fő funkciója a munkaállomások működési költségeinek "
-#~ "számítása és a munkaállomások terheltségének tervezése a gyártási "
-#~ "tervezésén keresztül."
-
-#~ msgid ""
-#~ "This allows to add state, date_start,date_stop in production order "
-#~ "operation lines (in the \"Work Centers\" tab).\n"
-#~ "-This installs the module mrp_operations."
-#~ msgstr ""
-#~ "Ez lehetővé teszi az állapot, elkezdés_dátuma,befelyezés_dátuma sorok "
-#~ "hozzáadását a termelési megrendelés soraihoz (a \"Munka állomások\" "
-#~ "fülön).\n"
-#~ "-Ez a mrp_operations modult telepíti."
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Ez a mező ábrázolja a kutatás hatékonyságát a teljes feladaton. pl. "
-#~ "egyedül végrehajtott kutatási 5 napos fázis 5 tárgyban kiosztva neki, ez "
-#~ "a 100% terhelés erre a fázisra alap értelmezve, de ha a hatékonyságot "
-#~ "200% tesszük akkor ez a terhelés \"csak\" 50%."
-
-#~ msgid "Time for 1 cycle (hour)"
-#~ msgstr "Ciklusidő (óra)"
-
-#~ msgid "Time in hours for doing one cycle."
-#~ msgstr "Idő (órában), ami egy ciklus elvégzéséhez szükséges"
-
-#~ msgid "Time in hours for the cleaning."
-#~ msgstr "A tisztítás ideje (órákban)."
-
-#~ msgid "Time in hours for the setup."
-#~ msgstr "A beállításhoz szükséges idő órákban megadva."
-
-#~ msgid ""
-#~ "Time in hours for this Work Center to achieve the operation of the "
-#~ "specified routing."
-#~ msgstr ""
-#~ "Ennek a Munkaállomásnak a meghatározott útvonal végrehajtás ideje órákban "
-#~ "megadva."
-
-#~ msgid "Total Cycles"
-#~ msgstr "Összes ciklus"
-
-#~ msgid "Total Hours"
-#~ msgstr "Összes óra"
-
-#~ msgid "Type"
-#~ msgstr "Típus"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Urgent"
-#~ msgstr "Sürgős"
-
-#~ msgid "Valid From"
-#~ msgstr "Érvényesség kezdete"
-
-#~ msgid "Valid From Date by Month"
-#~ msgstr "Ettől a havi dátumtól érvényes"
-
-#~ msgid "Valid From Month"
-#~ msgstr "Ettől a hónaptól érvényes"
-
-#~ msgid "Valid Until"
-#~ msgstr "Érvényesség vége"
-
-#~ msgid "Validity of component. Keep empty if it's always valid."
-#~ msgstr "Összetevő érvényessége. Hagyja üresen, ha mindíg érvényes."
-
-#~ msgid "Validity of this BoM. Keep empty if it's always valid."
-#~ msgstr ""
-#~ "Érvényesítés erre a anyagjegyzékre. Hagyja üresen, ha mindig érvényes."
-
-#~ msgid "Very Urgent"
-#~ msgstr "Nagyon sürgős"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid ""
-#~ "When the production order is created the status is set to 'Draft'.\n"
-#~ "If the order is confirmed the status is set to 'Waiting Goods.\n"
-#~ "If any exceptions are there, the status is set to 'Picking Exception.\n"
-#~ "If the stock is available then the status is set to 'Ready to Produce.\n"
-#~ "When the production gets started then the status is set to 'In "
-#~ "Production.\n"
-#~ "When the production is over, the status is set to 'Done'."
-#~ msgstr ""
-#~ "Ha a munka megbízás elkészült, akkor az állapot jelző a 'Terv'-re lesz "
-#~ "állítva.\n"
-#~ "                Ha a megrendelés visszaigazolt, akkor az állapot jelző a "
-#~ "'Várakozó termék'-ra lesz állítva.\n"
-#~ "                Ha kifogás van ebben, akkor az állapot jelző a "
-#~ "'Kiválogatás kivétel'-re lesz állítva.\n"
-#~ "                Ha a raktáron vannak a termékek, akkor az állapot jelző a "
-#~ "'Gyártásra kész'-re lesz állítva.\n"
-#~ "                Ha a gyártás elindul, akkor az állapot jelző a 'Gyártás "
-#~ "alatt'-ra lesz állítva.\n"
-#~ "                Ha a gyártás elkészült, akkor az állapot jelző a "
-#~ "'Elkészült'-re lesz állítva."
-
-#~ msgid "Work Center Product"
-#~ msgstr "Munkaállomás termék"
-
-#~ msgid "Work Centers Utilisation"
-#~ msgstr "Munkaállomások használata"
-
-#~ msgid "Work Order Planning"
-#~ msgstr "Munka megrendelés tervezés"
-
-#~ msgid "max"
-#~ msgstr "max."
-
-#~ msgid "min"
-#~ msgstr "perc"
-
-#~ msgid "plus"
-#~ msgstr "plusz"
-
-#~ msgid "unknown"
-#~ msgstr "ismeretlen"

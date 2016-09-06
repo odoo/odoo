@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-07-19 15:52+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -157,11 +157,6 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Egység ár</strong>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_backend_link
-msgid "Access the complete Sale application"
-msgstr "Teljes Értékesítési alkalmazás elérése"
-
-#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Amount Due"
 msgstr "Esedékes összeg"
@@ -170,15 +165,6 @@ msgstr "Esedékes összeg"
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Due Date"
 msgstr "Fizetési határidő"
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid ""
-"If you wish to access the complete application to manage your orders, you "
-"can follow"
-msgstr ""
-"Ha a teljes alkalmazást el szeretné érni a megrendelései eléréséhez, akkor "
-"követheti"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
@@ -203,7 +189,7 @@ msgstr "Megrendeléseim"
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "My Quotes"
-msgstr ""
+msgstr "Árajánlataim"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -226,6 +212,11 @@ msgid "Pay Now"
 msgstr "Fizessen most"
 
 #. module: website_portal_sale
+#: model:ir.model,name:website_portal_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "Quotation"
 msgstr "Árajánlat"
@@ -238,6 +229,11 @@ msgstr "Árajánlat #"
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
 msgid "Quotes"
+msgstr "Árajánlatok"
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_payment_transaction_sale_order_id
+msgid "Sale Order"
 msgstr ""
 
 #. module: website_portal_sale
@@ -306,15 +302,3 @@ msgstr "Megrendelései"
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Your Quotes"
 msgstr "Árajánlatai"
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid "this link"
-msgstr "ezt az elérési linket"
-
-#~ msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
-#~ msgstr ""
-#~ "<span>Mutass többet</span><span class=\"hidden\">Mutass kevesebbet</span>"
-
-#~ msgid "My Account"
-#~ msgstr "Fiókom"

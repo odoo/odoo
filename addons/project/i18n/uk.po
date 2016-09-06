@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:07+0000\n"
-"PO-Revision-Date: 2016-08-13 22:20+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>\n"
+"PO-Revision-Date: 2016-09-03 13:39+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
 "Language: uk\n"
@@ -397,6 +397,10 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-pencil-square-o\"/>\n"
+"<strong> Створити шаблони звітів</strong>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -422,6 +426,11 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-sitemap\"/>\n"
+"<strong> Налаштування робочого \n"
+"процесу</strong>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -432,6 +441,10 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-tasks\"/>\n"
+"<strong> Прямо тут</strong>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -445,6 +458,11 @@ msgid ""
 "Workload</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-thumb-tack\"/>\n"
+"<strong> Вправа 1</strong><br/>\n"
+"<span class=\"small\">Перевірити робоче навантаження</span>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -458,6 +476,11 @@ msgid ""
 "close an Issue</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-thumb-tack\"/>\n"
+"<strong> Вправа 2</strong><br/>\n"
+"<span class=\"small\">Відкласти закриття питання</span>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -482,6 +505,10 @@ msgid ""
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"/>\n"
+"                                        <strong> Табелі</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -505,6 +532,9 @@ msgid ""
 "number of customizations !\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Зв'яжіться з нами для налаштування програми:</strong><br/>\n"
+"У нас є спеціальні опції для безлічі налаштувань!\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -514,6 +544,10 @@ msgid ""
 "custom reports.\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Ми тут, щоб Вам допомогти:</strong> Якщо Вам не вдається "
+"досягти бажаного ККД, зв'яжіться з нами і ми допоможемо Вам створити "
+"персоналізовані звіти.\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -636,7 +670,7 @@ msgstr "<strong>Аналізувати звіти</strong> (щороку)"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Approve your Timesheets</strong> (every week)"
-msgstr ""
+msgstr "<strong>Затвердьте свої розклади</strong> (щотижня)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1339,9 +1373,9 @@ msgstr "Чіткий опис та ціль"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:49
-#, fuzzy, python-format
+#, python-format
 msgid "Click on a card to get the details of the task."
-msgstr "Натисніть, щоб додати нову стадію у  конвеєрі завдань."
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1389,9 +1423,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
-#, fuzzy
 msgid "Click to create a new project.<br>"
-msgstr "Створити новий проект."
+msgstr ""
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1491,9 +1524,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project_simplified
-#, fuzzy
 msgid "Create"
-msgstr "Створив"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1502,9 +1534,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
-#, fuzzy
 msgid "Create a Project"
-msgstr "Створити новий проект."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1530,9 +1561,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
-#, fuzzy
 msgid "Create date"
-msgstr "Дата створення"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1860,9 +1890,8 @@ msgstr "Псевдонім ел. пошти"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Псевдонім ел. пошти"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1986,7 +2015,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Tasks Pipeline"
-msgstr "згорнуті завдання уконвеєрі"
+msgstr "Згорнуті завдання у конвеєрі"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2140,7 +2169,7 @@ msgstr ""
 #: code:addons/project/models/project.py:591
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Беру собі"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -2466,9 +2495,9 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "Let's create your first project."
-msgstr "Створити новий проект."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_pad
@@ -2547,9 +2576,8 @@ msgstr "Більше <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
-#, fuzzy
 msgid "More Info"
-msgstr "Додаткова інформація"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2895,9 +2923,8 @@ msgstr "Псевдонім проекту"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
-#, fuzzy
 msgid "Project Count"
-msgstr "Завдання проекту"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -2964,14 +2991,13 @@ msgstr "Проекти"
 
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
 msgid "Projects & Tasks"
-msgstr "Завдання проекту"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Projects using this stage"
-msgstr ""
+msgstr "Проекти, що використовують цю стадію"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -3269,7 +3295,7 @@ msgstr "Стадію змінено"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "Опис стадій та підказки"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
@@ -3989,9 +4015,8 @@ msgstr "Ваші проекти:"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
-#, fuzzy
 msgid "activate a sample project"
-msgstr "Створити новий проект."
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4085,134 +4110,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid "Budget Lines"
-#~ msgstr "Рядки бюджету"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "Позначте це поле, якщо проект використовує табелі робочого часу"
-
-#~ msgid "Close"
-#~ msgstr "Закрити"
-
-#~ msgid "Closed"
-#~ msgstr "Закрито"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Делеговані завдання"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Помилка! Не можна створювати багаторазові завдання."
-
-#~ msgid "Extra features"
-#~ msgstr "Додаткові можливості"
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid "Generate tasks from sale orders"
-#~ msgstr "Створювати завдання з замовлень на продаж"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Last Modification Date"
-#~ msgstr "Дата останньої модифікації"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Повідомлення та історія бесіди"
-
-#~ msgid "No automatic task creation"
-#~ msgstr "Немає автоматичного створення завдань"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Open"
-#~ msgstr "Відкрито"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Відкрити меню проекту"
-
-#~ msgid "Parent Tasks"
-#~ msgstr "Батьківські завдання"
-
-#~ msgid "Pending"
-#~ msgstr "В очікуванні"
-
-#~ msgid "Private Project: followers only"
-#~ msgstr "Приватний проект: тільки підписники"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "Одиниця виміру часу проекту"
-
-#~ msgid "Sale Service"
-#~ msgstr "Сервіс продажу"
-
-#~ msgid "State"
-#~ msgstr "Стан"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Підписки"
-
-#~ msgid "Time Scheduling"
-#~ msgstr "Планування часу"
-
-#~ msgid "Time on Tasks"
-#~ msgstr "Час завдань"
-
-#~ msgid "Timesheets"
-#~ msgstr "Табелі"
-
-#~ msgid "Type of Account"
-#~ msgstr "Тип рахунку"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на веб-сайті"
-
-#~ msgid "unknown"
-#~ msgstr "невідомий"
-
-#, fuzzy
-#~ msgid "Sub-tasks"
-#~ msgstr "завдання"

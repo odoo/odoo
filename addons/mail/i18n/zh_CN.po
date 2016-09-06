@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-09 07:32+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -743,6 +743,11 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
+msgstr ""
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
 msgstr ""
 
 #. module: mail
@@ -2101,7 +2106,7 @@ msgstr "不活动的别名"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2140,7 +2145,7 @@ msgstr "无效的记录集：应为模型(无记录)或记录的记录单"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr "邀请"
@@ -3885,7 +3890,7 @@ msgstr "表情符"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4557,7 +4562,7 @@ msgstr "你可以通过发送邮件给%(email_link)s.来增加新的%(document)s
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "你已被邀请："
@@ -4572,14 +4577,14 @@ msgstr "你可以对这个模版附加文件，可以附加到所有基于此模
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "你不再订阅<b>%s</b>。"
@@ -4744,71 +4749,3 @@ msgstr "销售"
 #, python-format
 msgid "this document"
 msgstr "这个单据"
-
-#~ msgid ""
-#~ "* Smiley are only used for HTML code to display an image * Text (default "
-#~ "value) is use to substitute text with another text"
-#~ msgstr ""
-#~ "* 笑脸仅用于HTML代码以显示图像 * 文本 (默认值) 是用来与其他文本代替文本"
-
-#~ msgid "Activity"
-#~ msgstr "活动"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr "附件是通过模型 / res_id连接于文档并通过此字段链接到消息。"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "自动整理HTML内容"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "自动设置needaction为已读"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "点击在你的地址簿添加联系人"
-
-#~ msgid "Compose a new message"
-#~ msgstr "撰写新消息"
-
-#~ msgid "Contacts"
-#~ msgstr "联系人"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "对话已最小化"
-
-#~ msgid "Join Group"
-#~ msgstr "加入群组"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo帮助您轻松地跟踪有关一个客户所有的活动，会谈，商业机会历史，文档等。"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr "消息的富文本/HTML版本（这里可以使用占位符）"
-
-#~ msgid "Send mail"
-#~ msgstr "发送邮件"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "丢失的html代码替换快捷方式"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "使用该模版的这种类型的文档都是可选的"
-
-#~ msgid "The shortcut which must be replace in the Chat Messages"
-#~ msgstr "在Chat Messages中的快捷方式必须被替换掉"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "追踪值被保存在一个单一的模型中。这个字段允许重新构建追踪值并且在模型上生成"
-#~ "统计分析"
-
-#~ msgid "Unsubscribed"
-#~ msgstr "退订的"

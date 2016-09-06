@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-01-14 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/"
@@ -43,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -1455,7 +1455,7 @@ msgstr ""
 "                            to the loss of their possible customisations."
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1693,6 +1693,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1796,9 +1803,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Company"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3007,7 +3013,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -3606,9 +3612,8 @@ msgstr "Vendor Information"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Pricelists"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3920,94 +3925,3 @@ msgstr "to"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "unknown"
-
-#~ msgid "Action Needed"
-#~ msgstr "Action Needed"
-
-#~ msgid ""
-#~ "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-#~ "                                    The smooth anodized aluminum design "
-#~ "makes iPod nano feel as good as it sounds.\n"
-#~ "                                    And iPod nano wouldn’t be iPod nano "
-#~ "without gorgeous, hard-to-choose-from color."
-#~ msgstr ""
-#~ "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-#~ "                                    The smooth anodised aluminium design "
-#~ "makes iPod nano feel as good as it sounds.\n"
-#~ "                                    And iPod nano wouldn’t be iPod nano "
-#~ "without gorgeous, hard-to-choose-from colour."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date of the last message posted on the record."
-
-#~ msgid ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast Colors are vivid and "
-#~ "text is sharp on the iPad mini display.\n"
-#~ "                                    But what really makes it stand out is "
-#~ "its size. At 7.9 inches,\n"
-#~ "                                    it’s perfectly sized to deliver an "
-#~ "experience every bit as big as iPad."
-#~ msgstr ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast Colours are vivid and "
-#~ "text is sharp on the iPad mini display.\n"
-#~ "                                    But what really makes it stand out is "
-#~ "its size. At 7.9 inches,\n"
-#~ "                                    it’s perfectly sized to deliver an "
-#~ "experience every bit as big as iPad."
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Channels)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Followers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "If checked new messages require your attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "If checked, new messages require your attention."
-
-#~ msgid "Individually calibrated for true-to-life color."
-#~ msgstr "Individually calibrated for true-to-life colour."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is Follower"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Last Message Date"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Messages and communication history"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Number of Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Number of messages which requires an action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Number of unread messages"
-
-#~ msgid ""
-#~ "Soft covers are available separately in blue, green or orange. Pick a "
-#~ "color to match your style."
-#~ msgstr ""
-#~ "Soft covers are available separately in blue, green or orange. Pick a "
-#~ "colour to match your style."
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Unread Messages"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Unread Messages Counter"

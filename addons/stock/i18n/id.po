@@ -3,14 +3,15 @@
 # * stock
 #
 # Translators:
+# firman firman <firman.olxbpn@gmail.com>, 2016
 # Martin Trigaux, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:07+0000\n"
-"PO-Revision-Date: 2016-02-22 13:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
+"PO-Revision-Date: 2016-08-26 03:27+0000\n"
+"Last-Translator: firman firman <firman.olxbpn@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
 "Language: id\n"
@@ -21,15 +22,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Menciptakan rute dropship dan menambahkan tes-ini lebih kompleks menginstal "
-"stock_dropshipping modul."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:218
@@ -46,7 +43,6 @@ msgstr "Disimpan"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_state
 #: model:ir.model.fields,help:stock.field_stock_picking_state
-#, fuzzy
 msgid ""
 " * Draft: not confirmed yet and will not be scheduled until confirmed\n"
 " * Waiting Another Operation: waiting for another move to proceed before it "
@@ -57,25 +53,6 @@ msgid ""
 " * Transferred: has been processed, can't be modified or cancelled anymore\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
-"\n"
-"                * Draft: belum dikonfirmasi dan tidak akan dijadwalkan "
-"sampai dikonfirmasi\n"
-"\n"
-"                * Menunggu Operasi lain: menunggu langkah lain untuk "
-"melanjutkan sebelum menjadi otomatis tersedia (misalnya di Make-To-Order "
-"mengalir)\n"
-"\n"
-"                * Menunggu Ketersediaan: masih menunggu ketersediaan produk\n"
-"\n"
-"                * Sebagian Tersedia: beberapa produk yang tersedia dan "
-"dilindungi\n"
-"\n"
-"                * Siap Transfer: produk-undang, hanya menunggu konfirmasi.\n"
-"\n"
-"                * Ditransfer: telah diproses, tidak dapat diubah atau "
-"dibatalkan lagi\n"
-"\n"
-"                * Dibatalkan: telah dibatalkan, tidak dapat dikonfirmasi lagi"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -96,7 +73,6 @@ msgstr "%s: Transit Lokasi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -107,17 +83,9 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* New: Ketika bergerak stok dibuat dan belum dikonfirmasi. * Menunggu Pindah "
-"lain: negara ini dapat dilihat ketika bergerak menunggu satu sama lain, "
-"misalnya dalam aliran dirantai. * Menunggu Ketersediaan: Negara ini tiba "
-"saat resolusi pengadaan tidak lurus ke depan. Ini mungkin perlu scheduler "
-"untuk menjalankan, komponen untuk saya diproduksi ... * Tersedia: Ketika "
-"produk yang dilindungi, sudah diatur untuk 'Tersedia'. * Selesai: Ketika "
-"pengiriman diproses, negara 'Selesai'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
-#, fuzzy
 msgid ""
 "* Vendor Location: Virtual location representing the source location for "
 "products coming from your vendors\n"
@@ -138,31 +106,6 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-"
 "companies or inter-warehouses operations"
 msgstr ""
-"* Penjual Lokasi: lokasi Virtual mewakili lokasi sumber untuk produk yang "
-"berasal dari vendor Anda\n"
-"                       \n"
-"* View: lokasi Virtual digunakan untuk membuat struktur hirarkis untuk "
-"gudang Anda, menggabungkan lokasi anaknya; tidak dapat secara langsung "
-"mengandung produk\n"
-"                       \n"
-"* Internal Lokasi: lokasi fisik di dalam gudang Anda sendiri,\n"
-"                       \n"
-"* Pelanggan Lokasi: lokasi Virtual mewakili lokasi tujuan untuk produk "
-"dikirim ke pelanggan Anda\n"
-"                       \n"
-"* Persediaan Loss: Virtual lokasi menjabat sebagai mitra untuk operasi "
-"persediaan digunakan untuk memperbaiki tingkat stok (persediaan fisik)\n"
-"                       \n"
-"* Pengadaan: lokasi Virtual melayani rekan sebagai sementara untuk operasi "
-"pengadaan ketika sumber (vendor atau produksi) belum diketahui. Lokasi ini "
-"harus kosong ketika scheduler pengadaan telah selesai berjalan.\n"
-"                       \n"
-"* Produksi: Virtual rekan lokasi untuk operasi produksi: lokasi ini "
-"mengkonsumsi bahan baku dan menghasilkan produk jadi\n"
-"                       \n"
-"* Transit Lokasi: lokasi Counterpart yang harus digunakan dalam antar-"
-"perusahaan atau operasi antar-gudang\n"
-"                      "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -520,9 +463,8 @@ msgstr "Tanggal"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
-#, fuzzy
 msgid "<strong>Delivered Quantity</strong>"
-msgstr "<strong>Kuantitas</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -552,9 +494,8 @@ msgstr "<strong>Lokasi</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
-#, fuzzy
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>No Serial</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -647,9 +588,8 @@ msgstr "<strong>Pesanan (asal)</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
-#, fuzzy
 msgid "<strong>Ordered Quantity</strong>"
-msgstr "<strong>Kuantitas</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -746,17 +686,12 @@ msgstr "Penjualan aliran klasik terlihat seperti berikut:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
-#, fuzzy
 msgid ""
 "A good inventory management aims to optimize stock levels: not too low (or\n"
 "                        you may find yourself out of stock) and not too high "
 "(your products occupy\n"
 "                        space and may lose value)."
 msgstr ""
-"Manajemen persediaan baik yang bertujuan untuk mengoptimalkan tingkat stok: "
-"tidak terlalu rendah (atau Anda mungkin menemukan diri Anda keluar dari "
-"stok) dan tidak terlalu tinggi (produk Anda menempati ruang dan mungkin "
-"kehilangan nilai)."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -835,9 +770,8 @@ msgstr "Semua"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_quant_ids
-#, fuzzy
 msgid "All Bulk Content"
-msgstr "Sebagian besar konten"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -902,15 +836,11 @@ msgstr "Memungkinkan pemasok untuk mengirimkan langsung ke pelanggan Anda"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_procurement_jit
-#, fuzzy
 msgid ""
 "Allows you to automatically reserve the available\n"
 "        products when confirming a sale order.\n"
 "            This installs the module procurement_jit."
 msgstr ""
-"Memungkinkan Anda untuk secara otomatis mereservasi produk yang tersedia "
-"ketika konfirmasi order untuk menjual.\n"
-"                Ini akan menginstal modul procurement_jit."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_packaging
@@ -1190,7 +1120,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
-#, fuzzy
 msgid ""
 "By default, the system will take from the stock in the source location and "
 "passively wait for availability.The other possibility allows you to directly "
@@ -1198,12 +1127,6 @@ msgid ""
 "stock) to gather products. If we want to chain moves and have this one to "
 "wait for the previous,this second option should be chosen."
 msgstr ""
-"Secara default, sistem akan mengambil dari stok di lokasi sumber dan "
-"menunggu secara pasif ketersediaan. Kemungkinan lain memungkinkan Anda untuk "
-"langsung membuat pengadaan di lokasi sumber (dan dengan demikian mengabaikan "
-"stoknya saat ini) untuk mengumpulkan produk. Jika kita ingin rantai bergerak "
-"dan memiliki yang satu ini untuk menunggu sebelumnya, pilihan kedua ini "
-"harus dipilih."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1294,9 +1217,8 @@ msgstr "Memeriksa adanya quants terkait dengan memetik ini"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_pack_operation_exist
-#, fuzzy
 msgid "Check the existence of pack operation on the picking"
-msgstr "Memeriksa keberadaan kemasan operasi pada mengambil"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
@@ -1349,9 +1271,8 @@ msgstr "Klik untuk menambahkan lokasi."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
-#, fuzzy
 msgid "Click to add a lot/serial number."
-msgstr "Klik untuk menambahkan nomor seri."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1380,9 +1301,8 @@ msgstr "Klik untuk membuat sebuah stok operasi."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
-#, fuzzy
 msgid "Click to define a new product."
-msgstr "Klik untuk mendefinisikan sebuah gudang yang baru."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -1406,9 +1326,8 @@ msgstr "Klik untuk mendaftar tanda terima untuk produk ini."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_scrap
-#, fuzzy
 msgid "Click to scrap products."
-msgstr "Klik untuk menambahkan rute."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -1532,9 +1451,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
-#, fuzzy
 msgid "Count picking"
-msgstr "Urutan memetik"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
@@ -1548,9 +1466,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_late
-#, fuzzy
 msgid "Count picking late"
-msgstr "Daftar Jemput"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_ready
@@ -1575,15 +1492,13 @@ msgstr "Membuat Backorder?"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_tree_view
-#, fuzzy
 msgid "Create Date"
-msgstr "Tanggal Pembuatan"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
-#, fuzzy
 msgid "Create New Lots/Serial Numbers"
-msgstr "Mengelola banyak / nomor seri"
+msgstr ""
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -1924,9 +1839,8 @@ msgstr "Lokasi sumber default"
 #: model:ir.model.fields,help:stock.field_stock_production_lot_product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_quant_product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_uom
-#, fuzzy
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Klik untuk membuat sebuah stok operasi."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
@@ -1964,7 +1878,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
-#, fuzzy
 msgid ""
 "Define your locations to reflect your warehouse structure and\n"
 "            organization. Odoo is able to manage physical locations\n"
@@ -1973,10 +1886,6 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
-"Menentukan lokasi Anda untuk mencerminkan gudang struktur dan organisasi "
-"Anda. Odoo mampu mengelola lokasi fisik (gudang, rak, bin, dll), mitra "
-"lokasi (pelanggan, vendor) dan lokasi virtual yang mitra transaksi stok "
-"seperti pembuatan pesanan konsumsi, persediaan, dll."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -2016,7 +1925,7 @@ msgid "Delay (days)"
 msgstr "Menunda (hari)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:348
 #, python-format
 msgid "Delivered Qty"
 msgstr "Kuantitas yang dikirimkan"
@@ -2053,9 +1962,8 @@ msgstr "Pengiriman Slip"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Pengiriman Slip"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2236,9 +2144,8 @@ msgstr "Tidak melacak item produk individu"
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
-#, fuzzy
 msgid "Do not use Expiration Date on serial numbers"
-msgstr "Menentukan tanggal kedaluwarsa pada nomor seri"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
@@ -2301,7 +2208,6 @@ msgstr "Pelanggan Eropa"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
-#, fuzzy
 msgid ""
 "Every stock operation in Odoo moves the products from one\n"
 "            location to another one.  For instance, if you receive products\n"
@@ -2309,13 +2215,9 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
-"Setiap operasi stok di Odoo bergerak produk dari satu lokasi ke satu sama "
-"lain.  Misalnya, jika Anda menerima produk dari vendor, maka Odoo akan "
-"bergerak produk dari Vendor lokasi ke lokasi stok. Setiap laporan dapat "
-"dilakukan pada fisik, pasangan atau lokasi virtual."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:629
+#: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr "Segala sesuatu di dalam sebuah kemasan harus di lokasi yang sama"
@@ -2425,7 +2327,7 @@ msgstr ""
 "dengan tipe 'internal'."
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:343
 #: model:ir.model.fields,field_description:stock.field_product_template_virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
@@ -2443,31 +2345,31 @@ msgid "Full Location Name"
 msgstr "Nama lokasi"
 
 #. module: stock
-#: code:addons/stock/models/product.py:338
+#: code:addons/stock/models/product.py:346
 #, python-format
 msgid "Future Deliveries"
 msgstr "Pengiriman masa depan"
 
 #. module: stock
-#: code:addons/stock/models/product.py:343
+#: code:addons/stock/models/product.py:351
 #, python-format
 msgid "Future P&L"
 msgstr "Masa depan P & L"
 
 #. module: stock
-#: code:addons/stock/models/product.py:353
+#: code:addons/stock/models/product.py:361
 #, python-format
 msgid "Future Productions"
 msgstr "Produksi Akan datang"
 
 #. module: stock
-#: code:addons/stock/models/product.py:348
+#: code:addons/stock/models/product.py:356
 #, python-format
 msgid "Future Qty"
 msgstr "Masa depan Qty"
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future Receipts"
 msgstr "Masa depan penerimaan"
@@ -2560,9 +2462,8 @@ msgstr "Memiliki kemasan operasi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
-#, fuzzy
 msgid "Has Scrap Moves"
-msgstr "Memo bergerak"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -2668,7 +2569,7 @@ msgstr "Bagaimana menggunakan banyak pelacakan:"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8356
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8358
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_id
@@ -2814,26 +2715,18 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_create_lots
-#, fuzzy
 msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
-"Jika ini dicentang hanya, itu akan Misalkan Anda ingin membuat nomor Serial "
-"baru / banyak, sehingga Anda dapat memberikan mereka dalam bidang teks."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_existing_lots
-#, fuzzy
 msgid ""
 "If this is checked, you will be able to choose the Lots/Serial Numbers. You "
 "can also decide to not put lots in this picking type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"Jika ini dicentang, Anda akan dapat memilih nomor seri / Lot. Anda juga "
-"dapat memutuskan untuk tidak menempatkan banyak dalam memilih jenis ini.  "
-"Ini berarti itu akan membuat stok dengan banyak tidak ada atau tidak "
-"menempatkan batasan pada banyak yang diambil."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_backorder_id
@@ -2977,9 +2870,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
-#, fuzzy
 msgid "Include Exhausted Products"
-msgstr "Produk diinventarisasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -3110,18 +3002,15 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_ref
-#, fuzzy
 msgid ""
 "Internal reference number in case it differs from the manufacturer's lot/"
 "serial number"
 msgstr ""
-"Nomor referensi internal dalam kasus  itu berbeda dari nomor seri pabrikan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
-#, fuzzy
 msgid "Inventoried Category"
-msgstr "Pemilik diinventarisasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_location_id
@@ -3224,9 +3113,8 @@ msgstr "Kehilangan persediaan"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
-#, fuzzy
 msgid "Inventory Move"
-msgstr "Bergerak persediaan."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
@@ -3261,9 +3149,8 @@ msgstr "Nilai persediaan"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
-#, fuzzy
 msgid "Inventory adjustment"
-msgstr "Penyesuaian persediaan"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3531,9 +3418,8 @@ msgstr "Lokalisasi"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
-#, fuzzy
 msgid "Locate"
-msgstr "Lokasi"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:12
@@ -3648,27 +3534,25 @@ msgstr "Serial Number"
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:198
-#, fuzzy, python-format
+#, python-format
 msgid "Lot/Serial Number Details"
-msgstr "Serial Number"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
-#, fuzzy
 msgid "Lot/Serial Number Inventory"
-msgstr "Serial Number"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:268
-#, fuzzy, python-format
+#, python-format
 msgid "Lot/Serial Number required"
-msgstr "Serial Number"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
-#, fuzzy
 msgid "Lot/Serial number for pack ops"
-msgstr "Serial Number"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_production_lot
@@ -3694,9 +3578,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lots_visible
-#, fuzzy
 msgid "Lots visible"
-msgstr "Banyak digunakan"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -3704,21 +3587,19 @@ msgstr "Banyak digunakan"
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
-#, fuzzy
 msgid "Lots/Serial Numbers"
-msgstr "Serial Number"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_pack_lot_ids
-#, fuzzy
 msgid "Lots/Serial Numbers Used"
-msgstr "Serial Number"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "MTO"
-msgstr "MTO"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3783,15 +3664,13 @@ msgstr "Mengelola lokasi default per produk"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Mengelola beberapa lokasi dan gudang"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Mengelola beberapa lokasi dan gudang"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3825,15 +3704,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_locations
-#, fuzzy
 msgid "Manage several stock locations"
-msgstr "Mengelola beberapa lokasi per gudang"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Mengelola beberapa lokasi per gudang"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3847,9 +3724,8 @@ msgstr "Proses Manual"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
-#, fuzzy
 msgid "Manufacturing Operation"
-msgstr "Proses Manual"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3868,9 +3744,8 @@ msgstr "Jumlah maksimum"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
-#, fuzzy
 msgid "Message for Stock Picking"
-msgstr "Memilih stok"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
@@ -3994,9 +3869,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
-#, fuzzy
 msgid "Move that created the return move"
-msgstr "bergerak yang menciptakan kembali bergerak"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
@@ -4109,9 +3983,8 @@ msgstr "Tidak ada persediaan belum"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
-#, fuzzy
 msgid "No Message"
-msgstr "Pesan"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -4306,9 +4179,9 @@ msgstr "Satu pemilik hanya"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:91
-#, fuzzy, python-format
+#, python-format
 msgid "One product category"
-msgstr "Salah satu produk hanya"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:98
@@ -4342,15 +4215,13 @@ msgstr "Nama operasi"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Jenis operasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
-#, fuzzy
 msgid "Operation id"
-msgstr "Operasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
@@ -4414,9 +4285,8 @@ msgstr "Proses Pemesanan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_ordered_qty
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_ordered_qty
-#, fuzzy
 msgid "Ordered Quantity"
-msgstr "Kuantitas Diperiksa"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -4441,12 +4311,11 @@ msgstr "Asli bergerak"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_original_location_id
-#, fuzzy
 msgid "Original location id"
-msgstr "Lokasi Internal"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "Otherwise make sure the right stock/owner is set."
 msgstr ""
@@ -4507,7 +4376,7 @@ msgid "Owner of the quants"
 msgstr "Pemilik quants"
 
 #. module: stock
-#: code:addons/stock/models/product.py:345
+#: code:addons/stock/models/product.py:353
 #, python-format
 msgid "P&L Qty"
 msgstr "P & L Qty"
@@ -4527,9 +4396,8 @@ msgstr "Rincian kemasan"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
-#, fuzzy
 msgid "Pack Operation / Moves Link"
-msgstr "Memiliki kemasan operasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
@@ -4581,15 +4449,13 @@ msgstr "Transfer kemasan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Jenis kemasan"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Jenis kemasan"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4665,9 +4531,8 @@ msgstr "Paket orangtua"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_parent_location_id
-#, fuzzy
 msgid "Parent location id"
-msgstr "Induk Lokasi"
+msgstr ""
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -4700,17 +4565,12 @@ msgstr "Lokasi rekanan"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
-#, fuzzy
 msgid ""
 "Periodical Inventories are used to count the number of products\n"
 "            available per location. You can use it once a year when you do\n"
 "            the general inventory or whenever you need it, to adapt the\n"
 "            current inventory level of a product."
 msgstr ""
-"Berkala persediaan yang digunakan untuk menghitung jumlah produk yang "
-"tersedia per lokasi. Anda dapat menggunakannya sekali setahun ketika Anda "
-"melakukan persediaan umum atau setiap kali Anda membutuhkannya, beradaptasi "
-"tingkat persediaan saat ini produk."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4891,9 +4751,8 @@ msgstr "Positif"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
-#, fuzzy
 msgid "Preferred Packaging"
-msgstr "pilihan Kemasan"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
@@ -5006,7 +4865,7 @@ msgid "Procurements"
 msgstr "Pengadaan"
 
 #. module: stock
-#: code:addons/stock/models/product.py:355
+#: code:addons/stock/models/product.py:363
 #, python-format
 msgid "Produced Qty"
 msgstr "Produksi Qty"
@@ -5149,7 +5008,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:318
+#: code:addons/stock/models/product.py:326
 #, python-format
 msgid "Products: "
 msgstr "Produk : "
@@ -5180,9 +5039,8 @@ msgstr "Mendorong aturan"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
-#, fuzzy
 msgid "Pushed Flow"
-msgstr "Mendorong arus"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
@@ -5357,15 +5215,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
-#, fuzzy
 msgid "Rate picking backorders"
-msgstr "Mengelola memetik dalam batch per pekerja"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
-#, fuzzy
 msgid "Rate picking late"
-msgstr "Daftar Jemput"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -5425,7 +5281,7 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "Menerima barang langsung dalam stok (langkah 1)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:340
 #, python-format
 msgid "Received Qty"
 msgstr "Menerima Qty"
@@ -5501,13 +5357,10 @@ msgstr "Bagian-bagian yang tersisa dari memetik sebagian diproses"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_remaining_qty
-#, fuzzy
 msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation."
 msgstr ""
-"Kuantitas yang tersisa di default UoM menurut bergerak dicocokkan dengan "
-"operasi ini."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_removal
@@ -5521,7 +5374,7 @@ msgid "Removal Strategy"
 msgstr "Penghapusan strategi"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:449
+#: code:addons/stock/models/stock_quant.py:467
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "Penghapusan strategi %s tidak dilaksanakan."
@@ -5548,16 +5401,14 @@ msgstr "Penataan aturan Cari"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_max_qty
-#, fuzzy
 msgid "Reordering max qty"
-msgstr "Penataan aturan"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_min_qty
-#, fuzzy
 msgid "Reordering min qty"
-msgstr "Penataan aturan"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -5576,15 +5427,13 @@ msgstr "Cadangan"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
-#, fuzzy
 msgid "Reserve products immediately after the sale order confirmation"
-msgstr "Reserve dijual pesanan segera pada konfirmasi"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
-#, fuzzy
 msgid "Reserve products manually or based on automatic scheduler"
-msgstr "Reserve dijual pesanan secara manual atau dengan menjalankan Penjadwal"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -5805,9 +5654,8 @@ msgstr "Dihapus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
-#, fuzzy
 msgid "Scraps"
-msgstr "pertarungan"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5854,33 +5702,33 @@ msgstr "Berurutan"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:658
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence in"
-msgstr "Urutan"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence internal"
-msgstr "Urutan internal yang"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:659
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence out"
-msgstr "Urutan keluar"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence packing"
-msgstr "Urutan kemasan"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:661
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence picking"
-msgstr "Urutan memetik"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -5998,21 +5846,17 @@ msgstr "Kulkas kecil"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Beberapa produk dapat dijual/dibeli dalam berbagai unit tindakan (lanjutan)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:787
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Some products require lots/serial numbers, so you need to specify those "
 "first!"
 msgstr ""
-"Beberapa produk memerlukan banyak, sehingga Anda perlu menentukan yang "
-"pertama!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6072,10 +5916,9 @@ msgstr "Menentukan kemasan untuk fokus inventaris Anda pada kemasan tertentu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
-#, fuzzy
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
-msgstr "Menentukan produk untuk fokus Anda persediaan pada produk tertentu."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
@@ -6179,9 +6022,8 @@ msgstr "Stok di tangan"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
-#, fuzzy
 msgid "Stock Operation"
-msgstr "Transaksi stok"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
@@ -6196,9 +6038,8 @@ msgstr "Memilih stok"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_move_ids
-#, fuzzy
 msgid "Stock move ids"
-msgstr "Perpindahan Stok"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6217,9 +6058,8 @@ msgstr "Stok bergerak yang telah diproses"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_quant_ids
-#, fuzzy
 msgid "Stock quant ids"
-msgstr "Lokasi Stok"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -6227,7 +6067,7 @@ msgid "Stockable"
 msgstr "Stockable"
 
 #. module: stock
-#: code:addons/stock/models/product.py:470
+#: code:addons/stock/models/product.py:478
 #, python-format
 msgid "Stockable Product"
 msgstr ""
@@ -6298,13 +6138,10 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_lot_id
-#, fuzzy
 msgid ""
 "Technical field used to depict a restriction on the lot/serial number of "
 "quants to consider when marking this move as 'done'"
 msgstr ""
-"Bidang teknik yang digunakan untuk menggambarkan batasan banyak quants untuk "
-"dipertimbangkan saat menandai langkah ini 'dilakukan'"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
@@ -6358,9 +6195,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "FedEx integrasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6370,15 +6206,11 @@ msgstr "Cetakan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_auto
-#, fuzzy
 msgid ""
 "The 'Manual Operation' value will create a stock move after the current one."
 "With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
-"'Otomatis Pindahkan' / 'Manual operasi' nilai akan membuat bergerak stok "
-"setelah satu saat ini.  Dengan 'Otomatis No langkah ditambahkan', lokasi "
-"diganti dalam bergerak asli."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6512,13 +6344,10 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_qty_multiple
-#, fuzzy
 msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
-"Kuantitas pengadaan akan dibulatkan hingga beberapa ini.  Jika itu adalah 0, "
-"kuantitas yang tepat akan digunakan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
@@ -6554,15 +6383,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:818
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"Bulatan / Anda Unit dari langkah-langkah %s bergerak vs %s pada produk tidak "
-"memungkinkan untuk melakukan operasi ini atau Anda tidak mentransfer memetik "
-"sekaligus."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:126
@@ -6574,10 +6400,10 @@ msgid "The selected inventory options are not coherent."
 msgstr "Pilihan yang dipilih persediaan tidak koheren."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
-#, fuzzy, python-format
+#: code:addons/stock/models/stock_quant.py:222
+#, python-format
 msgid "The serial number %s is already in stock."
-msgstr "Nomor seri %s sudah dalam stok"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:515
@@ -6711,14 +6537,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
-#, fuzzy
 msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products "
 "contained in lot."
 msgstr ""
-"Ini adalah daftar semua banyak produksi yang direkam. Bila Anda memilih "
-"banyak, Anda bisa mendapatkan ketertelusuran terkandung dalam banyak produk."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
@@ -6894,7 +6717,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
-#, fuzzy
 msgid ""
 "To check the trajectory of a lot, find it back in <strong><i>Inventory "
 "Control &gt; Serial Numbers / lots</i></strong>.\n"
@@ -6903,11 +6725,6 @@ msgid ""
 "                       filter the Quantitative Valuation of a product with a "
 "certain lot."
 msgstr ""
-"Untuk memeriksa lintasan banyak, menemukan kembali <strong><i>Inventory "
-"Control > nomor seri / Lot</i></strong>.\n"
-"                       Pilih Lo t dalam daftar dan klik pada <i>penelusuran</"
-"i>saya >. Anda juga dapat menyaring Penilaian kuantitatif produk dengan "
-"banyak tertentu."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6936,9 +6753,8 @@ msgstr "Hari Ini"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_total_qty
-#, fuzzy
 msgid "Total Quantity"
-msgstr "Kuantitas teoritis"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_total_route_ids
@@ -6958,7 +6774,6 @@ msgstr "Bisa Ditelusuri"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_product_expiry
-#, fuzzy
 msgid ""
 "Track different dates on products and serial numbers.\n"
 "                The following dates can be tracked:\n"
@@ -6968,10 +6783,6 @@ msgid ""
 "                - alert date.\n"
 "                This installs the module product_expiry."
 msgstr ""
-"Melacak tanggal yang berbeda pada produk dan nomor seri.\n"
-"                    Tanggal berikut dapat dilacak: - akhir kehidupan - best "
-"sebelum tanggal - penghapusan tanggal - tanggal waspada.\n"
-"                    Ini akan menginstal modul product_expiry."
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_production_lot:0
@@ -6986,7 +6797,7 @@ msgid "Tracking"
 msgstr "pelacakan"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:960
+#: code:addons/stock/models/stock_move.py:959
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6997,7 +6808,7 @@ msgstr "red cross permindahan darah"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
 msgid "Transfer Destination Address"
-msgstr ""
+msgstr "Alamat tujuan transfer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
@@ -7059,9 +6870,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
-#, fuzzy
 msgid "Unique Lot/Serial Number"
-msgstr "Nomor seri yang unik"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
@@ -7113,7 +6923,7 @@ msgid "Units of Measures"
 msgstr "Unit tindakan"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:551
+#: code:addons/stock/models/stock_quant.py:569
 #, python-format
 msgid "Unknown Pack"
 msgstr "Paket tidak diketahui"
@@ -7147,7 +6957,7 @@ msgid "Unpack"
 msgstr "Membongkar"
 
 #. module: stock
-#: code:addons/stock/models/product.py:350
+#: code:addons/stock/models/product.py:358
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Qty Tidak direncanakan"
@@ -7182,13 +6992,11 @@ msgstr "Penting"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
-#, fuzzy
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Mengelola banyak / nomor seri"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
-#, fuzzy
 msgid ""
 "Use this assistant to generate a procurement request for this\n"
 "                    product. According to the product configuration, this "
@@ -7197,9 +7005,6 @@ msgid ""
 "or\n"
 "                    a new task."
 msgstr ""
-"Menggunakan Asisten ini untuk menghasilkan pengadaan permintaan untuk produk "
-"ini. Menurut konfigurasi produk, ini dapat memicu rancangan purchase order, "
-"Orde manufaktur atau tugas baru."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
@@ -7233,9 +7038,8 @@ msgstr "Tervalidasi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_variant_count
-#, fuzzy
 msgid "Variant Count"
-msgstr "Varian nomor"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_variant_count
@@ -7385,18 +7189,16 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_warning_stock
 #: selection:res.partner,picking_warn:0
-#, fuzzy
 msgid "Warning"
-msgstr "Perhatian!"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
-#, fuzzy
 msgid "Warning on the Picking"
-msgstr "Deskripsi pada memetik"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:311
+#: code:addons/stock/models/product.py:319
 #, python-format
 msgid "Warning!"
 msgstr "Perhatian!"
@@ -7434,9 +7236,9 @@ msgstr "Semoga panduan ini membantu Anda menerapkan Odoo persediaan."
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:11
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Produk diinventarisasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7587,17 +7389,13 @@ msgstr "Anda dapat menghapus baris untuk mengabaikan beberapa produk."
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
-#, fuzzy
 msgid ""
 "You can either do it immediately or mark it as Todo for future processing. "
 "Use your scanner to validate the transferred quantity quicker."
 msgstr ""
-"Anda dapat melakukannya segera atau menandainya sebagai Todo untuk masa "
-"depan pengolahan. Menggunakan scanner untuk memvalidasi kuantitas transfer "
-"yang lebih cepat."
 
 #. module: stock
-#: code:addons/stock/models/product.py:484
+#: code:addons/stock/models/product.py:492
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
@@ -7674,7 +7472,7 @@ msgstr ""
 "- qty: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:919
+#: code:addons/stock/models/stock_move.py:920
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
@@ -7682,7 +7480,7 @@ msgstr ""
 "dahulu."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:915
+#: code:addons/stock/models/stock_move.py:916
 #, python-format
 msgid "You cannot split a move done"
 msgstr "Anda tidak bisa membagi bergerak dilakukan"
@@ -7731,7 +7529,7 @@ msgid "You have processed less products than the initial demand."
 msgstr "Anda telah diproses kurang produk daripada permintaan awal."
 
 #. module: stock
-#: code:addons/stock/models/product.py:312
+#: code:addons/stock/models/product.py:320
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -7752,19 +7550,16 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_immediate_transfer
-#, fuzzy
 msgid ""
 "You haven't set processed (<i>done</i>) quantities. Click <i>apply</i> and\n"
 "                        Odoo will process all quantities to do."
 msgstr ""
-"Anda belum menentukan jumlah yang diproses. Jika Anda klik <i>menerapkan</"
-"i>, Odoo akan memproses semua jumlah untuk melakukan."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:43
-#, fuzzy, python-format
+#, python-format
 msgid "You may only return Done pickings"
-msgstr "Anda hanya dapat kembali satu memilih pada suatu waktu!"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
@@ -7774,7 +7569,7 @@ msgid "You need to provide a Lot/Serial Number for product %s"
 msgstr "Anda perlu menyediakan sejumlah banyak/Serial untuk produk %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:241
+#: code:addons/stock/models/stock_quant.py:260
 #, python-format
 msgid "You should only receive by the piece with the same serial number"
 msgstr "Anda hanya harus menerima dengan potongan dengan nomor seri yang sama"
@@ -8019,334 +7814,3 @@ msgstr "↳Put dalam kemasan"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Atur quantity  jadi 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Menciptakan rute dropship dan menambahkan tes-ini lebih kompleks "
-#~ "menginstal stock_dropshipping modul."
-
-#~ msgid " On Hand"
-#~ msgstr "Pada Tangan"
-
-#~ msgid "%s %s %s has been <b>moved to</b> scrap."
-#~ msgstr "%s%s%s <b>telah</b> dipindahkan ke memo."
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* New: Ketika bergerak stok dibuat dan belum dikonfirmasi. * Menunggu "
-#~ "Pindah lain: negara ini dapat dilihat ketika bergerak menunggu satu sama "
-#~ "lain, misalnya dalam aliran dirantai. * Menunggu Ketersediaan: Negara ini "
-#~ "tiba saat resolusi pengadaan tidak lurus ke depan. Ini mungkin perlu "
-#~ "scheduler untuk menjalankan, komponen untuk saya diproduksi ... * "
-#~ "Tersedia: Ketika produk yang dilindungi, sudah diatur untuk 'Tersedia'. * "
-#~ "Selesai: Ketika pengiriman diproses, negara 'Selesai'."
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Alamat kontak:</strong></span>"
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Status</strong>"
-
-#~ msgid "A barcode nomenclature"
-#~ msgstr "Nomenklatur barcode"
-
-#~ msgid ""
-#~ "A good inventory management aims to optimize stock levels: not too low "
-#~ "(or\n"
-#~ "                        you may find yourself out of stock) and not too "
-#~ "high (your products occupy\n"
-#~ "                        space and may loose value)."
-#~ msgstr ""
-#~ "Manajemen persediaan baik yang bertujuan untuk mengoptimalkan tingkat "
-#~ "stok: tidak terlalu rendah (atau Anda mungkin menemukan diri Anda keluar "
-#~ "dari stok) dan tidak terlalu tinggi (produk Anda menempati ruang dan "
-#~ "mungkin kehilangan nilai)."
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid "Add an internal note..."
-#~ msgstr "Tambahkan catatan internal..."
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Menambahkan link klaim pengiriman pesanan.\n"
-#~ "-Ini akan menginstal modul claim_from_delivery."
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "Memungkinkan klaim pada pengiriman"
-
-#~ msgid "Check the existance of stock moves linked to this inventory"
-#~ msgstr "Memeriksa keberadaan stok bergerak terkait untuk persediaan ini"
-
-#~ msgid "Claims"
-#~ msgstr "Klaim"
-
-#~ msgid "Create New Lots"
-#~ msgstr "Membuat banyak baru"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Metode Pengiriman"
-
-#~ msgid "Do not manage claims"
-#~ msgstr "Tidak mengelola klaim"
-
-#~ msgid "Do not record internal moves within a warehouse"
-#~ msgstr "Tidak merekam internal bergerak dalam sebuah gudang"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "Jangan gunakan kadaluarsa"
-
-#~ msgid "Followers"
-#~ msgstr "Pengikut"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Diperkirakan:"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "Stok bergerak"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "Information"
-#~ msgstr "Informasi"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Baris persediaan."
-
-#~ msgid "Inventory Name."
-#~ msgstr "Nama persediaan."
-
-#~ msgid "Inventory loss"
-#~ msgstr "Penurunan Nilai Persediaan"
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Link antara stok bergerak dan kemasan operasi"
-
-#~ msgid "Lot Details"
-#~ msgstr "Banyak rincian"
-
-#~ msgid "Lot Inventory"
-#~ msgstr "Lot Persediaan"
-
-#~ msgid "Lot Name"
-#~ msgstr "Banyak nama"
-
-#~ msgid "Lot is required"
-#~ msgstr "Banyak diperlukan"
-
-#~ msgid "Lots"
-#~ msgstr "Banyak"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Mengelola beberapa lokasi dan gudang"
-
-#~ msgid "Manage several locations per warehouse"
-#~ msgstr "Mengelola beberapa lokasi per gudang"
-
-#~ msgid "Move Lines"
-#~ msgstr "Memindahkan baris"
-
-#~ msgid "Multi Locations"
-#~ msgstr "Multi lokasi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Gudang buka Menu"
-
-#~ msgid "Packagings"
-#~ msgstr "Kemasan"
-
-#~ msgid "Picking Types"
-#~ msgstr "Memilih jenis"
-
-#~ msgid "Please provide a positive quantity to scrap."
-#~ msgstr "Harap memberikan kuantitas positif untuk memo."
-
-#~ msgid "Qty"
-#~ msgstr "Qty"
-
-#~ msgid "Reserve sale orders immediately on confirmation"
-#~ msgstr "Reserve dijual pesanan segera pada konfirmasi"
-
-#~ msgid "Reserve sale orders manually or by running the schedulers"
-#~ msgstr ""
-#~ "Reserve dijual pesanan secara manual atau dengan menjalankan Penjadwal"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Resupply dari gudang lainnya"
-
-#~ msgid "Reverse"
-#~ msgstr "lebar"
-
-#~ msgid "Scrap Products"
-#~ msgstr "Produk Rusak"
-
-#~ msgid "Serial Number"
-#~ msgstr "Serial Number"
-
-#~ msgid "Serial Number / Lots"
-#~ msgstr "Serial Number"
-
-#~ msgid "Serial Numbers / Lots"
-#~ msgstr "Serial Numbers / Lot"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Beberapa produk dapat dijual/dibeli dalam berbagai unit tindakan "
-#~ "(lanjutan)"
-
-#~ msgid "Specifies lot/serial number for pack operations that need it"
-#~ msgstr ""
-#~ "Menentukan banyak/serial number untuk kemasan operasi yang membutuhkannya"
-
-#~ msgid "Suppliers"
-#~ msgstr "Pemasok"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Bidang teknik digunakan untuk menyembunyikan tooltip bantuan jika tidak "
-#~ "diperlukan"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Kuantitas pilihan untuk produk %s tidak kompatibel dengan UoM pembulatan. "
-#~ "Itu akan secara otomatis dikonversi pada konfirmasi"
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "Bulatan / Anda Unit dari langkah-langkah %s bergerak vs %s pada produk "
-#~ "tidak memungkinkan untuk melakukan operasi ini atau Anda tidak "
-#~ "mentransfer memetik sekaligus."
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "UoM dipilih untuk produk %s tidak kompatibel dengan UoM ditetapkan pada "
-#~ "bentuk produk. \n"
-#~ "Silakan pilih UoM dalam kategori UoM yang sama."
-
-#~ msgid "The serial number %s is already in stock"
-#~ msgstr "Nomor seri %s sudah dalam stok"
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Ini akan menunjukkan lokasi dan memungkinkan Anda untuk menentukan "
-#~ "beberapa jenis memetik dan gudang."
-
-#~ msgid ""
-#~ "To check the trajectory of a lot, find it back in <strong><i>Inventory "
-#~ "Control &gt; Serial Numbers / lots</i></strong>.\n"
-#~ "                       Choose a Lo t in the list and click on "
-#~ "<i>Traceability</i>i&gt;. You may also\n"
-#~ "                       filter the Quantitative Valuation of a product "
-#~ "with a certain lot."
-#~ msgstr ""
-#~ "Untuk memeriksa lintasan banyak, menemukan kembali <strong><i>Inventory "
-#~ "Control > nomor seri / Lot</i></strong>.\n"
-#~ "                       Pilih Lo t dalam daftar dan klik pada "
-#~ "<i>penelusuran</i>saya >. Anda juga dapat menyaring Penilaian kuantitatif "
-#~ "produk dengan banyak tertentu."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unit tindakan"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Pesan Belum Dibaca"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Unused field"
-#~ msgstr "Bidang yang tidak terpakai"
-
-#~ msgid "Use Existing Lots"
-#~ msgstr "Menggunakan banyak yang sudah ada"
-
-#~ msgid "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr ""
-#~ "Menggunakan scanner untuk memvalidasi kuantitas transfer yang lebih cepat."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Peringatan: UoM salah!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Peringatan: salah kuantitas!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing."
-#~ msgstr ""
-#~ "Anda dapat melakukannya segera atau menandainya sebagai Todo untuk masa "
-#~ "depan pengolahan."
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing. "
-#~ "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr ""
-#~ "Anda dapat melakukannya segera atau menandainya sebagai Todo untuk masa "
-#~ "depan pengolahan. Menggunakan scanner untuk memvalidasi kuantitas "
-#~ "transfer yang lebih cepat."
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "Anda hanya dapat kembali hasil yang dilakukan!"
-
-#~ msgid "unknown"
-#~ msgstr "tidak diketahui"

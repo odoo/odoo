@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-06-27 16:01+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"PO-Revision-Date: 2016-08-19 16:19+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
@@ -48,7 +48,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% скидки и %s надбавки"
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -1424,7 +1424,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-#, fuzzy
 msgid ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
 "-  </span>\n"
@@ -1433,10 +1432,6 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', "
 "'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
-"<span attrs=\"{'invisible':[('base', 'not in', "
-"('list_price','standard_price'))]}\">Общий Прайс  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', "
-"'pricelist')]}\">Прочий прайс-лист  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -1482,7 +1477,7 @@ msgstr ""
 "                            приведет к потере их возможных настроек."
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Штрих-код может быть присвоен только одному продукту !"
@@ -1685,9 +1680,8 @@ msgstr "Обычный компьютер"
 #. module: product
 #: model:product.product,name:product.membership_2
 #: model:product.template,name:product.membership_2_product_template
-#, fuzzy
 msgid "Basic Membership"
-msgstr "Обычный компьютер"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -1725,6 +1719,13 @@ msgstr "Самая маленькая портативная Bluetooth-коло�
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Вычислить цену  за единицу продукции основанную на версии каталога."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -1822,9 +1823,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Компания"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -2463,7 +2463,7 @@ msgstr "Инвентаризация"
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "Вариант продукта"
 
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
@@ -3072,7 +3072,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Продукты "
@@ -3107,9 +3107,8 @@ msgstr "Количество"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Количество по пакету"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3480,11 +3479,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
 msgstr ""
-"Общее количество продуктов, которое вы можете разместить на поддоне или в "
-"коробке."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3496,7 +3492,7 @@ msgstr "Объём в метрах куб."
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Вес содержимого в кг, не включая упаковку, и пр."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -3574,12 +3570,9 @@ msgstr "Тип"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Сняв отметку с активного поля \"Активно\", вы можете запретить единицу "
-"измерения без ее удаления."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3694,9 +3687,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Другой прайс"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3807,13 +3799,10 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
-#, fuzzy
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
-"Вы должны создать продукт для каждой продаваемой позиции независимо от того, "
-"является ли она товаром, расходным материалом или услугой."
 
 #. module: product
 #: model:product.product,name:product.product_order_01
@@ -4015,285 +4004,3 @@ msgstr "для"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "неизвестен"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "Монитор 17\"\n"
-#~ "6Гб ОЗУ\n"
-#~ "Высокоскоростной процессор 234Q\n"
-#~ "Стандартная клавиатура"
-
-#~ msgid "30m RJ45 wire"
-#~ msgstr "30м RJ45 кабель"
-
-#~ msgid "75 percent less reflection."
-#~ msgstr "отражение на 75% меньше"
-
-#~ msgid "8-port Switch"
-#~ msgstr "8-портовый коммутатор"
-
-#~ msgid ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-#~ "                            <span attrs=\"{'invisible':[('base', '!=', "
-#~ "'pricelist')]}\">Other Pricelist  -  </span>"
-#~ msgstr ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">Общий Прайс  -  </span>\n"
-#~ "                            <span attrs=\"{'invisible':[('base', '!=', "
-#~ "'pricelist')]}\">Прочий прайс-лист  -  </span>"
-
-#~ msgid ""
-#~ "A consumable is a product for which you don't manage stock, a service is "
-#~ "a non-material product provided by a company or an individual."
-#~ msgstr ""
-#~ "Потребляемый - это вид продукта, для которого не ведётся учёт остатков на "
-#~ "складе, а услуга - это нематериальный продукт, предлагаемый компанией или "
-#~ "отдельным человеком."
-
-#~ msgid "A great Keyboard. Cordless."
-#~ msgstr "Великолепная клавиатура. Беспроводная."
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "Все в одном высокоскоростном принтере с факсом и сканером."
-
-#~ msgid "Auxiliary input for portable devices"
-#~ msgstr "Дополнительный вход для портативных устройств"
-
-#~ msgid ""
-#~ "Auxiliary port lets you connect other audio sources, like an MP3 player"
-#~ msgstr ""
-#~ "Дополнительный порт позволяет подключать другие источники звука такие, "
-#~ "как MP3-плеер"
-
-#~ msgid "Beautiful 7.9‑inch display."
-#~ msgstr "Красивый 7.9‑inch дисплей."
-
-#~ msgid "Beautiful widescreen display."
-#~ msgstr "Красивый широкоформатный дисплей."
-
-#~ msgid "Blank CD"
-#~ msgstr "Чистый CD"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "Чистый DVD-RW"
-
-#~ msgid "Characteristics"
-#~ msgstr "Характеристики"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Dell Inspiron Laptop without OS"
-#~ msgstr "Dell Inspiron Laptop без OS"
-
-#~ msgid "Desktop Lamp"
-#~ msgstr "Настольная лампа"
-
-#~ msgid "Efficient, high-quality audio"
-#~ msgstr "Эффективное, высококачественное аудио"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Конец жизненного цикла"
-
-#~ msgid "Ergonomic Mouse"
-#~ msgstr "Эргономичная Мышь"
-
-#~ msgid "External Hard disk"
-#~ msgstr "Внешний жесткий диск"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "Friendly to the environment."
-#~ msgstr "Дружественный к окружающей среде."
-
-#~ msgid "Full featured image editing software."
-#~ msgstr ""
-#~ "Полнофункциональное программное обеспечение для редактирования "
-#~ "изображений."
-
-#~ msgid "Genius. Your own personal DJ."
-#~ msgstr "Genius. Ваш персональный DJ."
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr ""
-#~ "Дает порядок последовательности при выводе списка категорий продуктов."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "Программное обеспечение GrapWorks"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Вес брутто"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "Жесткий диск по запросу"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Наушники \"свободные руки\" для переносных компьютеров со встроенным "
-#~ "микрофоном и разъемом для наушников."
-
-#~ msgid "Headset USB"
-#~ msgstr "USB наушники"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Гарнитура для ноутбука с разъемом USB."
-
-#~ msgid "Headset standard"
-#~ msgstr "Наушники стандартные"
-
-#~ msgid "Hear, hear."
-#~ msgstr "Слышу, слышу."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "If it's made for iPad, it's made for iPad mini."
-#~ msgstr "Сделан для iPad, сделан для iPad mini"
-
-#~ msgid "In Development"
-#~ msgstr "В разработке"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Чернила в картридже"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Key Features"
-#~ msgstr "Ключевые особенности"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Ноутбук S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "Управление второй единицей измерения"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "More features."
-#~ msgstr "Больше Возможностей"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Материнская плата A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Мультимедийные колонки"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Obsolete"
-#~ msgstr "Устаревший"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "Программы редактирования офисных приложений с обработкой текста, "
-#~ "электронными таблицами, презентациями, графикой и базами данных..."
-
-#~ msgid "Office Suite"
-#~ msgstr "Набор офисных приложений"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "По запросу жесткий диск с емкостью на основе требования."
-
-#~ msgid "Over 375,000 apps."
-#~ msgstr "Более 375,000 приложений."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Флешка, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Флешка, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Принтер, все в одном"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "Процессор AMD 8-Core"
-
-#~ msgid "RAM SR3"
-#~ msgstr "RAM SR3"
-
-#~ msgid "Router R430"
-#~ msgstr "Маршрутизатор R430"
-
-#~ msgid "Status"
-#~ msgstr "Статус"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Каталог поставщика"
-
-#~ msgid "Template Name"
-#~ msgstr "Название шаблона"
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Картридж с тонером"
-
-#~ msgid "USB Adapter"
-#~ msgstr "USB Adapter"
-
-#~ msgid "Ultrathin design"
-#~ msgstr "Ультратонкий дизайн"
-
-#~ msgid "Universal iPod docking station fits most iPod/iPhone models"
-#~ msgstr ""
-#~ "Универсальная док-станция для iPod подходит для большинства моделей iPod/"
-#~ "iPhone"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Webcam"
-#~ msgstr "Веб-камера"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"
-
-#~ msgid ""
-#~ "You must define a product for everything you sell, whether it's a "
-#~ "physical product, a consumable or a service you offer to  customers."
-#~ msgstr ""
-#~ "Вы должны создать продукт для каждой продаваемой позиции независимо от "
-#~ "того, является ли она товаром, расходным материалом или услугой."

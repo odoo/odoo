@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-05 08:33+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -760,6 +760,11 @@ msgstr "Pièces jointes"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
+msgstr ""
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
 msgstr ""
 
 #. module: mail
@@ -2153,7 +2158,7 @@ msgstr "Alias inactif"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2195,7 +2200,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr "Invitation"
@@ -3988,7 +3993,7 @@ msgstr "Smiley"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4688,7 +4693,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "Vous avez été invité à:"
@@ -4705,14 +4710,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Vous vous êtes désinscrits de <b>%s</b>."
@@ -4879,79 +4884,3 @@ msgstr "ventes"
 #, python-format
 msgid "this document"
 msgstr "ce document"
-
-#~ msgid ""
-#~ "* Smiley are only used for HTML code to display an image * Text (default "
-#~ "value) is use to substitute text with another text"
-#~ msgstr ""
-#~ "* un bonhomme-sourire est seulement utilisé dans le code HTML pour "
-#~ "afficher une image * Le texte (par défaut) est utilisé pour substituer un "
-#~ "texte par un autre texte."
-
-#~ msgid "Activity"
-#~ msgstr "Activité"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Les pièces jointes sont liées à un document à travers un modèle / "
-#~ "identifiant d'une ressource et au message grâce à ce champ"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Nettoyer automatiquement les contenus HTML"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Marquer comme lu automatiquement"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "Cliquer pour ajouter un contact dans le carnet d'adresses."
-
-#~ msgid "Contacts"
-#~ msgstr "Contacts"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "La conversation a été minimisée"
-
-#~ msgid "Join Group"
-#~ msgstr "Rejoindre le groupe"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo vous aide à faire facilement le suivi de toutes vos activités liées "
-#~ "à\n"
-#~ "un client; discussions, historique des opportunités d'affaires, \n"
-#~ "documents, etc."
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Version texte riche/HTML du message (des espaces réservés peuvent être "
-#~ "utilisés ici)"
-
-#~ msgid "Send mail"
-#~ msgstr "Envoyer e-mail"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "Le code html avec caractères d'échappement remplaçant le raccourci"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "Type de document avec lequel ce modèle peut être utilisé"
-
-#~ msgid "The shortcut which must be replace in the Chat Messages"
-#~ msgstr ""
-#~ "Le raccourci qui doit être remplacé dans les messages du chat de "
-#~ "discussion"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Les valeurs suivies sont rangées dans un modèle séparé. Ce champ permet "
-#~ "de reconstruire le suivi et de générer des statistiques sur le modèle."
-
-#~ msgid "Unsubscribed"
-#~ msgstr "Désinscrit "

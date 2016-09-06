@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:07+0000\n"
-"PO-Revision-Date: 2016-08-09 16:17+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
+"PO-Revision-Date: 2016-08-15 15:39+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
@@ -25,15 +25,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Es kann eine Route für das Streckengeschäft erstellt werden.\n"
-"- Installieren Sie hierzu das Modul stock_dropshipping"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:218
@@ -50,7 +46,6 @@ msgstr " (reserviert)"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_state
 #: model:ir.model.fields,help:stock.field_stock_picking_state
-#, fuzzy
 msgid ""
 " * Draft: not confirmed yet and will not be scheduled until confirmed\n"
 " * Waiting Another Operation: waiting for another move to proceed before it "
@@ -61,27 +56,6 @@ msgid ""
 " * Transferred: has been processed, can't be modified or cancelled anymore\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
-"\n"
-"                * Entwurf: Lieferung wurde noch nicht bestätigt, es erfolgt "
-"keine weitere Disposition bevor diese Bestätigung erfolgt ist.\n"
-"\n"
-"                * Warte auf andere Lieferung: Es wird auf eine andere "
-"Lieferung gewartet, bevor dieser Lieferauftrag weiter bearbeitet wird.\n"
-"\n"
-"                * Warte auf Verfügbarkeit: Es wird immer noch auf den Zugang "
-"von Produkten zur weiteren Bearbeitung gewartet.\n"
-"\n"
-"                * Teilweise Verfügbar: Einige Produkte sind teilweise "
-"verfügbar und wurden reserviert.\n"
-"\n"
-"               * Bereit zur Lieferung: Die Produkte wurden bereits "
-"reserviert, es fehlt nur noch die Bestätigung der Lieferung.\n"
-"\n"
-"               * Geliefert: Die Lieferungen wurden durchgeführt und können "
-"nicht mehr abgebrochen werden.\n"
-"\n"
-"               * Abgebrochen: Die Lieferung wurde abgebrochen und kann jetzt "
-"nicht mehr weiter bearbeitet werden."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -102,7 +76,6 @@ msgstr "%s: Umschlaglager"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -113,21 +86,9 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Neu: Wenn ein Lieferschein erstellt wurde und noch nicht bestätigt ist, "
-"befindet er sich im 'Entwurf'.\n"
-"* Warte auf andere Lieferung: Diese Lieferung wartet zur weiteren "
-"Bearbeitung auf eine andere Lieferung (z.B. Lieferkette)\n"
-"* Warte auf Verfügbarkeit: Ein Lieferschein in diesem Status, wartet auf die "
-"Durchführung einer Bestandsaktualisierung oder auf die noch offene "
-"Fertigstellung eines Fertigungsauftrags o.ä. \n"
-"* Verfügbar: Wenn Produkte für diese Lieferung reserviert sind oder werden, "
-"werden Sie als 'Verfügbar' angezeigt.\n"
-"* Fertig: Wenn die Auslieferung verarbeitet und abgeschlossen wird wird, ist "
-"der Zustand dann 'Fertig'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
-#, fuzzy
 msgid ""
 "* Vendor Location: Virtual location representing the source location for "
 "products coming from your vendors\n"
@@ -148,30 +109,6 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-"
 "companies or inter-warehouses operations"
 msgstr ""
-"* Lieferantenlager: Virtuelles Lager als Quelle für Lieferungen Ihrer "
-"Lieferanten.\n"
-"                       \n"
-"* Ansicht: Virtuelles Lager zur Abbildung von mehrdimensionalen "
-"Lagerstrukturen.\n"
-"                       \n"
-"* Intern: tatsächliches physikalisches Lager Ihres Unternehmens\n"
-"                       \n"
-"* Kundenlager: Virtuelles Lager als Ziel für Lieferungen an Kunden.\n"
-"                       \n"
-"* Inventurdifferenz: Virtuelles Lager, welches bei Inventuren als temporäre "
-"Gegenposition gebucht wird.\n"
-"                       \n"
-"* Beschaffung: Virtuelles Lager, welches als temporäre Gegenposition gebucht "
-"wird, wenn die Quelle noch nicht exakt bekannt ist (Lieferant oder "
-"Fertigung).\n"
-"                       \n"
-"* Fertigung: Virtuelles Lager, welches als Gegenposition bei "
-"Arbeitsaufträgen in der Fertigung genutzt wird. Hier wird der Verbrauch von "
-"Material gebucht, sowie auch die Fertigware zugebucht.\n"
-"                       \n"
-"* Transit: Virtuelles Lager, welches bei Inter-Company, aber auch bei "
-"internen Lagerbewegungen genutzt wird.\n"
-"                      "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -492,9 +429,8 @@ msgstr "<strong>Datum</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
-#, fuzzy
 msgid "<strong>Delivered Quantity</strong>"
-msgstr "<strong>Menge</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -524,9 +460,8 @@ msgstr "<strong>Ort</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
-#, fuzzy
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Seriennummer</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -596,9 +531,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
-#, fuzzy
 msgid "<strong>Ordered Quantity</strong>"
-msgstr "<strong>Menge</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -771,9 +705,8 @@ msgstr "Alle"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_quant_ids
-#, fuzzy
 msgid "All Bulk Content"
-msgstr "Masseninhalt"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -1121,7 +1054,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
-#, fuzzy
 msgid ""
 "By default, the system will take from the stock in the source location and "
 "passively wait for availability.The other possibility allows you to directly "
@@ -1129,12 +1061,6 @@ msgid ""
 "stock) to gather products. If we want to chain moves and have this one to "
 "wait for the previous,this second option should be chosen."
 msgstr ""
-"Im Standard reduziert das System den Bestand an der Quelle und wartet passiv "
-"die Verfügbarkeit ab. Optional kann eine direkte Beschaffung bei der Quelle "
-"ausgelöst werden, wodurch die tatsächliche Verfügbarkeit ignoriert werden "
-"kann. Im Falle einer Verkettung von Lieferungen, bei der eine Verfügbarkeit "
-"auch durch die vorherige Lieferung bestimmt wird, sollte diese alternative "
-"Möglichkeit ausgewählt werden."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1279,9 +1205,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
-#, fuzzy
 msgid "Click to add a lot/serial number."
-msgstr "Klicken Sie, um einen Seriennummer hinzufügen."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1310,9 +1235,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
-#, fuzzy
 msgid "Click to define a new product."
-msgstr "Klicken Sie, um einen Seriennummer hinzufügen."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -1336,9 +1260,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_scrap
-#, fuzzy
 msgid "Click to scrap products."
-msgstr "Ausschuss buchen"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -1460,9 +1383,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
-#, fuzzy
 msgid "Count picking"
-msgstr " Nummernfolge Pickaufträge"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
@@ -1476,9 +1398,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_late
-#, fuzzy
 msgid "Count picking late"
-msgstr "Lieferauftrag"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_ready
@@ -1503,15 +1424,13 @@ msgstr "Lieferrückstand erstellen?"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_tree_view
-#, fuzzy
 msgid "Create Date"
-msgstr "Erzeugt am"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
-#, fuzzy
 msgid "Create New Lots/Serial Numbers"
-msgstr "Verwalten Sie Lose / Seriennummern"
+msgstr ""
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -1940,7 +1859,7 @@ msgid "Delay (days)"
 msgstr "Zeitverzögerung (Tage)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:348
 #, python-format
 msgid "Delivered Qty"
 msgstr "Liefermenge"
@@ -1977,9 +1896,8 @@ msgstr "Lieferschein"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Lieferschein"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2159,9 +2077,8 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
-#, fuzzy
 msgid "Do not use Expiration Date on serial numbers"
-msgstr "Definieren von Ablaufdaten bei Fertigungslosen/Seriennummern"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
@@ -2233,7 +2150,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:629
+#: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr ""
@@ -2348,7 +2265,7 @@ msgstr ""
 "\"Intern\"."
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:343
 #: model:ir.model.fields,field_description:stock.field_product_template_virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
@@ -2366,31 +2283,31 @@ msgid "Full Location Name"
 msgstr "Komplette Lagerortbezeichnung"
 
 #. module: stock
-#: code:addons/stock/models/product.py:338
+#: code:addons/stock/models/product.py:346
 #, python-format
 msgid "Future Deliveries"
 msgstr "Zukünftige Lieferungen"
 
 #. module: stock
-#: code:addons/stock/models/product.py:343
+#: code:addons/stock/models/product.py:351
 #, python-format
 msgid "Future P&L"
 msgstr "Zukünftige G&V"
 
 #. module: stock
-#: code:addons/stock/models/product.py:353
+#: code:addons/stock/models/product.py:361
 #, python-format
 msgid "Future Productions"
 msgstr "Zukünftige Produktionen"
 
 #. module: stock
-#: code:addons/stock/models/product.py:348
+#: code:addons/stock/models/product.py:356
 #, python-format
 msgid "Future Qty"
 msgstr "Zukünftige Menge"
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future Receipts"
 msgstr "Zukünftige Zugänge"
@@ -2482,9 +2399,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
-#, fuzzy
 msgid "Has Scrap Moves"
-msgstr "Buchung Ausschuss"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -2576,7 +2492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8356
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8358
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_id
@@ -2855,9 +2771,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
-#, fuzzy
 msgid "Include Exhausted Products"
-msgstr "Inventarisiertes Produkt"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2982,19 +2897,15 @@ msgstr "Kontentyp"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_ref
-#, fuzzy
 msgid ""
 "Internal reference number in case it differs from the manufacturer's lot/"
 "serial number"
 msgstr ""
-"Interne Referenzunummer, sollte diese von der Seriennummer des Herstellers "
-"abweichen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
-#, fuzzy
 msgid "Inventoried Category"
-msgstr "Inventarisierter Eigentümer"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_location_id
@@ -3097,9 +3008,8 @@ msgstr "Lagerschwund"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
-#, fuzzy
 msgid "Inventory Move"
-msgstr "Inventurbuchungen"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
@@ -3134,9 +3044,8 @@ msgstr "Inventurbestandswert"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
-#, fuzzy
 msgid "Inventory adjustment"
-msgstr "Inventur"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3395,9 +3304,8 @@ msgstr "Lokalisierung"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
-#, fuzzy
 msgid "Locate"
-msgstr "Lagerort"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:12
@@ -3512,27 +3420,25 @@ msgstr "Los-/Seriennummer"
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:198
-#, fuzzy, python-format
+#, python-format
 msgid "Lot/Serial Number Details"
-msgstr "Los-/Seriennummer"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
-#, fuzzy
 msgid "Lot/Serial Number Inventory"
-msgstr "Los-/Seriennummer"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:268
-#, fuzzy, python-format
+#, python-format
 msgid "Lot/Serial Number required"
-msgstr "Los-/Seriennummer"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
-#, fuzzy
 msgid "Lot/Serial number for pack ops"
-msgstr "Los-/Seriennummer"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_production_lot
@@ -3562,21 +3468,19 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
-#, fuzzy
 msgid "Lots/Serial Numbers"
-msgstr "Los-/Seriennummer"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_pack_lot_ids
-#, fuzzy
 msgid "Lots/Serial Numbers Used"
-msgstr "Los-/Seriennummer"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "MTO"
-msgstr " MTO"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3641,15 +3545,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Verwaltung mehrfacher Lagerorte und Lager"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Verwaltung mehrfacher Lagerorte und Lager"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3688,9 +3590,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Verwalten Sie Lose / Seriennummern"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3704,9 +3605,8 @@ msgstr "Manuelle Durchführung"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
-#, fuzzy
 msgid "Manufacturing Operation"
-msgstr "Manuelle Durchführung"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3725,9 +3625,8 @@ msgstr "Maximale Menge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
-#, fuzzy
 msgid "Message for Stock Picking"
-msgstr "Lagerpackauftrag"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
@@ -3846,9 +3745,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
-#, fuzzy
 msgid "Move that created the return move"
-msgstr "Zugehörige Lieferung zu dieser Rücklieferung"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
@@ -3960,9 +3858,8 @@ msgstr "Noch kein Bestand"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
-#, fuzzy
 msgid "No Message"
-msgstr "Mitteilungen"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -4141,9 +4038,9 @@ msgstr "Alleiniger Eigentümer"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:91
-#, fuzzy, python-format
+#, python-format
 msgid "One product category"
-msgstr "Ein einziges Produkt"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:98
@@ -4177,15 +4074,13 @@ msgstr "Arbeitsauftrag"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Vorgänge"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
-#, fuzzy
 msgid "Operation id"
-msgstr "Vorgang"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
@@ -4251,9 +4146,8 @@ msgstr "Bearbeitung der Auftäge"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_ordered_qty
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_ordered_qty
-#, fuzzy
 msgid "Ordered Quantity"
-msgstr "Geprüfte Anzahl"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -4278,12 +4172,11 @@ msgstr "Ursprüngliche Lieferung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_original_location_id
-#, fuzzy
 msgid "Original location id"
-msgstr "Interner Lagerort"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "Otherwise make sure the right stock/owner is set."
 msgstr ""
@@ -4344,7 +4237,7 @@ msgid "Owner of the quants"
 msgstr "Eigentümer der Quants"
 
 #. module: stock
-#: code:addons/stock/models/product.py:345
+#: code:addons/stock/models/product.py:353
 #, python-format
 msgid "P&L Qty"
 msgstr "Anzahl"
@@ -4364,9 +4257,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
-#, fuzzy
 msgid "Pack Operation / Moves Link"
-msgstr "Packvorgang"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
@@ -4418,15 +4310,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Verpackungstyp"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Verpackungstyp"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4497,9 +4387,8 @@ msgstr "Umverpackung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_parent_location_id
-#, fuzzy
 msgid "Parent location id"
-msgstr "Hauptlagerort"
+msgstr ""
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -4714,9 +4603,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
-#, fuzzy
 msgid "Preferred Packaging"
-msgstr "Verpackung"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
@@ -4829,7 +4717,7 @@ msgid "Procurements"
 msgstr "Beschaffungsvorgänge"
 
 #. module: stock
-#: code:addons/stock/models/product.py:355
+#: code:addons/stock/models/product.py:363
 #, python-format
 msgid "Produced Qty"
 msgstr "Prod. Anzahl"
@@ -4896,7 +4784,7 @@ msgstr "Produktbezeichnung"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_tracking_owner
 msgid "Product Owners"
-msgstr ""
+msgstr "Produkteigentümer"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4972,7 +4860,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:318
+#: code:addons/stock/models/product.py:326
 #, python-format
 msgid "Products: "
 msgstr "Produkte: "
@@ -5003,9 +4891,8 @@ msgstr "Push Regeln"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
-#, fuzzy
 msgid "Pushed Flow"
-msgstr "Warenfluss durch Push Regeln"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
@@ -5180,15 +5067,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
-#, fuzzy
 msgid "Rate picking backorders"
-msgstr "Lieferrückstand erstellen"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
-#, fuzzy
 msgid "Rate picking late"
-msgstr "Lieferauftrag"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -5248,7 +5133,7 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "Direkte Anlieferung (1 Schritt)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:340
 #, python-format
 msgid "Received Qty"
 msgstr "Angenommene Menge"
@@ -5339,7 +5224,7 @@ msgid "Removal Strategy"
 msgstr "Entnahmestrategie"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:449
+#: code:addons/stock/models/stock_quant.py:467
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "Diese Entnahmestrategie %s ist noch nicht implementiert."
@@ -5366,16 +5251,14 @@ msgstr "Meldebestände Suche"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_max_qty
-#, fuzzy
 msgid "Reordering max qty"
-msgstr "Meldebestände"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_min_qty
-#, fuzzy
 msgid "Reordering min qty"
-msgstr "Meldebestände"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -5623,9 +5506,8 @@ msgstr "Verschrotted"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
-#, fuzzy
 msgid "Scraps"
-msgstr "Ausschuss melden"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5672,33 +5554,33 @@ msgstr "Reihenfolge"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:658
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence in"
-msgstr " Nummernfolge Zugänge"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence internal"
-msgstr " Nummernfolge Intern"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:659
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence out"
-msgstr " Nummernfolge Auslieferungen"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence packing"
-msgstr " Nummernfolge Verpackung"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:661
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence picking"
-msgstr " Nummernfolge Pickaufträge"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -5812,12 +5694,9 @@ msgstr "Kleiner Kühlschrank"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Einige Produkte können in verschieden Maßeinheiten ein-/verkauft werden "
-"(erweitert)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:787
@@ -5885,10 +5764,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
-#, fuzzy
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
-msgstr "Geben Sie zur Inventur für ein Produkt dieses Produkt ein."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
@@ -5992,9 +5870,8 @@ msgstr " Auf Lager"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
-#, fuzzy
 msgid "Stock Operation"
-msgstr "Lagervorgänge"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
@@ -6009,9 +5886,8 @@ msgstr "Lagerpackauftrag"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_move_ids
-#, fuzzy
 msgid "Stock move ids"
-msgstr "Lagerbuchungen"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6032,9 +5908,8 @@ msgstr "Verarbeitete Lagerbuchungen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_quant_ids
-#, fuzzy
 msgid "Stock quant ids"
-msgstr "Lagerorte"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -6042,7 +5917,7 @@ msgid "Stockable"
 msgstr "Lagerfähig"
 
 #. module: stock
-#: code:addons/stock/models/product.py:470
+#: code:addons/stock/models/product.py:478
 #, python-format
 msgid "Stockable Product"
 msgstr "Lagerprodukt"
@@ -6060,7 +5935,7 @@ msgstr "Verkäufer liefern direkt zu ihren Lager(n)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Supply Chain"
-msgstr ""
+msgstr "Lieferkette"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_procure_method
@@ -6114,14 +5989,10 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_lot_id
-#, fuzzy
 msgid ""
 "Technical field used to depict a restriction on the lot/serial number of "
 "quants to consider when marking this move as 'done'"
 msgstr ""
-"Datenfeld zur Restriktion auf die Seriennummer eines Quants, u.a. zur "
-"Ermittlung ob diese Lieferung als beendet abgeschlossen werden kann oder "
-"nicht."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
@@ -6175,9 +6046,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Fedex Integration"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6326,13 +6196,10 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_qty_multiple
-#, fuzzy
 msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
-"Die zu beschaffende Menge wird auf dieses Vielfache aufgerundet. Wenn hier 0 "
-"eingetragen ist, wird die exakte Anzahl verwendet.  "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
@@ -6385,7 +6252,7 @@ msgid "The selected inventory options are not coherent."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "The serial number %s is already in stock."
 msgstr ""
@@ -6702,9 +6569,8 @@ msgstr "Heute"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_total_qty
-#, fuzzy
 msgid "Total Quantity"
-msgstr "Planmäßiger Bestand"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_total_route_ids
@@ -6747,7 +6613,7 @@ msgid "Tracking"
 msgstr "Nachverfolgung"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:960
+#: code:addons/stock/models/stock_move.py:959
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6820,9 +6686,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
-#, fuzzy
 msgid "Unique Lot/Serial Number"
-msgstr "Eindeutige Seriennummer"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
@@ -6874,7 +6739,7 @@ msgid "Units of Measures"
 msgstr "Mengeneinheiten"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:551
+#: code:addons/stock/models/stock_quant.py:569
 #, python-format
 msgid "Unknown Pack"
 msgstr "Unbekannte Packung"
@@ -6907,7 +6772,7 @@ msgid "Unpack"
 msgstr "Entpacken"
 
 #. module: stock
-#: code:addons/stock/models/product.py:350
+#: code:addons/stock/models/product.py:358
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Ungeplante Menge"
@@ -6942,13 +6807,11 @@ msgstr "Dringend"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
-#, fuzzy
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Verwalten Sie Lose / Seriennummern"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
-#, fuzzy
 msgid ""
 "Use this assistant to generate a procurement request for this\n"
 "                    product. According to the product configuration, this "
@@ -6957,10 +6820,6 @@ msgid ""
 "or\n"
 "                    a new task."
 msgstr ""
-"Wieder auffüllen ist für die Erstellung eines Beschaffungsvorschlags "
-"vorgesehen. In Abhängigkeit von der Produktkonfiguration kann dieses "
-"entweder eine Bestellung, einen Fertigungsauftrag oder eine neue Aufgabe "
-"erstellen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
@@ -7078,7 +6937,7 @@ msgstr "Zu erwartende Lieferungen"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr ""
+msgstr "Lieferungen zu erledigen"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -7145,18 +7004,16 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_warning_stock
 #: selection:res.partner,picking_warn:0
-#, fuzzy
 msgid "Warning"
-msgstr "Warnung !"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
-#, fuzzy
 msgid "Warning on the Picking"
-msgstr "Beschreibung der Kommisionierung"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:311
+#: code:addons/stock/models/product.py:319
 #, python-format
 msgid "Warning!"
 msgstr "Warnung !"
@@ -7190,9 +7047,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:11
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Inventarisiertes Produkt"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7332,7 +7189,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:484
+#: code:addons/stock/models/product.py:492
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
@@ -7405,14 +7262,14 @@ msgstr ""
 "\t%s - Anz: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:919
+#: code:addons/stock/models/stock_move.py:920
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
 "Sie können nicht einfach eine Lieferung ohne vorherige Bestätigung aufteilen."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:915
+#: code:addons/stock/models/stock_move.py:916
 #, python-format
 msgid "You cannot split a move done"
 msgstr "Sie können eine bereits erledigte Lieferung nicht weiter aufteilen"
@@ -7457,7 +7314,7 @@ msgid "You have processed less products than the initial demand."
 msgstr "Sie haben weniger Produkte eingetragen als vereinbart war."
 
 #. module: stock
-#: code:addons/stock/models/product.py:312
+#: code:addons/stock/models/product.py:320
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -7476,19 +7333,16 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_immediate_transfer
-#, fuzzy
 msgid ""
 "You haven't set processed (<i>done</i>) quantities. Click <i>apply</i> and\n"
 "                        Odoo will process all quantities to do."
 msgstr ""
-"Sie haben keine Menge zum Ausliefern angegeben. Wenn Sie auf <i>anwenden</i> "
-"klicken, wird Odoo alle Mengen auf erledigt setzen."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:43
-#, fuzzy, python-format
+#, python-format
 msgid "You may only return Done pickings"
-msgstr "Sie können nur Lieferungen zurück senden, die bereits erledigt sind!"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
@@ -7498,7 +7352,7 @@ msgid "You need to provide a Lot/Serial Number for product %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:241
+#: code:addons/stock/models/stock_quant.py:260
 #, python-format
 msgid "You should only receive by the piece with the same serial number"
 msgstr ""
@@ -7734,222 +7588,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "=> Menge auf 0 setzen"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Es kann eine Route für das Streckengeschäft erstellt werden.\n"
-#~ "- Installieren Sie hierzu das Modul stock_dropshipping"
-
-#~ msgid " On Hand"
-#~ msgstr " Auf Lager"
-
-#~ msgid "%s %s %s has been <b>moved to</b> scrap."
-#~ msgstr "%s %s %s wurde<b>gebucht als</b> verschrottet."
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Neu: Wenn ein Lieferschein erstellt wurde und noch nicht bestätigt ist, "
-#~ "befindet er sich im 'Entwurf'.\n"
-#~ "* Warte auf andere Lieferung: Diese Lieferung wartet zur weiteren "
-#~ "Bearbeitung auf eine andere Lieferung (z.B. Lieferkette)\n"
-#~ "* Warte auf Verfügbarkeit: Ein Lieferschein in diesem Status, wartet auf "
-#~ "die Durchführung einer Bestandsaktualisierung oder auf die noch offene "
-#~ "Fertigstellung eines Fertigungsauftrags o.ä. \n"
-#~ "* Verfügbar: Wenn Produkte für diese Lieferung reserviert sind oder "
-#~ "werden, werden Sie als 'Verfügbar' angezeigt.\n"
-#~ "* Fertig: Wenn die Auslieferung verarbeitet und abgeschlossen wird wird, "
-#~ "ist der Zustand dann 'Fertig'."
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Kontaktadresse:</strong></span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion notwendig"
-
-#~ msgid "Add an internal note..."
-#~ msgstr "Interne Anmerkung hinzufügen ..."
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Erfassen Sie Beschwerden Ihrer Kunden zu Auslieferungen.\n"
-#~ "- Installieren Sie hier die Anwendung claim_from_delivery"
-
-#~ msgid "Claims"
-#~ msgstr "Reklamationen"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum der letzten Nachricht."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Auslieferungsmethode"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "Ablaufdaten nicht verwenden"
-
-#~ msgid "Followers"
-#~ msgstr "Beobachter"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Beobachter (Kanäle)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Beobachter (Partner)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Prognose:"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "hat Lagerbuchungen"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "Information"
-#~ msgstr "Information"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Inventurpositionen"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Inventurbezeichnung"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Bestandsaufnahme"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ist Beobachter"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Letzte Benachrichtigung"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Verknüpfung zwischen Bestandsbuchung und Packvorgang"
-
-#~ msgid "Lot Inventory"
-#~ msgstr "Inventurlos"
-
-#~ msgid "Lots"
-#~ msgstr "Fertigungslose"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Verwaltung mehrfacher Lagerorte und Lager"
-
-#~ msgid "Move Lines"
-#~ msgstr "Buchungszeilen"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Anzahl der Aktionen"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Anzahl ungelesene Nachrichten"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Öffne Lager Anwendungsmenü"
-
-#~ msgid "Packagings"
-#~ msgstr "Verpackungen"
-
-#~ msgid "Picking Types"
-#~ msgstr "Picktypen"
-
-#~ msgid "Please provide a positive quantity to scrap."
-#~ msgstr ""
-#~ "Bitte tragen Sie einen positiven Wert für die zu verschrottende Menge ein"
-
-#~ msgid "Qty"
-#~ msgstr "Anz."
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Beschaffe aus anderem Lager"
-
-#~ msgid "Reverse"
-#~ msgstr "Rücklieferung"
-
-#~ msgid "Serial Number"
-#~ msgstr "Seriennummer"
-
-#~ msgid "Serial Numbers / Lots"
-#~ msgstr "Los- / Seriennummer"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Einige Produkte können in verschieden Maßeinheiten ein-/verkauft werden "
-#~ "(erweitert)"
-
-#~ msgid "Suppliers"
-#~ msgstr "Lieferanten"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr "Datenfeld zur Ausblendung des Hilfe Tooltips (wenn nicht benötigt)"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Die gewählte Menge für das Produkt %s ist nicht kompatibel zur "
-#~ "eingestellten Rundung. Normalerweise erfolgt deshalb eine automatische "
-#~ "Konfiguration."
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "Die ausgewählte Mengeneinheit für das Produkt %s ist nicht kompatibel zur "
-#~ "Mengeneinheit im Produktformular.\n"
-#~ "Bitte wählen Sie auf jeden Fall eine Mengeneinheit innerhalb der gleichen "
-#~ "Mengeneinheit Kategorie."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr "Konfigurieren und nutzen Sie mehrere Lager und Lagerorte."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Maßeinheiten"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ungelesene Mitteilungen"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Zähler der ungelelesen Nachrichten"
-
-#~ msgid "Use Existing Lots"
-#~ msgstr "Bestehende Losnummern verwenden"
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Achtung: falsche ME!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Achtung: Falsche Menge!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website Nachrichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website Kommunikationshistorie"
-
-#~ msgid "unknown"
-#~ msgstr "unbekannt"

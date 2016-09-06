@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-02-20 10:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -139,10 +139,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Análise necessária, escreva os documentos de especificação e cotação"
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Arquivado"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -366,6 +376,11 @@ msgid "Departments"
 msgstr "Departamentos"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -382,6 +397,16 @@ msgstr "Divorciado(a)"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Fator de Eficiência"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -454,6 +479,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Erro! Você não pode criar hierarquias recursivas para Funcionários"
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "Novos Funcionários Esperados"
@@ -489,6 +519,16 @@ msgstr "Seguir e controlar a parte de desenvolvimento"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Seguidores"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -578,9 +618,8 @@ msgstr "Endereço Residencial"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "Departamento de RH"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -644,6 +683,11 @@ msgstr "Aumentar as oportunidades"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
 msgstr "Aumentar a visibilidade do produto"
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -849,9 +893,8 @@ msgstr "Bom ter"
 
 #. module: hr
 #: selection:hr.job,state:0
-#, fuzzy
 msgid "Not Recruiting"
-msgstr "Parar Recrutamento"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -923,7 +966,7 @@ msgstr "Departamento pai"
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Parceiro"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1020,9 +1063,8 @@ msgstr "Recurso"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-#, fuzzy
 msgid "Resource Name"
-msgstr "Tipo de Recurso"
+msgstr "Nome do Recurso"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1195,7 +1237,7 @@ msgstr "Mensagens não lidas"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_login
 msgid "Used to log into the system"
-msgstr ""
+msgstr "Usado para entrar no sistema"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1462,31 +1504,21 @@ msgstr "Você fala fluentemente Francês e Inglês"
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as                     coordinate and supervise "
 "small distributed development teams for specific projects. You will become a "
 "technical                 expert of the product."
 msgstr ""
-"Você será responsável por desenvolver e melhorar aplicativos, como o que "
-"você vai trabalhar de forma autônoma, bem como coordenar e supervisionar as "
-"pequenas equipes de desenvolvimento distribuídas para projetos específicos. "
-"Você vai se tornar um especialista técnico do produto."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as coordinate and supervise small distributed "
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
-"Você será responsável por desenvolver e melhorar aplicativos, como o que "
-"você vai trabalhar de forma autônoma, bem como coordenar e supervisionar as "
-"pequenas equipes de desenvolvimento distribuídas para projetos específicos. "
-"Você vai se tornar um especialista técnico do produto."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1550,6 +1582,19 @@ msgid "You will work closely with all trainees"
 msgstr "Você vai trabalhar em estreita colaboração com todos os estagiários"
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "departamento"
@@ -1563,107 +1608,3 @@ msgstr "Ex. Meio Período"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Ação Necessária"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "Clique aqui para definir um novo departamento."
-
-#~ msgid "Create Your Departments"
-#~ msgstr "Crie Seus Departamentos"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data da ultima mensagem para o registro."
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canais)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Parceiros)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#~ msgid "Is Follower"
-#~ msgstr "É um seguidor"
-
-#~ msgid "Job Name"
-#~ msgstr "Nome da Função"
-
-#~ msgid "Job Position Name"
-#~ msgstr "Nome do Cargo"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data da última mensagem"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de ações"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensagens que requer uma ação"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Quantidade de mensagens não lidas."
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Abrir Menu RH"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "Recrutamento Concluído"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Este campo descrevem a eficiência do recurso a tarefas completas. Por "
-#~ "exemplo colocar um recurso sozinho em uma fase de 5 dias com 5 tarefas "
-#~ "atribuídas a ele, irá mostrar uma carga de 100% para esta fase por "
-#~ "padrão, mas se colocarmos uma eficiência de 200%, então a sua carga será "
-#~ "apenas de 50%."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensagens Não Lidas."
-
-#~ msgid "Update Date"
-#~ msgstr "Data de Atualização"
-
-#~ msgid ""
-#~ "You will be responsible for developing and improving applications, such "
-#~ "as the You will work autonomously as well as                     "
-#~ "coordinate and supervise small distributed development teams for specific "
-#~ "projects. You will become a technical                 expert of the "
-#~ "product."
-#~ msgstr ""
-#~ "Você será responsável por desenvolver e melhorar aplicativos, como o que "
-#~ "você vai trabalhar de forma autônoma, bem como coordenar e supervisionar "
-#~ "as pequenas equipes de desenvolvimento distribuídas para projetos "
-#~ "específicos. Você vai se tornar um especialista técnico do produto."
-
-#~ msgid ""
-#~ "You will be responsible for developing and improving applications, such "
-#~ "as the You will work autonomously as well as coordinate and supervise "
-#~ "small distributed development teams for specific projects. You will "
-#~ "become a technical expert of the product."
-#~ msgstr ""
-#~ "Você será responsável por desenvolver e melhorar aplicativos, como o que "
-#~ "você vai trabalhar de forma autônoma, bem como coordenar e supervisionar "
-#~ "as pequenas equipes de desenvolvimento distribuídas para projetos "
-#~ "específicos. Você vai se tornar um especialista técnico do produto."
-
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents\n"
-#~ "                related to employees by departments: expenses and "
-#~ "timesheets,\n"
-#~ "                leaves and holidays, recruitments, etc."
-#~ msgstr ""
-#~ "Sua estrutura de departamentos é usada para gerenciar todos os "
-#~ "documentos\n"
-#~ "relacionados aos funcionários por departamentos: despesas e tquadros de "
-#~ "horários,\n"
-#~ "licenças e feriados, recrutamentos, etc."

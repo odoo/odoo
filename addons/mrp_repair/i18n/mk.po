@@ -31,7 +31,6 @@ msgstr "(ажурирај)"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-#, fuzzy
 msgid ""
 "* The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "repair order.\n"
@@ -43,17 +42,6 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-" * Статусот 'Нацрт' се користи кога корисникот внесува нов и непотврден "
-"налог за поправка.             \n"
-"* Статусот 'Потврдено' се користи кога корисникот го потврдува налогот за "
-"поправка.             \n"
-"* 'Спремно за поправка' се користи за да се започне со поправката. "
-"Корисникот може да започне откако налогот за поправка е "
-"потврден.             \n"
-"* Статусот 'За фактурирање' се користи за да се генерира фактура пред или "
-"после поправката.             \n"
-"* 'Завршено' се поставува откако поправката е целосно завршена.            \n"
-"* 'Откажано' се користи кога корисникот ќе го откаже налогот за поправка."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -92,9 +80,8 @@ msgstr "<strong>Производ за поправка:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#, fuzzy
 msgid "<strong>Shipping address :</strong>"
-msgstr "Адреса на испорака :"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -685,9 +672,8 @@ msgstr "Налози за поправка"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-#, fuzzy
 msgid "Search Repair Orders"
-msgstr "Пребарај ги налозите за поправка"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -871,98 +857,8 @@ msgstr ""
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:493
 #: code:addons/mrp_repair/models/mrp_repair.py:555
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
-"Мора да изберете ценовник во формуларот за поправка !\n"
-"Ве молиме подесете еден пред да изберете производ."
-
-#~ msgid ""
-#~ " * The 'Draft' status is set automatically as draft when repair order in "
-#~ "draft status.                         \n"
-#~ "* The 'Confirmed' status is set automatically as confirm when repair "
-#~ "order in confirm status.                         \n"
-#~ "* The 'Done' status is set automatically when repair order is "
-#~ "completed.                        \n"
-#~ "* The 'Cancelled' status is set automatically when user cancel repair "
-#~ "order."
-#~ msgstr ""
-#~ " * Статусот 'Нацрт' е автоматски подесен како нацрт кога налогот за "
-#~ "поправка е во статус нацрт.                         \n"
-#~ "* Статусот 'Потврдено' е автоматски подесен како потврдено кога налогот "
-#~ "за поправка е во статус потврди.                         \n"
-#~ "* Статусот 'Завршено' е подесен автоматски кога налогот за поправка е "
-#~ "завршен.                        \n"
-#~ "* Статусот 'Откажано' е автоматски подесен кога корисникот го откажува "
-#~ "налогот за поправка."
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid "Active ID not Found"
-#~ msgstr "Активниот ID не е најден"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Messages"
-#~ msgstr "Пораки"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Пораки и историја на комуникација"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Reair Orders"
-#~ msgstr "Налози за поправка"
-
-#~ msgid "Search Reair Orders"
-#~ msgstr "Пребарај ги налозите за поправка"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Адреса на испорака :"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитани Пораки"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid "Website Messages"
-#~ msgstr "Пораки на веб сајт"
-
-#~ msgid "Website communication history"
-#~ msgstr "Историја на веб комуникација"
-
-#~ msgid "unknown"
-#~ msgstr "непознато"

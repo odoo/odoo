@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -51,6 +51,7 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
+"% if is_online:\n"
 "<p style=\"margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;\">\n"
 "    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
 "line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
@@ -60,6 +61,7 @@ msgid ""
 "#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
 "</a>\n"
 "</p>\n"
+"% endif\n"
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
@@ -132,6 +134,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
+"<b>Hívjon meg értékesítőt vagy vezetőket</b> emailen.<br/><i>Soronként egy "
+"emailt adjon meg.</i>"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -141,6 +145,10 @@ msgid ""
 "support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Példa: előre-fizetendő szolgáltatás ajánlatok, melyekre a vevőnek \n"
+"extra                óra csomagokat kell vásárolnia, mivel az összes "
+"támogatási óráit\n"
+"                elhasználta.</i>"
 
 #. module: sale
 #. openerp-web
@@ -150,6 +158,9 @@ msgid ""
 "<p><b>Confirm the order</b> if the customer purchases.</p><p><i>The customer "
 "can also confirm the order directly from the email he received.</i></p>"
 msgstr ""
+"<p><b>Erősítse meg a vásárlói megrendelést</b> ha a vevő vásárolt.</"
+"p><p><i>A vásárló megerősítheti a rendelését közvetlenül a hozzá érkezett "
+"email-en is.</i></p>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -202,6 +213,7 @@ msgstr "Egy egyedi ár termékekként"
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
+"Egy figyelmeztetést állíthat be egy terméken vagy egy vásárlón (Értékesítés)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -242,12 +254,12 @@ msgstr "Előre árazás a képlet alapján"
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
 msgid "All the products and the customers can be used in sale orders"
-msgstr ""
+msgstr "Az összes termék és vevő használható a vevői megrendeléseken"
 
 #. module: sale
 #: selection:sale.config.settings,module_product_visible_discount:0
 msgid "Allow discount policy on sale order line"
-msgstr ""
+msgstr "Engedélyezi a vásárlói megrendelés tételeire az árengedmény szabályt"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -300,6 +312,8 @@ msgstr "Számlázandó értékesítések mennyisége"
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
 msgstr ""
+"Egy információs vagy blokkoló figyelmeztetés állítható be az egyes "
+"termékekre vagy egy vevőre"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -331,12 +345,12 @@ msgstr "Analitikus/elemző könyvelési gyűjtőkód az értékesítésekhez"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Költségen"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At sale price"
-msgstr ""
+msgstr "Eladási áron"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -357,7 +371,7 @@ msgstr "Blokkoló üzenet"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr ""
+msgstr "Megszakítások oldala"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -410,6 +424,8 @@ msgstr ""
 #, python-format
 msgid "Click the <i>Home icon</i> to navigate across apps."
 msgstr ""
+"Kattintson a <i>Kezdőlap ikonra</i> az alkalmazásokon keresztüli "
+"navigációhoz."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -439,7 +455,7 @@ msgstr "Vállalat"
 #: code:addons/sale/static/src/js/tour.js:40
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -548,7 +564,7 @@ msgstr "Vásárlói megrendelés létrehozásának dátuma."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
 msgid "Date on which the sale order is confirmed."
-msgstr ""
+msgstr "A vevői megrendelés megerősítésének dátuma."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
@@ -599,7 +615,7 @@ msgstr "Kiszállítás átfutási idő"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "A jelenlegi vásárlói megrendelés szállítási címe."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -686,7 +702,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sale orders and invoice reports"
-msgstr ""
+msgstr "Ne tegye személyessé a vevői megrendeléseket és számla kimutatásokat"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:83
@@ -836,7 +852,7 @@ msgid "Invoice"
 msgstr "Számlázás"
 
 #. module: sale
-#: code:addons/sale/sale.py:968
+#: code:addons/sale/sale.py:969
 #, python-format
 msgid "Invoice %s paid"
 msgstr "%s számla fizetve"
@@ -1176,14 +1192,10 @@ msgstr "Nincsenek variációk a termékre"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
-#, fuzzy
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-"Jegyezze meg, ha egy Árajánlat Vásárlói Megrendeléssé alakul, azt "
-"átmozgatja \n"
-"                az Árajánlatok listájából a Vásárlói Megrendelések listájába."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -1385,7 +1397,7 @@ msgstr ""
 "vállalathoz."
 
 #. module: sale
-#: code:addons/sale/sale.py:790
+#: code:addons/sale/sale.py:791
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -2260,7 +2272,7 @@ msgid "Warning"
 msgstr "Figyelmeztetés"
 
 #. module: sale
-#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:870
+#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:871
 #, python-format
 msgid "Warning for %s"
 msgstr "Figyelmeztetés erre %s"
@@ -2305,7 +2317,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:899
+#: code:addons/sale/sale.py:900
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"
@@ -2328,15 +2340,11 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
-#, fuzzy
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the "
 "Payment."
 msgstr ""
-"Következő műveletei hatékonyan folyhatnak: hagyja jóvá az Árajánlatot \n"
-"                egy Vásárlói Megrendeléssé, Ezután hozza létre a számlát és "
-"gyűjtse be a pénz."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -2384,339 +2392,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "ismeretlen"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' "
-#~ "or 'order confirmation'} from ${object.company_id.name}: </p>\n"
-#~ "\n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object."
-#~ "pricelist_id.currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.client_order_ref:\n"
-#~ "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email "
-#~ "or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "    <p>\n"
-#~ "        You can view your quotation online:\n"
-#~ "    </p>\n"
-#~ "    <a style=\"display:block; width: 150px; height:20px; margin-left: "
-#~ "120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
-#~ "serif; font-size: 13px; font-weight: bold; text-align: center; text-"
-#~ "decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
-#~ "background-color: #8E0000; border-radius: 5px 5px; background-repeat: "
-#~ "repeat no-repeat;\"\n"
-#~ "        href=\"/quote/${object.id}/${object.access_token}\">View ${object."
-#~ "state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-#~ "\n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>It is also possible to directly pay with Paypal:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/"
-#~ "btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Tisztelt ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>Itt van a(z) ${object.state in ('draft', 'sent') és 'árajánlat' "
-#~ "vagy 'megrendelés visszaigazolás'} innen ${object.company_id.name}: </p>\n"
-#~ "\n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>HIVATKOZÁSOK</strong><br />\n"
-#~ "       &nbsp;&nbsp;Megrendelés száma: <strong>${object.name}</strong><br /"
-#~ ">\n"
-#~ "       &nbsp;&nbsp;Megrendelés összege: <strong>${object.amount_total} "
-#~ "${object.pricelist_id.currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Megrendelés dátuma: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Megrendelés hivatkozása: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.client_order_ref:\n"
-#~ "       &nbsp;&nbsp;Ön hivatkozása: ${object.client_order_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Ön kapcsolattartója: <a href=\"mailto:${object.user_id."
-#~ "email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "    <p>\n"
-#~ "        Itt megtekintheti az árajánlatot online:\n"
-#~ "    </p>\n"
-#~ "    <a style=\"display:block; width: 150px; height:20px; margin-left: "
-#~ "120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
-#~ "serif; font-size: 13px; font-weight: bold; text-align: center; text-"
-#~ "decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
-#~ "background-color: #8E0000; border-radius: 5px 5px; background-repeat: "
-#~ "repeat no-repeat;\"\n"
-#~ "        href=\"/quote/${object.id}/${object.access_token}\">View ${object."
-#~ "state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-#~ "\n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>Lehetősége van Paypal rendszeren keresztüli fizetésre:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/"
-#~ "btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>További felmerülő kérdésekben állunk szíves rendelkezésükre.</p>\n"
-#~ "    <p>Köszönjük, hogy minket választott ${object.company_id.name or "
-#~ "'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-
-#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-#~ msgstr ""
-#~ "<span groups=\"sale.group_discount_per_so_line\">Árengedm.(%)</span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Done"
-#~ msgstr "Kész"
-
-#~ msgid "Expense Account"
-#~ msgstr "Költség főkönyvi számla"
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid ""
-#~ "If a sale order is done, you cannot modify it manually anymore. However, "
-#~ "you will still be able to invoice or deliver. This is used to freeze the "
-#~ "sale order."
-#~ msgstr ""
-#~ "Ha egy vásárlói megrendelés végrehajtott, azt kézzel többé nem "
-#~ "módosíthatja. Azonban, még lehetősége van kiszámlázni vagy kiszállítani. "
-#~ "Ezt a vásárlói megrendelés fagyasztására használja."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Invoice based on costs (time and material, expenses)"
-#~ msgstr "Számla a költségek alapján (idő és alapanyag, költségek)"
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "Számla az idő és az alapanyag alapján"
-
-#~ msgid ""
-#~ "Invoices will be created in draft so that you can update\n"
-#~ "                        them before validation."
-#~ msgstr ""
-#~ "Számlák vázlatban készülnek, így frissítheti\n"
-#~ "                        jóváhagyás előtt."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő egy követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Értékesítési menü megnyitása"
-
-#~ msgid "Sales Order that haven't yet been confirmed"
-#~ msgstr "Megrendelés mely még nem lett megerősítve"
-
-#~ msgid "Set to Done"
-#~ msgstr "Elvégzettre állítja"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Egyes termékek már másik mértékegységben kerültek eladásra/beszerezésre "
-#~ "(haladó)"
-
-#~ msgid ""
-#~ "The Sale Order %s linked to the Analytic Account must be validated before "
-#~ "registering expenses."
-#~ msgstr ""
-#~ "Az Elemző főkönyvi számlához kapcsolt  %s Vásárlói Megrendelést jóvá kell "
-#~ "hagyni mielőtt a költségek berögzítésre kerülnek."
-
-#~ msgid ""
-#~ "This account will be used for invoices instead of the default one to "
-#~ "value expenses for the current product."
-#~ msgstr ""
-#~ "A rendszer az alapértelmezett helyett ezt a számlát fogja használni a "
-#~ "költségek értékeinek a jelenlegi terméken."
-
-#~ msgid ""
-#~ "This account will be used for invoices instead of the default one to "
-#~ "value sales for the current product."
-#~ msgstr ""
-#~ "A rendszer az alapértelmezett helyett ezt a számlát fogja használni az "
-#~ "értékesítések értékeinek a jelenlegi terméken."
-
-#~ msgid ""
-#~ "This progress bar shows the stages your quotation will go through.\n"
-#~ "                Use buttons on the left to move forward to the next "
-#~ "stages."
-#~ msgstr ""
-#~ "Ez a haladást mutató grafikon mutatja milyen szakaszokon megy át az "
-#~ "árajánlata.\n"
-#~ "                Használja a baloldali gombokat a következő szakaszokra "
-#~ "lépéshez."
-
-#~ msgid "Timesheets on contract"
-#~ msgstr "Kapcsolatok időkiosztásai"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Mértékegységek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid ""
-#~ "Use pivot and graph views to analyze your sales pipeline.\n"
-#~ "                Select measures, filter and group dimensions to get the "
-#~ "perfect report according to your needs."
-#~ msgstr ""
-#~ "Használja a kimutatás és grafikon nézeteket az értékesítési folyamatának "
-#~ "elemzéséhez.\n"
-#~ "                Válasszon mércét, szűrjön és csoportosítson méreteket a "
-#~ "kívánságának megfelelő hibátlan kimutatás készítéséhez."
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "You can only delete draft quotations!"
-#~ msgstr "Csak a ajánlat tervezeteket törölheti!"
-
-#~ msgid "Date"
-#~ msgstr "Dátum"

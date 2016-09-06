@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-07-15 13:40+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -44,7 +44,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
@@ -1463,7 +1463,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1698,6 +1698,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Laske tuotehinta yksiköittäin hinnaston version perusteella."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1793,9 +1800,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Yritys"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3016,7 +3022,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Tuotteet: "
@@ -3051,9 +3057,8 @@ msgstr "Määrä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Määrä pakkauksessa"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3410,9 +3415,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "Tuotteiden kokonaismäärä jotka voit laittaa lavalle tai laatikkoon."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3501,12 +3505,9 @@ msgstr "Tyyppi"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Poistamalla valinnan kentästä voit poistaa käytöstä mittayksikön poistamatta "
-"sitä kokonaan."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3621,9 +3622,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Muu hinnasto"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3935,183 +3935,3 @@ msgstr "hasta"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "tuntematon"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Näyttö\n"
-#~ "16GB RAM\n"
-#~ "Nopea 234Q Prosessori\n"
-#~ "QWERTY-näppäimistö"
-
-#~ msgid "75 percent less reflection."
-#~ msgstr "75% vähemmän heijastusta."
-
-#~ msgid "8-port Switch"
-#~ msgstr "8-porttinen kytkin."
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "Monitoimilaite: nopea tulostin, faksi ja skanneri"
-
-#~ msgid "Blank CD"
-#~ msgstr "Tyhjä CD"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "Tyhjä DVD-RW"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Elinkaaren loppu"
-
-#~ msgid "External Hard disk"
-#~ msgstr "Ulkoinen kiintolevy"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "Friendly to the environment."
-#~ msgstr "Ympäristöystävällinen."
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "Kuvankäsittelyohjelma kaikilla ominaisuuksilla"
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "Antaa järjestyksen näytettäessä tuoteryhmäluettelon."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks ohjelmisto"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Bruttopaino"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Handsfree kuulokeet läppärille, sisäinen mikrofoni ja kuulokeliitin."
-
-#~ msgid "Headset USB"
-#~ msgstr "Kuuloke USB"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Kuuloke, kannettava PC USB-liittimellä."
-
-#~ msgid "Headset standard"
-#~ msgstr "Kuuloke standardi"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "In Development"
-#~ msgstr "Kehityksessä"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Mustekasetti"
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Läppäri S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "Hallitse toissijaista yksikköä"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Emolevy A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Multimediakaiuttimet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Obsolete"
-#~ msgstr "Poistunut"
-
-#~ msgid "Office Suite"
-#~ msgstr "Toimisto-ohjelmisto"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "Tarvittaessa kiintolevyn kapasiteetti asiakasvaatimusten mukaan."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Muistitikku, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Muistitikku, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Tulostin, All-in.one"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "Prosessori AMD 8-Core"
-
-#~ msgid "RAM SR3"
-#~ msgstr "Muisti RAM SR3"
-
-#~ msgid "Router R430"
-#~ msgstr "Reititin R430"
-
-#~ msgid "Status"
-#~ msgstr "Tila"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Toimittajan hinnasto"
-
-#~ msgid "Template Name"
-#~ msgstr "Mallin nimi"
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Väriainekasetti"
-
-#~ msgid "USB Adapter"
-#~ msgstr "USB Adapteri"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Webcam"
-#~ msgstr "Web-kamera"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 8.2"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"

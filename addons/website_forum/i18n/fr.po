@@ -2777,16 +2777,16 @@ msgstr ""
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:114
-#, fuzzy, python-format
+#, python-format
 msgid "This page contains the newly created questions and its answers."
-msgstr "Cette page contient une nouvelle question crée et sa réponse."
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:94
-#, fuzzy, python-format
+#, python-format
 msgid "This page contains the newly created questions."
-msgstr "Cette page contient une nouvelle question crée."
+msgstr ""
 
 #. module: website_forum
 #. openerp-web
@@ -2934,13 +2934,11 @@ msgstr "Question votée (6)"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:26
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Use this button to create a new forum like any other document (page, menu, "
 "products, event, ...)."
 msgstr ""
-"Utilisez ce menu <em>'Contenu'</em> pour créer un nouveau forum comme "
-"n'importe quel document (page, menu, produits, événement,...)."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_user_id
@@ -3002,9 +3000,8 @@ msgstr "En attente de validation"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
-#, fuzzy
 msgid "Waiting post"
-msgstr "Modifiez ses propres questions"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -3514,215 +3511,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "your biography can be seen as tooltip"
 msgstr "votre biographie est visible en infobulle"
-
-#~ msgid ""
-#~ "\n"
-#~ "<p>\n"
-#~ "    Hello ${object.name},\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "    You have been invited to validate your email in order to get access "
-#~ "to \"${object.company_id.name}\" Q/A Forums.\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "    To validate your email, please click on the following link:\n"
-#~ "</p>\n"
-#~ "<ul>\n"
-#~ "    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
-#~ "\"${object.company_id.name}\" Q/A Forums</a></li>\n"
-#~ "</ul>\n"
-#~ "<p>\n"
-#~ "    Thanks,\n"
-#~ "</p>\n"
-#~ "<pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "</pre>"
-#~ msgstr ""
-#~ "\n"
-#~ "<p>\n"
-#~ "Bonjour ${object.name},\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "Nous vous invitons à valider votre courriel afin d'accéder aux forums Q/A "
-#~ "de \"${object.company_id.name}\" \n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "Pour ce faire, il vous suffit de cliquer sur le lien ci-dessous:\n"
-#~ "</p>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"${ctx.get('token_url')}\">Valider mon adresse email pour "
-#~ "les forums Q/A de \"${object.company_id.name}\" </a></li>\n"
-#~ "</ul>\n"
-#~ "<p>\n"
-#~ "Merci,\n"
-#~ "</p>\n"
-#~ "<pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "</pre>"
-
-#~ msgid ""
-#~ "<b>Answers should not add or expand questions</b>. Instead either edit "
-#~ "the question edit or add a question comment."
-#~ msgstr ""
-#~ "<b>Les réponses ne devraient pas ajouter et étendre les questions</b>. A "
-#~ "la place soit modifiez la question ou ajoutez un commentaire."
-
-#~ msgid ""
-#~ "<b>Answers shouldn't just provide a\n"
-#~ "    link a solution</b>. Instead provide the solution\n"
-#~ "    description text in your answer, even if it's just a\n"
-#~ "    copy/paste. Links are welcome, but should complementary to\n"
-#~ "    answer, referring sources or additional reading."
-#~ msgstr ""
-#~ "<b>Les réponses ne devraient pas juste fournir un\n"
-#~ "lien vers la solution</b>. A la place fournissez la description\n"
-#~ "complète de la solution dans votre réponse, même si c'est juste un\n"
-#~ "copier/coller. Les liens sont les bienvenus, mais devraient être "
-#~ "complémentaires à \n"
-#~ "la réponse, réferrant les sources ou de la lecture additionnelle."
-
-#~ msgid ""
-#~ "<b>Answers shouldn't just provide a link a solution</b>. Instead provide "
-#~ "the solution description text in your answer, even if it's just a copy/"
-#~ "paste. Links are welcome, but should complementary to answer, referring "
-#~ "sources or additional reading."
-#~ msgstr ""
-#~ "<b>Les réponses ne devraient pas juste fournir un lien vers la solution</"
-#~ "b>. A la place fournissez la description complète de la solution dans "
-#~ "votre réponse, même si c'est juste un copier/coller. Les liens sont les "
-#~ "bienvenus, mais devraient être complémentaires à la réponse, en "
-#~ "fournissant les sources ou de la lecture additionnelle."
-
-#~ msgid ""
-#~ "<p>A new answer for <i>%s</i> has been posted. <a href=\"%s/forum/%s/"
-#~ "question/%s\">Click here to access the post.</a></p>"
-#~ msgstr ""
-#~ "<p>Une nouvelle réponse pour <i>%s</i> à été publiée. <a href=\"%s/forum/"
-#~ "%s/question/%s\">Cliquez ici y pour accéder</a></p>"
-
-#~ msgid ""
-#~ "<p>A new question <i>%s</i> has been asked on %s and require your "
-#~ "validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
-#~ "question.</a></p>"
-#~ msgstr ""
-#~ "<p>Une nouvelle question <i>%s</i> a été publiée à propos de %s. <a href="
-#~ "\"%s/forum/%s/question/%s\">Cliquez ici pour y accéder.</a></p>"
-
-#~ msgid ""
-#~ "<p>A new question <i>%s</i> has been asked on %s. <a href=\"%s/forum/%s/"
-#~ "question/%s\">Click here to access the question.</a></p>"
-#~ msgstr ""
-#~ "<p>Une nouvelle question <i>%s</i> à été posée à propos de %s. <a href="
-#~ "\"%s/forum/%s/question/%s\">Cliquez ici pour y accéder.</a></p>"
-
-#~ msgid ""
-#~ "A tag is a label that categorizes your question with other,\n"
-#~ "            similar questions. Using the right tags makes it easier for\n"
-#~ "            others to find and answer your question."
-#~ msgstr ""
-#~ "Une étiquette est un label qui permet de catégoriser votre question parmi "
-#~ "d'autres. Utilisés de la bonne manière, elles vous permettent d'obtenir "
-#~ "votre réponse plus rapidement."
-
-#~ msgid "Action Needed"
-#~ msgstr "Nécessite une action"
-
-#~ msgid "Badge \""
-#~ msgstr "Badge \""
-
-#~ msgid "By sharing you answer, you will get additionnal"
-#~ msgstr "En partageant votre réponse, vous aurez plus de "
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message publié sur cet enregistrement"
-
-#~ msgid "Enter a name for your new forum then click 'Continue'."
-#~ msgstr "Saisir un nom pour votre nouveau forum et cliquer sur \"Continuer\""
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "si elle est cochée, de nouveaux messages requièrent votre attention."
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historique des messages et communications"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Post type in \"Default post\" must be activated"
-#~ msgstr "Le type de message dans \"Message par défaut\" doit être activé"
-
-#~ msgid ""
-#~ "Put this question back in the top list by sharing it on social networks."
-#~ msgstr ""
-#~ "Ajoutez cette question à nouveau dans la top liste en la partageant sur "
-#~ "les réseaux sociaux."
-
-#~ msgid "Send a message to the group"
-#~ msgstr "Envoyer un message au groupe"
-
-#~ msgid "To improve your chance getting an answer:"
-#~ msgstr "Pour améliorer vos chances d'obtenir une réponse:"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Messages non lus"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"
-
-#~ msgid "Website meta description"
-#~ msgstr "Méta description du site web"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Mots clefs du site web"
-
-#~ msgid "Website meta title"
-#~ msgstr "Titre du site web"
-
-#~ msgid "received this badge:"
-#~ msgstr "ont reçu ce badge:"
-
-#~ msgid "user"
-#~ msgstr "utilisateur"
-
-#~ msgid "users"
-#~ msgstr "utilisateurs"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-01-14 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
@@ -41,7 +41,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Anɣel )"
@@ -1460,7 +1460,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1697,6 +1697,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Siḍen azal n ufaris s yiwen akken illa welqem n tebdart n ssuma ."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1792,9 +1799,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Takebbwanit"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3027,7 +3033,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Ifarisen : "
@@ -3062,9 +3068,8 @@ msgstr "Tanecta"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Tanecta s ukaraf"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3431,9 +3436,8 @@ msgstr "The sleek aluminium Apple Wireless Keyboard."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "The total number of products you can put by pallet or box."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3521,12 +3525,9 @@ msgstr "Tawsit"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"By unchecking the active field you can disable a unit of measure without "
-"deleting it."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3641,9 +3642,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Tabdart n ssuma nniḍen"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3955,158 +3955,3 @@ msgstr "ɣer"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "arussin"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "All in one hi-speed printer with fax and scanner."
-
-#~ msgid "Blank CD"
-#~ msgstr "CD Ilem"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "DVD-RW Ilem"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "End of Lifecycle"
-
-#~ msgid "External Hard disk"
-#~ msgstr "Disque dur externe"
-
-#~ msgid "Followers"
-#~ msgstr "Imeltaɣen"
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "Logiciel d'édition d'images complet"
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "Ad imudd amizzwer n uskan n tebdart n tiggayin n ifarisen."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks Software"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Taẓayt tarewwayt"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "Disque dur à la demande"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Casque mains-libres pour PC portable avec microphone intégré et prise "
-#~ "casque."
-
-#~ msgid "Headset USB"
-#~ msgstr "Écouteurs USB"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Écouteurs pour PC portable avec connecteur USB"
-
-#~ msgid "Headset standard"
-#~ msgstr "Écouteurs standards"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#~ msgid "In Development"
-#~ msgstr "Di tneflit"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Cartouche jet d'encre"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Portable S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Azemz n yizen aneggaru"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "Sefrek aferdis n uɣel wi ssin"
-
-#~ msgid "Messages"
-#~ msgstr "Iznan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Amazray n iznan  d  teywalin"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Carte mère A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Haut-parleurs multimédia"
-
-#~ msgid "Obsolete"
-#~ msgstr "Ifat"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "Suite bureautique avec traitement de textes, tableur, présentations, "
-#~ "graphiques, bases de données..."
-
-#~ msgid "Office Suite"
-#~ msgstr "Suite Bureautique"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "Disque dur à la demande dont la capacité dépend des besoins."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Clé USB, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Clé USB, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Imprimante, tout en un"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "Processeur AMD 8-Core"
-
-#~ msgid "RAM SR3"
-#~ msgstr "RAM SR3"
-
-#~ msgid "Router R430"
-#~ msgstr "Router R430"
-
-#~ msgid "Status"
-#~ msgstr "Addad"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Tabdart n ssuma n useǧǧaw"
-
-#~ msgid "Template Name"
-#~ msgstr "Isem n Tneɣruft"
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Toner Cartridge"
-
-#~ msgid "USB Adapter"
-#~ msgstr "USB Adapter"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Iznan ur neţwaɣer-ara"
-
-#~ msgid "Webcam"
-#~ msgstr "Webcam"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -38,7 +38,7 @@ msgid "# of Issues"
 msgstr "议题编号"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:162
+#: code:addons/project_issue/models/project_issue.py:170
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -220,7 +220,7 @@ msgstr "创建者"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -228,13 +228,13 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:300
+#: code:addons/project_issue/models/project_issue.py:310
 #, python-format
 msgid "Customer"
 msgstr "客户"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:302
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
@@ -367,7 +367,7 @@ msgid "High"
 msgstr "高"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
+#: code:addons/project_issue/models/project_issue.py:285
 #, python-format
 msgid "I take it"
 msgstr "我来做"
@@ -510,7 +510,7 @@ msgstr "最后更新者"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
 msgid "Last Updated on"
-msgstr "最近更新时间"
+msgstr "最后更新时间"
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -541,7 +541,7 @@ msgid "New"
 msgstr "新建"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:279
+#: code:addons/project_issue/models/project_issue.py:289
 #, python-format
 msgid "New Issue"
 msgstr "新的议题"
@@ -552,7 +552,7 @@ msgid "Next Action"
 msgstr "下一行动"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:326
+#: code:addons/project_issue/models/project_issue.py:336
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -681,9 +681,8 @@ msgstr "准备好下一个阶段"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-#, fuzzy
 msgid "Ready to reopen"
-msgstr "距开始处理"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -840,7 +839,7 @@ msgid ""
 msgstr "你可以在这里把议题和任务链接起来，也可以直接创建一个"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:197
+#: code:addons/project_issue/models/project_issue.py:205
 #, python-format
 msgid "issues"
 msgstr "议题"
@@ -854,117 +853,3 @@ msgstr "项目配置"
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid ""
-#~ "A Issue's kanban state indicates special situations affecting it:\n"
-#~ " * Normal is the default situation\n"
-#~ " * Blocked indicates something is preventing the progress of this issue\n"
-#~ " * Ready for next stage indicates the issue is ready to be pulled to the "
-#~ "next stage"
-#~ msgstr ""
-#~ "议题的看板状态显示了影响它的特殊状况:\n"
-#~ " * 正常状态是默认的状态\n"
-#~ " * 等待状态显示有事情阻止议题的进一步发展\n"
-#~ " * 预备好下一步状态显示议题已经做好准备进入到下一个阶段"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Click to create an issue."
-#~ msgstr "点击创建议题"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Issue ready for next sStage"
-#~ msgstr "可以进入下一阶段的议题"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Sale Team"
-#~ msgstr "销售团队"
-
-#~ msgid "Sales Team"
-#~ msgstr "销售团队"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                             Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr "这个业务所属的销售团队。输入团队负责人和邮箱。"
-
-#~ msgid ""
-#~ "The Odoo issues tacker allows you to efficiently manage things\n"
-#~ "                    like internal requests, software development bugs, "
-#~ "customer\n"
-#~ "                    complaints, project troubles, material breakdowns, "
-#~ "etc."
-#~ msgstr ""
-#~ "Odoo的议题跟踪可以让你很方便的管理事物例如，内部需求，软件开的bug，客户投"
-#~ "诉等等，项目议题，材料故障等等"
-
-#~ msgid ""
-#~ "The Odoo issues tacker allows you to efficiently manage things\n"
-#~ "                like internal requests, software development bugs, "
-#~ "customer\n"
-#~ "                complaints, project troubles, material breakdowns, etc."
-#~ msgstr ""
-#~ "Odoo的议题跟踪可以让你很方便的管理事物例如，内部需求，软件开的bug，客户投"
-#~ "诉等等，项目议题，材料故障等等"
-
-#~ msgid ""
-#~ "These email addresses will be added to the CC field of all inbound and "
-#~ "outbound emails for this record before being sent. Separate multiple "
-#~ "email addresses with a comma"
-#~ msgstr ""
-#~ "这些邮箱地址将添加到所有接收的发送邮件的抄送字段，用逗号分隔多个邮件地址。"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Update Date"
-#~ msgstr "更新日期"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid ""
-#~ "You can track your issues from this menu and the action we     \n"
-#~ "                will take."
-#~ msgstr "你可以在这里追踪议题并查看相关的动作"

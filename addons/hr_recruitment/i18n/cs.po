@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-08-11 12:17+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
@@ -440,9 +440,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
-#, fuzzy
 msgid "Click to add a new tag."
-msgstr "Klikněte zde pro přidání nového zaměstnance."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
@@ -494,9 +493,8 @@ msgstr "Kontaktní mail:"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
-#, fuzzy
 msgid "Content"
-msgstr "Kontaktní"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -515,9 +513,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
-#, fuzzy
 msgid "Create"
-msgstr "Vytvořil(a)"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
@@ -532,9 +529,8 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
-#, fuzzy
 msgid "Create a Job Position"
-msgstr "Pracovní pozice"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -651,9 +647,8 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
-#, fuzzy
 msgid "Departments"
-msgstr "Oddělení"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
@@ -898,9 +893,8 @@ msgstr "Najatí zaměstnanci"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "Oddělení"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -980,9 +974,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
-#, fuzzy
 msgid "Job Email"
-msgstr "Email"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
@@ -1437,9 +1430,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "Aplikace"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1914,93 +1906,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>Vážený/á ${object.partner_name or 'applicant'},</p>\n"
-#~ "<p>Gratulujeme! Váš životopis nás zaujal!\n"
-#~ "Zavoláme Vám co nejdřív, bude to 10 minutový telefonní rozhovor a "
-#~ "naplánujeme první schůzku.</p>\n"
-#~ "<p>Pokud se s Vámi nebudeme moci spojit, prosím neváhejte nás kontaktovat "
-#~ "na čísle 723 516 408.\n"
-#~ "Pokud to nebudeme zvedat, zanechejte nám prosím odkaz s přibližnými časy, "
-#~ "kdy Vás můžeme opět kontaktovat.</p>\n"
-#~ "<p>S přátelským pozdravem,</p>\n"
-#~ "<br/>\n"
-#~ "${object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>Vážený/á ${object.partner_name or 'applicant'},</p>\n"
-#~ "<p>Děkujeme Vám za Váš zájem o naši společnost a za Vaši přihlášku.\n"
-#~ "Bohužel, Váš profil neodpovídá našim potřebám a nebo již byla náborová \n"
-#~ "kampaň ukončena.</p>\n"
-#~ "<p>Jestli potřebujete víc informací, neváhejte nás kontaktovat "
-#~ "telefonicky.</p>\n"
-#~ "<p>S přátelským pozdravem,</p>\n"
-#~ "<br/>\\n${object.user_id and object.user_id.signature | safe or ''}\""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vyžadována akce"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampaň"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posledního vzkazu u tohoto záznamu."
-
-#~ msgid "Followers"
-#~ msgstr "Sledující"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum posledního vzkazu"
-
-#~ msgid "Messages"
-#~ msgstr "Zprávy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Zprávy a historie komunikace"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Otevřít menu HR"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Toto jméno vám pomůže rozlišit kampaně a sledovat, jak se jim daří (např. "
-#~ "Vánoční_speciál, Sezonní_výprodej)"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo nepřečtených zpráv"
-
-#~ msgid "Website Messages"
-#~ msgstr "Zprávy Webové stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historie komunikace Webové stránky"

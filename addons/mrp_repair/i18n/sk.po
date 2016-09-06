@@ -31,7 +31,6 @@ msgstr "(aktualizácia)"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-#, fuzzy
 msgid ""
 "* The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "repair order.\n"
@@ -43,14 +42,6 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* Stav 'Koncept' sa používa keď používateľ kóduje novú a nepotvrdenú opravnú "
-"objednávku.\n"
-"* Stav 'Potvrdené' sa používa keď používateľ potvrdí opravnú objednávku.\n"
-"* Stav 'Pripravené na opravu' sa používa na začatie opravovania, používateľ "
-"môže začať opravovať až keď je opravná objednávka potvrdená.\n"
-"* Stav 'Na vyfaktúrovanie' sa používa na vytvorenie faktúry pred alebo po "
-"oprave.\n"
-"* Stav 'Zrušené' sa používa keď používateľ zruší opravnú objednávku."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -89,9 +80,8 @@ msgstr "<strong>Produkt na opravu:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#, fuzzy
 msgid "<strong>Shipping address :</strong>"
-msgstr "<strong>Dátum tlače:</strong>"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -684,9 +674,8 @@ msgstr "Opravná objednávka"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-#, fuzzy
 msgid "Search Repair Orders"
-msgstr "Vyhľadať opravné objednávky"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -872,98 +861,8 @@ msgstr "Musíte zvoliť fakturačnú adresu partnera vo formulári opravy!"
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:493
 #: code:addons/mrp_repair/models/mrp_repair.py:555
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
-"Musíte zvoliť cenník vo formulári opravy !\n"
-"Prosím nastavte ho pred zvolením produktu."
-
-#~ msgid ""
-#~ " * The 'Draft' status is set automatically as draft when repair order in "
-#~ "draft status.                         \n"
-#~ "* The 'Confirmed' status is set automatically as confirm when repair "
-#~ "order in confirm status.                         \n"
-#~ "* The 'Done' status is set automatically when repair order is "
-#~ "completed.                        \n"
-#~ "* The 'Cancelled' status is set automatically when user cancel repair "
-#~ "order."
-#~ msgstr ""
-#~ "* Stav 'Koncept' sa automaticky nastaví ako koncept, ak opravná "
-#~ "objednávka v koncept stave.\n"
-#~ "* Stav 'Potvrdené' je nastavený automaticky ako potvrdený keď je opravná "
-#~ "objednávka v stave potvrdenia.\n"
-#~ "* Stav 'Hotovo' je natavený automaticky pri dokončení opravnej "
-#~ "objednávky.\n"
-#~ "* Stav 'Zrušený' je nastavený automaticky keď používateľ zruší opravnú "
-#~ "objednávku."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebná akcia"
-
-#~ msgid "Active ID not Found"
-#~ msgstr "Aktívne ID nebolo nájdené"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dátum poslednej správy záznamu."
-
-#~ msgid "Followers"
-#~ msgstr "Odberatelia"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Odberatelia (Kanály)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Odberatelia (Partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je odberateľ"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Dátum poslednej správy"
-
-#~ msgid "Messages"
-#~ msgstr "Správy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Správa a história komunikácie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Počet akcií"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Počet správ ktoré vyžadujú akciu"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Počet neprečítaných správ"
-
-#~ msgid "Reair Orders"
-#~ msgstr "Opravné objednávky"
-
-#~ msgid "Search Reair Orders"
-#~ msgstr "Vyhľadať opravné objednávky"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Dodacia adresa :"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neprečítané správy"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo neprečítaných správ"
-
-#~ msgid "Website Messages"
-#~ msgstr "Správy webovej stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "História komunikácie webovej stránky"
-
-#~ msgid "unknown"
-#~ msgstr "neznámy"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-06-13 10:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
@@ -42,7 +42,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -1454,7 +1454,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1686,6 +1686,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "根據價目表版本計算每單位產品價錢"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1781,9 +1788,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "公司"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -2984,7 +2990,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "產品： "
@@ -3019,9 +3025,8 @@ msgstr "數量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "盒數"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3370,9 +3375,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "可以卡板或箱子放入之產品總數"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3575,9 +3579,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "其他價目表"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3889,156 +3892,3 @@ msgstr "到"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "不詳"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-
-#~ msgid "Action Needed"
-#~ msgstr "待處理"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "具有傳真及掃描的高速印表機"
-
-#~ msgid "Blank CD"
-#~ msgstr "空白光碟"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "空白 DVD-RW"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "釋出到記錄上的最後資訊的日期"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "生命週期的結束"
-
-#~ msgid "External Hard disk"
-#~ msgstr "外接硬碟"
-
-#~ msgid "Followers"
-#~ msgstr "關注者"
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "全功能影像編輯軟體"
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "請指定排序以便顯示產品類別表。"
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks 軟體"
-
-#~ msgid "Gross Weight"
-#~ msgstr "毛重"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "HDD on Demand"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-
-#~ msgid "Headset USB"
-#~ msgstr "USB 耳機"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "附有USB接頭，手提電腦用的耳機。"
-
-#~ msgid "Headset standard"
-#~ msgstr "標準式耳機"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "當有新訊息時通知您。"
-
-#~ msgid "In Development"
-#~ msgstr "開發中"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "墨水匣"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Laptop S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最後訊息日期"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "管理次要量度單位"
-
-#~ msgid "Messages"
-#~ msgstr "訊息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "訊息及聯絡紀錄"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "主機板 A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "喇叭"
-
-#~ msgid "Obsolete"
-#~ msgstr "廢棄"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr "具有文書處理、試算表、簡報、圖表以及資料庫功能的辦公編輯軟體..."
-
-#~ msgid "Office Suite"
-#~ msgstr "辦公軟體套件"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "On demand hard-disk having capacity based on requirement."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Pen drive, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Pen drive, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "All-in-one 印表機"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "AMD 八核心處理器"
-
-#~ msgid "RAM SR3"
-#~ msgstr "記憶體 SR3"
-
-#~ msgid "Router R430"
-#~ msgstr "路由器 R430"
-
-#~ msgid "Status"
-#~ msgstr "狀態"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "供應商價目表"
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "碳粉匣"
-
-#~ msgid "USB Adapter"
-#~ msgstr "USB Adapter"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未讀訊息"
-
-#~ msgid "Webcam"
-#~ msgstr "網路攝影機"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"

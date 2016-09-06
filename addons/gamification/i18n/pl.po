@@ -52,7 +52,6 @@ msgstr ""
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
-#, fuzzy
 msgid ""
 "\n"
 "    <p>\n"
@@ -64,15 +63,6 @@ msgid ""
 "least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
-"\n"
-"    <header>\n"
-"        <strong>Przypomnienie ${object.name}</strong>\n"
-"    </header>\n"
-"    \n"
-"    <p>Nie uaktualniłeś/aś swoich postępów do celu ${object.definition_id."
-"name} (aktualny wypełniono ${object.completeness}%) przez co najmniej "
-"${object.remind_update_delay} dni. Nie zapomnij tego zrobić.</p>\n"
-"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -742,9 +732,8 @@ msgstr "Dla trzeciego użytkownika"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
-#, fuzzy
 msgid "For Every Succeeding User"
-msgstr "Dla każdego użytkownika, który osiągnie sukces"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1639,29 +1628,23 @@ msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:146
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The model configuration for the definition %s seems incorrect, please check "
 "it.\n"
 "\n"
 "%s not found"
 msgstr ""
-"Dziedzina dla definicji %s wygląda na nieprawidłową, sprawdź to.\n"
-"\n"
-"%s"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:143
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The model configuration for the definition %s seems incorrect, please check "
 "it.\n"
 "\n"
 "%s not stored"
 msgstr ""
-"Dziedzina dla definicji %s wygląda na nieprawidłową, sprawdź to.\n"
-"\n"
-"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
@@ -1992,78 +1975,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
 msgstr "w tym miesiącu"
-
-#~ msgid ""
-#~ "\n"
-#~ "    <header>\n"
-#~ "        <strong>Reminder ${object.name}</strong>\n"
-#~ "    </header>\n"
-#~ "    \n"
-#~ "    <p>You have not updated your progress for the goal ${object."
-#~ "definition_id.name} (currently reached at ${object.completeness}%) for at "
-#~ "least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "    <header>\n"
-#~ "        <strong>Przypomnienie ${object.name}</strong>\n"
-#~ "    </header>\n"
-#~ "    \n"
-#~ "    <p>Nie uaktualniłeś/aś swoich postępów do celu ${object.definition_id."
-#~ "name} (aktualny wypełniono ${object.completeness}%) przez co najmniej "
-#~ "${object.remind_update_delay} dni. Nie zapomnij tego zrobić.</p>\n"
-#~ "            "
-
-#~ msgid "Action Needed"
-#~ msgstr "Wymagana akcja"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ostatniej wiadomości w rekordzie."
-
-#~ msgid "Followers"
-#~ msgstr "Obserwatorzy"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Obserwatorzy (kanały)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Obserwatorzy (partnerzy)"
-
-#~ msgid "For Every Succeding User"
-#~ msgstr "Dla każdego użytkownika, który osiągnie sukces"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#~ msgid "Inherited models"
-#~ msgstr "Odziedziczone modele"
-
-#~ msgid "Is Follower"
-#~ msgstr "Jest obserwatorem"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ostatniej wiadomości"
-
-#~ msgid "Messages"
-#~ msgstr "Wiadomosći"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Wiadomości i historia komunikacji"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Liczba akcji"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Liczba wiadomości wymagających akcji"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Liczba nieprzeczytanych wiadomości"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nieprzeczytane wiadomości"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Licznik nieprzeczytanych wiadomości"

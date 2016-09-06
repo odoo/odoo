@@ -4,13 +4,14 @@
 #
 # Translators:
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
+# Mario Jureša <mario.juresa@uvid.hr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:10+0000\n"
-"PO-Revision-Date: 2015-10-20 16:36+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"PO-Revision-Date: 2016-08-31 12:21+0000\n"
+"Last-Translator: Mario Jureša <mario.juresa@uvid.hr>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +26,8 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Dostava će biti "
+"ažurirana nakon odabira načina dostave\"> Dostava:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
@@ -73,7 +76,7 @@ msgstr "Prijevoznik"
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr ""
+msgstr "Označiti ako artikl treba izvagati vagom"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_available_in_pos
@@ -87,9 +90,8 @@ msgstr "Odaberite svoj način isporuke"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
-#, fuzzy
 msgid "Country"
-msgstr "Država..."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
@@ -98,9 +100,8 @@ msgstr "Iznos isporuke"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
-#, fuzzy
 msgid "Delivery Methods"
-msgstr "Odaberite svoj način isporuke"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -109,9 +110,8 @@ msgstr "Opis"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-#, fuzzy
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr "Opis za online ponude"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
@@ -151,7 +151,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Ima dostavu"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
@@ -203,15 +203,13 @@ msgstr "Ocjena"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
-#, fuzzy
 msgid "Rating count"
-msgstr "Ocjena"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
-#, fuzzy
 msgid "Rating value"
-msgstr "Ocjena"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -274,7 +272,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "Izvagati vagom"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
@@ -298,9 +296,8 @@ msgstr "Kategorije web proizvoda"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
-#, fuzzy
 msgid "Website Sequence"
-msgstr "Sekvenca"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -316,36 +313,3 @@ msgstr "Web meta ključne riječi"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
 msgstr "Web meta naslov"
-
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "Poruka za stavku naloga za nabavu"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Upozorenje za stavku prodajnog naloga"
-
-#~ msgid "Project"
-#~ msgstr "Projekt"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Stavka naloga nabave"
-
-#~ msgid "Sales Order Line"
-#~ msgstr "Stavka prodajnog naloga"
-
-#~ msgid "Select..."
-#~ msgstr "Odaberi..."
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, "
-#~ "odabirom opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i "
-#~ "blokirati tok. Poruku treba napisati u slijedećem polju."
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "Puni URL za pristup dokumentu putem web stranice."
-
-#~ msgid "Website URL"
-#~ msgstr "URL web stranice"

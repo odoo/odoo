@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-06-30 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-08-22 08:02+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
 "hu/)\n"
@@ -1048,6 +1048,12 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Egyenlő : Költségeket egyenlő részekre osztja.\n"
+"Mennyiségenként : Költségeket a termékek mennyisége szerint osztja el.\n"
+"Jelenlegi költségenként : Költségeket a termékek jelenlegi költségeiknek "
+"megfelelően osztja el.\n"
+"Súlyonként : Költségeket a súlyok szerint osztja el.\n"
+"Térfogatonként : Költségeket a térfogatok szerint osztja el."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:57
@@ -1182,7 +1188,7 @@ msgstr "Rejtett"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11091
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11093
 msgid "ID"
 msgstr "ID"
 
@@ -1251,6 +1257,11 @@ msgstr ""
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Érvénytelen Email! Kérem adjon meg valós e-mail címeket"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
@@ -1711,9 +1722,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_rating_last_value
-#, fuzzy
 msgid "Rating value"
-msgstr "Becslés"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1740,7 +1750,7 @@ msgstr "Értékesítés"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:8
 #, python-format
 msgid "Sales"
-msgstr "Értékesítések"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2264,7 +2274,7 @@ msgid "Website Pricelist"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:424
+#: code:addons/website_sale/models/sale_order.py:435
 #, python-format
 msgid "Website Pricelist for %s"
 msgstr ""
@@ -2521,84 +2531,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "☑ Processed by Ogone"
 msgstr "☑ Ogone által feldolgozva"
-
-#~ msgid "-- Create a new address --"
-#~ msgstr "-- Új cím létrehozás --"
-
-#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-#~ msgstr ""
-#~ "<span class=\"fa fa-envelope-o\"/> Weboldalunk szakemberének email címe"
-
-#~ msgid "Billing Information"
-#~ msgstr "Számla információ"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Jelölje be a négyzetet árajánlat tender generálásához az igények alapján "
-#~ "történő árajánlat kérések generálása helyett."
-
-#~ msgid "Extra Info"
-#~ msgstr "Extra információ"
-
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "Üzenet a szállítói megrendelés sorról"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Üzenet a vevői megrendelés sorára"
-
-#~ msgid "Payment"
-#~ msgstr "Kifizetés"
-
-#~ msgid "Payment Transaction"
-#~ msgstr "Fizetési tranzakció"
-
-#~ msgid "Product Product Categories"
-#~ msgstr "Termék termékkategóriái"
-
-#~ msgid "Project"
-#~ msgstr "Projekt"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Szállítói megrendelés sor"
-
-#~ msgid "Sales Order Line"
-#~ msgstr "Vásárlói megrendelés sor"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
-#~ "értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az "
-#~ "üzenethez és leblokkolja a folyamatot. Az üzenetet a következő mezőbe "
-#~ "kell beírni."
-
-#~ msgid "Shipping"
-#~ msgstr "Szállítás"
-
-#~ msgid "Shipping Information"
-#~ msgstr "Szállítási információ"
-
-#~ msgid "Sign in"
-#~ msgstr "Bejelentkezés"
-
-#~ msgid "Street"
-#~ msgstr "Utca"
-
-#~ msgid "VAT Number"
-#~ msgstr "ADÓ szám"
-
-#~ msgid "Your Name"
-#~ msgstr "Az Ön neve"
-
-#~ msgid "Zip / Postal Code"
-#~ msgstr "Irányítószám / Postai kód"
-
-#~ msgid "or"
-#~ msgstr "vagy"
-
-#~ msgid "select..."
-#~ msgstr "kiválaszt..."

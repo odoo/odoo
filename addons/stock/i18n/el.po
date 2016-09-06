@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:07+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-04 20:25+0000\n"
 "Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -20,15 +20,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Δημιουργεί την πορεία παράδοσης και προσθέτει πιο πολύπλοκους ελέγχους-"
-"Εγκαθιστά την εφαρμογή stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:218
@@ -45,7 +41,6 @@ msgstr "(δεσμευμένα)"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_state
 #: model:ir.model.fields,help:stock.field_stock_picking_state
-#, fuzzy
 msgid ""
 " * Draft: not confirmed yet and will not be scheduled until confirmed\n"
 " * Waiting Another Operation: waiting for another move to proceed before it "
@@ -56,38 +51,6 @@ msgid ""
 " * Transferred: has been processed, can't be modified or cancelled anymore\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
-"\n"
-"\n"
-"* Πρόχειρο: δεν έχει επιβεβαιωθεί ακόμη και δεν θα πρέπει να προγραμματιστεί "
-"μέχρι να επιβεβαιωθεί\n"
-"\n"
-"\n"
-"\n"
-"* Περιμένοντας άλλη λειτουργία: σε αναμονή για μια άλλη κίνηση για να "
-"προχωρήσει πριν αυτό γίνει διαθέσιμο αυτόματα (π.χ. παραγωγή κατά παραγγελία "
-"ροές) \n"
-"\n"
-"\n"
-"\n"
-"* Περιμένοντας για Διαθεσιμότητα: εξακολουθούν να περιμένουν για την "
-"διαθεσιμότητα των προϊόντων\n"
-"\n"
-"\n"
-"* Μερικώς Διαθέσιμο: ορισμένα προϊόντα είναι διαθέσιμα και δεσμευμένα\n"
-"\n"
-"\n"
-"\n"
-"* Έτοιμο για μεταφορά:τα δεσμευμένα προϊόντα, απλά αναμένουν για "
-"επιβεβαίωση.\n"
-"\n"
-"\n"
-"\n"
-"* Μεταφέρθηκε: έχει υποστεί επεξεργασία, δεν μπορεί να τροποποιηθεί ή να "
-"ακυρωθεί πλέον\n"
-"\n"
-"\n"
-"\n"
-"* Ακυρώθηκε: έχει ακυρωθεί, δεν μπορεί να επιβεβαιωθεί πλέον"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -108,7 +71,6 @@ msgstr "%s:  Τοποθεσία Διαμετακόμισης"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -119,23 +81,9 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"*Νέο: Όταν το απόθεμα μετακινείται δημιουργείται και δεν έχει ακόμη "
-"επιβεβαιωθεί.\n"
-"*Περιμένωντας Άλλη Κίνηση: Αυτή  η κατάσταση μπορεί να ειδωθεί όταν η κίνηση "
-"αναμένει  μια άλλη, για παράδειγμα σε μια αλυσιδωτή ροή.\n"
-"* Αναμονή Διαθεσιμότητα: Αυτή η κατάσταση επιτυγχάνεται όταν η ανάλυση "
-"προμηθειών δεν είναι κατ 'ευθείαν προς τα εμπρός. Μπορεί να χρειαστεί το "
-"χρονοδιάγραμμα  να τρέξει, ένα στοιχείο που κατασκευάζονται ... \n"
-"\n"
-"* Διαθέσιμο: Όταν τα προϊόντα είναι διαθέσιμα,  έχει οριστεί σε "
-"«Διαθέσιμο'.\n"
-"\n"
-"* Ολοκληρωμένη: Όταν γίνεται επεξεργασία της αποστολής, η κατάσταση είναι "
-"«Ολοκληρωμένη»."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
-#, fuzzy
 msgid ""
 "* Vendor Location: Virtual location representing the source location for "
 "products coming from your vendors\n"
@@ -156,32 +104,6 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-"
 "companies or inter-warehouses operations"
 msgstr ""
-"* Τοποθεσία Προμηθευτή: Εικονική Τοποθεσία που αντιπροσωπεύει την τοποθεσία "
-"προέλευσης για τα προϊόντα που προέρχονται από τους προμηθευτές σας\n"
-"\n"
-"* Προβολή: Εικονική τοποθεσία που χρησιμοποιείται για να δημιουργηθεί  μια "
-"ιεραρχική δομή  για την αποθήκη σας, συγκεντρώνοντας τις θυγατρικές "
-"τοποθεσίες; Δεν μπορεί να περιέχει άμεσα προϊόντα\n"
-"\n"
-"* Εσωτερική Τοποθεσία: Φυσικές τοποθεσίες μέσα στις δικές σας αποθήκες, \n"
-"\n"
-"* Περιοχή Πελατών: Εικονική τοποθεσία η οποία αντιπροσωπεύει την τοποθεσία "
-"προορισμού για τα προϊόντα που αποστέλλονται στους πελάτες σας\n"
-"\n"
-"* Απογραφή: Εικονική τοποθεσία που χρησιμεύει ως αντιστάθμισμα για τις "
-"ενέργειες απογραφής που χρησιμοποιείται για να διορθώσει το επίπεδο των "
-"αποθεμάτων (Φυσικές απογραφές) \n"
-"\n"
-"* Προμήθεια: Εικονική τοποθεσία  που χρησιμεύει ως αντιστάθμισμα για τις "
-"ενέργειες προμηθειών όταν η πηγή (προμηθευτής ή παραγωγής) δεν είναι ακόμη "
-"γνωστή. Η τοποθεσία αυτή πρέπει να είναι κενή όταν ο προγραμματιστής "
-"προμηθειών θα  έχει τελειώσει την εκτέλεση \n"
-"\n"
-"* Παραγωγή: Εικονικό αντιστάθμισμα για δραστηριότητες παραγωγής: αυτή η "
-"τοποθεσία καταναλώνει τις πρώτες ύλες και παράγει τα τελικά προϊόντα\n"
-"\n"
-"* Τοποθεσία Διέλευσης: Τοποθεσία αντισταθμίσματος που θα πρέπει να "
-"χρησιμοποιείται  για λειτουργίες  μεταξύ επιχειρήσεων ή μεταξύ των αποθηκών "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -475,9 +397,8 @@ msgstr "<strong>Ημερομηνία</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
-#, fuzzy
 msgid "<strong>Delivered Quantity</strong>"
-msgstr "<strong>Ποσότητα</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -507,9 +428,8 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
-#, fuzzy
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Συνολική ποσότητα</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -579,9 +499,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
-#, fuzzy
 msgid "<strong>Ordered Quantity</strong>"
-msgstr "<strong>Ποσότητα</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -754,9 +673,8 @@ msgstr "Όλα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_quant_ids
-#, fuzzy
 msgid "All Bulk Content"
-msgstr "Μαζικό Περιεχόμενο"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -1103,7 +1021,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
-#, fuzzy
 msgid ""
 "By default, the system will take from the stock in the source location and "
 "passively wait for availability.The other possibility allows you to directly "
@@ -1111,12 +1028,6 @@ msgid ""
 "stock) to gather products. If we want to chain moves and have this one to "
 "wait for the previous,this second option should be chosen."
 msgstr ""
-"Από προεπιλογή, το σύστημα θα λαμβάνει από το απόθεμα της θέσης προέλευσης "
-"και παθητικά περιμένει για διαθεσιμότητα. Η άλλη δυνατότητα σας επιτρέπει να "
-"δημιουργήσετε απευθείας προμήθεια από τη θέση προέλευσης (και, επομένως, να "
-"αγνοήσετε το τρέχον απόθεμα) για να συγκεντρώσετε τα προϊόντα. Αν θέλουμε να "
-"συνδέσουμε κινήσεις και να έχουμε αυτή τη μια να περιμένει για την "
-"προηγούμενη, αυτή η δεύτερη επιλογή θα πρέπει να επιλεγεί."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1259,9 +1170,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
-#, fuzzy
 msgid "Click to add a lot/serial number."
-msgstr "Ανίχνευση παρτίδων ή σειριακών αριθμών"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1315,9 +1225,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_scrap
-#, fuzzy
 msgid "Click to scrap products."
-msgstr "Άχρηστα Προϊόντα"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -1439,9 +1348,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
-#, fuzzy
 msgid "Count picking"
-msgstr "Διαδοχικό μάζεμα"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
@@ -1455,9 +1363,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_late
-#, fuzzy
 msgid "Count picking late"
-msgstr "Λίστα Παραλαβής"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_ready
@@ -1482,15 +1389,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_tree_view
-#, fuzzy
 msgid "Create Date"
-msgstr "Ημερομηνία Δημιουργίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
-#, fuzzy
 msgid "Create New Lots/Serial Numbers"
-msgstr "Διαχείριση Παρτιδών / Σειριακών Αριθμών"
+msgstr ""
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -1921,7 +1826,7 @@ msgid "Delay (days)"
 msgstr "Καθυστέρηση (ημέρες)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:348
 #, python-format
 msgid "Delivered Qty"
 msgstr "Παραληφθείσα  Ποσ."
@@ -1958,9 +1863,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Παράδοση"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2215,7 +2119,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:629
+#: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr "Όλα μέσα σε ένα πακέτο θα πρέπει να βρίσκονται στην ίδια τοποθεσία"
@@ -2327,7 +2231,7 @@ msgstr ""
 "'εσωτερικό' τύπο."
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:343
 #: model:ir.model.fields,field_description:stock.field_product_template_virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
@@ -2345,31 +2249,31 @@ msgid "Full Location Name"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:338
+#: code:addons/stock/models/product.py:346
 #, python-format
 msgid "Future Deliveries"
 msgstr "Μελοντικές Παραδόσεις"
 
 #. module: stock
-#: code:addons/stock/models/product.py:343
+#: code:addons/stock/models/product.py:351
 #, python-format
 msgid "Future P&L"
 msgstr "Μελλοντικά Κέρδη και Ζημιές"
 
 #. module: stock
-#: code:addons/stock/models/product.py:353
+#: code:addons/stock/models/product.py:361
 #, python-format
 msgid "Future Productions"
 msgstr "Μελλοντικές Παραγωγές"
 
 #. module: stock
-#: code:addons/stock/models/product.py:348
+#: code:addons/stock/models/product.py:356
 #, python-format
 msgid "Future Qty"
 msgstr "Μελοντική Ποσ."
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future Receipts"
 msgstr "Μελλοντικές Αποδείξεις"
@@ -2462,9 +2366,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
-#, fuzzy
 msgid "Has Scrap Moves"
-msgstr "Μετακίνηση Απορριμάτων"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -2556,7 +2459,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8356
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8358
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_id
@@ -2841,9 +2744,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
-#, fuzzy
 msgid "Include Exhausted Products"
-msgstr "Προϊόν σε Απόθεμα"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2970,19 +2872,15 @@ msgstr "Εσωτερικός Τύπος"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_ref
-#, fuzzy
 msgid ""
 "Internal reference number in case it differs from the manufacturer's lot/"
 "serial number"
 msgstr ""
-"Εσωτερικός αριθμός σε περίπτωση που διαφέρει από τον σειριακό αριθμό του "
-"κατασκευαστή"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
-#, fuzzy
 msgid "Inventoried Category"
-msgstr "Απογεγραμμένος Ιδιοκτήτης"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_location_id
@@ -3085,9 +2983,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
-#, fuzzy
 msgid "Inventory Move"
-msgstr "Κινήσεις Αποθέματος"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
@@ -3122,9 +3019,8 @@ msgstr "Αξία Αποθέματος "
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
-#, fuzzy
 msgid "Inventory adjustment"
-msgstr "Τροποποίηση Αποθέματος"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3383,9 +3279,8 @@ msgstr "Τοπικοποίηση"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
-#, fuzzy
 msgid "Locate"
-msgstr "Τοποθεσία"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:12
@@ -3500,27 +3395,25 @@ msgstr "Παρτίδα/Σειριακός Αριθμός"
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:198
-#, fuzzy, python-format
+#, python-format
 msgid "Lot/Serial Number Details"
-msgstr "Παρτίδα/Σειριακός Αριθμός"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
-#, fuzzy
 msgid "Lot/Serial Number Inventory"
-msgstr "Παρτίδα/Σειριακός Αριθμός"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:268
-#, fuzzy, python-format
+#, python-format
 msgid "Lot/Serial Number required"
-msgstr "Παρτίδα/Σειριακός Αριθμός"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
-#, fuzzy
 msgid "Lot/Serial number for pack ops"
-msgstr "Παρτίδα/Σειριακός Αριθμός"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_production_lot
@@ -3550,21 +3443,19 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
-#, fuzzy
 msgid "Lots/Serial Numbers"
-msgstr "Παρτίδα/Σειριακός Αριθμός"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_pack_lot_ids
-#, fuzzy
 msgid "Lots/Serial Numbers Used"
-msgstr "Παρτίδα/Σειριακός Αριθμός"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:504
-#, fuzzy, python-format
+#, python-format
 msgid "MTO"
-msgstr "Παραγωγή κατά Παραγγελία (ΠκΠ)"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3629,15 +3520,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Διαχείριση Πολλαπλών Τοποθεσιών και Αποθηκών"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Διαχείριση Πολλαπλών Τοποθεσιών και Αποθηκών"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3676,9 +3565,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Διαχείριση Παρτιδών / Σειριακών Αριθμών"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3692,9 +3580,8 @@ msgstr "Μη Αυτοματοποιημένη Διαδικασία"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
-#, fuzzy
 msgid "Manufacturing Operation"
-msgstr "Μη Αυτοματοποιημένη Διαδικασία"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3713,9 +3600,8 @@ msgstr "Μέγιστη Ποσότητα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
-#, fuzzy
 msgid "Message for Stock Picking"
-msgstr "Επιλογή Αποθέματος"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
@@ -3836,9 +3722,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
-#, fuzzy
 msgid "Move that created the return move"
-msgstr "κίνηση που δημιούργησε την κίνηση επιστροφής"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
@@ -3953,9 +3838,8 @@ msgstr "Δεν υπάρχει απόθεμα ακόμη"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
-#, fuzzy
 msgid "No Message"
-msgstr "Μηνύματα"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -4134,9 +4018,9 @@ msgstr "Ένας ιδιοκτήτης μόνο"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:91
-#, fuzzy, python-format
+#, python-format
 msgid "One product category"
-msgstr "Ένα προϊόν μόνο"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:98
@@ -4170,15 +4054,13 @@ msgstr "Όνομα Λειτουργίας"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Λειτουργίες"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
-#, fuzzy
 msgid "Operation id"
-msgstr "Λειτουργία"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
@@ -4249,9 +4131,8 @@ msgstr "Επεξεργασία Παραγγελίας"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_ordered_qty
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_ordered_qty
-#, fuzzy
 msgid "Ordered Quantity"
-msgstr "Ελεγμένη Ποσότητα"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -4276,12 +4157,11 @@ msgstr "Αρχική Κίνηση"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_original_location_id
-#, fuzzy
 msgid "Original location id"
-msgstr "Εσωτερική Τοποθεσία"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "Otherwise make sure the right stock/owner is set."
 msgstr ""
@@ -4342,7 +4222,7 @@ msgid "Owner of the quants"
 msgstr "Ιδιοκτήτης των quants"
 
 #. module: stock
-#: code:addons/stock/models/product.py:345
+#: code:addons/stock/models/product.py:353
 #, python-format
 msgid "P&L Qty"
 msgstr "P&L Ποσ."
@@ -4362,9 +4242,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
-#, fuzzy
 msgid "Pack Operation / Moves Link"
-msgstr "Λειτουργία Συσκευασίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
@@ -4416,15 +4295,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Τύπος Συσκευασίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Τύπος Συσκευασίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4495,9 +4372,8 @@ msgstr "Μητρικό Πακέτο"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_parent_location_id
-#, fuzzy
 msgid "Parent location id"
-msgstr "Μητρική Τοποθεσία"
+msgstr ""
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -4713,9 +4589,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
-#, fuzzy
 msgid "Preferred Packaging"
-msgstr "Συσκευασία"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
@@ -4830,7 +4705,7 @@ msgid "Procurements"
 msgstr "Προμήθειες"
 
 #. module: stock
-#: code:addons/stock/models/product.py:355
+#: code:addons/stock/models/product.py:363
 #, python-format
 msgid "Produced Qty"
 msgstr "Ποσ. Παραχθέντων"
@@ -4973,7 +4848,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:318
+#: code:addons/stock/models/product.py:326
 #, python-format
 msgid "Products: "
 msgstr "Προϊόντα "
@@ -5004,9 +4879,8 @@ msgstr "Κανόνες Προώθησης"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
-#, fuzzy
 msgid "Pushed Flow"
-msgstr "Ροές Ώθησης"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
@@ -5188,9 +5062,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
-#, fuzzy
 msgid "Rate picking late"
-msgstr "Λίστα Παραλαβής"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -5250,7 +5123,7 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "Παραλαμβάνει αγαθά κατευθείαν σε απόθεμα (1 βήμα)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:340
 #, python-format
 msgid "Received Qty"
 msgstr "Παραληφθείσα Ποσ."
@@ -5326,13 +5199,10 @@ msgstr "Υπόλοιπα μέρη  της διαλογής μερικώς επε
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_remaining_qty
-#, fuzzy
 msgid ""
 "Remaining quantity in default UoM according to moves matched with this "
 "operation."
 msgstr ""
-"Υπόλοιπη ποσότητα σε προεπιλεγμένη ΜΜ σύμφωνα με τις κινήσεις που ταιριάζουν "
-"με αυτήν την λειτουργία."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_removal
@@ -5346,7 +5216,7 @@ msgid "Removal Strategy"
 msgstr "Στρατηγική Μετακίνησης"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:449
+#: code:addons/stock/models/stock_quant.py:467
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "Στρατηγική Μετακίνησης %s δεν υλοποιείται."
@@ -5373,16 +5243,14 @@ msgstr "Αναζήτηση Κανόνων Επαναλαμβανόμενης Π�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_max_qty
-#, fuzzy
 msgid "Reordering max qty"
-msgstr "Κανόνες Επαναλαμβανόμενης Παραγγελίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_min_qty
-#, fuzzy
 msgid "Reordering min qty"
-msgstr "Κανόνες Επαναλαμβανόμενης Παραγγελίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -5630,9 +5498,8 @@ msgstr "Έχει απορριφθεί"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
-#, fuzzy
 msgid "Scraps"
-msgstr "Άχρηστα"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5679,33 +5546,33 @@ msgstr "Ιεράρχηση"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:658
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence in"
-msgstr "Σε αλληλουχία"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:662
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence internal"
-msgstr "Εσωτερική αλληλουχία"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:659
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence out"
-msgstr "Εκτός αλληλουχίας"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence packing"
-msgstr "Διαδοχική συσκευασία"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:661
-#, fuzzy, python-format
+#, python-format
 msgid "Sequence picking"
-msgstr "Διαδοχικό μάζεμα"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -5820,12 +5687,9 @@ msgstr "Μικρό Ψυγείο"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Μερικά προϊόντα μπορει να πουληθούν/αγοραστούν σε διαφορετική μονάδα "
-"μέτρησης (προχωρημένο)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:787
@@ -5897,11 +5761,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
-#, fuzzy
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
 msgstr ""
-"Καθορίστε Προϊόν για  να επικεντρωθεί η απογραφή σας ένα συγκεκριμένο Προϊόν."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
@@ -6006,9 +5868,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
-#, fuzzy
 msgid "Stock Operation"
-msgstr "Διεργασίες Αποθέματος"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
@@ -6023,9 +5884,8 @@ msgstr "Επιλογή Αποθέματος"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_move_ids
-#, fuzzy
 msgid "Stock move ids"
-msgstr "Κινήσεις Αποθέματος"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6044,9 +5904,8 @@ msgstr "Κινήσεις αποθέματος που έχει επεξεργασ
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_quant_ids
-#, fuzzy
 msgid "Stock quant ids"
-msgstr "Τοποθεσίες Στοκ"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -6054,7 +5913,7 @@ msgid "Stockable"
 msgstr "Αποθηκεύσιμα"
 
 #. module: stock
-#: code:addons/stock/models/product.py:470
+#: code:addons/stock/models/product.py:478
 #, python-format
 msgid "Stockable Product"
 msgstr ""
@@ -6126,14 +5985,10 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_lot_id
-#, fuzzy
 msgid ""
 "Technical field used to depict a restriction on the lot/serial number of "
 "quants to consider when marking this move as 'done'"
 msgstr ""
-"Το τεχνικό πεδίο χρησιμοποιείται για να απεικονίζει ένα περιορισμό  στην "
-"παρτίδα των quants  για να εξεταστεί όταν μαρκάρεται αυτή η κίνηση ως "
-"'ολοκληρωμένη'"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
@@ -6190,9 +6045,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Τύπος της Λειτουργίας "
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6344,13 +6198,10 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_qty_multiple
-#, fuzzy
 msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
-"Η ποσότητα προμηθειών θα πρέπει να στρογγυλοποιούνται προς τα πάνω σε αυτό "
-"το πολλαπλάσιο. Εάν είναι 0, θα χρησιμοποιηθεί η ακριβής ποσότητα."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
@@ -6385,15 +6236,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:818
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"Οι στρογγυλοποιήσεις της Μονάδας Μέτρησης % s σχετικά με την κίνηση αντί για "
-"το % s για το προϊόν δεν επιτρέπουν να κάνετε αυτές τις ενέργειες ή να μην "
-"μεταφέρετε την επιλογή με τη μία."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:126
@@ -6405,7 +6253,7 @@ msgid "The selected inventory options are not coherent."
 msgstr "Οι επιλεγμένες εναλλακτικές απογραφής δεν έχουν συνάφεια"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "The serial number %s is already in stock."
 msgstr ""
@@ -6727,9 +6575,8 @@ msgstr "Σήμερα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_total_qty
-#, fuzzy
 msgid "Total Quantity"
-msgstr "Θεωρητική Ποσότητα"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_total_route_ids
@@ -6772,7 +6619,7 @@ msgid "Tracking"
 msgstr "Ανίχνευση"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:960
+#: code:addons/stock/models/stock_move.py:959
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6845,9 +6692,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
-#, fuzzy
 msgid "Unique Lot/Serial Number"
-msgstr "Μοναδικός Σειριακός Αριθμός"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
@@ -6899,7 +6745,7 @@ msgid "Units of Measures"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:551
+#: code:addons/stock/models/stock_quant.py:569
 #, python-format
 msgid "Unknown Pack"
 msgstr "Άγνωστο Πακέτο"
@@ -6931,7 +6777,7 @@ msgid "Unpack"
 msgstr "Ξεπακετάρισμα"
 
 #. module: stock
-#: code:addons/stock/models/product.py:350
+#: code:addons/stock/models/product.py:358
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Ποσ. Εκτός Προγραμματισμού"
@@ -6966,13 +6812,11 @@ msgstr "Επείγον"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
-#, fuzzy
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Διαχείριση Παρτιδών / Σειριακών Αριθμών"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
-#, fuzzy
 msgid ""
 "Use this assistant to generate a procurement request for this\n"
 "                    product. According to the product configuration, this "
@@ -6981,10 +6825,6 @@ msgid ""
 "or\n"
 "                    a new task."
 msgstr ""
-"Χρησιμοποιήστε αυτόν τον βοηθό για να δημιουργηθεί αίτημα προμήθειας για "
-"αυτό το προϊόν. Σύμφωνα με τη διαμόρφωση του προϊόντος, αυτό θα μπορούσε να "
-"ενεργοποιήσει μια πρόχειρη εντολή αγοράς, μια εντολή παραγωγής ή μια νέα "
-"διεργασία."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
@@ -7170,18 +7010,16 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_warning_stock
 #: selection:res.partner,picking_warn:0
-#, fuzzy
 msgid "Warning"
-msgstr "Προειδοποίηση"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
-#, fuzzy
 msgid "Warning on the Picking"
-msgstr "Οι τελευταίες 10 Ολοκληρωμένες Συλλογές"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:311
+#: code:addons/stock/models/product.py:319
 #, python-format
 msgid "Warning!"
 msgstr "Προειδοποίηση"
@@ -7215,9 +7053,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:11
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Προϊόν σε Απόθεμα"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7362,7 +7200,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:484
+#: code:addons/stock/models/product.py:492
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
@@ -7441,7 +7279,7 @@ msgstr ""
 "⇥%s - qty: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:919
+#: code:addons/stock/models/stock_move.py:920
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
@@ -7449,7 +7287,7 @@ msgstr ""
 "πρώτα."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:915
+#: code:addons/stock/models/stock_move.py:916
 #, python-format
 msgid "You cannot split a move done"
 msgstr "Δεν μπορείτε να διαχωρίσετε μια ολοκληρωμένη κίνηση"
@@ -7494,7 +7332,7 @@ msgid "You have processed less products than the initial demand."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:312
+#: code:addons/stock/models/product.py:320
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -7520,9 +7358,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:43
-#, fuzzy, python-format
+#, python-format
 msgid "You may only return Done pickings"
-msgstr "Θα πρέπει να επιστρέψετε μόνο μια συλλογή την φορά"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
@@ -7532,7 +7370,7 @@ msgid "You need to provide a Lot/Serial Number for product %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:241
+#: code:addons/stock/models/stock_quant.py:260
 #, python-format
 msgid "You should only receive by the piece with the same serial number"
 msgstr ""
@@ -7768,222 +7606,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Ορισμός ποσοτήτων στο 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Δημιουργεί την πορεία παράδοσης και προσθέτει πιο πολύπλοκους ελέγχους-"
-#~ "Εγκαθιστά την εφαρμογή stock_dropshipping."
-
-#~ msgid " On Hand"
-#~ msgstr "Διαθέσιμη"
-
-#~ msgid "%s %s %s has been <b>moved to</b> scrap."
-#~ msgstr "%s %s %s έχει<b>μεταφερθεί στα<b>απορρίματα"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "*Νέο: Όταν το απόθεμα μετακινείται δημιουργείται και δεν έχει ακόμη "
-#~ "επιβεβαιωθεί.\n"
-#~ "*Περιμένωντας Άλλη Κίνηση: Αυτή  η κατάσταση μπορεί να ειδωθεί όταν η "
-#~ "κίνηση αναμένει  μια άλλη, για παράδειγμα σε μια αλυσιδωτή ροή.\n"
-#~ "* Αναμονή Διαθεσιμότητα: Αυτή η κατάσταση επιτυγχάνεται όταν η ανάλυση "
-#~ "προμηθειών δεν είναι κατ 'ευθείαν προς τα εμπρός. Μπορεί να χρειαστεί το "
-#~ "χρονοδιάγραμμα  να τρέξει, ένα στοιχείο που κατασκευάζονται ... \n"
-#~ "\n"
-#~ "* Διαθέσιμο: Όταν τα προϊόντα είναι διαθέσιμα,  έχει οριστεί σε "
-#~ "«Διαθέσιμο'.\n"
-#~ "\n"
-#~ "* Ολοκληρωμένη: Όταν γίνεται επεξεργασία της αποστολής, η κατάσταση είναι "
-#~ "«Ολοκληρωμένη»."
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Διεύθυνση Επικοινωνίας:</strong></span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid "Add an internal note..."
-#~ msgstr "Προσθήκη εσωτερικής σημείωσης..."
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Προσθέτει ένα σύνδεσμο αξίωσης στην παράδοση της παραγγελίας.\n"
-#~ "\n"
-#~ "-Αυτό Εγκαθιστά το άρθρωμα claim_from_delivery."
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "Επιτρέπετε 'Απαίτηση' σχετικά με τις παραδόσεις"
-
-#~ msgid "Claims"
-#~ msgstr "Απαιτήσεις"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Delivery Method"
-#~ msgstr "Μέθοδος Παράδοσης"
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Προβλεπόμενα:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Information"
-#~ msgstr "Πληροφορίες"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Γραμμές Αποθέματος"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Όνομα Αποθέματος"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Απώλεια αποθέματος"
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr ""
-#~ "Σύνδεσμος μεταξύ των κινήσεων αποθεμάτων και λειτουργιών συσκευασίας"
-
-#~ msgid "Lot Inventory"
-#~ msgstr "Αποθέμα Παρτίδας"
-
-#~ msgid "Lots"
-#~ msgstr "Παρτίδες"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Διαχείριση Πολλαπλών Τοποθεσιών και Αποθηκών"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Το Μενού Ανοιχτής Αποθήκης"
-
-#~ msgid "Picking Types"
-#~ msgstr "Τύπος Παραλαβών"
-
-#~ msgid "Please provide a positive quantity to scrap."
-#~ msgstr "Παρακαλούμε δώστε μια θετική ποσότητα στα απορρίματα "
-
-#~ msgid "Qty"
-#~ msgstr "Ποσ."
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Ανατροφοδότηση Από Άλλες  Αποθήκες"
-
-#~ msgid "Serial Number"
-#~ msgstr "Σειριακός Αριθμός"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Μερικά προϊόντα μπορει να πουληθούν/αγοραστούν σε διαφορετική μονάδα "
-#~ "μέτρησης (προχωρημένο)"
-
-#~ msgid "Suppliers"
-#~ msgstr "Προμηθευτές"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Τεχνικό πεδίο που χρησιμοποιείται για να αποκρύψει τη βοήθεια επεξήγησης "
-#~ "εάν αυτό δεν απαιτείται"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Η επιλεγείσα ποσότητα του προϊόντος % s δεν είναι συμβατή με την "
-#~ "στρογγυλοποίηση της ΜΜ. Θα μετατραπεί αυτόματα σε επιβεβαίωση"
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "Οι στρογγυλοποιήσεις της Μονάδας Μέτρησης % s σχετικά με την κίνηση αντί "
-#~ "για το % s για το προϊόν δεν επιτρέπουν να κάνετε αυτές τις ενέργειες ή "
-#~ "να μην μεταφέρετε την επιλογή με τη μία."
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "Η επιλεγμένη ΜΜ για το προϊόν % s δεν είναι συμβατή με την ΜΜ  που "
-#~ "ορίστηκε στην φόρμα του προϊόντος.\n"
-#~ "Παρακαλώ επιλέξτε  μια ΜΜ  στο πλαίσιο της ίδιας κατηγορίας ΜΜ  ."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Αυτό θα σας δείξει τις θέσεις και θα σας επιτρέπει να ορίσετε πολλαπλούς "
-#~ "τύπους επιλογής και αποθήκες."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Μονάδα Μέτρησης"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Αδιάβαστα Μηνύματα"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Προειδοποιήση; λανθασμένη ΜΜ"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Προειδοποίηση: λάθος ποσότητα!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Μηνύματα Ιστότοπου"
-
-#~ msgid "Website communication history"
-#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr ""
-#~ "Θα μπορέσετε να επιστρέψετε μόνο συλλογές οι οποίες είναι Ολοκληρωμένες!"
-
-#~ msgid "unknown"
-#~ msgstr "άγνωστο"

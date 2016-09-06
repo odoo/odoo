@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:07+0000\n"
-"PO-Revision-Date: 2016-07-22 05:35+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
+"PO-Revision-Date: 2016-08-14 09:01+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
@@ -74,21 +74,16 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:262
+#: code:addons/mrp/models/mrp_bom.py:261
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                        Documents are attached to the tasks and issues of "
-"your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments "
-"to link\n"
-"                        documents to your project.\n"
+"                        Click to upload files to your product.\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"文档会做为附件上传到你项目的tasks和issues</p><p>\n"
-"以信息或日志发送一个附件文档链接到你的项目。\n"
-"</p>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -240,10 +235,10 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>工作中心</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:418
+#: code:addons/mrp/models/mrp_workorder.py:419
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
-msgstr ""
+msgstr "生产单已经完成或者被取消!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -325,7 +320,7 @@ msgid "Archived"
 msgstr "已归档"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:254
+#: code:addons/mrp/models/mrp_bom.py:253
 #, python-format
 msgid "Attachments"
 msgstr "附件"
@@ -364,7 +359,7 @@ msgstr "生成该产品的平均延时天数。在多级BoM的情况下，部件
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
 msgid "BOM Cost"
-msgstr "BOM 成本"
+msgstr "BOM成本"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -544,10 +539,10 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:258
+#: code:addons/mrp/models/mrp_production.py:260
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
-msgstr ""
+msgstr "不能删除非取消状态的生产订单"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:56
@@ -671,9 +666,8 @@ msgstr "基于实际时间计算"
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
-#, fuzzy
 msgid "Computer Desk"
-msgstr "计算数据"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1261,6 +1255,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Kit"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_type
 msgid ""
 "Kit (Phantom): When processing a sales order for this product, the delivery "
@@ -1377,7 +1376,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "系统存储成品的位置"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9450
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9451
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr "损失原因"
@@ -1391,6 +1390,7 @@ msgid "Lot"
 msgstr "批次"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_active_move_lot_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_move_move_lot_ids
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
 msgid "Lots"
@@ -1492,7 +1492,7 @@ msgid "Manufacturing Order"
 msgstr "制造订单"
 
 #. module: mrp
-#: code:addons/mrp/models/procurement.py:88
+#: code:addons/mrp/models/procurement.py:87
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "生产订单 <em>%s</em>  创建。"
@@ -1576,7 +1576,7 @@ msgstr "消息"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid ""
-"Messages can be configurred to appear during any operation: receptions, "
+"Messages can be configured to appear during any operation: receptions, "
 "delivery orders,\n"
 "                manufacturing orders, work orders, etc."
 msgstr ""
@@ -1633,12 +1633,12 @@ msgstr "名称"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:46
-#: code:addons/mrp/models/mrp_production.py:248
+#: code:addons/mrp/models/mrp_production.py:250
 #: code:addons/mrp/models/mrp_routing.py:18
 #: code:addons/mrp/models/mrp_routing.py:34
 #: code:addons/mrp/models/mrp_routing.py:35
 #: code:addons/mrp/models/mrp_unbuild.py:20
-#: code:addons/mrp/models/mrp_unbuild.py:80
+#: code:addons/mrp/models/mrp_unbuild.py:81
 #, python-format
 msgid "New"
 msgstr "新建"
@@ -1660,7 +1660,7 @@ msgid "Next Work Order"
 msgstr "下一工单"
 
 #. module: mrp
-#: code:addons/mrp/models/procurement.py:91
+#: code:addons/mrp/models/procurement.py:90
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "此产品没有BoM表！"
@@ -1686,7 +1686,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
 msgid "No maintenance machine and work centers"
-msgstr "不维护机器以及工作中心"
+msgstr "不保养机器以及工作中心"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_mps:0
@@ -1731,7 +1731,9 @@ msgid "None"
 msgstr "无"
 
 #. module: mrp
-#: selection:ir.attachment,priority:0 selection:mrp.workcenter,working_state:0
+#: selection:ir.attachment,priority:0
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+#: selection:mrp.production,priority:0 selection:mrp.workcenter,working_state:0
 msgid "Normal"
 msgstr "一般"
 
@@ -1739,6 +1741,11 @@ msgstr "一般"
 #: model:ir.model.fields,help:mrp.field_stock_scrap_workorder_id
 msgid "Not to restrict or prefer quants, but informative."
 msgstr ""
+
+#. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Not urgent"
+msgstr "不紧急"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -1926,7 +1933,7 @@ msgid "Planned Date"
 msgstr "计划的日期"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:263
+#: code:addons/mrp/models/mrp_workorder.py:264
 #, python-format
 msgid ""
 "Please set the quantity you produced in the Current Qty field. It can not be "
@@ -1946,10 +1953,11 @@ msgstr "库存过账"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
 msgid "Preventive and Corrective maintenance management"
-msgstr "防止及纠正维护管理"
+msgstr "预防及纠正保养管理"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_ir_attachment_priority
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_priority
 msgid "Priority"
 msgstr "优先级"
 
@@ -2287,7 +2295,7 @@ msgid "Reference of the document that generated this production order request."
 msgstr "生成这张生产订单的前置单据编号"
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:239
+#: code:addons/mrp/models/stock_move.py:244
 #, python-format
 msgid "Register Lots"
 msgstr "登记批次"
@@ -2426,8 +2434,8 @@ msgid "Scheduled Month"
 msgstr "月计划"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:521
-#: code:addons/mrp/models/mrp_workorder.py:427
+#: code:addons/mrp/models/mrp_production.py:529
+#: code:addons/mrp/models/mrp_workorder.py:428
 #: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2525,7 +2533,7 @@ msgid "Ship this product as a set of components (kit)"
 msgstr "以组合产品的形式运送"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:88
+#: code:addons/mrp/models/mrp_unbuild.py:89
 #, python-format
 msgid "Should have a lot for the finished product"
 msgstr ""
@@ -2681,7 +2689,7 @@ msgid "Technical: used in views only."
 msgstr "技术: 仅用于视图."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:223
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:222
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2779,7 +2787,7 @@ msgid "Time Tracking"
 msgstr "时间跟踪"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:354
+#: code:addons/mrp/models/mrp_workorder.py:355
 #, python-format
 msgid "Time Tracking: "
 msgstr "时间跟踪:"
@@ -2901,6 +2909,7 @@ msgstr "追溯:  批次"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_tracking
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_has_tracking
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_product_tracking
 msgid "Tracking"
 msgstr "追踪"
@@ -2923,7 +2932,7 @@ msgid "Unbuild Order"
 msgstr "拆解单"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:75
+#: code:addons/mrp/models/mrp_unbuild.py:76
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
 msgstr ""
@@ -2972,6 +2981,11 @@ msgid "Update"
 msgstr "更新"
 
 #. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Urgent"
+msgstr "紧急"
+
+#. module: mrp
 #: selection:mrp.config.settings,module_mrp_mps:0
 msgid ""
 "Use Master Production Schedule in order to create procurements based on "
@@ -3018,6 +3032,11 @@ msgid "Very High"
 msgstr "非常高"
 
 #. module: mrp
+#: selection:mrp.production,priority:0
+msgid "Very Urgent"
+msgstr "非常紧急"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,availability:0
@@ -3047,7 +3066,7 @@ msgid "Warehouse"
 msgstr "仓库"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:223
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:222
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -3251,7 +3270,7 @@ msgid "Work Sheet"
 msgstr "工作表"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:499
+#: code:addons/mrp/models/mrp_production.py:507
 #, python-format
 msgid "Work order %s is still running"
 msgstr "工单 %s 还在运行中"
@@ -3336,13 +3355,13 @@ msgstr ""
 "-安装模块 mrp_byproduct。"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:437
+#: code:addons/mrp/models/mrp_production.py:445
 #, python-format
 msgid "You can not cancel production order, a work order is still in progress."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:225
+#: code:addons/mrp/models/mrp_workorder.py:226
 #, python-format
 msgid "You can not change the finished work order."
 msgstr "不能变更已完成的工单."
@@ -3356,7 +3375,7 @@ msgid ""
 msgstr "正在生产中的物料清单不可删除,请先关闭或取消生产单."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:121
+#: code:addons/mrp/models/stock_move.py:122
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
@@ -3369,7 +3388,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:347
+#: code:addons/mrp/models/mrp_workorder.py:348
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3378,7 +3397,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:343
+#: code:addons/mrp/models/mrp_workorder.py:344
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3387,7 +3406,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:395
+#: code:addons/mrp/models/mrp_workorder.py:396
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3402,16 +3421,16 @@ msgid "You need to provide a lot for the finished product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:281
+#: code:addons/mrp/models/mrp_workorder.py:282
 #, python-format
 msgid "You should provide a lot for a component"
 msgstr "应当为部件提供批号"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:266
+#: code:addons/mrp/models/mrp_workorder.py:267
 #, python-format
 msgid "You should provide a lot for the final product"
-msgstr ""
+msgstr "你需要提供产成品的批次／序列号"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
@@ -3485,594 +3504,3 @@ msgstr "工单"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_worksheet
 msgid "worksheet"
 msgstr "工作记录表"
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (副本)"
-
-#~ msgid "%s produced"
-#~ msgstr "%s 生产"
-
-#~ msgid ""
-#~ "'Consume only' mode will only consume the products with the quantity "
-#~ "selected.\n"
-#~ "'Consume & Produce' mode will consume as well as produce the products "
-#~ "with the quantity selected and it will finish the production order when "
-#~ "total ordered quantities are produced."
-#~ msgstr ""
-#~ "'投料' 模式会仅消耗对应成品数量的原材料暂无产成品产出。\n"
-#~ "'投料并产出' 模式会消耗对应成品数量的原材料并立即产出对应数量的产成品。"
-
-#~ msgid "<strong>Consumed Products</strong>"
-#~ msgstr "<strong>已投料的产品</strong>"
-
-#~ msgid "<strong>No. Of Cycles</strong>"
-#~ msgstr "<strong>周期数</strong>"
-
-#~ msgid "<strong>No. Of Hours</strong>"
-#~ msgstr "<strong>小时数</strong>"
-
-#~ msgid "<strong>Sequence</strong>"
-#~ msgstr "<strong>序号</strong>"
-
-#~ msgid "A factor of 0.9 means a loss of 10% during the production process."
-#~ msgstr "因子为0.9表示生产过程10%的损耗。"
-
-#~ msgid "A factor of 0.9 means a loss of 10% within the production process."
-#~ msgstr "因子为0.9表示生产过程10%的损耗。"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Active Id not found"
-#~ msgstr "Active Id 找不到"
-
-#~ msgid "Allow detailed planning of work orders"
-#~ msgstr "允许详细的工单计划"
-
-#~ msgid ""
-#~ "Allow to manage product rounding on quantity and product efficiency "
-#~ "during production process"
-#~ msgstr "在生产过程中允许管理数量的四舍五入和产品效能"
-
-#~ msgid "Awaiting Raw Materials"
-#~ msgstr "等待原材料"
-
-#~ msgid ""
-#~ "Because the product %s requires it, you must assign a serial number to "
-#~ "your raw material %s to proceed further in your production. Please use "
-#~ "the 'Produce' button to do so."
-#~ msgstr ""
-#~ "因为产品%s需要它。您必须分配一个序列号给您的原料%s来继续。请使用'生产'按钮"
-#~ "来这样做。"
-
-#~ msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-#~ msgstr "BoM \"%s\" 含有产品项目为上级产品: \"%s\"。"
-
-#~ msgid "By Lots"
-#~ msgstr "批次"
-
-#~ msgid "By Unique Serial Number"
-#~ msgstr "唯一序列号"
-
-#~ msgid "Cancel Production"
-#~ msgstr "取消生产"
-
-#~ msgid "Cannot consume a move with negative or zero quantity."
-#~ msgstr "消耗的调拨数量不能小于等于0。"
-
-#~ msgid "Cannot delete a manufacturing order in state '%s'."
-#~ msgstr "不能删除'%s'状态的生产订单。"
-
-#~ msgid "Cannot find a bill of material for this product."
-#~ msgstr "找不到这个产品的BOM"
-
-#~ msgid "Cannot find bill of material for this product."
-#~ msgstr "不能找到这个产品的BOM"
-
-#~ msgid "Capacity Information"
-#~ msgstr "能力信息"
-
-#~ msgid "Capacity per Cycle"
-#~ msgstr "每周期能力"
-
-#~ msgid "Change Quantity"
-#~ msgstr "变更数量"
-
-#~ msgid "Click to create a group of properties."
-#~ msgstr "点击以创建一组属性."
-
-#~ msgid "Click to create a new property."
-#~ msgstr "单击创建一个新的属性."
-
-#~ msgid "Confirm"
-#~ msgstr "确认"
-
-#~ msgid "Confirm Production"
-#~ msgstr "确认生产"
-
-#~ msgid "Consume & Produce"
-#~ msgstr "投料并产出"
-
-#~ msgid "Consume Lines"
-#~ msgstr "投料明细"
-
-#~ msgid "Consume Only"
-#~ msgstr "仅投料"
-
-#~ msgid "Consumed Products"
-#~ msgstr "已投入产品"
-
-#~ msgid "Consumed for"
-#~ msgstr "投料"
-
-#~ msgid "Cost per cycle"
-#~ msgstr "每周期成本"
-
-#~ msgid "Cost per hour"
-#~ msgstr "每小时成本"
-
-#~ msgid "Costing Information"
-#~ msgstr "成本信息"
-
-#~ msgid "Cycle Account"
-#~ msgstr "周期账户"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid ""
-#~ "Define specific property groups that can be assigned to your\n"
-#~ "                bill of materials and sales orders. Properties allows "
-#~ "Odoo\n"
-#~ "                to automatically select the right bill of materials "
-#~ "according\n"
-#~ "                to properties selected in the sales order by salesperson."
-#~ msgstr ""
-#~ "定义能够分配给你的物料单和销售订单特定属性组\n"
-#~ "特定属性组能够让Odoo根据销售人员在销售订单中\n"
-#~ "选择的属性选择对应属性的正确的物料表。"
-
-#~ msgid ""
-#~ "Description of the Work Center. Explain here what's a cycle according to "
-#~ "this Work Center."
-#~ msgstr "工作中心的描述。在这里输入这个工作中心的简介。"
-
-#~ msgid "Destination Loc."
-#~ msgstr "成品库位"
-
-#~ msgid "Do not use a planning for the work orders "
-#~ msgstr "不要使用计划的工作订单"
-
-#~ msgid "Extra Information"
-#~ msgstr "其它信息"
-
-#~ msgid ""
-#~ "Fill this only if you want automatic analytic accounting entries on "
-#~ "production orders."
-#~ msgstr "如果你要自动在生成订单进行分析会计，只需填入这里"
-
-#~ msgid ""
-#~ "Fill this product to easily track your production costs in the analytic "
-#~ "accounting."
-#~ msgstr "填入产品将更容易在分析会计中跟踪你的生产成本。"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid ""
-#~ "For instance, in the property group \"Warranty\", you an have\n"
-#~ "                two properties: 1 year warranty, 3 years warranty. "
-#~ "Depending\n"
-#~ "                on the propoerties selected in the sales order, Odoo "
-#~ "will\n"
-#~ "                schedule a production using the matching bill of "
-#~ "materials."
-#~ msgstr ""
-#~ "例如，在属性组 \"保修\"中，你有两个属性：１年保修，３年保修。根据在销售订"
-#~ "单中选择的保修时间，Odoo会自动的安排相对应的物料表安排生产"
-
-#~ msgid "Force Reservation"
-#~ msgstr "强制保留"
-
-#~ msgid "General Account"
-#~ msgstr "通用科目"
-
-#~ msgid "Gives the sequence order when displaying a list of work orders."
-#~ msgstr "输入序列用于显示工作中心列表"
-
-#~ msgid "Hour Account"
-#~ msgstr "工时账户"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "In Production"
-#~ msgstr "在生产"
-
-#~ msgid "Inactive"
-#~ msgstr "不可用"
-
-#~ msgid "Internal Reference"
-#~ msgstr "内部参考"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid ""
-#~ "Keep empty if you produce at the location where the finished products are "
-#~ "needed.Set a location if you produce at a fixed location. This can be a "
-#~ "partner location if you subcontract the manufacturing operations."
-#~ msgstr ""
-#~ "如果您需要在成品库位生产请留空.如在固定地点生产请设置库位.如果您外包这生"
-#~ "产,这也可以是业务伙伴的库位."
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Manage rounding and efficiency of BoM components"
-#~ msgstr "管理物料单组件的舍入和效用"
-
-#~ msgid "Manage rounding and efficiency of bills of materials components"
-#~ msgstr "管理物料表组件的舍入和效用"
-
-#~ msgid "Manufacturing Efficiency"
-#~ msgstr "生产效率"
-
-#~ msgid "Manufacturing Orders which are ready to start production."
-#~ msgstr "可以开始生产的制造订单"
-
-#~ msgid "Manufacturing Orders which are waiting for raw materials."
-#~ msgstr "等待原材料的制造订单"
-
-#~ msgid "Manufacturing order cancelled."
-#~ msgstr "生产单取消"
-
-#~ msgid "Mark as Started"
-#~ msgstr "开始生产"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Mode"
-#~ msgstr "模式"
-
-#~ msgid "No Tracking"
-#~ msgstr "无跟踪信息"
-
-#~ msgid "No rounding and efficiency on bills of materials"
-#~ msgstr "在物料清单中不含舍入和效率因子"
-
-#~ msgid "Not urgent"
-#~ msgstr "不紧急"
-
-#~ msgid "Not used in computations, for information purpose only."
-#~ msgstr "没有在计算中使用，只为了提供信息。"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of Cycles"
-#~ msgstr "周期数"
-
-#~ msgid "Number of Hours"
-#~ msgstr "工时数"
-
-#~ msgid ""
-#~ "Number of iterations this work center has to do in the specified "
-#~ "operation of the routing."
-#~ msgstr "该工作中心必须要在工艺的指定操作上做的迭代次数"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid ""
-#~ "Number of operations this Work Center can do in parallel. If this Work "
-#~ "Center represents a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "此工作中心可以并行操作的数量。如果这个工作中心是5个工人的工作组，那么每周"
-#~ "期能力是5。"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "打开MRP 菜单"
-
-#~ msgid "Order Planning"
-#~ msgstr "订单计划"
-
-#~ msgid "Order quantity cannot be negative or zero!"
-#~ msgstr "订单数量不能是负数或者0！"
-
-#~ msgid "Planning"
-#~ msgstr "计划"
-
-#~ msgid "Please provide proper quantity."
-#~ msgstr "输入数量不正确"
-
-#~ msgid "Produced Products"
-#~ msgstr "产出的产品"
-
-#~ msgid "Product Move"
-#~ msgstr "产品移动"
-
-#~ msgid "Product Produce"
-#~ msgstr "产品生产"
-
-#~ msgid "Product Produce Consume lines"
-#~ msgstr "产品生产投料明细"
-
-#~ msgid "Product Rounding"
-#~ msgstr "产品舍入"
-
-#~ msgid "Production Order for Produced Products"
-#~ msgstr "产成品的生产单"
-
-#~ msgid "Production Order for Raw Materials"
-#~ msgstr "原料的生产单"
-
-#~ msgid "Production Scheduled Product"
-#~ msgstr "生产安排的产品"
-
-#~ msgid "Production Started"
-#~ msgstr "生产已开始"
-
-#~ msgid "Production Work Centers"
-#~ msgstr "生产工作中心"
-
-#~ msgid "Production progress"
-#~ msgstr "生产进度"
-
-#~ msgid "Products Consumed"
-#~ msgstr "产品投入"
-
-#~ msgid "Products to Consume"
-#~ msgstr "未投料数量"
-
-#~ msgid "Products to Finish"
-#~ msgstr "未完工数量"
-
-#~ msgid "Products to Produce"
-#~ msgstr "产成品"
-
-#~ msgid "Properties"
-#~ msgstr "属性"
-
-#~ msgid "Properties categories"
-#~ msgstr "属性类别"
-
-#~ msgid "Properties composition"
-#~ msgstr "属性组成"
-
-#~ msgid "Property"
-#~ msgstr "属性"
-
-#~ msgid "Property Group"
-#~ msgstr "属性组"
-
-#~ msgid "Property Groups"
-#~ msgstr "属性组"
-
-#~ msgid "Quantity (in default UoM)"
-#~ msgstr "数量（默认单位）"
-
-#~ msgid "Ready for production"
-#~ msgstr "准备生产"
-
-#~ msgid "Ready to Produce"
-#~ msgstr "准备生产"
-
-#~ msgid "Reference to a position in an external plan."
-#~ msgstr "位置的编号"
-
-#~ msgid "Reserve"
-#~ msgstr "保留"
-
-#~ msgid "Rounding applied on the product quantity."
-#~ msgstr "应用在产品数量的舍入"
-
-#~ msgid "Rounding efficiency"
-#~ msgstr "舍入效率"
-
-#~ msgid ""
-#~ "Routings indicates all the Work Centers used, for how long and/or cycles."
-#~ "If Routings is set then,the third tab of a production order (Work "
-#~ "Centers) will be automatically pre-completed."
-#~ msgstr ""
-#~ "工艺路线定义了所有需要用到的工作中心，以及多长时间和周期数。如果工艺路线被"
-#~ "设置，生产订单的第三页面（工作中心）会预先自动设置完成"
-
-#~ msgid "Scheduled Date"
-#~ msgstr "计划日期"
-
-#~ msgid "Scheduled Products"
-#~ msgstr "需求的产品"
-
-#~ msgid "Scheduled goods"
-#~ msgstr "需求的产品"
-
-#~ msgid "Scrap Products"
-#~ msgstr "报废产品"
-
-#~ msgid "Select Quantity"
-#~ msgstr "选择数量"
-
-#~ msgid ""
-#~ "Set: When processing a sales order for this product, the delivery order "
-#~ "will contain the raw materials, instead of the finished product."
-#~ msgstr "设置：当处理该产品的销售单时，发运单将以原料来替代成品"
-
-#~ msgid "Source Document"
-#~ msgstr "源单据"
-
-#~ msgid "Specify Cost of Work Center per cycle."
-#~ msgstr "输入每周期的工作中心成本"
-
-#~ msgid "Specify Cost of Work Center per hour."
-#~ msgstr "输入工作中心的工时成本"
-
-#~ msgid "Technical field used to make the traceability of produced products"
-#~ msgstr "技术字段常被用于追溯产品制造"
-
-#~ msgid ""
-#~ "The Properties in Odoo are used to select the right bill of\n"
-#~ "                materials for manufacturing a product when you have "
-#~ "different\n"
-#~ "                ways of building the same product.  You can assign "
-#~ "several\n"
-#~ "                properties to each bill of materials.  When a "
-#~ "salesperson\n"
-#~ "                creates a sales order, they can relate it to several "
-#~ "properties\n"
-#~ "                and Odoo will automatically select the BoM to use "
-#~ "according\n"
-#~ "                the needs."
-#~ msgstr ""
-#~ "当有几种不同的方式来生产同一产品的时候，Odoo中属性是用来选择正确的BOM，\n"
-#~ "你可以把不同的属性给到不同的BOM。当销售人员创建销售订单的时候，他们能选择"
-#~ "不同的属性。\n"
-#~ "然后Odoo根据相关的属性自动对应当相应的BOM"
-
-#~ msgid "The capacity per cycle must be strictly positive."
-#~ msgstr "每周期的容量必须严格为正."
-
-#~ msgid ""
-#~ "The list of operations (list of work centers) to produce the finished "
-#~ "product. The routing is mainly used to compute work center costs during "
-#~ "operations and to plan future loads on work centers based on production "
-#~ "plannification."
-#~ msgstr ""
-#~ "制造产成品需要的工序列表（也就是工作中心的列表）。工艺主要用于计算工作中心"
-#~ "在制造过程中的成本和在生产计划过程中规划工作中心的工作负载"
-
-#~ msgid ""
-#~ "This allows to add state, date_start,date_stop in production order "
-#~ "operation lines (in the \"Work Centers\" tab).\n"
-#~ "-This installs the module mrp_operations."
-#~ msgstr ""
-#~ "在生产单的工单上增加状态, 开始日期，结束日期 （在“工作中心”选项卡）。\n"
-#~ "-安装mrp_operations模块。"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "这个字段描述完成任务的资源的效率。比如：例如： 资源单独投入一个阶段， 5 "
-#~ "天 5 个任务指派给他，这一阶段默认情况将显示 100%的负荷，下，但如果我们把效"
-#~ "率设置为 200%，他的负荷将只是 50%。"
-
-#~ msgid "Time for 1 cycle (hour)"
-#~ msgstr "一个周期的时间(小时)"
-
-#~ msgid "Time in hours for doing one cycle."
-#~ msgstr "执行一个周期的小时数"
-
-#~ msgid "Time in hours for the cleaning."
-#~ msgstr "清理小时数"
-
-#~ msgid "Time in hours for the setup."
-#~ msgstr "准备小时数"
-
-#~ msgid ""
-#~ "Time in hours for this Work Center to achieve the operation of the "
-#~ "specified routing."
-#~ msgstr "该工作中心要完成指定工艺的操作所花费的小时数"
-
-#~ msgid "Total Cycles"
-#~ msgstr "总周期"
-
-#~ msgid "Total Hours"
-#~ msgstr "总小时数"
-
-#~ msgid "Type"
-#~ msgstr "类型"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Urgent"
-#~ msgstr "紧急"
-
-#~ msgid "Valid From"
-#~ msgstr "有效期自"
-
-#~ msgid "Valid From Date by Month"
-#~ msgstr "有效日期按月"
-
-#~ msgid "Valid From Month"
-#~ msgstr "有效期开始月份"
-
-#~ msgid "Valid Until"
-#~ msgstr "有效期至"
-
-#~ msgid "Validity of component. Keep empty if it's always valid."
-#~ msgstr "组件有效期。留空表示始终有效。"
-
-#~ msgid "Validity of this BoM. Keep empty if it's always valid."
-#~ msgstr "物料清单有效期。留空表示始终有效。"
-
-#~ msgid "Very Urgent"
-#~ msgstr "非常紧急"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid ""
-#~ "When the production order is created the status is set to 'Draft'.\n"
-#~ "If the order is confirmed the status is set to 'Waiting Goods.\n"
-#~ "If any exceptions are there, the status is set to 'Picking Exception.\n"
-#~ "If the stock is available then the status is set to 'Ready to Produce.\n"
-#~ "When the production gets started then the status is set to 'In "
-#~ "Production.\n"
-#~ "When the production is over, the status is set to 'Done'."
-#~ msgstr ""
-#~ "生产订单的初始状态是\"草稿\"。\n"
-#~ "如果生产订单已经确认，状态就会是\"等待原材料\"。\n"
-#~ "如果生产有异常，状态就是\"送货异常\"。\n"
-#~ "如果原材料库存足够，状态就是\"准备生产\"。\n"
-#~ "当生产已经开始，就将状态设为\"生产中\"。\n"
-#~ "当生产已经结束，状态将为\"已完成\"。"
-
-#~ msgid "Work Center Product"
-#~ msgstr "工作中心产品"
-
-#~ msgid "Work Centers Utilisation"
-#~ msgstr "工作中心利用率"
-
-#~ msgid "Work Order Planning"
-#~ msgstr "工单计划"
-
-#~ msgid "max"
-#~ msgstr "最大数量"
-
-#~ msgid "min"
-#~ msgstr "最小值"
-
-#~ msgid "plus"
-#~ msgstr "加"
-
-#~ msgid "unknown"
-#~ msgstr "未知的"
-
-#~ msgid "Recursion error !"
-#~ msgstr "递归错误!"

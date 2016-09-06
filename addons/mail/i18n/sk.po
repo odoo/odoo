@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-07-23 09:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -277,13 +277,10 @@ msgstr "(žiadna emailová adresa)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
-#, fuzzy
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
-"* Smajlíky sú použité iba pre HTML kód na zobrazenie obrázku * Text "
-"(východzia hodnota) je použitá nahradenie textu ďalším textom"
 
 #. module: mail
 #. openerp-web
@@ -749,13 +746,15 @@ msgstr "Prílohy"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
-#, fuzzy
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Prílohy sú nalinkované na dokument cez model / res_id a ku správe cez toto "
-"pole."
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr ""
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1082,9 +1081,8 @@ msgstr "Stav zloženia konverácie"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-#, fuzzy
 msgid "Conversation is minimized"
-msgstr "Konverácie je zminimalizovaná"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1108,9 +1106,8 @@ msgstr "Vytvoriť %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "Vytvoriť %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1275,23 +1272,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "Zrušiť email"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Súvisiaca správa"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Podpis autora (len emailová kampaň)"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2139,7 +2133,7 @@ msgstr "Neaktívny alias"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2181,7 +2175,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr "Pozvanie"
@@ -2302,9 +2296,8 @@ msgstr "Je notifikácia"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
-#, fuzzy
 msgid "Is Subscribed"
-msgstr "Odhlásený z odberu"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -3588,9 +3581,9 @@ msgstr "Privátne kanály"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Privátne kanály"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3890,9 +3883,9 @@ msgstr "Skratka"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:619
-#, fuzzy, python-format
+#, python-format
 msgid "Show an helper message"
-msgstr "ID kanálu spávy"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3959,7 +3952,7 @@ msgstr "Smajlík"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4075,9 +4068,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
-#, fuzzy
 msgid "The escaped html code replacing the shortcut"
-msgstr "Očakávaný html kód zameňujúci skratku"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4138,16 +4130,14 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
-#, fuzzy
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr "Skratka ktorá musí byť nahradená v Správach chatu"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
-#, fuzzy
 msgid "The type of document this template can be used with"
-msgstr "Tento typ dokumentu s touto šablónov môže byť použitý"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4245,13 +4235,10 @@ msgstr "Témy diskutované v tejto skupine..."
 #: model:ir.model.fields,help:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_tracking_value_ids
-#, fuzzy
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
-"Sledované hodnoty sú uložené v oddelenom modeli. Toto pole povoľuje "
-"prestavať sledovanie a generovať štatistiky modelu."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4605,9 +4592,9 @@ msgstr "Pridali ste <b>%s</b> do konverácie."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "You are alone in this channel."
-msgstr "Opustiť tento kanál"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:629
@@ -4659,7 +4646,7 @@ msgstr "Kliknutím pridať nový %(document)s alebo odoslať emal: %(email_link)
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "Boli ste pozvaný do:"
@@ -4676,14 +4663,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Odhlásili ste sa z <b>%s</b>."
@@ -4720,9 +4707,8 @@ msgstr "by"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "created"
-msgstr "%s vytvorené"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:320
@@ -4746,9 +4732,8 @@ msgstr "sledujúci"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "from:"
-msgstr "(od"
+msgstr ""
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -4825,9 +4810,9 @@ msgstr "rd"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Neprečítané správy"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4852,73 +4837,3 @@ msgstr "predaj"
 #, python-format
 msgid "this document"
 msgstr "tento dokument"
-
-#~ msgid "Activity"
-#~ msgstr "Aktivity"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Prílohy sú nalinkované na dokument cez model / res_id a ku správe cez "
-#~ "toto pole."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automaticky vylepšený HTML obsah"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Automaticky nastaviť needaction ako Prečítaný"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "Kliknutím pridať kontakt do adresára."
-
-#~ msgid "Contacts"
-#~ msgstr "Kontakty"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Konverácie je zminimalizovaná"
-
-#~ msgid "Join Group"
-#~ msgstr "Pridať do skupiny"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo vám pomáha ľahko sledovať všetky aktivity súvisiace so\n"
-#~ "zákazníkom; diskusie, história obchodných príležitostí,\n"
-#~ "dokumenty atď."
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr "Rich-text/HTML verzia správy (zástupné objekty môžu byť použité)"
-
-#~ msgid "Send mail"
-#~ msgstr "Odoslať mail"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "Očakávaný html kód zameňujúci skratku"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "Tento typ dokumentu s touto šablónov môže byť použitý"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Sledované hodnoty sú uložené v oddelenom modeli. Toto pole povoľuje "
-#~ "prestavať sledovanie a generovať štatistiky modelu."
-
-#~ msgid "Unsubscribed"
-#~ msgstr "Odhlásený z odberu"
-
-#, fuzzy
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer: discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo vám pomáha ľahko sledovať všetky aktivity súvisiace so\n"
-#~ "zákazníkom; diskusie, história obchodných príležitostí,\n"
-#~ "dokumenty atď."

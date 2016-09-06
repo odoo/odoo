@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-07-12 01:08+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -146,10 +146,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "分析需求，编写规范文件和报价单"
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "存档"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -367,6 +377,11 @@ msgid "Departments"
 msgstr "部门"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -383,6 +398,16 @@ msgstr "离异"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "效率因子"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -455,6 +480,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "错误！您不能创建递归的员工层级。"
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "预计的新员工"
@@ -489,6 +519,16 @@ msgstr "关注和检查开发部分"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "关注者"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -579,7 +619,7 @@ msgstr "家庭地址"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "部门"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -641,6 +681,11 @@ msgstr "增加商机"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
 msgstr "增加产品的可见性"
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -845,7 +890,7 @@ msgstr "最好有"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr ""
+msgstr "停止招聘"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -1428,27 +1473,21 @@ msgstr "你讲英语和法语很流利"
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as                     coordinate and supervise "
 "small distributed development teams for specific projects. You will become a "
 "technical                 expert of the product."
 msgstr ""
-"你要负责开发和改进引用，例如某些特定的项目要自主的工作同时协调并领导小型的分"
-"散的团队你会是一个技术专家"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as coordinate and supervise small distributed "
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
-"你要负责开发和改进引用，某些特定的项目要自主的工作同时协调并领导小型的分散的"
-"团队你会是一个技术专家"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1508,6 +1547,19 @@ msgid "You will work closely with all trainees"
 msgstr "你将会和所有的学员紧密合作"
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "部门"
@@ -1520,92 +1572,4 @@ msgstr "例如： 部分时间"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "所需动作"
-
-#~ msgid "Click here to change the recruitment goal!"
-#~ msgstr "点击这里改变招聘目标"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "单击定义一个新的部门"
-
-#~ msgid "Create Your Departments"
-#~ msgstr "创建您的部门"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "HR Department"
-#~ msgstr "HR 部门"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Job Name"
-#~ msgstr "工作名称"
-
-#~ msgid "Job Position Name"
-#~ msgstr "工作岗位名称"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Last Online Sale Order"
-#~ msgstr "最近的在线销售订单"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "打开 人力资源 菜单"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "招聘已结束"
-
-#~ msgid "Subscriptions"
-#~ msgstr "订阅"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "这个字段描述完成任务的资源的效率。比如：例如： 资源单独投入一个阶段， 5 "
-#~ "天 5 个任务指派给他，这一阶段默认情况将显示 100%的负荷，下，但如果我们把效"
-#~ "率设置为 200%，他的负荷将只是 50%。"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Update Date"
-#~ msgstr "更新日期"
-
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents\n"
-#~ "                related to employees by departments: expenses and "
-#~ "timesheets,\n"
-#~ "                leaves and holidays, recruitments, etc."
-#~ msgstr ""
-#~ "部门结构用来管理所有的不同部门员工的相关文档：费用和工时单，休假和假期，招"
-#~ "聘等等"
+msgstr "例如：销售经理"

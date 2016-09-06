@@ -103,13 +103,10 @@ msgstr "5 intensieve dagen"
 
 #. module: event
 #: model:event.event,description:event.event_2
-#, fuzzy
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
 "event or change the dates on which it is held.)</em>"
 msgstr ""
-"<em>(Chamber Works behoudt het recht om het evenement te annuleren,<br/>te "
-"hernoemen en te verplaatsen of de data te veranderen.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -548,9 +545,8 @@ msgstr "Contactpersoon"
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-#, fuzzy
 msgid "Controllers and Views"
-msgstr "Controllers en weergaves"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -1537,7 +1533,7 @@ msgstr "Scan badges om aanwezigheid te bevestigen"
 #. module: event
 #: model:res.groups,name:event.group_email_scheduling
 msgid "Schedule Emails on Event Registration"
-msgstr "Plan E-mails op Evenement Inschrijving"
+msgstr ""
 
 #. module: event
 #: selection:event.config.settings,group_email_scheduling:0
@@ -1886,220 +1882,3 @@ msgstr "om technische aspecten te leren"
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "training materiaal."
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
-#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
-#~ "to ${object.event_id.date_end_located}.\n"
-#~ "For any further information please contact our event department.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>Dit is een reminder voor ${object.event_id.name} waarvoor u zich heeft "
-#~ "geregistreerd. Deze is bevestigd en wordt gehouden van ${object.event_id."
-#~ "date_begin_located} tot ${object.event_id.date_end_located}.\n"
-#~ "Voor verdere informatie kan u ons departement altijd contacteren.</p>\n"
-#~ "<p>Bedankt voor uw deelname!</p>\n"
-#~ "<p>Met vriendelijke groeten,</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>Hierbij bevestigen wij dat uw registratie voor ${object.event_id.name} "
-#~ "goed werd ontvangen.\n"
-#~ "In bijlage van deze e-mail sturen wij u ook uw <b>Event Badge</b>.</p>\n"
-#~ "<p>Bedankt voor uw deelname!</p>\n"
-#~ "<p>Met vriendelijke groeten,</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "You will automatically receive an email providing you more practical "
-#~ "information (such as the schedule, the agenda...) as soon as the event is "
-#~ "confirmed.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>We bevestigen dat uw inschrijving voor het evenement ${object.event_id."
-#~ "name} geregistreerd is.\n"
-#~ "U ontvangt automatisch een e-mail met praktische informatie (zoals het "
-#~ "schema, de agenda,...) wanneer het evenement bevestigd is.</p>\n"
-#~ "<p>Bedankt voor uw deelname!</p>\n"
-#~ "<p>Met vriendelijke groeten</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We would like to thank you for your presence at our event ${object."
-#~ "event_id.name}.\n"
-#~ "<br/><br/>\n"
-#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-#~ "    % elif object.event_id.organizer_id:\n"
-#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "    % endif\n"
-#~ "</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>We willen u graag bedanken voor uw deelname aan ons evenement ${object."
-#~ "event_id.name}.\n"
-#~ "<br/><br/>\n"
-#~ "% if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "<strong>Het ${object.event_id.organizer_id.name} team</strong>\n"
-#~ "% elif object.event_id.organizer_id:\n"
-#~ "<strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "% endif\n"
-#~ "</p>"
-
-#~ msgid "<small>John Doe, CEO</small>"
-#~ msgstr "<small>John Doe, CEO</small>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "After each subscription"
-#~ msgstr "Na elke registratie"
-
-#~ msgid "Allow adding extra questions on subscriptions"
-#~ msgstr "Stel extra vragen bij inschrijven"
-
-#~ msgid "Badge Innner Left"
-#~ msgstr "Badge binnenkant links"
-
-#~ msgid ""
-#~ "Create and manage registrations for this event, send emails to attendees "
-#~ "and print identification badges."
-#~ msgstr ""
-#~ "Maak en beheer registraties van dit evenement. Verstuur e-mails naar de "
-#~ "deelnemers en druk identificatie badges af."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "Events Types"
-#~ msgstr "Soorten evenementen"
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid ""
-#~ "I did not expect such a great learning experience. I feel like I can "
-#~ "develop anything now."
-#~ msgstr ""
-#~ "Ik verwachte niet zo een geweldige leerervaring. Ik heb het gevoel dat ik "
-#~ "nu alles kan ontwikkelen."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Manually confirm every subscription"
-#~ msgstr "Handmatig elke inschrijving bevestigen"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "No extra questions on subscriptions"
-#~ msgstr "Geen extra vragen bij inschrijven"
-
-#~ msgid "No validation step on subscription"
-#~ msgstr "Geen validatie stap op inschrijving"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid ""
-#~ "Odoo helps you schedule and efficiently organize your events:\n"
-#~ "    track subscriptions and participations, automate the confirmation "
-#~ "emails,\n"
-#~ "    sell tickets, etc."
-#~ msgstr ""
-#~ "Odoo helpt u met het plannen en efficiënt organiseren van evenementen:\n"
-#~ "volg inschrijvingen en deelnames, automatiseer de bevestiging e-mails,\n"
-#~ "verkoop tickets, etc."
-
-#~ msgid "Open Event Menu"
-#~ msgstr "Open menu Evenementen"
-
-#~ msgid "Read Great Contents"
-#~ msgstr "Lees geweldige inhoud"
-
-#~ msgid "Schedule Emails on Event Subscription"
-#~ msgstr "Plan e-mails op evenement inschrijving"
-
-#~ msgid "Subscription Survey"
-#~ msgstr "Abonnement enquête"
-
-#~ msgid "Thanks for attending ${object.event_id.name}"
-#~ msgstr "Bedankt voor uw deelname aan ${object.event_id.name}"
-
-#~ msgid ""
-#~ "This course help me build my first application within a month. Definetly "
-#~ "worth its price."
-#~ msgstr ""
-#~ "Deze cursus heeft mij geholpen mijn eerste applicatie binnen een maand te "
-#~ "bouwen.\n"
-#~ "Zeker zijn prijs waard."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid ""
-#~ "Unselect this option to manually manage draft event and draft subscription"
-#~ msgstr ""
-#~ "Deselecteer deze optie om handmatig concept evenementen en concept "
-#~ "inschrijvingen te beheren"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
-
-#~ msgid "What do people say about this course?"
-#~ msgstr "Wat zeggen mensen over deze training?"
-
-#~ msgid ""
-#~ "You will be able to configure emails, and to schedule them to be "
-#~ "automatically sent to the attendees on subscription and/or attendance"
-#~ msgstr ""
-#~ "U zal e-mails kunnen configureren en inplannen dat ze automatisch "
-#~ "verzonden worden aan de aanwezigen wanneer ze zich inschrijven en/of bij "
-#~ "aanwezigheid"
-
-#~ msgid "Your subscription at ${object.event_id.name}"
-#~ msgstr "Uw registratie voor ${object.event_id.name}"

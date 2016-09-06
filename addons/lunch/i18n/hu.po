@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -30,6 +30,12 @@ msgid ""
 "                - Click on the <span class=\"fa fa-times-circle text-danger"
 "\"></span> red X to announce that the order isn't available"
 msgstr ""
+"- Kattintson erre <span class=\"fa fa-phone text-success\"></span> a "
+"megrendelé elvégzésének közlését <br>\n"
+"                - Kattintson erre <span class=\"fa fa-check text-success\"></"
+"span> a megrendelés beérkezésének közlését <br>\n"
+"                - Kattintson erre <span class=\"fa fa-times-circle text-"
+"danger\"></span> vörös X a megrendelés elérhetetlenségének közléséhez"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -41,6 +47,12 @@ msgid ""
 "                - Click on the <span class=\"fa fa-times-circle text-danger"
 "\"></span> to announce that the order isn't available"
 msgstr ""
+"- Kattintson ide <span class=\"fa fa-phone text-success\"></span> a "
+"megrendelés elvégzésének közléséhez <br>\n"
+"                - Kattintson ide <span class=\"fa fa-check text-success\"></"
+"span> a megrendelés beérkezésének közléséhez <br>\n"
+"                - Kattintson ide <span class=\"fa fa-times-circle text-danger"
+"\"></span> a megrendelés elérhetetlenségének közléséhez"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -126,7 +138,7 @@ msgstr "És"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Archive/Unarchive"
-msgstr ""
+msgstr "Archivál/Archiválásból visszatölt"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -152,7 +164,7 @@ msgstr "Alkalmazottak szerint"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Order"
-msgstr ""
+msgstr "Rendelésenként"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -595,19 +607,19 @@ msgstr "Megjegyzés"
 #: code:addons/lunch/models/lunch.py:193
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "Csak az ebéd manager törölheti a megrendeléseket."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:162
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Csak az ebéd manager hajthatja végre a megrendeléseket."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:182
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
-msgstr ""
+msgstr "Csak az ebéd manager állíthatja beérkezettre a megrendeléseket."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -835,6 +847,8 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a "
 "new lunch order."
 msgstr ""
+"Nem került előzőleg rögzítésre megrendelés. Kattintson az \"Én ebédem\" -re "
+"és hozzon létre új ebéd megrendelést."
 
 #. module: lunch
 #. openerp-web
@@ -976,49 +990,3 @@ msgstr "lunch.order.line.lucky"
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "or"
 msgstr "vagy"
-
-#~ msgid "- Click on the"
-#~ msgstr "- Kattintson erre"
-
-#~ msgid ""
-#~ "A lunch order is defined by its user, date and order lines.\n"
-#~ "                Each order line corresponds to a product, an additional "
-#~ "note and a price.\n"
-#~ "                Before selecting your order lines, don't forget to read "
-#~ "the warnings displayed in the reddish area."
-#~ msgstr ""
-#~ "Egy ebéd megrendelést meghatároz annak felhasználója, dátuma és "
-#~ "megrendelési tételsorai. \n"
-#~ "Mindegyik megrendelési tételsor egy terméknek felel meg, egy hozzáfűzött "
-#~ "megjegyzéssel és árral. \n"
-#~ "Mielőtt kiválasztaná a megrendelési tételsort, ne felejtse el elolvasni a "
-#~ "piros mezőben kijelzett figyelmeztetést."
-
-#~ msgid "Click to create a lunch order."
-#~ msgstr "Kattintson egy étkezési megrendelés létrehozásához."
-
-#~ msgid "Users"
-#~ msgstr "Felhasználók"
-
-#~ msgid "lunch orders"
-#~ msgstr "ebéd rendelések"
-
-#~ msgid "red X to announce that the order isn't available"
-#~ msgstr "piros X annak közlésére, hogy nem elérhető rendeléshez"
-
-#~ msgid ""
-#~ "to announce that the order is ordered <br>\n"
-#~ "                - Click on the"
-#~ msgstr ""
-#~ "annak közlése, hogy a megrendelést megrendelte <br>\n"
-#~ "                -  - Kattintson erre"
-
-#~ msgid ""
-#~ "to announce that the order is received <br>\n"
-#~ "                - Click on the"
-#~ msgstr ""
-#~ "annak közlése, hogy a megrendelés megérkezett <br>\n"
-#~ "                - Kattintson erre"
-
-#~ msgid "to announce that the order isn't available"
-#~ msgstr "annak közlése, hogy a megrendelés nem elérhető"

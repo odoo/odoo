@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-11 11:15+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-09-03 14:23+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
@@ -34,7 +34,7 @@ msgstr "№ Специфифікації"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr ""
+msgstr "Рахунків в закупівлі"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
@@ -79,13 +79,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Перевізник</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
-msgstr ""
+msgstr "<strong>Вага</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -223,9 +223,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
-#, fuzzy
 msgid "Can be Expensed"
-msgstr "Можна включити у витрати"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
@@ -427,15 +426,13 @@ msgstr "Доставка"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-#, fuzzy
 msgid "Delivery Carrier"
-msgstr "Доставка"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#, fuzzy
 msgid "Delivery Information"
-msgstr "Метод доставки"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -453,12 +450,12 @@ msgstr "Способи доставки"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "Розрахунок вартості доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
 msgid "Delivery Product"
-msgstr ""
+msgstr "Товар доставки"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_route_ids
@@ -528,9 +525,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
-#, fuzzy
 msgid "Event Registration"
-msgstr "Підписка на подію"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
@@ -668,9 +664,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
-#, fuzzy
 msgid "Height"
-msgstr "Вага"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -887,9 +882,8 @@ msgstr "Час виконання виробництва"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
-#, fuzzy
 msgid "Margin"
-msgstr "Загальна маржа"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -908,9 +902,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
-#, fuzzy
 msgid "Max Weight"
-msgstr "Вага"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -954,9 +947,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
-#, fuzzy
 msgid "Message for Sales Order Line"
-msgstr "Рядок замовлення на продаж"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -1016,7 +1008,7 @@ msgstr "Кількість дій"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
 msgid "Number of Packages"
-msgstr ""
+msgstr "Кількість упаковок"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
@@ -1055,22 +1047,20 @@ msgstr "На відправку"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
-#, fuzzy
 msgid "Package"
-msgstr "Упаковки"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
-#, fuzzy
 msgid "Package Code"
-msgstr "Упаковки"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:129
-#, fuzzy, python-format
+#, python-format
 msgid "Package Details"
-msgstr "Упаковки"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1079,9 +1069,8 @@ msgstr "Упаковки"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
-#, fuzzy
 msgid "Packaging"
-msgstr "Упаковки"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
@@ -1130,12 +1119,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Ціноутворення"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
 msgid "Pricing Rules"
-msgstr ""
+msgstr "Правила ціни"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
@@ -1150,7 +1139,7 @@ msgstr "Термін попередження товару"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
 msgid "Product Attributes"
-msgstr ""
+msgstr "Атрибути товару"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
@@ -1223,9 +1212,8 @@ msgstr "Прозір купівлі"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
-#, fuzzy
 msgid "Purchase Order Line"
-msgstr "Рядок замовлення на продаж"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
@@ -1285,21 +1273,18 @@ msgstr "Правила перезамовлення"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
-#, fuzzy
 msgid "Reordering max qty"
-msgstr "Правила перезамовлення"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
-#, fuzzy
 msgid "Reordering min qty"
-msgstr "Правила перезамовлення"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
-#, fuzzy
 msgid "Return Picking"
-msgstr "Опис для відбору"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1400,7 +1385,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr ""
+msgstr "Вартість доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
@@ -1462,9 +1447,8 @@ msgstr "Рахунок списання продукції"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
-#, fuzzy
 msgid "Stock move ids"
-msgstr "Переміщення запасів"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
@@ -1647,9 +1631,8 @@ msgstr "Слідкування"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-#, fuzzy
 msgid "Tracking Reference"
-msgstr "Внутрішні посилання"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1719,9 +1702,8 @@ msgstr "Податки придбання"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-#, fuzzy
 msgid "Vendors"
-msgstr "Постачальник"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1760,9 +1742,8 @@ msgstr "Вага * Об'єм"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
-#, fuzzy
 msgid "Weight Unit of Measure"
-msgstr "Одиниця виміру"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
@@ -1869,59 +1850,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "невідомий"
-
-#~ msgid "Expense Invoice Policy"
-#~ msgstr "Політика рахунків на витрати"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Вага"
-
-#~ msgid ""
-#~ "If you invoice at cost, the expense will be invoiced on the sale order at "
-#~ "the cost of the analytic line;if you invoice at sales price, the price of "
-#~ "the product will be used instead."
-#~ msgstr ""
-#~ "Якщо ви обрали виписування рахунків по витратам, то витрати замовлення на "
-#~ "продаж будуть включені в рахунок по вартості рядків аналітики "
-#~ "замовлення.\n"
-#~ "Якщо обрано виписування по ціні продажу, то буде використовуватися ціна "
-#~ "товару."
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Повідомлення та історія бесіди"
-
-#~ msgid "Price Computation"
-#~ msgstr "Розрахунок ціни"
-
-#~ msgid ""
-#~ "Select event types so when we use this product in sales order lines, it "
-#~ "will filter events of this type only."
-#~ msgstr ""
-#~ "Вибирайте тип події таким чином, щоб при вказуванні товару в замовленні "
-#~ "на продаж, відфільтровувалися лише події цього типу."
-
-#~ msgid "Status"
-#~ msgstr "Статус"
-
-#~ msgid "Template Name"
-#~ msgstr "Назва шаблону"
-
-#~ msgid "Type of Event"
-#~ msgstr "Тип події"
-
-#~ msgid "Unit of Measure -> UOS Coeff"
-#~ msgstr "Од. виміру -> Од. продажу коефіціент"
-
-#~ msgid "Unit of Sale"
-#~ msgstr "Одиниця продажу"
-
-#~ msgid "Vendor"
-#~ msgstr "Постачальник"
-
-#, fuzzy
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення"
-
-#, fuzzy
-#~ msgid "Website communication history"
-#~ msgstr "Повідомлення та історія бесіди"

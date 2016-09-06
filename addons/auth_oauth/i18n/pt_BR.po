@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2015-12-10 01:10+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -50,9 +50,8 @@ msgstr "Permitido"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-#, fuzzy
 msgid "Authentication"
-msgstr "Autenticar URL"
+msgstr "Autenticação"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -128,9 +127,8 @@ msgstr "Criado em"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-#, fuzzy
 msgid "Currency"
-msgstr "ID da Moeda"
+msgstr "Moeda"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -145,7 +143,7 @@ msgstr "Dados da URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Grau de confiança que você tem neste devedor"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -166,9 +164,8 @@ msgstr "Posição Fiscal"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-#, fuzzy
 msgid "Google Client ID:"
-msgstr "ID do Cliente"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
@@ -182,9 +179,8 @@ msgstr "ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
-#, fuzzy
 msgid "Invoice"
-msgstr "Faturas"
+msgstr "Fatura"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -232,7 +228,7 @@ msgstr "Últimos Pedidos & Pagamentos em Data Equivalente"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
 msgid "Message for Invoice"
-msgstr ""
+msgstr "Mensagem para Fatura"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -323,6 +319,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Selecionando a opção de \"Aviso\" irá notificar o usuário com a mensagem, "
+"marcar \"Mensagem de Bloqueio\" irá lançar uma exceção com a mensagem e "
+"bloquear o fluxo. A mensagem tem de ser escrita no campo a seguir."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
@@ -332,7 +331,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Show Tutorial"
-msgstr ""
+msgstr "Mostrar Tutorial"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
@@ -418,15 +417,10 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-#, fuzzy
 msgid ""
 "To setup the sign in process with Google, you have to perform \n"
 "                                    the following steps first."
 msgstr ""
-"Para definir o processo de login com Google, primeiro você deve seguir os "
-"seguintes passos:<br/>\n"
-"                                    <br/>\n"
-"                                    - Ir para o"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -504,7 +498,7 @@ msgstr "Ex: 1234-xyz.apps.googleusercontent.com"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
@@ -515,50 +509,3 @@ msgstr "ir.config_parameter"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
 msgid "unknown"
 msgstr "desconhecido"
-
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                                    - Ceate a new project<br/>\n"
-#~ "                                    - Go to Api Access<br/>\n"
-#~ "                                    - Create an oauth client_id<br/>\n"
-#~ "                                    - Edit settings and set both "
-#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
-#~ "hostname.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Now copy paste the client_id here:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "- Criar um novo projeto<br/>\n"
-#~ "- Ir para a API de Acesso<br/>\n"
-#~ "- Criar um oauth client_id<br/>\n"
-#~ "- Editar configurações e definir Redirecionamento de URIs Autorizadas e "
-#~ "Origens JavaScript Autorizadas a seu hostname <br/>.\n"
-#~ "<br/>\n"
-#~ "Agora copiar e colar o client_id aqui:"
-
-#~ msgid "Currency id"
-#~ msgstr "ID da Moeda"
-
-#~ msgid "Google APIs console"
-#~ msgstr "Console do Google API"
-
-#, fuzzy
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                                    - Create a new project<br/>\n"
-#~ "                                    - Go to Api Access<br/>\n"
-#~ "                                    - Create an oauth client_id<br/>\n"
-#~ "                                    - Edit settings and set both "
-#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
-#~ "hostname.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Now copy paste the client_id here:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "- Criar um novo projeto<br/>\n"
-#~ "- Ir para a API de Acesso<br/>\n"
-#~ "- Criar um oauth client_id<br/>\n"
-#~ "- Editar configurações e definir Redirecionamento de URIs Autorizadas e "
-#~ "Origens JavaScript Autorizadas a seu hostname <br/>.\n"
-#~ "<br/>\n"
-#~ "Agora copiar e colar o client_id aqui:"

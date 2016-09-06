@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-11 08:59+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
+"PO-Revision-Date: 2016-09-01 08:09+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -336,15 +336,14 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
-"<div><p>Hola,</p><p>%s t'ha convidat a fer-te seguidor %s del document: %s.</"
-"p></div>"
+"<div><p>Hola,</p><p>%s l'ha convidat a seguir el document %s: %s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:25
 #, python-format
 msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
-"<div><p>Hola,</p><p>%s t'ha convidat a seguir un nou document.</p></div>"
+"<div><p>Hola,</p><p>%s l'ha convidat a seguir un nou document.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -607,7 +606,7 @@ msgstr "Configuració avançada"
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Alias"
-msgstr "Àlies"
+msgstr "Pseudònim"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -725,6 +724,11 @@ msgstr ""
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr ""
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
 msgstr "Empresa autenticada"
 
@@ -803,7 +807,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Body"
-msgstr "Contingut"
+msgstr "Missatge"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_bounce
@@ -829,7 +833,7 @@ msgstr "Cancel·lar correu electrònic"
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr "Cancel·lada"
+msgstr "Cancel·lat"
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -1074,9 +1078,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "Creat per"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1242,23 +1245,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "Cancel·lar correu electrònic"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Missatge pare"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Firma de l'autor (només per enviaments massius)"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1430,7 +1430,7 @@ msgstr "Plantilles de correu electrònic"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "Fil de missatges"
+msgstr "Notificacions del sistema"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_alias_id
@@ -1479,7 +1479,7 @@ msgstr "Correus electrònics"
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr ""
-"Error durant la comunicació amb el servidor de garantia del editor de "
+"Error durant la comunicació amb el servidor de garantia de l'editor de "
 "OpenERP."
 
 #. module: mail
@@ -1577,7 +1577,7 @@ msgid ""
 msgstr ""
 "Camp utilitzat per enllaçar el model relacionat al model del subtipus quan "
 "s'utilitza la subscripció automatica en el document relacionat. El camp "
-"s'utilitza per calcular getattr(related_document.relation_field)"
+"s'utilitza per calcular getattr(related_document.relation_field)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_copyvalue
@@ -2105,7 +2105,7 @@ msgstr "Pseudònim inactiu"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2123,7 +2123,7 @@ msgstr "Missatge inicial del fil"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
 msgid "Internal Only"
-msgstr ""
+msgstr "Només intern"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:99
@@ -2145,7 +2145,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr ""
@@ -2262,7 +2262,7 @@ msgstr "És seguidor"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_notification
 msgid "Is Notification"
-msgstr "Es una notificació"
+msgstr "És una notificació"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
@@ -2527,7 +2527,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
 msgid "Mail has been created to notify people of an existing mail.message"
 msgstr ""
-"S'ha creat un correu electrònic per notificar a la gent de un missatge "
+"S'ha creat un correu electrònic per notificar a la gent d'un missatge "
 "existent"
 
 #. module: mail
@@ -3285,7 +3285,7 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id opcional d'un fil(registre) al que tots els missatges entrants "
+"Id opcional d'un fil (registre) al que tots els missatges entrants "
 "s'adjuntaran, inclús si no van ser respostes del mateix. Si s'estableix, se "
 "desactivarà completament la creació de nous registres."
 
@@ -3365,7 +3365,7 @@ msgstr "Propietari"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_parent_id
 msgid "Parent"
-msgstr "Parent"
+msgstr "Pare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_parent_id
@@ -3549,9 +3549,9 @@ msgstr "Canals privats"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Canals privats"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3772,7 +3772,7 @@ msgstr "Envia"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_send_mail
 msgid "Send Email"
-msgstr "Enviar Correu electrònic"
+msgstr "Enviar Correu"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:252
@@ -3852,9 +3852,9 @@ msgstr "Abreviació"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:619
-#, fuzzy, python-format
+#, python-format
 msgid "Show an helper message"
-msgstr "Enviar un missatge"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3918,7 +3918,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4060,8 +4060,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nom d'aquest pseudònim de correu electrònic. Per exemple, \"feines\", si "
-"el que vol és obtenir els correus per <fenies@example.odoo.com>"
+"El nom d'aquest pseudònim de correu electrònic. Per exemple, \"jobs\", si el "
+"que vol és obtenir els correus per <jobs@example.odoo.com>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_user_id
@@ -4102,9 +4102,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
-#, fuzzy
 msgid "The type of document this template can be used with"
-msgstr "La classe de document amb el qual aquesta plantilla pot ser utilitzada"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4145,7 +4144,7 @@ msgstr "Fil"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_email_to
 msgid "To"
-msgstr "A"
+msgstr "Per"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_to
@@ -4606,7 +4605,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr ""
@@ -4623,14 +4622,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr ""
@@ -4665,9 +4664,8 @@ msgstr "per"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "created"
-msgstr "%s creat"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:320
@@ -4691,9 +4689,8 @@ msgstr "seguidors"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "from:"
-msgstr "(de"
+msgstr ""
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -4770,9 +4767,9 @@ msgstr "rd"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Missatges pendents de llegir"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4797,31 +4794,3 @@ msgstr "vendes"
 #, python-format
 msgid "this document"
 msgstr "aquest document"
-
-#~ msgid "Activity"
-#~ msgstr "Activitat"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Contingut HTML automàticament sanejat"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "Cliqueu per afegir un contacte a la vostra llibreta d'adreces. "
-
-#~ msgid "Contacts"
-#~ msgstr "Contactes"
-
-#~ msgid "Join Group"
-#~ msgstr "Unir-se al grup"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Versió de text enriquit/HTML del missatge (es poden utilitzar aquí "
-#~ "expressions de camp)"
-
-#~ msgid "Send mail"
-#~ msgstr "Enviar correu"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr ""
-#~ "La classe de document amb el qual aquesta plantilla pot ser utilitzada"
