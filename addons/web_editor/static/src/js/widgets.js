@@ -200,21 +200,14 @@ var MediaDialog = Dialog.extend({
 
         $(document.body).trigger("media-saved", [media, self.old_media]);
         self.trigger("saved", [media, self.old_media]);
-        setTimeout(function () {
-            if (!media.parentNode) {
-                return;
-            }
+
+        // Update editor bar after image edition (in case the image change to icon or other)
+        _.defer(function () {
+            if (!media.parentNode) return;
             range.createFromNode(media).select();
             click_event(media, "mousedown");
-            if (!this.only_images) {
-                setTimeout(function () {
-                    if($(media).parent().data("oe-field") !== "image") {
-                        click_event(media, "click");
-                    }
-                    click_event(media, "mouseup");
-                },0);
-            }
-        },0);
+            click_event(media, "mouseup");
+        });
 
         this._super.apply(this, arguments);
     },
