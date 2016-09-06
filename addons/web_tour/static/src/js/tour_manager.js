@@ -197,6 +197,7 @@ return core.Class.extend({
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 300;
         this.TourModel = new Model('web_tour.tour');
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
+        this._log = [];
     },
     /**
      * Registers a tour described by the following arguments (in order)
@@ -326,17 +327,35 @@ return core.Class.extend({
         } else {
             $trigger = $(tip.trigger);
         }
-        $trigger = get_first_visible_element($trigger);
-        var extra_trigger = tip.extra_trigger ? get_first_visible_element($(tip.extra_trigger)).length : true;
-        var triggered = $trigger.length && extra_trigger;
+        var $visible_trigger = get_first_visible_element($trigger);
+
+        var extra_trigger = true;
+        var $extra_trigger = undefined;
+        if (tip.extra_trigger) {
+            $extra_trigger = $(tip.extra_trigger);
+            extra_trigger = get_first_visible_element($extra_trigger).length;
+        }
+
+        var triggered = $visible_trigger.length && extra_trigger;
         if (triggered) {
             if (!tip.widget) {
-                this._activate_tip(tip, tour_name, $trigger);
+                this._activate_tip(tip, tour_name, $visible_trigger);
             } else {
-                tip.widget.update($trigger);
+                tip.widget.update($visible_trigger);
             }
         } else {
             this._deactivate_tip(tip);
+
+            if (this.running_tour === tour_name) {
+                this._log.push("_check_for_tooltip");
+                this._log.push("- modal_displayed: " + this.$modal_displayed.length);
+                this._log.push("- trigger '" + tip.trigger + "': " + $trigger.length);
+                this._log.push("- visible trigger '" + tip.trigger + "': " + $visible_trigger.length);
+                if ($extra_trigger !== undefined) {
+                    this._log.push("- extra_trigger '" + tip.extra_trigger + "': " + $extra_trigger.length);
+                    this._log.push("- visible extra_trigger '" + tip.extra_trigger + "': " + extra_trigger);
+                }
+            }
         }
     },
     _activate_tip: function(tip, tour_name, $anchor) {
@@ -376,6 +395,7 @@ return core.Class.extend({
         if (this.active_tooltips[tour_name]) {
             local_storage.setItem(get_step_key(tour_name), this.tours[tour_name].current_step);
             if (is_running) {
+                this._log = [];
                 this._set_running_tour_timeout(tour_name, this.active_tooltips[tour_name]);
             }
             this.update(tour_name);
@@ -409,11 +429,16 @@ return core.Class.extend({
             this.running_tour = undefined;
             this.running_step_delay = undefined;
             if (error) {
+                _.each(this._log, function (log) {
+                    console.log(log);
+                });
+                console.log(document.body.outerHTML);
                 console.log("error " + error); // phantomJS wait for message starting by error
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
                 console.log("ok"); // phantomJS wait for exact message "ok"
             }
+            this._log = [];
         } else {
             this.TourModel.call('consume', [[tour_name]]).then((function () {
                 this.consumed_tours.push(tour_name);
