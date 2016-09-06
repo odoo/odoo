@@ -413,8 +413,8 @@ class marketing_campaign_activity(osv.osv):
             for activity in segment_obj.campaign_id.activity_ids:
                 act_ids.append(activity.id)
             return act_ids
-        return super(marketing_campaign_activity, self).search(cr, uid, args,
-                                           offset, limit, order, context, count)
+        return super(marketing_campaign_activity, self).search(
+            cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     #dead code
     def _process_wi_report(self, cr, uid, activity, workitem, context=None):
