@@ -19,7 +19,7 @@ from odoo.addons.website_portal.controllers.main import website_account
 class WebsiteAccount(website_account):
 
     @http.route()
-    def account(self):
+    def account(self, **kw):
         response = super(WebsiteAccount, self).account()
         lead_count = request.env['crm.lead'].search_count([
             ('partner_assigned_id', '=', request.env.user.partner_id.id),
