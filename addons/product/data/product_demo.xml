@@ -716,5 +716,12 @@ QWERTY keyboard</field>
             <field name="price">13.50</field>
         </record>
 
+        <record forcecreate="True" id="property_product_pricelist_demo" model="ir.property">
+            <field name="name">property_product_pricelist</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
+            <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
+            <field eval="'res.partner,'+str(ref('base.partner_demo'))" name="res_id"/>
+        </record>
+
     </data>
 </odoo>
