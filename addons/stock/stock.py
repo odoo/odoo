@@ -4299,7 +4299,7 @@ class stock_package(osv.osv):
 
     def get_content(self, cr, uid, ids, context=None):
         child_package_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
-        return self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', child_package_ids)], context=context)
+        return self.pool.get('stock.quant').search(cr, uid, [('package_id', 'in', ids + child_package_ids)], context=context)
 
     def get_content_package(self, cr, uid, ids, context=None):
         quants_ids = self.get_content(cr, uid, ids, context=context)
