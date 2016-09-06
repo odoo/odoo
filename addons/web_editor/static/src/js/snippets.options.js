@@ -227,11 +227,27 @@ odoo.define('web_editor.snippets.options', function (require) {
                 var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
                 var $clpicker = $(qweb.render('web_editor.colorpicker'));
 
+                // Retrieve excluded palettes list
+                var excluded = [];
+                if (this.data.paletteExclude) {
+                    excluded = this.data.paletteExclude.replace(/ /g, '').split(',');
+                }
+                // Apply a custom title if specified
+                if (this.data.paletteTitle) {
+                    $pt.find('.note-palette-title').text(this.data.paletteTitle);
+                }
+
                 var $toggles = $pt.find('.o_colorpicker_section_menu');
                 var $tabs = $pt.find('.o_colorpicker_section_tabs');
 
+                // Remove excluded palettes
+                _.each(excluded, function (exc) {
+                    $clpicker.find('[data-name="' + exc + '"]').remove();
+                });
+
                 var $sections = $clpicker.find('.o_colorpicker_section');
-                if ($sections.length) {
+
+                if ($sections.length > 1) { // Multi-palette layout
                     $sections.each(function () {
                         var $section = $(this);
                         var id = 'o_palette_' + $section.data('name') + _.uniqueId();
@@ -243,14 +259,26 @@ odoo.define('web_editor.snippets.options', function (require) {
 
                         $tabs.append($section.addClass('tab-pane').attr('id', id));
                     });
-                    $toggles.find('li').first().addClass('active');
-                    $tabs.find('div').first().addClass('active');
+
+                    // If a default palette is defined, make it active
+                    if (this.data.paletteDefault) {
+                        var $palette_def = $tabs.find('div[data-name="' + self.data.paletteDefault + '"]');
+                        var pos = $tabs.find('> div').index($palette_def);
+
+                        $toggles.children('li').eq(pos).addClass('active');
+                        $palette_def.addClass('active');
+                    } else {
+                        $toggles.find('li').first().addClass('active');
+                        $tabs.find('div').first().addClass('active');
+                    }
 
                     $toggles.on('click mouseover', '> li > a', function (e) {
                         e.preventDefault();
                         e.stopPropagation();
                         $(this).tab('show');
                     });
+                } else if ($sections.length === 1) { // Unique palette layout
+                    $tabs.addClass('o_unique_palette').append($sections.addClass('tab-pane active'));
                 } else {
                     $toggles.parent().empty().append($clpicker);
                 }
