@@ -936,9 +936,9 @@ var chat_manager = {
         if (res_model === "res.partner") {
             var domain = [["partner_id", "=", res_id]];
             UserModel.call("search", [domain]).then(function (user_ids) {
-                if (user_ids.length && user_ids[0] !== session.uid) {
-                    self.create_channel(res_id, 'dm').then(dm_redirection_callback || function () {});
-                } else if (!user_ids.length) {
+                if (user_ids.length && user_ids[0] !== session.uid && dm_redirection_callback) {
+                    self.create_channel(res_id, 'dm').then(dm_redirection_callback);
+                } else {
                     redirect_to_document(res_model, res_id);
                 }
             });
