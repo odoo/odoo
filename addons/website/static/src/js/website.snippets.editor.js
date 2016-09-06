@@ -162,7 +162,7 @@ options.registry.carousel = options.registry.slider.extend({
     },
     start : function () {
         var self = this;
-        this._super();
+        this._super.apply(this, arguments);
 
         // set background and prepare to clean for save
         var add_class = function (c) {
@@ -170,11 +170,17 @@ options.registry.carousel = options.registry.slider.extend({
             return self._class || "";
         };
         this.$target.on('slid.bs.carousel', function () {
-            if(self.editor && self.editor.styles.background) {
-                self.editor.styles.background.$target = self.$target.find(".item.active");
-                self.editor.styles.background.set_active();
-            }
             self.$target.carousel("pause");
+            if (!self.editor) return;
+
+            _.each(["background", "background_position", "colorpicker"], function (opt_name) {
+                var s_option = self.editor.styles[opt_name];
+                if (!s_option) return;
+
+                s_option.$target = self.$target.find(".item.active");
+                s_option.set_active();
+                s_option.$target.trigger("snippet-option-change", [s_option]);
+            });
         });
         this.$target.trigger('slid.bs.carousel');
     },
@@ -376,7 +382,7 @@ options.registry.marginAndResize = options.Class.extend({
 
         this.$overlay.attr("class", overlay_class);
     },
-    
+
     /* on_resize
     *  called when the box is resizing and the class change, before the cover_target
     *  @compass: resize direction : 'n', 's', 'e', 'w'
