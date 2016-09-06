@@ -225,7 +225,6 @@ class Report(osv.Model):
             for node in root.xpath("//html/head/style"):
                 css += node.text
 
-            cssfiles = []
             for xmlelt in [
                 lxml.html.fromstring(
                     render_minimal(dict(css='', subst=True, body='', base_url=''))
@@ -233,11 +232,10 @@ class Report(osv.Model):
                 root,
             ]:
                 for node in xmlelt.xpath("//link[@rel='stylesheet']"):
-                    css_path = node.get('href')[1:]
-                    if css_path not in cssfiles:
-                        cssfile = file_open(css_path)
-                        css += cssfile.read()
-                        cssfiles.append(css_path)
+                    css_path = node.get('href')
+                    if css_path.startswith("/"):
+                        css_path = css_path[1:]
+                    css += file_open(css_path).read()
                     node.getparent().remove(node)
 
             for node in root.xpath(match_klass.format('header')):
