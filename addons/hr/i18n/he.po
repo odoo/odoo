@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-07-23 17:19+0000\n"
 "Last-Translator: ilan kl <ilan@qaroads.co.il>\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
@@ -130,10 +130,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "התווסף לארכיון"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -345,6 +355,11 @@ msgid "Departments"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -361,6 +376,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "מקדם יעילות"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -433,6 +458,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr ""
@@ -467,6 +497,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "עוקבים"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -556,9 +596,8 @@ msgstr "כתובת מגורים"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "מחלקה"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -619,6 +658,11 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
 msgstr ""
 
 #. module: hr
@@ -982,9 +1026,8 @@ msgstr "משאב"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-#, fuzzy
 msgid "Resource Name"
-msgstr "סוג משאב"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1460,6 +1503,19 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr ""
@@ -1473,30 +1529,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "נדרשת פעולה"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "לחץ כדי להגדיר מחלקה חדשה"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
-
-#~ msgid "Last Message Date"
-#~ msgstr "תאריך הודעה אחרונה"
-
-#~ msgid "Number of Actions"
-#~ msgstr "מספר הפעולות"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "מספר ההודעות שדורשות פעולה"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "מספר ההודעות שלא נקראו"
-
-#~ msgid "Update Date"
-#~ msgstr "עידכון תאריך"

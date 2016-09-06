@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-05-23 20:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -134,10 +134,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Arhivirani"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -349,6 +359,11 @@ msgid "Departments"
 msgstr "Sektori"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -365,6 +380,16 @@ msgstr "Razvedeni"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Faktor efikasnosti"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -437,6 +462,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Greška! Nije moguće napraviti rekurzivnu hijerarhiju zaposlenog(ih)."
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "Očekivan broj novih radnika"
@@ -471,6 +501,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Pratioci"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -560,9 +600,8 @@ msgstr "Kućna adresa"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "Sektor"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -624,6 +663,11 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
 msgstr ""
 
 #. module: hr
@@ -824,9 +868,8 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
-#, fuzzy
 msgid "Not Recruiting"
-msgstr "Zatvori konkurs"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -988,9 +1031,8 @@ msgstr "Resurs"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-#, fuzzy
 msgid "Resource Name"
-msgstr "Tip resursa"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1466,6 +1508,19 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "sektor"
@@ -1479,68 +1534,3 @@ msgstr "npr. povremeno"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "Klikni da napraviš novi sektor."
-
-#~ msgid "Create Your Departments"
-#~ msgstr "Kreiraj svoje sektore"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnje poslate poruke na slog."
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratioc"
-
-#~ msgid "Job Name"
-#~ msgstr "Naziv radnog mjesta"
-
-#~ msgid "Job Position Name"
-#~ msgstr "Naziv radnog mjesta"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtjevaju akciju"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "Konkurs zatvoren"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Ovo polje prikazuje efikasnost resursa u vezi sa dovršetkom dodeljenih "
-#~ "zadataka. Npr. resurs stavite na bazi 5 dana i dodelite mu 5 zadatka, "
-#~ "pokazaće opterećenje od 100% za ovu fazu po defaultu , ali ako stavite "
-#~ "učinkovitost od 200% , onda će mu biti samo 50 %"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Update Date"
-#~ msgstr "Obnovi Datum"

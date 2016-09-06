@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-01 12:30+0000\n"
+"PO-Revision-Date: 2016-08-31 03:28+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
@@ -137,9 +137,8 @@ msgstr "原価計算法"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
-#, fuzzy
 msgid "Counter-Part Account"
-msgstr "在庫払出勘定"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -191,10 +190,10 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
-"原価が増加した場合、在庫の変動アカウントは借方に記帳され、そして在庫出力アカ"
-"ウントは 値 = （金額の相違 * 利用可能な数量） で貸方に記帳されます。\n"
-"原価が減少した場合、在庫の変動アカウントは貸方に記帳され、そして在庫入力アカ"
-"ウントは借方に記帳されます。"
+"原価が増加した場合、在庫の変動勘定は借方に記帳され、そして在庫払出勘定は 値 "
+"= (金額の相違 * 利用可能な数量) で貸方に記帳されます。\n"
+"原価が減少した場合、在庫の変動勘定は貸方に記帳され、そして在庫受入勘定は借方"
+"に記帳されます。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -305,9 +304,8 @@ msgstr "ロケーション"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-#, fuzzy
 msgid "Lot/Serial Number"
-msgstr "シリアル番号"
+msgstr ""
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
@@ -335,23 +333,23 @@ msgstr ""
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr ""
+msgstr "定期 (手動)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr "棚卸計算法（推奨）"
+msgstr "棚卸計算法 (推奨)"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "継続記録 (自動)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Perpetual inventory valuation (stock move generates accounting entries)"
-msgstr "継続記録法（在庫移動により会計仕訳生成）"
+msgstr "継続記録法 (在庫移動により会計仕訳生成)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -408,9 +406,8 @@ msgstr "現在の在庫評価を抽出します。"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-#, fuzzy
 msgid "Set standard price"
-msgstr "標準原価"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -457,9 +454,8 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-#, fuzzy
 msgid "Stock Accounting"
-msgstr "会計"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -542,7 +538,7 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"リアルタイム在庫評価のために使用されます。仮想の場所（非内部タイプ）に設定さ"
+"リアルタイム在庫評価のために使用されます。仮想の場所 (非内部タイプ) に設定さ"
 "れている場合、このアカウントは製品にセットされる一般的な在庫出力アカウントの"
 "代わりに、内部の場所からこの場所に移動される製品の価値を保持するために使用さ"
 "れます。"
@@ -556,7 +552,7 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"リアルタイム在庫評価のために使用されます。仮想の場所（非内部タイプ）に設定さ"
+"リアルタイム在庫評価のために使用されます。仮想の場所 (非内部タイプ) に設定さ"
 "れている場合、このアカウントは製品にセットされる一般的な在庫出力アカウントの"
 "代わりに、この場所から内部の場所に移動される製品の価値を保持するために使用さ"
 "れます。"
@@ -681,33 +677,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "unknown"
 msgstr "不明"
-
-#~ msgid "Asset Type"
-#~ msgstr "資産種別"
-
-#~ msgid "Can be expensed"
-#~ msgstr "経費入力可能"
-
-#~ msgid "Deferred Revenue Type"
-#~ msgstr "前受収益タイプ"
-
-#~ msgid "Move"
-#~ msgstr "移動"
-
-#~ msgid "Product Alert Time"
-#~ msgstr "製品警告時間"
-
-#~ msgid "Product Life Time"
-#~ msgstr "製品有効時間"
-
-#~ msgid "Product Removal Time"
-#~ msgstr "製品の撤去時間"
-
-#~ msgid "Product Use Time"
-#~ msgstr "製品使用時間"
-
-#~ msgid "Unit of Measure -> UOS Coeff"
-#~ msgstr "単位→販売単位係数"
-
-#~ msgid "Unit of Sale"
-#~ msgstr "販売単位"

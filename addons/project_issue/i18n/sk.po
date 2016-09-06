@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2015-12-19 13:02+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -34,7 +34,7 @@ msgid "# of Issues"
 msgstr "# Problémov"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:162
+#: code:addons/project_issue/models/project_issue.py:170
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
@@ -71,7 +71,6 @@ msgstr "Pridať internú poznámku..."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-#, fuzzy
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
@@ -84,11 +83,6 @@ msgid ""
 "                                           * Ready for next stage indicates "
 "the issue is ready to be pulled to the next stage"
 msgstr ""
-"Kanban stav problému určuje šéciálne situácie ktoré ho ovplyvňujú:\n"
-"* Normálna je prednastavená situácia\n"
-"* Zablokované označuje že niečo bráni progresu tohto problému\n"
-"* Pripravený pre ďalšiu fázu indikuje, že problém je pripravený na ťah do "
-"ďalšej fázy"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -223,9 +217,8 @@ msgstr "Vytvoril"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
-#, fuzzy
 msgid "Created on"
-msgstr "Vytvoril"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -233,13 +226,13 @@ msgid "Creation Date"
 msgstr "Dátum vytvorenia"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:300
+#: code:addons/project_issue/models/project_issue.py:310
 #, python-format
 msgid "Customer"
 msgstr "Zákazník"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:302
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "Customer Email"
 msgstr "Email zákazníka"
@@ -372,7 +365,7 @@ msgid "High"
 msgstr "Vysoká"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
+#: code:addons/project_issue/models/project_issue.py:285
 #, python-format
 msgid "I take it"
 msgstr "Beriem to"
@@ -440,9 +433,8 @@ msgstr "Problém otvorený"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-#, fuzzy
 msgid "Issue ready for next stage"
-msgstr "Problém pripravený pre ďalšiu fázu"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -515,9 +507,8 @@ msgstr "Naposledy upravoval"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr "Naposledy upravoval"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -548,7 +539,7 @@ msgid "New"
 msgstr "Nové"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:279
+#: code:addons/project_issue/models/project_issue.py:289
 #, python-format
 msgid "New Issue"
 msgstr "Nový problém"
@@ -559,16 +550,15 @@ msgid "Next Action"
 msgstr "Ďalšie akcie"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:326
+#: code:addons/project_issue/models/project_issue.py:336
 #, python-format
 msgid "No Subject"
 msgstr "Bez predmetu"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
-#, fuzzy
 msgid "No customer rating"
-msgstr "Email zákazníka"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -686,9 +676,8 @@ msgstr "Pripravené pre ďalšiu fázu"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-#, fuzzy
 msgid "Ready to reopen"
-msgstr "Priem. meškanie do otvorenia"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -728,47 +717,34 @@ msgstr "Úloha"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
-#, fuzzy
 msgid "Task Stage"
-msgstr "Etapa"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
-#, fuzzy
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, "
 "customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
-"Odoo sledovač problémov vám umožňuje efektiǘne riadiť veci\n"
-"ako interné požiadavky, chyby softvérového vývoja, sťažbisti\n"
-"zákazníkov, problémy projektu, rozpis materálu, atď."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-#, fuzzy
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
 msgstr ""
-"Odoo sledovač problémov vám umožňuje efektívne riadiť veci\n"
-"ako interné požiadavky, chyby softvérového vývoja, sťažbisti\n"
-"zákazníkov, problémy projektu, rozpis materálu, atď."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
-#, fuzzy
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate "
 "multiple email addresses with a comma"
 msgstr ""
-"Tieto emailové adresy budú pridané do poľa 'kópia' všetkých odchádzajúcich "
-"emailov pre\n"
-"tento záznam pred ich poslaním. Oddeľte jednotlivé email adresy čiarkou"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -802,9 +778,8 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
-#, fuzzy
 msgid "Timesheets on Issues"
-msgstr "Použit Problémy"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
@@ -864,7 +839,7 @@ msgstr ""
 "vytvoriť nový"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:197
+#: code:addons/project_issue/models/project_issue.py:205
 #, python-format
 msgid "issues"
 msgstr "problémy"
@@ -878,90 +853,3 @@ msgstr ""
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebná akcia"
-
-#~ msgid "Click to create an issue."
-#~ msgstr "Kliknite pre vytvorenie problému."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#~ msgid "Followers"
-#~ msgstr "Odberatelia"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Odberatelia (Kanály)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Odberatelia (Partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "Important Messages"
-#~ msgstr "Dôležité správy"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je odberateľ"
-
-#~ msgid "Issue ready for next sStage"
-#~ msgstr "Problém pripravený pre ďalšiu fázu"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Dátum poslednej správy"
-
-#~ msgid "Messages"
-#~ msgstr "Správy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Správa a história komunikácie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Počet akcií"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Počet správ ktoré vyžadujú akciu"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Počet neprečítaných správ"
-
-#~ msgid "Sale Team"
-#~ msgstr "Obchodný tím"
-
-#~ msgid "Sales Team"
-#~ msgstr "Obchodný tím"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                             Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr ""
-#~ "Obchodný tím, ku ktorému Prípad patrí. Definujte Zodpovedného používateľa "
-#~ "a emailový účet pre poštovú bránu."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo neprečítaných správ"
-
-#~ msgid "Update Date"
-#~ msgstr "Dátum aktualizácie"
-
-#~ msgid "Website Messages"
-#~ msgstr "Správy webovej stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "História komunikácie webovej stránky"
-
-#~ msgid ""
-#~ "You can track your issues from this menu and the action we     \n"
-#~ "                will take."
-#~ msgstr ""
-#~ "Môžete sledovať svoje problémy z tohto menu a akciu \n"
-#~ "ktorú podnikneme."
-
-#, fuzzy
-#~ msgid "project issue"
-#~ msgstr "Projektový problém"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -139,10 +139,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Értékeléshez szükséges, részletezési dokumentumok és ajánlatok írása"
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Archívált"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -366,6 +376,11 @@ msgid "Departments"
 msgstr "Osztályok/Részlegek"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -382,6 +397,16 @@ msgstr "Elvált"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Hatékonysági tényező"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -454,6 +479,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Hiba! Nem készíthet visszatérő rangsorú alklamazott(ak) listát."
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "Várható új munkavállalók"
@@ -488,6 +518,16 @@ msgstr "Kövesse és ellenőrizze a fejlesztési részt"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Követők"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -642,6 +682,11 @@ msgstr "Növelje a lehetőségeket"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
 msgstr "Növelje a termék felfedezhetőségét"
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1460,33 +1505,21 @@ msgstr "Folyékonyan beszél Franciául és Angolul"
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_trainee
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as                     coordinate and supervise "
 "small distributed development teams for specific projects. You will become a "
 "technical                 expert of the product."
 msgstr ""
-"Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében, mint "
-"egyedül, mint irányítás alatt fogja munkáit\n"
-"                     végezni és felügyeli az egyedi projekt témákban a "
-"kisebb fejlesztési csoportoknak \n"
-"                     kiosztott munkákat. A termék Műszaki szakértője lesz."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
-#, fuzzy
 msgid ""
 "You will be responsible for developing and improving applications. You will "
 "work autonomously as well as coordinate and supervise small distributed "
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
-"Felelős lesz az alkalmazások fejlesztésében és kifejlesztésében, mint "
-"egyedül, mint irányítás alatt fogja munkáit\n"
-"                     végezni és felügyeli az egyedi projekt témákban a "
-"kisebb fejlesztési csoportoknak \n"
-"                     kiosztott munkákat. A termék Műszaki szakértője lesz."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1549,6 +1582,19 @@ msgid "You will work closely with all trainees"
 msgstr "Ön szorosan fog közreműködni a gyakornokokkal"
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "részleg"
@@ -1562,95 +1608,3 @@ msgstr "Pl. Rész időben"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "pl. Értékesítési menedzsment"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Click here to change the recruitment goal!"
-#~ msgstr "Kattintson ide a pályázati folyamat céljának a megváltoztatásához!"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "Kattintson egy új osztály, részleg létrehozásához."
-
-#~ msgid "Create Your Departments"
-#~ msgstr "Saját osztály létrehozása"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "HR Department"
-#~ msgstr "Emberi erőforrás Osztály, részleg"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő követő"
-
-#~ msgid "Job Name"
-#~ msgstr "Munka megnevezése"
-
-#~ msgid "Job Position Name"
-#~ msgstr "Állás pozíció neve"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Last Online Sale Order"
-#~ msgstr "Utolsó online Vásárlói megrendelés"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Munkaügy HR menü megnyitása"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "Toborzás vége"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Feliratkozások"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Ez a mező ábrázolja a kutatás hatékonyságát a teljes feladaton. pl. "
-#~ "egyedül végrehajtott kutatási 5 napos fázis 5 tárgyban kiosztva neki, ez "
-#~ "a 100% terhelés erre a fázisra alap értelmezve, de ha a hatékonyságot "
-#~ "200% tesszük akkor ez a terhelés \"csak\" 50%."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Update Date"
-#~ msgstr "Frissítés Dátuma"
-
-#~ msgid ""
-#~ "Your departments structure is used to manage all documents\n"
-#~ "                related to employees by departments: expenses and "
-#~ "timesheets,\n"
-#~ "                leaves and holidays, recruitments, etc."
-#~ msgstr ""
-#~ " Ön osztályfelépítése az összes munkavállaló \n"
-#~ "                dokumentumának osztályonkénti kezelésére szolgál: "
-#~ "kiadások, \n"
-#~ "                és munkaidő-beosztások, eltávozások és szabadságolások, "
-#~ "felvételiztetések, stb."

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-10 14:26+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -278,13 +278,10 @@ msgstr "(немає email-адреси)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
-#, fuzzy
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
-"* Smiley використовуються лише в HTML-коді для демонстрації зображень * Text "
-"(значення за замовчуванням) використовується для заміни тексту - іншим."
 
 #. module: mail
 #. openerp-web
@@ -752,13 +749,15 @@ msgstr "Долучення"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
-#, fuzzy
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Долучення пов'язані з документом через цю модель / res_id та з повідомленням "
-"через це поле."
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr ""
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1085,9 +1084,8 @@ msgstr "Стан згортання розмови"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-#, fuzzy
 msgid "Conversation is minimized"
-msgstr "Розмову зменшено"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1111,9 +1109,8 @@ msgstr "Створити %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "Створити %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1280,23 +1277,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "Скасувати листа"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Пов'язане повідомлення"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Підпис автора (тільки масова розсилка)"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2122,7 +2116,7 @@ msgstr "Неактивний псевдонім"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2160,7 +2154,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr "Запрошення"
@@ -2281,9 +2275,8 @@ msgstr "Є сповіщенням"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
-#, fuzzy
 msgid "Is Subscribed"
-msgstr "Відписано"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -3524,9 +3517,9 @@ msgstr "Приватні канали"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Приватні канали"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3819,9 +3812,9 @@ msgstr "Скорочення"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:619
-#, fuzzy, python-format
+#, python-format
 msgid "Show an helper message"
-msgstr "ІД повідомлень каналу"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3883,7 +3876,7 @@ msgstr "Смайл"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4497,9 +4490,9 @@ msgstr "Ви додали <b>%s</b> до розмови."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "You are alone in this channel."
-msgstr "Залишити цей канал"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:629
@@ -4549,7 +4542,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "Вас запрошено до:"
@@ -4564,14 +4557,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Ви відписалися від <b>%s</b>."
@@ -4606,9 +4599,8 @@ msgstr "від"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "created"
-msgstr "%s створено"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:320
@@ -4632,9 +4624,8 @@ msgstr "підписники"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "from:"
-msgstr "(від"
+msgstr ""
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -4711,9 +4702,9 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Непрочитані повідомлення"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4738,40 +4729,3 @@ msgstr "продаж"
 #, python-format
 msgid "this document"
 msgstr "цей документ"
-
-#~ msgid "Activity"
-#~ msgstr "Дія"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Долучення пов'язані з документом через цю модель / res_id та з "
-#~ "повідомленням через це поле."
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "Натисніть, щоб додати контакт до адресної книги."
-
-#~ msgid "Compose a new message"
-#~ msgstr "Створити нове повідомлення"
-
-#~ msgid "Contacts"
-#~ msgstr "Контакти"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Розмову зменшено"
-
-#~ msgid "Join Group"
-#~ msgstr "Приєднатися до групи"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Версія повідомлення з вмістом форматованого тексту/HTML (тут можна "
-#~ "використовувати наповнювачі)"
-
-#~ msgid "Send mail"
-#~ msgstr "Надіслати листа"
-
-#~ msgid "Unsubscribed"
-#~ msgstr "Відписано"

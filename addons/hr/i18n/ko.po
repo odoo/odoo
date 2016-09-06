@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-04-26 05:33+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -128,9 +128,19 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
 msgstr ""
 
 #. module: hr
@@ -343,6 +353,11 @@ msgid "Departments"
 msgstr "부서"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -359,6 +374,16 @@ msgstr "이혼"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "효율 계수"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -431,6 +456,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "오류! 직원의 재귀적 계층을 만들 수 없습니다."
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "예상 신입 사원 수"
@@ -465,6 +495,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "팔로워"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -554,9 +594,8 @@ msgstr "집 주소"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "부서"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -618,6 +657,11 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
 msgstr ""
 
 #. module: hr
@@ -821,9 +865,8 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
-#, fuzzy
 msgid "Not Recruiting"
-msgstr "채용 중지"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -985,9 +1028,8 @@ msgstr "자원"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-#, fuzzy
 msgid "Resource Name"
-msgstr "자원 유형"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1468,6 +1510,19 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "부서"
@@ -1481,37 +1536,3 @@ msgstr "예 : 아르바이트"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
-
-#~ msgid "Create Your Departments"
-#~ msgstr "부서 만들기"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#~ msgid "Job Name"
-#~ msgstr "직무명"
-
-#~ msgid "Last Message Date"
-#~ msgstr "최근 메시지 날짜"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "인사 메뉴 열기"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "채용 마감"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "이 필드는 완료 작업에 자원 효율을 묘사한다. 예를 들어 자원을 그에게 할당"
-#~ "된 5개의 업무를 5일에 걸쳐 혼자 하도록 한다면 기본적으로 이 단계를 100% 부"
-#~ "하로 표시합니다. 그런데 효율을 200%로 놓을 경우 부하는 50%가 됩니다."
-
-#~ msgid "Update Date"
-#~ msgstr "날짜 갱신"

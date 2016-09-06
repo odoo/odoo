@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-10 07:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
@@ -48,6 +48,7 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
+"% if is_online:\n"
 "<p style=\"margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;\">\n"
 "    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
 "line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
@@ -57,6 +58,7 @@ msgid ""
 "#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
 "</a>\n"
 "</p>\n"
+"% endif\n"
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
@@ -427,9 +429,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_confirmation_date
-#, fuzzy
 msgid "Confirmation Date"
-msgstr "შექმნის თარიღი"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -627,9 +628,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_product_visible_discount
-#, fuzzy
 msgid "Discount Policy"
-msgstr "ფასდაკლება"
+msgstr ""
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -770,9 +770,8 @@ msgstr "დაჯგუფება"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-#, fuzzy
 msgid "Group By Name"
-msgstr "დაჯგუფება"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
@@ -806,7 +805,7 @@ msgid "Invoice"
 msgstr "ინვოისი"
 
 #. module: sale
-#: code:addons/sale/sale.py:968
+#: code:addons/sale/sale.py:969
 #, python-format
 msgid "Invoice %s paid"
 msgstr ""
@@ -997,9 +996,8 @@ msgstr "ბოლოს განახლებულია"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
-#, fuzzy
 msgid "Layout Sequence"
-msgstr "მიმდევრობა"
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -1060,16 +1058,14 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn_msg
-#, fuzzy
 msgid "Message for Sales Order"
-msgstr "გაყიდვის ორდერი"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn_msg
-#, fuzzy
 msgid "Message for Sales Order Line"
-msgstr "გაყიდვის ორდერის ხაზი"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1116,9 +1112,8 @@ msgstr ""
 #. module: sale
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
-#, fuzzy
 msgid "No Message"
-msgstr "მესიჯები"
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -1337,7 +1332,7 @@ msgid "Please define an accounting sale journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:790
+#: code:addons/sale/sale.py:791
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1379,9 +1374,8 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
-#, fuzzy
 msgid "Pricelists"
-msgstr "ფასი"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1419,9 +1413,8 @@ msgstr "პროდუქტი"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_category_action_form
-#, fuzzy
 msgid "Product Categories"
-msgstr "პროდუქტები"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
@@ -1781,9 +1774,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
-#, fuzzy
 msgid "Section"
-msgstr "აღწერილობა"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
@@ -1918,9 +1910,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
-#, fuzzy
 msgid "Tax Display"
-msgstr "სახელი"
+msgstr ""
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
@@ -2171,7 +2162,7 @@ msgid "Warning"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:870
+#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:871
 #, python-format
 msgid "Warning for %s"
 msgstr ""
@@ -2214,7 +2205,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:899
+#: code:addons/sale/sale.py:900
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"
@@ -2281,12 +2272,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "უცნობი"
-
-#~ msgid "Done"
-#~ msgstr "დასრულებულია"
-
-#~ msgid "Followers"
-#~ msgstr "მიმდევრები"
-
-#~ msgid "Last Message Date"
-#~ msgstr "ბოლო შეტყობინების თარიღი"

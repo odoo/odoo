@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-06-27 08:44+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -125,9 +125,8 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
-#, fuzzy
 msgid "% On tasks"
-msgstr "w zadaniach"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -147,9 +146,8 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
-#, fuzzy
 msgid "Customer Ratings"
-msgstr "Satysfakcja klienta"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -167,17 +165,15 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
-#, fuzzy
 msgid "Customer(s) Ratings"
-msgstr "Satysfakcja klienta"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
-#, fuzzy
 msgid "Customers Ratings"
-msgstr "Satysfakcja klienta"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -231,9 +227,8 @@ msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
-#, fuzzy
 msgid "No rating"
-msgstr "ocena"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -294,9 +289,8 @@ msgstr ""
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
-#, fuzzy
 msgid "Ratings"
-msgstr "ocena"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -313,9 +307,8 @@ msgstr "Zadanie"
 #. module: rating_project
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
-#, fuzzy
 msgid "Task Rating"
-msgstr "ocena"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -336,102 +329,3 @@ msgstr ""
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "<body>\n"
-#~ "    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
-#~ "        <div style=\"margin-left:30px;align=center;\">\n"
-#~ "            Dear ${object.partner_id.name},\n"
-#~ "        </div><br>\n"
-#~ "        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n"
-#~ "            We hope the services provided have met your expectations.\n"
-#~ "            <br>If you have any more questions or comments, do not "
-#~ "hesitate to reply to this e-mail.\n"
-#~ "            <br><br>Please, help us to improve ourself by rating the "
-#~ "service we provide.\n"
-#~ "        </div><br>\n"
-#~ "        <table style=\"margin-left:50px;\" width=\"70%\">\n"
-#~ "            <tr>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/10\">\n"
-#~ "                        <img alt=\"Great\" src=\"rating/static/src/img/"
-#~ "rating_10.png\" title=\"It was great\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/5\">\n"
-#~ "                        <img alt=\"Okay\" src=\"rating/static/src/img/"
-#~ "rating_5.png\" title=\"It was okay\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/0\">\n"
-#~ "                        <img alt=\"Bad\" src=\"rating/static/src/img/"
-#~ "rating_0.png\" title=\"It wasn't good\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "            </tr>\n"
-#~ "        </table><br>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">Thank you </"
-#~ "h4>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">${object."
-#~ "rated_partner_id.name or ''} </h4>\n"
-#~ "    </div>\n"
-#~ "</body>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<body>\n"
-#~ "    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
-#~ "        <div style=\"margin-left:30px;align=center;\">\n"
-#~ "            Szanowny/-a ${object.partner_id.name},\n"
-#~ "        </div><br>\n"
-#~ "        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n"
-#~ "            Mamy nadzieję, że wyświadczone usługi spełniły pańskie "
-#~ "oczekiwania.\n"
-#~ "            <br>Jeśli ma Pan/-i więcej pytań lub komentarzy, proszę się "
-#~ "nie wahać, aby odpowiedzieć na ten e-mail.\n"
-#~ "            <br><br>Proszę, pomóż nam, by udoskonalać nas samych poprzez "
-#~ "ocenę usług jakie wykonujemy.\n"
-#~ "        </div><br>\n"
-#~ "        <table style=\"margin-left:50px;\" width=\"70%\">\n"
-#~ "            <tr>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/10\">\n"
-#~ "                        <img alt=\"Great\" src=\"rating/static/src/img/"
-#~ "rating_10.png\" title=\"It was great\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/5\">\n"
-#~ "                        <img alt=\"Okay\" src=\"rating/static/src/img/"
-#~ "rating_5.png\" title=\"It was okay\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/0\">\n"
-#~ "                        <img alt=\"Bad\" src=\"rating/static/src/img/"
-#~ "rating_0.png\" title=\"It wasn't good\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "            </tr>\n"
-#~ "        </table><br>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">Dziękujemy </"
-#~ "h4>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">${object."
-#~ "rated_partner_id.name or ''} </h4>\n"
-#~ "    </div>\n"
-#~ "</body>\n"
-#~ "                \n"
-#~ "            "
-
-#~ msgid "${object.res_name}"
-#~ msgstr "${object.res_name}"
-
-#~ msgid "% Happy"
-#~ msgstr "% Szczęście"
-
-#~ msgid "Auto Kanban state validation"
-#~ msgstr "stan Kanban uprawomocniony automatycznie"

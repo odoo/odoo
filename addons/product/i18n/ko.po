@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-01-25 08:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -41,7 +41,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (사본)"
@@ -1460,7 +1460,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1696,6 +1696,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "가격표 버전을 기반으로 단위 당 제품 가격을 계산합니다."
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1791,9 +1798,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "회사"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3007,7 +3013,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "제품 : "
@@ -3042,9 +3048,8 @@ msgstr "수량"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "패키지별 수량"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3483,12 +3488,9 @@ msgstr "유형"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"활성 필드를 선택 해제하면 삭제 없이 측정 단위를 사용하지 않도록 설정할 수 있"
-"습니다."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3603,9 +3605,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "다른 가격리스트"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3917,153 +3918,3 @@ msgstr "까지"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "알 수 없음"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" 모니터\n"
-#~ "6GB 램\n"
-#~ "Hi-Speed 234Q 프로세서\n"
-#~ "QWERTY 키보드"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "팩스 스캐너 일체형 고속 프린터"
-
-#~ msgid "Blank CD"
-#~ msgstr "공 CD"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "공 DVD-RW"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "라이프사이클 끝"
-
-#~ msgid "External Hard disk"
-#~ msgstr "외장 하드 디스크"
-
-#~ msgid "Followers"
-#~ msgstr "팔로워"
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "모든 기능을 담은 이미지 편집 소프트웨어."
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "상품 분류 목록을 표시할 때 주문 순서를 제공합니다."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks 소프트웨어"
-
-#~ msgid "Gross Weight"
-#~ msgstr "총중량"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "HDD 요청시"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr "마이크와 헤드폰 플러그가 포함된 랩탑용 핸즈프리 헤드셋"
-
-#~ msgid "Headset USB"
-#~ msgstr "USB 헤드셋"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "USB 커넥터가 포함된 랩탑용 헤드셋"
-
-#~ msgid "Headset standard"
-#~ msgstr "표준 헤드셋"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#~ msgid "In Development"
-#~ msgstr "개발 중"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "잉크 카트리지"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "랩탑 S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "최근 메시지 날짜"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "보조 측정 단위 관리"
-
-#~ msgid "Messages"
-#~ msgstr "메시지"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "메시지 및 대화 기록"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "메인보드 A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "멀티미디어 스피커"
-
-#~ msgid "Obsolete"
-#~ msgstr "구형"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "문서편집기, 스프레드시트, 프레젠테이션, 그래픽과 데이터베이스를 제공하는 "
-#~ "오피스 편집 소프트웨어"
-
-#~ msgid "Office Suite"
-#~ msgstr "오피스 모음"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "요구 사항에 따라 하드 디스크 용량 추가"
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "펜 드라이브, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "펜 드라이브, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "프린터, 일체형"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "프로세서 AMD 8-코어"
-
-#~ msgid "RAM SR3"
-#~ msgstr "램 SR3"
-
-#~ msgid "Router R430"
-#~ msgstr "라우터 R430"
-
-#~ msgid "Status"
-#~ msgstr "상태"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "공급자 가격리스트"
-
-#~ msgid "Template Name"
-#~ msgstr "서식 이름"
-
-#~ msgid "USB Adapter"
-#~ msgstr "USB 어댑터"
-
-#~ msgid "Unread Messages"
-#~ msgstr "읽지 않은 메시지"
-
-#~ msgid "Webcam"
-#~ msgstr "웹캠"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"

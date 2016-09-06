@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-07-30 05:58+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"PO-Revision-Date: 2016-08-31 03:32+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
@@ -44,7 +44,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s（コピー）"
@@ -1403,7 +1403,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-#, fuzzy
 msgid ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
 "-  </span>\n"
@@ -1412,10 +1411,6 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', "
 "'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
-"<span attrs=\"{'invisible':[('base', 'not in', "
-"('list_price','standard_price'))]}\">公開価格  -  </span>\n"
-"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">他の価格リスト  "
-"-  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -1459,7 +1454,7 @@ msgstr ""
 "ます。"
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1693,6 +1688,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "価格リストバージョンに基づく単位当りの製品価格の計算"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1719,7 +1721,7 @@ msgstr "カテゴリタイプ"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "カテゴリ名"
 
 #. module: product
 #: code:addons/product/pricelist.py:361
@@ -1788,9 +1790,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "会社"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3004,7 +3005,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "製品： "
@@ -3039,9 +3040,8 @@ msgstr "数量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "梱包入数"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3395,9 +3395,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "パレットまたは箱に置くことのできる製品の合計数"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3485,12 +3484,9 @@ msgstr "タイプ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"アクティブ項目のチェックを外すことで、単位を削除することなく非表示にできま"
-"す。"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3605,9 +3601,8 @@ msgstr "仕入先情報"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "他の価格リスト"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3743,7 +3738,7 @@ msgstr "日数"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr "十進数．精度"
+msgstr "decimal.precision"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -3919,87 +3914,3 @@ msgstr "～"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "不明"
-
-#~ msgid ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-#~ "                            <span attrs=\"{'invisible':[('base', '!=', "
-#~ "'pricelist')]}\">Other Pricelist  -  </span>"
-#~ msgstr ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">公開価格  -  </span>\n"
-#~ "<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">他の価格リス"
-#~ "ト  -  </span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "必要なアクション"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "記録上の最後のメッセージが投稿された日"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "ライフサイクルの終わり"
-
-#~ msgid "Followers"
-#~ msgstr "フォロワー"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "フォロワー(チャンネル)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "フォロワー(取引先)"
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "製品カテゴリのリストを表示する時に並び順を与えます。"
-
-#~ msgid "Gross Weight"
-#~ msgstr "総重量"
-
-#~ msgid "Headset USB"
-#~ msgstr "ヘッドセットUSB"
-
-#~ msgid "In Development"
-#~ msgstr "開発で"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最終メッセージ日"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "副次的な単位を管理"
-
-#~ msgid "Messages"
-#~ msgstr "メッセージ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "メッセージと通信履歴"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "マルチメディアスピーカ"
-
-#~ msgid "Number of Actions"
-#~ msgstr "アクションの数"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未読メッセージの件数"
-
-#~ msgid "Obsolete"
-#~ msgstr "旧式"
-
-#~ msgid "Status"
-#~ msgstr "ステータス"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "仕入先価格リスト"
-
-#~ msgid "Template Name"
-#~ msgstr "テンプレート名"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未読メッセージ"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未読メッセージカウンター"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home サーバ 2011"

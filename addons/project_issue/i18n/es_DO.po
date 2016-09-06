@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-06-01 01:39+0000\n"
 "Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
@@ -34,7 +34,7 @@ msgid "# of Issues"
 msgstr "# de Incidencias"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:162
+#: code:addons/project_issue/models/project_issue.py:170
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -72,7 +72,6 @@ msgstr "Añadir una nota interna..."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-#, fuzzy
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
@@ -85,12 +84,6 @@ msgid ""
 "                                           * Ready for next stage indicates "
 "the issue is ready to be pulled to the next stage"
 msgstr ""
-"Un estado de kanban de las incidencias indica situaciones especiales que las "
-"afectan:\n"
-"* 'Normal' es la situación predeterminado.\n"
-"* 'Bloqueada' indica que algo impide el progreso de la incidencia.\n"
-"* 'Lista para la siguiente etapa' indica que la incidencia está lista para "
-"ser llevada a la siguiente etapa."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -225,9 +218,8 @@ msgstr "Creado por"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
-#, fuzzy
 msgid "Created on"
-msgstr "Creado por"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -235,13 +227,13 @@ msgid "Creation Date"
 msgstr "Fecha creación"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:300
+#: code:addons/project_issue/models/project_issue.py:310
 #, python-format
 msgid "Customer"
 msgstr "Cliente"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:302
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "Customer Email"
 msgstr "Correo del Cliente"
@@ -375,7 +367,7 @@ msgid "High"
 msgstr "Alta"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
+#: code:addons/project_issue/models/project_issue.py:285
 #, python-format
 msgid "I take it"
 msgstr "Lo cojo"
@@ -443,9 +435,8 @@ msgstr "Novedad reabierta"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-#, fuzzy
 msgid "Issue ready for next stage"
-msgstr "Novedad lista para la próxima etapa"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -518,9 +509,8 @@ msgstr "Última actualización de"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr "Última actualización de"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -551,7 +541,7 @@ msgid "New"
 msgstr "Nuevo"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:279
+#: code:addons/project_issue/models/project_issue.py:289
 #, python-format
 msgid "New Issue"
 msgstr "Nueva Incidencia"
@@ -562,16 +552,15 @@ msgid "Next Action"
 msgstr "Próxima Acción"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:326
+#: code:addons/project_issue/models/project_issue.py:336
 #, python-format
 msgid "No Subject"
 msgstr "Sin Asunto"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
-#, fuzzy
 msgid "No customer rating"
-msgstr "Correo del Cliente"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -689,9 +678,8 @@ msgstr "Lista para la siguiente fase/etapa"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-#, fuzzy
 msgid "Ready to reopen"
-msgstr "Retraso Promedio para Abrir"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -731,49 +719,34 @@ msgstr "Tarea"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
-#, fuzzy
 msgid "Task Stage"
-msgstr "Fase"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
-#, fuzzy
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, "
 "customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
-"El registrador de novedades de  Odoo le permite gestionar de manera "
-"eficiente cosas\n"
-"como solicitudes internas, errores de desarrollo de software, quejas de "
-"clientes, problemas del proyecto, averías de materiales, etc."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-#, fuzzy
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
 msgstr ""
-"El registrador de novedades de  Odoo le permite gestionar de manera "
-"eficiente cosas\n"
-"como solicitudes internas, errores de desarrollo de software, quejas de "
-"clientes, problemas del proyecto, averías de materiales, etc."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
-#, fuzzy
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate "
 "multiple email addresses with a comma"
 msgstr ""
-"Estos correos serán añadidos al campo CC para todos los correos entrantes y "
-"salientes de este registro antes de ser enviados. Separe los correos con "
-"comas."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -807,9 +780,8 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
-#, fuzzy
 msgid "Timesheets on Issues"
-msgstr "Use novedades"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
@@ -869,7 +841,7 @@ msgstr ""
 "aquí"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:197
+#: code:addons/project_issue/models/project_issue.py:205
 #, python-format
 msgid "issues"
 msgstr "incidencias"
@@ -883,87 +855,3 @@ msgstr ""
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Click to create an issue."
-#~ msgstr "Clic para crear una incidencia."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Asociados)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es Seguidor"
-
-#~ msgid "Issue ready for next sStage"
-#~ msgstr "Novedad lista para la próxima etapa"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mensajes e historial de comunicación"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Sale Team"
-#~ msgstr "Equipo de Ventas"
-
-#~ msgid "Sales Team"
-#~ msgstr "Equipo de ventas"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                             Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr ""
-#~ "Equipo de ventas al cual pertenece el caso. Define el usuario responsable "
-#~ "y la cuenta de correo electrónico para la pasarela de correo."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes no Leídos"
-
-#~ msgid "Update Date"
-#~ msgstr "Fecha de actualización"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Sitio Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicación del sitio web"
-
-#~ msgid ""
-#~ "You can track your issues from this menu and the action we     \n"
-#~ "                will take."
-#~ msgstr ""
-#~ "Puede hacer un seguimiento de sus novedades de este menú y la acción que\n"
-#~ "tendrá."
-
-#, fuzzy
-#~ msgid "project issue"
-#~ msgstr "Incidencia del Proyecto"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-04-23 10:51+0000\n"
 "Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -146,9 +146,8 @@ msgstr "Oluşturuldu"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Teslim Yöntemi"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -424,13 +423,10 @@ msgstr "Kaynak"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
-#, fuzzy
 msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
-"Bu Tedariği oluşturan belgenin referansı.\n"
-"Bu, Odoo tarafından otomatik olarak tamamlanır."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -524,22 +520,18 @@ msgstr "Çok Acil"
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
-#, fuzzy
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
 "                creates the necessary operations to fulfill the need: "
 "purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
-"Tedarik emri onaylandığında, gereksinimi karşılamak için tüm\n"
-"                gerekli işlemleri otomatik olarak başlatır: satınalma\n"
-"                siparişi teklifi, üretim siparişi, vs."
 
 #. module: procurement
 #: code:addons/procurement/models/procurement.py:142
-#, fuzzy, python-format
+#, python-format
 msgid "You cannot delete procurements that are in cancel state."
-msgstr "%s durumundaki Tedarik Emir(ler)i silinemiyor."
+msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
@@ -550,99 +542,3 @@ msgstr "örn. Satınal"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "örn. SO005"
-
-#~ msgid ""
-#~ "<b>Procurement Orders</b> represent the need for a certain quantity of "
-#~ "products, at a given time, in a given location."
-#~ msgstr ""
-#~ "<b>Tedarik Emirleri</b> belirli bir konumda, belirli bir zamanda, "
-#~ "ürünlerin belirli bir miktardaki gereksinimini temsil etmektedir."
-
-#~ msgid ""
-#~ "<b>Sales Orders</b> are one typical source of Procurement Orders (but "
-#~ "these are distinct documents). \n"
-#~ "                <br>Depending on the procurement parameters and the "
-#~ "product configuration, the procurement engine will attempt to satisfy the "
-#~ "need by reserving products from stock, ordering products from a supplier, "
-#~ "or passing a manufacturing order, etc..."
-#~ msgstr ""
-#~ "<b>Satış Siparişleri</b> tipik bir Tedarik Emri kaynağıdır (ama bunlar "
-#~ "belgelerden farklıdır). \n"
-#~ "                <br>Tedarik parametrelerine ve ürün yapılandırmasına "
-#~ "bağlı olarak, tedarik motoru ihtiyacı karşılamak için ürünü stoklarda "
-#~ "rezerve etmeye çalışacak, bir tedarikçiye ürünü sipariş edecek veya "
-#~ "üretim emri geçecektir, vb..."
-
-#~ msgid "Action Needed"
-#~ msgstr "Eylem Gerekiyor"
-
-#~ msgid ""
-#~ "Click to create a Procurement order in exception state, or remove the "
-#~ "filter on the search bar to display all the procurements."
-#~ msgstr ""
-#~ "İstisna durumunda bir Tedarik Siparişi oluşturmak için tıklayın veya "
-#~ "bütün tedarikleri görüntülemek için arama çubuğundaki süzgeçi kaldırın."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Teslim Yöntemi"
-
-#~ msgid "Followers"
-#~ msgstr "İzleyiciler"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "İzleyiciler (Kanallar)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "İzleyiciler (İş ortakları)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#~ msgid "Is Follower"
-#~ msgstr "Takipçi mi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Son Mesaj Tarihi"
-
-#~ msgid "Messages"
-#~ msgstr "Mesajlar"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mesajlar ve iletişim geçmişi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "İşlem Sayısı"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Eylem gerektiren mesaj sayısı"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Okunmamış mesaj sayısı"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Okunmamış Mesajlar"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Okunmamış Mesaj Sayacı"
-
-#~ msgid "Website Messages"
-#~ msgstr "Websitesi Mesajları"
-
-#~ msgid "Website communication history"
-#~ msgstr "Web Sitesi iletişim geçmişi"
-
-#~ msgid ""
-#~ "When the procurement order is confirmed, it automatically\n"
-#~ "                creates the necessary operations to fullfil the need: "
-#~ "purchase\n"
-#~ "                order proposition, manufacturing order, etc."
-#~ msgstr ""
-#~ "Tedarik emri onaylandığında, gereksinimi karşılamak için tüm\n"
-#~ "                gerekli işlemleri otomatik olarak başlatır: satınalma\n"
-#~ "                siparişi teklifi, üretim siparişi, vs."

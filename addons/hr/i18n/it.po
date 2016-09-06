@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-06-07 13:12+0000\n"
 "Last-Translator: Valeria Torrisi <valeriatorrisi93@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
@@ -136,10 +136,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr "Analizzare i bisogni, scrivere documenti specifici e quotazioni."
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Archiviato"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -363,6 +373,11 @@ msgid "Departments"
 msgstr "Dipartimenti"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -379,6 +394,16 @@ msgstr "Divorziato/a"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Fattore di efficienza"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -451,6 +476,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Errore! Impossibile creare gerarchie di dipendenti ricorsive."
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "Nuovi dipendenti attesi"
@@ -487,6 +517,16 @@ msgstr "Seguire e controllare la parte di sviluppo"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Followers"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -576,9 +616,8 @@ msgstr "Indirizzo fiscale"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "Dipartimento di Risorse Umane"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -642,6 +681,11 @@ msgstr "Aumentare le opportunità"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
 msgstr "Aumentare la visibilità del prodotto"
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -848,9 +892,8 @@ msgstr "Bello avere"
 
 #. module: hr
 #: selection:hr.job,state:0
-#, fuzzy
 msgid "Not Recruiting"
-msgstr "Ferma Assunzioni"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -1017,9 +1060,8 @@ msgstr "Risorse"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-#, fuzzy
 msgid "Resource Name"
-msgstr "Tipo di risorsa"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1501,6 +1543,19 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "Dipartimento"
@@ -1514,78 +1569,3 @@ msgstr "es. Part Time"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Azione Necessaria"
-
-#~ msgid "Click here to change the recruitment goal!"
-#~ msgstr "Clicca qui per cambiare l'obiettivo di reclutamento!"
-
-#~ msgid "Click to define a new department."
-#~ msgstr "Clicca per definire un nuovo dipartimento."
-
-#~ msgid "Create Your Departments"
-#~ msgstr "Crea i tuoi dipartimenti"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data dell'ultimo messaggio postato per questo record"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Canali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Followers (Partner)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "Is Follower"
-#~ msgstr "E' Follower"
-
-#~ msgid "Job Name"
-#~ msgstr "Nome lavoro"
-
-#~ msgid "Job Position Name"
-#~ msgstr "Nome della Posizione Lavorativa"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data Ultimo Messaggio"
-
-#~ msgid "Last Online Sale Order"
-#~ msgstr "Ultimo Ordine di Vendita Online"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Numero di Azioni"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Numero di messaggi che richiedono un'azione"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Numero di messaggi non letti"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Apre Menù HR"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "Reclutamento Chiuso."
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Questo campo rappresenta l'efficienza della risorsa sull'esecuzione delle "
-#~ "attività. Per es. una risorsa impiegata da sola su una fase di 5 giorni "
-#~ "con 5 attività assegnategli, avrà un carico del 100% per questa fase per "
-#~ "default, ma se indichiamo un'efficienza del 200%, allora il suo carico "
-#~ "sarà di solo il 50%."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contatore di messsaggi non letti"
-
-#~ msgid "Update Date"
-#~ msgstr "Data Aggiornamento"

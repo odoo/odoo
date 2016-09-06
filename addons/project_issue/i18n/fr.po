@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-08-05 08:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -37,7 +37,7 @@ msgid "# of Issues"
 msgstr "Nb. d'incidents"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:162
+#: code:addons/project_issue/models/project_issue.py:170
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -228,13 +228,13 @@ msgid "Creation Date"
 msgstr "Date de création"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:300
+#: code:addons/project_issue/models/project_issue.py:310
 #, python-format
 msgid "Customer"
 msgstr "Client"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:302
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "Customer Email"
 msgstr "Courriel client"
@@ -369,7 +369,7 @@ msgid "High"
 msgstr "Élevé"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
+#: code:addons/project_issue/models/project_issue.py:285
 #, python-format
 msgid "I take it"
 msgstr "Je m'en occupe"
@@ -543,7 +543,7 @@ msgid "New"
 msgstr "Nouveau"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:279
+#: code:addons/project_issue/models/project_issue.py:289
 #, python-format
 msgid "New Issue"
 msgstr "Nouvel incident"
@@ -554,7 +554,7 @@ msgid "Next Action"
 msgstr "Action suivante"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:326
+#: code:addons/project_issue/models/project_issue.py:336
 #, python-format
 msgid "No Subject"
 msgstr "Pas de sujet"
@@ -689,9 +689,8 @@ msgstr "Prêt pour la prochaine étape"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-#, fuzzy
 msgid "Ready to reopen"
-msgstr "Délai moyen pour ouvrir"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -852,7 +851,7 @@ msgstr ""
 "nouvelle"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:197
+#: code:addons/project_issue/models/project_issue.py:205
 #, python-format
 msgid "issues"
 msgstr "incidents"
@@ -866,130 +865,3 @@ msgstr "project.config.settings"
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid ""
-#~ "A Issue's kanban state indicates special situations affecting it:\n"
-#~ " * Normal is the default situation\n"
-#~ " * Blocked indicates something is preventing the progress of this issue\n"
-#~ " * Ready for next stage indicates the issue is ready to be pulled to the "
-#~ "next stage"
-#~ msgstr ""
-#~ "Un état kanban de l'incident indique les situations spéciales qui "
-#~ "l'affecte :\n"
-#~ " * Normal est la situation par défaut\n"
-#~ " * Bloqué indique que quelque chose bloque la progression de cet "
-#~ "incident\n"
-#~ " * Prêt pour l'étape suivante indique que l'incident est prêt à être "
-#~ "poussé à l'étape suivante"
-
-#~ msgid "Action Needed"
-#~ msgstr "A besoin d'une action"
-
-#~ msgid "Click to create an issue."
-#~ msgstr "Cliquer pour créer un incident."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message posté sur cet enregistrement"
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Issue ready for next sStage"
-#~ msgstr "Incident prêt pour la prochaine étape"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historique des messages et communications"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Sale Team"
-#~ msgstr "Équipe"
-
-#~ msgid "Sales Team"
-#~ msgstr "Équipe commerciale"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                             Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr ""
-#~ "Les équipes de vente auxquelles un cas appartient. Définissez un "
-#~ "responsable et un compte de courriel pour la passerelle de courriel."
-
-#~ msgid ""
-#~ "The Odoo issues tacker allows you to efficiently manage things\n"
-#~ "                    like internal requests, software development bugs, "
-#~ "customer\n"
-#~ "                    complaints, project troubles, material breakdowns, "
-#~ "etc."
-#~ msgstr ""
-#~ "Le suivi d'incidents d'Odoo permet de gérer efficacement des éléments\n"
-#~ "comme les demandes internes, les bugs logiciels, les réclamations de la "
-#~ "clientèle,\n"
-#~ "les problèmes dans les projets, les pannes de matériel, etc."
-
-#~ msgid ""
-#~ "The Odoo issues tacker allows you to efficiently manage things\n"
-#~ "                like internal requests, software development bugs, "
-#~ "customer\n"
-#~ "                complaints, project troubles, material breakdowns, etc."
-#~ msgstr ""
-#~ "Le suivi d'incidents d'Odoo permet de gérer efficacement des éléments\n"
-#~ "comme les demandes internes, les bugs logiciels, les réclamations de la "
-#~ "clientèle,\n"
-#~ "les problèmes dans les projets, les pannes de matériel, etc."
-
-#~ msgid ""
-#~ "These email addresses will be added to the CC field of all inbound and "
-#~ "outbound emails for this record before being sent. Separate multiple "
-#~ "email addresses with a comma"
-#~ msgstr ""
-#~ "Ces adresses courriels seront ajoutées par défaut au champ \"Copie à\" de "
-#~ "tous les courriels entrants et sortants de cet enregistrement. Séparez "
-#~ "les adresses multiples avec une virgule."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid "Update Date"
-#~ msgstr "Mettre à jour la date"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"
-
-#~ msgid ""
-#~ "You can track your issues from this menu and the action we     \n"
-#~ "                will take."
-#~ msgstr ""
-#~ "À partir de ce menu on peut suivre les incidents et l'action à "
-#~ "entreprendre."

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-07-12 00:57+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -915,7 +915,7 @@ msgstr "已雇用员工"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "部门"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -1916,7 +1916,7 @@ msgstr "例如：电话约见"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr ""
+msgstr "例如：销售经理"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
@@ -1933,199 +1933,3 @@ msgstr "应聘者"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Please welcome him/her and help him/her finding his/her "
-#~ "marks.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<p>\n"
-#~ "%if object.department_id:\n"
-#~ "非常高兴地宣布 <strong> ${object.name} </strong> 会加入我们 ${object."
-#~ "job_id.name}\n"
-#~ "在${object.department_id.name}.\n"
-#~ "%else:\n"
-#~ "我非常高兴地宣布<strong> ${object.name} </strong> 会加入我们 ${object."
-#~ "job_id.name}.\n"
-#~ "%endif\n"
-#~ "</p>\n"
-#~ "<p>请欢迎并帮助他/她适应他/她的工作.</p>"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>${object.partner_name or 'applicant'} 您好,</p>        <p> 非常高兴收到"
-#~ "您的简历!        我们将尽快和您电话沟通并预约初试时间.</p>        <p>如果"
-#~ "我们无法联系到您或者您错过接听电话,请在方便的时间联系我 XXX-XXXX(公司电话"
-#~ "或者个人电话,译者注)         如果我没有接听到您的电话,请短信或者邮件告诉我"
-#~ "一个合适的时间,我再与您联系</p>        <p>致敬,</p>        <br>         "
-#~ "${object.user_id.signature}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>${object.partner_name or 'applicant'} 你好,</p>\n"
-#~ "<p>谢谢您申请我们公司的职位.\n"
-#~ "很抱歉, 您的简历不符合我们的招聘要求\n"
-#~ "此职位的招聘已结束.</p>\n"
-#~ "<p>如果您有其他想法,请在方便的时间电话联系我们.</p>\n"
-#~ "<p>此致,</p>\n"
-#~ "<br>\n"
-#~ "${object.user_id and object.user_id.signature or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Campaign"
-#~ msgstr "营销活动"
-
-#~ msgid ""
-#~ "Click here to create a new job. You can remove the \"In Recruitment\" "
-#~ "filter to display all the job positions."
-#~ msgstr "点击这里生成一个新工作。你可以移除\"在招聘中”来过滤所有的工作岗位。"
-
-#~ msgid ""
-#~ "Create here some alias...\n"
-#~ "                That will allow you to track from where the applicant is "
-#~ "coming from..."
-#~ msgstr "在这里生产一些别名...这会允许你申请来自哪里"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid ""
-#~ "Define job position profile and manage recruitment in a context of a "
-#~ "particular job: print interview survey, define number of expected new "
-#~ "employees, and manage its recruitment pipe"
-#~ msgstr ""
-#~ "定义工作岗位的资料，并在具体工作的背景下，管理招聘：打印的采访调查中，定义"
-#~ "预期新员工的数量，并管理其招募管道"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "HR Department"
-#~ msgstr "HR 部门"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "If other, precise:"
-#~ msgstr "如其他的，精确的："
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Job Stages"
-#~ msgstr "招聘阶段"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid ""
-#~ "Manage your CV's and motivation letter related to all applicants.\n"
-#~ "-This installs the module document_ftp. This will install the knowledge "
-#~ "management  module in order to allow you to search using specific "
-#~ "keywords through  the content of all documents (PDF, .DOCx...)"
-#~ msgstr ""
-#~ "管理您的简历和求职信与所有申请人。\n"
-#~ "                安装模块document_ftp。为了让您通过使用特定的关键字的所有文"
-#~ "件的内容进行搜索，这将安装知识管理模块（PDF，DOCX...）"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "打开 人力资源 菜单"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "文档信息发送使用邮件服务器规则。\n"
-#~ "- 所有人：所有人都允许\n"
-#~ "- 业务伙伴：仅认证的业务伙伴\n"
-#~ "- 关注者：仅关注相关文档者\n"
-
-#~ msgid "Reset Application"
-#~ msgstr "重置申请"
-
-#~ msgid "Search through resumes and motivation letters."
-#~ msgstr "通过搜索简历和求职信"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "这里是一个帮助跟踪您不同市场活动尝试的名称。例如：Fall_Drive，"
-#~ "Christmas_Special"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "Welcoming ${object.name} "
-#~ msgstr "欢迎 ${object.name}"
-
-#~ msgid "Refused"
-#~ msgstr "已拒绝"

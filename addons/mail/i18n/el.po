@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-07-23 09:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -274,15 +274,10 @@ msgstr "(καμία διεύθυνση email)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
-#, fuzzy
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
-"* Φατσούλες: χρησιμοποιείται μόνο με HTML κώδικα για να εμφανίσετε μια "
-"εικόνα \n"
-"* Κείμενο: (προκαθορισμένη τιμή) χρησιμοποιείται για να αντικαταστήσει το "
-"κείμενο με άλλο κείμενο"
 
 #. module: mail
 #. openerp-web
@@ -748,13 +743,15 @@ msgstr "Συνημμένα"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
-#, fuzzy
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Τα συνημμένα συνδέονται με ένα έγγραφο μέσω του model / res_id και στο "
-"μήνυμα μέσα από αυτό το πεδίο."
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr ""
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1087,9 +1084,8 @@ msgstr "Κατάσταση Αναδίπλωσης Συνομιλίας"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-#, fuzzy
 msgid "Conversation is minimized"
-msgstr "Η Συνομιλία είναι ελαχιστοποιημένη"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1113,9 +1109,8 @@ msgstr "Δημιουργία %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "Δημιουργία %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1282,23 +1277,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "Ακύρωση Email"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Σχετικό Μήνυμα"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Υπογραφή Συγγραφέα (μόνο μέσω μαζικής αλληλογραφίας)"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2157,7 +2149,7 @@ msgstr "Ανενεργό Ψευδώνυμο"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2199,7 +2191,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr ""
@@ -2320,9 +2312,8 @@ msgstr "Είναι Ειδοποίηση"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
-#, fuzzy
 msgid "Is Subscribed"
-msgstr "Καταργημένες εγγραφές"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -3613,9 +3604,9 @@ msgstr "Ιδιωτικά κανάλια"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Ιδιωτικά κανάλια"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3916,9 +3907,9 @@ msgstr "Συντόμευση"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:619
-#, fuzzy, python-format
+#, python-format
 msgid "Show an helper message"
-msgstr "Κανάλι κωδικών μηνυμάτων"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3987,7 +3978,7 @@ msgstr "Φατσούλες"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4103,9 +4094,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
-#, fuzzy
 msgid "The escaped html code replacing the shortcut"
-msgstr "Η αποκοπή του κώδικα html αντικαθιστά τη συντόμευση"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4169,16 +4159,14 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
-#, fuzzy
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr "Η συντόμευση που πρέπει να αντικατασταθεί στα μηνύματα Chat"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
-#, fuzzy
 msgid "The type of document this template can be used with"
-msgstr "Το είδος του εγγράφου με αυτό το πρότυπο μπορεί να χρησιμοποιηθεί"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4277,14 +4265,10 @@ msgstr "Τα θέματα που συζητήθηκαν σε αυτή την ο�
 #: model:ir.model.fields,help:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_tracking_value_ids
-#, fuzzy
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
-"Οι τιμές που παρακολουθούνται αποθηκεύονται σε ένα ξεχωριστό μοντέλο. Το "
-"πεδίο αυτό επιτρέπει την παρακολούθηση ανακατασκευής και την παραγωγή "
-"στατιστικών του μοντέλου."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4695,7 +4679,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "Έχετε προσκληθεί να:"
@@ -4712,14 +4696,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Έχετε καταργήσει την εγγραφή σας από <b>%s</b>."
@@ -4756,9 +4740,8 @@ msgstr "από"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "created"
-msgstr "%s δημιουργήθηκε"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:320
@@ -4860,9 +4843,9 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Αδιάβαστα Μηνύματα"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4887,74 +4870,3 @@ msgstr ""
 #, python-format
 msgid "this document"
 msgstr "τρέχον έγγραφο"
-
-#~ msgid "Activity"
-#~ msgstr "Δραστηριότητα"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Τα συνημμένα συνδέονται με ένα έγγραφο μέσω του model / res_id και στο "
-#~ "μήνυμα μέσα από αυτό το πεδίο."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Αυτόματα απολυμαίνει HTML περιεχόμενα"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Αυτόματος ορισμός ως αναγνωσμένα τα 'Απαιτεί Ενέργεια'"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr ""
-#~ "Κάντε κλικ εδώ για να προσθέσετε μία επαφή στο βιβλίο διευθύνσεων σας."
-
-#~ msgid "Contacts"
-#~ msgstr "Επαφές"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Η Συνομιλία είναι ελαχιστοποιημένη"
-
-#~ msgid "Join Group"
-#~ msgstr "Συμμετοχή σε ομάδα"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Το Odoo σας βοηθά να παρακολουθείτε εύκολα όλες τις\n"
-#~ "δραστηριότητες που σχετίζονται με έναν πελάτη, συζητήσεις,\n"
-#~ "ιστορία των επιχειρηματικών ευκαιριών, έγγραφα, κλπ"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Rich-text/HTML έκδοση του μηνύματος (μπορούν να χρησιμοποιηθούν τα "
-#~ "σύμβολα κράτησης θέσης)"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "Η αποκοπή του κώδικα html αντικαθιστά τη συντόμευση"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "Το είδος του εγγράφου με αυτό το πρότυπο μπορεί να χρησιμοποιηθεί"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Οι τιμές που παρακολουθούνται αποθηκεύονται σε ένα ξεχωριστό μοντέλο. Το "
-#~ "πεδίο αυτό επιτρέπει την παρακολούθηση ανακατασκευής και την παραγωγή "
-#~ "στατιστικών του μοντέλου."
-
-#~ msgid "Unsubscribed"
-#~ msgstr "Καταργημένες εγγραφές"
-
-#, fuzzy
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer: discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Το Odoo σας βοηθά να παρακολουθείτε εύκολα όλες τις\n"
-#~ "δραστηριότητες που σχετίζονται με έναν πελάτη, συζητήσεις,\n"
-#~ "ιστορία των επιχειρηματικών ευκαιριών, έγγραφα, κλπ"

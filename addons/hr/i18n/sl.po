@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-02-20 10:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -130,10 +130,20 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Arhivirano"
+
+#. module: hr
+#: model:ir.model,name:hr.model_event_registration
+msgid "Attendee"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -345,6 +355,11 @@ msgid "Departments"
 msgstr "Oddelki"
 
 #. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -361,6 +376,16 @@ msgstr "Razvezan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Faktor učinkovitosti"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_thread
+msgid "Email Thread"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -433,6 +458,11 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Error! You cannot create recursive hierarchy of Employee(s)."
 
 #. module: hr
+#: model:ir.model,name:hr.model_event_event
+msgid "Event"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
 msgstr "Pričakovani novi kadri"
@@ -467,6 +497,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Sledilci"
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_badge
+msgid "Gamification badge"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -556,9 +596,8 @@ msgstr "Domači naslov"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
-#, fuzzy
 msgid "Hr Department"
-msgstr "Oddelek"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -621,6 +660,11 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_fleet_vehicle
+msgid "Information on a vehicle"
 msgstr ""
 
 #. module: hr
@@ -824,9 +868,8 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
-#, fuzzy
 msgid "Not Recruiting"
-msgstr "Ustavi zaposlovanje"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -988,9 +1031,8 @@ msgstr "Vir"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-#, fuzzy
 msgid "Resource Name"
-msgstr "Vrsta vira"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1469,6 +1511,19 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
+#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
+msgid "Your document has not been created"
+msgstr ""
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"Your document has not been created because your email address is not "
+"recognized. Please send emails with the email address recorded on your "
+"employee information, or contact your HR manager."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "oddelek"
@@ -1482,65 +1537,3 @@ msgstr "n.pr. delni čas"
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Potreben je ukrep"
-
-#~ msgid "Create Your Departments"
-#~ msgstr "Kreirajte vaše oddeleke"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Sledilci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Sledilci (partnerji)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je sledilec"
-
-#~ msgid "Job Name"
-#~ msgstr "Ime delovnega mesta"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnjega sporočila"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Število aktivnosti"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Število neprebranih sporočil"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Odpri meni Kadri"
-
-#~ msgid "Recruitment Closed"
-#~ msgstr "Zaposlovanje zaključeno"
-
-#~ msgid ""
-#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
-#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, "
-#~ "will show a load of 100% for this phase by default, but if we put a "
-#~ "efficiency of 200%, then his load will only be 50%."
-#~ msgstr ""
-#~ "Polje prikazuje učinkovitost vira za zaključek nalog. Npr.: uporaba samo "
-#~ "tega vira na fazi 5 dni s 5 prirejenimi nalogami, bo prikazala 100% "
-#~ "zasedenost za to fazo; če pa vpišemo učinkovitost 200%, bo njegova "
-#~ "zasedenost samo 50%."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Števec neprebranih sporočil"
-
-#~ msgid "Update Date"
-#~ msgstr "Datum posodobitve"

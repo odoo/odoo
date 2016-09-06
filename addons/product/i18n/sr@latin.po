@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-05-23 20:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -44,7 +44,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -1420,7 +1420,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-#, fuzzy
 msgid ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
 "-  </span>\n"
@@ -1429,10 +1428,6 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', "
 "'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
-"<span attrs=\"{'invisible':[('base', 'not in', "
-"('list_price','standard_price'))]}\">Javna cijena  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', "
-"'pricelist')]}\">Drugi cjenovnik  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -1474,7 +1469,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Nije dozvoljeno da dva različita proizvoda imaju isti barkod !"
@@ -1665,9 +1660,8 @@ msgstr "Basic Computer"
 #. module: product
 #: model:product.product,name:product.membership_2
 #: model:product.template,name:product.membership_2_product_template
-#, fuzzy
 msgid "Basic Membership"
-msgstr "Basic Computer"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -1705,6 +1699,13 @@ msgstr "Bose's smallest portable Bluetooth speaker"
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Izračunaj cijenu proizvoda po komadu baziranu na verziji cjenovnika"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -1810,9 +1811,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Preduzeće"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3029,7 +3029,7 @@ msgid "Products your store in the inventory"
 msgstr "Proizvodi koji su smješteni u skladištu"
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
@@ -3064,9 +3064,8 @@ msgstr "Količina"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Količina po paketima"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3418,9 +3417,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "Ukupan broj proizvoda koje možete smestiti na paletu ili u kutiju."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3623,9 +3621,8 @@ msgstr "Informacije dobavljača"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Drugi cjenovnik"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3944,825 +3941,3 @@ msgstr "do"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "nepoznato"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-
-#~ msgid "30m RJ45 wire"
-#~ msgstr "30m RJ45 wire"
-
-#~ msgid "75 percent less reflection."
-#~ msgstr "75 percent less reflection."
-
-#~ msgid "8-port Switch"
-#~ msgstr "8-port Switch"
-
-#~ msgid ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-#~ "                            <span attrs=\"{'invisible':[('base', '!=', "
-#~ "'pricelist')]}\">Other Pricelist  -  </span>"
-#~ msgstr ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">Javna cijena  -  </span>\n"
-#~ "                            <span attrs=\"{'invisible':[('base', '!=', "
-#~ "'pricelist')]}\">Drugi cjenovnik  -  </span>"
-
-#~ msgid "A great Keyboard. Cordless."
-#~ msgstr "A great Keyboard. Cordless."
-
-#~ msgid "A screen worthy of iPad."
-#~ msgstr "A screen worthy of iPad."
-
-#~ msgid ""
-#~ "About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
-#~ "thinnest iPod ever made.\n"
-#~ "                                    The 2.5-inch Multi-Touch display is "
-#~ "nearly twice as big as the display on the previous iPod nano,\n"
-#~ "                                    so you can see more of the music, "
-#~ "photos, and videos you love."
-#~ msgstr ""
-#~ "About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
-#~ "thinnest iPod ever made.\n"
-#~ "                                    The 2.5-inch Multi-Touch display is "
-#~ "nearly twice as big as the display on the previous iPod nano,\n"
-#~ "                                    so you can see more of the music, "
-#~ "photos, and videos you love."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "All in one hi-speed printer with fax and scanner."
-
-#~ msgid ""
-#~ "And at the Apple Online Store, you can configure your iMac with an even "
-#~ "more powerful Intel Core i7 processor, up to 3.5GHz."
-#~ msgstr ""
-#~ "And at the Apple Online Store, you can configure your iMac with an even "
-#~ "more powerful Intel Core i7 processor, up to 3.5GHz."
-
-#~ msgid "And because it’s so easy to use, it’s easy to love."
-#~ msgstr "And because it’s so easy to use, it’s easy to love."
-
-#~ msgid "Auxiliary input for portable devices"
-#~ msgstr "Auxiliary input for portable devices"
-
-#~ msgid ""
-#~ "Auxiliary port lets you connect other audio sources, like an MP3 player"
-#~ msgstr ""
-#~ "Auxiliary port lets you connect other audio sources, like an MP3 player"
-
-#~ msgid "Beautiful 7.9‑inch display."
-#~ msgstr "Beautiful 7.9‑inch display."
-
-#~ msgid "Beautiful widescreen display."
-#~ msgstr "Beautiful widescreen display."
-
-#~ msgid "Blank CD"
-#~ msgstr "Blank CD"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "Blank DVD-RW"
-
-#~ msgid "Bluetooth connectivity"
-#~ msgstr "Bluetooth connectivity"
-
-#~ msgid "Bose Mini Bluetooth Speaker."
-#~ msgstr "Bose Mini Bluetooth Speaker."
-
-#~ msgid "Brilliance onscreen. And behind it."
-#~ msgstr "Brilliance onscreen. And behind it."
-
-#~ msgid ""
-#~ "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-#~ "                                    The smooth anodized aluminum design "
-#~ "makes iPod nano feel as good as it sounds.\n"
-#~ "                                    And iPod nano wouldn’t be iPod nano "
-#~ "without gorgeous, hard-to-choose-from color."
-#~ msgstr ""
-#~ "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-#~ "                                    The smooth anodized aluminum design "
-#~ "makes iPod nano feel as good as it sounds.\n"
-#~ "                                    And iPod nano wouldn’t be iPod nano "
-#~ "without gorgeous, hard-to-choose-from color."
-
-#~ msgid "Characteristics"
-#~ msgstr "Karakteristike"
-
-#~ msgid "Charges iPod/iPhone"
-#~ msgstr "Charges iPod/iPhone"
-
-#~ msgid ""
-#~ "Charging cradle recharges the battery and serves as a convenient\n"
-#~ "                                    home base for your speaker, and it "
-#~ "lets you play while it charges."
-#~ msgstr ""
-#~ "Charging cradle recharges the battery and serves as a convenient\n"
-#~ "                                    home base for your speaker, and it "
-#~ "lets you play while it charges."
-
-#~ msgid ""
-#~ "Creating such a stunningly thin design took some equally stunning feats "
-#~ "of technological innovation. We refined,re-imagined,or re-engineered "
-#~ "everything about iMac from the inside out. The result is an advanced, "
-#~ "elegant all-in-one computer that’s as much a work of art as it is state "
-#~ "of the art."
-#~ msgstr ""
-#~ "Creating such a stunningly thin design took some equally stunning feats "
-#~ "of technological innovation. We refined,re-imagined,or re-engineered "
-#~ "everything about iMac from the inside out. The result is an advanced, "
-#~ "elegant all-in-one computer that’s as much a work of art as it is state "
-#~ "of the art."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnje poslate poruke na slog."
-
-#~ msgid "Dell Inspiron Laptop without OS"
-#~ msgstr "Dell Inspiron Laptop without OS"
-
-#~ msgid "Design. The thinnest iPod ever."
-#~ msgstr "Design. The thinnest iPod ever."
-
-#~ msgid "Desktop Computer Table"
-#~ msgstr "Desktop Computer Table"
-
-#~ msgid "Desktop Lamp"
-#~ msgstr "Desktop Lamp"
-
-#~ msgid "Efficient, high-quality audio"
-#~ msgstr "Efficient, high-quality audio"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Kraj životnog ciklusa"
-
-#~ msgid "Ergonomic Mouse"
-#~ msgstr "Ergonomic Mouse"
-
-#~ msgid ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast Colors are vivid and "
-#~ "text is sharp on the iPad mini display.\n"
-#~ "                                    But what really makes it stand out is "
-#~ "its size. At 7.9 inches,\n"
-#~ "                                    it’s perfectly sized to deliver an "
-#~ "experience every bit as big as iPad."
-#~ msgstr ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast Colors are vivid and "
-#~ "text is sharp on the iPad mini display.\n"
-#~ "                                    But what really makes it stand out is "
-#~ "its size. At 7.9 inches,\n"
-#~ "                                    it’s perfectly sized to deliver an "
-#~ "experience every bit as big as iPad."
-
-#~ msgid ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast and fluid performance, "
-#~ "FaceTime and\n"
-#~ "                                    iSight cameras, thousands of amazing "
-#~ "apps, 10-hour\n"
-#~ "                                    battery life* — is everything you’ll "
-#~ "love about\n"
-#~ "                                    iPad mini, too. And you can hold it "
-#~ "in one hand."
-#~ msgstr ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast and fluid performance, "
-#~ "FaceTime and\n"
-#~ "                                    iSight cameras, thousands of amazing "
-#~ "apps, 10-hour\n"
-#~ "                                    battery life* — is everything you’ll "
-#~ "love about\n"
-#~ "                                    iPad mini, too. And you can hold it "
-#~ "in one hand."
-
-#~ msgid ""
-#~ "Everything you love about iPad — the beautiful screen,\n"
-#~ "                                        fast and fluid performance, "
-#~ "FaceTime and iSight cameras, \n"
-#~ "                                        thousands of amazing apps, 10-"
-#~ "hour battery life* — is everything\n"
-#~ "                                        you’ll love about iPad mini, too. "
-#~ "And you can hold it in one hand."
-#~ msgstr ""
-#~ "Everything you love about iPad — the beautiful screen,\n"
-#~ "                                        fast and fluid performance, "
-#~ "FaceTime and iSight cameras, \n"
-#~ "                                        thousands of amazing apps, 10-"
-#~ "hour battery life* — is everything\n"
-#~ "                                        you’ll love about iPad mini, too. "
-#~ "And you can hold it in one hand."
-
-#~ msgid "External Hard disk"
-#~ msgstr "External Hard disk"
-
-#~ msgid "Fast connections.The world over."
-#~ msgstr "Fast connections.The world over."
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (partneri)"
-
-#~ msgid "Friendly to the environment."
-#~ msgstr "Friendly to the environment."
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "Full featured image editing software."
-
-#~ msgid "Genius. Your own personal DJ."
-#~ msgstr "Genius. Your own personal DJ."
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "Daje redosled sekvenci pri prikazu liste kategorije proizvoda."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks Software"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Ukupna težina"
-
-#~ msgid "HDD SH-2 (mto)"
-#~ msgstr "HDD SH-2 (mto)"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "HDD on Demand"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-
-#~ msgid "Have Genius call the tunes."
-#~ msgstr "Have Genius call the tunes."
-
-#~ msgid "Headset USB"
-#~ msgstr "Headset USB"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Headset for laptop PC with USB connector."
-
-#~ msgid "Headset standard"
-#~ msgstr "Headset standard"
-
-#~ msgid "Hear, hear."
-#~ msgstr "Hear, hear."
-
-#~ msgid "Highly rated designs."
-#~ msgstr "Highly rated designs."
-
-#~ msgid ""
-#~ "How did we make an already gorgeous widescreen display even better? By "
-#~ "making it 75 percent less reflective. And by re-architecting the LCD and "
-#~ "moving it right up against the cover glass. So you see your photos, "
-#~ "games, movies, and everything else in vivid, lifelike detail."
-#~ msgstr ""
-#~ "How did we make an already gorgeous widescreen display even better? By "
-#~ "making it 75 percent less reflective. And by re-architecting the LCD and "
-#~ "moving it right up against the cover glass. So you see your photos, "
-#~ "games, movies, and everything else in vivid, lifelike detail."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "If it's made for iPad, it's made for iPad mini."
-#~ msgstr "If it's made for iPad, it's made for iPad mini."
-
-#~ msgid "In Development"
-#~ msgstr "U razvoju"
-
-#~ msgid "Individually calibrated for true-to-life color."
-#~ msgstr "Individually calibrated for true-to-life color."
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Ink Cartridge"
-
-#~ msgid ""
-#~ "Inside each earpiece is a stainless steel mesh cap that protects the "
-#~ "precision acoustic\n"
-#~ "                                    components from dust and debris. You "
-#~ "can remove the caps for cleaning or replace\n"
-#~ "                                    them with an extra set that’s "
-#~ "included in the box."
-#~ msgstr ""
-#~ "Inside each earpiece is a stainless steel mesh cap that protects the "
-#~ "precision acoustic\n"
-#~ "                                    components from dust and debris. You "
-#~ "can remove the caps for cleaning or replace\n"
-#~ "                                    them with an extra set that’s "
-#~ "included in the box."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratioc"
-
-#~ msgid "Keep it clean."
-#~ msgstr "Keep it clean."
-
-#~ msgid "Key Features"
-#~ msgstr "Key Features"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Laptop S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Linutop"
-#~ msgstr "Linutop"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i istorija komunikacije"
-
-#~ msgid "More energy efficient."
-#~ msgstr "More energy efficient."
-
-#~ msgid "More features."
-#~ msgstr "More features."
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Motherboard A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Multimedia Speakers"
-
-#~ msgid "Music. It's what beats inside."
-#~ msgstr "Music. It's what beats inside."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtjevaju akciju"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Obsolete"
-#~ msgstr "Zastarjelo"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-
-#~ msgid "Office Suite"
-#~ msgstr "Office Suite"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "On demand hard-disk having capacity based on requirement."
-
-#~ msgid "Over 375,000 apps."
-#~ msgstr "Over 375,000 apps."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Pen drive, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Pen drive, SP-4"
-
-#~ msgid "Playlists. The perfect mix for every mood."
-#~ msgstr "Playlists. The perfect mix for every mood."
-
-#~ msgid "Plays where you play"
-#~ msgstr "Plays where you play"
-
-#~ msgid ""
-#~ "Powered by fourth-generation Intel Core processors, this iMac is the "
-#~ "fastest yet. Every model in the lineup comes standard with a quad-core "
-#~ "Intel Core i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-#~ msgstr ""
-#~ "Powered by fourth-generation Intel Core processors, this iMac is the "
-#~ "fastest yet. Every model in the lineup comes standard with a quad-core "
-#~ "Intel Core i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Printer, All-in-one"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "Processor AMD 8-Core"
-
-#~ msgid "RAM SR2 (kit)"
-#~ msgstr "RAM SR2 (kit)"
-
-#~ msgid "RAM SR3"
-#~ msgstr "RAM SR3"
-
-#~ msgid "Remote control for power, volume, track seek"
-#~ msgstr "Remote control for power, volume, track seek"
-
-#~ msgid ""
-#~ "Right from the start, apps made for iPad also work with iPad mini.\n"
-#~ "                                    They’re immersive, full-screen apps "
-#~ "that let you do almost anything\n"
-#~ "                                    you can imagine. And with automatic "
-#~ "updates,\n"
-#~ "                                    you're always getting the best "
-#~ "experience possible."
-#~ msgstr ""
-#~ "Right from the start, apps made for iPad also work with iPad mini.\n"
-#~ "                                    They’re immersive, full-screen apps "
-#~ "that let you do almost anything\n"
-#~ "                                    you can imagine. And with automatic "
-#~ "updates,\n"
-#~ "                                    you're always getting the best "
-#~ "experience possible."
-
-#~ msgid ""
-#~ "Right from the start, there’s a lot to love about\n"
-#~ "                                    iPad. It’s simple yet powerful. Thin "
-#~ "and light yet\n"
-#~ "                                    full-featured. It can do just about "
-#~ "everything and\n"
-#~ "                                    be just about anything."
-#~ msgstr ""
-#~ "Right from the start, there’s a lot to love about\n"
-#~ "                                    iPad. It’s simple yet powerful. Thin "
-#~ "and light yet\n"
-#~ "                                    full-featured. It can do just about "
-#~ "everything and\n"
-#~ "                                    be just about anything."
-
-#~ msgid ""
-#~ "Right from the start, there’s a lot to love about iPad.\n"
-#~ "                                   It’s simple yet powerful. Thin and "
-#~ "light yet full-\n"
-#~ "                                   featured. It can do just about "
-#~ "everything and be just\n"
-#~ "                                   about anything.And because it’s so "
-#~ "easy to use, it’s\n"
-#~ "                                   easy to love."
-#~ msgstr ""
-#~ "Right from the start, there’s a lot to love about iPad.\n"
-#~ "                                   It’s simple yet powerful. Thin and "
-#~ "light yet full-\n"
-#~ "                                   featured. It can do just about "
-#~ "everything and be just\n"
-#~ "                                   about anything.And because it’s so "
-#~ "easy to use, it’s\n"
-#~ "                                   easy to love."
-
-#~ msgid "Router R430"
-#~ msgstr "Router R430"
-
-#~ msgid ""
-#~ "Say you’re listening to a song you love and you want to stay in the "
-#~ "mood.\n"
-#~ "                                        Just tap Genius. It finds other "
-#~ "songs on iPod nano that go great together\n"
-#~ "                                        and makes a Genius playlist for "
-#~ "you. For more song combinations\n"
-#~ "                                        you wouldn’t have thought of "
-#~ "yourself, create Genius Mixes in iTunes\n"
-#~ "                                        and sync the ones you like to "
-#~ "iPod nano. Then tap Genius Mixes and\n"
-#~ "                                        rediscover songs you haven’t "
-#~ "heard in a while — or find music you forgot you even had."
-#~ msgstr ""
-#~ "Say you’re listening to a song you love and you want to stay in the "
-#~ "mood.\n"
-#~ "                                        Just tap Genius. It finds other "
-#~ "songs on iPod nano that go great together\n"
-#~ "                                        and makes a Genius playlist for "
-#~ "you. For more song combinations\n"
-#~ "                                        you wouldn’t have thought of "
-#~ "yourself, create Genius Mixes in iTunes\n"
-#~ "                                        and sync the ones you like to "
-#~ "iPod nano. Then tap Genius Mixes and\n"
-#~ "                                        rediscover songs you haven’t "
-#~ "heard in a while — or find music you forgot you even had."
-
-#~ msgid "Sleek, compact design"
-#~ msgstr "Sleek, compact design"
-
-#~ msgid ""
-#~ "Soft covers are available separately in blue, green or orange. Pick a "
-#~ "color to match your style."
-#~ msgstr ""
-#~ "Soft covers are available separately in blue, green or orange. Pick a "
-#~ "color to match your style."
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Cjenovnik dobavljača"
-
-#~ msgid "Sync to your heart’s content."
-#~ msgstr "Sync to your heart’s content."
-
-#~ msgid ""
-#~ "Tap to play your favorite songs. Or entire albums.\n"
-#~ "                                    Or everything by one artist. You can "
-#~ "even browse by genres or composers.\n"
-#~ "                                    Flip through your music: Album art "
-#~ "looks great on the bigger screen.\n"
-#~ "                                    Or to keep things fresh, give iPod "
-#~ "nano a shake and it shuffles to a different song in your music library."
-#~ msgstr ""
-#~ "Tap to play your favorite songs. Or entire albums.\n"
-#~ "                                    Or everything by one artist. You can "
-#~ "even browse by genres or composers.\n"
-#~ "                                    Flip through your music: Album art "
-#~ "looks great on the bigger screen.\n"
-#~ "                                    Or to keep things fresh, give iPod "
-#~ "nano a shake and it shuffles to a different song in your music library."
-
-#~ msgid "Template Name"
-#~ msgstr "Naziv šablona"
-
-#~ msgid ""
-#~ "The Apple In-Ear Headphones deliver a truly immersive sound experience by "
-#~ "drastically\n"
-#~ "                                    reducing unwanted outside noises. The "
-#~ "soft, silicone ear tips fit snugly and comfortably\n"
-#~ "                                    in your ear, creating a seal that "
-#~ "isolates your music from your surroundings.\n"
-#~ "                                    Three different sizes of ear tips are "
-#~ "included so you can find a perfect fit for each ear.\n"
-#~ "                                    Also included are a convenient "
-#~ "carrying case for the ear tips and a cable-control case\n"
-#~ "                                    for the headphones themselves."
-#~ msgstr ""
-#~ "The Apple In-Ear Headphones deliver a truly immersive sound experience by "
-#~ "drastically\n"
-#~ "                                    reducing unwanted outside noises. The "
-#~ "soft, silicone ear tips fit snugly and comfortably\n"
-#~ "                                    in your ear, creating a seal that "
-#~ "isolates your music from your surroundings.\n"
-#~ "                                    Three different sizes of ear tips are "
-#~ "included so you can find a perfect fit for each ear.\n"
-#~ "                                    Also included are a convenient "
-#~ "carrying case for the ear tips and a cable-control case\n"
-#~ "                                    for the headphones themselves."
-
-#~ msgid ""
-#~ "The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. "
-#~ "Its ultra-compact size fits in the \n"
-#~ "                                    palm of your hand, yet gives you "
-#~ "full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it "
-#~ "and go \n"
-#~ "                                    full-featured. It can do just about "
-#~ "everything and\n"
-#~ "                                    experience music just about anywhere."
-#~ msgstr ""
-#~ "The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. "
-#~ "Its ultra-compact size fits in the \n"
-#~ "                                    palm of your hand, yet gives you "
-#~ "full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it "
-#~ "and go \n"
-#~ "                                    full-featured. It can do just about "
-#~ "everything and\n"
-#~ "                                    experience music just about anywhere."
-
-#~ msgid ""
-#~ "The SoundLink® Mini speaker is small and light enough\n"
-#~ "                                        to tuck into your bag. It weighs "
-#~ "in at just 1.5 pounds.\n"
-#~ "                                        Its low profile lets you place it "
-#~ "almost anywhere and\n"
-#~ "                                        provides a low center of gravity "
-#~ "that makes it nearly\n"
-#~ "                                        impossible to tip over."
-#~ msgstr ""
-#~ "The SoundLink® Mini speaker is small and light enough\n"
-#~ "                                        to tuck into your bag. It weighs "
-#~ "in at just 1.5 pounds.\n"
-#~ "                                        Its low profile lets you place it "
-#~ "almost anywhere and\n"
-#~ "                                        provides a low center of gravity "
-#~ "that makes it nearly\n"
-#~ "                                        impossible to tip over."
-
-#~ msgid "The desktop. In its most advanced form ever"
-#~ msgstr "The desktop. In its most advanced form ever"
-
-#~ msgid "The full iPad experience."
-#~ msgstr "The full iPad experience."
-
-#~ msgid ""
-#~ "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-#~ "                                    which makes it compatible with iPad. "
-#~ "And you’re free to type wherever\n"
-#~ "                                    you like — with the keyboard in front "
-#~ "of your iPad or on your lap."
-#~ msgstr ""
-#~ "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-#~ "                                    which makes it compatible with iPad. "
-#~ "And you’re free to type wherever\n"
-#~ "                                    you like — with the keyboard in front "
-#~ "of your iPad or on your lap."
-
-#~ msgid ""
-#~ "The rechargeable lithium-ion battery delivers up to seven hours of "
-#~ "playtime.\n"
-#~ "                                    And at home, you can listen even "
-#~ "longer—the charging cradle lets\n"
-#~ "                                    you listen while it charges."
-#~ msgstr ""
-#~ "The rechargeable lithium-ion battery delivers up to seven hours of "
-#~ "playtime.\n"
-#~ "                                    And at home, you can listen even "
-#~ "longer—the charging cradle lets\n"
-#~ "                                    you listen while it charges."
-
-#~ msgid ""
-#~ "The speaker has a range of about 30 feet, so you can enjoy\n"
-#~ "                                    the sound you want without wires. It "
-#~ "pairs easily with your\n"
-#~ "                                    smartphone, iPad® or other Bluetooth "
-#~ "device.\n"
-#~ "                                    And it remembers the most recent six "
-#~ "devices you've used,\n"
-#~ "                                    so reconnecting is even simpler."
-#~ msgstr ""
-#~ "The speaker has a range of about 30 feet, so you can enjoy\n"
-#~ "                                    the sound you want without wires. It "
-#~ "pairs easily with your\n"
-#~ "                                    smartphone, iPad® or other Bluetooth "
-#~ "device.\n"
-#~ "                                    And it remembers the most recent six "
-#~ "devices you've used,\n"
-#~ "                                    so reconnecting is even simpler."
-
-#~ msgid "There is less of it, but no less to it."
-#~ msgstr "There is less of it, but no less to it."
-
-#~ msgid "There's less of it, but no less to it."
-#~ msgstr "There's less of it, but no less to it."
-
-#~ msgid ""
-#~ "There’s another way to get a good mix of music on iPod: Let Genius do the "
-#~ "work.\n"
-#~ "                                        Activate Genius in iTunes on your "
-#~ "computer, and it automatically finds songs that sound\n"
-#~ "                                        great together. Then it creates "
-#~ "Genius Mixes, which you can easily sync to your iPod.\n"
-#~ "                                        It’s the perfect way to "
-#~ "rediscover songs you haven’t listened to in forever."
-#~ msgstr ""
-#~ "There’s another way to get a good mix of music on iPod: Let Genius do the "
-#~ "work.\n"
-#~ "                                        Activate Genius in iTunes on your "
-#~ "computer, and it automatically finds songs that sound\n"
-#~ "                                        great together. Then it creates "
-#~ "Genius Mixes, which you can easily sync to your iPod.\n"
-#~ "                                        It’s the perfect way to "
-#~ "rediscover songs you haven’t listened to in forever."
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Toner Cartridge"
-
-#~ msgid "Two is better than one."
-#~ msgstr "Two is better than one."
-
-#~ msgid "TypeMatrix Dvorak Keyboard"
-#~ msgstr "TypeMatrix Dvorak Keyboard"
-
-#~ msgid "USB Adapter"
-#~ msgstr "USB Adapter"
-
-#~ msgid ""
-#~ "USB port allows for software update to ensure ongoing Bluetooth device "
-#~ "compatibility"
-#~ msgstr ""
-#~ "USB port allows for software update to ensure ongoing Bluetooth device "
-#~ "compatibility"
-
-#~ msgid "Ultrafast wireless."
-#~ msgstr "Ultrafast wireless."
-
-#~ msgid "Ultrathin design"
-#~ msgstr "Ultrathin design"
-
-#~ msgid "Universal iPod docking station fits most iPod/iPhone models"
-#~ msgstr "Universal iPod docking station fits most iPod/iPhone models"
-
-#~ msgid ""
-#~ "Unlike many small headphones, each earpiece of the Apple In-Ear "
-#~ "Headphones\n"
-#~ "                                    contains two separate high-"
-#~ "performance drivers — a woofer to handle bass and\n"
-#~ "                                    mid-range sounds and a tweeter for "
-#~ "high-frequency audio. These dedicated\n"
-#~ "                                    drivers help ensure accurate, "
-#~ "detailed sound across the entire sonic spectrum.\n"
-#~ "                                    The result: you’re immersed in the "
-#~ "music and hear details you never knew existed.\n"
-#~ "                                    Even when listening to an old "
-#~ "favorite, you may feel like you’re hearing it for the first time."
-#~ msgstr ""
-#~ "Unlike many small headphones, each earpiece of the Apple In-Ear "
-#~ "Headphones\n"
-#~ "                                    contains two separate high-"
-#~ "performance drivers — a woofer to handle bass and\n"
-#~ "                                    mid-range sounds and a tweeter for "
-#~ "high-frequency audio. These dedicated\n"
-#~ "                                    drivers help ensure accurate, "
-#~ "detailed sound across the entire sonic spectrum.\n"
-#~ "                                    The result: you’re immersed in the "
-#~ "music and hear details you never knew existed.\n"
-#~ "                                    Even when listening to an old "
-#~ "favorite, you may feel like you’re hearing it for the first time."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid ""
-#~ "Wall charger can be plugged into the cradle or directly into the speaker"
-#~ msgstr ""
-#~ "Wall charger can be plugged into the cradle or directly into the speaker"
-
-#~ msgid "Webcam"
-#~ msgstr "Webcam"
-
-#~ msgid "When one playlist isn’t enough."
-#~ msgstr "When one playlist isn’t enough."
-
-#~ msgid "Why you'll love an iPad."
-#~ msgstr "Why you'll love an iPad."
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"
-
-#~ msgid ""
-#~ "With advanced Wi‑Fi that’s up to twice as fast as\n"
-#~ "                                   any previous-generation iPad and "
-#~ "access to fast\n"
-#~ "                                   cellular data networks around the "
-#~ "world, iPad mini\n"
-#~ "                                   lets you download content, stream "
-#~ "video,\n"
-#~ "                                   and browse the web at amazing speeds."
-#~ msgstr ""
-#~ "With advanced Wi‑Fi that’s up to twice as fast as\n"
-#~ "                                   any previous-generation iPad and "
-#~ "access to fast\n"
-#~ "                                   cellular data networks around the "
-#~ "world, iPad mini\n"
-#~ "                                   lets you download content, stream "
-#~ "video,\n"
-#~ "                                   and browse the web at amazing speeds."
-
-#~ msgid ""
-#~ "You probably have multiple playlists in iTunes on your computer.\n"
-#~ "                                        One for your commute. One for the "
-#~ "gym. Sync those playlists\n"
-#~ "                                        to iPod, and you can play the "
-#~ "perfect mix for whatever\n"
-#~ "                                        mood strikes you. VoiceOver tells "
-#~ "you the name of each playlist,\n"
-#~ "                                        so it’s easy to switch between "
-#~ "them and find the one you want without looking."
-#~ msgstr ""
-#~ "You probably have multiple playlists in iTunes on your computer.\n"
-#~ "                                        One for your commute. One for the "
-#~ "gym. Sync those playlists\n"
-#~ "                                        to iPod, and you can play the "
-#~ "perfect mix for whatever\n"
-#~ "                                        mood strikes you. VoiceOver tells "
-#~ "you the name of each playlist,\n"
-#~ "                                        so it’s easy to switch between "
-#~ "them and find the one you want without looking."
-
-#~ msgid ""
-#~ "iTunes on your Mac or PC makes it easy to load up\n"
-#~ "                                        your iPod. Just choose the "
-#~ "playlists, audiobooks,\n"
-#~ "                                        podcasts, and other audio files "
-#~ "you want, then sync."
-#~ msgstr ""
-#~ "iTunes on your Mac or PC makes it easy to load up\n"
-#~ "                                        your iPod. Just choose the "
-#~ "playlists, audiobooks,\n"
-#~ "                                        podcasts, and other audio files "
-#~ "you want, then sync."

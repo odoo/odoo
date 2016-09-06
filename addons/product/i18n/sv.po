@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-06-20 03:26+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"PO-Revision-Date: 2016-09-02 12:13+0000\n"
 "Last-Translator: Kristoffer Grundström <kristoffer.grundstrom1983@gmail."
 "com>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
@@ -43,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -1459,7 +1459,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1650,9 +1650,8 @@ msgstr "Standard-dator"
 #. module: product
 #: model:product.product,name:product.membership_2
 #: model:product.template,name:product.membership_2_product_template
-#, fuzzy
 msgid "Basic Membership"
-msgstr "Standard-dator"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -1690,6 +1689,13 @@ msgstr "Den minsta blåtandshögtalaren från Bose"
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Beräkna produktens pris per enhet baserat på aktuell prislisteversion."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -1787,9 +1793,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Företag"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -2997,7 +3002,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Produkter: "
@@ -3032,9 +3037,8 @@ msgstr "Antal"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Kvantitet per emballage"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3386,9 +3390,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "Totalt antal produkter som får plats på en pall eller i en låda."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3476,12 +3479,9 @@ msgstr "Typ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Genom att avmarkera det aktiva fältet kan du inaktivera en måttenhet utan "
-"att ta bort det."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3596,9 +3596,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Other Pricelist"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3910,138 +3909,3 @@ msgstr "till"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "okänd"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY tangentbord"
-
-#~ msgid "30m RJ45 wire"
-#~ msgstr "30 m RJ45-kabel"
-
-#~ msgid "8-port Switch"
-#~ msgstr "8-portarsswitch"
-
-#~ msgid "A great Keyboard. Cordless."
-#~ msgstr "Ett toppenbra tangentbord. Trådlöst."
-
-#~ msgid "Action Needed"
-#~ msgstr "Åtgärd krävs"
-
-#~ msgid "Blank CD"
-#~ msgstr "Tom CD"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "Tom DVD-RW"
-
-#~ msgid "Charges iPod/iPhone"
-#~ msgstr "Laddar iPod/iPhone"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum för senast publicerade meddelandet i loggen."
-
-#~ msgid "Desktop Lamp"
-#~ msgstr "Skrivbordslampa"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Slut på livscykeln"
-
-#~ msgid "Followers"
-#~ msgstr "Följare"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Följare (Kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Följare (Partners)"
-
-#~ msgid "Friendly to the environment."
-#~ msgstr "Miljövänlig."
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "Sorterar artiklarna när de sorteras per produktkategori."
-
-#~ msgid "Gross Weight"
-#~ msgstr "Bruttovikt"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
-
-#~ msgid "In Development"
-#~ msgstr "Under utveckling"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Bläckpatron"
-
-#~ msgid "Is Follower"
-#~ msgstr "Är följare"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Senast meddelandedatum"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "Administrera andrahandsmått"
-
-#~ msgid "Messages"
-#~ msgstr "Meddelanden"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meddelande- och kommunikationshistorik"
-
-#~ msgid "More energy efficient."
-#~ msgstr "Mer energieffektiv."
-
-#~ msgid "More features."
-#~ msgstr "Fler funktioner."
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Moderkort A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Multimediahögtalare"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antalet åtgärder"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelanden som kräver en åtgärd"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antalet olästa meddelanden"
-
-#~ msgid "Obsolete"
-#~ msgstr "Föråldrad"
-
-#~ msgid "Office Suite"
-#~ msgstr "Kontorssvit"
-
-#~ msgid "Over 375,000 apps."
-#~ msgstr "Över 375,000 appar."
-
-#~ msgid "Playlists. The perfect mix for every mood."
-#~ msgstr "Spellistor. Den perfekta blandningen för varje humör."
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Allt-i-ett-skrivare"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "8-kärnig AMD-processor"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Leverantörsprislista"
-
-#~ msgid "Template Name"
-#~ msgstr "Mallnamn"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olästa meddelanden"

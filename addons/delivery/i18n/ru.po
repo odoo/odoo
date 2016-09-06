@@ -3,15 +3,16 @@
 # * delivery
 #
 # Translators:
+# Andrey Samorukov <andrey.samorukov@me.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-06-01 18:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-08-19 17:45+0000\n"
+"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -235,9 +236,8 @@ msgstr "Объёмный Вес"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
-#, fuzzy
 msgid "Can be Expensed"
-msgstr "Может быть расходом"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
@@ -447,15 +447,13 @@ msgstr "Доставка"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-#, fuzzy
 msgid "Delivery Carrier"
-msgstr "Доставка"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#, fuzzy
 msgid "Delivery Information"
-msgstr "Сведения о службе доставки"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -473,7 +471,7 @@ msgstr "Способы доставки"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "Правила тарификации доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
@@ -537,6 +535,9 @@ msgid ""
 "attached\n"
 "                to each method."
 msgstr ""
+"Каждый перевозчик( например UPS) может иметь несколько методов доставки\n"
+"(например UPS Express, UPS Standard) с набором правил тарификации,\n"
+"привязанному к каждому методу доставки."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -550,9 +551,8 @@ msgstr "Ожидаемая Цена Доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
-#, fuzzy
 msgid "Event Registration"
-msgstr "Подписка на событие"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
@@ -598,6 +598,8 @@ msgstr "Счет расходов"
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Заполните это поле, если вы планируете выставить счет на отгрузку основанный "
+"на комплектовании."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -661,7 +663,7 @@ msgstr "Бесплатно стоимость доставки"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
-msgstr ""
+msgstr "Бесплатно, если общая сумма заказа больше, чем"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -686,6 +688,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
 msgstr ""
+"Обеспечивает порядок следования при расчете стоимости доставки перевозчиком."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -700,9 +703,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
-#, fuzzy
 msgid "Height"
-msgstr "Вес"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -835,7 +837,7 @@ msgstr "Оценка запасов"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr ""
+msgstr "Отгрузочная счет-фактура по доставке"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -855,12 +857,12 @@ msgstr "Подписчик"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Является доставкой"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "Является вариантом продукта"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
@@ -936,9 +938,8 @@ msgstr "Время производства"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
-#, fuzzy
 msgid "Margin"
-msgstr "Общая маржа"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -957,9 +958,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
-#, fuzzy
 msgid "Max Weight"
-msgstr "Вес"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -1003,9 +1003,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
-#, fuzzy
 msgid "Message for Sales Order Line"
-msgstr "Позиция заказа на продажу"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -1026,21 +1025,20 @@ msgstr "Название"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
-#, fuzzy
 msgid "No carrier integration"
-msgstr "Сведения о службе доставки"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
 #, python-format
 msgid "No carrier matching."
-msgstr ""
+msgstr "Нет соответствующего перевозчика"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:72
 #, python-format
 msgid "No carrier set for this order."
-msgstr ""
+msgstr "Нет установленного перевозчика для этого заказа."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
@@ -1056,7 +1054,7 @@ msgstr "Нормальная цена — Общая цена"
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
 msgid "Normal Delivery Charges"
-msgstr ""
+msgstr "Обычная стоимость доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1105,22 +1103,20 @@ msgstr "Исходящие"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
-#, fuzzy
 msgid "Package"
-msgstr "Упаковка"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
-#, fuzzy
 msgid "Package Code"
-msgstr "Упаковка"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:129
-#, fuzzy, python-format
+#, python-format
 msgid "Package Details"
-msgstr "Упаковка"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1129,9 +1125,8 @@ msgstr "Упаковка"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
-#, fuzzy
 msgid "Packaging"
-msgstr "Упаковка"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
@@ -1273,9 +1268,8 @@ msgstr "Отставание закупок"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
-#, fuzzy
 msgid "Purchase Order Line"
-msgstr "Позиция заказа на продажу"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
@@ -1305,6 +1299,13 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"Количество продукции которое планируется получить.\n"
+"В контексте с одним складским местом хранения, это включает в себя товары "
+"прибывающие в это место, или любой из его дочерних.\n"
+"В контексте одного склада, это включает в себя товары прибывающие в место "
+"хранения этого склада, или любого из его дочерних.\n"
+"В противном случае, это включает в себя товары, прибывающие на любые места "
+"хранения с типом \"внутренний\"."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1317,6 +1318,13 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Количество продукции которое планируется отгрузить.\n"
+"В контексте с одним складским местом хранения, это включает в себя товары "
+"отгружаемые из этого места, или любого из его дочерних.\n"
+"В контексте одного склада, это включает в себя товары отгружаемые из места "
+"хранения этого склада, или любого из его дочерних.\n"
+"В противном случае, это включает в себя товары, отгружаемые из любых мест "
+"хранения с типом \"внутренний\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
@@ -1335,21 +1343,18 @@ msgstr "Правила упорядочивания"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
-#, fuzzy
 msgid "Reordering max qty"
-msgstr "Правила упорядочивания"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
-#, fuzzy
 msgid "Reordering min qty"
-msgstr "Правила упорядочивания"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
-#, fuzzy
 msgid "Return Picking"
-msgstr "Описание по Комлектации"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1408,6 +1413,8 @@ msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "carrier(s) criteria."
 msgstr ""
+"Выбранный продукт в методе доставки на соответствует какому-либо критерию "
+"доставки перевозчика(ов)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_line_warn
@@ -1454,9 +1461,8 @@ msgstr "Стоимость доставки"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
-#, fuzzy
 msgid "Shipping Weight"
-msgstr "Стоимость доставки"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1520,9 +1526,8 @@ msgstr "Счет стоимости исходящих ТМЦ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
-#, fuzzy
 msgid "Stock move ids"
-msgstr "Движение запасов"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
@@ -1598,7 +1603,7 @@ msgstr "Объём в метрах куб."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Вес содержимого в кг, не включая упаковку, и пр."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1608,6 +1613,9 @@ msgid ""
 "the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Эти методы позволяют автоматически рассчитывать стоимость доставки\n"
+"в соответсвии с вашими настройками; в заказе на продажу ( на основании\n"
+"предложения) или счете-фактуре (на основании заказов на поставку)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
@@ -1666,6 +1674,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
+"Это место хранения будет использоваться, вместо места хранения по умолчанию, "
+"как исходное место хранения для движений созданных производственными "
+"заказами."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
@@ -1673,6 +1684,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
 msgstr ""
+"Это место хранения будет использоваться, вместо места хранения по умолчанию, "
+"как исходное место хранения для движений созданных при поставках."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
@@ -1680,6 +1693,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
+"Это место хранения будет использоваться, вместо места хранения по умолчанию, "
+"как исходное место хранения для движений созданных при проведении "
+"инвентаризации."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1714,9 +1730,8 @@ msgstr "Учет движения"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-#, fuzzy
 msgid "Tracking Reference"
-msgstr "Внутренняя ссылка"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1786,9 +1801,8 @@ msgstr "Налоги Поставщика"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-#, fuzzy
 msgid "Vendors"
-msgstr "Вендор"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1827,9 +1841,8 @@ msgstr "Вес * объем"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
-#, fuzzy
 msgid "Weight Unit of Measure"
-msgstr "Ед. изм."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
@@ -1933,6 +1946,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Ваш метод доставки не переадресован на вебсайт перевозчика для отслеживания "
+"этого заказа."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
@@ -1954,96 +1969,3 @@ msgstr " например UPS Express"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "неизвестен"
-
-#~ msgid ""
-#~ "A consumable is a product for which you don't manage stock, a service is "
-#~ "a non-material product provided by a company or an individual."
-#~ msgstr ""
-#~ "Расходуемый это продукт, для которого вы не управляете складскими "
-#~ "запасами, услуга является нематериальный продукт предоставляется "
-#~ "компанией или индивидом."
-
-#~ msgid "Carrier Information"
-#~ msgstr "Сведения о службе доставки"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Отслеживание доставки перевозчиком"
-
-#~ msgid ""
-#~ "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom "
-#~ "* coeff"
-#~ msgstr ""
-#~ "Коэффициент для преобразования единицы измерения по умолчанию в единицу "
-#~ "продажи\n"
-#~ " еп = еи * коэфф"
-
-#~ msgid "Expense Invoice Policy"
-#~ msgstr "Политика выставления Счет-фактур Расхода"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Вес брутто"
-
-#~ msgid ""
-#~ "If you invoice at cost, the expense will be invoiced on the sale order at "
-#~ "the cost of the analytic line;if you invoice at sales price, the price of "
-#~ "the product will be used instead."
-#~ msgstr ""
-#~ "Если вы выставите счет по стоимости, то расходы будут фактурированы в "
-#~ "заказе продаж по стоимости аналитической линии; если Вы выставите счет по "
-#~ "продажной цене, то вместо этого будет использоваться цена продукта."
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Price Computation"
-#~ msgstr "Расчет цены"
-
-#~ msgid ""
-#~ "Select event types so when we use this product in sales order lines, it "
-#~ "will filter events of this type only."
-#~ msgstr ""
-#~ "Выберите типы события так, что когда мы будем использовать этот товар в "
-#~ "строках заказа на продажу, он отфильтрует события только этого типа."
-
-#~ msgid "Shipping enabled"
-#~ msgstr "Доставка включена"
-
-#~ msgid ""
-#~ "Specify a unit of measure here if invoicing is made in another unit of "
-#~ "measure than inventory. Keep empty to use the default unit of measure."
-#~ msgstr ""
-#~ "Укажите единицу измерения здесь, если выставление счета сделано в другой "
-#~ "единице измерения, чем инвентаризация. Оставьте поле пустым, чтобы "
-#~ "использовать единицу измерения по умолчанию."
-
-#~ msgid "Status"
-#~ msgstr "Статус"
-
-#~ msgid "Template Name"
-#~ msgstr "Название шаблона"
-
-#~ msgid "The partner that is doing the delivery service."
-#~ msgstr "Партнёр оказывающий услуги доставки."
-
-#~ msgid "Transporter Company"
-#~ msgstr "Компания Перевозчик"
-
-#~ msgid "Type of Event"
-#~ msgstr "Тип события"
-
-#~ msgid "Unit of Measure -> UOS Coeff"
-#~ msgstr "Коэффициент Ед.изм -> Ед.прод."
-
-#~ msgid "Unit of Sale"
-#~ msgstr "Единица продажи"
-
-#~ msgid "Vendor"
-#~ msgstr "Вендор"
-
-#, fuzzy
-#~ msgid "Website Messages"
-#~ msgstr "Сообщения"
-
-#, fuzzy
-#~ msgid "Website communication history"
-#~ msgstr "Сообщения и история общения"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-12 14:50+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -50,6 +50,7 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
+"% if is_online:\n"
 "<p style=\"margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;\">\n"
 "    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
 "line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
@@ -59,6 +60,7 @@ msgid ""
 "#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
 "</a>\n"
 "</p>\n"
+"% endif\n"
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
@@ -105,13 +107,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Понуда' or 'Нарачка'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -175,9 +174,8 @@ msgstr "<strong>Адреса на испорака:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "<strong>Subtotal: </strong>"
-msgstr "<strong>Вкупно</strong>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -216,9 +214,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_subtotal
-#, fuzzy
 msgid "Add subtotal"
-msgstr "Вкупно"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
@@ -248,9 +245,8 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,module_product_visible_discount:0
-#, fuzzy
 msgid "Allow discount policy on sale order line"
-msgstr "Дозволи попусти на ставки од налози за продажба"
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -318,9 +314,8 @@ msgstr "Аналитичка ставка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
-#, fuzzy
 msgid "Analytic Tags"
-msgstr "Аналитичка ставка"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
@@ -334,9 +329,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,expense_policy:0
-#, fuzzy
 msgid "At sale price"
-msgstr "Продажна цена"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -445,9 +439,8 @@ msgstr "Потврди продажба"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_confirmation_date
-#, fuzzy
 msgid "Confirmation Date"
-msgstr "Датум на креирање"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -545,9 +538,8 @@ msgstr "Датум на кој налогот за продажба е креи�
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
-#, fuzzy
 msgid "Date on which the sale order is confirmed."
-msgstr "Датум на кој налогот за продажба е креиран"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
@@ -597,9 +589,8 @@ msgstr "Времетраење на испорака"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
-#, fuzzy
 msgid "Delivery address for current invoice."
-msgstr "Адреса за испорака за тековен налог за продажба."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -632,9 +623,8 @@ msgstr "Различни цени по сегмент на клиент"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Попуст (%)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -648,9 +638,8 @@ msgstr "Попуст (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_product_visible_discount
-#, fuzzy
 msgid "Discount Policy"
-msgstr "Попуст на ставките"
+msgstr ""
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -733,9 +722,8 @@ msgstr "Волшебник за креирање на Е-пошта"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Волшебник за креирање на Е-пошта"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -803,9 +791,8 @@ msgstr "Групирај по"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-#, fuzzy
 msgid "Group By Name"
-msgstr "Групирај по"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
@@ -818,14 +805,10 @@ msgstr "ID"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"Ако налогот на продажба е завршен, нема да можете да го уредувате рачно "
-"повеќе. Но ќе можете да извршите фактурирање или испорака. Ова се користи со "
-"цел да се \"замрзне\" налогот за продажба."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -843,7 +826,7 @@ msgid "Invoice"
 msgstr "Фактура"
 
 #. module: sale
-#: code:addons/sale/sale.py:968
+#: code:addons/sale/sale.py:969
 #, python-format
 msgid "Invoice %s paid"
 msgstr "Фактурата %s е платена"
@@ -967,14 +950,10 @@ msgstr "Статистики на фактури"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
-#, fuzzy
 msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"Фактурите ќе ви бидат креирани во draft/почетни така што ќе можете да ги "
-"ажурирате\n"
-"пред валидација"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1043,17 +1022,15 @@ msgstr "Последно ажурирање на"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
-#, fuzzy
 msgid "Layout Sequence"
-msgstr "Секвенца"
+msgstr ""
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "Let's have a look at the quotations of this sales team."
 msgstr ""
-"Изберете го ова поле за да управувате со понудите во овој тим на продажба."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1107,16 +1084,14 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn_msg
-#, fuzzy
 msgid "Message for Sales Order"
-msgstr "Барај налози за продажба"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn_msg
-#, fuzzy
 msgid "Message for Sales Order Line"
-msgstr "Ставки на мојот налог за продажба"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1163,9 +1138,8 @@ msgstr ""
 #. module: sale
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
-#, fuzzy
 msgid "No Message"
-msgstr "Пораки"
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -1174,9 +1148,8 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,module_product_visible_discount:0
-#, fuzzy
 msgid "No discount policy on sale order line"
-msgstr "Дозволи попусти на ставки од налози за продажба"
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1387,7 +1360,7 @@ msgid "Please define an accounting sale journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:790
+#: code:addons/sale/sale.py:791
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1407,15 +1380,13 @@ msgstr "Намалена цена"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
-#, fuzzy
 msgid "Price Reduce Tax excl"
-msgstr "Намалена цена"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
-#, fuzzy
 msgid "Price Reduce Tax inc"
-msgstr "Намалена цена"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_pricelist_id
@@ -1431,9 +1402,8 @@ msgstr "Ценовник за тековен налог за продажба"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
-#, fuzzy
 msgid "Pricelists"
-msgstr "Ценовник"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1471,9 +1441,8 @@ msgstr "Производ"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_category_action_form
-#, fuzzy
 msgid "Product Categories"
-msgstr "Категорија на производ"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
@@ -1616,9 +1585,8 @@ msgstr "Анализа на понуди"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Понудата е испратена"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1628,9 +1596,8 @@ msgstr "Понуди и продажби"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
-#, fuzzy
 msgid "Re-Invoice Expenses"
-msgstr "Ставки на фактура"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -1647,9 +1614,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.Report_configuration
-#, fuzzy
 msgid "Report Layout Categories"
-msgstr "Категорија на производ"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1825,9 +1791,8 @@ msgstr "Продавач"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-#, fuzzy
 msgid "Search Name"
-msgstr "Барај налози за продажба"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1838,9 +1803,8 @@ msgstr "Барај налози за продажба"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
-#, fuzzy
 msgid "Section"
-msgstr "Опис"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
@@ -1876,9 +1840,8 @@ msgstr "Секвенца"
 
 #. module: sale
 #: model:sale.layout_category,name:sale.sale_layout_cat_1
-#, fuzzy
 msgid "Services"
-msgstr "Фактури"
+msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -1926,15 +1889,13 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
-#, fuzzy
 msgid "Show subtotal"
-msgstr "Вкупно"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_total
-#, fuzzy
 msgid "Show total"
-msgstr "Вкупно"
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -1978,9 +1939,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
-#, fuzzy
 msgid "Tax Display"
-msgstr "Прикажи име"
+msgstr ""
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
@@ -2176,17 +2136,15 @@ msgstr "Единица мерка"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
-#, fuzzy
 msgid "Unit of Measure Categories"
-msgstr "Единица мерка"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Единица мерка"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2251,16 +2209,15 @@ msgid "Warning"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:870
+#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:871
 #, python-format
 msgid "Warning for %s"
 msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
-#, fuzzy
 msgid "Warning on the Sales Order"
-msgstr "Барај налози за продажба"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
@@ -2295,7 +2252,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:899
+#: code:addons/sale/sale.py:900
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"
@@ -2311,9 +2268,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Ставки од налогот за продажба спремни за фактурирање"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2363,84 +2319,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "непознато"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Понуда' or 'Нарачка'} (Ref ${object.name or 'n/a' })"
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Done"
-#~ msgstr "Завршено"
-
-#~ msgid "Expense Account"
-#~ msgstr "Сметка Трошоци"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "Invoice based on costs (time and material, expenses)"
-#~ msgstr "Фактура базирана според трошоци (време и материјали, трошоци)"
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "Фактура базирана според време и материјали"
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Пораки и историја на комуникација"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Отвори мени Продажба"
-
-#~ msgid "Sales Order that haven't yet been confirmed"
-#~ msgstr "Налог за продажба што уште не е потврден"
-
-#~ msgid "Set to Done"
-#~ msgstr "Подесено на завршено"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid "Website Messages"
-#~ msgstr "Пораки на веб сајт"
-
-#, fuzzy
-#~ msgid "Reinvoice Costs"
-#~ msgstr "Статус на фактурата"
-
-#, fuzzy
-#~ msgid "account analytic line"
-#~ msgstr "Аналитичка ставка"

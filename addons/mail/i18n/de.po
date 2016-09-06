@@ -5,6 +5,7 @@
 # Translators:
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
+# Leon Fischer <leon.fischer621@gmail.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # darenkster <renkosp@gmail.com>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
@@ -13,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-12 11:12+0000\n"
-"Last-Translator: Ermin Trevisan <trevi@twanda.com>\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
+"PO-Revision-Date: 2016-08-17 15:05+0000\n"
+"Last-Translator: Leon Fischer <leon.fischer621@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -279,13 +280,10 @@ msgstr "(keine E-Mail-Adresse)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
-#, fuzzy
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
-"*Smilies werden im HTML Code verwandt, um ein Bild anzuzeigen * Text "
-"(Voreinstellung) wird genutzt, um Text durch einen anderen Text zu ersetzen."
 
 #. module: mail
 #. openerp-web
@@ -754,13 +752,15 @@ msgstr "Dateianhänge"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
-#, fuzzy
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Anhänge sind mit dem Dokument und der Nachricht über model/res_id und dieses "
-"Feld verknüpft."
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr ""
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -902,7 +902,7 @@ msgstr "CC"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Change"
-msgstr "Wechselgeld"
+msgstr "Ändern"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
@@ -1091,9 +1091,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-#, fuzzy
 msgid "Conversation is minimized"
-msgstr "Die Konversation ist minimiert"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1117,9 +1116,8 @@ msgstr "%s erstellen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "%s erstellen"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1284,23 +1282,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "E-Mail abbrechen"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Verknüpfte Nachricht"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Verfassersignatur (nur Massenmail)"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2151,7 +2146,7 @@ msgstr "Inaktiver Alias"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2191,7 +2186,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr "Einladung"
@@ -2312,9 +2307,8 @@ msgstr "Ist Benachrichtigung"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
-#, fuzzy
 msgid "Is Subscribed"
-msgstr "Abmelden"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -2525,7 +2519,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chatter.js:37
 #, python-format
 msgid "Log"
-msgstr ""
+msgstr "Protokoll"
 
 #. module: mail
 #. openerp-web
@@ -3603,9 +3597,9 @@ msgstr "Private Kanäle"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Private Kanäle"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3906,9 +3900,9 @@ msgstr "Tastenkombination (Shortcut)"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:619
-#, fuzzy, python-format
+#, python-format
 msgid "Show an helper message"
-msgstr "Gruppen Nachrichten-IDs"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3975,7 +3969,7 @@ msgstr "Smiley"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4160,9 +4154,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
-#, fuzzy
 msgid "The type of document this template can be used with"
-msgstr "Dokument, das mit diesem Template genutzt werden kann"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4613,9 +4606,9 @@ msgstr "Sie haben <b>%s</b> zur Konversation hinzugefügt."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:660
-#, fuzzy, python-format
+#, python-format
 msgid "You are alone in this channel."
-msgstr "Kanal verlassen"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:629
@@ -4668,7 +4661,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "Sie wurden eingeladen zu:"
@@ -4685,14 +4678,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Sie wurden von <b>%s</b> abgemeldet."
@@ -4729,9 +4722,8 @@ msgstr "durch"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "created"
-msgstr "%s erstellt"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:320
@@ -4755,9 +4747,8 @@ msgstr "Beobachter"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "from:"
-msgstr "(von"
+msgstr ""
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -4834,9 +4825,9 @@ msgstr "rd"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Ungelesene Mitteilungen"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4861,64 +4852,3 @@ msgstr "Verkauf"
 #, python-format
 msgid "this document"
 msgstr "diesem Dokument"
-
-#~ msgid "Activity"
-#~ msgstr "Aktivität"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Anhänge sind mit dem Dokument und der Nachricht über model/res_id und "
-#~ "dieses Feld verknüpft."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automatisch bereinigter HTML-Inhalt"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Automatisch erstellt. Lesebestätigung erforderlich"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "Klicken Sie, um ein Kontakt zu ihrem Adressbuch hinzuzufügen."
-
-#~ msgid "Contacts"
-#~ msgstr "Kontakte"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Die Konversation ist minimiert"
-
-#~ msgid "Join Group"
-#~ msgstr "Gruppe beitreten"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo hilft Ihnen alle Aktivitäten zu einem Kunden\n"
-#~ "leicht zu überblicken: Diskussionen, Verlauf der \n"
-#~ "Geschäftschancen, Dokumente, usw."
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Rich-text/HTML Version der Nachricht /Platzhalter können verwendet werden)"
-
-#~ msgid "Send mail"
-#~ msgstr "E-Mail senden"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "Dokument, das mit diesem Template genutzt werden kann"
-
-#~ msgid "Unsubscribed"
-#~ msgstr "Abmelden"
-
-#, fuzzy
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer: discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo hilft Ihnen alle Aktivitäten zu einem Kunden\n"
-#~ "leicht zu überblicken: Diskussionen, Verlauf der \n"
-#~ "Geschäftschancen, Dokumente, usw."

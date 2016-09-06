@@ -32,7 +32,6 @@ msgstr "(обновить)"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-#, fuzzy
 msgid ""
 "* The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "repair order.\n"
@@ -44,17 +43,6 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* Статус 'Черновик'  используется, когда пользователь создает новый и "
-"неподтвержденный заказ на ремонт. \n"
-"* Статус 'Подтверждено' используется, когда пользователь подтверждает заказ "
-"на ремонт. \n"
-"* Статус 'Готово к Ремонту'  используется, чтобы начать ремонт, пользователь "
-"может начать ремонт, только после подтверждения заказа на ремонт.\n"
-"* Статус 'Будет выставлена счет-фактура' используется для генерации счета до "
-"или после выполненного ремонта. \n"
-"* Статус 'Выполнен' состояние устанавливается при завершении ремонта. \n"
-"*  Статус 'Отменен' используется, когда пользователь отменяет заказ на "
-"ремонт."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -93,9 +81,8 @@ msgstr "<strong>Продукт к Ремонту:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#, fuzzy
 msgid "<strong>Shipping address :</strong>"
-msgstr "<strong>Дата Печати:</strong>"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -688,9 +675,8 @@ msgstr "Заказы на Ремонт"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-#, fuzzy
 msgid "Search Repair Orders"
-msgstr "Поиск Заказов на Ремонт"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -877,98 +863,8 @@ msgstr "Вы должны выбрать Адрес Счета Партнера 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:493
 #: code:addons/mrp_repair/models/mrp_repair.py:555
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
-"Вы должны выбрать прайс-лист в форме Ремонта!\n"
-"Пожалуйста сделайте это перед выбором продукта."
-
-#~ msgid ""
-#~ " * The 'Draft' status is set automatically as draft when repair order in "
-#~ "draft status.                         \n"
-#~ "* The 'Confirmed' status is set automatically as confirm when repair "
-#~ "order in confirm status.                         \n"
-#~ "* The 'Done' status is set automatically when repair order is "
-#~ "completed.                        \n"
-#~ "* The 'Cancelled' status is set automatically when user cancel repair "
-#~ "order."
-#~ msgstr ""
-#~ "* Статус 'Черновик' автоматически устанавливается как черновик, когда "
-#~ "заказ на ремонт в статусе черновик. \n"
-#~ "* Статус 'Подтверждено' автоматически устанавливается в качестве "
-#~ "подтверждения при заказ на ремонт в статусе подтверждения. \n"
-#~ "*Статус 'Выполнен' устанавливается автоматически, когда заказ на ремонт "
-#~ "завершен. \n"
-#~ "* Статус 'Отменен' устанавливается автоматически когда пользователь "
-#~ "отменяет заказ на ремонт."
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Active ID not Found"
-#~ msgstr "Активный ID не Найден"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Reair Orders"
-#~ msgstr "Заказы на Ремонт"
-
-#~ msgid "Search Reair Orders"
-#~ msgstr "Поиск Заказов на Ремонт"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Адрес доставки :"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Website Messages"
-#~ msgstr "Сообщения с сайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общения с сайта"
-
-#~ msgid "unknown"
-#~ msgstr "неизвестен"

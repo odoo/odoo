@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-05-10 21:08+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -149,9 +149,8 @@ msgstr "Создан"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Метод доставки"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -427,13 +426,10 @@ msgstr "Ссылка"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
-#, fuzzy
 msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
-"Сноска на документ, создавший этот запрос снабжения.\n"
-"Заполняется автоматически."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -528,22 +524,18 @@ msgstr "Очень срочно"
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
-#, fuzzy
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
 "                creates the necessary operations to fulfill the need: "
 "purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
-"Когда заказ на закупку будет подтвержден, он автоматически\n"
-"создаст все необходимые для выполнения операции: предложение\n"
-"на поставку заказа, производственный заказ и т.д."
 
 #. module: procurement
 #: code:addons/procurement/models/procurement.py:142
-#, fuzzy, python-format
+#, python-format
 msgid "You cannot delete procurements that are in cancel state."
-msgstr "Нельзя удалить заказы снабжения в состоянии  %s"
+msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
@@ -554,100 +546,3 @@ msgstr "например Купить"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "например SO005"
-
-#~ msgid ""
-#~ "<b>Procurement Orders</b> represent the need for a certain quantity of "
-#~ "products, at a given time, in a given location."
-#~ msgstr ""
-#~ "<b>Заказы на закупки</b> представляют собой потребность в определенном "
-#~ "количестве продуктов в определенный момент времени, в определенном месте."
-
-#~ msgid ""
-#~ "<b>Sales Orders</b> are one typical source of Procurement Orders (but "
-#~ "these are distinct documents). \n"
-#~ "                <br>Depending on the procurement parameters and the "
-#~ "product configuration, the procurement engine will attempt to satisfy the "
-#~ "need by reserving products from stock, ordering products from a supplier, "
-#~ "or passing a manufacturing order, etc..."
-#~ msgstr ""
-#~ "<b>Заказы на Продажу</b> это типичный источник Заказов на Закупку (но это "
-#~ "разные документы).\n"
-#~ "<br/>В зависимости от параметров закупки и конфигурации продукта, "
-#~ "\"движок закупок\" будет пытаться удовлетворить потребность путем "
-#~ "резервирования продукции на складе, заказа продукции у поставщика или "
-#~ "передачи заказа на производство и т. д."
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid ""
-#~ "Click to create a Procurement order in exception state, or remove the "
-#~ "filter on the search bar to display all the procurements."
-#~ msgstr ""
-#~ "Нажмите, чтобы создать заказ на закупку в состоянии исключенительной "
-#~ "ситуации \"Проблема\", или удалите фильтр в строке поиска, чтобы "
-#~ "отобразить все закупки."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Delivery Method"
-#~ msgstr "Метод доставки"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Website Messages"
-#~ msgstr "Сообщения с сайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общения с сайта"
-
-#~ msgid ""
-#~ "When the procurement order is confirmed, it automatically\n"
-#~ "                creates the necessary operations to fullfil the need: "
-#~ "purchase\n"
-#~ "                order proposition, manufacturing order, etc."
-#~ msgstr ""
-#~ "Когда заказ на закупку будет подтвержден, он автоматически\n"
-#~ "создаст все необходимые для выполнения операции: предложение\n"
-#~ "на поставку заказа, производственный заказ и т.д."

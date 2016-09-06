@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-03-22 03:45+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -43,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% descuento and %s recargo"
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -1419,7 +1419,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-#, fuzzy
 msgid ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
 "-  </span>\n"
@@ -1428,10 +1427,6 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', "
 "'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
-"<span attrs=\"{'invisible':[('base', 'not in', "
-"('list_price','standard_price'))]}\">Precio Público  - </span>\n"
-"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Otras listas de "
-"precios  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -1476,7 +1471,7 @@ msgstr ""
 "la pérdida de posibles personalizaciones."
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "¡El código de barra debe ser único por producto!"
@@ -1689,9 +1684,8 @@ msgstr "Computador Básica"
 #. module: product
 #: model:product.product,name:product.membership_2
 #: model:product.template,name:product.membership_2_product_template
-#, fuzzy
 msgid "Basic Membership"
-msgstr "Computador Básica"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -1730,6 +1724,13 @@ msgstr "El más pequeño Parlante portable Bose's"
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr ""
 "Calcular los precios del producto según unidades para una versión de tarifa."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -1834,9 +1835,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Compañía"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3108,7 +3108,7 @@ msgid "Products your store in the inventory"
 msgstr "Productos que almacena en el inventario"
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Productos: "
@@ -3143,9 +3143,8 @@ msgstr "Cantidad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Cantidad por paquete"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3534,9 +3533,8 @@ msgstr "El elegante diseño en aluminio del Teclado Inalámbrico Apple."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "El número total de productos que puede poner por palet o caja."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3632,12 +3630,9 @@ msgstr "Tipo"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Si el campo activo se desmarca, permite ocultar una unidad de medida sin "
-"eliminarla."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3756,9 +3751,8 @@ msgstr "Información del Vendedor"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Otro Precio"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3875,13 +3869,10 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
-#, fuzzy
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
-"Debe definir un producto para todo lo que usted vende, si se trata de un "
-"producto físico, un consumible o de un servicio que ofrece a los clientes."
 
 #. module: product
 #: model:product.product,name:product.product_order_01
@@ -4087,804 +4078,3 @@ msgstr "hasta"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "desconocido"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "Monitor 17\"\n"
-#~ "6GB RAM\n"
-#~ "Procesadr Hi-Speed 234Q\n"
-#~ "Teclado QWERTY"
-
-#~ msgid "30m RJ45 wire"
-#~ msgstr "Cable RJ45 30m "
-
-#~ msgid "75 percent less reflection."
-#~ msgstr "75% menos de reflexión."
-
-#~ msgid "8-port Switch"
-#~ msgstr "Switch 8 puertos"
-
-#~ msgid ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">Public Price  -  </span>\n"
-#~ "                            <span attrs=\"{'invisible':[('base', '!=', "
-#~ "'pricelist')]}\">Other Pricelist  -  </span>"
-#~ msgstr ""
-#~ "<span attrs=\"{'invisible':[('base', 'not in', "
-#~ "('list_price','standard_price'))]}\">Precio Público  - </span>\n"
-#~ "<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Otras listas "
-#~ "de precios  -  </span>"
-
-#~ msgid ""
-#~ "A consumable is a product for which you don't manage stock, a service is "
-#~ "a non-material product provided by a company or an individual."
-#~ msgstr ""
-#~ "Un consumible es un tipo de producto para el que no se maneja inventario, "
-#~ "un servicio es un producto no material proporcionado por una empresa o un "
-#~ "individuo."
-
-#~ msgid "A great Keyboard. Cordless."
-#~ msgstr "Un excelente teclado inalámbrico."
-
-#~ msgid "A screen worthy of iPad."
-#~ msgstr "Una pantalla digna del iPad."
-
-#~ msgid ""
-#~ "About the size of a credit card — and just 5.4 mm thin — iPod nano is the "
-#~ "thinnest iPod ever made.\n"
-#~ "                                    The 2.5-inch Multi-Touch display is "
-#~ "nearly twice as big as the display on the previous iPod nano,\n"
-#~ "                                    so you can see more of the music, "
-#~ "photos, and videos you love."
-#~ msgstr ""
-#~ "Con el tamaño de una tarjeta de crédito - y sólo 5,4 mm de grosor - iPod "
-#~ "nano es el más delgado iPod jamás creado. La pantalla Multi-Touch de 2,5 "
-#~ "pulgadas es casi el doble de grande que la pantalla del iPod nano "
-#~ "anterior, para que puedas ver más de la música, fotos y vídeos que le "
-#~ "gustan."
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr ""
-#~ "Una impresora All in one con alta velocidad de impresión, fax y escáner."
-
-#~ msgid ""
-#~ "And at the Apple Online Store, you can configure your iMac with an even "
-#~ "more powerful Intel Core i7 processor, up to 3.5GHz."
-#~ msgstr ""
-#~ "Y en la Tienda en línea Apple, usted puede configurar su iMac con un "
-#~ "poderoso procesador Intel Core i7 de hasta 3.5 GHz."
-
-#~ msgid "And because it’s so easy to use, it’s easy to love."
-#~ msgstr "Y por su facilidad de uso, es fácil adorarla."
-
-#~ msgid "Auxiliary input for portable devices"
-#~ msgstr "Entrada auxiliar para dispositivos portátiles"
-
-#~ msgid ""
-#~ "Auxiliary port lets you connect other audio sources, like an MP3 player"
-#~ msgstr ""
-#~ "Puerto auxiliar que le permite conectar otras fuentes de audio, como un "
-#~ "reproductor de MP3"
-
-#~ msgid "Beautiful 7.9‑inch display."
-#~ msgstr "Hermosa Pantalla de 7.9 pulgadas."
-
-#~ msgid "Beautiful widescreen display."
-#~ msgstr "Hermosa Pantalla panorámica."
-
-#~ msgid "Blank CD"
-#~ msgstr "CD Virgen"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "DVD-RV Virgen"
-
-#~ msgid "Bluetooth connectivity"
-#~ msgstr "Conectividad Bluetooth"
-
-#~ msgid "Bose Mini Bluetooth Speaker."
-#~ msgstr "Mini Parlante  Bluetooth Bose."
-
-#~ msgid "Brilliance onscreen. And behind it."
-#~ msgstr "Brillo en la pantalla. Y detrás de él."
-
-#~ msgid ""
-#~ "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-#~ "                                    The smooth anodized aluminum design "
-#~ "makes iPod nano feel as good as it sounds.\n"
-#~ "                                    And iPod nano wouldn’t be iPod nano "
-#~ "without gorgeous, hard-to-choose-from color."
-#~ msgstr ""
-#~ "Botones que le permiten reproducir rápidamente, pausar, cambiar canciones "
-#~ "o ajustar el volumen. El diseño de aluminio anodizado liso hace que el "
-#~ "iPod nano se sienta tan bueno como parece. Y el iPod nano no sería iPod "
-#~ "nano sin un magnífico color, tan lindo que será díficil de elegir."
-
-#~ msgid "Characteristics"
-#~ msgstr "Características"
-
-#~ msgid "Charges iPod/iPhone"
-#~ msgstr "Carga iPod/iPhone"
-
-#~ msgid ""
-#~ "Charging cradle recharges the battery and serves as a convenient\n"
-#~ "                                    home base for your speaker, and it "
-#~ "lets you play while it charges."
-#~ msgstr ""
-#~ "Base de carga recarga la batería y sirve como un cómoda base de "
-#~ "operaciones para su altavoz y le permite reproducir mientras se carga."
-
-#~ msgid ""
-#~ "Creating such a stunningly thin design took some equally stunning feats "
-#~ "of technological innovation. We refined,re-imagined,or re-engineered "
-#~ "everything about iMac from the inside out. The result is an advanced, "
-#~ "elegant all-in-one computer that’s as much a work of art as it is state "
-#~ "of the art."
-#~ msgstr ""
-#~ "Crear un diseño delgado tan impresionante requirió de algunas hazañas "
-#~ "igualmente impresionantes de innovación tecnológica. Nosotros refinamos, "
-#~ "reimaginamos y rediseñamos todo lo relacionado con el iMac de adentro "
-#~ "hacia afuera. El resultado es un elegante equipo avanzado, todo-en-uno "
-#~ "que más que una obra de arte técnica."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha de el último mensaje publicado en el registro"
-
-#~ msgid "Dell Inspiron Laptop without OS"
-#~ msgstr "Dell Inspiron Laptop sin OS"
-
-#~ msgid "Design. The thinnest iPod ever."
-#~ msgstr "Diseño. El más delgado iPod creado."
-
-#~ msgid "Desktop Computer Table"
-#~ msgstr "Computador de Escritorio"
-
-#~ msgid "Desktop Lamp"
-#~ msgstr "Lámpara de escritorio"
-
-#~ msgid "Efficient, high-quality audio"
-#~ msgstr "Eficiente, audio de alta calidad"
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Fin del ciclo de vida"
-
-#~ msgid "Ergonomic Mouse"
-#~ msgstr "Ratón Ergónomico "
-
-#~ msgid ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast Colors are vivid and "
-#~ "text is sharp on the iPad mini display.\n"
-#~ "                                    But what really makes it stand out is "
-#~ "its size. At 7.9 inches,\n"
-#~ "                                    it’s perfectly sized to deliver an "
-#~ "experience every bit as big as iPad."
-#~ msgstr ""
-#~ "Todo lo que te gusta de iPad - la hermosa\n"
-#~ "pantalla, colores sólidos vívidos y el texto nítido en la pantalla del "
-#~ "iPad mini.\n"
-#~ "Pero lo que realmente lo hace destacar es su tamaño. En 7.9 pulgadas,\n"
-#~ "está perfectamente dimensionado para ofrecer una experiencia casi tan "
-#~ "grande como el iPad."
-
-#~ msgid ""
-#~ "Everything you love about iPad — the beautiful\n"
-#~ "                                    screen, fast and fluid performance, "
-#~ "FaceTime and\n"
-#~ "                                    iSight cameras, thousands of amazing "
-#~ "apps, 10-hour\n"
-#~ "                                    battery life* — is everything you’ll "
-#~ "love about\n"
-#~ "                                    iPad mini, too. And you can hold it "
-#~ "in one hand."
-#~ msgstr ""
-#~ "Todo lo que te gusta de iPad - la pantalla hermosa, un rendimiento rápido "
-#~ "y fluido, FaceTime y cámaras iSight, miles de aplicaciones sorprendentes, "
-#~ "duración de la batería de 10 horas * - todo te va a encantar también en "
-#~ "el iPad mini. Y usted puede sostenerla en una mano."
-
-#~ msgid ""
-#~ "Everything you love about iPad — the beautiful screen,\n"
-#~ "                                        fast and fluid performance, "
-#~ "FaceTime and iSight cameras, \n"
-#~ "                                        thousands of amazing apps, 10-"
-#~ "hour battery life* — is everything\n"
-#~ "                                        you’ll love about iPad mini, too. "
-#~ "And you can hold it in one hand."
-#~ msgstr ""
-#~ "Todo lo que te gusta de iPad - la pantalla hermosa, un rendimiento rápido "
-#~ "y fluido, FaceTime y cámaras iSight, miles de aplicaciones sorprendentes, "
-#~ "duración de la batería de 10 horas * - todo te va a encantar también en "
-#~ "el iPad mini. Y usted puede sostenerla en una mano."
-
-#~ msgid "External Hard disk"
-#~ msgstr "Disco Duro Externo"
-
-#~ msgid "Fast connections.The world over."
-#~ msgstr "Conexiones veloces. El mundo sobre usted."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Terceros)"
-
-#~ msgid "Friendly to the environment."
-#~ msgstr "Amistoso con el medio ambiente."
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "Completo Software de edición de imágenes."
-
-#~ msgid "Genius. Your own personal DJ."
-#~ msgstr "Genius. Su propio DJ personal."
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr ""
-#~ "Indica el orden de secuencia cuando se muestra una lista de categorías de "
-#~ "producto."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "Software GrapWorks"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Peso bruto"
-
-#~ msgid "HDD SH-2 (mto)"
-#~ msgstr "HDD SH-2 (mto)"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "HDD bajo demanda"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Audífonos manos libre para portátiles con entrada para micrófono y "
-#~ "auriculares."
-
-#~ msgid "Have Genius call the tunes."
-#~ msgstr "Tiene un Genius que llama las melodías."
-
-#~ msgid "Headset USB"
-#~ msgstr "Audífonos USB"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Audífonos para laptops PC con conector USB"
-
-#~ msgid "Headset standard"
-#~ msgstr "Audífonos estándares"
-
-#~ msgid "Hear, hear."
-#~ msgstr "Orejera, orejera."
-
-#~ msgid "Highly rated designs."
-#~ msgstr "Diseños de alta valoración."
-
-#~ msgid ""
-#~ "How did we make an already gorgeous widescreen display even better? By "
-#~ "making it 75 percent less reflective. And by re-architecting the LCD and "
-#~ "moving it right up against the cover glass. So you see your photos, "
-#~ "games, movies, and everything else in vivid, lifelike detail."
-#~ msgstr ""
-#~ "¿Cómo hacemos aún mejor una ya magnífica pantalla panorámica ? La hicimos "
-#~ "75 por ciento menos reflectante. Y volviendo a la arquitectura de la "
-#~ "pantalla LCD y se refleja excelente en la cubierta de vidrio. Así que ya "
-#~ "puede ver tus fotos, juegos, películas y todo lo demás en vivo con "
-#~ "detalles realistas."
-
-#~ msgid "How to get your groove on."
-#~ msgstr "¿Cómo obtener el mejor ritmo?"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si esta habilitado, los nuevos mensajes deben ser revisado"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si esta habilitado, los nuevos mensajes deben ser revisados"
-
-#~ msgid "If it's made for iPad, it's made for iPad mini."
-#~ msgstr "Si es hecho para una iPad, es hecho también para una iPad mini."
-
-#~ msgid "In Development"
-#~ msgstr "En desarrollo"
-
-#~ msgid "Individually calibrated for true-to-life color."
-#~ msgstr "Individualmente calibrado para verdaderos colores vívidos. "
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Cartucho de tinta"
-
-#~ msgid ""
-#~ "Inside each earpiece is a stainless steel mesh cap that protects the "
-#~ "precision acoustic\n"
-#~ "                                    components from dust and debris. You "
-#~ "can remove the caps for cleaning or replace\n"
-#~ "                                    them with an extra set that’s "
-#~ "included in the box."
-#~ msgstr ""
-#~ "Dentro de cada auricular existe un protector de acero inoxidable para "
-#~ "proteger el auricular acústico de polvo y basura. Puede quitar las tapas "
-#~ "para limpiar o reemplazarlo con un juego extra de protectores que se "
-#~ "incluye en la caja."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es seguidor"
-
-#~ msgid "Keep it clean."
-#~ msgstr "Mantenerlo limpio."
-
-#~ msgid "Key Features"
-#~ msgstr "Principales caracteristicas "
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Laptop S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha de último mensaje"
-
-#~ msgid "Linutop"
-#~ msgstr "Linutop"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "Administra una segunda unidad de medida"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de Comunicación y Mensajes"
-
-#~ msgid "More energy efficient."
-#~ msgstr "Más eficiente energéticamente. "
-
-#~ msgid "More features."
-#~ msgstr "Más características"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Motherboard A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Parlantes Multimedia"
-
-#~ msgid "Music. It's what beats inside."
-#~ msgstr "Música. Es lo que late en su interior."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leídos"
-
-#~ msgid "Obsolete"
-#~ msgstr "Obsoleto"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "Software de Oficina con procesadores de texto, hojas de cálculo, "
-#~ "presentaciones, gráficos y bases de datos ..."
-
-#~ msgid "Office Suite"
-#~ msgstr "Suite Office"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr ""
-#~ "Discos duros bajo demanda con capacidad basada en los requerimientos."
-
-#~ msgid "Over 375,000 apps."
-#~ msgstr "Más de 375.000 aplicaciones."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Pen drive, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Pen drive, SP-4"
-
-#~ msgid "Playlists. The perfect mix for every mood."
-#~ msgstr ""
-#~ "Listas de reproducción. La mezcla perfecta para cada estado de ánimo."
-
-#~ msgid "Plays where you play"
-#~ msgstr "Reproduce donde estes"
-
-#~ msgid ""
-#~ "Powered by fourth-generation Intel Core processors, this iMac is the "
-#~ "fastest yet. Every model in the lineup comes standard with a quad-core "
-#~ "Intel Core i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-#~ msgstr ""
-#~ "Desarrollado para procesadores Intel Core de cuarta generación, este iMac "
-#~ "es el más rápido. Todos los modelos de la gama viene con un procesador "
-#~ "Intel Core i5 de cuatro núcleos, a partir de 2,7 GHz y llega al tope de "
-#~ "3.4GHz."
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Impresora, All-in-one"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "Procesador AMD 8-Core"
-
-#~ msgid "RAM SR2 (kit)"
-#~ msgstr "RAM SR2 (kit)"
-
-#~ msgid "RAM SR3"
-#~ msgstr "RAM SR3"
-
-#~ msgid "Remote control for power, volume, track seek"
-#~ msgstr "Control remoto para encendido, volumen, búsqueda de pistas"
-
-#~ msgid ""
-#~ "Right from the start, apps made for iPad also work with iPad mini.\n"
-#~ "                                    They’re immersive, full-screen apps "
-#~ "that let you do almost anything\n"
-#~ "                                    you can imagine. And with automatic "
-#~ "updates,\n"
-#~ "                                    you're always getting the best "
-#~ "experience possible."
-#~ msgstr ""
-#~ "Desde el principio, las aplicaciones hechas para el iPad también "
-#~ "funcionan con el iPad Mini. Son aplicaciones de pantalla completa cuya "
-#~ "inmersión te permiten hacer casi cualquier cosa puedes imaginar. Y con "
-#~ "las actualizaciones automáticas, siempre estás obteniendo la mejor "
-#~ "experiencia posible."
-
-#~ msgid ""
-#~ "Right from the start, there’s a lot to love about\n"
-#~ "                                    iPad. It’s simple yet powerful. Thin "
-#~ "and light yet\n"
-#~ "                                    full-featured. It can do just about "
-#~ "everything and\n"
-#~ "                                    be just about anything."
-#~ msgstr ""
-#~ "Desde el principio, hay mucho que amarás del iPad. Es muy sencillo pero "
-#~ "potente. Delgado y ligero pero con todas las funciones. Se puede hacer "
-#~ "casi todo y ser casi cualquier cosa."
-
-#~ msgid ""
-#~ "Right from the start, there’s a lot to love about iPad.\n"
-#~ "                                   It’s simple yet powerful. Thin and "
-#~ "light yet full-\n"
-#~ "                                   featured. It can do just about "
-#~ "everything and be just\n"
-#~ "                                   about anything.And because it’s so "
-#~ "easy to use, it’s\n"
-#~ "                                   easy to love."
-#~ msgstr ""
-#~ "Desde el principio, hay mucho que amarás del iPad. \n"
-#~ "Es muy sencillo pero potente. Delgado y ligero \n"
-#~ "pero con todas las funciones. Se puede hacer casi \n"
-#~ "todo y ser casi cualquier cosa. Es fácil de usar, es fácil\n"
-#~ "de amar."
-
-#~ msgid "Router R430"
-#~ msgstr "Router R430"
-
-#~ msgid ""
-#~ "Say you’re listening to a song you love and you want to stay in the "
-#~ "mood.\n"
-#~ "                                        Just tap Genius. It finds other "
-#~ "songs on iPod nano that go great together\n"
-#~ "                                        and makes a Genius playlist for "
-#~ "you. For more song combinations\n"
-#~ "                                        you wouldn’t have thought of "
-#~ "yourself, create Genius Mixes in iTunes\n"
-#~ "                                        and sync the ones you like to "
-#~ "iPod nano. Then tap Genius Mixes and\n"
-#~ "                                        rediscover songs you haven’t "
-#~ "heard in a while — or find music you forgot you even had."
-#~ msgstr ""
-#~ "Digamos que estás escuchando una canción que te gusta y quieres "
-#~ "permanecer en el estado de ánimo.\n"
-#~ "Sólo tienes que pulsar Genius. Encuentra otras canciones en el iPod nano "
-#~ "que van muy bien juntos y hace una lista de reproducción Genius para "
-#~ "ti. \n"
-#~ "Para más combinaciones de canciones, cree mezclas Genius en iTunes\n"
-#~ "y sincronice las que le gusten a iPod nano. A continuación, toque Mezclas "
-#~ "Genius y\n"
-#~ "redescubrir canciones que no han oído hablar de un tiempo - o encontrar "
-#~ "la música que usted se olvidó que aún tenía."
-
-#~ msgid "Sleek, compact design"
-#~ msgstr "Diseño elegante y compacto"
-
-#~ msgid ""
-#~ "Soft covers are available separately in blue, green or orange. Pick a "
-#~ "color to match your style."
-#~ msgstr ""
-#~ "Tapas blandas están disponibles por separado en azul, verde o naranja. "
-#~ "Elija un color para que coincida con su estilo."
-
-#~ msgid "Status"
-#~ msgstr "Estado"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Precio provedor"
-
-#~ msgid "Sync to your heart’s content."
-#~ msgstr "Sincronizado con el contenido de su corazón."
-
-#~ msgid ""
-#~ "Tap to play your favorite songs. Or entire albums.\n"
-#~ "                                    Or everything by one artist. You can "
-#~ "even browse by genres or composers.\n"
-#~ "                                    Flip through your music: Album art "
-#~ "looks great on the bigger screen.\n"
-#~ "                                    Or to keep things fresh, give iPod "
-#~ "nano a shake and it shuffles to a different song in your music library."
-#~ msgstr ""
-#~ "Pulse para reproducir sus canciones favoritas. O álbumes enteros. O a un "
-#~ "artista determinado. Usted incluso puede navegar por géneros y "
-#~ "compositores. Recorrer su música: el arte del álbum se ve muy bien en la "
-#~ "pantalla grande. O para mantener las cosas frescas, de a su iPod nano una "
-#~ "sacudida y cambia hacia una canción diferente de su biblioteca de música."
-
-#~ msgid "Template Name"
-#~ msgstr "Nombre de la plantilla"
-
-#~ msgid ""
-#~ "The Apple In-Ear Headphones deliver a truly immersive sound experience by "
-#~ "drastically\n"
-#~ "                                    reducing unwanted outside noises. The "
-#~ "soft, silicone ear tips fit snugly and comfortably\n"
-#~ "                                    in your ear, creating a seal that "
-#~ "isolates your music from your surroundings.\n"
-#~ "                                    Three different sizes of ear tips are "
-#~ "included so you can find a perfect fit for each ear.\n"
-#~ "                                    Also included are a convenient "
-#~ "carrying case for the ear tips and a cable-control case\n"
-#~ "                                    for the headphones themselves."
-#~ msgstr ""
-#~ "Los auriculares Apple In-Ear proporcionan una experiencia de sonido "
-#~ "realmente envolvente por la drástica reducción de los ruidos externos no "
-#~ "deseados. Las puntas de silicona suave hacen que se sienta cómodos en el "
-#~ "oído, creando un sello que aísla la música desde su entorno. Tres tamaños "
-#~ "diferentes de protectores están incluidos para que pueda encontrar un "
-#~ "ajuste perfecto para cada oído. También se incluye una funda de "
-#~ "transporte para los protectores y un estuche para los cables de los "
-#~ "auriculares."
-
-#~ msgid ""
-#~ "The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. "
-#~ "Its ultra-compact size fits in the \n"
-#~ "                                    palm of your hand, yet gives you "
-#~ "full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it "
-#~ "and go \n"
-#~ "                                    full-featured. It can do just about "
-#~ "everything and\n"
-#~ "                                    experience music just about anywhere."
-#~ msgstr ""
-#~ "El mini Bose® SoundLink® es más pequeño altavoz Bluetooth portátil de "
-#~ "Bose. Su tamaño ultra compacto cabe en la palma de la mano, sin embargo, "
-#~ "le da un sonido completo y natural de forma inalámbrica desde tu iPhone, "
-#~ "iPad o iPod. Viene con todas las funciones que puedas requerir. Se puede "
-#~ "hacer casi todo y vivir una experiencia musical vívida en cualquier lugar."
-
-#~ msgid ""
-#~ "The SoundLink® Mini speaker is small and light enough\n"
-#~ "                                        to tuck into your bag. It weighs "
-#~ "in at just 1.5 pounds.\n"
-#~ "                                        Its low profile lets you place it "
-#~ "almost anywhere and\n"
-#~ "                                        provides a low center of gravity "
-#~ "that makes it nearly\n"
-#~ "                                        impossible to tip over."
-#~ msgstr ""
-#~ "El SoundLink® Mini altavoz es pequeño y bastante ligero para \n"
-#~ "meter en su bolsa. Pesa sólo 1.5 libras. Su diseño compacto le \n"
-#~ "permite colocarlo en casi en cualquier lugar y proporciona un bajo \n"
-#~ "centro de gravedad que hace que sea casi imposible de caer."
-
-#~ msgid "The desktop. In its most advanced form ever"
-#~ msgstr "El escritorio. En su forma más avanzada jamás creada"
-
-#~ msgid "The full iPad experience."
-#~ msgstr "La completa experiencia iPad."
-
-#~ msgid ""
-#~ "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-#~ "                                    which makes it compatible with iPad. "
-#~ "And you’re free to type wherever\n"
-#~ "                                    you like — with the keyboard in front "
-#~ "of your iPad or on your lap."
-#~ msgstr ""
-#~ "El increíblemente delgado teclado inalámbrico Apple Wireless utiliza la "
-#~ "tecnología Bluetooth,lo que lo hace compatible con iPad. Y usted es libre "
-#~ "de escribir lo que sea\n"
-#~ "te gusta - con el teclado en frente de su iPad o en su regazo."
-
-#~ msgid ""
-#~ "The rechargeable lithium-ion battery delivers up to seven hours of "
-#~ "playtime.\n"
-#~ "                                    And at home, you can listen even "
-#~ "longer—the charging cradle lets\n"
-#~ "                                    you listen while it charges."
-#~ msgstr ""
-#~ "La batería de iones de litio recargable ofrece hasta siete horas de "
-#~ "reproducción. Y en casa, puede escuchar incluso más tiempo gracias al "
-#~ "cargador que le permite se escuche mientras se carga."
-
-#~ msgid ""
-#~ "The speaker has a range of about 30 feet, so you can enjoy\n"
-#~ "                                    the sound you want without wires. It "
-#~ "pairs easily with your\n"
-#~ "                                    smartphone, iPad® or other Bluetooth "
-#~ "device.\n"
-#~ "                                    And it remembers the most recent six "
-#~ "devices you've used,\n"
-#~ "                                    so reconnecting is even simpler."
-#~ msgstr ""
-#~ "El altavoz tiene un alcance de unos 30 pies, para que pueda disfrutar el "
-#~ "sonido que desee sin necesidad de cables. Se conecta fácilmente con su "
-#~ "smartphone, iPad® u otro dispositivo Bluetooth. Y memoriza los más "
-#~ "recientes seis dispositivos que ha utilizado, así que la reconexión es "
-#~ "aún más simple."
-
-#~ msgid "There is less of it, but no less to it."
-#~ msgstr "Hay menos de él, pero no menos a la misma."
-
-#~ msgid "There's less of it, but no less to it."
-#~ msgstr "Hay menos de él, pero no menos a la misma."
-
-#~ msgid ""
-#~ "There’s another way to get a good mix of music on iPod: Let Genius do the "
-#~ "work.\n"
-#~ "                                        Activate Genius in iTunes on your "
-#~ "computer, and it automatically finds songs that sound\n"
-#~ "                                        great together. Then it creates "
-#~ "Genius Mixes, which you can easily sync to your iPod.\n"
-#~ "                                        It’s the perfect way to "
-#~ "rediscover songs you haven’t listened to in forever."
-#~ msgstr ""
-#~ "Hay otra manera de conseguir una buena mezcla de música en el iPod: Dejar "
-#~ "que Genius haga el trabajo. Activa Genius en el iTunes de tu ordenador y "
-#~ "encontrará automáticamente las canciones que suenan muy bien juntas. "
-#~ "Entonces se crea  un Genius Mixes que puedes sincronizar fácilmente a su "
-#~ "iPod. Es la manera perfecta para volver descubrir canciones que no has "
-#~ "escuchado en mucho tiempo."
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Cartucho de Tinta"
-
-#~ msgid "Two is better than one."
-#~ msgstr "Dos es mejor que uno."
-
-#~ msgid "TypeMatrix Dvorak Keyboard"
-#~ msgstr "Teclado TypeMatrix Dvorak "
-
-#~ msgid "USB Adapter"
-#~ msgstr "Adaptador USB"
-
-#~ msgid ""
-#~ "USB port allows for software update to ensure ongoing Bluetooth device "
-#~ "compatibility"
-#~ msgstr ""
-#~ "Puerto USB permite la actualización de software para asegurar la "
-#~ "compatibilidad de dispositivos Bluetooth en curso"
-
-#~ msgid "Ultrafast wireless."
-#~ msgstr "Red inalámbrica ultraveloz"
-
-#~ msgid "Ultrathin design"
-#~ msgstr "Diseño ultradelgado"
-
-#~ msgid "Universal iPod docking station fits most iPod/iPhone models"
-#~ msgstr ""
-#~ "Soporte para iPod universal se adapta a la mayoría de los modelos de "
-#~ "iPod / iPhone"
-
-#~ msgid ""
-#~ "Unlike many small headphones, each earpiece of the Apple In-Ear "
-#~ "Headphones\n"
-#~ "                                    contains two separate high-"
-#~ "performance drivers — a woofer to handle bass and\n"
-#~ "                                    mid-range sounds and a tweeter for "
-#~ "high-frequency audio. These dedicated\n"
-#~ "                                    drivers help ensure accurate, "
-#~ "detailed sound across the entire sonic spectrum.\n"
-#~ "                                    The result: you’re immersed in the "
-#~ "music and hear details you never knew existed.\n"
-#~ "                                    Even when listening to an old "
-#~ "favorite, you may feel like you’re hearing it for the first time."
-#~ msgstr ""
-#~ "A diferencia de muchos auriculares pequeños, cada auricular de los "
-#~ "auriculares de Apple In-Ear contiene dos conductores de alto rendimiento "
-#~ "independientes - un woofer para manejar bajos y sonidos de rango medio y "
-#~ "un tweeter para el audio de alta frecuencia. Estos conductores dedicados "
-#~ "ayudan a garantizar un sonido preciso y detallado en todo el espectro "
-#~ "sonoro. El resultado: usted está inmerso en la música y escucha detalles "
-#~ "que no sabía que existían. Incluso cuando se escucha uno de sus favoritos "
-#~ "antiguos, usted puede sentir como que estás escuchando por primera vez."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes no leídos"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes no Leídos"
-
-#~ msgid "Volume control on main system"
-#~ msgstr "Sistema principal del control del volumen"
-
-#~ msgid ""
-#~ "Wall charger can be plugged into the cradle or directly into the speaker"
-#~ msgstr ""
-#~ "Cargador de pared puede ser conectado a la pared o directamente en el "
-#~ "altavoz"
-
-#~ msgid "Webcam"
-#~ msgstr "Webcam"
-
-#~ msgid "When one playlist isn’t enough."
-#~ msgstr "Cuando una lista de música no es suficiente."
-
-#~ msgid "Why you'll love an iPad."
-#~ msgstr "Porque tu amaras un iPad"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"
-
-#~ msgid ""
-#~ "With advanced Wi‑Fi that’s up to twice as fast as\n"
-#~ "                                   any previous-generation iPad and "
-#~ "access to fast\n"
-#~ "                                   cellular data networks around the "
-#~ "world, iPad mini\n"
-#~ "                                   lets you download content, stream "
-#~ "video,\n"
-#~ "                                   and browse the web at amazing speeds."
-#~ msgstr ""
-#~ "Con una red Wi-Fi avanzada que es hasta dos veces más rápida que "
-#~ "cualquier generación anterior iPad y acceso a la rápida redes de datos "
-#~ "móviles de todo el mundo, el iPad mini le permite descargar los "
-#~ "contenidos, secuencia de vídeo y navegar por Internet a velocidades "
-#~ "increíbles."
-
-#~ msgid ""
-#~ "You must define a product for everything you sell, whether it's a "
-#~ "physical product, a consumable or a service you offer to  customers."
-#~ msgstr ""
-#~ "Debe definir un producto para todo lo que usted vende, si se trata de un "
-#~ "producto físico, un consumible o de un servicio que ofrece a los clientes."
-
-#~ msgid ""
-#~ "You probably have multiple playlists in iTunes on your computer.\n"
-#~ "                                        One for your commute. One for the "
-#~ "gym. Sync those playlists\n"
-#~ "                                        to iPod, and you can play the "
-#~ "perfect mix for whatever\n"
-#~ "                                        mood strikes you. VoiceOver tells "
-#~ "you the name of each playlist,\n"
-#~ "                                        so it’s easy to switch between "
-#~ "them and find the one you want without looking."
-#~ msgstr ""
-#~ "Probablemente tengas varias listas de reproducción en iTunes en tu "
-#~ "ordenador. Uno para su viaje. Uno para el gimnasio. Sincroniza esas "
-#~ "listas de reproducción al iPod, y se puede reproducir la mezcla perfecta "
-#~ "para conjugarlo con tu estado de ánimo. VoiceOver te dice el nombre de "
-#~ "cada lista de reproducción, por lo que es fácil de cambiar entre ellas y "
-#~ "encontrar el que usted desea sin mirar."
-
-#~ msgid ""
-#~ "iTunes on your Mac or PC makes it easy to load up\n"
-#~ "                                        your iPod. Just choose the "
-#~ "playlists, audiobooks,\n"
-#~ "                                        podcasts, and other audio files "
-#~ "you want, then sync."
-#~ msgstr ""
-#~ "iTunes en tu Mac o PC hace que sea fácil de cargar hasta tu iPod. Sólo "
-#~ "tienes que elegir las listas de reproducción, audiolibros, podcasts y "
-#~ "otros archivos de audio que desea, para sincronizarlos."

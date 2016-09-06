@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-04-12 10:04+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -36,7 +36,7 @@ msgid "# of Issues"
 msgstr "# ügyből"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:162
+#: code:addons/project_issue/models/project_issue.py:170
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -85,6 +85,16 @@ msgid ""
 "                                           * Ready for next stage indicates "
 "the issue is ready to be pulled to the next stage"
 msgstr ""
+"A bejelentett ügyek kanban állapota megmutatja milyen speciális állapotot "
+"érint:\n"
+"\n"
+"                                           * Normál az alap helyzet \n"
+"\n"
+"                                           * Blokkolt azt jelzi, hogy valami "
+"akadályozza a bejelentett ügy végrehajtását \n"
+"\n"
+"                                           * Készen áll a következő "
+"szakaszra jelzi az ügy egy szakasszal tovább lépésre készen áll"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -228,13 +238,13 @@ msgid "Creation Date"
 msgstr "Létrehozás dátuma"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:300
+#: code:addons/project_issue/models/project_issue.py:310
 #, python-format
 msgid "Customer"
 msgstr "Vevő"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:302
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "Customer Email"
 msgstr "Vevői e-mail"
@@ -369,7 +379,7 @@ msgid "High"
 msgstr "Magas"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
+#: code:addons/project_issue/models/project_issue.py:285
 #, python-format
 msgid "I take it"
 msgstr "Én intézem"
@@ -438,7 +448,7 @@ msgstr "Ügyet indítása"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next stage"
-msgstr ""
+msgstr "Bejelentett ügy készen áll a következő szakaszra"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -543,7 +553,7 @@ msgid "New"
 msgstr "Új"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:279
+#: code:addons/project_issue/models/project_issue.py:289
 #, python-format
 msgid "New Issue"
 msgstr "Új ügy"
@@ -554,7 +564,7 @@ msgid "Next Action"
 msgstr "Következő művelet"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:326
+#: code:addons/project_issue/models/project_issue.py:336
 #, python-format
 msgid "No Subject"
 msgstr "Nincs tárgy"
@@ -679,7 +689,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on issue"
-msgstr ""
+msgstr "Értékelés a bejelentett ügyön"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -688,9 +698,8 @@ msgstr "Következő fokra ugorhat"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-#, fuzzy
 msgid "Ready to reopen"
-msgstr "Ált. megnyitási késleltetés"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -742,6 +751,10 @@ msgid ""
 "customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
+"Az Odoo bejelentett ügyek követő rendszere lehetővé teszi a \n"
+"                    belső igénylések, szoftver fejlesztői hibák,  vásárlói "
+"reklamációk,\n"
+"                    projekt gondok, anyag hibák, stb. hatékony kezelését."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -750,6 +763,10 @@ msgid ""
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc."
 msgstr ""
+"Az Odoo bejelentett ügyek követő rendszere lehetővé teszi a \n"
+"                    belső igénylések, szoftver fejlesztői hibák,  vásárlói "
+"reklamációk,\n"
+"                    projekt gondok, anyag hibák, stb. hatékony kezelését."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -758,6 +775,9 @@ msgid ""
 "        and outbound emails for this record before being sent. Separate "
 "multiple email addresses with a comma"
 msgstr ""
+"Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ \n"
+"        mezőhöz minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel "
+"küld. Több email felsorolását vesszővel elválasztva adja meg."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -767,7 +787,7 @@ msgstr "Ezek az emberek fogják megkapni az e-mailt."
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "This allows customers to give rating on issue"
-msgstr ""
+msgstr "Ez lehetővé teszi a vásárlóknak, a bejelentett ügyekre a szavazást"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -792,12 +812,12 @@ msgstr "Munkaidő-beosztás"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
-msgstr ""
+msgstr "Időkiosztások a bejelentett ügyeken"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "Track customer satisfaction on issues"
-msgstr ""
+msgstr "Vásárlói Elégedettségének követése a bejelentett ügyeken"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -852,7 +872,7 @@ msgstr ""
 "egy újat itt"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:197
+#: code:addons/project_issue/models/project_issue.py:205
 #, python-format
 msgid "issues"
 msgstr "bejelentett ügyek"
@@ -866,129 +886,3 @@ msgstr "project.config.settings"
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid ""
-#~ "A Issue's kanban state indicates special situations affecting it:\n"
-#~ " * Normal is the default situation\n"
-#~ " * Blocked indicates something is preventing the progress of this issue\n"
-#~ " * Ready for next stage indicates the issue is ready to be pulled to the "
-#~ "next stage"
-#~ msgstr ""
-#~ "Az ügyek kanban állapota megmutatja milyen speciális állapotot érint:\n"
-#~ " * Normál az alap állapot\n"
-#~ " * Blokkolt azt jelzi, hogy valami akadályozza az ügy végrehajtását\n"
-#~ " * Készenáll a következő szintre jelzi az ügy egy fokkal feljebb lépését"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Click to create an issue."
-#~ msgstr "Kattintson egy garanciális ügy létrehozásához."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ez egy követő"
-
-#~ msgid "Issue ready for next sStage"
-#~ msgstr "Bejelentett ügy készen áll a következő szintre"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Sale Team"
-#~ msgstr "Értékesítési csapat"
-
-#~ msgid "Sales Team"
-#~ msgstr "Értékesítési csapat"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                             Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr ""
-#~ "Eladó csoport, melyhez ez az eset tartozik. Határozzon meg felelős "
-#~ "felhasználót és email-t az email átjáróhoz."
-
-#~ msgid ""
-#~ "The Odoo issues tacker allows you to efficiently manage things\n"
-#~ "                    like internal requests, software development bugs, "
-#~ "customer\n"
-#~ "                    complaints, project troubles, material breakdowns, "
-#~ "etc."
-#~ msgstr ""
-#~ "                    Az Odoo bejelentett ügyek követő rendszere lehetővé "
-#~ "teszi a belső igénylések,\n"
-#~ "                    szoftver fejlesztői hibák, vásárlói reklamációk, "
-#~ "projekt gondok, \n"
-#~ "                    anyag hibák, stb. hatékony kezelését."
-
-#~ msgid ""
-#~ "The Odoo issues tacker allows you to efficiently manage things\n"
-#~ "                like internal requests, software development bugs, "
-#~ "customer\n"
-#~ "                complaints, project troubles, material breakdowns, etc."
-#~ msgstr ""
-#~ "                    Az Odoo bejelentett ügyek követő rendszere lehetővé "
-#~ "teszi a belső igénylések,\n"
-#~ "                    szoftver fejlesztői hibák, vásárlói reklamációk, "
-#~ "projekt gondok, \n"
-#~ "                    anyag hibák, stb. hatékony kezelését."
-
-#~ msgid ""
-#~ "These email addresses will be added to the CC field of all inbound and "
-#~ "outbound emails for this record before being sent. Separate multiple "
-#~ "email addresses with a comma"
-#~ msgstr ""
-#~ "Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ mezőhöz "
-#~ "minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel küld. Több "
-#~ "email felsorolását vesszővel elválasztva adja meg."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Update Date"
-#~ msgstr "Frissítés Dátuma"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid ""
-#~ "You can track your issues from this menu and the action we     \n"
-#~ "                will take."
-#~ msgstr ""
-#~ "Nyomon követheti az ügyeit ebből a menüből  és az elvégezni kívánt \n"
-#~ "           műveletekből."

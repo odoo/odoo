@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-02-22 13:18+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"PO-Revision-Date: 2016-09-01 08:49+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
@@ -43,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -1462,7 +1462,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1701,6 +1701,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Kalkulasi Harga Produk per unit berdasarkan versi daftar harga"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1762,7 +1769,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_all
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Klik untuk membuat produk baru."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -1796,9 +1803,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Perusahaan"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3040,7 +3046,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Produk : "
@@ -3075,9 +3081,8 @@ msgstr "Kwantitas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Kuantitas berdasarkan paket"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3450,9 +3455,8 @@ msgstr "Aluminium ramping Apple Keyboard nirkabel."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "Jumlah produk Anda dapat diajukan oleh palet atau kotak."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3544,12 +3548,9 @@ msgstr "Jenis"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Dengan tidak mencentang bidang aktif Anda dapat menonaktifkan unit ukuran "
-"tanpa menghapusnya"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3664,9 +3665,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Rak-rak"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3789,7 +3789,7 @@ msgstr "Zed + Antivirus"
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
@@ -3980,183 +3980,3 @@ msgstr "kepada"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "tidak diketahui"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "All in one hi-speed printer with fax and scanner."
-
-#~ msgid "Blank CD"
-#~ msgstr "CD kosong"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "DVD-RW kosong"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Akhir Siklus Hidup"
-
-#~ msgid "External Hard disk"
-#~ msgstr "Hard disk eksternal"
-
-#~ msgid "Followers"
-#~ msgstr "Pengikut"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "Perangkat lunak editing gambar Terpilih penuh."
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr ""
-#~ "Memberikan perintah urutan ketika menampilkan daftar kategori produk."
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks perangkat lunak"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Berat kotor"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "Proses Permintaan"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Tangan gratis headset untuk laptop PC dengan steker mikrofon dan "
-#~ "headphone di-line."
-
-#~ msgid "Headset USB"
-#~ msgstr "Headset USB"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Headset untuk laptop PC dengan konektor USB."
-
-#~ msgid "Headset standard"
-#~ msgstr "Headset standar"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "In Development"
-#~ msgstr "Dalam Pengembangan"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Cartridge tinta"
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Laptop S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "Mengelola sekunder satuan ukuran"
-
-#~ msgid "Messages"
-#~ msgstr "Pesan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pesan dan riwayat komunikasi"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Motherboard A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Speaker Multimedia"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Obsolete"
-#~ msgstr "Non-Aktif"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "Kantor Editing Software dengan pengolah kata, spreadsheet, presentasi, "
-#~ "grafis, dan database ..."
-
-#~ msgid "Office Suite"
-#~ msgstr "Office Suite"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "Pada permintaan hard-disk memiliki kapasitas berdasarkan kebutuhan."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Pen drive, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Pen drive, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Printer, All-in-one"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "Prosesor AMD 8-Core"
-
-#~ msgid "Router R430"
-#~ msgstr "Router R430"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Daftar harga Supplier"
-
-#~ msgid "Template Name"
-#~ msgstr "Nama Template"
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Toner Cartridge"
-
-#~ msgid "USB Adapter"
-#~ msgstr "Adaptor USB"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Pesan Belum Dibaca"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Webcam"
-#~ msgstr "Kamera web"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 profesional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Server 2011"

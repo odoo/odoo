@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-03 04:06+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -56,6 +56,7 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
+"% if is_online:\n"
 "<p style=\"margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;\">\n"
 "    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
 "line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
@@ -65,6 +66,7 @@ msgid ""
 "#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
 "</a>\n"
 "</p>\n"
+"% endif\n"
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
@@ -206,7 +208,7 @@ msgstr "每产品单一售价"
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "可以为产品和客户设置警告信息(销售)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -247,12 +249,12 @@ msgstr "基于公式的高级定价"
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
 msgid "All the products and the customers can be used in sale orders"
-msgstr ""
+msgstr "所有产品和客户在订单可用"
 
 #. module: sale
 #: selection:sale.config.settings,module_product_visible_discount:0
 msgid "Allow discount policy on sale order line"
-msgstr ""
+msgstr "允许在销售订单明细行上折扣"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -432,7 +434,7 @@ msgstr "公司"
 #: code:addons/sale/static/src/js/tour.js:40
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "配置选项在模块的设置里可用。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -541,7 +543,7 @@ msgstr "销售订单创建日期"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
 msgid "Date on which the sale order is confirmed."
-msgstr ""
+msgstr "销售订单确认日期。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
@@ -822,7 +824,7 @@ msgid "Invoice"
 msgstr "发票"
 
 #. module: sale
-#: code:addons/sale/sale.py:968
+#: code:addons/sale/sale.py:969
 #, python-format
 msgid "Invoice %s paid"
 msgstr "发票 %s 已付"
@@ -1023,7 +1025,7 @@ msgstr "布局序列"
 #: code:addons/sale/static/src/js/tour.js:16
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "对此销售团队的报价单有个认识."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1142,7 +1144,7 @@ msgstr "不在订单明细中显示销售折扣，只显示全局折扣"
 #. module: sale
 #: selection:sale.config.settings,module_product_visible_discount:0
 msgid "No discount policy on sale order line"
-msgstr ""
+msgstr "不允许在销售订单明细行中设置折扣"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -1156,13 +1158,10 @@ msgstr "产品无任何变型"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
-#, fuzzy
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-"注意一旦报价转为销售订单，它将从报价单列表\n"
-"移动到销售订单列表中。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -1356,7 +1355,7 @@ msgid "Please define an accounting sale journal for this company."
 msgstr "请为本公司定义一个会计销售科目。"
 
 #. module: sale
-#: code:addons/sale/sale.py:790
+#: code:addons/sale/sale.py:791
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -2205,7 +2204,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: sale
-#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:870
+#: code:addons/sale/sale.py:245 code:addons/sale/sale.py:871
 #, python-format
 msgid "Warning for %s"
 msgstr "%s 的警告"
@@ -2250,7 +2249,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:899
+#: code:addons/sale/sale.py:900
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"
@@ -2271,14 +2270,11 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
-#, fuzzy
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the "
 "Payment."
 msgstr ""
-"你的下一步行动应该为：确认报价单\n"
-"并转为销售订单，然后创建发票和收取款项。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -2323,126 +2319,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "未知的"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-
-#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-#~ msgstr "<span groups=\"sale.group_discount_per_so_line\">折扣(%)</span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Done"
-#~ msgstr "完成"
-
-#~ msgid "Expense Account"
-#~ msgstr "费用科目"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid ""
-#~ "If a sale order is done, you cannot modify it manually anymore. However, "
-#~ "you will still be able to invoice or deliver. This is used to freeze the "
-#~ "sale order."
-#~ msgstr ""
-#~ "如果一个销售订单已完成，你就不能手动修改它。然而，你仍然可以开具发票或交"
-#~ "付。这是用于冻结销售订单的。"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Invoice based on costs (time and material, expenses)"
-#~ msgstr "成本 ( 时间和材料，费用 ) "
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "基于时间和物料开票"
-
-#~ msgid ""
-#~ "Invoices will be created in draft so that you can update\n"
-#~ "                        them before validation."
-#~ msgstr "发票将被创建为草稿以便你在验证前能更新它们。"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "打开销售订单"
-
-#~ msgid "Sales Order that haven't yet been confirmed"
-#~ msgstr "销售订单尚未被确认"
-
-#~ msgid "Set to Done"
-#~ msgstr "设置为已完成"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr "一些产品可使用不同的单位销售 / 采购 ( 高级 )"
-
-#~ msgid ""
-#~ "The Sale Order %s linked to the Analytic Account must be validated before "
-#~ "registering expenses."
-#~ msgstr "此销售订单 %s 在链接到分析会计时必须在登记费用前验证。"
-
-#~ msgid "Timesheets on contract"
-#~ msgstr "合同上的记工单"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "计量单位"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "You can only delete draft quotations!"
-#~ msgstr "你只能删除草稿报价单！"
-
-#~ msgid "Date"
-#~ msgstr "日期"
-
-#~ msgid "Sale pricelist setting"
-#~ msgstr "销售价格表设置"
-
-#~ msgid "Untaxed Total"
-#~ msgstr "不含税总计"

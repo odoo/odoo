@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2015-12-08 21:08+0000\n"
 "Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
@@ -45,39 +45,34 @@ msgstr "Funcionário"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
-#, fuzzy
 msgid "Order Line"
-msgstr "Linha de Pedido de Vendas"
+msgstr "Linha do Pedido"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
-msgstr ""
+msgstr "Aquisição"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
-#, fuzzy
 msgid "Product"
-msgstr "Modelo de Produto"
+msgstr "Produto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
-#, fuzzy
 msgid "Product Alert Time"
-msgstr "Modelo de Produto"
+msgstr "Hora do Alerta do Produto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
-#, fuzzy
 msgid "Product Life Time"
-msgstr "Modelo de Produto"
+msgstr "Tempo de Vida do Produto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
-#, fuzzy
 msgid "Product Removal Time"
-msgstr "Modelo de Produto"
+msgstr "Hora de Remoção do Produto"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -86,22 +81,20 @@ msgstr "Modelo de Produto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
-#, fuzzy
 msgid "Product Use Time"
-msgstr "Modelo de Produto"
+msgstr "Hora de Uso do Produto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
-msgstr ""
+msgstr "Projeto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
-#, fuzzy
 msgid "Project associated to this sale"
-msgstr "Atividades de quadro de horários associados a esta venda"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -119,25 +112,24 @@ msgstr "Linha de Pedido de Vendas"
 #: model:ir.model,name:sale_timesheet.model_project_task
 #: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
 msgid "Task"
-msgstr ""
+msgstr "Tarefa"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:84
+#: code:addons/sale_timesheet/models/sale_service.py:94
 #, python-format
 msgid "Task created"
-msgstr ""
+msgstr "Tarefa criada"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Tasks"
-msgstr ""
+msgstr "Tarefas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
-#, fuzzy
 msgid "Tasks associated to this sale"
-msgstr "Atividades de quadro de horários associados a esta venda"
+msgstr "Tarefas associadas a esta venda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -154,9 +146,8 @@ msgstr "Custo do Quadro de Horários"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid "Timesheet UoM"
-msgstr "Planilha de Horas"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -180,6 +171,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Quando um Número Serial é emitido, este é o número de dias antes em que um "
+"alerta seja notificado."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -187,6 +180,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"Quando um novo número de série é emitido, este é o número de dias antes de "
+"que as mercadorias possam se tornar perigosas e não devem ser consumidas."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -194,6 +189,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Quando um novo Número de Série é emitido, este é o número de dias antes das "
+"mercadorias serem removidas do estoque."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -201,6 +198,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Quando um novo número de série é emitido, este é o número de dias antes de "
+"que as mercadorias começam a se deteriorar, sem ser perigosas."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_timesheet.py:143
@@ -215,16 +214,11 @@ msgstr ""
 "base no tempo e material."
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:103
+#: code:addons/sale_timesheet/models/sale_service.py:113
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
-
-#~ msgid "Timesheet"
-#~ msgstr "Planilha de Horas"
-
-#, fuzzy
-#~ msgid "account analytic line"
-#~ msgstr "Linha Analítica"
+"Você não pode excluir uma tarefa relacionada com uma Ordem de Venda. Você só "
+"pode arquivar esta tarefa."

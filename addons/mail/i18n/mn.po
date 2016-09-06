@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-07-23 09:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -275,13 +275,10 @@ msgstr "(эмэйл хаяг алга)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
-#, fuzzy
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
-"* Инээмсэглэл гэдэг нь зөвхөн HTML кодод зураг илгээхэд хэрэглэгддэг * Текст "
-"(анхны утга) нь нэг текстийг өөр текстээр орлуулахад хэрэглэнэ"
 
 #. module: mail
 #. openerp-web
@@ -745,13 +742,15 @@ msgstr "Хавсралтууд"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
-#, fuzzy
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Хавсралтууд нь баримттай холбогдохдоо модул / res_id -р холбогдох бөгөөд "
-"зурвас руу энэ талбараар холбогдоно."
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr ""
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1082,9 +1081,8 @@ msgstr "Хөөрөлдөөн Эвхэгдсэн Төлөв"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-#, fuzzy
 msgid "Conversation is minimized"
-msgstr "Хөөрөлдөөнийг багасгасан"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1108,9 +1106,8 @@ msgstr "%s үүсгэх"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "%s үүсгэх"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1277,23 +1274,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "Эмэйл цуцлах"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Холбогдох зурвас"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Зохиогчийн гарын үсэг (зөвхөн масс мэйлийн)"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2144,7 +2138,7 @@ msgstr "Идэвхгүй хуурмаг нэр"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2186,7 +2180,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr ""
@@ -2307,9 +2301,8 @@ msgstr "Мэдэгдэл үү"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
-#, fuzzy
 msgid "Is Subscribed"
-msgstr "Бүртгэл арилгагдсан"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -3584,9 +3577,9 @@ msgstr "Хувийн Суваг"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Хувийн Суваг"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3885,9 +3878,9 @@ msgstr "Товчлол"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:619
-#, fuzzy, python-format
+#, python-format
 msgid "Show an helper message"
-msgstr "Сувгийн зурвасуудын хувийн дугаарууд"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3953,7 +3946,7 @@ msgstr "Инээмсэглэл"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4069,9 +4062,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
-#, fuzzy
 msgid "The escaped html code replacing the shortcut"
-msgstr "Богино кодыг солигч html код"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4132,16 +4124,14 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
-#, fuzzy
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr "Чаатын зурвас дотор солигдох ёстой богино код"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
-#, fuzzy
 msgid "The type of document this template can be used with"
-msgstr "Энэ үлгэртэй хэрэглэгдэж болох баримтуудын төрөл"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4239,13 +4229,10 @@ msgstr "Энэ бүлгэмд хөөрөлдөх сэдэвүүд..."
 #: model:ir.model.fields,help:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_tracking_value_ids
-#, fuzzy
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
-"Хөтлөгдсөн утга нь тусдаа моделд хадгалагдана. Энэ талбар нь хөтлөлтийн "
-"бүтцийг өөрчилж модель дээр статистикийг үүсгэх боломжийг олгодог."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4653,7 +4640,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "Таны уригдсан зүйл: "
@@ -4668,14 +4655,14 @@ msgstr "Энэ имэйл үлгэрээр үүсгэгдэх бүх имэйл�
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Та <b>%s</b>-с бүртгэл чинь хасагдлаа."
@@ -4712,9 +4699,8 @@ msgstr "аар"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
-#, fuzzy
 msgid "created"
-msgstr "%s үүсгэгдсэн"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:320
@@ -4816,9 +4802,9 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Уншаагүй Зурвасууд"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4843,68 +4829,3 @@ msgstr ""
 #, python-format
 msgid "this document"
 msgstr "энэ баримт"
-
-#~ msgid "Activity"
-#~ msgstr "Үйл ажиллагаа"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Хавсралтууд нь баримттай холбогдохдоо модул / res_id -р холбогдох бөгөөд "
-#~ "зурвас руу энэ талбараар холбогдоно."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Автомат янзлагдсан HTML агуулга"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Шаардлагатай үйлдлийг уншсанаар автоматаар тохируулах"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "Хаягийн дэвтэртээ холбох хаяг нэмэхдээ дарна."
-
-#~ msgid "Contacts"
-#~ msgstr "Харилцагч"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Хөөрөлдөөнийг багасгасан"
-
-#~ msgid "Join Group"
-#~ msgstr "Бүлгэмд Нэгдэх"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo нь захиалагч, хөөрөлдөөн, боломжуудын түүх, баримтууд\n"
-#~ "            зэрэгт холбогдох үйл ажиллагаануудыг хөтлөхөд тусладаг.]"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr "Зурвасын Rich-text/HTML хувилбар (энд хувьсагч хэрэглэж болно)"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "Богино кодыг солигч html код"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "Энэ үлгэртэй хэрэглэгдэж болох баримтуудын төрөл"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Хөтлөгдсөн утга нь тусдаа моделд хадгалагдана. Энэ талбар нь хөтлөлтийн "
-#~ "бүтцийг өөрчилж модель дээр статистикийг үүсгэх боломжийг олгодог."
-
-#~ msgid "Unsubscribed"
-#~ msgstr "Бүртгэл арилгагдсан"
-
-#, fuzzy
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer: discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo нь захиалагч, хөөрөлдөөн, боломжуудын түүх, баримтууд\n"
-#~ "            зэрэгт холбогдох үйл ажиллагаануудыг хөтлөхөд тусладаг.]"

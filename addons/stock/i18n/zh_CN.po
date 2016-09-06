@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:07+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-07-22 06:34+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -675,7 +675,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr ""
+msgstr "可以针对合作伙伴设置警告消息(库存)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -799,7 +799,7 @@ msgstr "这个补货的所有库存移动都会被取消。"
 #. module: stock
 #: selection:stock.config.settings,group_warning_stock:0
 msgid "All the partners can be used in pickings"
-msgstr ""
+msgstr "所有合作伙伴在分拣单可用"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_entire_packs
@@ -1872,7 +1872,7 @@ msgid "Delay (days)"
 msgstr "延迟（天）"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:348
 #, python-format
 msgid "Delivered Qty"
 msgstr "已交货数量"
@@ -2157,7 +2157,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:629
+#: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr "包裹里面的东西应该在同一个位置"
@@ -2266,7 +2266,7 @@ msgstr ""
 "另外，这包括了要到达所有“内部”类型的位置的产品。"
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:343
 #: model:ir.model.fields,field_description:stock.field_product_template_virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
@@ -2284,31 +2284,31 @@ msgid "Full Location Name"
 msgstr "完整的位置名称"
 
 #. module: stock
-#: code:addons/stock/models/product.py:338
+#: code:addons/stock/models/product.py:346
 #, python-format
 msgid "Future Deliveries"
 msgstr "未来送货"
 
 #. module: stock
-#: code:addons/stock/models/product.py:343
+#: code:addons/stock/models/product.py:351
 #, python-format
 msgid "Future P&L"
 msgstr "未来 P&L"
 
 #. module: stock
-#: code:addons/stock/models/product.py:353
+#: code:addons/stock/models/product.py:361
 #, python-format
 msgid "Future Productions"
 msgstr "未来生产"
 
 #. module: stock
-#: code:addons/stock/models/product.py:348
+#: code:addons/stock/models/product.py:356
 #, python-format
 msgid "Future Qty"
 msgstr "未来数量"
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future Receipts"
 msgstr "未来收货"
@@ -2497,7 +2497,7 @@ msgstr "如何使用批次跟踪："
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8356
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8358
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_id
@@ -4170,7 +4170,7 @@ msgid "Original location id"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "Otherwise make sure the right stock/owner is set."
 msgstr ""
@@ -4231,7 +4231,7 @@ msgid "Owner of the quants"
 msgstr "份的所有者"
 
 #. module: stock
-#: code:addons/stock/models/product.py:345
+#: code:addons/stock/models/product.py:353
 #, python-format
 msgid "P&L Qty"
 msgstr "P&L Qty"
@@ -4710,7 +4710,7 @@ msgid "Procurements"
 msgstr "补货"
 
 #. module: stock
-#: code:addons/stock/models/product.py:355
+#: code:addons/stock/models/product.py:363
 #, python-format
 msgid "Produced Qty"
 msgstr "产品数量"
@@ -4853,7 +4853,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:318
+#: code:addons/stock/models/product.py:326
 #, python-format
 msgid "Products: "
 msgstr "产品： "
@@ -5119,7 +5119,7 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "接收货物直接到库存 (一步)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:340
 #, python-format
 msgid "Received Qty"
 msgstr "已接收数量"
@@ -5210,7 +5210,7 @@ msgid "Removal Strategy"
 msgstr "下架策略"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:449
+#: code:addons/stock/models/stock_quant.py:467
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "下架策略 %s 没有实现."
@@ -5540,7 +5540,7 @@ msgstr "序号"
 #: code:addons/stock/models/stock_warehouse.py:658
 #, python-format
 msgid "Sequence in"
-msgstr ""
+msgstr " 入库序列"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:662
@@ -5552,19 +5552,19 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:659
 #, python-format
 msgid "Sequence out"
-msgstr ""
+msgstr " 出库序列"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:660
 #, python-format
 msgid "Sequence packing"
-msgstr ""
+msgstr " 包装序列"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:661
 #, python-format
 msgid "Sequence picking"
-msgstr ""
+msgstr " 分拣序列"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -5894,7 +5894,7 @@ msgid "Stockable"
 msgstr "可库存"
 
 #. module: stock
-#: code:addons/stock/models/product.py:470
+#: code:addons/stock/models/product.py:478
 #, python-format
 msgid "Stockable Product"
 msgstr "可库存商品"
@@ -6206,10 +6206,10 @@ msgid "The selected inventory options are not coherent."
 msgstr "选择的库存选项并不相干。"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "The serial number %s is already in stock."
-msgstr ""
+msgstr "序列号%s已经在库存中 "
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:515
@@ -6564,7 +6564,7 @@ msgid "Tracking"
 msgstr "跟踪"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:960
+#: code:addons/stock/models/stock_move.py:959
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6688,7 +6688,7 @@ msgid "Units of Measures"
 msgstr "计量单位"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:551
+#: code:addons/stock/models/stock_quant.py:569
 #, python-format
 msgid "Unknown Pack"
 msgstr "未知包裹"
@@ -6718,7 +6718,7 @@ msgid "Unpack"
 msgstr "拆包"
 
 #. module: stock
-#: code:addons/stock/models/product.py:350
+#: code:addons/stock/models/product.py:358
 #, python-format
 msgid "Unplanned Qty"
 msgstr "未计划数量"
@@ -6959,7 +6959,7 @@ msgid "Warning on the Picking"
 msgstr "分拣单的警告"
 
 #. module: stock
-#: code:addons/stock/models/product.py:311
+#: code:addons/stock/models/product.py:319
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -7146,7 +7146,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:484
+#: code:addons/stock/models/product.py:492
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
@@ -7220,13 +7220,13 @@ msgstr ""
 "\t%s - qty: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:919
+#: code:addons/stock/models/stock_move.py:920
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr "不能拆分一个移动草稿。你需要先确认它。"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:915
+#: code:addons/stock/models/stock_move.py:916
 #, python-format
 msgid "You cannot split a move done"
 msgstr "您无法分割一个已完成的移动"
@@ -7269,7 +7269,7 @@ msgid "You have processed less products than the initial demand."
 msgstr "你已经处理了初始需求的部分产品"
 
 #. module: stock
-#: code:addons/stock/models/product.py:312
+#: code:addons/stock/models/product.py:320
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -7295,7 +7295,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:43
 #, python-format
 msgid "You may only return Done pickings"
-msgstr ""
+msgstr "您只能退回已完成的分拣"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
@@ -7305,7 +7305,7 @@ msgid "You need to provide a Lot/Serial Number for product %s"
 msgstr "你需要提供产品的批次／序列号%s"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:241
+#: code:addons/stock/models/stock_quant.py:260
 #, python-format
 msgid "You should only receive by the piece with the same serial number"
 msgstr "你应该只能每一片用同一个序列号收货"
@@ -7545,619 +7545,3 @@ msgstr "↳放置在包裹中"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ 设置数量为 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * 草稿：即未确认状态，直到确认前不会被安排分拣。\n"
-#~ "\n"
-#~ "                * 等待另一操作：等待另一库存移动完成后而自动变为可用状态"
-#~ "（例如MTO流程）。\n"
-#~ "\n"
-#~ "                * 等待可用：等待产品可用状态。\n"
-#~ "\n"
-#~ "                * 部分可用：一些产品可用并被保留。\n"
-#~ "\n"
-#~ "                * 准备调拨：产品已保留，等待确认。\n"
-#~ "\n"
-#~ "                * 已调拨：已完成调拨，再也无法修改和取消。\n"
-#~ "\n"
-#~ "                * 已取消：已取消，再也无法确认。"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "创建从供应商直接发到客户的直运dropship路线，增加更加复杂的测试-这会安装 "
-#~ "stock_dropshipping模块。"
-
-#~ msgid " MTO"
-#~ msgstr " MTO"
-
-#~ msgid " On Hand"
-#~ msgstr " 在手"
-
-#~ msgid " Sequence in"
-#~ msgstr " 入库序列"
-
-#~ msgid " Sequence internal"
-#~ msgstr " 内部序列"
-
-#~ msgid " Sequence out"
-#~ msgstr " 出库序列"
-
-#~ msgid " Sequence packing"
-#~ msgstr " 包装序列"
-
-#~ msgid " Sequence picking"
-#~ msgstr " 分拣序列"
-
-#~ msgid "%s %s %s has been <b>moved to</b> scrap."
-#~ msgstr "%s %s %s 已被 <b>移动到</b> 报废仓."
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* 新建: 当库存移动被创建，还没被确认时。\n"
-#~ "* 等待其它移动: 当需要等待另外一个移库完成时，出现该状态。例如：链式物"
-#~ "流.\n"
-#~ "* 等待可用: 当需求还不能被直接了当地解决时，出现该状态。可能需要等调度程序"
-#~ "被运行，有个部件在等待制造等等...\n"
-#~ "* 可用: 当产品已经被保留了，状态就被设置为 可用。\n"
-#~ "* 完成: 当这次装运被处理，状态就是“完成”。"
-
-#~ msgid ""
-#~ "* Vendor Location: Virtual location representing the source location for "
-#~ "products coming from your vendors\n"
-#~ "                       \n"
-#~ "* View: Virtual location used to create a hierarchical structures for "
-#~ "your warehouse, aggregating its child locations ; can't directly contain "
-#~ "products\n"
-#~ "                       \n"
-#~ "* Internal Location: Physical locations inside your own warehouses,\n"
-#~ "                       \n"
-#~ "* Customer Location: Virtual location representing the destination "
-#~ "location for products sent to your customers\n"
-#~ "                       \n"
-#~ "* Inventory Loss: Virtual location serving as counterpart for inventory "
-#~ "operations used to correct stock levels (Physical inventories)\n"
-#~ "                       \n"
-#~ "* Procurement: Virtual location serving as temporary counterpart for "
-#~ "procurement operations when the source (vendor or production) is not "
-#~ "known yet. This location should be empty when the procurement scheduler "
-#~ "has finished running.\n"
-#~ "                       \n"
-#~ "* Production: Virtual counterpart location for production operations: "
-#~ "this location consumes the raw material and produces finished products\n"
-#~ "                       \n"
-#~ "* Transit Location: Counterpart location that should be used in inter-"
-#~ "companies or inter-warehouses operations\n"
-#~ "                      "
-#~ msgstr ""
-#~ "供应商位置：用于从供应商处收货时的库存移动的源位置，是一种虚拟位置. \n"
-#~ "                       \n"
-#~ "视图：位置树状结构的中间节点，用于组织位置树状结构。该种视图不可在库存移动"
-#~ "中使用，但可用于库存统计，即统计其下面的各个位置的总库存 \n"
-#~ "                       \n"
-#~ "内部位置：仓库中实际存放货物的位置，即库区 \n"
-#~ "                       \n"
-#~ "客户位置：用于供货给客户时的库存移动的目标位置，是一种虚拟位置。\n"
-#~ "                       \n"
-#~ "盘点位置：用于盘亏时的目标位置，或者盘盈时的源位置。注意，新上OE系统时候也"
-#~ "是从该位置中“移动”产品至各位置，以建立期初库存 \n"
-#~ "                       \n"
-#~ "补货位置：产品需求单，引起库存移动的“临时”源位置或目标位置。当系统初次生成"
-#~ "需求单时候，系统不能确定补货的来源（不确定是通过购买还是通过生产补货）。只"
-#~ "有当\n"
-#~ "系统运行完补货调度计划（Procurement Scheduler）后，才知道补货来源。默认情"
-#~ "况下，系统每天运行一次补货调度计划，当然，你可以在任何时候手动执行补货调度"
-#~ "计划。\n"
-#~ "补货位置用于初次生成的需求单中的库存移动。每当运行完补货调度计划后，该位置"
-#~ "库存数量应为零\n"
-#~ "                       \n"
-#~ "生产位置：生产时候，生产领料的目标位置或成品入库时候的源位置，是一种虚拟位"
-#~ "置。\n"
-#~ "                       \n"
-#~ "中转位置：对方位置，用于公司间、仓库间作业。\n"
-#~ "                      "
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>联系地址:</strong></span>"
-
-#~ msgid "<strong>Serial Number</strong>"
-#~ msgstr "<strong>序列号</strong>"
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>状态</strong>"
-
-#~ msgid "A barcode nomenclature"
-#~ msgstr "条码命名规则"
-
-#~ msgid ""
-#~ "A good inventory management aims to optimize stock levels: not too low "
-#~ "(or\n"
-#~ "                        you may find yourself out of stock) and not too "
-#~ "high (your products occupy\n"
-#~ "                        space and may loose value)."
-#~ msgstr ""
-#~ "好的库存管理的目标是优化库存: 不要太低(或者你可能没有库存) 并且不能太高 "
-#~ "(产品占用太多的空间并且可能造成损失)."
-
-#~ msgid "Action Needed"
-#~ msgstr "所需动作"
-
-#~ msgid "Add an internal note..."
-#~ msgstr "添加一个内部备注..."
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "为送货单添加一个投诉链接。\n"
-#~ "-这会安装模块claim_from_delivery。"
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "允许基于交货索赔"
-
-#~ msgid ""
-#~ "Allows you to automatically reserve the available\n"
-#~ "            products when confirming a sale order.\n"
-#~ "                This installs the module procurement_jit."
-#~ msgstr ""
-#~ "安装模块 procurement_jit.能够在确认销售订单时候让你自动的预留可用的产品"
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "默认情况下，系统从源位置的库存中取货，并等待产品可用。另外一个可能是允许您"
-#~ "在源位置上直接产生一个需求单(从而忽略它的当前库存)来获取产品。如果我们想把"
-#~ "库存移动连接起来，并让库存移动等待上一个移动，您应该选择第二个选项。"
-
-#~ msgid "Check the existance of pack operation on the picking"
-#~ msgstr "勾选拣货包装操作的存在"
-
-#~ msgid "Check the existance of stock moves linked to this inventory"
-#~ msgstr "勾选库存相关的移库的存在"
-
-#~ msgid "Claims"
-#~ msgstr "索赔"
-
-#~ msgid "Click to add a serial number."
-#~ msgstr "点击添加序列号"
-
-#~ msgid "Create New Lots"
-#~ msgstr "创建新的批次"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid ""
-#~ "Define your locations to reflect your warehouse structure and\n"
-#~ "                organization. Odoo is able to manage physical locations\n"
-#~ "                (warehouses, shelves, bin, etc), partner locations "
-#~ "(customers,\n"
-#~ "                vendors) and virtual locations which are the counterpart "
-#~ "of\n"
-#~ "                the stock operations like the manufacturing orders\n"
-#~ "                consumptions, inventories, etc."
-#~ msgstr ""
-#~ "定义位置来反映仓库的结构和组织。Odoo能管理物理位置（仓库，货架，bin位等"
-#~ "等），\n"
-#~ "业务伙伴位置（客户，供应商）和虚拟位置（是生产订单的消耗，盘点，补货等等）"
-
-#~ msgid "Delivery Method"
-#~ msgstr "交货方法"
-
-#~ msgid "Do not manage claims"
-#~ msgstr "不要管理索赔"
-
-#~ msgid "Do not record internal moves within a warehouse"
-#~ msgstr "不记录仓库的内部移动"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "不使用‘过期日期’"
-
-#~ msgid ""
-#~ "Every stock operation in Odoo moves the products from one\n"
-#~ "                location to another one.  For instance, if you receive "
-#~ "products\n"
-#~ "                from a vendor, Odoo will move products from the Vendor\n"
-#~ "                location to the Stock location. Each report can be "
-#~ "performed on\n"
-#~ "                physical, partner or virtual locations."
-#~ msgstr ""
-#~ "每一个Odoo中的库存操作都是产品从一个位置到另一个位置。例如，一旦你从供应商"
-#~ "那边收货\n"
-#~ "，Odoo将会把产品从供应商位置调拨到仓库位置。每个报表都会从物理位置，业务伙"
-#~ "伴位置或者虚拟位置反映出来。"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "Forecasted:"
-#~ msgstr "预测："
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "有库存移动"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid ""
-#~ "If this is checked only, it will suppose you want to create new Serial "
-#~ "Numbers / Lots, so you can provide them in a text field. "
-#~ msgstr ""
-#~ "如果只有这个被勾选，就会认为你想要创建新的序列号／批次。所以你可以用text　"
-#~ "字段提供"
-
-#~ msgid ""
-#~ "If this is checked, you will be able to choose the Serial Number / Lots. "
-#~ "You can also decide to not put lots in this picking type.  This means it "
-#~ "will create stock with no lot or not put a restriction on the lot taken. "
-#~ msgstr ""
-#~ "如果这个被勾选，你将能够选择序列号／批次号。你也可以把批次放在拣货类型中。"
-#~ "这意味着创建没有批次的移库或者不放任何限制"
-
-#~ msgid "Information"
-#~ msgstr "信息"
-
-#~ msgid ""
-#~ "Internal reference number in case it differs from the manufacturer's "
-#~ "serial number"
-#~ msgstr "内部参考号码它不同与制造商序列号"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "盘点明细行。"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "盘点移动"
-
-#~ msgid "Inventory Name."
-#~ msgstr "盘点名称"
-
-#~ msgid "Inventory loss"
-#~ msgstr "盘存盈亏"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "将库存调拨和包装操作关联"
-
-#~ msgid "Lot Details"
-#~ msgstr "批次详细信息"
-
-#~ msgid "Lot Inventory"
-#~ msgstr "批次盘点"
-
-#~ msgid "Lot Name"
-#~ msgstr "批次名称"
-
-#~ msgid "Lot is required"
-#~ msgstr "批次是必须的"
-
-#~ msgid "Lots"
-#~ msgstr "批次"
-
-#~ msgid "Lots Used"
-#~ msgstr "用到的批次"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "管理多位置和仓库"
-
-#~ msgid "Manage several locations per warehouse"
-#~ msgstr "管理仓库的多个位置"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Move Lines"
-#~ msgstr "移动行"
-
-#~ msgid "Multi Locations"
-#~ msgstr "多位置"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "打开仓库菜单"
-
-#~ msgid "Packagings"
-#~ msgstr "包装"
-
-#~ msgid ""
-#~ "Periodical Inventories are used to count the number of products\n"
-#~ "                available per location. You can use it once a year when "
-#~ "you do\n"
-#~ "                the general inventory or whenever you need it, to adapt "
-#~ "the\n"
-#~ "                current inventory level of a product."
-#~ msgstr ""
-#~ "周期性的盘点被用来计算每个位置的可用数量，\n"
-#~ "你可以一年盘点一次或者需要的时候随时进行盘点，\n"
-#~ "进而调整库存水平"
-
-#~ msgid "Picking Types"
-#~ msgstr "分拣类型"
-
-#~ msgid "Please provide a positive quantity to scrap."
-#~ msgstr "请提供一个要报废的正数。"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "推式物流"
-
-#~ msgid "Qty"
-#~ msgstr "数量"
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr " 默认计量单位的剩余数量是和这次移动操作相匹配的。"
-
-#~ msgid "Reserve sale orders immediately on confirmation"
-#~ msgstr "确认时立即保留销售订单"
-
-#~ msgid "Reserve sale orders manually or by running the schedulers"
-#~ msgstr "通过运行调度，或手动保留销售订单"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "从其他仓库补给"
-
-#~ msgid "Reverse"
-#~ msgstr "逆转"
-
-#~ msgid "Scrap Products"
-#~ msgstr "报废产品"
-
-#~ msgid "Serial Number"
-#~ msgstr "序列号"
-
-#~ msgid "Serial Number / Lots"
-#~ msgstr "序列号／批次"
-
-#~ msgid "Serial Numbers / Lots"
-#~ msgstr "序列号／批次"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr "一些产品可使用不同的单位销售 / 采购 ( 高级 )"
-
-#~ msgid "Some products require lots, so you need to specify those first!"
-#~ msgstr "有些产品需要批次，所以你需要先要标识"
-
-#~ msgid "Specifies lot/serial number for pack operations that need it"
-#~ msgstr "给包装作业制定批次／序列号"
-
-#~ msgid "Suppliers"
-#~ msgstr "供应商"
-
-#~ msgid ""
-#~ "Technical field used to depict a restriction on the lot of quants to "
-#~ "consider when marking this move as 'done'"
-#~ msgstr "该技术字段用来描述当多份移动标记为’完成‘时的限制"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr "该技术字段用来隐藏不必要的帮助提示信息。"
-
-#~ msgid ""
-#~ "The 'Automatic Move' / 'Manual Operation' value will create a stock move "
-#~ "after the current one.  With 'Automatic No Step Added', the location is "
-#~ "replaced in the original move."
-#~ msgstr ""
-#~ "'自动移动' / '手动操作' 这个选项能够在当前的移动下创建一个移库   在 '没有"
-#~ "额外步骤的自动',状况下， 在原始移库中位置被代替 "
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr "选择的产品数量%s不兼容计量单位的舍入。确认后它将会自动转换"
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "采购数量将是倍数级别的。若为0，将强制要求确切数值才行，就是说不能为0。"
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "在此产品上您的计量单位%s的舍入 在此移动vs. %s 上不允许这些操作，或您没一次"
-#~ "完成分拣调拨。"
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "产品%s 的所选计量单位与这个产品的默认计量单位类别不同。\n"
-#~ " 请选择一个同类别的计量单位。"
-
-#~ msgid "The serial number %s is already in stock"
-#~ msgstr "序列号%s已经在库存中 "
-
-#~ msgid ""
-#~ "This is the list of all the production lots you recorded. When\n"
-#~ "                you select a lot, you can get the traceability of the "
-#~ "products contained in lot."
-#~ msgstr ""
-#~ "这是所有生产批次的列表，当你选择一个批次，你可以追踪一个批次中的产品的踪"
-#~ "迹 "
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr "这将告诉你位置并且允许你定义多个分拣类型和仓库"
-
-#~ msgid ""
-#~ "To check the trajectory of a lot, find it back in <strong><i>Inventory "
-#~ "Control &gt; Serial Numbers / lots</i></strong>.\n"
-#~ "                       Choose a Lo t in the list and click on "
-#~ "<i>Traceability</i>i&gt;. You may also\n"
-#~ "                       filter the Quantitative Valuation of a product "
-#~ "with a certain lot."
-#~ msgstr ""
-#~ "要查看一个批次的踪迹，可以回到<strong><i>\n"
-#~ "存货控制 &gt; 序列号 / 批次</i></strong>。\n"
-#~ "在列表中选择一个批次并且点击<i>踪迹</i>i&gt;过滤带有特定特定批次号的产品的"
-#~ "数量评估\""
-
-#~ msgid ""
-#~ "Track different dates on products and serial numbers.\n"
-#~ "                    The following dates can be tracked:\n"
-#~ "                    - end of life\n"
-#~ "                    - best before date\n"
-#~ "                    - removal date\n"
-#~ "                    - alert date.\n"
-#~ "                    This installs the module product_expiry."
-#~ msgstr ""
-#~ "在产品和序列号中追踪不同的日期.\n"
-#~ "                    以下日期能够被追踪到:\n"
-#~ "                    - 寿命终止日期\n"
-#~ "                    - 食品包装上标明的日期\n"
-#~ "                    - 下架日期\n"
-#~ "                    - 警报日期.\n"
-#~ "                    需要安装模块 product_expiry."
-
-#~ msgid "Unique Serial Number"
-#~ msgstr "唯一序列号码"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "计量单位"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Unused field"
-#~ msgstr "不用的字段"
-
-#~ msgid "Use Existing Lots"
-#~ msgstr "用现有的批次"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "填充这里来运行该产品的补货申请。根据产品的配置，这个方法触发一个采购单草"
-#~ "稿、生产订单或者新的任务。"
-
-#~ msgid "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr "用扫描设备能够更快捷的确认移动数量"
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "警告：错误UoM！"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "警告：错误数量！"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing."
-#~ msgstr "你可以立即处理或者标识为稍后处理. "
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing. "
-#~ "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr "你可以立即处理或者标识为稍后处理. 用扫描设备校验调拨的数量更加快捷."
-
-#~ msgid ""
-#~ "You haven't set processed quantities. If you click <i>apply</i>,\n"
-#~ "                        Odoo will process all quantities to do."
-#~ msgstr ""
-#~ "你还没有设置操作的数量，如果你点击<i>应用</i>,\n"
-#~ "                        Odoo 将会完成所有的数量的操作."
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "您可以只返回已完成的分拣！"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "您可能只返回已完成的分拣！"
-
-#~ msgid "move that created the return move"
-#~ msgstr "迁移已创建的返回迁移"
-
-#~ msgid "preferred Packaging"
-#~ msgstr "首选包装"
-
-#~ msgid "unknown"
-#~ msgstr "未知的"
-
-#~ msgid "<span class=\"pull-left\">Lot/Serial Number</span>"
-#~ msgstr "<span class=\"pull-left\">批次/序列号码</span>"
-
-#~ msgid "Manage quality control points, checks and measures"
-#~ msgstr "管理质量控制点，检查以及测量"
-
-#~ msgid "Quality"
-#~ msgstr "质量"
-
-#~ msgid "to"
-#~ msgstr "到"

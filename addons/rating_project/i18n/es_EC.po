@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-01-20 13:17+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -125,9 +125,8 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
-#, fuzzy
 msgid "% On tasks"
-msgstr "En tareas"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -136,7 +135,6 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
-#, fuzzy
 msgid ""
 "Automatically modify the kanban state when the customer reply to the "
 "feedback for this stage.\n"
@@ -145,18 +143,11 @@ msgid ""
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red "
 "bullet).\n"
 msgstr ""
-"Modificar automáticamente el estado Kanban cuando el cliente respondió a la "
-"retroalimentación para esta etapa.\n"
-"* Una gran respuesta por parte del cliente actualizará el estado de Kanban a "
-"\"listo para la nueva etapa '(color verde).\n"
-"* Una reacción media o mala establecerá el estado de Kanban en "
-"'bloqueado' (color rojo).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
-#, fuzzy
 msgid "Customer Ratings"
-msgstr "Satisfacción del Cliente"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -174,17 +165,15 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
-#, fuzzy
 msgid "Customer(s) Ratings"
-msgstr "Satisfacción del Cliente"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
-#, fuzzy
 msgid "Customers Ratings"
-msgstr "Satisfacción del Cliente"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -238,9 +227,8 @@ msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
-#, fuzzy
 msgid "No rating"
-msgstr "Clasificación"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -301,9 +289,8 @@ msgstr ""
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
-#, fuzzy
 msgid "Ratings"
-msgstr "Clasificación"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -322,9 +309,8 @@ msgstr "Tarea"
 #. module: rating_project
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
-#, fuzzy
 msgid "Task Rating"
-msgstr "Clasificación"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -345,122 +331,3 @@ msgstr ""
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "<body>\n"
-#~ "    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
-#~ "        <div style=\"margin-left:30px;align=center;\">\n"
-#~ "            Dear ${object.partner_id.name},\n"
-#~ "        </div><br>\n"
-#~ "        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n"
-#~ "            We hope the services provided have met your expectations.\n"
-#~ "            <br>If you have any more questions or comments, do not "
-#~ "hesitate to reply to this e-mail.\n"
-#~ "            <br><br>Please, help us to improve ourself by rating the "
-#~ "service we provide.\n"
-#~ "        </div><br>\n"
-#~ "        <table style=\"margin-left:50px;\" width=\"70%\">\n"
-#~ "            <tr>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/10\">\n"
-#~ "                        <img alt=\"Great\" src=\"rating/static/src/img/"
-#~ "rating_10.png\" title=\"It was great\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/5\">\n"
-#~ "                        <img alt=\"Okay\" src=\"rating/static/src/img/"
-#~ "rating_5.png\" title=\"It was okay\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/0\">\n"
-#~ "                        <img alt=\"Bad\" src=\"rating/static/src/img/"
-#~ "rating_0.png\" title=\"It wasn't good\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "            </tr>\n"
-#~ "        </table><br>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">Thank you </"
-#~ "h4>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">${object."
-#~ "rated_partner_id.name or ''} </h4>\n"
-#~ "    </div>\n"
-#~ "</body>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<body>\n"
-#~ "    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
-#~ "        <div style=\"margin-left:30px;align=center;\">\n"
-#~ "            Estimado ${object.partner_id.name},\n"
-#~ "        </div><br>\n"
-#~ "        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n"
-#~ "            Esperamos que los servicios prestados cumplen con sus "
-#~ "expectativas.\n"
-#~ "            <br>Si usted tiene más preguntas o comentarios, no dude en "
-#~ "responder a este mensaje.\n"
-#~ "            <br><br>Por favor, ayúdenos a mejorar calificando el servicio "
-#~ "que ofrecemos.\n"
-#~ "        </div><br>\n"
-#~ "        <table style=\"margin-left:50px;\" width=\"70%\">\n"
-#~ "            <tr>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/10\">\n"
-#~ "                        <img alt=\"Great\" src=\"rating/static/src/img/"
-#~ "rating_10.png\" title=\"It was great\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/5\">\n"
-#~ "                        <img alt=\"Okay\" src=\"rating/static/src/img/"
-#~ "rating_5.png\" title=\"It was okay\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "                <td>\n"
-#~ "                    <a href=\"/rating/${object.access_token}/0\">\n"
-#~ "                        <img alt=\"Bad\" src=\"rating/static/src/img/"
-#~ "rating_0.png\" title=\"It wasn't good\"/>\n"
-#~ "                    </a>\n"
-#~ "                </td>\n"
-#~ "            </tr>\n"
-#~ "        </table><br>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">Muchas gracias "
-#~ "</h4>\n"
-#~ "        <h4 style=\"margin-left:30px;font-weight:normal;\">${object."
-#~ "rated_partner_id.name or ''} </h4>\n"
-#~ "    </div>\n"
-#~ "</body>\n"
-#~ "                \n"
-#~ "            "
-
-#~ msgid "${object.res_name}"
-#~ msgstr "${object.res_name}"
-
-#~ msgid "% Happy"
-#~ msgstr "% Feliz"
-
-#~ msgid "Auto Kanban state validation"
-#~ msgstr "Estado de validación Auto Kanban"
-
-#~ msgid ""
-#~ "Display informations about rating of the project on kanban and form view. "
-#~ "This buttons will only be displayed if at least a rating exists."
-#~ msgstr ""
-#~ "Muestra información sobre la calificación del proyecto de Kanban y su "
-#~ "vista formulario. Este botón sólo se mostrarán si al menos existe una "
-#~ "clasificación."
-
-#~ msgid "Percentage of happy people about this project"
-#~ msgstr "Porcentaje de gente feliz con este proyecto"
-
-#, fuzzy
-#~ msgid ""
-#~ "Display information about rating of the project on kanban and form view. "
-#~ "This buttons will only be displayed if at least a rating exists."
-#~ msgstr ""
-#~ "Muestra información sobre la calificación del proyecto de Kanban y su "
-#~ "vista formulario. Este botón sólo se mostrarán si al menos existe una "
-#~ "clasificación."

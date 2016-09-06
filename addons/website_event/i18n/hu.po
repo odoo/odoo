@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-07-01 16:27+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -185,6 +185,8 @@ msgid ""
 "Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
+"Hozza létre az új eseményének a nevét és kattintson  <em>\"Tovább\"</em>. "
+"pl: Technikai Tréning"
 
 #. module: website_event
 #. openerp-web
@@ -273,7 +275,7 @@ msgstr "Jelvény szerkesztése"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "End of Registration"
-msgstr ""
+msgstr "Jelentkezés vége"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -319,7 +321,7 @@ msgstr "Esemény közzétéve"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration is closed."
-msgstr ""
+msgstr "Rendezvényre a regisztráció véget ért."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -377,7 +379,7 @@ msgstr "Bemutatás"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
 msgid "Is Participating"
-msgstr ""
+msgstr "Résztvevő"
 
 #. module: website_event
 #. openerp-web
@@ -590,11 +592,9 @@ msgstr "Ezen a héten"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:26
-#, fuzzy, python-format
+#, python-format
 msgid "This button allows you to create new pages, events, menus, etc."
 msgstr ""
-"A <em>Tartalom</em> menü lehetővé teszi új lapok, események, menük, stb. "
-"létrehozását."
 
 #. module: website_event
 #. openerp-web
@@ -649,9 +649,14 @@ msgid "Visible in Website"
 msgstr "Látható a weboldalon"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Visualize on Google Maps"
+msgstr "Tegye láthatóvá a Googel Maps-en"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "Örömmel igazoljuk vissza az eseményünkre a feliratkozását"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -692,7 +697,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
-msgstr ""
+msgstr "Regisztrációja"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -712,41 +717,4 @@ msgstr "ig"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "unpublished"
-msgstr ""
-
-#~ msgid "%(month)s %(start_day)s%(end_day)s"
-#~ msgstr "%(month)s %(start_day)s%(end_day)s"
-
-#~ msgid "Drag the 'Text Block' in your event page."
-#~ msgstr "Vigye a 'Szöveg blokk'-ot az esemény oldalára."
-
-#~ msgid "End of Subscription"
-#~ msgstr "Feliratkozást vége"
-
-#~ msgid "Event Subscription"
-#~ msgstr "Eseményre feliratkozás"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "A teljes URL elérési út a dokumentum weboldalon keresztüli eléréséhez."
-
-#~ msgid "We are glad to confirm your subscription to our event"
-#~ msgstr "Örülünk, hogy az esemény feliratkozását visszaigazolhatjuk"
-
-#~ msgid "Website URL"
-#~ msgstr "Honlap URL"
-
-#~ msgid "Website meta description"
-#~ msgstr "Honlap meta leírás"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Honlap meta kulcsszavai"
-
-#~ msgid "Website meta title"
-#~ msgstr "Honlap meta cím"
-
-#~ msgid "Your subscription"
-#~ msgstr "Feliratkozása"
-
-#~ msgid "not published"
-#~ msgstr "nem közzétett"
+msgstr "Nem közzétett"

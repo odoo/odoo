@@ -183,6 +183,166 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            % set last_created_project = user.env['project.project']."
+"search([('alias_id','<>',False)], order=\"create_date desc\")[0]\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;"
+"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;"
+"text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;"
+"margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-"
+"size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Automatikus "
+"belépés</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;"
+"border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-"
+"top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Az Odoo rendszer Projekt téma "
+"alkalmazása él és fut</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-"
+"bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:"
+"bold;\">Mi a további teendő?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
+"font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-"
+"top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Próbáljon meg egy "
+"feladatot létrehozni a e-amil küldésével ide: </span>\n"
+"                                            <a href=\"mailto:"
+"${last_created_project.alias_id.name_get()[0][1] if last_created_project."
+"alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:"
+"bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()"
+"[0][1] if last_created_project.alias_id.alias_domain else user.company_id."
+"email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/"
+"web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; "
+"text-decoration:underline;\">Hívjon meg új felhasználókat</span></a></span>\n"
+"                                        <span>segítségnyújtához</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
+"top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Fedezze "
+"fel a </span>\n"
+"                                <span><a href=\"/"
+"web#view_type=kanban&model=project.project&action=project."
+"open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-"
+"decoration:underline;\">projekt téma tervezőt</span></a></span>\n"
+"                                <span> extra jellemzők aktiválásával</span>\n"
+"                                <span style=\"color:#a24689;margin:0;font-"
+"weight:bold\">(${user.env['web.planner']."
+"get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;"
+"font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Kövesse nyomon a munkaórákat a "
+"Munkaidő-kimutatásokkal,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Tervezzen feladatokat és "
+"erőforrásokat előrejelzésekkel,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Kapjon okos kimutatásokat és  "
+"pontos műszerfalakat,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:0pt;\">\n"
+"                                        <span>Időben számlázzon a "
+"feladatokra vagy az ügyekre,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;"
+"margin-bottom:8pt;\">\n"
+"                                        <span>É s még sok más...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-"
+"height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Szüksége "
+"van segítségre?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re "
+"not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
+"top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Örömmel  nyújtunk segítséget útközben. "
+"Lépjen kapcsolatba velünk itt \n"
+"                                <a href=\"mailto:help@odoo.com\"><span style="
+"\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> bármely felmerülő "
+"kérdéssel. Ugyanakkor felfedezheti \n"
+"                                hogyan vegye ki a legtöbbet az Odoo Projekt "
+"témákból a mi </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/"
+"user/9.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;"
+"\">Felhasználói Dokumentációnkból</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation"
+"\">\n"
+"                                <span style=\"text-decoration:underline;"
+"\">API Dokumentáció</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-"
+"top:0pt;margin-bottom:8pt;\"><span>Élvezze az Odoo rendszer felfedezését,</"
+"span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-"
+"bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Az Odoo csapata<br/>PS: Emberek szeretik "
+"az Odoo rendszert, ellenőrizze </span><a href=\"https://twitter.com/odoo/"
+"favorites\"><span style=\"text-decoration:underline;\">mit mondanak erről.</"
+"span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -252,6 +412,8 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>Rendelje hozzá a feladatot</b> valakihez. <i>Létrehozhat és meghívhat új "
+"felhasználókat menet közben.</i>"
 
 #. module: project
 #. openerp-web
@@ -259,13 +421,15 @@ msgstr ""
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
+"<b>Kattintson a mentés gombra</b> a feladaton elvégzett változtatások "
+"elmentéséhez."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:39
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr ""
+msgstr "<b>Fogd &amp; vidd feladatok</b> az oszlopok közt a munkája során."
 
 #. module: project
 #. openerp-web
@@ -279,7 +443,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:44
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Kedvenc feladatok</b> a csapat prioritásai jelöléséhez."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -312,6 +476,8 @@ msgstr ""
 msgid ""
 "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Kattintson új projekt téma "
+"létrehozásához.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -878,6 +1044,11 @@ msgid ""
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
+"<strong>Csak azt kövesse amire szüksége van</strong><br/>\n"
+"                                    Az üzenetek használatának a "
+"legegyszerűbb módja a teljes Projekt téma követése: akkor az összes üzenetet "
+"megkapja az összes új és meglévő Projekt témához vagy Egy projekt téma "
+"bejelentett ügyéhez."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1252,7 +1423,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.server,name:project.activate_sample_project
 msgid "Activate Sample Project"
-msgstr ""
+msgstr "Példa projekt téma aktiválása"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_active
@@ -1273,6 +1444,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
 msgstr ""
+"Adjon oszlopokat a <b>projekt témája szakaszainak</b> beállításához.<br/"
+"><i>pl. Részletezés &gt; Fejlesztés &gt; Kész</i>"
 
 #. module: project
 #. openerp-web
@@ -1318,9 +1491,8 @@ msgstr "Minta álnév"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
-#, fuzzy
 msgid "Allow customer ratings on tasks or issues"
-msgstr "Vásárlói értékelés aktiválása a projekt témákon, ügy befejezéshez"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1592,11 +1764,13 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
+"Válasszon egy <b>projekt téma nevet</b>. (pl. Weboldal indítás, Termék "
+"fejlesztés, Irodai rendezvény, stb.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project_simplified
 msgid "Choose a Project Email"
-msgstr ""
+msgstr "Válasszon egy projekt téma E-mailt"
 
 #. module: project
 #. openerp-web
@@ -1610,7 +1784,7 @@ msgstr "Törölje a leírást és célt"
 #: code:addons/project/static/src/js/tour.js:49
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr ""
+msgstr "Kattintson egy kártyára a feladat részleteihez"
 
 #. module: project
 #. openerp-web
@@ -1618,6 +1792,8 @@ msgstr ""
 #, python-format
 msgid "Click on layers in the path to easily <b>return to tasks</b>."
 msgstr ""
+"Kattintson az útvonalon egy rétegre, hogy könnyen <b>visszatérjen a "
+"feladatokra</b>."
 
 #. module: project
 #. openerp-web
@@ -1626,13 +1802,15 @@ msgstr ""
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
 msgstr ""
+"Kattintson a kártyára <b>a projekt témájának eléréséhez</b> és feladatai "
+"rendszerezéséhez."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr ""
+msgstr "Kattintson erre a gombra a feladat módosításához."
 
 #. module: project
 #. openerp-web
@@ -1659,7 +1837,7 @@ msgstr "Kattintson a kedvencek hozzáadásához/kikapcsolásához."
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "Kattintson egy új projekt téma létrehozásához.<br>"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1709,7 +1887,7 @@ msgstr "Beállítások"
 #: code:addons/project/static/src/js/tour.js:78
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
@@ -1772,7 +1950,7 @@ msgstr "Hozzon létre Gentt táblázatot a projekt feladataihoz és határidőkh
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "Projekt létrehozása"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -2448,6 +2626,15 @@ msgid ""
 "followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"A jelenlegi projekt téma feladatai vagy ügyei láthatóságát tartja vissza:\n"
+"- Meghívottak kizárólag: Alkalmazottak láthatják az összes követett projekt "
+"témát, feladatokat, bejelentett ügyeket\n"
+"- Összes alkalmazott láthatja: Alkalmazottak láthatják az összes projekt "
+"témát, feladatokat, bejelentett ügyeket\n"
+"- Látható a következő ügyfeleknek: alkalmazottak mindet láthatják;\n"
+"   ha a weboldal aktív, portál felhasználók láthatják az általuk vagy a "
+"vállalatuk által követett projekt témát, \n"
+"   feladatokat, bejelentett ügyeket\n"
 
 #. module: project
 #: code:addons/project/models/project.py:591
@@ -2513,6 +2700,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Ha beállított, egy emailt küld a vásárlónak, ha a feladat vagy bejelentett "
+"ügy eléri ezt a lépést."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2820,7 +3009,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:16
 #, python-format
 msgid "Let's create your first project."
-msgstr ""
+msgstr "Hozza létre első projekt témáját."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_pad
@@ -3076,7 +3265,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "Csak meghívottak"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3302,7 +3491,7 @@ msgstr "Projekt téma álnév"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
 msgid "Project Count"
-msgstr ""
+msgstr "Projekt téma számláló"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -3369,9 +3558,8 @@ msgstr "Projekt témák"
 
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
-#, fuzzy
 msgid "Projects & Tasks"
-msgstr "Projekt téma feladatok"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3615,7 +3803,7 @@ msgstr "Fájlok megosztása és verziók kezelése"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Projekt téma megjelenítése a műszerfalon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4066,6 +4254,11 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"Ez állítja be a projekt témákban és a feladatokban használt "
+"mértékegységet. \n"
+"Ha használja a projektekhez kapcsolt munkaidő-kimutatást /project_timesheet "
+"modul/, ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
+"űrlapon."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4250,14 +4443,14 @@ msgstr "Nézzem meg a hét statisztikáját"
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "Összes alkalmazott által látható"
 
 #. module: project
 #: code:addons/project/models/project.py:200
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "Következő alkalmazottak által látható"
 
 #. module: project
 #. openerp-web
@@ -4281,7 +4474,7 @@ msgstr "Várak. Szakértő"
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
+msgstr "Jobban szeretné <b>kezelni a projekt témáit</b>? <i>Itt kezdje.</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4366,7 +4559,7 @@ msgstr "Mennyi az átlag értéke a munkaóráknak éves szinten?"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Ez a projekt téma megjelenítésre kerüljön a műszerfalon vagy sem"
 
 #. module: project
 #. openerp-web
@@ -4388,7 +4581,7 @@ msgstr "Munkamennyiség"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write date"
-msgstr ""
+msgstr "Dátum írása"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4444,7 +4637,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "Elmentheti a jelentéseit későbbi újbóli felhasználáshoz"
 
 #. module: project
 #: code:addons/project/models/project.py:70
@@ -4469,7 +4662,7 @@ msgstr "Célkitűzései"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Az Odoo rendszer Projekt téma alkalmazása fut"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4484,7 +4677,7 @@ msgstr "Projekt témái:"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr ""
+msgstr "egy példa projekt téma aktiválása"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4494,7 +4687,7 @@ msgstr "és aktivált:"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "pl. Munkahelyi rendezvény"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4524,7 +4717,7 @@ msgstr "project.config.settings"
 #. module: project
 #: model:ir.model,name:project.model_project_task_history_cumulative
 msgid "project.task.history.cumulative"
-msgstr ""
+msgstr "project.task.history.cumulative"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4545,7 +4738,7 @@ msgstr "és írja meg<br/> tapasztalatait vagy javasoljon újításokat !"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "játsszon vele."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4580,292 +4773,3 @@ msgstr "Munkaidő-kiosztásokkal"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr "az előbbi lépésen listáztás"
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid ""
-#~ "<strong>Follow only what you need</strong><br/>\n"
-#~ "                                    The simplest way to use notifications "
-#~ "is to follow a whole Project: you will then receive all the selected "
-#~ "notifications for all the Project's new and existing and new Tasks or "
-#~ "Issues."
-#~ msgstr ""
-#~ "<strong>Csak azt kövesse amire szüksége van</strong><br/>\n"
-#~ "                                    Az üzenetek használatának a "
-#~ "legegyszerűbb módja a teljes Projekt téma követése: akkor az összes "
-#~ "kiválasztott üzenetet megkapja az összes új és meglévő Projekt témához és "
-#~ "új Feladatokhoz és Ügyekhez."
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Activate timesheets on issues"
-#~ msgstr "Aktiválja az ügyek munkaidő-időkiosztásait"
-
-#~ msgid "All Employees Project: all employees can access"
-#~ msgstr ""
-#~ "Összes munkavállaló projekt feladata: összes munkavállaló hozzáférhet"
-
-#~ msgid "Allows you to compute Time Estimation on tasks."
-#~ msgstr "Lehetővé teszi az idő becslés számítását a feladatokon."
-
-#~ msgid "Budget Lines"
-#~ msgstr "Költségvetési sorok"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr ""
-#~ "Jelölje ki ezt a mezőt, ha ez a projekt téma munkaidő  időkiosztásokat is "
-#~ "kezel"
-
-#~ msgid ""
-#~ "Child task still open.\n"
-#~ "Please cancel or complete child task first."
-#~ msgstr ""
-#~ "Al-feladatok még nyitottak.\n"
-#~ "Kérem zárja be vagy teljesítse az al-feladatokat először."
-
-#~ msgid "Close"
-#~ msgstr "Bezár"
-
-#~ msgid "Closed"
-#~ msgstr "Lezárt"
-
-#~ msgid "Create Date"
-#~ msgstr "Létrehozás dátuma"
-
-#~ msgid "Customer Project: visible in portal if the customer is a follower"
-#~ msgstr "Vásárlói Projekt témák: látható a portálon, ha a vásárló egy követő"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Átruházott feladatok"
-
-#~ msgid "Do not estimate working time on tasks"
-#~ msgstr "Ne becsülje meg a munka időket a feladatokon"
-
-#~ msgid "Do not record timesheets on tasks"
-#~ msgstr "Ne jegyezze fel a munkaidő-beosztásokat a feladatokon"
-
-#~ msgid "Do not track working hours on issues"
-#~ msgstr "Ne kövesse a munkával eltöltött időt az ügyön"
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív feladatokat."
-
-#~ msgid ""
-#~ "Every event on a task is logged in this section. Send a new message to "
-#~ "notify followers or log an internal note."
-#~ msgstr ""
-#~ "A feladattal kapcsolatos összes esemény ebben a szekcióban kerül "
-#~ "naplózásra. Küldhet üzenetet a követőknek vagy naplózhat egy belső "
-#~ "feljegyzést."
-
-#~ msgid "Extra features"
-#~ msgstr "Extra jellemzők"
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "Generate tasks from sale orders"
-#~ msgstr "Feladat generálása megrendelésből"
-
-#~ msgid "Helpdesk & Support"
-#~ msgstr "Ügyfélszolgálat & Támogatás"
-
-#~ msgid ""
-#~ "Holds visibility of the tasks or issues that belong to the current "
-#~ "project:\n"
-#~ "- Portal : employees see everything;\n"
-#~ "   if portal is activated, portal users see the tasks or issues followed "
-#~ "by\n"
-#~ "   them or by someone of their company\n"
-#~ "- Employees Only: employees see all tasks or issues\n"
-#~ "- Followers Only: employees see only the followed tasks or issues; if "
-#~ "portal\n"
-#~ "   is activated, portal users see the followed tasks or issues."
-#~ msgstr ""
-#~ "A jelenlegi projekt téma feladatai vagy ügyei láthatóságát tartja "
-#~ "vissza:\n"
-#~ "- Portál : munkavállalók mindent látnak;\n"
-#~ "    ha a portál aktivált, portál felhasználók csak az általuk, vagy a "
-#~ "vállalatuk által követendő feladatokat és ügyeket látják\n"
-#~ "- Kizárólag Munkavállalók: munkavállalók látják az összes feladatot, "
-#~ "ügyet\n"
-#~ "- Csak a követők: munkavállalók csak a követett feladatokat,ügyeket "
-#~ "látják; ha a portál\n"
-#~ "    aktivált, portál felhasználók látják a követett feladatokat, ügyeket."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Last Modification Date"
-#~ msgstr "Utolsó módosítás dátuma"
-
-#~ msgid "Manage time estimation on tasks"
-#~ msgstr "Idő beosztás becslés szervezése a feladatokon"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "No automatic task creation"
-#~ msgstr "Nincs automatikus feladat létrehozás"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek akciót igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open"
-#~ msgstr "Megnyitás"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Projekt menü megnyitás"
-
-#~ msgid "Parent Tasks"
-#~ msgstr "Forrás feladatok"
-
-#~ msgid "Pending"
-#~ msgstr "Függőben lévő"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra "
-#~ "vonatkozó üzenetek kiküldéséhez.\n"
-#~ "- mindenki: mindenki tud üzenni\n"
-#~ "- ügyfelek: csak a hitelesített partnerek\n"
-#~ "- követők: csak az idevonatkozó dokumentum követői\n"
-
-#~ msgid "Privacy / Visibility"
-#~ msgstr "Szabályzat / Láthatóság"
-
-#~ msgid "Private Project: followers only"
-#~ msgstr "Privát projekt téma: kizárólag követőknek"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "Projekt idő egység"
-
-#~ msgid ""
-#~ "Provides timesheet support for the issues/bugs management in project.\n"
-#~ "-This installs the module project_issue_sheet."
-#~ msgstr ""
-#~ "A projekt témák ügyeinek/hibáinak szervezéséhez időbeosztás támogatást "
-#~ "ad.\n"
-#~ "-Ez a project_issue_sheet modult telepíti."
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Feladatonkénti időbeosztás sor felvétele"
-
-#~ msgid "Sale Service"
-#~ msgstr "Értékesítési szolgáltatás"
-
-#~ msgid "State"
-#~ msgstr "Állapot"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Feliratkozások"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Feladatok munkái a feladaton"
-
-#~ msgid "Templates of Projects"
-#~ msgstr "Projekt téma sablonok"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Ez lehetővé teszi a projekt kezelésben meghatározott ügyek bevitt "
-#~ "időbeosztás tételsor adataihoz a kiegészítést a dátum és felhasználó "
-#~ "tekintetében, a létrehozás, szerkesztés és törlés bármely irányú "
-#~ "megvalósításával.\n"
-#~ "-Ez a project_timesheet modult telepíti."
-
-#~ msgid ""
-#~ "This feature automatically creates project tasks from service products in "
-#~ "sale orders. In order to make it work,  the product has to be a service "
-#~ "and 'Create Task Automatically' has to be flagged on the procurement tab "
-#~ "in the product form.\n"
-#~ "-This installs the module sale_service."
-#~ msgstr ""
-#~ "Ez a tulajdonság automatikusan projekt téma feladatokat hoz létre a "
-#~ "vásárlói megrendelések szolgáltatás termékéről. Ahhoz, hogy ez működjön, "
-#~ "a terméknek szolgáltatásnak kell lennie és 'Feladatot automatikusan "
-#~ "hozzon létre' be kell jelölni a termék űrlap beszerzés fülén.\n"
-#~ "-Ez a sale_service modult telepíti."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "Ez állítja be a projektekben és a feladatokban használt mértékegységet.\n"
-#~ "Ha használja a projektekhez kapcsolt munkaidő-beosztás (project_timesheet "
-#~ "modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
-#~ "űrlapon."
-
-#~ msgid "Time Scheduling"
-#~ msgstr "Idő ütemezés"
-
-#~ msgid "Time on Tasks"
-#~ msgstr "Idő a Feladatokra"
-
-#~ msgid "Timesheet app for Chrome/Android/iOS"
-#~ msgstr "Időbeosztás alkalmazás  Chrome/Android/iOS eszközökhöz"
-
-#~ msgid "Timesheets"
-#~ msgstr "Munkaidő-beosztás"
-
-#~ msgid "Timesheets Invoicing"
-#~ msgstr "Időkiosztás számlázás"
-
-#~ msgid "Timesheets on Project"
-#~ msgstr "A projekt témák időkiosztásai"
-
-#~ msgid "Type of Account"
-#~ msgstr "Bankszámla típusa"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "You can save your reports to for easy reuse later"
-#~ msgstr "Elmentheti a  jelentéseit későbbi újbóli felhasználáshoz"
-
-#~ msgid "unknown"
-#~ msgstr "ismeretlen"

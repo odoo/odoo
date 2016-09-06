@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:43+0000\n"
 "PO-Revision-Date: 2016-08-12 13:25+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -751,6 +751,11 @@ msgstr "Bijlagen"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
+msgstr ""
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
 msgstr ""
 
 #. module: mail
@@ -2144,7 +2149,7 @@ msgstr "Inactieve alias"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2186,7 +2191,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr "Uitnodiging"
@@ -2308,7 +2313,7 @@ msgstr "Is melding"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "Is ingeschreven"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -3608,7 +3613,7 @@ msgstr "Privé kanalen"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Openbare kanalen"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3975,7 +3980,7 @@ msgstr "Smiley"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4671,7 +4676,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "U bent uitgenodigd om:"
@@ -4688,14 +4693,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "U heeft zich uitgeschreven van <b>%s</b>."
@@ -4862,80 +4867,3 @@ msgstr "verkoop"
 #, python-format
 msgid "this document"
 msgstr "dit document"
-
-#~ msgid ""
-#~ "* Smiley are only used for HTML code to display an image * Text (default "
-#~ "value) is use to substitute text with another text"
-#~ msgstr ""
-#~ "* Smileys zijn enkel gebruikt voor HTML code om een afbeelding te tonen * "
-#~ "Tekst (standaard waarde) is gebruikt om tekst te vervangen met andere "
-#~ "tekst"
-
-#~ msgid "Activity"
-#~ msgstr "Activiteit"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Bijlages zijn gelinkt aan het document via het model / res_id en aan het "
-#~ "bericht via dit veld."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automatisch opgeschoonde HTML-inhoud"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Zet automatisch vereist actie naar gelezen"
-
-#~ msgid "Click to add a contact in your address book."
-#~ msgstr "Klik om een contact toe te voegen in uw adresboek."
-
-#~ msgid "Compose a new message"
-#~ msgstr "Nieuw bericht"
-
-#~ msgid "Contacts"
-#~ msgstr "Contacten"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Conversatie is verkleind"
-
-#~ msgid "Join Group"
-#~ msgstr "Toetreden tot groep"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo helpt u gemakkelijk alle activiteiten te volgen gerelateerd met\n"
-#~ "een klant; discussies, geschiedenis van prospects,\n"
-#~ "documenten, etc."
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Rich-text/HTML versie van het bericht (tijdelijke aanduidingen kunnen "
-#~ "hier worden gebruikt)"
-
-#~ msgid "Send mail"
-#~ msgstr "Verstuur e-mail"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "De geëncodeerde HTML code die de shortcut vervangt"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
-
-#~ msgid "The shortcut which must be replace in the Chat Messages"
-#~ msgstr "De shortcode die moet vervangen worden in de chat berichten"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Traceringswaardes worden bewaard in een apart model. Dit veld staat de "
-#~ "reconstructie van traceringen toe en staat toe statistieken te genereren "
-#~ "op het model."
-
-#~ msgid "Unsubscribed"
-#~ msgstr "Uitgeschreven"

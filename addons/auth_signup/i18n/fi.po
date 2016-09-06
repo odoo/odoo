@@ -4,13 +4,14 @@
 #
 # Translators:
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-07-08 10:56+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-08-26 16:55+0000\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -114,7 +115,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} kutsuu sinut liittymään Odooseen"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -129,6 +130,7 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
+"<strong>Kutsusähköposti on lähetetty seuraavalla liittymislinkillä:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -177,9 +179,8 @@ msgstr ""
 
 #. module: auth_signup
 #: selection:res.users,state:0
-#, fuzzy
 msgid "Confirmed"
-msgstr "Vahvista"
+msgstr ""
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
@@ -212,7 +213,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Ei kirjautumista"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -253,7 +254,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Lähetä kutsu sähköpostilla"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login

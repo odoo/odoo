@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-05-16 11:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
@@ -36,7 +36,7 @@ msgid "# of Issues"
 msgstr "# predmeta"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:162
+#: code:addons/project_issue/models/project_issue.py:170
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -73,7 +73,6 @@ msgstr "Dodaj internu napomenu ..."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-#, fuzzy
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
@@ -86,11 +85,6 @@ msgid ""
 "                                           * Ready for next stage indicates "
 "the issue is ready to be pulled to the next stage"
 msgstr ""
-"Kanban stanje predmeta ukazuje na posebne situacije koje na njega utječu: \n"
-"  * Normalno je zadana situacija \n"
-"  * Blokirano ukazuje na nešto što sprečava napredak   \n"
-"  * Spremno za sljedeću fazu ukazuje da je  je spreman da je predmet spreman "
-"da se povuče na sljedeću fazu"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -224,9 +218,8 @@ msgstr "Kreirao"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
-#, fuzzy
 msgid "Created on"
-msgstr "Kreirao"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -234,13 +227,13 @@ msgid "Creation Date"
 msgstr "Datum kreiranja"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:300
+#: code:addons/project_issue/models/project_issue.py:310
 #, python-format
 msgid "Customer"
 msgstr "Kupac"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:302
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "Customer Email"
 msgstr "Email kupca"
@@ -373,7 +366,7 @@ msgid "High"
 msgstr "Visoka"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
+#: code:addons/project_issue/models/project_issue.py:285
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -441,9 +434,8 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-#, fuzzy
 msgid "Issue ready for next stage"
-msgstr "Spreman za sljedeću fazu"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -516,9 +508,8 @@ msgstr "Promijenio"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr "Promijenio"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -549,7 +540,7 @@ msgid "New"
 msgstr "Novi"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:279
+#: code:addons/project_issue/models/project_issue.py:289
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -560,16 +551,15 @@ msgid "Next Action"
 msgstr "Sljedeća akcija"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:326
+#: code:addons/project_issue/models/project_issue.py:336
 #, python-format
 msgid "No Subject"
 msgstr "Bez naslova"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
-#, fuzzy
 msgid "No customer rating"
-msgstr "Email kupca"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -685,9 +675,8 @@ msgstr "Spreman za sljedeću fazu"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-#, fuzzy
 msgid "Ready to reopen"
-msgstr "Prosječno kašnjenje za otvaranje"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -727,9 +716,8 @@ msgstr "Task"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
-#, fuzzy
 msgid "Task Stage"
-msgstr "Faza"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
@@ -751,14 +739,11 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
-#, fuzzy
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate "
 "multiple email addresses with a comma"
 msgstr ""
-"Ove adrese e-pošte će biti dodane u CC polja svih ulaznih i izlaznih e-"
-"poruka ovog zapisa prije slanja. Više adresa odvojite zarezom."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -850,7 +835,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:197
+#: code:addons/project_issue/models/project_issue.py:205
 #, python-format
 msgid "issues"
 msgstr ""
@@ -864,74 +849,3 @@ msgstr ""
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna dodatna radnja"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjeg zapisa"
-
-#~ msgid "Followers"
-#~ msgstr "Pratitelji"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratitelji (Kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratitelji (Partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratitelj"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i povijest"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtijevaju aktivnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Sale Team"
-#~ msgstr "Prodajni tim"
-
-#~ msgid "Sales Team"
-#~ msgstr "Prodajni tim"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                             Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr ""
-#~ "Prodajni tim kojemu pripada slučaj. Odredite odgovornog korisnika te "
-#~ "podesite e-mail račun"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Update Date"
-#~ msgstr "Datum ažuriranja"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website poruke"
-
-#~ msgid "Website communication history"
-#~ msgstr "Povijest komunikacije Web stranice"
-
-#, fuzzy
-#~ msgid "project issue"
-#~ msgstr "Projektni predmeti"

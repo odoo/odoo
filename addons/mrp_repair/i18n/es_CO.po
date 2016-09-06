@@ -33,7 +33,6 @@ msgstr "(actualizar)"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-#, fuzzy
 msgid ""
 "* The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "repair order.\n"
@@ -45,19 +44,6 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-" * El estado 'Borrador' se establece automáticamente cuando el usuario "
-"introduce un nuevo y sin confirmar orden de reparación\n"
-"* El estado 'Confirmado' se establece cuando el usuario confirma la orden de "
-"reparación.\n"
-"* El estado 'Listo para Reparar' se usa para iniciar la reparación. El "
-"usuario sólo puede iniciar la reparación cuando se confirma la orden de "
-"repación.\n"
-"* El estado 'Para ser facturado' se usa para generar la factura antes o "
-"después de que se realice la facturación.\n"
-"* El estado 'Realizado' se establece cuando la orden de reparación se "
-"completa.\n"
-"* El estado 'Cancelado' se establece cuando el usuario cancela la orden de "
-"reparación."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -96,9 +82,8 @@ msgstr "<strong>Producto a reparar:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#, fuzzy
 msgid "<strong>Shipping address :</strong>"
-msgstr "<strong>Fecha de impresión:</strong>"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -692,9 +677,8 @@ msgstr "Ordenes de reparación"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-#, fuzzy
 msgid "Search Repair Orders"
-msgstr "Buscar Órdenes de Reparación"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -885,98 +869,8 @@ msgstr ""
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:493
 #: code:addons/mrp_repair/models/mrp_repair.py:555
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
-"Debe seleccionar una tarifa en el formulario de Reparación.\n"
-"Hágalo por favor antes de seleccionar un producto."
-
-#~ msgid ""
-#~ " * The 'Draft' status is set automatically as draft when repair order in "
-#~ "draft status.                         \n"
-#~ "* The 'Confirmed' status is set automatically as confirm when repair "
-#~ "order in confirm status.                         \n"
-#~ "* The 'Done' status is set automatically when repair order is "
-#~ "completed.                        \n"
-#~ "* The 'Cancelled' status is set automatically when user cancel repair "
-#~ "order."
-#~ msgstr ""
-#~ " * El estado 'Borrador' se establece automáticamente cuando el usuario "
-#~ "introduce una orden de reparación.\n"
-#~ "* El estado 'Confirmado' se establece automáticamente cuando el usuario "
-#~ "confirma la orden.\n"
-#~ "* El estado 'Realizado' se establece automáticamente cuando la orden de "
-#~ "reparación se completa.\n"
-#~ "* El estado 'Cancelado' se establece automáticamente cuando el usuario "
-#~ "cancela la orden."
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Active ID not Found"
-#~ msgstr "ID Activo no Encontrado"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Asociados)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es Seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del Último Mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de mensajes y de comunicación"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Reair Orders"
-#~ msgstr "Órdenes de Reparación"
-
-#~ msgid "Search Reair Orders"
-#~ msgstr "Buscar Órdenes de Reparación"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Dirección de envío :"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes sin Leer"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes no Leídos"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Sitio Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicación del sitio web"
-
-#~ msgid "unknown"
-#~ msgstr "desconocida"

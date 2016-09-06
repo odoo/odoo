@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-11 08:07+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
+"PO-Revision-Date: 2016-08-30 17:05+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -35,6 +35,8 @@ msgid ""
 "% set access_url = access_action['type'] == 'ir.actions.act_url' and "
 "access_action['url'] or '/report/pdf/account.report_invoice/' + str(object."
 "id)\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions."
+"act_url'\n"
 "\n"
 "<p>Dear\n"
 "% if object.partner_id.is_company and object.child_ids:\n"
@@ -53,6 +55,7 @@ msgid ""
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
+"% if is_inline:\n"
 "<p style=\"margin-left: 30px;\">\n"
 "    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
 "line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
@@ -62,6 +65,8 @@ msgid ""
 "#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
 "</a>\n"
 "</p>\n"
+"% endif\n"
+"\n"
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
@@ -97,7 +102,7 @@ msgstr "Aantal decimalen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr "# lijnen"
+msgstr "# Regels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -107,7 +112,7 @@ msgstr "# van de transactie"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Factuur (Ref ${object.number or 'n/a'})"
+msgstr "${object.company_id.name} factuur (Ref ${object.number or 'n/b'})"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:469
@@ -142,7 +147,7 @@ msgstr ", indien boekhouding of inkoop is geïnstalleerd."
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> Afgepunt"
+msgstr "-> Afletteren"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -396,7 +401,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Balance in Odoo\">Balans in Odoo</span>"
+msgstr "<span title=\"Balance in Odoo\">Balans in GB</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -416,7 +421,7 @@ msgstr "<span> Tot </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "<span>Duplicate</span>"
-msgstr "<span>Dubbele</span>"
+msgstr "<span>Kopie factuur</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -885,14 +890,14 @@ msgstr ""
 "gaat."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1342
+#: code:addons/account/models/account_invoice.py:1347
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
 msgstr ""
 "Bij een betalingsvoorwaarde moet de laatste regel van het type Saldo zijn."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1345
+#: code:addons/account/models/account_invoice.py:1350
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
@@ -1718,12 +1723,12 @@ msgstr "Verschuldigd bedrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr "Restbedrag in Bedrijfsvaluta"
+msgstr "Restbedrag in bedrijfsvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr "Restbedrag in Factuurvaluta"
+msgstr "Restbedrag in factuurvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -2005,9 +2010,9 @@ msgstr "Automatische formatering"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
-#, fuzzy, python-format
+#, python-format
 msgid "Automatic reconciliation"
-msgstr "Automatisch afgeletterde regels"
+msgstr "Automatisch afletteren"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:475
@@ -2219,7 +2224,7 @@ msgstr "Bankafschriften zijn volledig afgeletterd"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
 msgid "Base"
-msgstr "Basis"
+msgstr "Grondslag"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -2270,7 +2275,7 @@ msgstr "Facturatie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr "Rekeningen"
+msgstr "Facturen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2644,7 +2649,7 @@ msgstr "Controleer eindsaldo"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_is_difference_zero
 msgid "Check if difference is zero."
-msgstr "Controleer of het verschil nul is"
+msgstr "Controleer of het verschil nul is."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_reconcile
@@ -3676,7 +3681,7 @@ msgstr "Vervallen"
 #: model:account.account.type,name:account.data_account_type_depreciation
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Depreciation"
-msgstr "Afschrijving"
+msgstr "Afschrijvingen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.cash_box_out_form
@@ -4195,7 +4200,7 @@ msgstr "Kosten"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
 msgid "External Reference"
-msgstr "Externe Referentie"
+msgstr "Externe referentie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4435,12 +4440,12 @@ msgstr "Vrije referentie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr "Uit Crediteurenrekeningen"
+msgstr "Van crediteuren"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Receivable accounts"
-msgstr "Uit Debiteurenrekening"
+msgstr "Van debiteuren"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -5262,7 +5267,7 @@ msgstr "Invoice Tax"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the refund"
-msgstr "Factuur waar dit een creditnota voor is"
+msgstr "Factuur waar dit een creditfactur voor is"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
@@ -5281,7 +5286,7 @@ msgid "Invoice refund"
 msgstr "Creditering factuur"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1431
+#: code:addons/account/models/account_invoice.py:1436
 #, python-format
 msgid "Invoice sent"
 msgstr "Factuur verzonden"
@@ -5918,12 +5923,12 @@ msgstr "Legale naam"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr ""
+msgstr "Juridische notities"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Juridische notities welke op de factuur moeten worden afgedrukt."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:145
@@ -6217,7 +6222,7 @@ msgstr "Memoriaal boekingen"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:82
 #, python-format
 msgid "Modify models"
-msgstr ""
+msgstr "Wijzig modellen"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -6740,6 +6745,9 @@ msgid ""
 "secondary currency or that don't have one. Edit your journal items or make "
 "another selection before proceeding any further."
 msgstr ""
+"Bewerking niet toegestaan. U kunt alleen boekingen afletteren welke dezelfde "
+"tweede valuta hebben of welke geen tweede valuta hebben. Bewerk uw boekingen "
+"of maak een andere selectie voordat u verder gaat. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -7240,7 +7248,7 @@ msgid "Percentage of balance"
 msgstr "Percentage van balans"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1413
+#: code:addons/account/models/account_invoice.py:1418
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
 msgstr ""
@@ -7382,7 +7390,7 @@ msgstr "Prefix van de hoofdcontantenrekening"
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr "Voorafbetalingen"
+msgstr "Vooruitbetaalde kosten"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -7605,7 +7613,7 @@ msgstr "Debiteuren rekening"
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
-msgstr "Debiteuren rekeningen"
+msgstr "Debiteuren"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7613,7 +7621,7 @@ msgstr "Debiteuren rekeningen"
 #: selection:account.report.partner.ledger,result_selection:0
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Receivable and Payable Accounts"
-msgstr "Debiteuren en crediteuren rekeningen"
+msgstr "Debiteuren en crediteuren"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -8062,7 +8070,7 @@ msgstr "Verkoper"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:89
 #, python-format
 msgid "Save and New"
-msgstr ""
+msgstr "Opslaan & nieuw"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
@@ -8122,37 +8130,37 @@ msgstr "Zoek belastingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_account_id
 msgid "Second Account"
-msgstr ""
+msgstr "Tweede rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_amount
 msgid "Second Amount"
-msgstr ""
+msgstr "Tweede bedrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_amount_type
 msgid "Second Amount type"
-msgstr ""
+msgstr "Tweede bedragtype"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_analytic_account_id
 msgid "Second Analytic Account"
-msgstr ""
+msgstr "Tweede kostenplaats"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_journal_id
 msgid "Second Journal"
-msgstr ""
+msgstr "Tweede dagboek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_label
 msgid "Second Journal Item Label"
-msgstr ""
+msgstr "Tweede boekingsregel label"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_second_tax_id
 msgid "Second Tax"
-msgstr ""
+msgstr "Tweede belasting"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_type
@@ -8219,7 +8227,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_template_action
 msgid "Sellable Products"
-msgstr ""
+msgstr "Verkoopbare producten"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -8561,7 +8569,7 @@ msgstr "Belastingrekening voor terugbetalingen"
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Tax Adjustments"
-msgstr ""
+msgstr "Belasting aanpassing"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -8597,7 +8605,7 @@ msgstr "Belasting omschrijving"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax Excluded Price"
-msgstr ""
+msgstr "Prijs exclusief BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
@@ -8660,7 +8668,7 @@ msgstr "Belasting sjablonen"
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_adjustment
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tax_adjustment
 msgid "Tax adjustment"
-msgstr ""
+msgstr "BTW aanpassing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_tax_calculation_rounding_method
@@ -9110,7 +9118,7 @@ msgid ""
 "accounts!"
 msgstr ""
 "De relatie moet dezelfde zijn voor alle regels van de debiteuren- en "
-"crediteurenrekeningen !"
+"crediteurenrekeningen!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
@@ -9149,7 +9157,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1275
+#: code:addons/account/models/account_invoice.py:1280
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -9714,7 +9722,7 @@ msgstr "Totaal in bedrijfsvaluta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
 msgid "Total in Invoice Currency"
-msgstr ""
+msgstr "Totaal in factuurvaluta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_total_entry_encoding
@@ -10179,8 +10187,8 @@ msgid "Warning on the Invoice"
 msgstr "Waarschuwing bij een factuur"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1214
-#: code:addons/account/models/account_invoice.py:1274
+#: code:addons/account/models/account_invoice.py:1219
+#: code:addons/account/models/account_invoice.py:1279
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -10395,6 +10403,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
+"Het is niet mogelijk om een boeking toe te voegen of te wijzigen op een "
+"datum gelijk of na de blokkeerdatum %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:190
@@ -10587,7 +10597,7 @@ msgid "You must define a Start Date"
 msgstr "U moet een startdatum ingeven."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1215
+#: code:addons/account/models/account_invoice.py:1220
 #, python-format
 msgid "You must first select a partner!"
 msgstr "U moet eerst een relatie te selecteren!"
@@ -10877,7 +10887,7 @@ msgstr "report.account.report_generalledger"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
 msgid "report.account.report_journal"
-msgstr ""
+msgstr "report.account.report_journal"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_overdue
@@ -10977,467 +10987,3 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Tel"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "    <p>A new invoice is available for you: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br /"
-#~ ">\n"
-#~ "       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email "
-#~ "or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>  \n"
-#~ "    \n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>It is also possible to directly pay with Paypal:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/"
-#~ "img/btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "    \n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "    <p>Hallo ${object.partner_id.name},</p>\n"
-#~ "    <p>Er is een nieuwe factuur voor u: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Factuurnummer : <strong>${object.number}</strong><br /"
-#~ ">\n"
-#~ "       &nbsp;&nbsp;Factuurtotaal: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Factuurdatum: ${object.date_invoice}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Bestelreferentie: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Uw contactpersoon: <a href=\"mailto:${object.user_id."
-#~ "email or ''}?subject=Factuur%20${object.number}\">${object.user_id.name}</"
-#~ "a>\n"
-#~ "       % endif\n"
-#~ "    </p>  \n"
-#~ "    \n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>U kunt ook meteen via Paypal betalen:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/"
-#~ "img/btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "    \n"
-#~ "    <br/>\n"
-#~ "    <p>Mocht u vragen hebben, aarzel dan niet om ons te contacteren.</p>\n"
-#~ "    <p>Wij danken u voor het vertrouwen in ${object.company_id.name or "
-#~ "'ons'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Telefoon:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Website :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-
-#~ msgid ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
-#~ "number.\n"
-#~ " * The 'Open' status is used when user create invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-#~ msgstr ""
-#~ " * De 'Concept' status wordt gebruikt wanneer een gebruiker een nieuwe en "
-#~ "niet bevestigde factuur ingeeft.\n"
-#~ " * De 'Pro-forma' status wordt gebruikt bij een factuur in de Pro-forma "
-#~ "staat. De factuur heeft geen factuurnummer.\n"
-#~ " * De 'Open' status wordt gebruikt als de gebruiker een factuur maakt en "
-#~ "een factuurnummer is toegekend. De factuur blijft in deze staat zolang de "
-#~ "factuur niet is betaald.\n"
-#~ " * De 'Betaald' status wordt automatisch ingesteld wanneer de factuur is "
-#~ "betaald. De bijhorende boekingen kunnen wel of niet zijn afgeletterd.\n"
-#~ "* De 'Geannuleerd' status wordt gebruikt wanneer de gebruiker de factuur "
-#~ "annuleert."
-
-#~ msgid "# of Invoices"
-#~ msgstr "# Facturen"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} Factuur (Referentie ${object.number or "
-#~ "'onbekend'})"
-
-#~ msgid "<span title=\"Balance in Odoo\">Balance in Odoo</span>"
-#~ msgstr "<span title=\"Balance in Odoo\">Balans in Odoo</span>"
-
-#~ msgid "<strong>Sub-Total :</strong>"
-#~ msgstr "<strong>Subtotaal :</strong>"
-
-#~ msgid "A bank account can anly belong to one journal."
-#~ msgstr "Een bankrekening kan slechts tot een dagboek behoren."
-
-#~ msgid "A list of your customer and suppler payment terms."
-#~ msgstr "Een lijst van uw klant en leverancier hun betalingscondities."
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid ""
-#~ "Aged Partner Balance is a more detailed report of your receivables by "
-#~ "intervals. When opening that report, Odoo asks for the name of the "
-#~ "company, the Start Date and the size of the interval to be analyzed (in "
-#~ "days). Odoo then calculates a table of credit balance by start Date. So "
-#~ "if you request an interval of 30 days Odoo generates an analysis of "
-#~ "creditors for the past month, past two months, and so on."
-#~ msgstr ""
-#~ "Dit openstaande posten rapport is een meer gedetailleerd rapport van uw "
-#~ "vorderingen in de tijd. Bij het openen van het rapport vraagt Odoo naar "
-#~ "de naam van het bedrijf, de startdatum en de grootte van het te "
-#~ "analyseren interval (in dagen). Odoo toont dan een overzicht van "
-#~ "openstaande posten vanaf de startdatum. Dus als u een interval van 30 "
-#~ "dagen opgeeft, genereert odoo een analyse van de schuldeisers van de "
-#~ "afgelopen maand, afgelopen twee maanden, enz."
-
-#~ msgid "Allows you multi currency environment"
-#~ msgstr "Dit geeft u de mogelijkheid van het gebruik van meerdere valuta's."
-
-#~ msgid ""
-#~ "Asset management: This allows you to manage the assets owned by a company "
-#~ "or a person. It keeps track of the depreciation occurred on those assets, "
-#~ "and creates account move for those depreciation lines.\n"
-#~ "\n"
-#~ "-This installs the module account_asset. If you do not check this box, "
-#~ "you will be able to do invoicing & payments, but not accounting (Journal "
-#~ "Items, Chart of Accounts, ...)"
-#~ msgstr ""
-#~ "Activabeheer : stelt u in staat activa te beheren voor een bedrijf/"
-#~ "persoon.\n"
-#~ "                    Het registreert afschrijvingen voor activa, en maakt "
-#~ "boekingen voor de afschrijvingen.\n"
-#~ "                    Hiermee installeert u de module 'account_asset'. Als "
-#~ "u dit niet aanvinkt, kunt u wel facturen en betalingen\n"
-#~ "                    registreren, maar geen financiële administratie "
-#~ "voeren (rekeningschema, boekingen, ....)"
-
-#~ msgid "Bank Synchronization"
-#~ msgstr "Bank synchronisatie"
-
-#~ msgid "Bills &amp; Refunds"
-#~ msgstr "Facturen &amp; Credit facturen"
-
-#~ msgid ""
-#~ "Chart of Accounts has been\n"
-#~ "                            installed. You should review it and create "
-#~ "any additionnal accounts."
-#~ msgstr ""
-#~ "Rekeningschema is\n"
-#~ "geïnstalleerd. U zou het moeten controleren en additionele rekeningen "
-#~ "moeten aanmaken."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "Direct Costs"
-#~ msgstr "Directe kosten"
-
-#~ msgid "Exchange Rate Entry of"
-#~ msgstr "Wisselkoers mutatie van"
-
-#~ msgid "Fixed day of the following month"
-#~ msgstr "Vaste dag van de volgende maand"
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid ""
-#~ "Get your bank statements from you bank and import them through plaid."
-#~ "com.\n"
-#~ "-that installs the module account_plaid."
-#~ msgstr ""
-#~ "Download het bankafschrift vanuit je bank software en importeer deze bij "
-#~ "plaid.com\n"
-#~ "- dit installeert de module account_plaid."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "OFX format.\n"
-#~ "This installs the module account_bank_statement_import_ofx."
-#~ msgstr ""
-#~ "Download het bankafschrift vanuit je bank software en importeer deze in "
-#~ "Odoo in het .OFX formaat\n"
-#~ "- dit installeert de module ccount_bank_statement_import_ofx."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "QIF format.\n"
-#~ "This installs the module account_bank_statement_import_qif."
-#~ msgstr ""
-#~ "Download het bankafschrift vanuit je bank software en importeer deze in "
-#~ "Odoo in het .QIFformaat\n"
-#~ "- dit installeert de module ccount_bank_statement_import_qif."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them through yodlee."
-#~ "com.\n"
-#~ "-that installs the module account_yodlee."
-#~ msgstr ""
-#~ "Download het bankafschrift vanuit je bank software en importeer deze bij "
-#~ "yodlee.com\n"
-#~ "- dit installeert de module account_yodlee."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Invoices &amp; Refunds"
-#~ msgstr "Facturen &amp; Terugbetalingen"
-
-#~ msgid "Invoicing"
-#~ msgstr "Facturatie"
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Less Cost of Sales"
-#~ msgstr "Minus verkoopkosten"
-
-#~ msgid "Less Current Liabilities"
-#~ msgstr "Minus huidige passiva"
-
-#~ msgid "Less Expenses"
-#~ msgstr "Minus uitgaven"
-
-#~ msgid "Less Non-Current Liabilities"
-#~ msgstr "Minus vaste activa"
-
-#~ msgid "Less Payable Accounts"
-#~ msgstr "Minus crediteurrekeningen"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Modify presets"
-#~ msgstr "Voorinstellingen wijzigen"
-
-#~ msgid "New Operation"
-#~ msgstr "Nieuwe handeling"
-
-#~ msgid "New preset"
-#~ msgstr "Nieuwe voorinstelling"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Open account dashboard menu"
-#~ msgstr "Open menu Account Dashboard"
-
-#~ msgid "Paypal Account"
-#~ msgstr "Paypal account"
-
-#~ msgid "Paypal account"
-#~ msgstr "Paypal account"
-
-#~ msgid ""
-#~ "Paypal account (email) for receiving online payments (credit card, etc.)\n"
-#~ "             If you set a paypal account, the customer  will be able to "
-#~ "pay your invoices or quotations\n"
-#~ "             with a button \"Pay with  Paypal\" in automated emails or "
-#~ "through the Odoo portal."
-#~ msgstr ""
-#~ "Uw Paypal account (e-mail) voor het ontvangen van online betalingen "
-#~ "(credit card, etc.)\n"
-#~ "Wanneer er een paypal account is ingesteld, kan de klant uw facturen of "
-#~ "offertes betalen\n"
-#~ "met een knop \"Betalen met Paypal\" in geautomatiseerde e-mails of in het "
-#~ "Odoo portaal."
-
-#~ msgid "Paypal username (usually email) for receiving online payments."
-#~ msgstr ""
-#~ "Paypal gebruikersnaam (vaak het emailadres) voor het ontvangen van online "
-#~ "betalingen."
-
-#~ msgid "Price"
-#~ msgstr "Bedrag"
-
-#~ msgid ""
-#~ "Programmation error : domain_maker_move_line_amount requires comparator "
-#~ "'=' or '<'"
-#~ msgstr ""
-#~ "Programmeerfout: domain_maker_move_line_amount moet het vergelijkteken "
-#~ "'=' of '<' hebben"
-
-#~ msgid "Reporting"
-#~ msgstr "Rapportages"
-
-#~ msgid "Sales Team"
-#~ msgstr "Verkoopteam"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "Selecteer 'Verkoop' voor klantfactuur dagboeken. Selecteer 'Inkoop' voor "
-#~ "leverancierfacturen dagboeken. Selecteer 'Kas' of 'Bank' voor dagboeken, "
-#~ "welke worden gebruikt in klant- en leveranciersbetalingen. Selecteer "
-#~ "'Normaal' voor diverse verwerkingen. Selecteer 'Opening/Afsluit situatie' "
-#~ "voor boekingen gegenereerd in het nieuwe fiscale jaar."
-
-#~ msgid ""
-#~ "Technical field used to keep track of the origin of journal entries "
-#~ "created in case of fluctuation of the currency exchange rate. This is "
-#~ "needed when cancelling the source: it will post the inverse journal entry "
-#~ "to cancel that part too."
-#~ msgstr ""
-#~ "Technisch veld om de oorsprong van boekingen op te slaan indien er "
-#~ "verschillen in wisselkoers zijn. Dit is nodig wanneer u een boeking "
-#~ "annuleert; het zal immers ook het omgekeerde deel van de boeking "
-#~ "annuleren. "
-
-#~ msgid "The bank statement line was already reconciled."
-#~ msgstr "Bankafschrift was reeds afgeletterd"
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or "
-#~ "select a multi-currency view on the journal."
-#~ msgstr ""
-#~ "De geselecteerde rekening van uw journalboeking vraagt om een tweede "
-#~ "valuta. U moet de tweede valuta op de rekening verwijderen of selecteer "
-#~ "een multi-valuta overzicht van de boeking."
-
-#~ msgid ""
-#~ "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-#~ msgstr ""
-#~ "Tip: Druk op CTRL-Enter om alle regels met overeenkomend saldo af te "
-#~ "letteren. "
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ongelezen berichten"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
-
-#~ msgid "You cannot change the tax, you should remove and recreate lines."
-#~ msgstr ""
-#~ "Het is niet mogelijk de belastingen te wijzigen. U dient de regels te "
-#~ "verwijderen en opnieuw in te geven."
-
-#~ msgid "e.g. sales@odoo.com"
-#~ msgstr "bijv. verkoop@uwbedrijf.nl"
-
-#~ msgid "${object.subject}"
-#~ msgstr "${object.subject}"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-06 07:44+0000\n"
 "PO-Revision-Date: 2016-04-27 09:13+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -34,7 +34,7 @@ msgid "# of Issues"
 msgstr "Tapausten lukumäärä"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:162
+#: code:addons/project_issue/models/project_issue.py:170
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
@@ -71,7 +71,6 @@ msgstr "Lisää sisäinen ilmoitus..."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-#, fuzzy
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
@@ -84,10 +83,6 @@ msgid ""
 "                                           * Ready for next stage indicates "
 "the issue is ready to be pulled to the next stage"
 msgstr ""
-"Tapauksen Kanban tila kuvaa erityistilanteita jotka vaikuttavat tapaukseen:\n"
-"* Normal: oletustilanne\n"
-"* Blocked: jokin asia estää tapauksen käsittelyä eteenpäin\n"
-"* Ready for next stage: tapaus voidaan siirtää seuraavaan vaiheeseen"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -220,9 +215,8 @@ msgstr "Luonut"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
-#, fuzzy
 msgid "Created on"
-msgstr "Luonut"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -230,13 +224,13 @@ msgid "Creation Date"
 msgstr "Luontipäivämäärä"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:300
+#: code:addons/project_issue/models/project_issue.py:310
 #, python-format
 msgid "Customer"
 msgstr "Asiakas"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:302
+#: code:addons/project_issue/models/project_issue.py:312
 #, python-format
 msgid "Customer Email"
 msgstr "Asiakkaan sähköposti"
@@ -369,7 +363,7 @@ msgid "High"
 msgstr "Korkea"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
+#: code:addons/project_issue/models/project_issue.py:285
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -437,9 +431,8 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-#, fuzzy
 msgid "Issue ready for next stage"
-msgstr "Valmis seuraavaan vaiheeseen"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -512,9 +505,8 @@ msgstr "Viimeksi päivittänyt"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-#, fuzzy
 msgid "Last Updated on"
-msgstr "Viimeksi päivittänyt"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -545,7 +537,7 @@ msgid "New"
 msgstr "Uusi"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:279
+#: code:addons/project_issue/models/project_issue.py:289
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -556,16 +548,15 @@ msgid "Next Action"
 msgstr "Seuraava toimenpide"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:326
+#: code:addons/project_issue/models/project_issue.py:336
 #, python-format
 msgid "No Subject"
 msgstr "Ei aihetta"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
-#, fuzzy
 msgid "No customer rating"
-msgstr "Asiakkaan sähköposti"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -681,9 +672,8 @@ msgstr "Valmis seuraavaan vaiheeseen"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-#, fuzzy
 msgid "Ready to reopen"
-msgstr "Keskimääräinen viive avaamiseen"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -723,9 +713,8 @@ msgstr "Tehtävä"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
-#, fuzzy
 msgid "Task Stage"
-msgstr "Vaihe"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
@@ -747,15 +736,11 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
-#, fuzzy
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate "
 "multiple email addresses with a comma"
 msgstr ""
-"Nämä sähköpostiosoitteet lisätään cc (kopio viestistä) kenttään tähän "
-"tietueeseen liittyvien sähköpostien osalta. Erota useammat osoitteet "
-"pilkulla."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -848,7 +833,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:197
+#: code:addons/project_issue/models/project_issue.py:205
 #, python-format
 msgid "issues"
 msgstr "tapaukset"
@@ -862,74 +847,3 @@ msgstr ""
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Sale Team"
-#~ msgstr "Myyntitiimi"
-
-#~ msgid "Sales Team"
-#~ msgstr "Myyntitiimi"
-
-#~ msgid ""
-#~ "Sales team to which Case belongs to.                             Define "
-#~ "Responsible user and Email account for mail gateway."
-#~ msgstr ""
-#~ "Myyntitiimi jolle tapaus kuuluu. Määrittele vastuuhenkilö ja "
-#~ "sähköpostitili sähköpostin välityspalvelimelle."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Update Date"
-#~ msgstr "Päivityksen ajankohta"
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
-
-#, fuzzy
-#~ msgid "project issue"
-#~ msgstr "Projektin huolenaihe"

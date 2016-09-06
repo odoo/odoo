@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"POT-Creation-Date: 2016-09-06 07:45+0000\n"
 "PO-Revision-Date: 2016-05-22 07:22+0000\n"
 "Last-Translator: Ahmet Altınışık <aaltinisik@altinkaya.com.tr>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -43,7 +43,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:728
+#: code:addons/product/product.py:729
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -1462,7 +1462,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:1013 sql_constraint:product.product:0
+#: code:addons/product/product.py:1015 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
@@ -1703,6 +1703,13 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Fiyat listesi sürümüne bağlı birim için Ürün Fiyatını hesapla"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
 #: model:ir.model.fields,field_description:product.field_product_template_rental
 msgid "Can be Rent"
@@ -1798,9 +1805,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
-#, fuzzy
 msgid "Companies"
-msgstr "Firma"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -3037,7 +3043,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:833
+#: code:addons/product/product.py:835
 #, python-format
 msgid "Products: "
 msgstr "Ürünler: "
@@ -3072,9 +3078,8 @@ msgstr "Miktar"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
-#, fuzzy
 msgid "Quantity per Package"
-msgstr "Pakete göreMiktar"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -3441,9 +3446,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
-#, fuzzy
 msgid "The total number of products you can have per pallet or box."
-msgstr "Palete veya kutuya koyabileceğiniz toplam ürün sayısı"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -3534,12 +3538,9 @@ msgstr "Tür"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
-#, fuzzy
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Aktif kutudaki seçimi kaldırırsanız ölçü birimini silmeden etkisiz "
-"kılabilirsiniz."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3654,9 +3655,8 @@ msgstr "Tedarikçi Bilgisi"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
-#, fuzzy
 msgid "Vendor Pricelists"
-msgstr "Diğer FiyatListesi"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3968,209 +3968,3 @@ msgstr "to"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 msgid "unknown"
 msgstr "bilinmeyen"
-
-#~ msgid ""
-#~ "17\" Monitor\n"
-#~ "6GB RAM\n"
-#~ "Hi-Speed 234Q Processor\n"
-#~ "QWERTY keyboard"
-#~ msgstr ""
-#~ "17\" Monitör\n"
-#~ "6GB RAM\n"
-#~ "Yüksek Hızlı 234Q İşlemci\n"
-#~ "QWERTY klavye"
-
-#~ msgid "75 percent less reflection."
-#~ msgstr "Yüzde 75 daha az yansıma."
-
-#~ msgid ""
-#~ "A consumable is a product for which you don't manage stock, a service is "
-#~ "a non-material product provided by a company or an individual."
-#~ msgstr ""
-#~ "Bir tüketim maddesi, stok yönetimim olmayan bir üründür, bir servis bir "
-#~ "firma ya da şahıs tarafından sağlanan malzeme olmayan bir üründür."
-
-#~ msgid "Action Needed"
-#~ msgstr "Eylem Gerekiyor"
-
-#~ msgid "All in one hi-speed printer with fax and scanner."
-#~ msgstr "Hepsi birarada yüksek hızlı yazıcı, faks ve tarayıcı ile."
-
-#~ msgid "Blank CD"
-#~ msgstr "Boş CD"
-
-#~ msgid "Blank DVD-RW"
-#~ msgstr "Boş DVD-RW"
-
-#~ msgid "Characteristics"
-#~ msgstr "Karakteristik"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#~ msgid "End of Lifecycle"
-#~ msgstr "Yaşam Döngüsü Bitmiş"
-
-#~ msgid "External Hard disk"
-#~ msgstr "Harici Hard disk"
-
-#~ msgid "Followers"
-#~ msgstr "İzleyiciler"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "İzleyiciler (Kanallar)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "İzleyiciler (İş ortakları)"
-
-#~ msgid "Friendly to the environment."
-#~ msgstr "Çevre dostu"
-
-#~ msgid "Full featured image editing software."
-#~ msgstr "Tam özellikli resim düzenleme yazılımı."
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of product categories."
-#~ msgstr "Ürün kategorilerini gösterirken sıra numarası verir"
-
-#~ msgid "GrapWorks Software"
-#~ msgstr "GrapWorks Yazılımı"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Bürüt Ağırlık"
-
-#~ msgid "HDD on Demand"
-#~ msgstr "HDD İsteğe göre"
-
-#~ msgid ""
-#~ "Hands free headset for laptop PC with in-line microphone and headphone "
-#~ "plug."
-#~ msgstr ""
-#~ "Mikrofonu içinde ve eller serbest dizüstü PC kulaklığı ve kulaklık fişi."
-
-#~ msgid "Headset USB"
-#~ msgstr "Kulaklık USB"
-
-#~ msgid "Headset for laptop PC with USB connector."
-#~ msgstr "Dizüstü bilgisayar için USB bağlantılı Kulaklık."
-
-#~ msgid "Headset standard"
-#~ msgstr "Standart kulaklık"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#~ msgid "In Development"
-#~ msgstr "Geliştirilmekte"
-
-#~ msgid "Ink Cartridge"
-#~ msgstr "Mürekkep Kartuşu"
-
-#~ msgid "Is Follower"
-#~ msgstr "Takipçi mi"
-
-#~ msgid "Keep it clean."
-#~ msgstr "Temiz tut."
-
-#~ msgid "Key Features"
-#~ msgstr "Kilit Özellikler"
-
-#~ msgid "Laptop S3450"
-#~ msgstr "Dizüstü S3450"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Son Mesaj Tarihi"
-
-#~ msgid "Manage Secondary Unit of Measure"
-#~ msgstr "İkinci Ölçü Birimini Yönetme"
-
-#~ msgid "Messages"
-#~ msgstr "Mesajlar"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mesajlar ve iletişim geçmişi"
-
-#~ msgid "Motherboard A20Z7"
-#~ msgstr "Anakart A20Z7"
-
-#~ msgid "Multimedia Speakers"
-#~ msgstr "Çoklu Ortam Hoparlörleri"
-
-#~ msgid "Number of Actions"
-#~ msgstr "İşlem Sayısı"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Eylem gerektiren mesaj sayısı"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Okunmamış mesaj sayısı"
-
-#~ msgid "Obsolete"
-#~ msgstr "Kullanılmayan"
-
-#~ msgid ""
-#~ "Office Editing Software with word processing, spreadsheets, "
-#~ "presentations, graphics, and databases..."
-#~ msgstr ""
-#~ "Office Düzenleme Yazılımı, kelime işlemcisi, çalışma tablosu, sunucu, "
-#~ "grafik ve veritabanı ile..."
-
-#~ msgid "Office Suite"
-#~ msgstr "Ofis Paketi"
-
-#~ msgid "On demand hard-disk having capacity based on requirement."
-#~ msgstr "İstek üzerine gereksinimlere göre kapasiteye sahip hard disk."
-
-#~ msgid "Pen drive, SP-2"
-#~ msgstr "Kalem sürücü, SP-2"
-
-#~ msgid "Pen drive, SP-4"
-#~ msgstr "Kalem sürücü, SP-4"
-
-#~ msgid "Printer, All-in-one"
-#~ msgstr "Yazıcı, Hepsi birarada"
-
-#~ msgid "Processor AMD 8-Core"
-#~ msgstr "AMD 8-Core İşlemci"
-
-#~ msgid "RAM SR3"
-#~ msgstr "RAM SR3"
-
-#~ msgid "Router R430"
-#~ msgstr "Yöneltici R430"
-
-#~ msgid "Status"
-#~ msgstr "Durumu"
-
-#~ msgid "Supplier Pricelist"
-#~ msgstr "Tedarikçi Fiyat Listesi"
-
-#~ msgid "Template Name"
-#~ msgstr "Şablon Adı"
-
-#~ msgid "Toner Cartridge"
-#~ msgstr "Toner Kartuşu"
-
-#~ msgid "Two is better than one."
-#~ msgstr "İki, birden daha iyidir."
-
-#~ msgid "USB Adapter"
-#~ msgstr "USB Adaptörü"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Okunmamış Mesajlar"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Okunmamış Mesaj Sayacı"
-
-#~ msgid "Webcam"
-#~ msgstr "Webcam"
-
-#~ msgid "Windows 7 Professional"
-#~ msgstr "Windows 7 Professional"
-
-#~ msgid "Windows Home Server 2011"
-#~ msgstr "Windows Home Sunucusu 2011"
