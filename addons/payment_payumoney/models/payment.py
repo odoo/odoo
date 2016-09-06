@@ -17,8 +17,8 @@ class PaymentAcquirerPayumoney(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('payumoney', 'PayUmoney')])
-    payumoney_merchant_key = fields.Char(string='Merchant Key', required_if_provider='payumoney')
-    payumoney_merchant_salt = fields.Char(string='Merchant Salt', required_if_provider='payumoney')
+    payumoney_merchant_key = fields.Char(string='Merchant Key', required_if_provider='payumoney', groups='base.group_user')
+    payumoney_merchant_salt = fields.Char(string='Merchant Salt', required_if_provider='payumoney', groups='base.group_user')
 
     def _get_payumoney_urls(self, environment):
         """ PayUmoney URLs"""
