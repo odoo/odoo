@@ -73,6 +73,7 @@ Dashboard for CRM will include:
         'data/crm_demo.xml',
         'data/crm_lead_demo.xml',
         'data/base_action_rule_demo.xml',
+        'data/mail_activity_log_demo.xml',
     ],
     'css': ['static/src/css/crm.css'],
     'installable': True,

@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Activity Logs-->
+        <record id="activity_log_1" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_13" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_meeting" />
+            <field name="title_action">Meeting to go over pricing information.</field>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="activity_log_2" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_14" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Send Catalog by Email</field>
+        </record>
+        <record id="activity_log_3" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_15" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Call to get system requirements</field>
+        </record>
+        <record id="activity_log_4" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_16" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_meeting"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Convert to quote</field>
+        </record>
+        <record id="activity_log_5" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_17" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Send our service pricelist</field>
+        </record>
+        <record id="activity_log_6" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_18" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Call to get training needs</field>
+        </record>
+        <record id="activity_log_7" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_19" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=-2)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Followup on the proposal</field>
+        </record>
+        <record id="activity_log_8" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_20" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')" />
+        </record>
+        <record id="activity_log_9" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_21" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_meeting"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M')" />
+        </record>
+        <record id="activity_log_10" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_22" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=-2)).strftime('%Y-%m-%d %H:%M')" />
+        </record>
+        <record id="activity_log_11" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_23" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')" />
+        </record>
+        <record id="activity_log_12" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_24" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')" />
+        </record>
+        <record id="activity_log_13" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_25" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=0)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Conf call with technical service</field>
+        </record>
+        <record id="activity_log_14" model="mail.activity.log">
+            <field name="res_id" ref="crm.crm_case_26" />
+            <field name="model">crm.lead</field>
+            <field name="next_activity_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_action" eval="(DateTime.today() + relativedelta(days=0)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="title_action">Send Catalog by Email</field>
+        </record>
+    </data>
+</odoo>
