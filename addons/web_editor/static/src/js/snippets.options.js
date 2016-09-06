@@ -319,6 +319,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.$target.off(".background-option")
                         .on("background-color-event.background-option", (function (e, type) {
                             e.stopPropagation();
+                            if (e.currentTarget !== e.target) return;
                             this.$el.find("li:first > a").trigger(type);
                         }).bind(this));
             return res;
