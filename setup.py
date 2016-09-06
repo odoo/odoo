@@ -67,6 +67,9 @@ def py2exe_options():
                     'skip_archive': 1,
                     'optimize': 0,  # Keep the assert running as the integrated tests rely on them.
                     'dist_dir': 'dist',
+                    'namespace_packages': [
+                        'odoo.addons',
+                    ],
                     'packages': [
                         'asynchat', 'asyncore',
                         'commands',
