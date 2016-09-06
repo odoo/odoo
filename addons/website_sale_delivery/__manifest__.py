@@ -1,5 +1,5 @@
 {
-    'name': 'e-Commerce Delivery',
+    'name': 'eCommerce Delivery',
     'category': 'Website',
     'summary': 'Add Delivery Costs to Online Sales',
     'website': 'https://www.odoo.com/page/e-commerce',

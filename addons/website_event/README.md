@@ -100,7 +100,7 @@ Fully Integrated With Others Apps
 ### Get hundreds of open source apps for free
 
 
-### e-Commerce
+### eCommerce
 
 Promote products, sell online, optimize visitors' shopping experiences.
 
