@@ -687,8 +687,8 @@
         </li>
     </div>
 
-    <div data-js='colorpicker'
-        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel, .s_text_block_image_fw .row > div, .s_banner .carousel-content">
+    <div data-js="colorpicker"
+        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
             <ul class="dropdown-menu">
@@ -696,6 +696,19 @@
             </ul>
         </li>
     </div>
+    <div data-js="colorpicker"
+        data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
+        data-palette-exclude="grayscale"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Overlay Color">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
+
 
     <div data-js='gallery' data-selector=".o_gallery">
         <li class="dropdown-submenu">
