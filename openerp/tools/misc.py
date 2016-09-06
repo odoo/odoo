@@ -1184,7 +1184,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     lang = env.user.company_id.partner_id.lang or 'en_US'
     lang_objs = env['res.lang'].search([('code', '=', lang)])
     if not lang_objs:
-        lang_objs = env['res.lang'].search([('code', '=', 'en_US')])
+        lang_objs = env['res.lang'].search([], limit=1)
     lang_obj = lang_objs[0]
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
