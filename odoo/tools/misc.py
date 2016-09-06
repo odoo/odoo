@@ -22,8 +22,8 @@ import time
 import werkzeug.utils
 import zipfile
 from cStringIO import StringIO
-from collections import defaultdict, Hashable, Iterable, Mapping, OrderedDict
-from itertools import islice, izip, groupby
+from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
+from itertools import islice, izip, groupby, repeat
 from lxml import etree
 from which import which
 from threading import local
@@ -1080,22 +1080,21 @@ class Collector(Mapping):
     def __len__(self):
         return len(self._map)
 
-class OrderedSet(OrderedDict):
+class OrderedSet(MutableSet):
     """ A set collection that remembers the elements first insertion order. """
-    def __init__(self, seq=()):
-        super(OrderedSet, self).__init__([(x, None) for x in seq])
-
+    __slots__ = ['_map']
+    def __init__(self, elems=()):
+        self._map = OrderedDict((elem, None) for elem in elems)
+    def __contains__(self, elem):
+        return elem in self._map
+    def __iter__(self):
+        return iter(self._map)
+    def __len__(self):
+        return len(self._map)
     def add(self, elem):
-        self[elem] = None
-
+        self._map[elem] = None
     def discard(self, elem):
-        self.pop(elem, None)
-
-    def __or__(self, other):
-        return OrderedSet(self.keys() + list(other))
-
-    def __and__(self, other):
-        return OrderedSet(e for e in self.keys() if e in other)
+        self._map.pop(elem, None)
 
 class LastOrderedSet(OrderedSet):
     """ A set collection that remembers the elements last insertion order. """
