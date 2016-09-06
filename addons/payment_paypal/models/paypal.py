@@ -41,17 +41,17 @@ class AcquirerPaypal(osv.Model):
         return providers
 
     _columns = {
-        'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal'),
+        'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal', groups='base.group_user'),
         'paypal_seller_account': fields.char(
-            'Paypal Merchant ID',
+            'Paypal Merchant ID', groups='base.group_user',
             help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.'),
-        'paypal_use_ipn': fields.boolean('Use IPN', help='Paypal Instant Payment Notification'),
+        'paypal_use_ipn': fields.boolean('Use IPN', help='Paypal Instant Payment Notification', groups='base.group_user'),
         # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
-        'paypal_api_username': fields.char('Rest API Username'),
-        'paypal_api_password': fields.char('Rest API Password'),
-        'paypal_api_access_token': fields.char('Access Token'),
-        'paypal_api_access_token_validity': fields.datetime('Access Token Validity'),
+        'paypal_api_username': fields.char('Rest API Username', groups='base.group_user'),
+        'paypal_api_password': fields.char('Rest API Password', groups='base.group_user'),
+        'paypal_api_access_token': fields.char('Access Token', groups='base.group_user'),
+        'paypal_api_access_token_validity': fields.datetime('Access Token Validity', groups='base.group_user'),
     }
 
     _defaults = {

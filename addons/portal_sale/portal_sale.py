@@ -40,7 +40,7 @@ class sale_order(osv.Model):
         for this in self.browse(cr, SUPERUSER_ID, ids, context=context):
             if this.state not in ('draft', 'cancel') and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(
-                    cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
+                    cr, SUPERUSER_ID, this.name, this.amount_total, this.pricelist_id.currency_id.id,
                     partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
@@ -100,7 +100,7 @@ class account_invoice(osv.Model):
         for this in self.browse(cr, uid, ids, context=context):
             if this.type == 'out_invoice' and this.state not in ('draft', 'done') and not this.reconciled:
                 result[this.id] = payment_acquirer.render_payment_block(
-                    cr, uid, this.number, this.residual, this.currency_id.id,
+                    cr, SUPERUSER_ID, this.number, this.residual, this.currency_id.id,
                     partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
