@@ -93,6 +93,12 @@ var Action = core.Class.extend({
     get_fragment: function() {
         return this.$fragment;
     },
+    /**
+     * @return {string} the active view, i.e. empty for client actions
+     */
+    get_active_view: function() {
+        return '';
+    },
 });
 /**
  * Specialization of Action for client actions that are Widgets
@@ -196,6 +202,12 @@ var ViewManagerAction = WidgetAction.extend({
     get_nb_views: function() {
         return this.widget.view_stack.length;
     },
+    /**
+     * @return {string} the active view of the ViewManager
+     */
+    get_active_view: function() {
+        return this.widget.active_view.type;
+    }
 });
 
 var ActionManager = Widget.extend({
