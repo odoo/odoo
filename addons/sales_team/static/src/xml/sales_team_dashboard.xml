@@ -14,7 +14,7 @@
                             Today
                         </td>
                         <td class="o_main" title="To Calendar">
-                            <a href="#" class="o_dashboard_action" name="calendar.action_calendar_event">
+                            <a href="#" class="o_dashboard_action" name="calendar.action_calendar_event" data-context="{'search_default_mymeetings':'1'}">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="values['meeting']['today']"/>
@@ -27,7 +27,7 @@
                             </a>
                         </td>
                         <td class="o_main" title="To Activities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="today">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-context="{'search_default_today':'1'}">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="values['activity']['today']"/>
@@ -49,7 +49,7 @@
                     <tr>
                         <td class="o_text">Next 7 days</td>
                         <td class="o_main" title="To Calendar">
-                            <a href="#" class="o_dashboard_action" name="calendar.action_calendar_event">
+                            <a href="#" class="o_dashboard_action" name="calendar.action_calendar_event" data-context="{'search_default_mymeetings':'1'}">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['meeting']['next_7_days']"/>
                                 </t>
@@ -59,7 +59,7 @@
                             </a>
                         </td>
                         <td class="o_main" title="To Activities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="this_week">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-context="{'search_default_this_week':'1'}">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['activity']['next_7_days']"/>
                                 </t>
@@ -74,7 +74,7 @@
                         <td></td>
                         <!-- Hide overdue when there is none -->
                         <td t-if="show_demo or (values and values['activity']['overdue'] != 0)" class="o_warning" title="To Activities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-extra="overdue">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities" data-context="{'search_default_overdue':'1'}">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['activity']['overdue']"/> overdue
                                 </t>
@@ -84,7 +84,7 @@
                             </a>
                         </td>
                         <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline" data-extra="overdue">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline" data-context="{'search_default_overdue':'1'}">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['closing']['overdue']"/> exp. closing
                                 </t>
@@ -116,7 +116,7 @@
                             </a>
                         </td>
                         <td t-attf-class="#{values and values['won']['target'] and values['won']['this_month'] >= values['won']['target'] ? 'o_main' : 'o_secondary'}" title="To Opportunity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph" data-context="{'search_default_won':'1'}">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="widget.render_monetary_field(values['won']['this_month'], values['currency_id'])"/>
@@ -192,7 +192,7 @@
                             </a>
                         </td>
                         <td class="o_secondary" title="To Opportunity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_opportunity_report_action_graph" data-context="{'search_default_won':'1'}">
                                 <t t-esc="widget.render_monetary_field(values['won']['last_month'], values['currency_id'])"/>
                             </a>
                         </td>
