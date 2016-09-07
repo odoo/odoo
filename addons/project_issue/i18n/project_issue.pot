@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid "# of Issues"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:148
+#: code:addons/project_issue/models/project_issue.py:156
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -126,13 +126,24 @@ msgid "Blocked"
 msgstr ""
 
 #. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
 msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_channel
 msgid "Channel"
 msgstr ""
 
@@ -150,11 +161,6 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
-msgid "Communication Channel."
 msgstr ""
 
 #. module: project_issue
@@ -205,13 +211,13 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:286
+#: code:addons/project_issue/models/project_issue.py:296
 #, python-format
 msgid "Customer"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:288
+#: code:addons/project_issue/models/project_issue.py:298
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -345,7 +351,7 @@ msgid "High"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:261
+#: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -502,13 +508,24 @@ msgid "My Issues"
 msgstr ""
 
 #. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Need functional or technical help"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "New"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:265
+#: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -519,7 +536,7 @@ msgid "Next Action"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:312
+#: code:addons/project_issue/models/project_issue.py:322
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -534,6 +551,14 @@ msgstr ""
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
+msgid "Not validated"
 msgstr ""
 
 #. module: project_issue
@@ -626,6 +651,11 @@ msgid "Ready for next stage"
 msgstr ""
 
 #. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
 msgstr ""
@@ -655,7 +685,6 @@ msgid "Tags"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_task_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Task"
@@ -669,16 +698,10 @@ msgstr ""
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid "The Odoo issues tracker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid "The Odoo issues tracker allows you to efficiently manage things\n"
-"                like internal requests, software development bugs, customer\n"
-"                complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
 #. module: project_issue
@@ -704,7 +727,7 @@ msgid "This report on the project issues allows you to analyse the quality of yo
 msgstr ""
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_config_settings_form_inherit_project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Timesheets"
 msgstr ""
 
@@ -767,7 +790,7 @@ msgid "You can link this issue to an existing task or directly create a new one 
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:183
+#: code:addons/project_issue/models/project_issue.py:191
 #, python-format
 msgid "issues"
 msgstr ""

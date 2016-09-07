@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 14:10+0000\n"
-"PO-Revision-Date: 2016-09-05 14:10+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -471,7 +471,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_abandonned_orders_ecommerce
-msgid "Abandonned e-Commerce Orders"
+msgid "Abandonned eCommerce Orders"
 msgstr ""
 
 #. module: website_sale
@@ -527,8 +527,13 @@ msgid "All Products"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_website_pricelist_selectable
+#: model:ir.model.fields,help:website_sale.field_product_pricelist_selectable
 msgid "Allow the end user to choose this price list"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Allow to use on"
 msgstr ""
 
 #. module: website_sale
@@ -571,6 +576,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability_warning
 msgid "Availability Warning"
+msgstr ""
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_benelux
+msgid "Benelux Pricelist"
 msgstr ""
 
 #. module: website_sale
@@ -629,6 +639,11 @@ msgid "Choose an image from the library."
 msgstr ""
 
 #. module: website_sale
+#: model:product.pricelist,name:website_sale.list_christmas
+msgid "Christmas Pricelist"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "City"
 msgstr ""
@@ -674,6 +689,21 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Components
+msgid "Components"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Computer_all_in_one
+msgid "Computer all-in-one"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.sub_computers
+msgid "Computers"
 msgstr ""
 
 #. module: website_sale
@@ -723,16 +753,6 @@ msgid "Country"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_res_country_group
-msgid "Country Group"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_country_group_ids
-msgid "Country Groups"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Country..."
 msgstr ""
@@ -746,7 +766,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image_create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_style_create_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_create_uid
 msgid "Created by"
 msgstr ""
 
@@ -754,7 +773,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image_create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_style_create_date
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_create_date
 msgid "Created on"
 msgstr ""
 
@@ -825,10 +843,14 @@ msgid "Determine the display order in the Website E-commerce"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.devices
+msgid "Devices"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_style_display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_display_name
 msgid "Display Name"
 msgstr ""
 
@@ -903,9 +925,14 @@ msgid "Equal : Cost will be equally divided.\n"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:58
+#: code:addons/website_sale/models/product.py:85
 #, python-format
 msgid "Error ! You cannot create recursive categories."
+msgstr ""
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_europe
+msgid "Europe Pricelist"
 msgstr ""
 
 #. module: website_sale
@@ -931,6 +958,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Export the 3 products you have already created by checking them and choosing 'Export' from the 'Action' menu"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.External_Hard_Drive
+msgid "External Hard Drive"
 msgstr ""
 
 #. module: website_sale
@@ -1029,6 +1061,11 @@ msgid "Have a coupon code? Fill in this field and apply."
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Headset
+msgid "Headset"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Here are <strong>some pros and cons</strong> to help you decide:"
 msgstr ""
@@ -1047,13 +1084,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11130
 msgid "ID"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-msgid "If you have an e-Commerce, one of your objectives is of course to grow your revenues by\n"
+msgid "If you have an eCommerce, one of your objectives is of course to grow your revenues by\n"
 "                    selling more and pricier products. Luckily for you, Odoo integrates three powerful\n"
 "                    customizations for that."
 msgstr ""
@@ -1144,15 +1180,24 @@ msgid "It's difficult to recommend one over the others. So, simply pick the one 
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Keyboard_Mouse
+msgid "Keyboard / Mouse"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_landed_cost_ok
 msgid "Landed Costs"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.laptops
+msgid "Laptops"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image___last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category___last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_style___last_update
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist___last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -1165,7 +1210,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image_write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_style_write_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -1173,7 +1217,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image_write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_style_write_date
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -1222,6 +1265,11 @@ msgid "Name"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.network
+msgid "Network"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/controllers/main.py:951
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
@@ -1248,6 +1296,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
 msgid "No, choose another method"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "None website"
 msgstr ""
 
 #. module: website_sale
@@ -1407,6 +1460,11 @@ msgid "Payment<span class=\"chevron\"/>"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Pen_Drive
+msgid "Pen Drive"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr ""
@@ -1423,22 +1481,17 @@ msgid "Price"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_website_pricelist_ids
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_pricelist_id
 msgid "Pricelist"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_name
-msgid "Pricelist Name"
-msgstr ""
-
-#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 msgid "Pricelists"
 msgstr ""
@@ -1446,6 +1499,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_pricelist_setting_split_1
 msgid "Pricing Strategy"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.printer
+msgid "Printer"
 msgstr ""
 
 #. module: website_sale
@@ -1685,6 +1743,11 @@ msgid "Save my payment data"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Screen
+msgid "Screen"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Secure Payment"
 msgstr ""
@@ -1712,7 +1775,7 @@ msgid "Select this address"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_selectable
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_selectable
 msgid "Selectable"
 msgstr ""
 
@@ -1729,6 +1792,16 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
 msgid "Sequence"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.server
+msgid "Server"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.services
+msgid "Services"
 msgstr ""
 
 #. module: website_sale
@@ -1800,7 +1873,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_website_multi_image
-msgid "Show multi image on e-Commerce"
+msgid "Show multi image on eCommerce"
 msgstr ""
 
 #. module: website_sale
@@ -1856,6 +1929,11 @@ msgid "Small-sized image of the category. It is automatically resized as a 64x64
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Software
+msgid "Software"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Some customers prefer to pay this way"
 msgstr ""
@@ -1869,6 +1947,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
 msgid "Sorry, this product is not available anymore."
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Speakers
+msgid "Speakers"
 msgstr ""
 
 #. module: website_sale
@@ -2055,6 +2138,11 @@ msgid "UPS integration"
 msgstr ""
 
 #. module: website_sale
+#: model:product.pricelist,name:website_sale.list_us
+msgid "US/CA Pricelist"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_usps
 msgid "USPS integration"
 msgstr ""
@@ -2071,7 +2159,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
-msgid "Unpaid e-Commerce Orders"
+msgid "Unpaid eCommerce Orders"
 msgstr ""
 
 #. module: website_sale
@@ -2116,7 +2204,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Website"
 msgstr ""
@@ -2133,33 +2221,8 @@ msgid "Website Comments"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_country_group_website_pricelist_ids
-msgid "Website Price Lists"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.website_pricelist_form_view
-#: model:ir.ui.view,arch_db:website_sale.website_pricelist_tree_view
-msgid "Website PriceLists"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.website_sale_pricelists_by_website
-#: model:ir.model,name:website_sale.model_website_pricelist
-#: model:ir.ui.menu,name:website_sale.menu_website_sale_pricelists
-msgid "Website Pricelist"
-msgstr ""
-
-#. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:466
-#, python-format
-msgid "Website Pricelist for %s"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
-#: model:ir.ui.menu,name:website_sale.menu_product_public_category
 msgid "Website Product Categories"
 msgstr ""
 
@@ -2342,19 +2405,19 @@ msgid "comments"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_ebay
+msgid "eBay connector"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
-msgid "e-Commerce"
+msgid "eCommerce"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
-msgid "e-Commerce Orders"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_ebay
-msgid "eBay connector"
+msgid "eCommerce Orders"
 msgstr ""
 
 #. module: website_sale
