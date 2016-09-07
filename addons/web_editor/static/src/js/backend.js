@@ -213,7 +213,7 @@ var FieldTextHtml = widget.extend({
                 self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
             }
         };
-        $(window).on('resize', self.resize);
+        $(window).on('resize', this.resize);
 
         var def = this._super.apply(this, arguments);
         this.$translate.remove();
@@ -374,7 +374,7 @@ var FieldTextHtml = widget.extend({
         }
     },
     destroy: function () {
-        $(window).off('resize', self.resize);
+        $(window).off('resize', this.resize);
         delete window.odoo[this.callback+"_editor"];
         delete window.odoo[this.callback+"_content"];
         delete window.odoo[this.callback+"_updown"];
