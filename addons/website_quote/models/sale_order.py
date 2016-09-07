@@ -231,7 +231,7 @@ class SaleOrderOption(models.Model):
         if order.state not in ['draft', 'sent']:
             return False
 
-        order_line = self.order_line.filtered(lambda line: line.product_id == self.product_id)
+        order_line = order.order_line.filtered(lambda line: line.product_id == self.product_id)
         if order_line:
             order_line[0].product_uom_qty += 1
         else:
