@@ -20,15 +20,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Δημιουργεί την πορεία παράδοσης και προσθέτει πιο πολύπλοκους ελέγχους-"
-"Εγκαθιστά την εφαρμογή stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -81,7 +77,6 @@ msgstr "%s:  Τοποθεσία Διαμετακόμισης"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -92,19 +87,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"*Νέο: Όταν το απόθεμα μετακινείται δημιουργείται και δεν έχει ακόμη "
-"επιβεβαιωθεί.\n"
-"*Περιμένωντας Άλλη Κίνηση: Αυτή  η κατάσταση μπορεί να ειδωθεί όταν η κίνηση "
-"αναμένει  μια άλλη, για παράδειγμα σε μια αλυσιδωτή ροή.\n"
-"* Αναμονή Διαθεσιμότητα: Αυτή η κατάσταση επιτυγχάνεται όταν η ανάλυση "
-"προμηθειών δεν είναι κατ 'ευθείαν προς τα εμπρός. Μπορεί να χρειαστεί το "
-"χρονοδιάγραμμα  να τρέξει, ένα στοιχείο που κατασκευάζονται ... \n"
-"\n"
-"* Διαθέσιμο: Όταν τα προϊόντα είναι διαθέσιμα,  έχει οριστεί σε "
-"«Διαθέσιμο'.\n"
-"\n"
-"* Ολοκληρωμένη: Όταν γίνεται επεξεργασία της αποστολής, η κατάσταση είναι "
-"«Ολοκληρωμένη»."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1865,9 +1847,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Παράδοση"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3485,15 +3466,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Διαχείριση Πολλαπλών Τοποθεσιών και Αποθηκών"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Διαχείριση Πολλαπλών Τοποθεσιών και Αποθηκών"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3532,9 +3511,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Διαχείριση Παρτιδών / Σειριακών Αριθμών"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -4008,9 +3986,8 @@ msgstr "Όνομα Λειτουργίας"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Λειτουργίες"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4248,15 +4225,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Τύπος Συσκευασίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Τύπος Συσκευασίας"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5656,12 +5631,9 @@ msgstr "Μικρό Ψυγείο"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Μερικά προϊόντα μπορει να πουληθούν/αγοραστούν σε διαφορετική μονάδα "
-"μέτρησης (προχωρημένο)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:780
@@ -6005,9 +5977,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Τύπος της Λειτουργίας "
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6197,15 +6168,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:814
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"Οι στρογγυλοποιήσεις της Μονάδας Μέτρησης % s σχετικά με την κίνηση αντί για "
-"το % s για το προϊόν δεν επιτρέπουν να κάνετε αυτές τις ενέργειες ή να μην "
-"μεταφέρετε την επιλογή με τη μία."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:116
@@ -7014,9 +6982,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Προϊόν σε Απόθεμα"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7554,393 +7522,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Ορισμός ποσοτήτων στο 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "* Πρόχειρο: δεν έχει επιβεβαιωθεί ακόμη και δεν θα πρέπει να "
-#~ "προγραμματιστεί μέχρι να επιβεβαιωθεί\n"
-#~ "\n"
-#~ "\n"
-#~ "\n"
-#~ "* Περιμένοντας άλλη λειτουργία: σε αναμονή για μια άλλη κίνηση για να "
-#~ "προχωρήσει πριν αυτό γίνει διαθέσιμο αυτόματα (π.χ. παραγωγή κατά "
-#~ "παραγγελία ροές) \n"
-#~ "\n"
-#~ "\n"
-#~ "\n"
-#~ "* Περιμένοντας για Διαθεσιμότητα: εξακολουθούν να περιμένουν για την "
-#~ "διαθεσιμότητα των προϊόντων\n"
-#~ "\n"
-#~ "\n"
-#~ "* Μερικώς Διαθέσιμο: ορισμένα προϊόντα είναι διαθέσιμα και δεσμευμένα\n"
-#~ "\n"
-#~ "\n"
-#~ "\n"
-#~ "* Έτοιμο για μεταφορά:τα δεσμευμένα προϊόντα, απλά αναμένουν για "
-#~ "επιβεβαίωση.\n"
-#~ "\n"
-#~ "\n"
-#~ "\n"
-#~ "* Μεταφέρθηκε: έχει υποστεί επεξεργασία, δεν μπορεί να τροποποιηθεί ή να "
-#~ "ακυρωθεί πλέον\n"
-#~ "\n"
-#~ "\n"
-#~ "\n"
-#~ "* Ακυρώθηκε: έχει ακυρωθεί, δεν μπορεί να επιβεβαιωθεί πλέον"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Δημιουργεί την πορεία παράδοσης και προσθέτει πιο πολύπλοκους ελέγχους-"
-#~ "Εγκαθιστά την εφαρμογή stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr "Παραγωγή κατά Παραγγελία (ΠκΠ)"
-
-#~ msgid " On Hand"
-#~ msgstr "Διαθέσιμη"
-
-#~ msgid " Sequence in"
-#~ msgstr "Σε αλληλουχία"
-
-#~ msgid " Sequence internal"
-#~ msgstr "Εσωτερική αλληλουχία"
-
-#~ msgid " Sequence out"
-#~ msgstr "Εκτός αλληλουχίας"
-
-#~ msgid " Sequence packing"
-#~ msgstr "Διαδοχική συσκευασία"
-
-#~ msgid " Sequence picking"
-#~ msgstr "Διαδοχικό μάζεμα"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "*Νέο: Όταν το απόθεμα μετακινείται δημιουργείται και δεν έχει ακόμη "
-#~ "επιβεβαιωθεί.\n"
-#~ "*Περιμένωντας Άλλη Κίνηση: Αυτή  η κατάσταση μπορεί να ειδωθεί όταν η "
-#~ "κίνηση αναμένει  μια άλλη, για παράδειγμα σε μια αλυσιδωτή ροή.\n"
-#~ "* Αναμονή Διαθεσιμότητα: Αυτή η κατάσταση επιτυγχάνεται όταν η ανάλυση "
-#~ "προμηθειών δεν είναι κατ 'ευθείαν προς τα εμπρός. Μπορεί να χρειαστεί το "
-#~ "χρονοδιάγραμμα  να τρέξει, ένα στοιχείο που κατασκευάζονται ... \n"
-#~ "\n"
-#~ "* Διαθέσιμο: Όταν τα προϊόντα είναι διαθέσιμα,  έχει οριστεί σε "
-#~ "«Διαθέσιμο'.\n"
-#~ "\n"
-#~ "* Ολοκληρωμένη: Όταν γίνεται επεξεργασία της αποστολής, η κατάσταση είναι "
-#~ "«Ολοκληρωμένη»."
-
-#~ msgid ""
-#~ "* Vendor Location: Virtual location representing the source location for "
-#~ "products coming from your vendors\n"
-#~ "                       \n"
-#~ "* View: Virtual location used to create a hierarchical structures for "
-#~ "your warehouse, aggregating its child locations ; can't directly contain "
-#~ "products\n"
-#~ "                       \n"
-#~ "* Internal Location: Physical locations inside your own warehouses,\n"
-#~ "                       \n"
-#~ "* Customer Location: Virtual location representing the destination "
-#~ "location for products sent to your customers\n"
-#~ "                       \n"
-#~ "* Inventory Loss: Virtual location serving as counterpart for inventory "
-#~ "operations used to correct stock levels (Physical inventories)\n"
-#~ "                       \n"
-#~ "* Procurement: Virtual location serving as temporary counterpart for "
-#~ "procurement operations when the source (vendor or production) is not "
-#~ "known yet. This location should be empty when the procurement scheduler "
-#~ "has finished running.\n"
-#~ "                       \n"
-#~ "* Production: Virtual counterpart location for production operations: "
-#~ "this location consumes the raw material and produces finished products\n"
-#~ "                       \n"
-#~ "* Transit Location: Counterpart location that should be used in inter-"
-#~ "companies or inter-warehouses operations\n"
-#~ "                      "
-#~ msgstr ""
-#~ "* Τοποθεσία Προμηθευτή: Εικονική Τοποθεσία που αντιπροσωπεύει την "
-#~ "τοποθεσία προέλευσης για τα προϊόντα που προέρχονται από τους προμηθευτές "
-#~ "σας\n"
-#~ "\n"
-#~ "* Προβολή: Εικονική τοποθεσία που χρησιμοποιείται για να δημιουργηθεί  "
-#~ "μια ιεραρχική δομή  για την αποθήκη σας, συγκεντρώνοντας τις θυγατρικές "
-#~ "τοποθεσίες; Δεν μπορεί να περιέχει άμεσα προϊόντα\n"
-#~ "\n"
-#~ "* Εσωτερική Τοποθεσία: Φυσικές τοποθεσίες μέσα στις δικές σας αποθήκες, \n"
-#~ "\n"
-#~ "* Περιοχή Πελατών: Εικονική τοποθεσία η οποία αντιπροσωπεύει την "
-#~ "τοποθεσία προορισμού για τα προϊόντα που αποστέλλονται στους πελάτες σας\n"
-#~ "\n"
-#~ "* Απογραφή: Εικονική τοποθεσία που χρησιμεύει ως αντιστάθμισμα για τις "
-#~ "ενέργειες απογραφής που χρησιμοποιείται για να διορθώσει το επίπεδο των "
-#~ "αποθεμάτων (Φυσικές απογραφές) \n"
-#~ "\n"
-#~ "* Προμήθεια: Εικονική τοποθεσία  που χρησιμεύει ως αντιστάθμισμα για τις "
-#~ "ενέργειες προμηθειών όταν η πηγή (προμηθευτής ή παραγωγής) δεν είναι "
-#~ "ακόμη γνωστή. Η τοποθεσία αυτή πρέπει να είναι κενή όταν ο "
-#~ "προγραμματιστής προμηθειών θα  έχει τελειώσει την εκτέλεση \n"
-#~ "\n"
-#~ "* Παραγωγή: Εικονικό αντιστάθμισμα για δραστηριότητες παραγωγής: αυτή η "
-#~ "τοποθεσία καταναλώνει τις πρώτες ύλες και παράγει τα τελικά προϊόντα\n"
-#~ "\n"
-#~ "* Τοποθεσία Διέλευσης: Τοποθεσία αντισταθμίσματος που θα πρέπει να "
-#~ "χρησιμοποιείται  για λειτουργίες  μεταξύ επιχειρήσεων ή μεταξύ των "
-#~ "αποθηκών "
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Διεύθυνση Επικοινωνίας:</strong></span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Προσθέτει ένα σύνδεσμο αξίωσης στην παράδοση της παραγγελίας.\n"
-#~ "\n"
-#~ "-Αυτό Εγκαθιστά το άρθρωμα claim_from_delivery."
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "Επιτρέπετε 'Απαίτηση' σχετικά με τις παραδόσεις"
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Από προεπιλογή, το σύστημα θα λαμβάνει από το απόθεμα της θέσης "
-#~ "προέλευσης και παθητικά περιμένει για διαθεσιμότητα. Η άλλη δυνατότητα "
-#~ "σας επιτρέπει να δημιουργήσετε απευθείας προμήθεια από τη θέση προέλευσης "
-#~ "(και, επομένως, να αγνοήσετε το τρέχον απόθεμα) για να συγκεντρώσετε τα "
-#~ "προϊόντα. Αν θέλουμε να συνδέσουμε κινήσεις και να έχουμε αυτή τη μια να "
-#~ "περιμένει για την προηγούμενη, αυτή η δεύτερη επιλογή θα πρέπει να "
-#~ "επιλεγεί."
-
-#~ msgid "Claims"
-#~ msgstr "Απαιτήσεις"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Delivery Method"
-#~ msgstr "Μέθοδος Παράδοσης"
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Προβλεπόμενα:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Information"
-#~ msgstr "Πληροφορίες"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Γραμμές Αποθέματος"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Κινήσεις Αποθέματος"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Όνομα Αποθέματος"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Απώλεια αποθέματος"
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr ""
-#~ "Σύνδεσμος μεταξύ των κινήσεων αποθεμάτων και λειτουργιών συσκευασίας"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Διαχείριση Πολλαπλών Τοποθεσιών και Αποθηκών"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Το Μενού Ανοιχτής Αποθήκης"
-
-#~ msgid "Picking Types"
-#~ msgstr "Τύπος Παραλαβών"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Ροές Ώθησης"
-
-#~ msgid "Qty"
-#~ msgstr "Ποσ."
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr ""
-#~ "Υπόλοιπη ποσότητα σε προεπιλεγμένη ΜΜ σύμφωνα με τις κινήσεις που "
-#~ "ταιριάζουν με αυτήν την λειτουργία."
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Ανατροφοδότηση Από Άλλες  Αποθήκες"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Μερικά προϊόντα μπορει να πουληθούν/αγοραστούν σε διαφορετική μονάδα "
-#~ "μέτρησης (προχωρημένο)"
-
-#~ msgid "Suppliers"
-#~ msgstr "Προμηθευτές"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Τεχνικό πεδίο που χρησιμοποιείται για να αποκρύψει τη βοήθεια επεξήγησης "
-#~ "εάν αυτό δεν απαιτείται"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Η επιλεγείσα ποσότητα του προϊόντος % s δεν είναι συμβατή με την "
-#~ "στρογγυλοποίηση της ΜΜ. Θα μετατραπεί αυτόματα σε επιβεβαίωση"
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "Η ποσότητα προμηθειών θα πρέπει να στρογγυλοποιούνται προς τα πάνω σε "
-#~ "αυτό το πολλαπλάσιο. Εάν είναι 0, θα χρησιμοποιηθεί η ακριβής ποσότητα."
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "Οι στρογγυλοποιήσεις της Μονάδας Μέτρησης % s σχετικά με την κίνηση αντί "
-#~ "για το % s για το προϊόν δεν επιτρέπουν να κάνετε αυτές τις ενέργειες ή "
-#~ "να μην μεταφέρετε την επιλογή με τη μία."
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "Η επιλεγμένη ΜΜ για το προϊόν % s δεν είναι συμβατή με την ΜΜ  που "
-#~ "ορίστηκε στην φόρμα του προϊόντος.\n"
-#~ "Παρακαλώ επιλέξτε  μια ΜΜ  στο πλαίσιο της ίδιας κατηγορίας ΜΜ  ."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Αυτό θα σας δείξει τις θέσεις και θα σας επιτρέπει να ορίσετε πολλαπλούς "
-#~ "τύπους επιλογής και αποθήκες."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Μονάδα Μέτρησης"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Αδιάβαστα Μηνύματα"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Χρησιμοποιήστε αυτόν τον βοηθό για να δημιουργηθεί αίτημα προμήθειας για "
-#~ "αυτό το προϊόν. Σύμφωνα με τη διαμόρφωση του προϊόντος, αυτό θα μπορούσε "
-#~ "να ενεργοποιήσει μια πρόχειρη εντολή αγοράς, μια εντολή παραγωγής ή μια "
-#~ "νέα διεργασία."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Προειδοποιήση; λανθασμένη ΜΜ"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Προειδοποίηση: λάθος ποσότητα!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Μηνύματα Ιστότοπου"
-
-#~ msgid "Website communication history"
-#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "Θα πρέπει να επιστρέψετε μόνο μια συλλογή την φορά"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr ""
-#~ "Θα μπορέσετε να επιστρέψετε μόνο συλλογές οι οποίες είναι Ολοκληρωμένες!"
-
-#~ msgid "move that created the return move"
-#~ msgstr "κίνηση που δημιούργησε την κίνηση επιστροφής"
-
-#~ msgid "unknown"
-#~ msgstr "άγνωστο"

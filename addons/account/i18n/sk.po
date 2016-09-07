@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-05-22 07:59+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"PO-Revision-Date: 2016-08-24 08:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
-#, fuzzy
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "Invoice.\n"
@@ -75,15 +74,6 @@ msgid ""
 "related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-"* Stav 'Koncept'je používaný keď používateľ kóduje novú a nepotvrdenú "
-"faktúru.\n"
-"* \"Pro-forma 'stav sa používa keď faktúra nemá číslo faktúry.\n"
-"* Stav \"Otvorená\" sa používa, keď používateľ vytvorí faktúru a je "
-"vygenerované číslo faktúry. Je v otvorenom stave až kým používateľ nezaplatí "
-"faktúru.\n"
-"* \"Zaplatené\" stav sa nastaví automaticky, keď je zaplatená faktúra. Jej "
-"súvisiace položky účtovnej knihy môžu ale nemusia byť zosúladené.\n"
-"* \"Zrušené\" stav sa používa, keď používateľ zruší faktúru."
 
 #. module: account
 #. openerp-web
@@ -101,9 +91,8 @@ msgstr "# Číslic"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
-#, fuzzy
 msgid "# of Lines"
-msgstr "# Faktúr"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -112,9 +101,8 @@ msgstr "# Transakcií"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
-#, fuzzy
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name|safe} Faktúra (Ref ${object.number or 'n/a'})"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:469
@@ -148,15 +136,13 @@ msgstr ", ak je nainštalované účtovnictvo alebo nákup"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "-> Reconcile"
-msgstr "Zosúladiť"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
 msgid "-> View partially reconciled entries"
-msgstr "Má nezladené vstupy"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:470
@@ -394,9 +380,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Balance in Odoo\">Zostatok v Odoo</span>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -543,9 +528,8 @@ msgstr "<strong>Komentár:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
 msgid "<strong>Company:</strong>"
-msgstr "<strong>Komentár:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -625,9 +609,8 @@ msgstr "<strong>Dátum splatnosti:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>Radené podľa:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -646,9 +629,8 @@ msgstr "<strong>Dátum vystavenia faktúry:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "<strong>Journal:</strong>"
-msgstr "<strong>Účtovné knihy:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -893,9 +875,9 @@ msgstr "Platobná lehota by mala mať iba jeden riadok typu Zostatok."
 
 #. module: account
 #: code:addons/account/models/account.py:503
-#, fuzzy, python-format
+#, python-format
 msgid "A bank account can only belong to one journal."
-msgstr "Bankový účet môže patriť iba jednej účtovnej knihe."
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -941,9 +923,8 @@ msgstr "Zoznam bežných daní a ich sadzieb."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-#, fuzzy
 msgid "A list of your customer and supplier payment terms."
-msgstr "Zoznam v a platobné podmienky dodávateľa."
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1059,9 +1040,8 @@ msgstr "Účet správy bežného účtu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
-#, fuzzy
 msgid "Account Common Journal Report"
-msgstr "Účet správy bežného účtu"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
@@ -1128,9 +1108,8 @@ msgstr "Číslo účtu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_partner_ledger
-#, fuzzy
 msgid "Account Partner Ledger"
-msgstr "Výkaz bežného účtu partnera"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
@@ -1139,9 +1118,8 @@ msgstr "Splatný účet"
 
 #. module: account
 #: model:ir.model,name:account.model_account_print_journal
-#, fuzzy
 msgid "Account Print Journal"
-msgstr "Účtovná kniha"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_category_property_form
@@ -1492,19 +1470,12 @@ msgstr "Zostatok partnera za obdobie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
-#, fuzzy
 msgid ""
 "Aged Partner Balance is a more detailed report of your receivables by "
 "intervals. Odoo calculates a table of credit balance by start Date. So if "
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
-"Zostatok partnera za obdobie je detailnejší výkaz vašich pohľadávok za "
-"intervaly. Pri otvorení ttohoto výkazu, Odoo sa pýta na meno spoločnosti, "
-"dátum začatia a dĺžka intervalu ktorá sa má analyzovať (v dňoch). Odoo potom "
-"vypočíta tabuľku zostatku podľa dátumu začiatku. Takže ak ste požiadali o "
-"interval 30 dní, Odoo vygeneruje analýzu veriteľov za uplynulý mesiac, "
-"posledné dva mesiace a tak ďalej."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1662,9 +1633,8 @@ msgstr "Povoliť pro-forma faktúry"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
-#, fuzzy
 msgid "Allows to work in a multi currency environment"
-msgstr "Povoľuje vám multi menové prostredie"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
@@ -1911,7 +1881,6 @@ msgstr "Vypýtať vratku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_asset
-#, fuzzy
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or "
 "a person. It keeps track of the depreciation occurred on those assets, and "
@@ -1919,13 +1888,6 @@ msgid ""
 "\n"
 "-This installs the module account_asset."
 msgstr ""
-"Spravovanie aktív: To vám umožní hospodáriť s majetkom vo vlastníctve "
-"spoločností alebo osoboy. Vedie záznamy o odpisoch týchto aktív, a vytvorí "
-"účtový pohyb pre riadky tých odpisov.\n"
-"\n"
-"-Toto nainštaluje modul account_asset. Pokiaľ nezaškrtnete toto políčko, "
-"budete môcť robiť fakturáciu a platby, ale nie účtovníctvo (Položky účtovnej "
-"knihy, Účtovný rozvrh, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -2196,9 +2158,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Base Amount"
-msgstr "Suma platby"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2243,9 +2204,8 @@ msgstr "Účtovanie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "Bills"
-msgstr "Účtenka"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2593,14 +2553,11 @@ msgstr "Šablóna grafu účtov"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-#, fuzzy
 msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any "
 "additional accounts."
 msgstr ""
-"Graf účtov bol\n"
-"nainštalovaný. Mali by ste ho skontrolovať a vytvoriť ďalšie účty."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -3483,9 +3440,8 @@ msgstr "Dátum"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
-#, fuzzy
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr "Dni po dátume faktúry"
+msgstr ""
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3950,9 +3906,8 @@ msgstr "Sprievodca zostavovaním emailov"
 
 #. module: account
 #: model:ir.model,name:account.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Sprievodca zostavovaním emailov"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
@@ -4011,9 +3966,8 @@ msgstr "Položky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal_sort_selection
-#, fuzzy
 msgid "Entries Sorted by"
-msgstr "Vstupy:"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:861
@@ -4077,15 +4031,13 @@ msgstr "Účtovná kniha ziskov alebo strát kurzu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
-#, fuzzy
 msgid "Exchange move id"
-msgstr "ID debetného pohybu"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_partial_rec_id
-#, fuzzy
 msgid "Exchange partial rec id"
-msgstr "Vstup výmenného kurzu"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4128,9 +4080,8 @@ msgstr "Výdavky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
-#, fuzzy
 msgid "External Reference"
-msgstr "Partnerská referencia"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4363,15 +4314,13 @@ msgstr "Voľná referencia"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
 msgid "From Payable accounts"
-msgstr "Účty pohľadávok"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
 msgid "From Receivable accounts"
-msgstr "Účty pohľadávok"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -4398,9 +4347,8 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_full_reconcile_id
-#, fuzzy
 msgid "Full Reconcile"
-msgstr "Zosúladiť"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
@@ -4460,13 +4408,10 @@ msgstr "Začať"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_plaid
-#, fuzzy
 msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-This installs the module account_plaid."
 msgstr ""
-"Získajte svoje bankové výpisy a importujte ich cez plaid.com.\n"
-"-to nainštaluje modul account_plaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
@@ -4478,35 +4423,26 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
-#, fuzzy
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX "
 "format.\n"
 "-This installs the module account_bank_statement_import_ofx."
 msgstr ""
-"Získajte svoje bankové výpisy a importujte ich do odoo v .OFX formáte.\n"
-"Toto nainštaluje modul account_bank_statement_import_ofx."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
-#, fuzzy
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF "
 "format.\n"
 "-This installs the module account_bank_statement_import_qif."
 msgstr ""
-"Získajte svoje bankové výpisy a importujte ich do odoo v .QIF formáte.\n"
-"Toto nainštaluje modul account_bank_statement_import_qif."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
-#, fuzzy
 msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-This installs the module account_yodlee."
 msgstr ""
-"Získajte svoje bankové výpisy a importujte ich cez yodlee.com.\n"
-"-to nainštaluje modul account_yodlee."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -4548,9 +4484,8 @@ msgstr "Ísť na panel konfigurácie"
 
 #. module: account
 #: selection:res.partner,trust:0
-#, fuzzy
 msgid "Good Debtor"
-msgstr "Dobrá práca!"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -5430,9 +5365,8 @@ msgstr "Vstup účtovnej knihy"
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Journal Entry Number"
-msgstr "Vstup účtovnej knihy"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -5812,15 +5746,13 @@ msgstr "Právne meno"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
-#, fuzzy
 msgid "Legal Notes..."
-msgstr "Interné poznámky..."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
-#, fuzzy
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr "Zoznam všetkých daní, ktoré musia byť inštalované pomocou sprievodcu"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:145
@@ -5992,9 +5924,8 @@ msgstr "Označiť faktúru ako plne uhradenú"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
-#, fuzzy
 msgid "Matched Journal Items"
-msgstr "Zverejnené položky účtovnej knihy"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
@@ -6009,15 +5940,13 @@ msgstr "d spárovaného debetu"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
 msgid "Matching"
-msgstr "Spárovanie platieb"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
-#, fuzzy
 msgid "Matching Number"
-msgstr "Číslo účtu"
+msgstr ""
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6073,27 +6002,23 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Current Liabilities"
-msgstr "Aktuálne záväzky"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Expenses"
-msgstr "Menej výdajov"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Non-Current Liabilities"
-msgstr "Menej neaktuálnych záväzkov"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Payable Accounts"
-msgstr "Účty pohľadávok"
+msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6341,9 +6266,8 @@ msgstr "Žiadne"
 
 #. module: account
 #: selection:res.partner,trust:0
-#, fuzzy
 msgid "Normal Debtor"
-msgstr "Normálny text"
+msgstr ""
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6832,21 +6756,18 @@ msgstr "Partnerská spoločnosť"
 #: model:ir.actions.report.xml,name:account.action_report_partnerledger
 #: model:ir.ui.menu,name:account.menu_partner_ledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
 msgid "Partner Ledger"
-msgstr "Hlavná účtovná kniha"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable
-#, fuzzy
 msgid "Partner Ledger: Payable"
-msgstr "Partnerská referencia"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable
-#, fuzzy
 msgid "Partner Ledger: Receivable"
-msgstr "Partnerská referencia"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
@@ -7546,9 +7467,8 @@ msgstr "Zosúladené"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
-#, fuzzy
 msgid "Reconciled Entries"
-msgstr "Zosúladiť vstupy"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -7568,9 +7488,8 @@ msgstr "Modely zosúladenia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
-#, fuzzy
 msgid "Reconciliation Parts"
-msgstr "Zosúladenie"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7907,9 +7826,8 @@ msgstr "Daň z predaja"
 #: model:ir.actions.act_window,name:account.action_account_print_journal_menu
 #: model:ir.actions.report.xml,name:account.action_report_journal
 #: model:ir.ui.menu,name:account.menu_print_journal
-#, fuzzy
 msgid "Sale/Purchase Journal"
-msgstr "Vyhľadať položky účtovnej knihy"
+msgstr ""
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -8001,7 +7919,6 @@ msgstr "Vyhľadať dane"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_type
-#, fuzzy
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
@@ -8009,12 +7926,6 @@ msgid ""
 "payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Vyberte 'Predaj' pre zákaznícke faktúry v účtovných knihách. Vyberte 'Nákup' "
-"pre účtovné knihyúčtenie predajcov. Vyberte 'Hotovosť'alebo'Banka'pre "
-"účtovné knihy, ktoré sa používajú u zákazníckých alebo predajcovkých "
-"platieb. Vyberte 'Všeobecné', pre rôzne operácie účtovných kníh. Vyberte "
-"'Otváranie / zatváranie situácie' pre položky vytvorené pre nové fiškálne "
-"roky."
 
 #. module: account
 #. openerp-web
@@ -8394,9 +8305,8 @@ msgstr "Daňový účet na refundáciach"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Tax Amount"
-msgstr "Daňový účet"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
@@ -8416,9 +8326,8 @@ msgstr "Výpočet dane"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Tax Declaration"
-msgstr "Popis dane"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
@@ -8959,14 +8868,11 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:417
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"Zvolený účet vášhovstupu účtovnej knihy vyžaduje druhotnú menu. Mali by ste "
-"odstrániť druhotnú menu na účte alebo zvoliť zobrazenie multi-meny na "
-"účtovnej knihe,"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1268
@@ -9383,10 +9289,9 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:21
-#, fuzzy, python-format
+#, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
 msgstr ""
-"Tip: stlačte ctrl-enter pre zladenie všetkých zostatkových položiek v liste."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9611,9 +9516,9 @@ msgstr "Merná jednotka"
 
 #. module: account
 #: code:addons/account/report/account_aged_partner_balance.py:174
-#, fuzzy, python-format
+#, python-format
 msgid "Unknown Partner"
-msgstr "Partner"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable_no_partner
@@ -10035,9 +9940,8 @@ msgstr "Fíha, to bolo rýchle!"
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_print_journal_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_amount_currency
-#, fuzzy
 msgid "With Currency"
-msgstr "Hlavná mena"
+msgstr ""
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -10166,13 +10070,10 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:179
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
-"Nemôžete pridať/upravovať vstupy pred a vrátane uzamknutého dátumu %s. "
-"Skontrolujte nastavenia spoločnosti alebo sa opýtajte niekoho s rolou "
-"'Poradca'"
 
 #. module: account
 #: code:addons/account/models/account_move.py:181
@@ -10495,9 +10396,8 @@ msgstr "Rozsah PSČ do"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Analytické riadky"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -10663,15 +10563,13 @@ msgstr "report.account.report_trialbalance"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_extra_reports_report_journal
-#, fuzzy
 msgid "report.account_extra_reports.report_journal"
-msgstr "report.account.report_financial "
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_extra_reports_report_partnerledger
-#, fuzzy
 msgid "report.account_extra_reports.report_partnerledger"
-msgstr "report.account.report_generalledger "
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:209
@@ -10756,449 +10654,3 @@ msgstr "wizard.multi.charts.accounts "
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Spočítať"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "    <p>A new invoice is available for you: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br /"
-#~ ">\n"
-#~ "       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email "
-#~ "or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>  \n"
-#~ "    \n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>It is also possible to directly pay with Paypal:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/"
-#~ "img/btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "    \n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "<p>Dobrý deň ${object.partner_id.name},</p>\n"
-#~ "<p>K dispozícii je pre Vás nová faktúra: </p>\n"
-#~ "\n"
-#~ "<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "&nbsp;&nbsp;<strong>REFERENCIE</strong><br />\n"
-#~ "&nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n"
-#~ "&nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "&nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
-#~ "% if object.origin:\n"
-#~ "&nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "% endif\n"
-#~ "% if object.user_id:\n"
-#~ "&nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?"
-#~ "subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-#~ "% endif\n"
-#~ "</p> \n"
-#~ "\n"
-#~ "% if object.paypal_url:\n"
-#~ "<br/>\n"
-#~ "<p>Tiež je možne zaplatiť priamo cez Paypal:</p>\n"
-#~ "<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "<img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/"
-#~ "btn_paynowcc_lg.gif\"/>\n"
-#~ "</a>\n"
-#~ "% endif\n"
-#~ "\n"
-#~ "<br/>\n"
-#~ "<p>Ak máte akúkoľvek otázku, neváhajte nás kontaktovať.</p>\n"
-#~ "<p>Ďakujeme že ste si vybrali ${object.company_id.name or 'us'}!</p>\n"
-#~ "<br/>\n"
-#~ "<br/>\n"
-#~ "<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-#~ "#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px "
-#~ "5px; background-repeat: repeat no-repeat;\">\n"
-#~ "<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;"
-#~ "\">\n"
-#~ "<strong style=\"text-transform:uppercase;\">${object.company_id.name}</"
-#~ "strong></h3>\n"
-#~ "</div>\n"
-#~ "<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-#~ "16px; background-color: #F2F2F2;\">\n"
-#~ "<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-#~ "${object.company_id.partner_id.sudo().with_context(show_address=True, "
-#~ "html_format=True).name_get()[0][1] | safe}\n"
-#~ "</span>\n"
-#~ "% if object.company_id.phone:\n"
-#~ "<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; "
-#~ "margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-#~ "0px; padding-left: 0px; \">\n"
-#~ "Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "</div>\n"
-#~ "% endif\n"
-#~ "% if object.company_id.website:\n"
-#~ "<div>\n"
-#~ "Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id."
-#~ "website}</a>\n"
-#~ "</div>\n"
-#~ "%endif\n"
-#~ "<p></p>\n"
-#~ "</div>\n"
-#~ "</div>"
-
-#~ msgid ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
-#~ "number.\n"
-#~ " * The 'Open' status is used when user create invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-#~ msgstr ""
-#~ "* Stav 'Koncept'je používaný keď používateľ kóduje novú a nepotvrdenú "
-#~ "faktúru.\n"
-#~ "* \"Pro-forma 'stav sa používa keď faktúra nemá číslo faktúry.\n"
-#~ "* Stav \"Otvorená\" sa používa, keď používateľ vytvorí faktúru a je "
-#~ "vygenerované číslo faktúry. Je v otvorenom stave až kým používateľ "
-#~ "nezaplatí faktúru.\n"
-#~ "* \"Zaplatené\" stav sa nastaví automaticky, keď je zaplatená faktúra. "
-#~ "Jej súvisiace položky účtovnej knihy môžu ale nemusia byť zosúladené.\n"
-#~ "* \"Zrušené\" stav sa používa, keď používateľ zruší faktúru."
-
-#~ msgid "# of Invoices"
-#~ msgstr "# Faktúr"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} Faktúra (Ref ${object.number or 'n/a'})"
-
-#~ msgid "<span title=\"Balance in Odoo\">Balance in Odoo</span>"
-#~ msgstr "<span title=\"Balance in Odoo\">Zostatok v Odoo</span>"
-
-#~ msgid "A bank account can anly belong to one journal."
-#~ msgstr "Bankový účet môže patriť iba jednej účtovnej knihe."
-
-#~ msgid "A list of your customer and suppler payment terms."
-#~ msgstr "Zoznam v a platobné podmienky dodávateľa."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebná akcia"
-
-#~ msgid ""
-#~ "Aged Partner Balance is a more detailed report of your receivables by "
-#~ "intervals. When opening that report, Odoo asks for the name of the "
-#~ "company, the Start Date and the size of the interval to be analyzed (in "
-#~ "days). Odoo then calculates a table of credit balance by start Date. So "
-#~ "if you request an interval of 30 days Odoo generates an analysis of "
-#~ "creditors for the past month, past two months, and so on."
-#~ msgstr ""
-#~ "Zostatok partnera za obdobie je detailnejší výkaz vašich pohľadávok za "
-#~ "intervaly. Pri otvorení ttohoto výkazu, Odoo sa pýta na meno spoločnosti, "
-#~ "dátum začatia a dĺžka intervalu ktorá sa má analyzovať (v dňoch). Odoo "
-#~ "potom vypočíta tabuľku zostatku podľa dátumu začiatku. Takže ak ste "
-#~ "požiadali o interval 30 dní, Odoo vygeneruje analýzu veriteľov za "
-#~ "uplynulý mesiac, posledné dva mesiace a tak ďalej."
-
-#~ msgid "Allows you multi currency environment"
-#~ msgstr "Povoľuje vám multi menové prostredie"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analytický riadok"
-
-#~ msgid ""
-#~ "Asset management: This allows you to manage the assets owned by a company "
-#~ "or a person. It keeps track of the depreciation occurred on those assets, "
-#~ "and creates account move for those depreciation lines.\n"
-#~ "\n"
-#~ "-This installs the module account_asset. If you do not check this box, "
-#~ "you will be able to do invoicing & payments, but not accounting (Journal "
-#~ "Items, Chart of Accounts, ...)"
-#~ msgstr ""
-#~ "Spravovanie aktív: To vám umožní hospodáriť s majetkom vo vlastníctve "
-#~ "spoločností alebo osoboy. Vedie záznamy o odpisoch týchto aktív, a "
-#~ "vytvorí účtový pohyb pre riadky tých odpisov.\n"
-#~ "\n"
-#~ "-Toto nainštaluje modul account_asset. Pokiaľ nezaškrtnete toto políčko, "
-#~ "budete môcť robiť fakturáciu a platby, ale nie účtovníctvo (Položky "
-#~ "účtovnej knihy, Účtovný rozvrh, ...)"
-
-#~ msgid "Bills &amp; Refunds"
-#~ msgstr "Účtenky &amp; Vratky"
-
-#~ msgid ""
-#~ "Chart of Accounts has been\n"
-#~ "                            installed. You should review it and create "
-#~ "any additionnal accounts."
-#~ msgstr ""
-#~ "Graf účtov bol\n"
-#~ "nainštalovaný. Mali by ste ho skontrolovať a vytvoriť ďalšie účty."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#~ msgid "Direct Costs"
-#~ msgstr "Priame náklady"
-
-#~ msgid "Due Payments"
-#~ msgstr "Splatné platby"
-
-#~ msgid "Exchange Rate Entry of"
-#~ msgstr "Vstup výmenného kurzu"
-
-#~ msgid "Financial Report"
-#~ msgstr "Finančný výkaz"
-
-#~ msgid "Fixed day of the following month"
-#~ msgstr "Pevný deň nasledujúceho mesiaca"
-
-#~ msgid "Followers"
-#~ msgstr "Odberatelia"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Odberatelia (Kanály)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Odberatelia (Partneri)"
-
-#~ msgid ""
-#~ "Get your bank statements from you bank and import them through plaid."
-#~ "com.\n"
-#~ "-that installs the module account_plaid."
-#~ msgstr ""
-#~ "Získajte svoje bankové výpisy a importujte ich cez plaid.com.\n"
-#~ "-to nainštaluje modul account_plaid."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "OFX format.\n"
-#~ "This installs the module account_bank_statement_import_ofx."
-#~ msgstr ""
-#~ "Získajte svoje bankové výpisy a importujte ich do odoo v .OFX formáte.\n"
-#~ "Toto nainštaluje modul account_bank_statement_import_ofx."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "QIF format.\n"
-#~ "This installs the module account_bank_statement_import_qif."
-#~ msgstr ""
-#~ "Získajte svoje bankové výpisy a importujte ich do odoo v .QIF formáte.\n"
-#~ "Toto nainštaluje modul account_bank_statement_import_qif."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them through yodlee."
-#~ "com.\n"
-#~ "-that installs the module account_yodlee."
-#~ msgstr ""
-#~ "Získajte svoje bankové výpisy a importujte ich cez yodlee.com.\n"
-#~ "-to nainštaluje modul account_yodlee."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "Invoices &amp; Refunds"
-#~ msgstr "Faktúry &amp; Refundácie"
-
-#~ msgid "Invoicing"
-#~ msgstr "Fakturácia"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je odberateľ"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Dátum poslednej správy"
-
-#~ msgid "Less Cost of Sales"
-#~ msgstr "Menej nákladov na predaje"
-
-#~ msgid "Less Current Liabilities"
-#~ msgstr "Menej aktuálnych záväzkov"
-
-#~ msgid "Less Expenses"
-#~ msgstr "Menej výdajov"
-
-#~ msgid "Less Non-Current Liabilities"
-#~ msgstr "Menej neaktuálnych záväzkov"
-
-#~ msgid "Less Payable Accounts"
-#~ msgstr "Menej splatných účtov"
-
-#~ msgid "Messages"
-#~ msgstr "Správy"
-
-#~ msgid "New Operation"
-#~ msgstr "Nová operácia"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Počet akcií"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Počet správ ktoré vyžadujú akciu"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Počet neprečítaných správ"
-
-#~ msgid "Open account dashboard menu"
-#~ msgstr "Otvoriť menu nástenky účtu"
-
-#~ msgid "PDF Reports"
-#~ msgstr "PDF výkazy"
-
-#~ msgid "Paypal Account"
-#~ msgstr "Paypal Účet"
-
-#~ msgid "Paypal account"
-#~ msgstr "Paypal účet"
-
-#~ msgid ""
-#~ "Paypal account (email) for receiving online payments (credit card, etc.)\n"
-#~ "             If you set a paypal account, the customer  will be able to "
-#~ "pay your invoices or quotations\n"
-#~ "             with a button \"Pay with  Paypal\" in automated emails or "
-#~ "through the Odoo portal."
-#~ msgstr ""
-#~ "Paypal účet (email) pre prijímanie online platieb (kreditné karty, atď.)\n"
-#~ "Ak nastavíte Paypal účet, bude zákazník môcť platiť svoje faktúry alebo "
-#~ "cenové ponuky\n"
-#~ "s tlačidlom \"Platby pomocou Paypal\" v automatizovaných emailoch alebo "
-#~ "prostredníctvom Odoo portálu."
-
-#~ msgid "Paypal username (usually email) for receiving online payments."
-#~ msgstr ""
-#~ "Paypal používateľské meno (zvyčajne email) pre príjmanie online platieb."
-
-#~ msgid "Price"
-#~ msgstr "Cena"
-
-#~ msgid ""
-#~ "Programmation error : domain_maker_move_line_amount requires comparator "
-#~ "'=' or '<'"
-#~ msgstr ""
-#~ "Chyba programovania : domain_maker_move_line_amount vyžaduje porovnávač "
-#~ "'=' alebo '<'"
-
-#~ msgid "Reporting"
-#~ msgstr "Výkazy"
-
-#~ msgid "Sales Team"
-#~ msgstr "Predajný tým"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "Vyberte 'Predaj' pre zákaznícke faktúry v účtovných knihách. Vyberte "
-#~ "'Nákup' pre účtovné knihyúčtenie predajcov. Vyberte "
-#~ "'Hotovosť'alebo'Banka'pre účtovné knihy, ktoré sa používajú u "
-#~ "zákazníckých alebo predajcovkých platieb. Vyberte 'Všeobecné', pre rôzne "
-#~ "operácie účtovných kníh. Vyberte 'Otváranie / zatváranie situácie' pre "
-#~ "položky vytvorené pre nové fiškálne roky."
-
-#~ msgid ""
-#~ "Technical field used to keep track of the origin of journal entries "
-#~ "created in case of fluctuation of the currency exchange rate. This is "
-#~ "needed when cancelling the source: it will post the inverse journal entry "
-#~ "to cancel that part too."
-#~ msgstr ""
-#~ "Technické pole používané na sledovanie pôvodu vytvorených vstupov "
-#~ "účtovnej knihy v prípade kolísania výmenného kurzu meny. Toto je potrebné "
-#~ "pri zrušení zdroja: to bude účtovať inverzný zápis účtovnej knihy aby sa "
-#~ "zrušila aj tá časť."
-
-#~ msgid "The bank statement line was already reconciled."
-#~ msgstr "Riadok bankového výpisu už bol zosúladený."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or "
-#~ "select a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Zvolený účet vášhovstupu účtovnej knihy vyžaduje druhotnú menu. Mali by "
-#~ "ste odstrániť druhotnú menu na účte alebo zvoliť zobrazenie multi-meny na "
-#~ "účtovnej knihe,"
-
-#~ msgid ""
-#~ "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-#~ msgstr ""
-#~ "Tip: stlačte ctrl-enter pre zladenie všetkých zostatkových položiek v "
-#~ "liste."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neprečítané správy"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo neprečítaných správ"
-
-#~ msgid "Website Messages"
-#~ msgstr "Správy webovej stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "História komunikácie webovej stránky"
-
-#~ msgid "You cannot change the tax, you should remove and recreate lines."
-#~ msgstr "Nemôžete zmeniť daň, musíte odstrániť a nanovo vytvoriť riadky."
-
-#~ msgid "e.g. sales@odoo.com"
-#~ msgstr "napr. predaje@odoo.com"
-
-#, fuzzy
-#~ msgid "View reconciled entries"
-#~ msgstr "Má nezladené vstupy"

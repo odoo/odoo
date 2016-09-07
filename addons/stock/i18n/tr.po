@@ -21,15 +21,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Stoksuz satış rotası oluşturur ve daha karmaşık testler akler-Bu, "
-"stock_dropshipping modülünü kurar."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -82,7 +78,6 @@ msgstr "%s: Transit Konum"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -93,14 +88,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Yeni: Stok hareketi oluşturulmuş ancak henüz onaylanmamış.\n"
-"* Başka bir hareket bekliyor: Bu durum bir hareketin başka bir hareketi "
-"beklediğinde görülür, örneğin bir zincirli akışta.\n"
-"* Uygunluk Bekliyor: Bu duruma, tedarik çözümünün doğru olmadığı zaman "
-"erişilir. Planlayıcının çalıştırılması, bir parçanın üretilmesi "
-"gerekebilir...\n"
-"* Uygun: Ürünler ayrıldığında, 'Uygun'a ayarlanır.\n"
-"* Yapıldı: Sevkiyat yapıldığında durum 'Yapıldı' olur."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1849,9 +1836,8 @@ msgstr "Teslim Makbuzu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Teslim Makbuzu"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3430,15 +3416,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Çoklu Lokayonları ve Depoları Yönetme"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Çoklu Lokayonları ve Depoları Yönetme"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3477,9 +3461,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Lot / Seri Numaralarını Yönet"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3944,9 +3927,8 @@ msgstr "İşlem Adı"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "İşlemler"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4179,15 +4161,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Paket Türü"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Paket Türü"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5878,9 +5858,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Operasyon Türü"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6849,9 +6828,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Envanterlenen Ürün"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7364,246 +7343,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Miktarları ayarla 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "            * Taslak: henüz onaylanmamış ve onaylanana kadar "
-#~ "planlanmayacaktır\n"
-#~ "\n"
-#~ "            * Başka Bir İşlem Bekliyor: kendiliğinden hazır olmadan önce "
-#~ "yürütülmek üzere başka bir hareket bekliyor (örn. stoktan sipariş "
-#~ "akışları)\n"
-#~ "\n"
-#~ "            * Hazır Olmayı Bekliyor: hala ürünlerin hazır olmasını "
-#~ "bekliyor\n"
-#~ "\n"
-#~ "            *Parçalı Sevk İçin Hazır: ürünler kısmi olarak hazır ve "
-#~ "rezerve edildi\n"
-#~ "\n"
-#~ "            * Aktarılmaya Hazır: ürünler rezerve edilmiş, yalnızca onay "
-#~ "bekliyor.\n"
-#~ "\n"
-#~ "            * Aktarıldı: işlenmiş olup, bir daha değiştirilemez ve iptal "
-#~ "edilemez\n"
-#~ "\n"
-#~ "            * İptal edildi: iptal edilmiş olup, bir daha onaylanamaz"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Stoksuz satış rotası oluşturur ve daha karmaşık testler akler-Bu, "
-#~ "stock_dropshipping modülünü kurar."
-
-#~ msgid " MTO"
-#~ msgstr " MTO"
-
-#~ msgid " On Hand"
-#~ msgstr " Stokta"
-
-#~ msgid " Sequence in"
-#~ msgstr " Giriş Sırası"
-
-#~ msgid " Sequence internal"
-#~ msgstr " İç sıralama"
-
-#~ msgid " Sequence out"
-#~ msgstr " Dış sıralama"
-
-#~ msgid " Sequence packing"
-#~ msgstr " Paketleme sırası"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Toplama sırası"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Yeni: Stok hareketi oluşturulmuş ancak henüz onaylanmamış.\n"
-#~ "* Başka bir hareket bekliyor: Bu durum bir hareketin başka bir hareketi "
-#~ "beklediğinde görülür, örneğin bir zincirli akışta.\n"
-#~ "* Uygunluk Bekliyor: Bu duruma, tedarik çözümünün doğru olmadığı zaman "
-#~ "erişilir. Planlayıcının çalıştırılması, bir parçanın üretilmesi "
-#~ "gerekebilir...\n"
-#~ "* Uygun: Ürünler ayrıldığında, 'Uygun'a ayarlanır.\n"
-#~ "* Yapıldı: Sevkiyat yapıldığında durum 'Yapıldı' olur."
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Durumlar</strong>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Eylem Gerekiyor"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Teslimat emrine talep oluşturma linkini ekler.\n"
-#~ "-Bunu seçerseniz şu modül kurulur : claim_from_delivery."
-
-#~ msgid "Claims"
-#~ msgstr "Şikayetler"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Teslim Yöntemi"
-
-#~ msgid "Followers"
-#~ msgstr "İzleyiciler"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "İzleyiciler (Kanallar)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "İzleyiciler (İş ortakları)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Öngörülen:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#~ msgid "Information"
-#~ msgstr "Bilgi"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Envanter Satırları."
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Envanter Hareketleri."
-
-#~ msgid "Inventory Name."
-#~ msgstr "Envanter Adı."
-
-#~ msgid "Inventory loss"
-#~ msgstr "Envanter zararı"
-
-#~ msgid "Is Follower"
-#~ msgstr "Takipçi mi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Son Mesaj Tarihi"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Stok hareketleri ve paketleme operasyonları arasındaki bağlantı"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Çoklu Lokayonları ve Depoları Yönetme"
-
-#~ msgid "Messages"
-#~ msgstr "Mesajlar"
-
-#~ msgid "Number of Actions"
-#~ msgstr "İşlem Sayısı"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Eylem gerektiren mesaj sayısı"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Okunmamış mesaj sayısı"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Depo Menüsünü Aç"
-
-#~ msgid "Packagings"
-#~ msgstr "Paketlemeler"
-
-#~ msgid "Picking Types"
-#~ msgstr "Toplama Türü"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "İtilen Akışlar"
-
-#~ msgid "Qty"
-#~ msgstr "Mik"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Diğer Depolardan İkmâl"
-
-#~ msgid "Suppliers"
-#~ msgstr "Tedarikçiler"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Gerekmediği takdirde Teknik alan yardım araç ipucunu gizlemek için "
-#~ "kullanılır"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Okunmamış Mesajlar"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Okunmamış Mesaj Sayacı"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Bu ürün için bir tedarik isteği başlatmak için burayı\n"
-#~ "                        doldurun. Ürün yapılandırmasına göre, Bu bir "
-#~ "taslak\n"
-#~ "                        satınalma siparişini, bir üretim emrini ya da "
-#~ "yeni bir\n"
-#~ "                        görevi tetikleyecektir."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Uyarı: Yanlış UoM!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Uyarı: yanlış miktar!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Websitesi Mesajları"
-
-#~ msgid "Website communication history"
-#~ msgstr "Web Sitesi iletişim geçmişi"
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr ""
-#~ "Bir defada sadece bir toplama listesi için ters transfer yapabilirsiniz."
-
-#~ msgid "move that created the return move"
-#~ msgstr "Geri alım için oluşturulan kayıt"
-
-#~ msgid "unknown"
-#~ msgstr "bilinmeyen"

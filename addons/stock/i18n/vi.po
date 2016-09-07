@@ -77,7 +77,6 @@ msgstr "%s: Địa điểm chuyển tiếp"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -88,13 +87,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Mới: Khi một dịch chuyển kho được tạo và chưa được xác nhận.\n"
-"* Chờ dịch chuyển khác: Trạng thái này xuất hiện khi một dịch chuyển đang "
-"chờ một dịch chuyển khác, ví dụ như trong một chuỗi cung ứng.\n"
-"* Chờ có sẵn: Trạng thái này xảy ra khi nó đang chờ sản phẩm có sẵn trong "
-"kho...\n"
-"* Có sẵn: Khi sản phẩm đã có sẵn.\n"
-"* Hoàn thành: Khi một lô hàng được xử lý."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1814,9 +1806,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Giao hàng"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3391,15 +3382,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Quản lý đa Địa điểm và Nhà kho"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Quản lý đa Địa điểm và Nhà kho"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3902,9 +3891,8 @@ msgstr "Tên Thao tác"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Thao tác"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4135,15 +4123,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Loại giao nhận"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Loại giao nhận"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5825,9 +5811,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Loại hoạt động"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6786,9 +6771,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Sản phẩm"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7300,181 +7285,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Thiết lập số lượng về 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "* Dự thảo: chưa được xác nhận và sẽ không được lên kế hoạch cho đến khi "
-#~ "được xác nhận\n"
-#~ "\n"
-#~ "* Chờ hoạt động khác: chờ đợi động thái khác được tiến hành trước khi nó "
-#~ "được tự động chạy (ví dụ trong quy trình Make-To-Order)\n"
-#~ "\n"
-#~ "* Chờ có sẵn: vẫn chờ cho tới khi có sẵn phẩm\n"
-#~ "\n"
-#~ "* Có sẵn một phần: Một vài sản phảm đã có sẵn\n"
-#~ "\n"
-#~ "* Sẵn sàng di chuyển: sản phẩm đã được đăng ký trước, chỉ đơn giản là chờ "
-#~ "xác nhận.\n"
-#~ "\n"
-#~ "* Đã chuyển: đã được xử lý, không thể chỉnh sửa hoặc hủy bỏ\n"
-#~ "\n"
-#~ "* Đã hủy: đã bị hủy bỏ, không thể xác nhận"
-
-#~ msgid " MTO"
-#~ msgstr "MTO"
-
-#~ msgid " On Hand"
-#~ msgstr "Trong kho"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Mới: Khi một dịch chuyển kho được tạo và chưa được xác nhận.\n"
-#~ "* Chờ dịch chuyển khác: Trạng thái này xuất hiện khi một dịch chuyển đang "
-#~ "chờ một dịch chuyển khác, ví dụ như trong một chuỗi cung ứng.\n"
-#~ "* Chờ có sẵn: Trạng thái này xảy ra khi nó đang chờ sản phẩm có sẵn trong "
-#~ "kho...\n"
-#~ "* Có sẵn: Khi sản phẩm đã có sẵn.\n"
-#~ "* Hoàn thành: Khi một lô hàng được xử lý."
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Thêm một khiếu nại liên kết tới phiếu xuất kho.\n"
-#~ "-Việc này sẽ cài đặt phân hệ claim_from_delivery."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Mặc định, hệ thống sẽ lấy từ địa điểm nguồn và chờ đợi khi nào có sẵn một "
-#~ "cách thụ động. Một khả năng khác cho phép bạn trực tiếp tạo một mua sắm "
-#~ "trên địa điểm nguồn (và do đó nó bỏ qua tồn kho hiện tại) để tập hợp sản "
-#~ "phẩm. Nếu chúng ta muốn thực hiện một chuỗi cung ứng thì tủy chọn thứ hai "
-#~ "nên được chọn."
-
-#~ msgid "Claims"
-#~ msgstr "Các khiếu nại"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
-
-#~ msgid "Delivery Method"
-#~ msgstr "Phương thức giao hàng"
-
-#~ msgid "Followers"
-#~ msgstr "Người dõi theo"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Người theo dõi (Các kênh)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Người theo dõi (Các đối tác)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Được dự báo:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
-
-#~ msgid "Information"
-#~ msgstr "Thông tin"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Chi tiết kiểm kho"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Dịch chuyển kiểm kho."
-
-#~ msgid "Inventory loss"
-#~ msgstr "Inventory loss"
-
-#~ msgid "Is Follower"
-#~ msgstr "Trở thành người theo dõi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Ngày thông điệp cuối cùng"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Quản lý đa Địa điểm và Nhà kho"
-
-#~ msgid "Messages"
-#~ msgstr "Thông điệp"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Mở trình đơn Kho"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Pushed Flows"
-
-#~ msgid "Qty"
-#~ msgstr "Số lượng"
-
-#~ msgid "Suppliers"
-#~ msgstr "Nhà cung cấp"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Thông điệp chưa đọc"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Sử dụng công cụ này để tạo một yêu cầu mua sắm cho sản phẩm này\n"
-#~ "                        Tùy thuộc vào cấu hình sản phẩm mà việc này có "
-#~ "thể kích hoạt\n"
-#~ "                        một hợp đồng mua hàng, một lệnh sản xuất hoặc một "
-#~ "tác vụ mới."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Cảnh báo: sai đơn vị tính!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Cảnh báo: sai số lượng!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Thông điệp Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Lịch sử thông tin liên lạc website"
-
-#~ msgid "unknown"
-#~ msgstr "chưa rõ"

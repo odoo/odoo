@@ -78,7 +78,6 @@ msgstr "%s: Транзитна локација"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -89,14 +88,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Ново: Кога движењето на стоката е креирано, но не е потврдено.\n"
-"* Исчекување на друго движење: Оваа состојба може да се види кога едно "
-"движење зависи од друго, на пример во синџирен тек.\n"
-"* Исчекување на достапност: Оваа состојба се постига кога одлуката за "
-"испорка не е јасна. Можеби се чека изработка на компонента...\n"
-"* Достапно: Со резервирање на производите, статусот се менува во "
-"'Достапно'.\n"
-"* Завршено: Кога пратката ќе се обработи, статусот се менува во 'Завршено'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1840,9 +1831,8 @@ msgstr "Ливче за испорака"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Ливче за испорака"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3419,15 +3409,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Управување со повеќе локации и магацини"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Управување со повеќе локации и магацини"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3466,9 +3454,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Управувај со лот/ сериски броеви"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3933,9 +3920,8 @@ msgstr "Име на операцијата"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Операции"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4167,15 +4153,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Тип на пакување"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Тип на пакување"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5876,9 +5860,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Тип на операција"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6860,9 +6843,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Производ"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7383,240 +7366,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ подеси количина на 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Нацрт: сеуште не е потврден и нема да биде закажан се "
-#~ "додека не се потврди\n"
-#~ "\n"
-#~ "                * Чека друга операција: чека за друго движење да се "
-#~ "изврши пред  да стане автоматско достапно (пр. во Направи нарачка "
-#~ "тековите)\n"
-#~ "\n"
-#~ "                * Чека достапност: сеуште чека за достапноста на "
-#~ "производите\n"
-#~ "\n"
-#~ "                * Делумно достапен: некои производи се достапни и "
-#~ "резервирани\n"
-#~ "\n"
-#~ "                * Спремен за трансфер: производите се резервирани, "
-#~ "едноставно чекаат потврда.\n"
-#~ "\n"
-#~ "                * Префлрени: обработено е, не може повеќе да се променува "
-#~ "или откаже\n"
-#~ "\n"
-#~ "                * Откажано: откажано е, повеќе не може да биде потврден"
-
-#~ msgid " MTO"
-#~ msgstr " Направи налог"
-
-#~ msgid " On Hand"
-#~ msgstr " на рака"
-
-#~ msgid " Sequence in"
-#~ msgstr " секвенца во"
-
-#~ msgid " Sequence internal"
-#~ msgstr "Внатрешна секвенца"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Ново: Кога движењето на стоката е креирано, но не е потврдено.\n"
-#~ "* Исчекување на друго движење: Оваа состојба може да се види кога едно "
-#~ "движење зависи од друго, на пример во синџирен тек.\n"
-#~ "* Исчекување на достапност: Оваа состојба се постига кога одлуката за "
-#~ "испорка не е јасна. Можеби се чека изработка на компонента...\n"
-#~ "* Достапно: Со резервирање на производите, статусот се менува во "
-#~ "'Достапно'.\n"
-#~ "* Завршено: Кога пратката ќе се обработи, статусот се менува во "
-#~ "'Завршено'."
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Додава линк за Рекламација на налогот за достава.\n"
-#~ "-Ова го инсталира модулот claim_from_delivery."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Стандардно, системот ќе земе од залиха во изворната локација и пасивно ќе "
-#~ "чека за достапност. Другата можност ви дозволува директно да креирате "
-#~ "набавка на изворната локација (и така да ја игнорирате моменталната "
-#~ "залиха) за да соберете производи. Ако сакаме да поврземе движења во "
-#~ "синџир и ова треба да го чека претходното, тогаш оваа втора опција треба "
-#~ "да е изберена."
-
-#~ msgid "Claims"
-#~ msgstr "Барања"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Delivery Method"
-#~ msgstr "Метод на испорака"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Прогнозирано:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "Information"
-#~ msgstr "Информација"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Загуба на залиха"
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Управување со повеќе локации и магацини"
-
-#~ msgid "Messages"
-#~ msgstr "Пораки"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Мени Отвори магацин"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Наметнати текови"
-
-#~ msgid "Qty"
-#~ msgstr "Количина"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Надополни од други магацини"
-
-#~ msgid "Suppliers"
-#~ msgstr "Добавувачи"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Избраната количина за производот %s не е компатибилна со неговата единица "
-#~ "мерка. Ќе биде автоматски конвертирано при потврда"
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "Количината на набавка ќе биде заокружена до оваа вредност.  Ако е 0, "
-#~ "точната количина ќе биде употребена.  "
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "Избраната единица мерка за производ %s не е компатибилна со единицата "
-#~ "мерка подесена на формата на производот. \n"
-#~ "Ве молимие изберете мерна единица од истата категорија единици."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Ова ќе ги покаже локациите и ќе дозволи дефинирање на повеќе видови "
-#~ "преноси и магацини."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитани Пораки"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Пополни го овој формулар за да лансирате барање на набавка за овој "
-#~ "производ. Во согласност со конфигурацијата на производот, ова може да "
-#~ "активира нацрт налог за набавка, налог за производство или нова задача."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Предупредување: погрешна единица мерка!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Предупредување: погрешна количина!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Пораки на веб сајт"
-
-#~ msgid "Website communication history"
-#~ msgstr "Историја на веб комуникација"
-
-#~ msgid "move that created the return move"
-#~ msgstr "движење што го креирало повратното движење"
-
-#~ msgid "unknown"
-#~ msgstr "непознато"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-11 09:12+0000\n"
+"PO-Revision-Date: 2016-09-01 07:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
@@ -19,15 +19,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Crea la ruta de dropship i afegeix testos més complexos.\n"
-"- Això instala el mòdul stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -80,7 +76,6 @@ msgstr "%s: ubicació de trànsit"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -91,14 +86,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Nou: Quan el moviment d'existències s'ha creat i no s'ha confirmat "
-"encara.\n"
-"* Esperant un altre moviment: Aquest estat es dóna quan un moviment està "
-"esperant a un altre, per exemple al flux encadenat.\n"
-"* Esperant disponibilitat: S'assoleix aquest estat quan la resolució "
-"d'abastiment no és correcta.\n"
-"* Disponible: S'estableix quan es reserva productes.\n"
-"* Realitzat: Quan es processa l'enviament, llavors s'assoleix aquest estat."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -126,7 +113,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ", if accounting or purchase is installed"
-msgstr ""
+msgstr ", si els mòduls de comptabilitat o de compra estan instal·lats"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -227,6 +214,14 @@ msgid ""
 "&gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon="
+"\"&#57408;\"/>\n"
+"                                        <strong>Importa un arxiu</strong><br/"
+">\n"
+"                                        <span class=\"small\">Recomanat si "
+"&gt;100 productes</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -265,6 +260,14 @@ msgid ""
 "&lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon="
+"\"&#57440;\"/>\n"
+"                                        <strong> Crear manualment</"
+"strong><br/>\n"
+"                                        <span class=\"small\">Recomanat si "
+"&lt;100 productes</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1386,7 +1389,7 @@ msgstr "Crear proveïment"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create Vendors"
-msgstr ""
+msgstr "Crear venedors"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1415,7 +1418,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create your products"
-msgstr ""
+msgstr "Creï els seus productes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_move_ids
@@ -1834,9 +1837,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Lliurament"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -1851,7 +1853,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Deployment"
-msgstr ""
+msgstr "Desplegament"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_name
@@ -2042,7 +2044,7 @@ msgstr "Transferències realitzades per data"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Download the"
-msgstr ""
+msgstr "Descarregui el"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2095,7 +2097,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Excel template"
-msgstr ""
+msgstr "Plantilla Excel"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -2622,7 +2624,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "If you want to do it yourself:"
-msgstr ""
+msgstr "Si desitja fer-ho vostè mateix:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -2643,7 +2645,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Import using the top left button in"
-msgstr ""
+msgstr "Import utilitzant el botó superior esquerra en"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3446,15 +3448,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Gestionar múltiples ubicacions i magatzems"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Gestionar múltiples ubicacions i magatzems"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3493,9 +3493,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Gestionar lots / núm. de sèrie"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3968,9 +3967,8 @@ msgstr "Nom operació"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Operacions"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4203,15 +4201,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Tipus de empaquetament"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Tipus de empaquetament"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4464,7 +4460,7 @@ msgstr "Data planificada"
 #. module: stock
 #: model:ir.model,name:stock.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Planificador"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:772
@@ -5606,12 +5602,9 @@ msgstr "Petit refrigerador"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Alguns productes poden ser venuts/comprats en diferents unitats de mesura "
-"(avançat)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:780
@@ -5953,9 +5946,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Tipus d'operació"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6141,14 +6133,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:814
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"L'arrodoniment de la seva unitat de mesura %s al moviment vs. %s al producte "
-"no permet realitzar aquesta operació o no està transmetent l'albarà d'un cop."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:116
@@ -6953,14 +6943,14 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Producte inventariat"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Benvingut"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_warehouse_selectable
@@ -7278,7 +7268,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Products"
-msgstr ""
+msgstr "Els teus productes"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7448,7 +7438,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "the list of products"
-msgstr ""
+msgstr "la llista de productes"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7484,314 +7474,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Establir quantitat a 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "* Esborrany: no confirmat encara i per tant no planificat fins que es "
-#~ "confirmi.\n"
-#~ "\n"
-#~ "* Esperant una altra operació: esperant que un altre moviment acabi abans "
-#~ "de convertir-se automàticament en disponible (per exemple en els fluxos "
-#~ "sota comanda).\n"
-#~ "\n"
-#~ "* Esperant disponibilitat: encara esperant a la disponibilitat dels "
-#~ "productes.\n"
-#~ "\n"
-#~ "* Parcialment disponible: alguns productes estan disponibles i "
-#~ "reservats.\n"
-#~ "\n"
-#~ "* Llest per ser transferit: els productes estan reservats, esperant "
-#~ "simplement a la seva confirmació.\n"
-#~ "\n"
-#~ "* Transferit: ha estat processat, pel que no pot ser modificat o "
-#~ "cancel·lat ja.\n"
-#~ "\n"
-#~ "* Cancel·lat: ha estat cancel·lat i ja no pot ser confirmat."
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Crea la ruta de dropship i afegeix testos més complexos.\n"
-#~ "- Això instala el mòdul stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr "Sota demanda"
-
-#~ msgid " On Hand"
-#~ msgstr "Disponible"
-
-#~ msgid " Sequence in"
-#~ msgstr "Seqüència d'entrada"
-
-#~ msgid " Sequence internal"
-#~ msgstr "Seqüència interna"
-
-#~ msgid " Sequence out"
-#~ msgstr "Seqüència de sortida"
-
-#~ msgid " Sequence packing"
-#~ msgstr "Seqüència d'empaquetatge"
-
-#~ msgid " Sequence picking"
-#~ msgstr "Seqüència d'albarà"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Nou: Quan el moviment d'existències s'ha creat i no s'ha confirmat "
-#~ "encara.\n"
-#~ "* Esperant un altre moviment: Aquest estat es dóna quan un moviment està "
-#~ "esperant a un altre, per exemple al flux encadenat.\n"
-#~ "* Esperant disponibilitat: S'assoleix aquest estat quan la resolució "
-#~ "d'abastiment no és correcta.\n"
-#~ "* Disponible: S'estableix quan es reserva productes.\n"
-#~ "* Realitzat: Quan es processa l'enviament, llavors s'assoleix aquest "
-#~ "estat."
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Estat</strong>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Cal fer alguna acció"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Afegeix un enllaç a reclamacions des de l'albarà d'enviament.\n"
-#~ "Això instal·la el mòdul claim_from_delivery."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Per defecte, el sistema agafarà les unitats des de les existències en la "
-#~ "ubicació font (o fills) i esperarà passivament a la seva disponibilitat. "
-#~ "L'altra possibilitat li permet crear un abastiment en la ubicació font (i "
-#~ "per tant, ignorar les existències actuals) per obtenir productes. Si vol "
-#~ "encadenar moviments i tenir aquesta per esperar l'anterior, aquesta "
-#~ "segona opció és la que ha d'escollir-se."
-
-#~ msgid "Claims"
-#~ msgstr "Reclamacions"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data de l'últim missatge enviat al registre."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Mètode lliurament"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidors"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Canals)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidors (Socis)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Previst:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si està marcat hi ha missatges nous pendents."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
-
-#~ msgid "Information"
-#~ msgstr "Informació"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Línies d'inventari."
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Moviments d'inventari."
-
-#~ msgid "Inventory Name."
-#~ msgstr "Nom de l'inventari."
-
-#~ msgid "Inventory loss"
-#~ msgstr "Pèrdues d'inventari"
-
-#~ msgid "Is Follower"
-#~ msgstr "És seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data Últim Missatge"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr ""
-#~ "Enllaci entre els moviments d'existències i les operacions d'empaquetatge"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Gestionar múltiples ubicacions i magatzems"
-
-#~ msgid "Messages"
-#~ msgstr "Missatges"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'accions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de missatges que requereixen una atenció"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de missatges no llegits"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Obrir el menú magatzem"
-
-#~ msgid "Picking Types"
-#~ msgstr "Tipus d'albarà"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Fluxos empesos"
-
-#~ msgid "Qty"
-#~ msgstr "Qtat"
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr ""
-#~ "La quantitat restant en la UdM per defecte d'acord amb els moviments en "
-#~ "casats amb aquesta operació"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Reabastir d'altres magatzems"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Alguns productes poden ser venuts/comprats en diferents unitats de mesura "
-#~ "(avançat)"
-
-#~ msgid "Suppliers"
-#~ msgstr "Proveïdors"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Camp tècnic utilitzat per ocultar l'ajuda contextual si no es necessita"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "La quantitat escollida pel producte %s no és compatible amb "
-#~ "l'arrodoniment de la UdM. Serà convertida automàticament en la "
-#~ "confirmació."
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "La quantitat de l'abastiment serà arrodonida a aquest múltiple. Si és 0, "
-#~ "s'utilitzarà la quantitat exacta."
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "L'arrodoniment de la seva unitat de mesura %s al moviment vs. %s al "
-#~ "producte no permet realitzar aquesta operació o no està transmetent "
-#~ "l'albarà d'un cop."
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "La UdM seleccionada pel producte %s no és compatible amb la LdM "
-#~ "establerta al formulari de producte.\n"
-#~ "Esculli una LdM de la mateixa categoria."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Això mostrarà les ubicacions i li permetrà definir múltiples tipus "
-#~ "d'albarà i magatzems."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unitat de mesures"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Missatges pendents de llegir"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Comptador de missatges no llegits"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Utilitzi aquest assistent per generar una petició d'abastiment per aquest "
-#~ "producte, això pot crear una comanda de compra en esborrany, una ordre de "
-#~ "fabricació o una nova tasca."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Advertència: UdM no valida!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Advertència: quantitat no valida!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Missatges de la pàgina web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicacions de la pàgina web"
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "Només pot tornar un albarà a la vegada!"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "Sol pots retornar albarans que ja estan realitzats."
-
-#~ msgid "move that created the return move"
-#~ msgstr "moviment que ha creat la devolució"
-
-#~ msgid "unknown"
-#~ msgstr "desconegut"

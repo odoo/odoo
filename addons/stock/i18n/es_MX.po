@@ -79,7 +79,6 @@ msgstr "%s: Lugar de Tránsito"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -90,15 +89,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Nuevo: Cuando se crea el stock de movimiento y todavía no confirmado.\n"
-"* Esperando Otra Mover: Este estado se puede ver cuando un movimiento está "
-"esperando otro, por ejemplo en un flujo encadenado.\n"
-"* Espera Disponibilidad: se alcanza este estado cuando la resolución de la "
-"contratación no es sencillo. Es posible que el planificador corra, un "
-"componente para mí fabricado ... \n"
-"* Disponible: Cuando los productos están reservados, se establece en "
-"'Disponible'.\n"
-"* Hecho: Cuando se procesa el envío, el estado es 'Hecho'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1834,9 +1824,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Entrega"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3919,9 +3908,8 @@ msgstr "Nombre operación"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Operaciones"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4152,15 +4140,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Tipo de albarán"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Paquetes"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -6780,9 +6766,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Producto"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7287,204 +7273,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr ""
-
-#~ msgid " MTO"
-#~ msgstr "MTO"
-
-#~ msgid " On Hand"
-#~ msgstr "En Mano"
-
-#~ msgid " Sequence in"
-#~ msgstr "Secuencia en"
-
-#~ msgid " Sequence internal"
-#~ msgstr "Secuencia interna"
-
-#~ msgid " Sequence packing"
-#~ msgstr "Secuencia del empaque"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Nuevo: Cuando se crea el stock de movimiento y todavía no confirmado.\n"
-#~ "* Esperando Otra Mover: Este estado se puede ver cuando un movimiento "
-#~ "está esperando otro, por ejemplo en un flujo encadenado.\n"
-#~ "* Espera Disponibilidad: se alcanza este estado cuando la resolución de "
-#~ "la contratación no es sencillo. Es posible que el planificador corra, un "
-#~ "componente para mí fabricado ... \n"
-#~ "* Disponible: Cuando los productos están reservados, se establece en "
-#~ "'Disponible'.\n"
-#~ "* Hecho: Cuando se procesa el envío, el estado es 'Hecho'."
-
-#~ msgid ""
-#~ "* Vendor Location: Virtual location representing the source location for "
-#~ "products coming from your vendors\n"
-#~ "                       \n"
-#~ "* View: Virtual location used to create a hierarchical structures for "
-#~ "your warehouse, aggregating its child locations ; can't directly contain "
-#~ "products\n"
-#~ "                       \n"
-#~ "* Internal Location: Physical locations inside your own warehouses,\n"
-#~ "                       \n"
-#~ "* Customer Location: Virtual location representing the destination "
-#~ "location for products sent to your customers\n"
-#~ "                       \n"
-#~ "* Inventory Loss: Virtual location serving as counterpart for inventory "
-#~ "operations used to correct stock levels (Physical inventories)\n"
-#~ "                       \n"
-#~ "* Procurement: Virtual location serving as temporary counterpart for "
-#~ "procurement operations when the source (vendor or production) is not "
-#~ "known yet. This location should be empty when the procurement scheduler "
-#~ "has finished running.\n"
-#~ "                       \n"
-#~ "* Production: Virtual counterpart location for production operations: "
-#~ "this location consumes the raw material and produces finished products\n"
-#~ "                       \n"
-#~ "* Transit Location: Counterpart location that should be used in inter-"
-#~ "companies or inter-warehouses operations\n"
-#~ "                      "
-#~ msgstr ""
-#~ "* Ubicación de Proveedor: Ubicación virtual que representa la ubicación "
-#~ "de origen para productos provenientes de tus proveedores.\n"
-#~ "                       \n"
-#~ "* Vista: Ubicación virtual usara para crear estructura jerarquica de tus "
-#~ "almacenes, agregando sus ubicaciones hijas; no puede contener productos "
-#~ "directamente.\n"
-#~ "                       \n"
-#~ "* Ubicación Interna: Ubicación física dentro de tus propios almacenes.\n"
-#~ "                       \n"
-#~ "* Ubicación de Clientes: Ubicación física que representa la ubicación de "
-#~ "destino cuando los productos son enviados a los clientes.\n"
-#~ "                       \n"
-#~ "* Pérdidas de Inventario: Ubicación virtual que sirve como contraparte de "
-#~ "las operaciones de inventario usado para corregir los niveles de "
-#~ "inventario (Inventarios Físicos).\n"
-#~ "                       \n"
-#~ "* Procurement: Ubicación virtual que sirve como contraparte temporal de "
-#~ "las operaciones de requisisiones cuando el origen (proveedor o "
-#~ "producción) aún no son conocidas. Esta ubicación debe vaciarse cuando el "
-#~ "planificador se ejecuta.\n"
-#~ "                       \n"
-#~ "* Producción: Ubicación virtual que sirve como contraparte para las "
-#~ "operaciones de producción: esta ubicación consume la materia prima y "
-#~ "genera los productos terminados.\n"
-#~ "                       \n"
-#~ "* Ubicación de Tránsito: Ubicación que sirve como contraparte para ser "
-#~ "usada en operaciones inter-compañía e inter-almacenes."
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Claims"
-#~ msgstr "Reclamaciones"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha de último trabajo realizado en esta cuenta"
-
-#~ msgid ""
-#~ "Define your locations to reflect your warehouse structure and\n"
-#~ "                organization. Odoo is able to manage physical locations\n"
-#~ "                (warehouses, shelves, bin, etc), partner locations "
-#~ "(customers,\n"
-#~ "                vendors) and virtual locations which are the counterpart "
-#~ "of\n"
-#~ "                the stock operations like the manufacturing orders\n"
-#~ "                consumptions, inventories, etc."
-#~ msgstr ""
-#~ "Define tus ubicaciones para reflejar la estructura de tu almacén\n"
-#~ "y organización. Odoo permite administrar ubicaciones físicas\n"
-#~ "(almacenes, entantes, cajas, etc.), ubicaciones de empresas (clientes,\n"
-#~ "proveedores) y ubicaciones virtuales que son la contraparte de\n"
-#~ "las operaciones de almacén, como las ordenes de fabricación,\n"
-#~ "consumos, inventarios, etc."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Método de Entrega"
-
-#~ msgid ""
-#~ "Every stock operation in Odoo moves the products from one\n"
-#~ "                location to another one.  For instance, if you receive "
-#~ "products\n"
-#~ "                from a vendor, Odoo will move products from the Vendor\n"
-#~ "                location to the Stock location. Each report can be "
-#~ "performed on\n"
-#~ "                physical, partner or virtual locations."
-#~ msgstr ""
-#~ "Cada operación de almacén en Odoo mueve productos de una\n"
-#~ "ubicación a otra. Por ejemplo, si tu recibes productos de un proveedor,\n"
-#~ "Odoo va a mover los productos de la ubicación de Proveedor a la \n"
-#~ "ubicación de Existencias. Cada registro puede ser ejecutado en\n"
-#~ "ubicaciones físicas, de empresas o virtuales."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Socios)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Planeado"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si se marca, los nuevos mensajes requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "Information"
-#~ msgstr "Información"
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un Seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha de último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes sin leer"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Flujos empujados"
-
-#~ msgid "Qty"
-#~ msgstr "Ctd."
-
-#~ msgid "Suppliers"
-#~ msgstr "Proveedores"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unidades de medida"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes sin leer"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de mensajes sin leer"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sitio Web historial de comunicación"
-
-#~ msgid "unknown"
-#~ msgstr "Desconocido"

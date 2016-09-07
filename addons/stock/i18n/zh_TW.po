@@ -21,15 +21,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"建立從供應商直接發到客戶的路線，增加更加複雜的測試-這會安裝 "
-"stock_dropshipping模組。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -82,7 +78,6 @@ msgstr "%s: 中轉位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -93,13 +88,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* 新增：庫存調動尚未被確認。\n"
-"* 等待另外的調動：此狀態出現於當一個調動正在等待另外一個調動時，例如連動式物"
-"流。\n"
-"* 等待可用：此狀態代表貨物非直接可取得，可能需要執行排程器、生產一個零件等"
-"等。\n"
-"* 可用：當產品已經被保留給此調動，該調動會被設為「可用」。\n"
-"* 完成：當調動已處理完成時，狀態是「完成」。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1818,9 +1806,8 @@ msgstr "送貨單"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "送貨單"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3386,15 +3373,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "管理多個倉位與倉庫"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "管理多個倉位與倉庫"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3433,9 +3418,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "管理批次和序列號"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3897,9 +3881,8 @@ msgstr "作業名稱"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "作業"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4128,15 +4111,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "包裹類型"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "包裹類型"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5824,9 +5805,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "作業類型"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6002,14 +5982,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:814
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"在此產品上您的計量單位%s的舍入 在此移動vs. %s 上不允許這些作業，或您沒一次完"
-"成分揀調撥。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:116
@@ -6784,9 +6762,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "已盤存產品"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7301,247 +7279,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ 設定數量為 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * 草稿：即未確認狀態，直到確認前不會被安排分揀。\n"
-#~ "\n"
-#~ "                * 等待其他操作：等待另一庫存移動完成後而自動變為可用狀態"
-#~ "（例如MTO流程）。\n"
-#~ "\n"
-#~ "                * 等待可用：等待產品可用狀態。\n"
-#~ "\n"
-#~ "                * 部分可用：部分產品可用並被保留。\n"
-#~ "\n"
-#~ "                * 準備待調撥：產品已被保留，等待確認。\n"
-#~ "\n"
-#~ "                * 已調撥：已完成調撥，無法修改和取消。\n"
-#~ "\n"
-#~ "                * 已取消：已取消，無法被再次確認。"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "建立從供應商直接發到客戶的路線，增加更加複雜的測試-這會安裝 "
-#~ "stock_dropshipping模組。"
-
-#~ msgid " MTO"
-#~ msgstr " MTO"
-
-#~ msgid " On Hand"
-#~ msgstr " 在手"
-
-#~ msgid " Sequence in"
-#~ msgstr " 入庫序列"
-
-#~ msgid " Sequence internal"
-#~ msgstr " 內部序列"
-
-#~ msgid " Sequence out"
-#~ msgstr " 出庫序列"
-
-#~ msgid " Sequence packing"
-#~ msgstr " 包裹序列"
-
-#~ msgid " Sequence picking"
-#~ msgstr " 分揀序列"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* 新增：庫存調動尚未被確認。\n"
-#~ "* 等待另外的調動：此狀態出現於當一個調動正在等待另外一個調動時，例如連動式"
-#~ "物流。\n"
-#~ "* 等待可用：此狀態代表貨物非直接可取得，可能需要執行排程器、生產一個零件等"
-#~ "等。\n"
-#~ "* 可用：當產品已經被保留給此調動，該調動會被設為「可用」。\n"
-#~ "* 完成：當調動已處理完成時，狀態是「完成」。"
-
-#~ msgid "Action Needed"
-#~ msgstr "待處理"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "為送貨單新增一個索賠連結。\n"
-#~ "-這會安裝模組claim_from_delivery。"
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "預設情況下，系統從源位置的庫存中取貨，並等待產品可用。另外一個可能是允許您"
-#~ "在源位置上直接產生一個需求單(從而忽略它的當前庫存)來獲取產品。如果我們想把"
-#~ "庫存移動連線起來，並讓庫存移動等待上一個移動，您應該選擇第二個選項。"
-
-#~ msgid "Claims"
-#~ msgstr "索賠"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "釋出到記錄上的最後資訊的日期"
-
-#~ msgid "Delivery Method"
-#~ msgstr "交貨方法"
-
-#~ msgid "Followers"
-#~ msgstr "關注者"
-
-#~ msgid "Forecasted:"
-#~ msgstr "預測："
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "當有新訊息時通知您。"
-
-#~ msgid "Information"
-#~ msgstr "資訊"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "盤存明細行。"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "盤存移動"
-
-#~ msgid "Inventory Name."
-#~ msgstr "盤存名稱"
-
-#~ msgid "Inventory loss"
-#~ msgstr "盤點損失"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最後訊息日期"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "將庫存調撥和包裝作業關聯"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "管理多個倉位與倉庫"
-
-#~ msgid "Messages"
-#~ msgstr "訊息"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "開啟倉庫選單"
-
-#~ msgid "Picking Types"
-#~ msgstr "分揀類型"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "推式物流"
-
-#~ msgid "Qty"
-#~ msgstr "數量"
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr " 預設計量單位的剩餘數量是和這次移動作業相匹配的。"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "從其他倉庫補給"
-
-#~ msgid "Suppliers"
-#~ msgstr "供應商"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr "該技術欄位用來隱藏不必要的幫助提示資訊。"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr "選擇的產品數量%s不相容四捨五入計量單位。確認後它將會自動轉換"
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "採購數量將是倍數級別的。若為0，將強制要求確切數值才行，就是說不能為0。"
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "在此產品上您的計量單位%s的舍入 在此移動vs. %s 上不允許這些作業，或您沒一次"
-#~ "完成分揀調撥。"
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "產品%s 的所選計量單位與這個產品的預設計量單位類別不同。\n"
-#~ " 請選擇一個同類別的計量單位。"
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr "這將告訴你位置並且允許你定義多個分揀類型和倉庫"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未讀訊息"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "填充這裡來執行該產品的需求申請。根據產品的配置，這個方法觸發一個採購單草"
-#~ "稿、生產訂單或者新的任務。"
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "警告：錯誤UoM！"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "警告：錯誤數量！"
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "您可以只返回已完成的分揀！"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "您可能只返回已完成的分揀！"
-
-#~ msgid "move that created the return move"
-#~ msgstr "建立退貨移動的移動"
-
-#~ msgid "unknown"
-#~ msgstr "不詳"

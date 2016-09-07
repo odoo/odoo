@@ -61,7 +61,7 @@ msgstr ""
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Cancelar,</i> Seu pagamento foi cancelado.</span>"
 
 #. module: payment
 #: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -76,6 +76,8 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
+"<span><i>Pronto,</i> Seu pagamento online foi processado com sucesso. "
+"Obrigado por sua compra.</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -105,6 +107,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
+"<span><i>Pendente,</i> Seu pagamento online foi processado com sucesso. Mas "
+"sua compra ainda não foi validada.</span>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -166,7 +170,7 @@ msgstr "No pagamento com a confirmação do comprador"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -207,7 +211,7 @@ msgstr "Configuração"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
@@ -271,7 +275,7 @@ msgstr "Detalhes do Cliente"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -399,7 +403,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr ""
+msgstr "Instalar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
@@ -668,7 +672,7 @@ msgstr "Servidor a Servidor"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
@@ -780,6 +784,8 @@ msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
 msgstr ""
+"<p>Você será redirecionado para o site Adyen após clicar no botão de "
+"pagamento.</p>"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
@@ -787,6 +793,8 @@ msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
 msgstr ""
+"Você será redirecionado ao site do Authorize depois de clicar no botão de "
+"pagamento."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
@@ -794,6 +802,8 @@ msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment "
 "button."
 msgstr ""
+"<p>Rápido Você Será redirecionado PARA O local não APOS Buckaroo Clicar no "
+"Botão de Pagamento.</p>"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
@@ -808,12 +818,16 @@ msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
 msgstr ""
+"<p>Você será redirecionado para o site do Paypal depois de clicar no botão "
+"de pagamento.</p>"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
 msgstr ""
+"Você será redirecionado para o site do Sips após clicar no botão de "
+"pagamento."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -885,58 +899,3 @@ msgstr "tx_values: valores de transação"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "user: atual recorde usuário navegue"
-
-#~ msgid "-It installs the module payment_adyen."
-#~ msgstr "-Instala o módulo payment_adyen."
-
-#~ msgid "-It installs the module payment_authorize."
-#~ msgstr "-instala o módulo payment_authorize."
-
-#~ msgid "-It installs the module payment_buckaroo."
-#~ msgstr "-Instala o módulo payment_buckaroo."
-
-#~ msgid "-It installs the module payment_ogone."
-#~ msgstr "-Instala o módulo payment_ogone."
-
-#~ msgid "-It installs the module payment_paypal."
-#~ msgstr "-Instala o módulo payment_paypal."
-
-#~ msgid "-It installs the module payment_transfer."
-#~ msgstr "-instala o módulo payment_authorize."
-
-#~ msgid "Ogone"
-#~ msgstr "Ogone"
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"
-
-#~ msgid "unknown"
-#~ msgstr "desconhecido"
-
-#, fuzzy
-#~ msgid "-This installs the module payment_adyen."
-#~ msgstr "-Instala o módulo payment_adyen."
-
-#, fuzzy
-#~ msgid "-This installs the module payment_authorize."
-#~ msgstr "-instala o módulo payment_authorize."
-
-#, fuzzy
-#~ msgid "-This installs the module payment_buckaroo."
-#~ msgstr "-Instala o módulo payment_buckaroo."
-
-#, fuzzy
-#~ msgid "-This installs the module payment_ogone."
-#~ msgstr "-Instala o módulo payment_ogone."
-
-#, fuzzy
-#~ msgid "-This installs the module payment_paypal."
-#~ msgstr "-Instala o módulo payment_paypal."
-
-#, fuzzy
-#~ msgid "-This installs the module payment_sips."
-#~ msgstr "-Instala o módulo payment_paypal."
-
-#, fuzzy
-#~ msgid "-This installs the module payment_transfer."
-#~ msgstr "-instala o módulo payment_authorize."

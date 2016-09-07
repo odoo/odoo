@@ -21,15 +21,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Ustvari dropship progo in doda kompleksnejše teste. -Namesti modul "
-"stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -82,7 +78,6 @@ msgstr "%s: Tranzitna lokacija"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -93,11 +88,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Novo:Še ne potrjen premik.\n"
-"* Čaka na drugi premik: Pri verižnem toku.\n"
-"* Čaka na razpoložljivost: Čaka nabavo,izdelavo..\n"
-"* Razpoložljivo: Izdelki so rezervirani.\n"
-"* Končano: Premik kočan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1823,9 +1813,8 @@ msgstr "Dobavnica"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Dobavnica"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3427,15 +3416,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Upravljanje z več različnimi lokacijami in skladišči"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Upravljanje z več različnimi lokacijami in skladišči"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3474,9 +3461,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Upravljanje lotov/serijskih številk"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3944,9 +3930,8 @@ msgstr "Ime operacije"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Operacije"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4175,15 +4160,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Tip pakiranja"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Tip pakiranja"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5903,9 +5886,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Tip operacije"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6085,14 +6067,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:814
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"Zaokroževanja EM %s pri premiku glede na %s proizvoda ne dovoljujejo teh "
-"operacij ali pa ne premikate celotnega prevzema hkrati. "
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:116
@@ -6884,9 +6864,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Popisani proizvod"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7406,289 +7386,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Nastavi količine na 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Osnutek: še ne potrjeno in ne bo načrtovano dokler ne "
-#~ "bopotrjeno\n"
-#~ "\n"
-#~ "                * Čakanje na drugo operacijo: čakanje na drug premik pred "
-#~ "nadaljevanjem preden postane samodejno razpoložljivo (npr. v tokovih "
-#~ "Naredi po naročilu)\n"
-#~ "\n"
-#~ "                * Čakanje na razpoložljivost: še vedno čaka na "
-#~ "razpoložljivostproizvodov\n"
-#~ "\n"
-#~ "                * Delno razpoložljivo: nekaj proizvodov je na voljo in so "
-#~ "rezervirani\n"
-#~ "\n"
-#~ "                * Pripravljeno na premestitev: proizvodi so rezervirani "
-#~ "in čakajo na potrditev.\n"
-#~ "\n"
-#~ "                * Premeščeno: že obdelano, ne more več biti spremenjeno "
-#~ "ali preklicano\n"
-#~ "\n"
-#~ "                * Preklicano: bilo je preklicano in ne more biti več "
-#~ "potrjeno"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Ustvari dropship progo in doda kompleksnejše teste. -Namesti modul "
-#~ "stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr " MTO"
-
-#~ msgid " On Hand"
-#~ msgstr " Pri roki"
-
-#~ msgid " Sequence in"
-#~ msgstr " Vhodno zaporedje"
-
-#~ msgid " Sequence internal"
-#~ msgstr " Interno zaporedje"
-
-#~ msgid " Sequence out"
-#~ msgstr " Izhodno zaporedje"
-
-#~ msgid " Sequence packing"
-#~ msgstr " Zaporedje pakiranja"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Zaporedje zbirnika"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Novo:Še ne potrjen premik.\n"
-#~ "* Čaka na drugi premik: Pri verižnem toku.\n"
-#~ "* Čaka na razpoložljivost: Čaka nabavo,izdelavo..\n"
-#~ "* Razpoložljivo: Izdelki so rezervirani.\n"
-#~ "* Končano: Premik kočan."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potreben je ukrep"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Doda povezavo do reklamacij na dostavni nalog.\n"
-#~ "-Namesti modul claim_from_delivery."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Privzeto bo sistem vzel iz zaloge na izvorni lokaciji in pasivno čakal na "
-#~ "razpoložljivost. Druga možnost omogoča neposredno ustvariti oskrbovanje "
-#~ "na izvorni lokaciji (in tako prezreti trenutno zalogo) za zbiranje "
-#~ "proizvodov. Če želimo verižne premike in da ta premik mora čakati "
-#~ "prejšnjega, se izbere prav ta, druga, možnost."
-
-#~ msgid "Claims"
-#~ msgstr "Zahtevki"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Način dostave"
-
-#~ msgid "Followers"
-#~ msgstr "Sledilci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Sledilci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Sledilci (partnerji)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Napoved:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "Information"
-#~ msgstr "Informacije"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Postavke inventure"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Premiki inventarja"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Naziv inventure"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Primanjkljaj inventarja"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je sledilec"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnjega sporočila"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Povezava med premiki zaloge in operacijami pakiranja"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Upravljanje z več različnimi lokacijami in skladišči"
-
-#~ msgid "Messages"
-#~ msgstr "Sporočila"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Število aktivnosti"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Število neprebranih sporočil"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Odpri meni skladišča"
-
-#~ msgid "Picking Types"
-#~ msgstr "Tipi zbirnikov"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Potisni tokovi ('push')"
-
-#~ msgid "Qty"
-#~ msgstr "Kol."
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr ""
-#~ "Preostala količina v privzeti EM glede na premike, ki ustrezajo tej "
-#~ "operaciji. "
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Oskrbuj iz drugih skladišč"
-
-#~ msgid "Suppliers"
-#~ msgstr "Dobavitelji"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr "Tehnično polje za skrivanje napotkov, če niso potrebni"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Izbrana količina proizvoda %s ni združljiva z zaokroževanjem EM. Ob "
-#~ "potrditvi bo samodejno pretvorjena."
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "Oskrbovalna količina bo zaokrožena na ta večkratnik. Če je 0, se uporabi "
-#~ "točna količina.  "
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "Zaokroževanja EM %s pri premiku glede na %s proizvoda ne dovoljujejo teh "
-#~ "operacij ali pa ne premikate celotnega prevzema hkrati. "
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "Izbrana EM proizvoda %s ni združljiva z EM nastavljeno v obrazcu "
-#~ "proizvoda. \n"
-#~ "Izberite EM iste kategorije EM."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Prikaz lokacij in omogočeno določanje več tipov zbirnikov in skladišč."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neprebrana sporočila"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Števec neprebranih sporočil"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr "Ta obrazec bo sprožil proces oskrbe"
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Opozorilo: napačna EM!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Opozorilo: napačna količina!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Sporočila iz spletne strani"
-
-#~ msgid "Website communication history"
-#~ msgstr "Kronologija komunikacij spletne strani"
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "Dovoljeno je vračilo le enega zbirnika hkrati!"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "Možna so le vračila zbirnikov, ki so opravljeni!"
-
-#~ msgid "move that created the return move"
-#~ msgstr "premik, ki je ustvaril povratni premik"
-
-#~ msgid "unknown"
-#~ msgstr "neznano"

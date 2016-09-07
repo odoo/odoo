@@ -6,6 +6,7 @@
 # Aboubakar Youssoufa <sasocda@gmail.com>, 2016
 # Fahad Saeed <fsaeed667@gmail.com>, 2016
 # fares alokeeli <okffok@gmail.com>, 2016
+# Fatma Reda <alex.fatma@gmail.com>, 2016
 # HaNi alakkad <haniakad@gmail.com>, 2016
 # hoxhe aits <hoxhe0@gmail.com>, 2015
 # Khaled Menof <kifcaliph@hotmail.com>, 2016
@@ -27,8 +28,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-24 08:55+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-26 14:41+0000\n"
+"Last-Translator: Fatma Reda <alex.fatma@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +81,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
-#, fuzzy
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "Invoice.\n"
@@ -92,13 +92,6 @@ msgid ""
 "related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-"* تستخدم الحالة `مسودة`  عندما يكود المستخدم فاتورة جديدة غير مصدقة\n"
-"* تستخدم الحالة 'Pro-forma' عندما لاتحتوي الفاتورة علي رقم للفاتورة\n"
-"* تستخدم الحالة  `مفتوح` عندما ينشء المستخدم فاتورة ويولد لها رقما. وتظل في "
-"حالة مفتوحة  حتي يدفع المستخدم الفاتورة\n"
-"* تستخدم حالة `مدفوعة` تلقائيا عند دفع الفاتورة. وقد تكون أو لاتكون مدخلات "
-"دفتر اليومية الموافقة لها  ذات صلة\n"
-"* تستخم حالة `ملغاة` عندما يلغي المستخدم فاتورة"
 
 #. module: account
 #. openerp-web
@@ -117,7 +110,7 @@ msgstr "عدد خانات الأرقام"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "عدد السطور"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -163,6 +156,9 @@ msgstr "، إذا تم تثبيت الحسابات أو المشتريات"
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
 msgstr ""
+"توفيق\n"
+"اصلاح\n"
+"انسجام"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -559,9 +555,8 @@ msgstr "<strong>تعليق:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
 msgid "<strong>Company:</strong>"
-msgstr "<strong>تعليق:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -638,9 +633,8 @@ msgstr "<strong>تاريخ الاستحقاق:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>ترتيب حسب:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -659,9 +653,8 @@ msgstr "<strong>تاريخ الفاتورة:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "<strong>Journal:</strong>"
-msgstr "<strong>اليوميات:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -1032,9 +1025,8 @@ msgstr "تقرير الحساب/الحساب المشترك"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
-#, fuzzy
 msgid "Account Common Journal Report"
-msgstr "تقرير الحساب/الحساب المشترك"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
@@ -1101,9 +1093,8 @@ msgstr "رقم الحساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_partner_ledger
-#, fuzzy
 msgid "Account Partner Ledger"
-msgstr "تقرير الحساب المشترك للشريك"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
@@ -1112,9 +1103,8 @@ msgstr "دائن"
 
 #. module: account
 #: model:ir.model,name:account.model_account_print_journal
-#, fuzzy
 msgid "Account Print Journal"
-msgstr "حساب اليومية"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_category_property_form
@@ -1619,9 +1609,8 @@ msgstr "السماح للفواتير المبدأية"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
-#, fuzzy
 msgid "Allows to work in a multi currency environment"
-msgstr "السماح لمناخ متعدد العملات"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
@@ -2128,9 +2117,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Base Amount"
-msgstr "القيمة"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3835,9 +3823,8 @@ msgstr "معالج تكوين رسالة بريد الالكتروني"
 
 #. module: account
 #: model:ir.model,name:account.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "معالج تكوين رسالة بريد الالكتروني"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
@@ -3896,9 +3883,8 @@ msgstr "القيود"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal_sort_selection
-#, fuzzy
 msgid "Entries Sorted by"
-msgstr "القيود: "
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:861
@@ -4008,9 +3994,8 @@ msgstr "المصروفات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
-#, fuzzy
 msgid "External Reference"
-msgstr "مرجع حر"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4237,15 +4222,13 @@ msgstr "مرجع حر"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
 msgid "From Payable accounts"
-msgstr "تصفح البلدان المتاحة."
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
 msgid "From Receivable accounts"
-msgstr "حسابات الدائنون و المدينون"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -4266,9 +4249,8 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_full_reconcile_id
-#, fuzzy
 msgid "Full Reconcile"
-msgstr "للتسوية"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
@@ -4399,9 +4381,8 @@ msgstr "انتقل إلى لوحة الإعدادات"
 
 #. module: account
 #: selection:res.partner,trust:0
-#, fuzzy
 msgid "Good Debtor"
-msgstr "عمل رائع"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -5238,9 +5219,8 @@ msgstr "قيد يومية"
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Journal Entry Number"
-msgstr "قيد يومية"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -5786,9 +5766,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
-#, fuzzy
 msgid "Matched Journal Items"
-msgstr "عناصر اليومية"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
@@ -5808,9 +5787,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
-#, fuzzy
 msgid "Matching Number"
-msgstr "رقم الحساب"
+msgstr ""
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -5860,27 +5838,23 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Current Liabilities"
-msgstr "الخصوم المتداولة"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Expenses"
-msgstr "المصروفات"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Non-Current Liabilities"
-msgstr "الخصوم المتداولة"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Payable Accounts"
-msgstr "حسابات الدائنون و المدينون"
+msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6578,9 +6552,8 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.action_report_partnerledger
 #: model:ir.ui.menu,name:account.menu_partner_ledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
 msgid "Partner Ledger"
-msgstr "الأستاذ العام"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable
@@ -7277,9 +7250,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
-#, fuzzy
 msgid "Reconciled Entries"
-msgstr "مدخلات المحاسبة"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -7299,9 +7271,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
-#, fuzzy
 msgid "Reconciliation Parts"
-msgstr "تسزية البنك مسبقة الحركات"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -8097,9 +8068,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Tax Amount"
-msgstr "إجمالي المبلغ"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
@@ -8119,9 +8089,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Tax Declaration"
-msgstr "الوصف"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
@@ -9595,9 +9564,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_print_journal_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_amount_currency
-#, fuzzy
 msgid "With Currency"
-msgstr "العملة"
+msgstr ""
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -10003,9 +9971,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "سطور تحليلية"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -10167,15 +10134,13 @@ msgstr "تقرير.حساب.تقرير_hgl,h.km"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_extra_reports_report_journal
-#, fuzzy
 msgid "report.account_extra_reports.report_journal"
-msgstr "تقرير.حساب.تقرير_hgl,h.km"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_extra_reports_report_partnerledger
-#, fuzzy
 msgid "report.account_extra_reports.report_partnerledger"
-msgstr "تقرير.حساب.تقرير_hgl,h.km"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:209
@@ -10260,94 +10225,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "إحصاء"
-
-#~ msgid ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
-#~ "number.\n"
-#~ " * The 'Open' status is used when user create invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-#~ msgstr ""
-#~ "* تستخدم الحالة `مسودة`  عندما يكود المستخدم فاتورة جديدة غير مصدقة\n"
-#~ "* تستخدم الحالة 'Pro-forma' عندما لاتحتوي الفاتورة علي رقم للفاتورة\n"
-#~ "* تستخدم الحالة  `مفتوح` عندما ينشء المستخدم فاتورة ويولد لها رقما. وتظل "
-#~ "في حالة مفتوحة  حتي يدفع المستخدم الفاتورة\n"
-#~ "* تستخدم حالة `مدفوعة` تلقائيا عند دفع الفاتورة. وقد تكون أو لاتكون "
-#~ "مدخلات دفتر اليومية الموافقة لها  ذات صلة\n"
-#~ "* تستخم حالة `ملغاة` عندما يلغي المستخدم فاتورة"
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid "Allows you multi currency environment"
-#~ msgstr "السماح لمناخ متعدد العملات"
-
-#~ msgid "Analytic Line"
-#~ msgstr "البند التحليلي"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Direct Costs"
-#~ msgstr "التكاليف المباشرة"
-
-#~ msgid "Financial Report"
-#~ msgstr "تقرير مالية"
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Price"
-#~ msgstr "سعر"
-
-#~ msgid "Sales Team"
-#~ msgstr "فريق المبيعات"
-
-#~ msgid "The bank statement line was already reconciled."
-#~ msgstr "تمت تسوية قيد كشف الحساب البنكي من قبل"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"
-
-#~ msgid "e.g. sales@odoo.com"
-#~ msgstr "مثلا sales@odoo.com"
-
-#~ msgid "Invoicing"
-#~ msgstr "تحرير الفواتير"

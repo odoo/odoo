@@ -31,7 +31,6 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
-#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
@@ -41,12 +40,6 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
-"<p>Dobrý deň ${object.name},</p>\n"
-"<p>Potvrdzujeme že Vaše predplatné na udalosť ${object.event_id.name} bolo "
-"zaznamenané.\n"
-"Prosím, nájdite Vaše <b>Event Badge</b> pripojené k tomuto emailu.</p>\n"
-"<p>Ďakujeme za Vašu účasť!</p>\n"
-"<p>S pozdravom</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -98,13 +91,10 @@ msgstr "5 intenzívnych dní"
 
 #. module: event
 #: model:event.event,description:event.event_2
-#, fuzzy
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
 "event or change the dates on which it is held.)</em>"
 msgstr ""
-"<em>(Pracovná komora si vyhradzuje právo zrušiť, premenovať alebo premiesniť "
-"<br/>udalosť alebo meniť dátumy počas ktorých sa koná.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -345,9 +335,8 @@ msgstr "Predok odznaku"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-#, fuzzy
 msgid "Badge Inner Left"
-msgstr "Ľavé vnútro odznaku"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -531,9 +520,8 @@ msgstr "Kontakt"
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-#, fuzzy
 msgid "Controllers and Views"
-msgstr "Ovládače a Zobrazenia"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -1858,175 +1846,3 @@ msgstr "na učenie sa technických aspektov"
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "tréningový materiál."
-
-#~ msgid ""
-#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
-#~ ">the event or change the dates on which it is held.)</em>"
-#~ msgstr ""
-#~ "<em>(Pracovná komora si vyhradzuje právo zrušiť, premenovať alebo "
-#~ "premiesniť <br/>udalosť alebo meniť dátumy počas ktorých sa koná.)</em>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
-#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
-#~ "to ${object.event_id.date_end_located}.\n"
-#~ "For any further information please contact our event department.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Dobrý deň ${object.name},</p>\n"
-#~ "<p>Toto je pripomienka pre ${object.event_id.name} na ktorú ste sa "
-#~ "registoval/a a bude sa konať od ${object.event_id.date_begin_located} do "
-#~ "${object.event_id.date_end_located}.\n"
-#~ "FPre akékoľvek ďalšie informácie kontaktujte prosím naše oddelenie "
-#~ "podujatí.</p>\n"
-#~ "<p>Ďakujeme za Vašu účasť!</p>\n"
-#~ "<p>S pozdravom</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Dobrý deň ${object.name},</p>\n"
-#~ "<p>Potvrdzujeme že Vaše predplatné na udalosť ${object.event_id.name} "
-#~ "bolo zaznamenané.\n"
-#~ "Prosím, nájdite Vaše <b>Event Badge</b> pripojené k tomuto emailu.</p>\n"
-#~ "<p>Ďakujeme za Vašu účasť!</p>\n"
-#~ "<p>S pozdravom</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "You will automatically receive an email providing you more practical "
-#~ "information (such as the schedule, the agenda...) as soon as the event is "
-#~ "confirmed.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Dobrý deň ${object.name},</p>\n"
-#~ "<p>Potvrdzujeme že Vaše predplatné na udalosť ${object.event_id.name} "
-#~ "bolo zaznamenané.\n"
-#~ "Automaticky dostane email ktorý poskytuje viac praktických informácií "
-#~ "(napríklad rozvrh, agendu...) akonáhle bude udalosť potvrdená.</p>\n"
-#~ "<p>Ďakujeme za Vašu účasť!</p>\n"
-#~ "<p>S pozdravom</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We would like to thank you for your presence at our event ${object."
-#~ "event_id.name}.\n"
-#~ "<br/><br/>\n"
-#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-#~ "    % elif object.event_id.organizer_id:\n"
-#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "    % endif\n"
-#~ "</p>"
-#~ msgstr ""
-#~ "<p>Dobrý deň ${object.name},</p>\n"
-#~ "<p>Chceli by sme Vám poďakovať za účasť na našej udalosti ${object."
-#~ "event_id.name}.\n"
-#~ "<br/><br/>\n"
-#~ "% if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "<strong>${object.event_id.organizer_id.name} Tím</strong>\n"
-#~ "% elif object.event_id.organizer_id:\n"
-#~ "<strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "% endif\n"
-#~ "</p>"
-
-#~ msgid "<small>John Doe, CEO</small>"
-#~ msgstr "<small>John Doe, Generálny riaditeľ</small>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebná akcia"
-
-#~ msgid "Badge Innner Left"
-#~ msgstr "Ľavé vnútro odznaku"
-
-#~ msgid "Controlers and Views"
-#~ msgstr "Ovládače a Zobrazenia"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#~ msgid "Events Types"
-#~ msgstr "Typy udalostí"
-
-#~ msgid "Followers"
-#~ msgstr "Odberatelia"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Odberatelia (Kanály)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Odberatelia (Partneri)"
-
-#~ msgid ""
-#~ "I did not expect such a great learning experience. I feel like I can "
-#~ "develop anything now."
-#~ msgstr ""
-#~ "Neočakával som takú skvelú vzdelávaciu skúsenosť. Teraz mám pocit že "
-#~ "môžem vyvíjať čokoľvek."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je odberateľ"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Dátum poslednej správy"
-
-#~ msgid "Messages"
-#~ msgstr "Správy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Správa a história komunikácie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Počet akcií"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Počet správ ktoré vyžadujú akciu"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Počet neprečítaných správ"
-
-#~ msgid "Open Event Menu"
-#~ msgstr "Otvoriť menu udalosti"
-
-#~ msgid "Read Great Contents"
-#~ msgstr "Prečítajte širší obsah"
-
-#~ msgid "Thanks for attending ${object.event_id.name}"
-#~ msgstr "Ďakujeme za zúčastnenie sa ${object.event_id.name}"
-
-#~ msgid ""
-#~ "This course help me build my first application within a month. Definetly "
-#~ "worth its price."
-#~ msgstr ""
-#~ "Tento kurz mi pomohol vybudovať moju prvú aplikáciu v priebehu mesiaca. "
-#~ "Definitivné hodný svojej ceny."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo neprečítaných správ"
-
-#~ msgid "Website Messages"
-#~ msgstr "Správy webovej stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "História komunikácie webovej stránky"
-
-#~ msgid "What do people say about this course?"
-#~ msgstr "Čo hovoria ľudia o tomto kurze?"

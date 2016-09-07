@@ -23,15 +23,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"سيقوم بإنشاء مسار الشحن المباشر ويضيف اختبارات أكثر تعقيداً. سيقوم هذا بتثبيت "
-"الموديول stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -84,7 +80,6 @@ msgstr "%s: موقع العبور"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -95,13 +90,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"*جديد:عندما تكونحركات المخزون منشاة ولم يتم تاكيدها بعد\n"
-"*فى انتظار تحرك اخر: هذه الحالة يمكن رؤيتها عندما تكون الحركة فى انتظار حركة "
-"اخرى, على سبيل المثال \"فى تدفق متسلسل\"\n"
-"*فى انتظار لة التوفر : هذه الحالة يتم الوصول لها عندما يكون قرار الشراء ليس "
-"واضحا .قد تحتاج الى تشغيل عنصر المصنوعة لى.\n"
-"*متوفر: عندما تكون المنتجات محفوظة, فانها تكون متاحة.\n"
-"*تم:عندما تكون الشحنة مجهزة,الحالة تكون \"تم\""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1830,9 +1818,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "الشحن"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3418,15 +3405,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "ادارة عديد من المواقع والمخازن"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "ادارة عديد من المواقع والمخازن"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3465,9 +3450,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "إدارة الحصص / الأرقام التسلسلية "
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3934,9 +3918,8 @@ msgstr "اسم العملية"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "العمليات"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4165,15 +4148,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "نوع الحزم "
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "نوع الحزم "
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5892,9 +5873,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "نوع العمليه "
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6076,14 +6056,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:814
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"التدوير فى وحده القياس الخاصه بك ٪ s على هذه الحركه ٪ s على المنتج لا تسمح "
-"للقيام بهذه العمليات أو انك لم تنقل الالتقاط دفعة واحدة. "
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:116
@@ -6877,9 +6855,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "منتجات مخزنة"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7396,295 +7374,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "عين الكميات بصفر"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "*مسوده : لم تتأكد بعد، لن يجدول حتى يتم التأكيد \n"
-#~ "\n"
-#~ "* في انتظار عملية أخرى: ننتظر خطوة أخرى إلى المضي قدما قبل أن تصبح متوفرة "
-#~ "تلقائيا (على سبيل المثال في المكياج لأمر تدفقات)\n"
-#~ "\n"
-#~ "* انتظار التوفر: لا تزال تنتظر توافر المنتجات\n"
-#~ "\n"
-#~ "* متوفر جزئيا: بعض المنتجات المتوفرة ومحجوزه \n"
-#~ "\n"
-#~ "* على استعداد لنقل: المنتجات محفوظة، ببساطة منتظره التأكيد.\n"
-#~ "\n"
-#~ "*محوله : تم معالجتها، لا يمكن تعديلها أو إلغاؤها بعد الآن\n"
-#~ "\n"
-#~ "* ألغي: تم إلغاء، لا يمكن أن يتم تأكيد بعد الآن"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "سيقوم بإنشاء مسار الشحن المباشر ويضيف اختبارات أكثر تعقيداً. سيقوم هذا "
-#~ "بتثبيت الموديول stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr "حسب الطلب"
-
-#~ msgid " On Hand"
-#~ msgstr "في اليد"
-
-#~ msgid " Sequence in"
-#~ msgstr "التسلسل الداخل"
-
-#~ msgid " Sequence internal"
-#~ msgstr "التسلسل الداخلي"
-
-#~ msgid " Sequence out"
-#~ msgstr "التسلسل الخارج"
-
-#~ msgid " Sequence packing"
-#~ msgstr "تسلسل التعبئة"
-
-#~ msgid " Sequence picking"
-#~ msgstr "تسلسل الاستلام"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "*جديد:عندما تكونحركات المخزون منشاة ولم يتم تاكيدها بعد\n"
-#~ "*فى انتظار تحرك اخر: هذه الحالة يمكن رؤيتها عندما تكون الحركة فى انتظار "
-#~ "حركة اخرى, على سبيل المثال \"فى تدفق متسلسل\"\n"
-#~ "*فى انتظار لة التوفر : هذه الحالة يتم الوصول لها عندما يكون قرار الشراء "
-#~ "ليس واضحا .قد تحتاج الى تشغيل عنصر المصنوعة لى.\n"
-#~ "*متوفر: عندما تكون المنتجات محفوظة, فانها تكون متاحة.\n"
-#~ "*تم:عندما تكون الشحنة مجهزة,الحالة تكون \"تم\""
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "أضافه وصلة المطالبة لأمر التسليم.\n"
-#~ "هذا يثبت موديول claim_from_delivery ."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "افتراضيا، فإن النظام يتخذ من المخزون في موقع المصدر والانتظار السلبي "
-#~ "لاتاحه. والاحتمال الاخر يسمح لك بإنشاء مباشرة على الشراء على موقع المصدر "
-#~ "(وبالتالي تجاهل المخزون الحالي) لجمع المنتجات. إذا كنا نريد سلسلة "
-#~ "التحركات ويكون هذا واحد لانتظار السابق، وينبغي اختيار هذا الخيار الثاني. "
-
-#~ msgid "Claims"
-#~ msgstr "الشكاوى"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Delivery Method"
-#~ msgstr "طريقة الشحن"
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "متوقع"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "لها حركات مخزنية"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Information"
-#~ msgstr "المعلومات"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "خطوط المخزون"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "حركات المخزون"
-
-#~ msgid "Inventory Name."
-#~ msgstr "اسم المخزون."
-
-#~ msgid "Inventory loss"
-#~ msgstr "المفقود من الجرد"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "الرابط بين تحركات المخزون و حزم العمليات "
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "ادارة عديد من المواقع والمخازن"
-
-#~ msgid "Messages"
-#~ msgstr "الرسائل"
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "فتح قائمة مستودع"
-
-#~ msgid "Picking Types"
-#~ msgstr "انواع الالتقاط "
-
-#~ msgid "Pushed Flows"
-#~ msgstr "دفع المسارات"
-
-#~ msgid "Qty"
-#~ msgstr "الكمية"
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr ""
-#~ "الكميه المتبقيه فى وحده القياس الافتراضي وفقا لتحركات التى تتماشى مع هذه "
-#~ "العملية . "
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "إعاده التذويد من مخازن أخرى "
-
-#~ msgid "Suppliers"
-#~ msgstr "المورّدون"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "تستخدم الحقل التقني لإخفاء مساعدة  او التلميح إذا لم يكن هناك حاجة  "
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "الكمية المختاره للمنتج %s ليست متوافقة مع تقريب وحده القياس. سيتم تحويلها "
-#~ "تلقائيا عند تأكيدا "
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "سيتم تقريب كمية المشتريات حتى تصل إلى هذه متعددة. إذا كان 0، سيتم استخدام "
-#~ "كمية الدقيق . "
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "التدوير فى وحده القياس الخاصه بك %s على هذه الحركه %s على المنتج لا تسمح "
-#~ "للقيام بهذه العمليات أو انك لم تنقل الالتقاط دفعة واحدة. "
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "وحده القياس المختارة للمنتج %s غير متوافقه مع  وحده قياس التى تم تعيينها "
-#~ "على المنتج \n"
-#~ "يرجى اختيار وحده قياس من نفس وحده قياس الفئه "
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "هذا سوف يعرض لك المواقع ويسمح لك بتحديد أنواع الالتقاط المتعددة "
-#~ "والمستودعات. "
-
-#~ msgid "Unit of Measures"
-#~ msgstr "وحدة القياس"
-
-#~ msgid "Unread Messages"
-#~ msgstr "رسائل غير مقروءة"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "استخدام هذا المساعد لإنشاء طلب شراء لهذا\n"
-#~ "المنتج. وفقا لتكوين المنتج، وهذا قد\n"
-#~ "يطلق مسوده أمر الشراء، أمر التصنيع أو\n"
-#~ "مهمة جديدة."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "تحذير : خطأ فى وحده القياس !"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "تحذير: كمية خاطئة!"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "يمكنك العودة فقط لإلتقاط واحدة في وقت واحد! "
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "يمكنك فقط معاوده إلتقاط التى فى الحاله \"تمت\" ! "
-
-#~ msgid "move that created the return move"
-#~ msgstr "الحركه التي خلقت عوده هذه الحركه"
-
-#~ msgid "unknown"
-#~ msgstr "غير معروف"

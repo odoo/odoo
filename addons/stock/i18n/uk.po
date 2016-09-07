@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-29 07:41+0000\n"
+"PO-Revision-Date: 2016-09-03 13:59+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
@@ -24,15 +24,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Створює спосіб прямої доставки та додає складніші перевірки. Це встановлює "
-"модуль stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -85,7 +81,6 @@ msgstr "%s: Транзитне розташування"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -96,14 +91,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Новий: Коли створено переміщення запасів але ще не підтверджено.\n"
-"* Очікує на інше переміщення: цей стан можна побачити, коли переміщення "
-"очікує на завершення іншого, наприклад, в ланцюжковій послідовності.\n"
-"* Очікує наявності: цей стан досягається, коли забезпечення не є "
-"тривіальним. Можливо, планувальник повинен запустити виготовлення певного "
-"компоненту...\n"
-"* В наявності: встановлюється, коли товари зарезервовані.\n"
-"* Виконано: встановлюється, коли поставку завершено."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -989,7 +976,7 @@ msgstr "Наявні товари"
 #: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_backorder_id
 msgid "Back Order of"
-msgstr "Недозамовлення"
+msgstr "Дозамовлення"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1006,7 +993,7 @@ msgstr "Дозамовлення <em>%s</em> <b>скасовано</b>."
 #: code:addons/stock/models/stock_picking.py:967
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "Недозамовлення <em>%s</em> <b>створено</b>."
+msgstr "Дозамовлення <em>%s</em> <b>створено</b>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
@@ -1107,7 +1094,7 @@ msgid ""
 "Odoo will not automatically generate a back order."
 msgstr ""
 "Змінюючи цю кількість ви автоматично приймаєте нову кількість як виконану: "
-"Odoo не буде автоматично генерувати недозамовлення."
+"Odoo не буде автоматично генерувати дозамовлення."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1408,7 +1395,7 @@ msgstr "Вітаємо!"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
 msgid "Consumable"
-msgstr "Можна споживати"
+msgstr "Витратний"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_ids
@@ -1937,9 +1924,8 @@ msgstr "Транспортна накладна"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Транспортна накладна"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2106,9 +2092,8 @@ msgstr "Не відслідковувати окремі одиниці това
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
-#, fuzzy
 msgid "Do not use Expiration Date on serial numbers"
-msgstr "Визначіть термін придатності серійних номерів."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
@@ -3460,7 +3445,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr "Дозволити використання різних власників складів"
+msgstr "Керувати різними власниками складів"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -3494,15 +3479,13 @@ msgstr "Використовувати типове розташування д�
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Використовувати декілька складів та розташувань"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Використовувати декілька складів та розташувань"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3536,15 +3519,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_locations
-#, fuzzy
 msgid "Manage several stock locations"
-msgstr "Використовувати декілька розташувань на одному складі"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Використовувати декілька розташувань на одному складі"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -4004,9 +3985,8 @@ msgstr "Назва операції"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Типи операцій"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4235,15 +4215,13 @@ msgstr "Переміщення упаковок"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Тип упакування"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Тип упакування"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5599,10 +5577,9 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
-msgstr "Товари мають тільки одну одиницю виміру (простіше)"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:780
@@ -5915,9 +5892,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Інтеграція Fedex"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6388,6 +6364,8 @@ msgid ""
 "products may be sold/purchased in different unit of measures (advanced)</i> "
 "in the"
 msgstr ""
+"Для використання різних одиниць виміру активуйте<i> Деякі товари можуть бути "
+"продані/куплені в інших одиницях виміру (розширено)</i> у"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6869,9 +6847,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Товар інвентаризації"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7379,323 +7357,3 @@ msgstr "↳Упакувати"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Обнулити кількість"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Чорновий: не підтвержено і не буде заплановано доки не "
-#~ "підтвердиться\n"
-#~ "\n"
-#~ "                * Очікує на іншу операцію: очікує на завершення іншого "
-#~ "переміщення і потім автоматично стає в наявності (наприклад, при "
-#~ "виконанні під замовлення)\n"
-#~ "\n"
-#~ "                * Очікує наявності: все ще очікує наявності деяких "
-#~ "товарів\n"
-#~ "\n"
-#~ "                * Частково в наявності: деякі товари є в наявності та "
-#~ "зарезервовано\n"
-#~ "\n"
-#~ "                * Напоготові до переміщення: товари зарезервовано, просто "
-#~ "очікується підтвердження\n"
-#~ "\n"
-#~ "                * Переміщено: було опрацьовано, більше не можна змінювати "
-#~ "або скасувати\n"
-#~ "\n"
-#~ "                * Скасовано: було скасовано, більше не можна підтвердити"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Створює спосіб прямої доставки та додає складніші перевірки. Це "
-#~ "встановлює модуль stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr "Під замовлення"
-
-#~ msgid " On Hand"
-#~ msgstr " В наявності"
-
-#~ msgid " Sequence in"
-#~ msgstr " Вхідна черга"
-
-#~ msgid " Sequence internal"
-#~ msgstr " Внутрішня черга"
-
-#~ msgid " Sequence out"
-#~ msgstr " Вихідна черга"
-
-#~ msgid " Sequence packing"
-#~ msgstr " Черга пакування"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Черга відбору"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Новий: Коли створено переміщення запасів але ще не підтверджено.\n"
-#~ "* Очікує на інше переміщення: цей стан можна побачити, коли переміщення "
-#~ "очікує на завершення іншого, наприклад, в ланцюжковій послідовності.\n"
-#~ "* Очікує наявності: цей стан досягається, коли забезпечення не є "
-#~ "тривіальним. Можливо, планувальник повинен запустити виготовлення певного "
-#~ "компоненту...\n"
-#~ "* В наявності: встановлюється, коли товари зарезервовані.\n"
-#~ "* Виконано: встановлюється, коли поставку завершено."
-
-#~ msgid ""
-#~ "* Vendor Location: Virtual location representing the source location for "
-#~ "products coming from your vendors\n"
-#~ "                       \n"
-#~ "* View: Virtual location used to create a hierarchical structures for "
-#~ "your warehouse, aggregating its child locations ; can't directly contain "
-#~ "products\n"
-#~ "                       \n"
-#~ "* Internal Location: Physical locations inside your own warehouses,\n"
-#~ "                       \n"
-#~ "* Customer Location: Virtual location representing the destination "
-#~ "location for products sent to your customers\n"
-#~ "                       \n"
-#~ "* Inventory Loss: Virtual location serving as counterpart for inventory "
-#~ "operations used to correct stock levels (Physical inventories)\n"
-#~ "                       \n"
-#~ "* Procurement: Virtual location serving as temporary counterpart for "
-#~ "procurement operations when the source (vendor or production) is not "
-#~ "known yet. This location should be empty when the procurement scheduler "
-#~ "has finished running.\n"
-#~ "                       \n"
-#~ "* Production: Virtual counterpart location for production operations: "
-#~ "this location consumes the raw material and produces finished products\n"
-#~ "                       \n"
-#~ "* Transit Location: Counterpart location that should be used in inter-"
-#~ "companies or inter-warehouses operations\n"
-#~ "                      "
-#~ msgstr ""
-#~ "* Розташування у постачальника: віртуальне розташування, що відображає "
-#~ "початкове місце знаходження ваших товарів у постачальника.\n"
-#~ "                       \n"
-#~ "* Перегляд: віртуальне розташування для відображення структури вашого "
-#~ "складу, що включає всі дочірні розташування; не може містити товарів.\n"
-#~ "                       \n"
-#~ "* Внутрішнє розташування: Фізичне розташування всередині власного "
-#~ "складу.\n"
-#~ "                       \n"
-#~ "* Розташування у клієнта: віртуальне розташування, що відображає кінцеве "
-#~ "місце знаходження продуктів, які будуть відправлені клієнту.\n"
-#~ "                       \n"
-#~ "* Інвентаризація: віртуальне розташування, що використовується для "
-#~ "операцій з інвентаризації при коригуванні залишків (реальна кількість).\n"
-#~ "                       \n"
-#~ "* Забезпечення: віртуальне розташування, що слугує тимчасовим "
-#~ "розташуванням для операцій матеріального забезпечення, коли джерело "
-#~ "постачання (постачальник чи виготовлення) поки що невідоме. Це "
-#~ "розташування повинне бути порожнім після завершення роботи "
-#~ "планувальника.\n"
-#~ "                       \n"
-#~ "* Виготовлення: віртуальне розташування для операцій з виготовлення. Це "
-#~ "розташування споживає сировину та створює готовий товар.\n"
-#~ "                       \n"
-#~ "* Транзитне розташування: допоміжне розташування, що використовується для "
-#~ "переміщень всередині підприємства або складу.\n"
-#~ "                      "
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Контактна адреса:</strong></span>"
-
-#~ msgid "<strong>Serial Number</strong>"
-#~ msgstr "<strong>Серійний номер</strong>"
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Статус</strong>"
-
-#~ msgid "A barcode nomenclature"
-#~ msgstr "Номенклатура штрихкодів"
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Додає посилання на скаргу в замовленні на доставку.\n"
-#~ "Це встановлює модуль claim_from_delivery."
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "Використовувати скарги по доставках"
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Зазвичай система бере з запасів початкового розташування та пасивно чекає "
-#~ "їх наявності. Іншим способом можна напряму створити замовлення на "
-#~ "забезпечення для початкового розташування (ігноруючи поточну наявність "
-#~ "запасів) щоб забрати товари. Якщо ми хочемо щоб переміщення відбувались "
-#~ "по ланцюжку і щоб це переміщення чекало на попереднє, то потрібно обрати "
-#~ "другий спосіб."
-
-#~ msgid "Claims"
-#~ msgstr "Скарги"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Метод доставки"
-
-#~ msgid "Do not manage claims"
-#~ msgstr "Не використовувати скарги"
-
-#~ msgid "Do not record internal moves within a warehouse"
-#~ msgstr "Не робити записи про внутрішні переміщення по складу"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "Не використовувати термін придатності товарів"
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Прогнозовано:"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "Має складські переміщення"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Information"
-#~ msgstr "Інформація"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Рядки інвентаризації."
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Переміщення запасів."
-
-#~ msgid "Inventory Name."
-#~ msgstr "Назва складу."
-
-#~ msgid "Inventory loss"
-#~ msgstr "Втрата запасів"
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Lot is required"
-#~ msgstr "Вкажіть партію"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Використовувати декілька складів та розташувань"
-
-#~ msgid "Manage several locations per warehouse"
-#~ msgstr "Використовувати декілька розташувань на одному складі"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Move Lines"
-#~ msgstr "Рядки переміщення"
-
-#~ msgid "Multi Locations"
-#~ msgstr "Декілька розташувань"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Packagings"
-#~ msgstr "Пакування"
-
-#~ msgid "Picking Types"
-#~ msgstr "Типи відбору"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Потік виштовхування"
-
-#~ msgid "Qty"
-#~ msgstr "Кількість"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Поповнити з іншого складу"
-
-#~ msgid "Suppliers"
-#~ msgstr "Постачальники"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Одиниці виміру"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитані повідомлення"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Попередження: невірна кількість!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на веб-сайті"
-
-#~ msgid "preferred Packaging"
-#~ msgstr "Бажане пакування"
-
-#~ msgid "unknown"
-#~ msgstr "невідомий"

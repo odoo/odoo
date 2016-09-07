@@ -20,15 +20,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Creează ruta de livrare direct furnizor-client şi adaugă teste mai complexe "
-"- Instalează modulul stock_dropshipping"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -81,7 +77,6 @@ msgstr "%s: Locație tranzit"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -92,16 +87,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Nou: Atunci când mișcarea este creata și nu este încă confirmată.\n"
-"* În așteptarea altei mișcări: Aceasta stare poate fi văzuta atunci când o "
-"mișcare este în așteptarea alteia, de exemplu într-un flux înlănțuit.\n"
-"* În așteptarea disponibilității: Aceasta stare este atinsă atunci când "
-"rezoluția de aprovizionare nu este imediată. Poate este nevoie ca "
-"programatorul să ruleze planificarea sau ca o componentă să fie "
-"fabricată...\n"
-"* Disponibil: Atunci când produsele sunt rezervate, starea este setata pe "
-"'Disponibil'.\n"
-"* Efectuat: Atunci când transportul este procesat, starea este 'Efectuat'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1821,9 +1806,8 @@ msgstr "Tipărire Livrare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Tipărire Livrare"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3406,15 +3390,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Gestionați Locații și Depozite Multiple"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Gestionați Locații și Depozite Multiple"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3453,9 +3435,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Gestionare Loturi / Numere seriale"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3920,9 +3901,8 @@ msgstr "Nume operatiune"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Operatiuni"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4153,15 +4133,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Tip ambalare"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Tip ambalare"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5837,9 +5815,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Tipul operației"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6807,9 +6784,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Produs inventariat"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7322,192 +7299,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Stabilește cantitatea la 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ " * Ciornă: neconfirmată încă și nu va fi planificată până la confirmare\n"
-#~ "\n"
-#~ " * Așteaptă altă operație: așteaptă altă mișcare să fie efectuată înainte "
-#~ "de a deveni stocul în mod automat disponibil (ex. în fluxul La Comandă)\n"
-#~ "\n"
-#~ "* Așteaptă disponibilitatea: așteaptă disponibilitatea produselor\n"
-#~ "\n"
-#~ "* Disponibil parțial: o parte din produse sunt disponibile și rezervate\n"
-#~ "\n"
-#~ "* Gata de transfer: produsele sunt rezervate și mișcarea așteaptă să fie "
-#~ "confirmată\n"
-#~ "\n"
-#~ "* Transferat: Transferul a fost efectuat, mișcarea nu se poate modifica "
-#~ "sau anula\n"
-#~ "\n"
-#~ "* Anulat: Mișcare a fost anulată, nu se mai pot face modificări"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Creează ruta de livrare direct furnizor-client şi adaugă teste mai "
-#~ "complexe - Instalează modulul stock_dropshipping"
-
-#~ msgid " MTO"
-#~ msgstr " MTO"
-
-#~ msgid " On Hand"
-#~ msgstr " Disponibil"
-
-#~ msgid " Sequence in"
-#~ msgstr " Secvență intrare"
-
-#~ msgid " Sequence internal"
-#~ msgstr " Secvență internă"
-
-#~ msgid " Sequence out"
-#~ msgstr " Secvență ieșire"
-
-#~ msgid " Sequence packing"
-#~ msgstr " Secvență ridicare"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Secvență ridicare"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Nou: Atunci când mișcarea este creata și nu este încă confirmată.\n"
-#~ "* În așteptarea altei mișcări: Aceasta stare poate fi văzuta atunci când "
-#~ "o mișcare este în așteptarea alteia, de exemplu într-un flux înlănțuit.\n"
-#~ "* În așteptarea disponibilității: Aceasta stare este atinsă atunci când "
-#~ "rezoluția de aprovizionare nu este imediată. Poate este nevoie ca "
-#~ "programatorul să ruleze planificarea sau ca o componentă să fie "
-#~ "fabricată...\n"
-#~ "* Disponibil: Atunci când produsele sunt rezervate, starea este setata pe "
-#~ "'Disponibil'.\n"
-#~ "* Efectuat: Atunci când transportul este procesat, starea este 'Efectuat'."
-
-#~ msgid "Claims"
-#~ msgstr "Revendicari"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ultimului mesaj postat pe înregistrare."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Metodă de livrare"
-
-#~ msgid "Followers"
-#~ msgstr "Urmări"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Prevăzut:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
-
-#~ msgid "Information"
-#~ msgstr "Informații"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Linii inventar"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Mișcări inventar"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Nume inventar"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Pierdere la inventar"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ultimului mesaj"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Legătură dintre mișcare de stoc și operația de ambalare"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Gestionați Locații și Depozite Multiple"
-
-#~ msgid "Messages"
-#~ msgstr "Mesaje"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Deschideți Meniul Depozit"
-
-#~ msgid "Picking Types"
-#~ msgstr "Tipuri de ridicare"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Fluxuri inaintate"
-
-#~ msgid "Qty"
-#~ msgstr "Cantitate"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Reaprovizionare din alt depozit"
-
-#~ msgid "Suppliers"
-#~ msgstr "Furnizori"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mesaje necitite"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Completati pentru a lansa o cerere de aprovizionare pentru acest\n"
-#~ "                        produs. In functie de configurarea produsului, "
-#~ "aceasta ar putea\n"
-#~ "                        declansa o comanda de achizitie ciorna, o comanda "
-#~ "de productie sau\n"
-#~ "                        o sarcina noua."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Atenție: UM greșită!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Atenție: cantitate greșită!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mesaje Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istoric comunicare website"
-
-#~ msgid "unknown"
-#~ msgstr "necunoscut(a)"

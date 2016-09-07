@@ -19,15 +19,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"직송 경로와 복합 테스트를 작성합니다 - 이것은 stock_dropshipping 모듈을 설치"
-"합니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -80,7 +76,6 @@ msgstr "%s : 운송 위치"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -91,13 +86,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* 새로운 기능 : 재고 이동이 작성될 때 및 아직 확인되지 않은 경우\n"
-"* 다른 이동 대기 : 예를 들면 연결된 작업 흐름에서 이동이 다른 하나로 인해 대"
-"기 중인 상태입니다.\n"
-"* 가능 여부 대기 : 조달 해결이 바로 되지 않은 상태입니다. 제조하기 위한 일정"
-"이 필요할 수 있습니다....\n"
-"* 가능 : 예약된 제품인 경우, '가능'으로 설정됩니다.\n"
-"* 완료 : 출하가 처리되면 '완료'상태 입니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1833,9 +1821,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "배송"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2010,9 +1997,8 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
-#, fuzzy
 msgid "Do not use Expiration Date on serial numbers"
-msgstr "일련번호에 따라 만료일자 정하기"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
@@ -3414,15 +3400,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "여러 위치 및 창고 관리"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "여러 위치 및 창고 관리"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3461,9 +3445,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "작업 단위/일련번호 관리"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3928,9 +3911,8 @@ msgstr "작업 이름"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "작업"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4159,15 +4141,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "묶음 유형"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "묶음 유형"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5873,9 +5853,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "작업 유형"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6054,14 +6033,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:814
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"이동 대립에 %s 측정 단위의 반올림. 제품 %s는 작업을 수행할 수 없거나 한 번에 "
-"출고를 전송하지 않습니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:116
@@ -6852,9 +6829,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "재고 조사된 제품"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7374,273 +7351,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ 0으로 수량 설정"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * 기안 : 아직 확인이 안되고 확인되기 전에는 계획이 없는 경"
-#~ "우\n"
-#~ "\n"
-#~ "                * 다른 작업 대기중 : 자동으로 가능하게 되기 전에 진행하는 "
-#~ "다른 이동 대기(예. 주문제작 흐름에서)\n"
-#~ "\n"
-#~ "                * 가능여부 대기중 : 제품이 가능할 때까지 아직 대기중\n"
-#~ "\n"
-#~ "                * 일부만 가능 : 몇몇 제품은 가능하고 보류중이다.\n"
-#~ "\n"
-#~ "                * 출하 준비됨 : 제품이 준비되어 승인 대기중이다\n"
-#~ "\n"
-#~ "                * 출하함 : 처리중으로 수정이나 취소할 수 없다.\n"
-#~ "\n"
-#~ "                * 취소함 : 취소되어서 승인할 수 없다."
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "직송 경로와 복합 테스트를 작성합니다 - 이것은 stock_dropshipping 모듈을 설"
-#~ "치합니다."
-
-#~ msgid " MTO"
-#~ msgstr " 주문 생산"
-
-#~ msgid " On Hand"
-#~ msgstr " 보유량"
-
-#~ msgid " Sequence in"
-#~ msgstr " 순서대로"
-
-#~ msgid " Sequence internal"
-#~ msgstr " 내부 순서"
-
-#~ msgid " Sequence out"
-#~ msgstr " 순서없이"
-
-#~ msgid " Sequence packing"
-#~ msgstr " 포장 순서"
-
-#~ msgid " Sequence picking"
-#~ msgstr " 선별 순서"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* 새로운 기능 : 재고 이동이 작성될 때 및 아직 확인되지 않은 경우\n"
-#~ "* 다른 이동 대기 : 예를 들면 연결된 작업 흐름에서 이동이 다른 하나로 인해 "
-#~ "대기 중인 상태입니다.\n"
-#~ "* 가능 여부 대기 : 조달 해결이 바로 되지 않은 상태입니다. 제조하기 위한 일"
-#~ "정이 필요할 수 있습니다....\n"
-#~ "* 가능 : 예약된 제품인 경우, '가능'으로 설정됩니다.\n"
-#~ "* 완료 : 출하가 처리되면 '완료'상태 입니다."
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>연락할 주소:</strong></span>"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "배송 주문에 불만사항 링크를 추가합니다.\n"
-#~ "- 이것은 claim_from_delivery 모듈을 설치합니다."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "기본적으로, 시스템은 자재 위치에 재고에서 소요되며 수동적으로 가용성을 기"
-#~ "다립니다. 다른 가능성은 제품을 수집하기 위한 자재 위치(및 현재 재고 무시"
-#~ "에 따라서)에 구매를 직접 생성할 수 있습니다. 연쇄 이동을 원하고 이전을 기"
-#~ "다리는 것이 있는 경우, 두 번째 옵션은 선택해야 합니다."
-
-#~ msgid "Claims"
-#~ msgstr "클레임"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#~ msgid "Delivery Method"
-#~ msgstr "운송 방법"
-
-#~ msgid "Followers"
-#~ msgstr "팔로워"
-
-#~ msgid "Forecasted:"
-#~ msgstr "예상:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#~ msgid "Information"
-#~ msgstr "정보"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "재고 명세"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "재고 이동"
-
-#~ msgid "Inventory Name."
-#~ msgstr "재고 명"
-
-#~ msgid "Inventory loss"
-#~ msgstr "재고 손실"
-
-#~ msgid "Last Message Date"
-#~ msgstr "최근 메시지 날짜"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "재고 이동 및 물품 작업 사이의 연결"
-
-#~ msgid "Lot is required"
-#~ msgstr "로트가 필요합니다"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "여러 위치 및 창고 관리"
-
-#~ msgid "Messages"
-#~ msgstr "메시지"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "창고 메뉴 열기"
-
-#~ msgid ""
-#~ "Periodical Inventories are used to count the number of products\n"
-#~ "                available per location. You can use it once a year when "
-#~ "you do\n"
-#~ "                the general inventory or whenever you need it, to adapt "
-#~ "the\n"
-#~ "                current inventory level of a product."
-#~ msgstr ""
-#~ "주기적인 재고 관리는 한 장소에서 제품의 수량을 세는데 사용됩니다.\n"
-#~ "여러분은 1년에 1번 공용 재고 관리를 수행하거나 원할 때 이를 수행할 수 있으"
-#~ "며,\n"
-#~ "현재 제품의 재고관리 수준을 결정할 수 있습니다."
-
-#~ msgid "Picking Types"
-#~ msgstr "선별 유형"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "밀어넣는 작업"
-
-#~ msgid "Qty"
-#~ msgstr "수량"
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr "작업과 일치된 이동에 따라 기본 측정 단위에 잔량"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "다른 창고에서 재공급"
-
-#~ msgid "Suppliers"
-#~ msgstr "공급업체"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr "필요하지 않은 경우 도움말 말풍선을 숨기는데 사용하는 기술 분야"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "제품 %s의 선택 수량은 측정 단위 반올림과 호환되지 않습니다. 자동으로 확인"
-#~ "에 변환됩니다."
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "조달 수량은 다수로 반올림됩니다. 0인 경우, 정확한 수량이 사용됩니다."
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "이동 대립에 %s 측정 단위의 반올림. 제품 %s는 작업을 수행할 수 없거나 한 번"
-#~ "에 출고를 전송하지 않습니다."
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "제품 %s의 선택된 측정 단위는 제품 양식에 설정한 측정 단위와는 호환되지 않"
-#~ "습니다.\n"
-#~ "같은 측정 단위 범주안에서 측정 단위를 선택하세요."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr "위치를 표시하고 여러 선별 유형과 창고를 정의할 수 있습니다."
-
-#~ msgid "Unread Messages"
-#~ msgstr "읽지 않은 메시지"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "제품에 대한 조달 요청을 생성하기 위해 보조를 사용합니다.\n"
-#~ "                        제품의 구성에 따르면 제조 주문 또는 새로운 작업"
-#~ "의\n"
-#~ "                        초안 구매 주문을 실행할 수 있습니다."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "경고 : 잘못된 측정 단위!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "경고 : 잘못된 수량!"
-
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
-
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "완료된 출고를 반환할 수 있습니다!"
-
-#~ msgid "move that created the return move"
-#~ msgstr "반환 움직임을 생성하여 움직임"
-
-#~ msgid "unknown"
-#~ msgstr "알 수 없음"

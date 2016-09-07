@@ -3,14 +3,15 @@
 # * stock
 #
 # Translators:
+# firman firman <firman.olxbpn@gmail.com>, 2016
 # Martin Trigaux, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-02-22 13:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-26 03:27+0000\n"
+"Last-Translator: firman firman <firman.olxbpn@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
 "Language: id\n"
@@ -21,15 +22,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Menciptakan rute dropship dan menambahkan tes-ini lebih kompleks menginstal "
-"stock_dropshipping modul."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -82,7 +79,6 @@ msgstr "%s: Transit Lokasi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -93,13 +89,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* New: Ketika bergerak stok dibuat dan belum dikonfirmasi. * Menunggu Pindah "
-"lain: negara ini dapat dilihat ketika bergerak menunggu satu sama lain, "
-"misalnya dalam aliran dirantai. * Menunggu Ketersediaan: Negara ini tiba "
-"saat resolusi pengadaan tidak lurus ke depan. Ini mungkin perlu scheduler "
-"untuk menjalankan, komponen untuk saya diproduksi ... * Tersedia: Ketika "
-"produk yang dilindungi, sudah diatur untuk 'Tersedia'. * Selesai: Ketika "
-"pengiriman diproses, negara 'Selesai'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -703,17 +692,12 @@ msgstr "Penjualan aliran klasik terlihat seperti berikut:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
-#, fuzzy
 msgid ""
 "A good inventory management aims to optimize stock levels: not too low (or\n"
 "                        you may find yourself out of stock) and not too high "
 "(your products occupy\n"
 "                        space and may lose value)."
 msgstr ""
-"Manajemen persediaan baik yang bertujuan untuk mengoptimalkan tingkat stok: "
-"tidak terlalu rendah (atau Anda mungkin menemukan diri Anda keluar dari "
-"stok) dan tidak terlalu tinggi (produk Anda menempati ruang dan mungkin "
-"kehilangan nilai)."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1962,9 +1946,8 @@ msgstr "Pengiriman Slip"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Pengiriman Slip"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2145,9 +2128,8 @@ msgstr "Tidak melacak item produk individu"
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
-#, fuzzy
 msgid "Do not use Expiration Date on serial numbers"
-msgstr "Menentukan tanggal kedaluwarsa pada nomor seri"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
@@ -3633,15 +3615,13 @@ msgstr "Mengelola lokasi default per produk"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Mengelola beberapa lokasi dan gudang"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Mengelola beberapa lokasi dan gudang"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3675,15 +3655,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_locations
-#, fuzzy
 msgid "Manage several stock locations"
-msgstr "Mengelola beberapa lokasi per gudang"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Mengelola beberapa lokasi per gudang"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -4174,9 +4152,8 @@ msgstr "Nama operasi"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Jenis operasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4407,15 +4384,13 @@ msgstr "Transfer kemasan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Jenis kemasan"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Jenis kemasan"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5382,15 +5357,13 @@ msgstr "Cadangan"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
-#, fuzzy
 msgid "Reserve products immediately after the sale order confirmation"
-msgstr "Reserve dijual pesanan segera pada konfirmasi"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
-#, fuzzy
 msgid "Reserve products manually or based on automatic scheduler"
-msgstr "Reserve dijual pesanan secara manual atau dengan menjalankan Penjadwal"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -5822,11 +5795,9 @@ msgstr "Kulkas kecil"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Beberapa produk dapat dijual/dibeli dalam berbagai unit tindakan (lanjutan)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:780
@@ -6162,9 +6133,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "FedEx integrasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6351,15 +6321,12 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:814
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
 msgstr ""
-"Bulatan / Anda Unit dari langkah-langkah %s bergerak vs %s pada produk tidak "
-"memungkinkan untuk melakukan operasi ini atau Anda tidak mentransfer memetik "
-"sekaligus."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:116
@@ -6372,9 +6339,9 @@ msgstr "Pilihan yang dipilih persediaan tidak koheren."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:246
-#, fuzzy, python-format
+#, python-format
 msgid "The serial number %s is already in stock."
-msgstr "Nomor seri %s sudah dalam stok"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:508
@@ -6688,7 +6655,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
-#, fuzzy
 msgid ""
 "To check the trajectory of a lot, find it back in <strong><i>Inventory "
 "Control &gt; Serial Numbers / lots</i></strong>.\n"
@@ -6697,11 +6663,6 @@ msgid ""
 "                       filter the Quantitative Valuation of a product with a "
 "certain lot."
 msgstr ""
-"Untuk memeriksa lintasan banyak, menemukan kembali <strong><i>Inventory "
-"Control > nomor seri / Lot</i></strong>.\n"
-"                       Pilih Lo t dalam daftar dan klik pada <i>penelusuran</"
-"i>saya >. Anda juga dapat menyaring Penilaian kuantitatif produk dengan "
-"banyak tertentu."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6784,7 +6745,7 @@ msgstr "red cross permindahan darah"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
 msgid "Transfer Destination Address"
-msgstr ""
+msgstr "Alamat tujuan transfer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
@@ -7210,9 +7171,9 @@ msgstr "Semoga panduan ini membantu Anda menerapkan Odoo persediaan."
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Produk diinventarisasi"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7363,14 +7324,10 @@ msgstr "Anda dapat menghapus baris untuk mengabaikan beberapa produk."
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
-#, fuzzy
 msgid ""
 "You can either do it immediately or mark it as Todo for future processing. "
 "Use your scanner to validate the transferred quantity quicker."
 msgstr ""
-"Anda dapat melakukannya segera atau menandainya sebagai Todo untuk masa "
-"depan pengolahan. Menggunakan scanner untuk memvalidasi kuantitas transfer "
-"yang lebih cepat."
 
 #. module: stock
 #: code:addons/stock/models/product.py:464
@@ -7781,559 +7738,3 @@ msgstr "↳Put dalam kemasan"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Atur quantity  jadi 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Draft: belum dikonfirmasi dan tidak akan dijadwalkan "
-#~ "sampai dikonfirmasi\n"
-#~ "\n"
-#~ "                * Menunggu Operasi lain: menunggu langkah lain untuk "
-#~ "melanjutkan sebelum menjadi otomatis tersedia (misalnya di Make-To-Order "
-#~ "mengalir)\n"
-#~ "\n"
-#~ "                * Menunggu Ketersediaan: masih menunggu ketersediaan "
-#~ "produk\n"
-#~ "\n"
-#~ "                * Sebagian Tersedia: beberapa produk yang tersedia dan "
-#~ "dilindungi\n"
-#~ "\n"
-#~ "                * Siap Transfer: produk-undang, hanya menunggu "
-#~ "konfirmasi.\n"
-#~ "\n"
-#~ "                * Ditransfer: telah diproses, tidak dapat diubah atau "
-#~ "dibatalkan lagi\n"
-#~ "\n"
-#~ "                * Dibatalkan: telah dibatalkan, tidak dapat dikonfirmasi "
-#~ "lagi"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Menciptakan rute dropship dan menambahkan tes-ini lebih kompleks "
-#~ "menginstal stock_dropshipping modul."
-
-#~ msgid " MTO"
-#~ msgstr "MTO"
-
-#~ msgid " On Hand"
-#~ msgstr "Pada Tangan"
-
-#~ msgid " Sequence in"
-#~ msgstr "Urutan"
-
-#~ msgid " Sequence internal"
-#~ msgstr "Urutan internal yang"
-
-#~ msgid " Sequence out"
-#~ msgstr "Urutan keluar"
-
-#~ msgid " Sequence packing"
-#~ msgstr "Urutan kemasan"
-
-#~ msgid " Sequence picking"
-#~ msgstr "Urutan memetik"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* New: Ketika bergerak stok dibuat dan belum dikonfirmasi. * Menunggu "
-#~ "Pindah lain: negara ini dapat dilihat ketika bergerak menunggu satu sama "
-#~ "lain, misalnya dalam aliran dirantai. * Menunggu Ketersediaan: Negara ini "
-#~ "tiba saat resolusi pengadaan tidak lurus ke depan. Ini mungkin perlu "
-#~ "scheduler untuk menjalankan, komponen untuk saya diproduksi ... * "
-#~ "Tersedia: Ketika produk yang dilindungi, sudah diatur untuk 'Tersedia'. * "
-#~ "Selesai: Ketika pengiriman diproses, negara 'Selesai'."
-
-#~ msgid ""
-#~ "* Vendor Location: Virtual location representing the source location for "
-#~ "products coming from your vendors\n"
-#~ "                       \n"
-#~ "* View: Virtual location used to create a hierarchical structures for "
-#~ "your warehouse, aggregating its child locations ; can't directly contain "
-#~ "products\n"
-#~ "                       \n"
-#~ "* Internal Location: Physical locations inside your own warehouses,\n"
-#~ "                       \n"
-#~ "* Customer Location: Virtual location representing the destination "
-#~ "location for products sent to your customers\n"
-#~ "                       \n"
-#~ "* Inventory Loss: Virtual location serving as counterpart for inventory "
-#~ "operations used to correct stock levels (Physical inventories)\n"
-#~ "                       \n"
-#~ "* Procurement: Virtual location serving as temporary counterpart for "
-#~ "procurement operations when the source (vendor or production) is not "
-#~ "known yet. This location should be empty when the procurement scheduler "
-#~ "has finished running.\n"
-#~ "                       \n"
-#~ "* Production: Virtual counterpart location for production operations: "
-#~ "this location consumes the raw material and produces finished products\n"
-#~ "                       \n"
-#~ "* Transit Location: Counterpart location that should be used in inter-"
-#~ "companies or inter-warehouses operations\n"
-#~ "                      "
-#~ msgstr ""
-#~ "* Penjual Lokasi: lokasi Virtual mewakili lokasi sumber untuk produk yang "
-#~ "berasal dari vendor Anda\n"
-#~ "                       \n"
-#~ "* View: lokasi Virtual digunakan untuk membuat struktur hirarkis untuk "
-#~ "gudang Anda, menggabungkan lokasi anaknya; tidak dapat secara langsung "
-#~ "mengandung produk\n"
-#~ "                       \n"
-#~ "* Internal Lokasi: lokasi fisik di dalam gudang Anda sendiri,\n"
-#~ "                       \n"
-#~ "* Pelanggan Lokasi: lokasi Virtual mewakili lokasi tujuan untuk produk "
-#~ "dikirim ke pelanggan Anda\n"
-#~ "                       \n"
-#~ "* Persediaan Loss: Virtual lokasi menjabat sebagai mitra untuk operasi "
-#~ "persediaan digunakan untuk memperbaiki tingkat stok (persediaan fisik)\n"
-#~ "                       \n"
-#~ "* Pengadaan: lokasi Virtual melayani rekan sebagai sementara untuk "
-#~ "operasi pengadaan ketika sumber (vendor atau produksi) belum diketahui. "
-#~ "Lokasi ini harus kosong ketika scheduler pengadaan telah selesai "
-#~ "berjalan.\n"
-#~ "                       \n"
-#~ "* Produksi: Virtual rekan lokasi untuk operasi produksi: lokasi ini "
-#~ "mengkonsumsi bahan baku dan menghasilkan produk jadi\n"
-#~ "                       \n"
-#~ "* Transit Lokasi: lokasi Counterpart yang harus digunakan dalam antar-"
-#~ "perusahaan atau operasi antar-gudang\n"
-#~ "                      "
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Alamat kontak:</strong></span>"
-
-#~ msgid "<strong>Serial Number</strong>"
-#~ msgstr "<strong>No Serial</strong>"
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Status</strong>"
-
-#~ msgid "A barcode nomenclature"
-#~ msgstr "Nomenklatur barcode"
-
-#~ msgid ""
-#~ "A good inventory management aims to optimize stock levels: not too low "
-#~ "(or\n"
-#~ "                        you may find yourself out of stock) and not too "
-#~ "high (your products occupy\n"
-#~ "                        space and may loose value)."
-#~ msgstr ""
-#~ "Manajemen persediaan baik yang bertujuan untuk mengoptimalkan tingkat "
-#~ "stok: tidak terlalu rendah (atau Anda mungkin menemukan diri Anda keluar "
-#~ "dari stok) dan tidak terlalu tinggi (produk Anda menempati ruang dan "
-#~ "mungkin kehilangan nilai)."
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Menambahkan link klaim pengiriman pesanan.\n"
-#~ "-Ini akan menginstal modul claim_from_delivery."
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "Memungkinkan klaim pada pengiriman"
-
-#~ msgid ""
-#~ "Allows you to automatically reserve the available\n"
-#~ "            products when confirming a sale order.\n"
-#~ "                This installs the module procurement_jit."
-#~ msgstr ""
-#~ "Memungkinkan Anda untuk secara otomatis mereservasi produk yang tersedia "
-#~ "ketika konfirmasi order untuk menjual.\n"
-#~ "                Ini akan menginstal modul procurement_jit."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Secara default, sistem akan mengambil dari stok di lokasi sumber dan "
-#~ "menunggu secara pasif ketersediaan. Kemungkinan lain memungkinkan Anda "
-#~ "untuk langsung membuat pengadaan di lokasi sumber (dan dengan demikian "
-#~ "mengabaikan stoknya saat ini) untuk mengumpulkan produk. Jika kita ingin "
-#~ "rantai bergerak dan memiliki yang satu ini untuk menunggu sebelumnya, "
-#~ "pilihan kedua ini harus dipilih."
-
-#~ msgid "Check the existance of pack operation on the picking"
-#~ msgstr "Memeriksa keberadaan kemasan operasi pada mengambil"
-
-#~ msgid "Check the existance of stock moves linked to this inventory"
-#~ msgstr "Memeriksa keberadaan stok bergerak terkait untuk persediaan ini"
-
-#~ msgid "Claims"
-#~ msgstr "Klaim"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid ""
-#~ "Define your locations to reflect your warehouse structure and\n"
-#~ "                organization. Odoo is able to manage physical locations\n"
-#~ "                (warehouses, shelves, bin, etc), partner locations "
-#~ "(customers,\n"
-#~ "                vendors) and virtual locations which are the counterpart "
-#~ "of\n"
-#~ "                the stock operations like the manufacturing orders\n"
-#~ "                consumptions, inventories, etc."
-#~ msgstr ""
-#~ "Menentukan lokasi Anda untuk mencerminkan gudang struktur dan organisasi "
-#~ "Anda. Odoo mampu mengelola lokasi fisik (gudang, rak, bin, dll), mitra "
-#~ "lokasi (pelanggan, vendor) dan lokasi virtual yang mitra transaksi stok "
-#~ "seperti pembuatan pesanan konsumsi, persediaan, dll."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Metode Pengiriman"
-
-#~ msgid "Do not manage claims"
-#~ msgstr "Tidak mengelola klaim"
-
-#~ msgid "Do not record internal moves within a warehouse"
-#~ msgstr "Tidak merekam internal bergerak dalam sebuah gudang"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "Jangan gunakan kadaluarsa"
-
-#~ msgid ""
-#~ "Every stock operation in Odoo moves the products from one\n"
-#~ "                location to another one.  For instance, if you receive "
-#~ "products\n"
-#~ "                from a vendor, Odoo will move products from the Vendor\n"
-#~ "                location to the Stock location. Each report can be "
-#~ "performed on\n"
-#~ "                physical, partner or virtual locations."
-#~ msgstr ""
-#~ "Setiap operasi stok di Odoo bergerak produk dari satu lokasi ke satu sama "
-#~ "lain.  Misalnya, jika Anda menerima produk dari vendor, maka Odoo akan "
-#~ "bergerak produk dari Vendor lokasi ke lokasi stok. Setiap laporan dapat "
-#~ "dilakukan pada fisik, pasangan atau lokasi virtual."
-
-#~ msgid "Followers"
-#~ msgstr "Pengikut"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Diperkirakan:"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "Stok bergerak"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "Information"
-#~ msgstr "Informasi"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Baris persediaan."
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Bergerak persediaan."
-
-#~ msgid "Inventory Name."
-#~ msgstr "Nama persediaan."
-
-#~ msgid "Inventory loss"
-#~ msgstr "Penurunan Nilai Persediaan"
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Link antara stok bergerak dan kemasan operasi"
-
-#~ msgid "Lot is required"
-#~ msgstr "Banyak diperlukan"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Mengelola beberapa lokasi dan gudang"
-
-#~ msgid "Manage several locations per warehouse"
-#~ msgstr "Mengelola beberapa lokasi per gudang"
-
-#~ msgid "Messages"
-#~ msgstr "Pesan"
-
-#~ msgid "Move Lines"
-#~ msgstr "Memindahkan baris"
-
-#~ msgid "Multi Locations"
-#~ msgstr "Multi lokasi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Gudang buka Menu"
-
-#~ msgid "Packagings"
-#~ msgstr "Kemasan"
-
-#~ msgid ""
-#~ "Periodical Inventories are used to count the number of products\n"
-#~ "                available per location. You can use it once a year when "
-#~ "you do\n"
-#~ "                the general inventory or whenever you need it, to adapt "
-#~ "the\n"
-#~ "                current inventory level of a product."
-#~ msgstr ""
-#~ "Berkala persediaan yang digunakan untuk menghitung jumlah produk yang "
-#~ "tersedia per lokasi. Anda dapat menggunakannya sekali setahun ketika Anda "
-#~ "melakukan persediaan umum atau setiap kali Anda membutuhkannya, "
-#~ "beradaptasi tingkat persediaan saat ini produk."
-
-#~ msgid "Picking Types"
-#~ msgstr "Memilih jenis"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Mendorong arus"
-
-#~ msgid "Qty"
-#~ msgstr "Qty"
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr ""
-#~ "Kuantitas yang tersisa di default UoM menurut bergerak dicocokkan dengan "
-#~ "operasi ini."
-
-#~ msgid "Reserve sale orders immediately on confirmation"
-#~ msgstr "Reserve dijual pesanan segera pada konfirmasi"
-
-#~ msgid "Reserve sale orders manually or by running the schedulers"
-#~ msgstr ""
-#~ "Reserve dijual pesanan secara manual atau dengan menjalankan Penjadwal"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Resupply dari gudang lainnya"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Beberapa produk dapat dijual/dibeli dalam berbagai unit tindakan "
-#~ "(lanjutan)"
-
-#~ msgid "Specifies lot/serial number for pack operations that need it"
-#~ msgstr ""
-#~ "Menentukan banyak/serial number untuk kemasan operasi yang membutuhkannya"
-
-#~ msgid "Suppliers"
-#~ msgstr "Pemasok"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Bidang teknik digunakan untuk menyembunyikan tooltip bantuan jika tidak "
-#~ "diperlukan"
-
-#~ msgid ""
-#~ "The 'Automatic Move' / 'Manual Operation' value will create a stock move "
-#~ "after the current one.  With 'Automatic No Step Added', the location is "
-#~ "replaced in the original move."
-#~ msgstr ""
-#~ "'Otomatis Pindahkan' / 'Manual operasi' nilai akan membuat bergerak stok "
-#~ "setelah satu saat ini.  Dengan 'Otomatis No langkah ditambahkan', lokasi "
-#~ "diganti dalam bergerak asli."
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Kuantitas pilihan untuk produk %s tidak kompatibel dengan UoM pembulatan. "
-#~ "Itu akan secara otomatis dikonversi pada konfirmasi"
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "Kuantitas pengadaan akan dibulatkan hingga beberapa ini.  Jika itu adalah "
-#~ "0, kuantitas yang tepat akan digunakan."
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "Bulatan / Anda Unit dari langkah-langkah %s bergerak vs %s pada produk "
-#~ "tidak memungkinkan untuk melakukan operasi ini atau Anda tidak "
-#~ "mentransfer memetik sekaligus."
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "UoM dipilih untuk produk %s tidak kompatibel dengan UoM ditetapkan pada "
-#~ "bentuk produk. \n"
-#~ "Silakan pilih UoM dalam kategori UoM yang sama."
-
-#~ msgid "The serial number %s is already in stock"
-#~ msgstr "Nomor seri %s sudah dalam stok"
-
-#~ msgid ""
-#~ "This is the list of all the production lots you recorded. When\n"
-#~ "                you select a lot, you can get the traceability of the "
-#~ "products contained in lot."
-#~ msgstr ""
-#~ "Ini adalah daftar semua banyak produksi yang direkam. Bila Anda memilih "
-#~ "banyak, Anda bisa mendapatkan ketertelusuran terkandung dalam banyak "
-#~ "produk."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Ini akan menunjukkan lokasi dan memungkinkan Anda untuk menentukan "
-#~ "beberapa jenis memetik dan gudang."
-
-#~ msgid ""
-#~ "To check the trajectory of a lot, find it back in <strong><i>Inventory "
-#~ "Control &gt; Serial Numbers / lots</i></strong>.\n"
-#~ "                       Choose a Lo t in the list and click on "
-#~ "<i>Traceability</i>i&gt;. You may also\n"
-#~ "                       filter the Quantitative Valuation of a product "
-#~ "with a certain lot."
-#~ msgstr ""
-#~ "Untuk memeriksa lintasan banyak, menemukan kembali <strong><i>Inventory "
-#~ "Control > nomor seri / Lot</i></strong>.\n"
-#~ "                       Pilih Lo t dalam daftar dan klik pada "
-#~ "<i>penelusuran</i>saya >. Anda juga dapat menyaring Penilaian kuantitatif "
-#~ "produk dengan banyak tertentu."
-
-#~ msgid ""
-#~ "Track different dates on products and serial numbers.\n"
-#~ "                    The following dates can be tracked:\n"
-#~ "                    - end of life\n"
-#~ "                    - best before date\n"
-#~ "                    - removal date\n"
-#~ "                    - alert date.\n"
-#~ "                    This installs the module product_expiry."
-#~ msgstr ""
-#~ "Melacak tanggal yang berbeda pada produk dan nomor seri.\n"
-#~ "                    Tanggal berikut dapat dilacak: - akhir kehidupan - "
-#~ "best sebelum tanggal - penghapusan tanggal - tanggal waspada.\n"
-#~ "                    Ini akan menginstal modul product_expiry."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unit tindakan"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Pesan Belum Dibaca"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Unused field"
-#~ msgstr "Bidang yang tidak terpakai"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Menggunakan Asisten ini untuk menghasilkan pengadaan permintaan untuk "
-#~ "produk ini. Menurut konfigurasi produk, ini dapat memicu rancangan "
-#~ "purchase order, Orde manufaktur atau tugas baru."
-
-#~ msgid "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr ""
-#~ "Menggunakan scanner untuk memvalidasi kuantitas transfer yang lebih cepat."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Peringatan: UoM salah!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Peringatan: salah kuantitas!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing."
-#~ msgstr ""
-#~ "Anda dapat melakukannya segera atau menandainya sebagai Todo untuk masa "
-#~ "depan pengolahan."
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing. "
-#~ "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr ""
-#~ "Anda dapat melakukannya segera atau menandainya sebagai Todo untuk masa "
-#~ "depan pengolahan. Menggunakan scanner untuk memvalidasi kuantitas "
-#~ "transfer yang lebih cepat."
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "Anda hanya dapat kembali satu memilih pada suatu waktu!"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "Anda hanya dapat kembali hasil yang dilakukan!"
-
-#~ msgid "move that created the return move"
-#~ msgstr "bergerak yang menciptakan kembali bergerak"
-
-#~ msgid "preferred Packaging"
-#~ msgstr "pilihan Kemasan"
-
-#~ msgid "unknown"
-#~ msgstr "tidak diketahui"

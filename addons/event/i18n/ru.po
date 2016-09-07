@@ -35,7 +35,6 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
-#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
@@ -45,11 +44,6 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
-"<p>Здравствуйте, ${object.name},</p>\n"
-"<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id.name}\".\n"
-"Ваш <b>бэйдж участника</b> находится в приложении к данному сообщению.</p>\n"
-"<p>Благодарим за участие!</p>\n"
-"<p>С уважением,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -330,9 +324,8 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-#, fuzzy
 msgid "Badge Inner Left"
-msgstr "Значок внутри слева"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -1837,115 +1830,3 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr ""
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
-#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
-#~ "to ${object.event_id.date_end_located}.\n"
-#~ "For any further information please contact our event department.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Здравствуйте, ${object.name},</p>\n"
-#~ "<p>Высылаем вам подтверждение о том, что мероприятие \"${object.event_id."
-#~ "name}\", на которое вы зарегистрировались, будет проходить с ${object."
-#~ "event_id.date_begin_located} до ${object.event_id.date_end_located}.\n"
-#~ "Для более подробной информации, пожалуйста, свяжитесь с нашим отделом "
-#~ "проведения мероприятий.</p>\n"
-#~ "<p>Благодарим за участие!</p>\n"
-#~ "<p>С уважением,</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Здравствуйте, ${object.name},</p>\n"
-#~ "<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id."
-#~ "name}\".\n"
-#~ "Ваш <b>бэйдж участника</b> находится в приложении к данному сообщению.</"
-#~ "p>\n"
-#~ "<p>Благодарим за участие!</p>\n"
-#~ "<p>С уважением,</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "You will automatically receive an email providing you more practical "
-#~ "information (such as the schedule, the agenda...) as soon as the event is "
-#~ "confirmed.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Здравствуйте, ${object.name},</p>\n"
-#~ "<p>Теперь вы подписаны на рассылку мероприятия \"${object.event_id."
-#~ "name}\". Мы отправим вам письмо с более подробной информацией "
-#~ "(расписание, план мероприятия...), как только мероприятие будет "
-#~ "подтверждено.</p>\n"
-#~ "<p>Благодарим за участие!</p>\n"
-#~ "<p>С уважением,</p>"
-
-#~ msgid "<small>John Doe, CEO</small>"
-#~ msgstr "<small>Джон Доу, CEO</small>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Badge Innner Left"
-#~ msgstr "Значок внутри слева"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Events Types"
-#~ msgstr "Виды событий"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Open Event Menu"
-#~ msgstr "Открыть меню событий"
-
-#~ msgid "Thanks for attending ${object.event_id.name}"
-#~ msgstr "Спасибо за участие в \"${object.event_id.name}\""
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"

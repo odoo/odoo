@@ -38,7 +38,6 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
-#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
@@ -48,20 +47,6 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"<p>Hallo ${object.name},</p>\n"
-"<p>Wir bestätigen hiermit Ihre Anmeldung zur Veranstaltung ${object.event_id."
-"name}.\n"
-"Ihren <b>Teilnahmeausweise</b> finden Sie im Anhang zu dieser Mail.</p>\n"
-"<p>Vielen Dank für Ihre Teilnahme!</p>\n"
-"<p>Mit freundlichem Gruß</p>\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"<p>Hallo ${object.name},</p>\n"
-"<p>Wir bestätigen hiermit Ihre Anmeldung zur Veranstaltung ${object.event_id."
-"name}.\n"
-"Ihren <b>Teilnahmenschein</b> finden Sie im Anhang zu dieser Mail.</p>\n"
-"<p>Vielen Dank für Ihre Teilnahme!</p>\n"
-"<p>Mit freundlichem Gruß</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -113,17 +98,10 @@ msgstr "5 Intensivtage"
 
 #. module: event
 #: model:event.event,description:event.event_2
-#, fuzzy
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
 "event or change the dates on which it is held.)</em>"
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"<em>(Chamber Works behält sich das Recht vor, die Veranstaltung umzubenennen,"
-"<br/>zu stornieren oder Zeit oder Ort zu verlegen.)</em>\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"<em>(Chamber Works behält sich das Recht vor, die Veranstaltung umzubenennen,"
-"<br/>zu stornieren, Zeit oder Ort zu verlegen.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -365,9 +343,8 @@ msgstr "Eintrittskarten-Vorderseite"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
-#, fuzzy
 msgid "Badge Inner Left"
-msgstr "Auszeichnung Innen links"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -552,13 +529,8 @@ msgstr "Kontakt"
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-#, fuzzy
 msgid "Controllers and Views"
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Controllers und Views\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Controller und Sichten"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -1897,176 +1869,3 @@ msgstr "zum Erlernen technischer Gesichtspunkte"
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "Schulungsunterlagen."
-
-#~ msgid ""
-#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
-#~ ">the event or change the dates on which it is held.)</em>"
-#~ msgstr ""
-#~ "<em>(Chamber Works behält sich das Recht vor, die Veranstaltung "
-#~ "umzubenennen,<br/>zu stornieren oder Zeit oder Ort zu verlegen.)</em>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
-#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
-#~ "to ${object.event_id.date_end_located}.\n"
-#~ "For any further information please contact our event department.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>Dies ist eine Erinnerung bezüglich Ihrer Anmeldung: ${object.event_id."
-#~ "name} ist bestätigt und findet vom ${object.event_id.date_begin_located} "
-#~ "bis ${object.event_id.date_end_located} statt.\n"
-#~ "Für weitergehende Information nehmen Sie bitte mit der "
-#~ "Veranstaltungsorganisation Verbindung auf.</p>\n"
-#~ "<p>Vielen Dank für Ihre Teilnahme!</p>\n"
-#~ "<p>Herzliche Grüße</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>Wir bestätigen hiermit Ihre Anmeldung zur Veranstaltung ${object."
-#~ "event_id.name}.\n"
-#~ "Ihren <b>Teilnahmeausweise</b> finden Sie im Anhang zu dieser Mail.</p>\n"
-#~ "<p>Vielen Dank für Ihre Teilnahme!</p>\n"
-#~ "<p>Mit freundlichem Gruß</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "You will automatically receive an email providing you more practical "
-#~ "information (such as the schedule, the agenda...) as soon as the event is "
-#~ "confirmed.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>Wir bestätigen hiermit Ihre Anmeldung zur Veranstaltung ${object."
-#~ "event_id.name}.\n"
-#~ "Sie werden automatisch eine weitere Mitteilung mit nützlichen Hinweisen "
-#~ "(wie Zeitplan oder Agenda, ...) erhalten, sobald die Veranstaltung "
-#~ "bestätigt ist.</p>\n"
-#~ "<p>Wir freuen uns über Ihre Teilnahme!</p>\n"
-#~ "<p>Mit freundlichem Gruß</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We would like to thank you for your presence at our event ${object."
-#~ "event_id.name}.\n"
-#~ "<br/><br/>\n"
-#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-#~ "    % elif object.event_id.organizer_id:\n"
-#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "    % endif\n"
-#~ "</p>"
-#~ msgstr ""
-#~ "<p>Hallo ${object.name},</p>\n"
-#~ "<p>Wir möchten Ihnen für die Teilnahme an unserer Veranstaltung ${object."
-#~ "event_id.name} danken.\n"
-#~ "<br/><br/>\n"
-#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "        <strong>Das Team ${object.event_id.organizer_id.name}</strong>\n"
-#~ "    % elif object.event_id.organizer_id:\n"
-#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "    % endif\n"
-#~ "</p>"
-
-#~ msgid "<small>John Doe, CEO</small>"
-#~ msgstr "<small>John Doe, CEO</small>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion notwendig"
-
-#~ msgid "Badge Innner Left"
-#~ msgstr "Auszeichnung Innen links"
-
-#~ msgid "Controlers and Views"
-#~ msgstr "Controllers und Views"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum der letzten Nachricht."
-
-#~ msgid "Events Types"
-#~ msgstr "Veranstaltungsarten"
-
-#~ msgid "Followers"
-#~ msgstr "Beobachter"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Beobachter (Kanäle)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Beobachter (Partner)"
-
-#~ msgid ""
-#~ "I did not expect such a great learning experience. I feel like I can "
-#~ "develop anything now."
-#~ msgstr ""
-#~ "Ich habe einen solchen Lernerfolg nicht erwartet. Ich fühle mich, als "
-#~ "könnte ich jetzt alles entwickeln."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ist Beobachter"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Letzte Benachrichtigung"
-
-#~ msgid "Messages"
-#~ msgstr "Mitteilungen"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Nachrichten und Kommunikations-Historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Anzahl der Aktionen"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Anzahl ungelesene Nachrichten"
-
-#~ msgid "Open Event Menu"
-#~ msgstr "Veranstaltungsmenü öffnen"
-
-#~ msgid "Read Great Contents"
-#~ msgstr "Lesen Sie tolle Inhalte"
-
-#~ msgid "Thanks for attending ${object.event_id.name}"
-#~ msgstr "Dank für die Teilnahme an ${object.event_id.name}"
-
-#~ msgid ""
-#~ "This course help me build my first application within a month. Definetly "
-#~ "worth its price."
-#~ msgstr ""
-#~ "Dieser Kurs half mir meine erste Anwendung innerhalb eines Monats "
-#~ "fertigzustellen. Definitiv seinen Preis wert."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Zähler der ungelelesen Nachrichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website-Meldungen"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website-Kommunikationsverlauf"
-
-#~ msgid "What do people say about this course?"
-#~ msgstr "Was sagen die Leute über diesen Kurs?"

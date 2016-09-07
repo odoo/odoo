@@ -25,15 +25,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Es kann eine Route für das Streckengeschäft erstellt werden.\n"
-"- Installieren Sie hierzu das Modul stock_dropshipping"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -86,7 +82,6 @@ msgstr "%s: Umschlaglager"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -97,17 +92,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Neu: Wenn ein Lieferschein erstellt wurde und noch nicht bestätigt ist, "
-"befindet er sich im 'Entwurf'.\n"
-"* Warte auf andere Lieferung: Diese Lieferung wartet zur weiteren "
-"Bearbeitung auf eine andere Lieferung (z.B. Lieferkette)\n"
-"* Warte auf Verfügbarkeit: Ein Lieferschein in diesem Status, wartet auf die "
-"Durchführung einer Bestandsaktualisierung oder auf die noch offene "
-"Fertigstellung eines Fertigungsauftrags o.ä. \n"
-"* Verfügbar: Wenn Produkte für diese Lieferung reserviert sind oder werden, "
-"werden Sie als 'Verfügbar' angezeigt.\n"
-"* Fertig: Wenn die Auslieferung verarbeitet und abgeschlossen wird wird, ist "
-"der Zustand dann 'Fertig'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1896,9 +1880,8 @@ msgstr "Lieferschein"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Lieferschein"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2078,9 +2061,8 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
-#, fuzzy
 msgid "Do not use Expiration Date on serial numbers"
-msgstr "Definieren von Ablaufdaten bei Fertigungslosen/Seriennummern"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
@@ -3509,15 +3491,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Verwaltung mehrfacher Lagerorte und Lager"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Verwaltung mehrfacher Lagerorte und Lager"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3556,9 +3536,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Verwalten Sie Lose / Seriennummern"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -4027,9 +4006,8 @@ msgstr "Arbeitsauftrag"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Vorgänge"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4262,15 +4240,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Verpackungstyp"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Verpackungstyp"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5663,12 +5639,9 @@ msgstr "Kleiner Kühlschrank"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Einige Produkte können in verschieden Maßeinheiten ein-/verkauft werden "
-"(erweitert)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:780
@@ -6006,9 +5979,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Fedex Integration"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -7005,9 +6977,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Inventarisiertes Produkt"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7535,364 +7507,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "=> Menge auf 0 setzen"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Entwurf: Lieferung wurde noch nicht bestätigt, es "
-#~ "erfolgt keine weitere Disposition bevor diese Bestätigung erfolgt ist.\n"
-#~ "\n"
-#~ "                * Warte auf andere Lieferung: Es wird auf eine andere "
-#~ "Lieferung gewartet, bevor dieser Lieferauftrag weiter bearbeitet wird.\n"
-#~ "\n"
-#~ "                * Warte auf Verfügbarkeit: Es wird immer noch auf den "
-#~ "Zugang von Produkten zur weiteren Bearbeitung gewartet.\n"
-#~ "\n"
-#~ "                * Teilweise Verfügbar: Einige Produkte sind teilweise "
-#~ "verfügbar und wurden reserviert.\n"
-#~ "\n"
-#~ "               * Bereit zur Lieferung: Die Produkte wurden bereits "
-#~ "reserviert, es fehlt nur noch die Bestätigung der Lieferung.\n"
-#~ "\n"
-#~ "               * Geliefert: Die Lieferungen wurden durchgeführt und "
-#~ "können nicht mehr abgebrochen werden.\n"
-#~ "\n"
-#~ "               * Abgebrochen: Die Lieferung wurde abgebrochen und kann "
-#~ "jetzt nicht mehr weiter bearbeitet werden."
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Es kann eine Route für das Streckengeschäft erstellt werden.\n"
-#~ "- Installieren Sie hierzu das Modul stock_dropshipping"
-
-#~ msgid " MTO"
-#~ msgstr " MTO"
-
-#~ msgid " On Hand"
-#~ msgstr " Auf Lager"
-
-#~ msgid " Sequence in"
-#~ msgstr " Nummernfolge Zugänge"
-
-#~ msgid " Sequence internal"
-#~ msgstr " Nummernfolge Intern"
-
-#~ msgid " Sequence out"
-#~ msgstr " Nummernfolge Auslieferungen"
-
-#~ msgid " Sequence packing"
-#~ msgstr " Nummernfolge Verpackung"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Nummernfolge Pickaufträge"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Neu: Wenn ein Lieferschein erstellt wurde und noch nicht bestätigt ist, "
-#~ "befindet er sich im 'Entwurf'.\n"
-#~ "* Warte auf andere Lieferung: Diese Lieferung wartet zur weiteren "
-#~ "Bearbeitung auf eine andere Lieferung (z.B. Lieferkette)\n"
-#~ "* Warte auf Verfügbarkeit: Ein Lieferschein in diesem Status, wartet auf "
-#~ "die Durchführung einer Bestandsaktualisierung oder auf die noch offene "
-#~ "Fertigstellung eines Fertigungsauftrags o.ä. \n"
-#~ "* Verfügbar: Wenn Produkte für diese Lieferung reserviert sind oder "
-#~ "werden, werden Sie als 'Verfügbar' angezeigt.\n"
-#~ "* Fertig: Wenn die Auslieferung verarbeitet und abgeschlossen wird wird, "
-#~ "ist der Zustand dann 'Fertig'."
-
-#~ msgid ""
-#~ "* Vendor Location: Virtual location representing the source location for "
-#~ "products coming from your vendors\n"
-#~ "                       \n"
-#~ "* View: Virtual location used to create a hierarchical structures for "
-#~ "your warehouse, aggregating its child locations ; can't directly contain "
-#~ "products\n"
-#~ "                       \n"
-#~ "* Internal Location: Physical locations inside your own warehouses,\n"
-#~ "                       \n"
-#~ "* Customer Location: Virtual location representing the destination "
-#~ "location for products sent to your customers\n"
-#~ "                       \n"
-#~ "* Inventory Loss: Virtual location serving as counterpart for inventory "
-#~ "operations used to correct stock levels (Physical inventories)\n"
-#~ "                       \n"
-#~ "* Procurement: Virtual location serving as temporary counterpart for "
-#~ "procurement operations when the source (vendor or production) is not "
-#~ "known yet. This location should be empty when the procurement scheduler "
-#~ "has finished running.\n"
-#~ "                       \n"
-#~ "* Production: Virtual counterpart location for production operations: "
-#~ "this location consumes the raw material and produces finished products\n"
-#~ "                       \n"
-#~ "* Transit Location: Counterpart location that should be used in inter-"
-#~ "companies or inter-warehouses operations\n"
-#~ "                      "
-#~ msgstr ""
-#~ "* Lieferantenlager: Virtuelles Lager als Quelle für Lieferungen Ihrer "
-#~ "Lieferanten.\n"
-#~ "                       \n"
-#~ "* Ansicht: Virtuelles Lager zur Abbildung von mehrdimensionalen "
-#~ "Lagerstrukturen.\n"
-#~ "                       \n"
-#~ "* Intern: tatsächliches physikalisches Lager Ihres Unternehmens\n"
-#~ "                       \n"
-#~ "* Kundenlager: Virtuelles Lager als Ziel für Lieferungen an Kunden.\n"
-#~ "                       \n"
-#~ "* Inventurdifferenz: Virtuelles Lager, welches bei Inventuren als "
-#~ "temporäre Gegenposition gebucht wird.\n"
-#~ "                       \n"
-#~ "* Beschaffung: Virtuelles Lager, welches als temporäre Gegenposition "
-#~ "gebucht wird, wenn die Quelle noch nicht exakt bekannt ist (Lieferant "
-#~ "oder Fertigung).\n"
-#~ "                       \n"
-#~ "* Fertigung: Virtuelles Lager, welches als Gegenposition bei "
-#~ "Arbeitsaufträgen in der Fertigung genutzt wird. Hier wird der Verbrauch "
-#~ "von Material gebucht, sowie auch die Fertigware zugebucht.\n"
-#~ "                       \n"
-#~ "* Transit: Virtuelles Lager, welches bei Inter-Company, aber auch bei "
-#~ "internen Lagerbewegungen genutzt wird.\n"
-#~ "                      "
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Kontaktadresse:</strong></span>"
-
-#~ msgid "<strong>Serial Number</strong>"
-#~ msgstr "<strong>Seriennummer</strong>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion notwendig"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Erfassen Sie Beschwerden Ihrer Kunden zu Auslieferungen.\n"
-#~ "- Installieren Sie hier die Anwendung claim_from_delivery"
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Im Standard reduziert das System den Bestand an der Quelle und wartet "
-#~ "passiv die Verfügbarkeit ab. Optional kann eine direkte Beschaffung bei "
-#~ "der Quelle ausgelöst werden, wodurch die tatsächliche Verfügbarkeit "
-#~ "ignoriert werden kann. Im Falle einer Verkettung von Lieferungen, bei der "
-#~ "eine Verfügbarkeit auch durch die vorherige Lieferung bestimmt wird, "
-#~ "sollte diese alternative Möglichkeit ausgewählt werden."
-
-#~ msgid "Claims"
-#~ msgstr "Reklamationen"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum der letzten Nachricht."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Auslieferungsmethode"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "Ablaufdaten nicht verwenden"
-
-#~ msgid "Followers"
-#~ msgstr "Beobachter"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Beobachter (Kanäle)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Beobachter (Partner)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Prognose:"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "hat Lagerbuchungen"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "Information"
-#~ msgstr "Information"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Inventurpositionen"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Inventurbuchungen"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Inventurbezeichnung"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Bestandsaufnahme"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ist Beobachter"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Letzte Benachrichtigung"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Verknüpfung zwischen Bestandsbuchung und Packvorgang"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Verwaltung mehrfacher Lagerorte und Lager"
-
-#~ msgid "Messages"
-#~ msgstr "Mitteilungen"
-
-#~ msgid "Move Lines"
-#~ msgstr "Buchungszeilen"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Anzahl der Aktionen"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Anzahl ungelesene Nachrichten"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Öffne Lager Anwendungsmenü"
-
-#~ msgid "Packagings"
-#~ msgstr "Verpackungen"
-
-#~ msgid "Picking Types"
-#~ msgstr "Picktypen"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Warenfluss durch Push Regeln"
-
-#~ msgid "Qty"
-#~ msgstr "Anz."
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Beschaffe aus anderem Lager"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Einige Produkte können in verschieden Maßeinheiten ein-/verkauft werden "
-#~ "(erweitert)"
-
-#~ msgid "Suppliers"
-#~ msgstr "Lieferanten"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr "Datenfeld zur Ausblendung des Hilfe Tooltips (wenn nicht benötigt)"
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "Die gewählte Menge für das Produkt %s ist nicht kompatibel zur "
-#~ "eingestellten Rundung. Normalerweise erfolgt deshalb eine automatische "
-#~ "Konfiguration."
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "Die zu beschaffende Menge wird auf dieses Vielfache aufgerundet. Wenn "
-#~ "hier 0 eingetragen ist, wird die exakte Anzahl verwendet.  "
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "Die ausgewählte Mengeneinheit für das Produkt %s ist nicht kompatibel zur "
-#~ "Mengeneinheit im Produktformular.\n"
-#~ "Bitte wählen Sie auf jeden Fall eine Mengeneinheit innerhalb der gleichen "
-#~ "Mengeneinheit Kategorie."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr "Konfigurieren und nutzen Sie mehrere Lager und Lagerorte."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Maßeinheiten"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ungelesene Mitteilungen"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Zähler der ungelelesen Nachrichten"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Wieder auffüllen ist für die Erstellung eines Beschaffungsvorschlags "
-#~ "vorgesehen. In Abhängigkeit von der Produktkonfiguration kann dieses "
-#~ "entweder eine Bestellung, einen Fertigungsauftrag oder eine neue Aufgabe "
-#~ "erstellen."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Achtung: falsche ME!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Achtung: Falsche Menge!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website Nachrichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website Kommunikationshistorie"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr ""
-#~ "Sie können nur Lieferungen zurück senden, die bereits erledigt sind!"
-
-#~ msgid "move that created the return move"
-#~ msgstr "Zugehörige Lieferung zu dieser Rücklieferung"
-
-#~ msgid "unknown"
-#~ msgstr "unbekannt"

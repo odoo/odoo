@@ -21,15 +21,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Kreira dropship rute i dodaje kompleksnije testove - ova opcija instalira "
-"modul stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -82,7 +78,6 @@ msgstr "%s: Prenosno mjesto"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -93,14 +88,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Novi: Kada je kretanje zalihe kreirano ali nije potvrđeno.\n"
-"* Čeka drugo kretanje zalihe: Ovaj je status je vidljiv kada je za kretanje "
-"zalihe potrebano još jedano kretanje, na primjer u povezanim tokovima.\n"
-"* Čeka dostupnost: ovaj se status se javlja kada rezolucija naručivanja nije "
-"jednostavna. Možda je potrebno pokrenuti 'planer', proizvesti "
-"komponentu ...\n"
-"* Dostupno: Kada su proizvodi rezervisani, javlja se status 'Dostupno'.\n"
-"* Gotovo: Kada je isporuka obrađena, status je 'Gotovo'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1856,9 +1843,8 @@ msgstr "Potvrda dostave"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Potvrda dostave"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3412,15 +3398,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Upravljanje višestrukim lokacijama i skladištima"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Upravljanje višestrukim lokacijama i skladištima"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3924,9 +3908,8 @@ msgstr "Naziv operacije"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Operacije"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4162,9 +4145,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Paketi"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -6801,9 +6783,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Proizvod"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7310,192 +7292,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Skica naloga: nalog još nije potvrđen i neće biti "
-#~ "raspoređen\n"
-#~ "\n"
-#~ "                * Čeka drugu operaciju: čeka završetak nekog drugog "
-#~ "transfera prije nego postane automatski dostupan\n"
-#~ "\n"
-#~ "                * Čeka dostupnost: još uvijek čeka da proizvod postane "
-#~ "dostupan\n"
-#~ "\n"
-#~ "                * Djelimično dostupan: određena količina proizvoda je "
-#~ "dostupna i rezervirana\n"
-#~ "\n"
-#~ "                * Spreman za transfer: proizvodi rezervirani, čekaju "
-#~ "potvrdu\n"
-#~ "\n"
-#~ "                * Prenesen: procesiran nalog, nije moguće vršiti dodatne "
-#~ "izmjene\n"
-#~ "\n"
-#~ "                * Otkazan: nalog je otkazan, nije ga moguće naknadno "
-#~ "potvrditi"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Kreira dropship rute i dodaje kompleksnije testove - ova opcija instalira "
-#~ "modul stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr "Proizvedeno po narudžbi - MTO"
-
-#~ msgid " On Hand"
-#~ msgstr "Pri ruci"
-
-#~ msgid " Sequence in"
-#~ msgstr "Redoslijed u"
-
-#~ msgid " Sequence internal"
-#~ msgstr "Redoslijed interno"
-
-#~ msgid " Sequence out"
-#~ msgstr "Redoslijed van"
-
-#~ msgid " Sequence packing"
-#~ msgstr "Redoslijed pakovanje"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Prikupljanje robe po redoslijedu"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Novi: Kada je kretanje zalihe kreirano ali nije potvrđeno.\n"
-#~ "* Čeka drugo kretanje zalihe: Ovaj je status je vidljiv kada je za "
-#~ "kretanje zalihe potrebano još jedano kretanje, na primjer u povezanim "
-#~ "tokovima.\n"
-#~ "* Čeka dostupnost: ovaj se status se javlja kada rezolucija naručivanja "
-#~ "nije jednostavna. Možda je potrebno pokrenuti 'planer', proizvesti "
-#~ "komponentu ...\n"
-#~ "* Dostupno: Kada su proizvodi rezervisani, javlja se status 'Dostupno'.\n"
-#~ "* Gotovo: Kada je isporuka obrađena, status je 'Gotovo'."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Claims"
-#~ msgstr "Prigovori"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posljednje poruke ostavljene na unos."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Način isporuke"
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (Partneri)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Predviđeno"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno nove poruke će zahtjevati vašu pažnju."
-
-#~ msgid "Information"
-#~ msgstr "Informacije"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Popisni gubitak (manjak na skladištu)"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratilac"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Upravljanje višestrukim lokacijama i skladištima"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Otvori meni Sladišta"
-
-#~ msgid "Packagings"
-#~ msgstr "Paketi"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Gurnuti tokovi"
-
-#~ msgid "Qty"
-#~ msgstr "Količina"
-
-#~ msgid "Suppliers"
-#~ msgstr "Dobavljači"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Koristite ovaj pomoćnik za generisanje zahtjeva naručivanja za\n"
-#~ "                        ovaj proizvod. Ovisno o konfiguraciji proizvoda, "
-#~ "moguće je\n"
-#~ "                        kreirati nabavnu narudžbu u statusu 'U pripremi', "
-#~ "nalog proizvodnje\n"
-#~ "                        ili novi zadatak."
-
-#~ msgid "Website Messages"
-#~ msgstr "Poruke na website-u"
-
-#~ msgid "unknown"
-#~ msgstr "nepoznato"
