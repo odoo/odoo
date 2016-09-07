@@ -6,6 +6,8 @@ var formats = require('web.formats');
 var Model = require('web.Model');
 var session = require('web.session');
 var KanbanView = require('web_kanban.KanbanView');
+var data = require('web.data');
+
 
 var QWeb = core.qweb;
 
@@ -43,34 +45,14 @@ var SalesTeamDashboardView = KanbanView.extend({
         });
     },
 
-    on_dashboard_action_clicked: function(ev){
+    on_dashboard_action_clicked: function(ev) {
         ev.preventDefault();
-
         var $action = $(ev.currentTarget);
         var action_name = $action.attr('name');
-        var action_extra = $action.data('extra');
-        var additional_context = {};
-
-        // TODO: find a better way to add defaults to search view
-        if (action_name === 'calendar.action_calendar_event') {
-            additional_context.search_default_mymeetings = 1;
-        } else if (action_name === 'crm.crm_lead_action_activities') {
-            if (action_extra === 'today') {
-                additional_context.search_default_today = 1;
-            } else if (action_extra === 'this_week') {
-                additional_context.search_default_this_week = 1;
-            } else if (action_extra === 'overdue') {
-                additional_context.search_default_overdue = 1;
-            }
-        } else if (action_name === 'crm.action_your_pipeline') {
-            if (action_extra === 'overdue') {
-                additional_context['search_default_overdue'] = 1;
-            }
-        } else if (action_name === 'crm.crm_opportunity_report_action_graph') {
-            additional_context.search_default_won = 1;
-        }
-
-        this.do_action(action_name, {additional_context: additional_context});
+        var action_context = $action.data('context');
+        this.do_action(action_name, {
+            additional_context: action_context
+        });
     },
 
     on_change_input_target: function(e) {
