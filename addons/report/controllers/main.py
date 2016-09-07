@@ -91,7 +91,7 @@ class ReportController(Controller):
                 if '/' in reportname:
                     reportname, docids = reportname.split('/')
 
-                d = request.cr, request.uid
+                cr, uid = request.cr, request.uid
                 report_obj = request.registry['report']
                 report = report_obj._get_report_from_name(cr, uid, reportname)
                 filename = "%s.%s" % (report.name, "pdf")
