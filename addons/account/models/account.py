@@ -46,48 +46,6 @@ class AccountAccount(models.Model):
     _description = "Account"
     _order = "code"
 
-    #@api.multi
-    #def _compute_has_unreconciled_entries(self):
-    #    print "ici dedans"
-    #    account_ids = self.ids
-    #    for account in self:
-    #        # Avoid useless work if has_unreconciled_entries is not relevant for this account
-    #        if account.deprecated or not account.reconcile:
-    #            account.has_unreconciled_entries = False
-    #            account_ids = account_ids - account
-    #    if account_ids:
-    #        res = dict.fromkeys([x.id for x in account_ids], False)
-    #        self.env.cr.execute(
-    #            """ SELECT s.account_id FROM(
-    #                    SELECT
-    #                        a.id as account_id, a.last_time_entries_checked AS last_time_entries_checked,
-    #                        MAX(l.write_date) AS max_date
-    #                    FROM
-    #                        account_move_line l
-    #                        RIGHT JOIN account_account a ON (a.id = l.account_id)
-    #                    WHERE
-    #                        a.id in %s
-    #                        AND EXISTS (
-    #                            SELECT 1
-    #                            FROM account_move_line l
-    #                            WHERE l.account_id = a.id
-    #                            AND l.amount_residual > 0
-    #                        )
-    #                        AND EXISTS (
-    #                            SELECT 1
-    #                            FROM account_move_line l
-    #                            WHERE l.account_id = a.id
-    #                            AND l.amount_residual < 0
-    #                        )
-    #                    GROUP BY a.id, a.last_time_entries_checked
-    #                ) as s
-    #                WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-    #            """ % (account_ids,))
-    #        res.update(self.env.cr.dictfetchall())
-    #        for account in self.browse(res.keys()):
-    #            if res[account.id]:
-    #                account.has_unreconciled_entries = True
-
     @api.multi
     @api.constrains('internal_type', 'reconcile')
     def _check_reconcile(self):
