@@ -5,7 +5,17 @@
     'category': 'Accounting',
     'summary': 'Payment Acquirer: Ogone Implementation',
     'version': '1.0',
-    'description': """Ogone Payment Acquirer""",
+    'description': """.. raw:: html
+
+    <p>
+        Ingenico Payment Services (formerly Ogone) supports credit cards, debit cards and bank transfers.
+    </p>
+    <ul class="list-inline">
+        <li><i class="fa fa-check"/>eCommerce</li>
+        <li><i class="fa fa-check"/>Cards storage</li>
+        <li><i class="fa fa-check"/>Pay button in emails</li>
+    </ul>
+""",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

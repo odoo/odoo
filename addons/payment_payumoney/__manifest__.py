@@ -5,11 +5,17 @@
     'name': 'PayuMoney Payment Acquirer',
     'category': 'Payment Acquirer',
     'summary': 'Payment Acquirer: PayuMoney Implementation',
-    'description': """
-    PayuMoney Payment Acquirer for India.
+    'description': """.. raw:: html
 
-    PayUmoney payment gateway supports only INR currency.
-    """,
+    <p>
+        PayU India is an online payments solutions company serving the Indian market.
+    </p>
+    <ul class="list-inline">
+        <li><i class="fa fa-check"/>eCommerce</li>
+        <li><i class="fa fa-check"/>Subscription</li>
+        <li><i class="fa fa-check"/>Pay button in emails</li>
+    </ul>
+""",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

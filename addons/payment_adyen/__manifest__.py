@@ -5,7 +5,15 @@
     'category': 'Accounting',
     'summary': 'Payment Acquirer: Adyen Implementation',
     'version': '1.0',
-    'description': """Adyen Payment Acquirer""",
+    'description': """.. raw:: html
+
+    <p>
+        A payment gateway to accept online payments via credit cards, debit cards and bank transfers.
+    </p>
+    <ul>
+        <li><i class="fa fa-check"/>eCommerce</li>
+    </ul>
+""",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

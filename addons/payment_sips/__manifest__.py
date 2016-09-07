@@ -22,11 +22,15 @@
     'version': '1.0',
     'author': 'Eezee-It',
     'category': 'Accounting',
-    'description': """
-Worldline SIPS Payment Acquirer for online payments
+    'description': """.. raw:: html
 
-Works with Worldline keys version 2.0, contains implementation of
-payments acquirer using Worldline SIPS.""",
+    <p>
+        A payment gateway from Atos Worldline to accept online payments via credit cards.
+    </p>
+    <ul>
+        <li><i class="fa fa-check"/>eCommerce</li>
+    </ul>
+""",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

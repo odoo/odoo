@@ -11,6 +11,7 @@
         'data/account_data.xml',
         'data/payment_acquirer_data.xml',
         'views/payment_views.xml',
+        'views/ir_module_module_views.xml',
         'views/account_payment_views.xml',
         'views/payment_templates.xml',
         'views/res_partner_views.xml',

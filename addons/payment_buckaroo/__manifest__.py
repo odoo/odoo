@@ -5,7 +5,15 @@
     'category': 'Accounting',
     'summary': 'Payment Acquirer: Buckaroo Implementation',
     'version': '1.0',
-    'description': """Buckaroo Payment Acquirer""",
+    'description': """.. raw:: html
+
+    <p>
+        A payment gateway to accept online payments via credit cards.
+    </p>
+    <ul>
+        <li><i class="fa fa-check"/>eCommerce</li>
+    </ul>
+""",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
