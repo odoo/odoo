@@ -59,7 +59,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
-#, fuzzy
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "Invoice.\n"
@@ -71,15 +70,6 @@ msgid ""
 "related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice "
-"number.\n"
-" * The 'Open' status is used when user creates invoice, an invoice number is "
-"generated. Its in open status till user does not pay invoice.\n"
-" * The 'Paid' status is set automatically when the invoice is paid. Its "
-"related journal entries may or may not be reconciled.\n"
-" * The 'Cancelled' status is used when user cancel invoice."
 
 #. module: account
 #. openerp-web
@@ -780,9 +770,9 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:503
-#, fuzzy, python-format
+#, python-format
 msgid "A bank account can only belong to one journal."
-msgstr "A bank account can only belong to one journal."
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1752,9 +1742,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_asset
-#, fuzzy
 msgid "Assets management"
-msgstr "Assets management"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_account_ids
@@ -1783,9 +1772,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
-#, fuzzy
 msgid "Automate Payments"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -2390,15 +2378,11 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-#, fuzzy
 msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any "
 "additional accounts."
 msgstr ""
-"Chart of Accounts has been\n"
-"                            installed. You should review it and create any "
-"additional accounts."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -3137,9 +3121,8 @@ msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
-#, fuzzy
 msgid "Current Liabilities"
-msgstr "Minus Current Liabilities"
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
@@ -3179,9 +3162,9 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:481
-#, fuzzy, python-format
+#, python-format
 msgid "Customer Payment"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_payment_term_id
@@ -3468,9 +3451,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_balance_report_display_account
 #: model:ir.model.fields,field_description:account.field_account_common_account_report_display_account
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_display_account
-#, fuzzy
 msgid "Display Accounts"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_debit_credit
@@ -3862,17 +3844,15 @@ msgstr ""
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_expense0
-#, fuzzy
 msgid "Expense"
-msgstr "Minus Expenses"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category_property_account_expense_categ_id
 #: model:ir.model.fields,field_description:account.field_product_template_property_account_expense_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
-#, fuzzy
 msgid "Expense Account"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_id
@@ -3882,9 +3862,8 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Expenses"
-msgstr "Minus Expenses"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
@@ -4111,9 +4090,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
 msgid "From Payable accounts"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4576,9 +4554,8 @@ msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
-#, fuzzy
 msgid "Immediate Payment"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_qif
@@ -5539,16 +5516,14 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_loss_account_id
-#, fuzzy
 msgid "Loss Account"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_expense_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_expense_currency_exchange_account_id
-#, fuzzy
 msgid "Loss Exchange Rate Account"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/chart_template.py:179
@@ -5702,27 +5677,23 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Current Liabilities"
-msgstr "Minus Current Liabilities"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Expenses"
-msgstr "Minus Expenses"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Non-Current Liabilities"
-msgstr "Minus Non-Current Liabilities"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Payable Accounts"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
@@ -5953,9 +5924,8 @@ msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
-#, fuzzy
 msgid "Non-current Liabilities"
-msgstr "Minus Non-Current Liabilities"
+msgstr ""
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -6194,9 +6164,9 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:82
-#, fuzzy, python-format
+#, python-format
 msgid "Open Payment"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -6319,9 +6289,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_company_inherit_form
-#, fuzzy
 msgid "Overdue Payments"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_overdue_msg
@@ -6481,9 +6450,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_payable_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
-#, fuzzy
 msgid "Payable Account"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -6491,9 +6459,8 @@ msgstr "Minus Payable Accounts"
 #: selection:account.report.partner.ledger,result_selection:0
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 #: model:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Payable Accounts"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit_limit
@@ -6641,9 +6608,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
-#, fuzzy
 msgid "Payments"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6780,9 +6746,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Plus Non-Current Assets"
-msgstr "Minus Non-Current Liabilities"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6847,9 +6812,8 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Prepayments"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -7051,9 +7015,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_receivable_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
-#, fuzzy
 msgid "Receivable Account"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7062,18 +7025,16 @@ msgstr "Minus Payable Accounts"
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 #: model:ir.ui.view,arch_db:account.view_account_form
 #: model:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Receivable Accounts"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.report.partner.ledger,result_selection:0
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
-#, fuzzy
 msgid "Receivable and Payable Accounts"
-msgstr "Minus Payable Accounts"
+msgstr ""
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -7285,15 +7246,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
-#, fuzzy
 msgid "Register Payment"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-#, fuzzy
 msgid "Register Payments"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
@@ -8462,13 +8421,11 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:417
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1268
@@ -9128,9 +9085,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_sepa
-#, fuzzy
 msgid "Use SEPA payments"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
@@ -9293,9 +9249,9 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:488
-#, fuzzy, python-format
+#, python-format
 msgid "Vendor Payment"
-msgstr "Minus Payment"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
@@ -10078,91 +10034,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr ""
-
-#~ msgid ""
-#~ "Asset management: This allows you to manage the assets owned by a company "
-#~ "or a person. It keeps track of the depreciation occurred on those assets, "
-#~ "and creates account move for those depreciation lines.\n"
-#~ "\n"
-#~ "Revenue recognition: This allows you to manage the Revenue recognition on "
-#~ "selling product. It keeps track of the installment occurred on those "
-#~ "revenue recognition, and creates account move for those installment "
-#~ "lines.\n"
-#~ "-This installs the module account_asset. If you do not check this box, "
-#~ "you will be able to do invoicing & payments, but not accounting (Journal "
-#~ "Items, Chart of Accounts, ...)"
-#~ msgstr ""
-#~ "Asset management: This allows you to manage the assets owned by a company "
-#~ "or a person. It keeps track of the depreciation occurred on those assets, "
-#~ "and creates account move for those depreciation lines."
-
-#~ msgid "Assets management & Revenue recognition"
-#~ msgstr "Assets management"
-
-#~ msgid ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
-#~ "number.\n"
-#~ " * The 'Open' status is used when user create invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-#~ msgstr ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used when the invoice does not have an "
-#~ "invoice number.\n"
-#~ " * The 'Open' status is used when user creates invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-
-#~ msgid "A bank account can anly belong to one journal."
-#~ msgstr "A bank account can only belong to one journal."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or "
-#~ "select a multi-currency view on the journal."
-#~ msgstr ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account."
-
-#~ msgid ""
-#~ "Chart of Accounts has been\n"
-#~ "                            installed. You should review it and create "
-#~ "any additionnal accounts."
-#~ msgstr ""
-#~ "Chart of Accounts has been\n"
-#~ "                            installed. You should review it and create "
-#~ "any additional accounts."
-
-#~ msgid "Less Cost of Sales"
-#~ msgstr "Minus Cost of Sales"
-
-#~ msgid "Less Current Liabilities"
-#~ msgstr "Minus Current Liabilities"
-
-#~ msgid "Less Expenses"
-#~ msgstr "Minus Expenses"
-
-#~ msgid "Less Non-Current Liabilities"
-#~ msgstr "Minus Non-Current Liabilities"
-
-#~ msgid "Less Payable Accounts"
-#~ msgstr "Minus Payable Accounts"
-
-#, fuzzy
-#~ msgid "Due Payments"
-#~ msgstr "Minus Payment"
-
-#, fuzzy
-#~ msgid "Paypal Account"
-#~ msgstr "Minus Payable Accounts"
-
-#, fuzzy
-#~ msgid "Paypal account"
-#~ msgstr "Minus Payable Accounts"

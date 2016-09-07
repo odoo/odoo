@@ -30,6 +30,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Tisztelt ${object.name},</p>\n"
+"<p>Köszönjük igénylését.</p>\n"
+"<p>Itt találja a jelvényét az eseményre  ${object.event_id.name}.</p>\n"
+"<p>További felmerülő kérdésekkel, keressen fel bennünket.</p>\n"
+"<p>Legjobbakat,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -343,7 +349,7 @@ msgstr "Jelvény előlap"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "Jelkép belül balra"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -741,7 +747,7 @@ msgstr "Esemény kezdő dátuma"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Event Categories"
-msgstr ""
+msgstr "Esemény kategória"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -832,7 +838,7 @@ msgstr "Esemény típusa"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 msgid "Event Types"
-msgstr ""
+msgstr "Esemény típusok"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.report_event_registration_graph
@@ -1860,189 +1866,3 @@ msgstr "megtanulni a műszaki sajátosságait"
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "képzési anyag."
-
-#~ msgid ""
-#~ "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br/"
-#~ ">the event or change the dates on which it is held.)</em>"
-#~ msgstr ""
-#~ "<em>(Terem Munka törlésének joga fenntartva, nevezze-újra vagy helyezze-"
-#~ "át<br/>az eseményt vagy változtassa meg a szervezési dátumot.)</em>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>This is a reminder for ${object.event_id.name} that you registered for "
-#~ "is confirmed and will be held from ${object.event_id.date_begin_located} "
-#~ "to ${object.event_id.date_end_located}.\n"
-#~ "For any further information please contact our event department.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Üdvözlöm ${object.name},</p>\n"
-#~ "<p>Ez egy emlékeztető a ${object.event_id.name} eseményre történt "
-#~ "regisztrációjára amit jóváhagytunk és megtartásra kerül ${object.event_id."
-#~ "date_begin_located} -tól ${object.event_id.date_end_located} -ig.\n"
-#~ "Egyéb felmerülő kérdésekben kérjük vegye fel a kapcsolatot a fejlesztő "
-#~ "részlegünkkel.</p>\n"
-#~ "<p>Köszönjük a részvételét!</p>\n"
-#~ "<p>Viszont látásra</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "<p>Üdvözlöm ${object.name},</p>\n"
-#~ "<p>Visszaigazoljuk, hogy a részvételét a ${object.event_id.name} "
-#~ "eseményre rögzítettük.\n"
-#~ "Kérjük, tekintse meg az email mellékletében az <b>Esemény Jelvény</b>.</"
-#~ "p>\n"
-#~ "<p>Köszönjük a részvételét!</p>\n"
-#~ "<p>Viszont látásra</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We confirm that your subscription to the event ${object.event_id.name} "
-#~ "has been recorded.\n"
-#~ "You will automatically receive an email providing you more practical "
-#~ "information (such as the schedule, the agenda...) as soon as the event is "
-#~ "confirmed.</p>\n"
-#~ "<p>Thank you for your participation!</p>\n"
-#~ "<p>Best regards</p>"
-#~ msgstr ""
-#~ "        <p>Hello ${object.name},</p>\n"
-#~ "        <p>Visszaigazoljuk a feliratkozását erre a rendezvényre ${object."
-#~ "event_id.name} és annak rögzítésére.\n"
-#~ "        Automatikus válasz levelet kap a részvétel információiról (mint "
-#~ "menetrend, napirend...) amint a rendezvényt jóváhagyták.</p>\n"
-#~ "        <p>Köszönjük jelentkezését, részvételét!</p>\n"
-#~ "        <p>Viszont látásra</p>"
-
-#~ msgid ""
-#~ "<p>Hello ${object.name},</p>\n"
-#~ "<p>We would like to thank you for your presence at our event ${object."
-#~ "event_id.name}.\n"
-#~ "<br/><br/>\n"
-#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "        <strong>The ${object.event_id.organizer_id.name} Team</strong>\n"
-#~ "    % elif object.event_id.organizer_id:\n"
-#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "    % endif\n"
-#~ "</p>"
-#~ msgstr ""
-#~ "<p>Tisztelt ${object.name},</p>\n"
-#~ "<p>Köszönjül részvételét az eseményünkön  ${object.event_id.name} "
-#~ "eseményünkön.\n"
-#~ "<br/><br/>\n"
-#~ "    % if object.event_id.organizer_id and object.event_id.organizer_id."
-#~ "is_company:\n"
-#~ "        <strong>The ${object.event_id.organizer_id.name} Csoport</"
-#~ "strong>\n"
-#~ "    % elif object.event_id.organizer_id:\n"
-#~ "        <strong>${object.event_id.organizer_id.name}</strong>\n"
-#~ "    % endif\n"
-#~ "</p>"
-
-#~ msgid "<small>John Doe, CEO</small>"
-#~ msgstr "<small>John Doe, CEO</small>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Badge Innner Left"
-#~ msgstr "Jelkép balra belül"
-
-#~ msgid "Controlers and Views"
-#~ msgstr "Vezérlők és nézetek"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Events Types"
-#~ msgstr "Rendezvény típusai"
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid ""
-#~ "I did not expect such a great learning experience. I feel like I can "
-#~ "develop anything now."
-#~ msgstr ""
-#~ "Nem vártam ezt a nagyszerű tanulási élményt. Úgy érzem már mindenfélét "
-#~ "tudok fejleszteni."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open Event Menu"
-#~ msgstr "Esemény menü megnyitás"
-
-#~ msgid "Read Great Contents"
-#~ msgstr "Olvasson nagyszerű  tartalmakat"
-
-#~ msgid "Thanks for attending ${object.event_id.name}"
-#~ msgstr "Köszönjük a részvételt erre ${object.event_id.name}"
-
-#~ msgid ""
-#~ "This course help me build my first application within a month. Definetly "
-#~ "worth its price."
-#~ msgstr ""
-#~ "Ez a kurzus segítséget nyújt az első alkalmazásom egy hónap alatti "
-#~ "felépítésében. Feltétlen megérte az árát."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "What do people say about this course?"
-#~ msgstr "Mit mondanak erről a kurzusról?"
-
-#~ msgid "Available Seats"
-#~ msgstr "Még rendelkezésre álló székek"
-
-#~ msgid "Barcode Interface"
-#~ msgstr "Vonalkód interfész csatoló"
-
-#~ msgid "Event Category"
-#~ msgstr "Esemény kategória"
-
-#~ msgid "Your registration at ${object.event_id.name}"
-#~ msgstr "A jelentkezése erre ${object.event_id.name}"

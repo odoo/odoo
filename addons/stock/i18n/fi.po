@@ -8,13 +8,14 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Timo Koukkari <timo.koukkari@seamk.fi>, 2015
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-15 13:52+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"PO-Revision-Date: 2016-08-29 07:56+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -81,7 +82,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -92,14 +92,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Uusi: varastosiirto on luotu, mutta ei ole vielä vahvistettu.\n"
-"* Odottaa toista siirtoa: odottaa toisen siirron valmistumista, esim. "
-"ketjutetussa siirrossa.\n"
-"* Odottaa saatavuuutta: tämä tila saavutetaan, kun hankinta ei ole valmis. "
-"Voi odottaa ajoittimen ajoa, tuotteen valmistusta,...\n"
-"* Saatavilla: kun tuote on varattu tälle ja valmiina lähettäväksi, niin tila "
-"on saatavilla.\n"
-"* Valmis: kun lähetys on käsitelty, tilaksi tulee valmis."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -852,8 +844,8 @@ msgid ""
 "As an example, a decimal precision of 2 will allow weights like: 9.99 kg, "
 "whereas a decimal precision of 4 will allow weights like:  0.0231 kg."
 msgstr ""
-"Esimerkiksi desimaalitarkkuus 2 sallii painot, kuten 9,99kg, kun taas "
-"desimaalitarkkuus 4 sallii painot, kuten 0,0231 kg."
+"Esimerkiksi desimaalitarkkuus 2 sallii painon 9,99 kg ja desimaalitarkkuus 4 "
+"sallii painon 0,0231 kg."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_make_procurment_wizard
@@ -1838,9 +1830,8 @@ msgstr "Lähetysluettelo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Lähetysluettelo"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3395,15 +3386,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Hallitse useita paikkoja ja varastoja"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Hallitse useita paikkoja ja varastoja"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3437,15 +3426,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_locations
-#, fuzzy
 msgid "Manage several stock locations"
-msgstr "Hallitse useita varastopaikkoja"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Hallitse useita varastopaikkoja"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3909,9 +3896,8 @@ msgstr "Toiminnon nimi"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Keräilytyypit"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4142,15 +4128,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Keräilytyyppi"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Keräilytyypit"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4361,7 +4345,7 @@ msgstr "Keräilyn tyyppi palautuksille"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_picking_wave
 msgid "Picking Waves"
-msgstr "Keräilyaalto"
+msgstr "Keräilyaallot"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.vpicktree
@@ -5509,10 +5493,9 @@ msgstr "Pieni pakastin"
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
-msgstr "Tuotteita voidaan myydä/ostaa eri mittayksiköissä (edistynyt)"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:780
@@ -6778,9 +6761,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Tuote"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7290,129 +7273,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Aseta määrät 0:ksi"
-
-#~ msgid " On Hand"
-#~ msgstr "Käytettävissä"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Uusi: varastosiirto on luotu, mutta ei ole vielä vahvistettu.\n"
-#~ "* Odottaa toista siirtoa: odottaa toisen siirron valmistumista, esim. "
-#~ "ketjutetussa siirrossa.\n"
-#~ "* Odottaa saatavuuutta: tämä tila saavutetaan, kun hankinta ei ole "
-#~ "valmis. Voi odottaa ajoittimen ajoa, tuotteen valmistusta,...\n"
-#~ "* Saatavilla: kun tuote on varattu tälle ja valmiina lähettäväksi, niin "
-#~ "tila on saatavilla.\n"
-#~ "* Valmis: kun lähetys on käsitelty, tilaksi tulee valmis."
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Claims"
-#~ msgstr "Palautteet"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Delivery Method"
-#~ msgstr "Toimitustapa"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Ennustettu:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Information"
-#~ msgstr "Tiedot"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Varastohävikki"
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Hallitse useita paikkoja ja varastoja"
-
-#~ msgid "Manage several locations per warehouse"
-#~ msgstr "Hallitse useita varastopaikkoja"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Avaa varastovalikko"
-
-#~ msgid "Picking Types"
-#~ msgstr "Keräilytyypit"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Työnnetyt virtaukset"
-
-#~ msgid "Qty"
-#~ msgstr "Määrä"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Täydennä toisista varastoista"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr "Tuotteita voidaan myydä/ostaa eri mittayksiköissä (edistynyt)"
-
-#~ msgid "Suppliers"
-#~ msgstr "Toimittajat"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Mittayksiköt"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Varoitus: väärä määrä!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
-
-#~ msgid "unknown"
-#~ msgstr "tuntematon"

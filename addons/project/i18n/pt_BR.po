@@ -1637,7 +1637,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Descartar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1758,9 +1758,8 @@ msgstr "Email Alternativo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Email Alternativo"
+msgstr "Modelo de E-mail"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2476,7 +2475,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Membros"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2491,7 +2490,7 @@ msgstr "Mais <i class=\"fa fa-caret-down\"/>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Mais Informação"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2769,7 +2768,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -2778,9 +2776,10 @@ msgid ""
 "channels\n"
 msgstr ""
 "Política para enviar uma mensagem sobre o documento usando o MailGateway.\n"
-"- todos: todos podem postar\n"
-"- parceiros: parceiros única autenticados\n"
-"- seguidores: apenas seguidores do documento relacionado\n"
+"- Todos: Qualquer um pode escrever\n"
+"- Parceiros: somente parceiros autenticados\n"
+"- Seguidores: apenas seguidores do documento relacionado ou membros dos "
+"seguintes canais\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3056,7 +3055,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibilities"
-msgstr ""
+msgstr "Responsabilidades"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3099,7 +3098,7 @@ msgstr "Pesquisar Projeto"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Selecionar"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3258,9 +3257,8 @@ msgstr "Situação"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "tarefas"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3601,16 +3599,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Isto irá ajustar a unidade de medida utilizada nos projetos e tarefas.\n"
-"Se você usa planilhas de horas vinculadas com projetos (módulo "
-"project_timesheet), não esqueça de configurar a unidade de medida correta "
-"nos seus colaboradores."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4069,112 +4062,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Ação Necessária"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "Marque este campo se este projeto gera planilha de horas"
-
-#~ msgid "Close"
-#~ msgstr "Fechar"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data da ultima mensagem para o registro."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Tarefas Delegadas"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canais)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Parceiros)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se marcado novas mensagens solicitarão sua atenção."
-
-#~ msgid "Is Follower"
-#~ msgstr "É um seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data da última mensagem"
-
-#~ msgid "Messages"
-#~ msgstr "Mensagens"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Histórico de mensagens e comunicação"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de ações"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensagens que requer uma ação"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Quantidade de mensagens não lidas."
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Menu de Projetos Abertos"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Política para enviar uma mensagem sobre o documento usando o "
-#~ "MailGateway.\n"
-#~ "- todos: todos podem postar\n"
-#~ "- parceiros: parceiros única autenticados\n"
-#~ "- seguidores: apenas seguidores do documento relacionado\n"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Registrar planilha de tempo por tarefa"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Trabalho de Tarefas em Tarefas"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Isso permite que você transfira as entradas em tarefas definidas para "
-#~ "Gerenciamento de Projetos para as entradas da linha de quadro de horários "
-#~ "especial data e do usuário para, com o efeito de criar, editar e excluir "
-#~ "qualquer maneiras.\n"
-#~ "-Este Instala o project_timesheet módulo."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "Isto irá ajustar a unidade de medida utilizada nos projetos e tarefas.\n"
-#~ "Se você usa planilhas de horas vinculadas com projetos (módulo "
-#~ "project_timesheet), não esqueça de configurar a unidade de medida correta "
-#~ "nos seus colaboradores."
-
-#~ msgid "Type of Account"
-#~ msgstr "Tipo de Conta"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensagens Não Lidas."
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do Site"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de Comunicação do Site"

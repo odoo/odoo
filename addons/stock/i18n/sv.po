@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-19 14:41+0000\n"
+"PO-Revision-Date: 2016-09-03 15:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "Language: sv\n"
@@ -1802,9 +1802,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Delivery"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2070,7 +2069,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "External note..."
-msgstr ""
+msgstr "Extern anteckning..."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:942
@@ -3351,15 +3350,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Hantera flera lager och platser"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Hantera flera lager och platser"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3398,9 +3395,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Administrera partier / serienummer"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3854,15 +3850,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
 msgid "Operation Name"
-msgstr ""
+msgstr "Operationsnamn"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Åtgärder"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4091,15 +4086,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Plocktyp"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Plocktyper"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4476,7 +4469,7 @@ msgstr "Inköpsförfrågan"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Inköpsrekvisition"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
@@ -4489,7 +4482,7 @@ msgstr "Anskaffningsregel"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_pull_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Procurement Rules"
-msgstr ""
+msgstr "Anskaffningsregler"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_procurement_op
@@ -6720,9 +6713,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Produkt"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7227,155 +7220,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Utkast: inte ännu bekräftad och kommer inte planeras "
-#~ "innan dess\n"
-#~ "\n"
-#~ "                * Väntar på annan operation: väntar på genomförandet av "
-#~ "en annan flytt innan den automatiskt blit tillgänglig (eg Tillverka-på-"
-#~ "order-flöden)\n"
-#~ "\n"
-#~ "                * Väntar på tillgänglighet: väntar fortfarande på "
-#~ "tillgängligt gods\n"
-#~ "\n"
-#~ "                * Delvis tillgänglig: några produkter är tillgängliga och "
-#~ "reserverade\n"
-#~ "\n"
-#~ "                * Klara för leverans: produkter är reserverade, väntar på "
-#~ "bekräftelse\n"
-#~ "\n"
-#~ "                * Levererade: har hanterats och kan inte ändras eller "
-#~ "avbrytas längre\n"
-#~ "\n"
-#~ "                * Avbruten: har blivit avbruten, kan inte längre bekräftas"
-
-#~ msgid " On Hand"
-#~ msgstr "Tillhanda"
-
-#~ msgid "Action Needed"
-#~ msgstr "Åtgärd krävs"
-
-#~ msgid "Claims"
-#~ msgstr "Reklamationer"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum för senast publicerade meddelandet i loggen."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Leveransmetod"
-
-#~ msgid "Followers"
-#~ msgstr "Följare"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Följare (Kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Följare (Partners)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Prognos:"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
-
-#~ msgid "Information"
-#~ msgstr "Information"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Inventeringsrad."
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Lagerrörelser"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Inventeringsbenämning"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Lagerförlust"
-
-#~ msgid "Is Follower"
-#~ msgstr "Är följare"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Senast meddelandedatum"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Hantera flera lager och platser"
-
-#~ msgid "Messages"
-#~ msgstr "Meddelanden"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antalet åtgärder"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelanden som kräver en åtgärd"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antalet olästa meddelanden"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Öppna lagermenyn"
-
-#~ msgid "Picking Types"
-#~ msgstr "Plocktyper"
-
-#~ msgid "Qty"
-#~ msgstr "Antal"
-
-#~ msgid "Suppliers"
-#~ msgstr "Leverantörer"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olästa meddelanden"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Använd denna assistent för att skapa en inköpsanmodan för denna\n"
-#~ "produkt. I enlighet med produktkonfigurationen, detta kan komma att\n"
-#~ "utlösa ett inköpsorderförslag, en tillverkningsorder eller\n"
-#~ "en ny aktivitet."
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Varning: fel antal!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Webbplatsmeddelanden"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webbplatsens kommunikationshistorik"
-
-#~ msgid "unknown"
-#~ msgstr "okänd"

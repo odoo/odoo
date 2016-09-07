@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-05-19 13:55+0000\n"
+"PO-Revision-Date: 2016-08-29 10:59+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
@@ -62,7 +62,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
-#, fuzzy
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed "
 "Invoice.\n"
@@ -74,17 +73,6 @@ msgid ""
 "related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * Статусот 'Нацрт' е прикажан во моментот кога корисникот отвора нова и "
-"непотврдена Фактура.\n"
-"* 'Про-фактура' е кога фактурата е во статус: Про-фактура, фактурата овде "
-"нема број.\n"
-"* Статус 'Отворено' е прикажан кога корисникот ја креирал фактурата, се "
-"генерира број на фактура. Таа е во статус Отворено се додека корисникот не "
-"ја плати фактурата.\n"
-"* Статус 'Платено' се подесува автоматски кога фактурата ќе биде платена. "
-"Тоа е поврзано со внесовите во дневникот кои можат да бидат или да не бидат "
-"порамнети.\n"
-"* Статусот 'Откажано' се користи кога корисникот ја откажува фактурата."
 
 #. module: account
 #. openerp-web
@@ -102,9 +90,8 @@ msgstr "# од броеви"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
-#, fuzzy
 msgid "# of Lines"
-msgstr "# од Фактури"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -113,9 +100,8 @@ msgstr "# од трансакцијата"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
-#, fuzzy
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name|safe} Фактура (Ref ${object.number or 'n/a'})"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:469
@@ -151,15 +137,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "-> Reconcile"
-msgstr "Порамни"
+msgstr "-> Порамни"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
 msgid "-> View partially reconciled entries"
-msgstr "Има непорамнети внесови"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:470
@@ -388,9 +372,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Balance in Odoo\"> Салдо во Odoo </span>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -537,9 +520,8 @@ msgstr "<strong>Коментирај:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
 msgid "<strong>Company:</strong>"
-msgstr "<strong>Коментирај:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -619,9 +601,8 @@ msgstr "<strong>Краен датум:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>Подредени по:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -640,9 +621,8 @@ msgstr "<strong>Датум на фактура:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "<strong>Journal:</strong>"
-msgstr "<strong>Дневници:</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -891,9 +871,9 @@ msgstr "Условот на плаќањето треба да има само �
 
 #. module: account
 #: code:addons/account/models/account.py:503
-#, fuzzy, python-format
+#, python-format
 msgid "A bank account can only belong to one journal."
-msgstr "Банкарска сметка може да припаѓа на само еден дневник."
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -941,9 +921,8 @@ msgstr "Листа на познати даноци и нивните проце
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-#, fuzzy
 msgid "A list of your customer and supplier payment terms."
-msgstr "Листа на клиентски и добавувачки услови на плаќање."
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1057,9 +1036,8 @@ msgstr "Извештај за сметка на заедничка сметка"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
-#, fuzzy
 msgid "Account Common Journal Report"
-msgstr "Извештај за сметка на заедничка сметка"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
@@ -1126,9 +1104,8 @@ msgstr "Број на сметка"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_partner_ledger
-#, fuzzy
 msgid "Account Partner Ledger"
-msgstr "Извештај за сметка на заеднички партнер"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
@@ -1137,9 +1114,8 @@ msgstr "Сметка Обврски"
 
 #. module: account
 #: model:ir.model,name:account.model_account_print_journal
-#, fuzzy
 msgid "Account Print Journal"
-msgstr "Дневник на сметка"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_category_property_form
@@ -1490,19 +1466,12 @@ msgstr "Старосна структура на обврски/побарува
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
-#, fuzzy
 msgid ""
 "Aged Partner Balance is a more detailed report of your receivables by "
 "intervals. Odoo calculates a table of credit balance by start Date. So if "
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
-"Старосна структура на обврски/побарувања- претставува подетален извештај на "
-"примањата, дадени по интервали. Кога отварате извештај, Odoo прашува за "
-"името на компанијата, почетниот датум и големината на интервалот кој што ќе "
-"се анализира (во денови). Odoo тогаш ви пресметува табела на кредитна "
-"состојба со почетен датум. Така што, доколку побарате интервал од 30 дена, "
-"Odoo ќе генерира анализа на кредитирање од минатиот месец, два месеци, итн."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1660,9 +1629,8 @@ msgstr "Овозможи профактури"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
-#, fuzzy
 msgid "Allows to work in a multi currency environment"
-msgstr "Овозможува околина со повеќе валути"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
@@ -1903,7 +1871,6 @@ msgstr "Побарај поврат"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_asset
-#, fuzzy
 msgid ""
 "Asset management: This allows you to manage the assets owned by a company or "
 "a person. It keeps track of the depreciation occurred on those assets, and "
@@ -1911,13 +1878,6 @@ msgid ""
 "\n"
 "-This installs the module account_asset."
 msgstr ""
-"Менаџирање на средства: Ова ви овозможува да ги управувате средствата кои се "
-"поседувани од компанија или лице.\n"
-"                Ја следи амортизацијата која се прави на овие средства, и "
-"креира движење на сметката за овие ставки на амортизацијата.\n"
-"                Ова го инсталира модулот account_asset. Доколку не го "
-"означите ова поле, ќе може да правите фактурирање и плаќања,\n"
-"                но не и сметководство (Ставки на Дневник, Контен план, ...)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -2194,9 +2154,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Base Amount"
-msgstr "Плаќачки износ"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2241,9 +2200,8 @@ msgstr "Фактурирање"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-#, fuzzy
 msgid "Bills"
-msgstr "Сметка"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2589,14 +2547,11 @@ msgstr "Урнеци за сметководствен план"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-#, fuzzy
 msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any "
 "additional accounts."
 msgstr ""
-"Модулот - Контен план ви беше \n"
-"инсталиран. Слободно прегледајте го и креирајте ги вашите сметки."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -3477,9 +3432,8 @@ msgstr "Датуми"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
-#, fuzzy
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr "Ден(ови) после датумот на креирањето на фактурата"
+msgstr ""
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3942,9 +3896,8 @@ msgstr "Волшебник за креирање на Е-пошта"
 
 #. module: account
 #: model:ir.model,name:account.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Волшебник за креирање на Е-пошта"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
@@ -4003,9 +3956,8 @@ msgstr "Внесови"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal_sort_selection
-#, fuzzy
 msgid "Entries Sorted by"
-msgstr "Внесови: "
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:861
@@ -4074,9 +4026,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_partial_rec_id
-#, fuzzy
 msgid "Exchange partial rec id"
-msgstr "Внес во девизен курс од"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4116,9 +4067,8 @@ msgstr "Трошоци"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
-#, fuzzy
 msgid "External Reference"
-msgstr "Референца на партнер"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4353,15 +4303,13 @@ msgstr "Слободна референца"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
 msgid "From Payable accounts"
-msgstr "Сметки Обврски"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
-#, fuzzy
 msgid "From Receivable accounts"
-msgstr "Сметки Побарувања"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -4388,9 +4336,8 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_full_reconcile_id
-#, fuzzy
 msgid "Full Reconcile"
-msgstr "Порамни"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
@@ -4450,14 +4397,10 @@ msgstr "Започни"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_plaid
-#, fuzzy
 msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-This installs the module account_plaid."
 msgstr ""
-"Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги "
-"преку plaid.com\n"
-"-тоа ви го инсталира модулот account_plaid"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
@@ -4469,38 +4412,26 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
-#, fuzzy
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX "
 "format.\n"
 "-This installs the module account_bank_statement_import_ofx."
 msgstr ""
-"Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги во "
-"Odoo во .OFX формат\n"
-"-Ова ви го инсталира модулот account_bank_statement_import_ofx"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
-#, fuzzy
 msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF "
 "format.\n"
 "-This installs the module account_bank_statement_import_qif."
 msgstr ""
-"Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги во "
-"Odoo во .QIF формат\n"
-"-Ова ви го инсталира модулот account_bank_statement_import_qif"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
-#, fuzzy
 msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-This installs the module account_yodlee."
 msgstr ""
-"Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги "
-"преку yodlee.com\n"
-"-тоа ви го инсталира модулот account_yodlee"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -4544,9 +4475,8 @@ msgstr "Влези во конфигурациски панел"
 
 #. module: account
 #: selection:res.partner,trust:0
-#, fuzzy
 msgid "Good Debtor"
-msgstr "Добра работа!"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -5428,9 +5358,8 @@ msgstr "Внес во дневник"
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Journal Entry Number"
-msgstr "Внес во дневник"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -5810,15 +5739,13 @@ msgstr "Правно име"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
-#, fuzzy
 msgid "Legal Notes..."
-msgstr "Внатрешни белешки..."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
-#, fuzzy
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr "Листа на сите даноци кои треба да бидат инсталирани од волшебникот"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:145
@@ -5989,9 +5916,8 @@ msgstr "Означи фактура како целосно платена"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
-#, fuzzy
 msgid "Matched Journal Items"
-msgstr "Објавени ставки од дневник"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
@@ -6006,15 +5932,13 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form
-#, fuzzy
 msgid "Matching"
-msgstr "Поврзувања на плаќања"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
-#, fuzzy
 msgid "Matching Number"
-msgstr "Број на сметка"
+msgstr ""
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6070,27 +5994,23 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Current Liabilities"
-msgstr "Тековни обврски"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Expenses"
-msgstr "Помалку трошоци"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Non-Current Liabilities"
-msgstr "Помалку не-тековни обврски"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Minus Payable Accounts"
-msgstr "Сметки Обврски"
+msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6338,9 +6258,8 @@ msgstr "Ниедно"
 
 #. module: account
 #: selection:res.partner,trust:0
-#, fuzzy
 msgid "Normal Debtor"
-msgstr "Нормален текст"
+msgstr ""
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6832,21 +6751,18 @@ msgstr "Партнер компанија"
 #: model:ir.actions.report.xml,name:account.action_report_partnerledger
 #: model:ir.ui.menu,name:account.menu_partner_ledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
-#, fuzzy
 msgid "Partner Ledger"
-msgstr "Генерална главна книга"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable
-#, fuzzy
 msgid "Partner Ledger: Payable"
-msgstr "Референца на партнер"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable
-#, fuzzy
 msgid "Partner Ledger: Receivable"
-msgstr "Референца на партнер"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
@@ -7534,9 +7450,8 @@ msgstr "Порамнето"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
-#, fuzzy
 msgid "Reconciled Entries"
-msgstr "Внесови на порамнување"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -7556,9 +7471,8 @@ msgstr "Модели на порамнување"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
-#, fuzzy
 msgid "Reconciliation Parts"
-msgstr "Порамнување"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7891,9 +7805,8 @@ msgstr "Данок на продажба"
 #: model:ir.actions.act_window,name:account.action_account_print_journal_menu
 #: model:ir.actions.report.xml,name:account.action_report_journal
 #: model:ir.ui.menu,name:account.menu_print_journal
-#, fuzzy
 msgid "Sale/Purchase Journal"
-msgstr "Пребарај ставки од дневник"
+msgstr ""
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -7985,7 +7898,6 @@ msgstr "Пребарај даноци"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_type
-#, fuzzy
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
@@ -7993,11 +7905,6 @@ msgid ""
 "payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Избери 'Продажба' за дневникот Излезни фактури. Избери 'Набавка' за "
-"дневникот Влезни фактури. Избери 'Готовина' или 'Банка' за дневници кои се "
-"користат за плаќањата на купувач или добавувач. Ивбери 'Општо' за дневници "
-"за разни набавки. Избери 'Ситуација при отварање/затварање' за внесови "
-"генерирани за нови фискални години."
 
 #. module: account
 #. openerp-web
@@ -8379,9 +8286,8 @@ msgstr "Сметка данок на поврати"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Tax Amount"
-msgstr "Сметка Данок"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
@@ -8401,9 +8307,8 @@ msgstr "Пресметка на данок"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
-#, fuzzy
 msgid "Tax Declaration"
-msgstr "Опис на данок"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
@@ -8927,14 +8832,11 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:417
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"Избраната сметка на вашиот внес во дневникот принудува да се обезбеди "
-"секундарна валута. Треба да ја отсраните секундарната валута на сметката или "
-"да изберете повеќе-валутен преглед на вашиот дневник."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1268
@@ -9329,11 +9231,9 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:21
-#, fuzzy, python-format
+#, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
 msgstr ""
-"Совет: Притиснете ctrl-enter за да ги порамнете си балансирани предмети во "
-"листата."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9560,9 +9460,9 @@ msgstr "Единица мерка"
 
 #. module: account
 #: code:addons/account/report/account_aged_partner_balance.py:174
-#, fuzzy, python-format
+#, python-format
 msgid "Unknown Partner"
-msgstr "Партнер"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable_no_partner
@@ -9976,9 +9876,8 @@ msgstr "Ова беше брзо !"
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_print_journal_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_amount_currency
-#, fuzzy
 msgid "With Currency"
-msgstr "Главна валута"
+msgstr ""
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -10418,9 +10317,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Аналитички ставки"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -10673,293 +10571,3 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Прерачунај"
-
-#~ msgid ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
-#~ "number.\n"
-#~ " * The 'Open' status is used when user create invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-#~ msgstr ""
-#~ " * Статусот 'Нацрт' е прикажан во моментот кога корисникот отвора нова и "
-#~ "непотврдена Фактура.\n"
-#~ "* 'Про-фактура' е кога фактурата е во статус: Про-фактура, фактурата овде "
-#~ "нема број.\n"
-#~ "* Статус 'Отворено' е прикажан кога корисникот ја креирал фактурата, се "
-#~ "генерира број на фактура. Таа е во статус Отворено се додека корисникот "
-#~ "не ја плати фактурата.\n"
-#~ "* Статус 'Платено' се подесува автоматски кога фактурата ќе биде платена. "
-#~ "Тоа е поврзано со внесовите во дневникот кои можат да бидат или да не "
-#~ "бидат порамнети.\n"
-#~ "* Статусот 'Откажано' се користи кога корисникот ја откажува фактурата."
-
-#~ msgid "# of Invoices"
-#~ msgstr "# од Фактури"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} Фактура (Ref ${object.number or 'n/a'})"
-
-#~ msgid "<span title=\"Balance in Odoo\">Balance in Odoo</span>"
-#~ msgstr "<span title=\"Balance in Odoo\"> Салдо во Odoo </span>"
-
-#~ msgid "A bank account can anly belong to one journal."
-#~ msgstr "Банкарска сметка може да припаѓа на само еден дневник."
-
-#~ msgid "A list of your customer and suppler payment terms."
-#~ msgstr "Листа на клиентски и добавувачки услови на плаќање."
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid ""
-#~ "Aged Partner Balance is a more detailed report of your receivables by "
-#~ "intervals. When opening that report, Odoo asks for the name of the "
-#~ "company, the Start Date and the size of the interval to be analyzed (in "
-#~ "days). Odoo then calculates a table of credit balance by start Date. So "
-#~ "if you request an interval of 30 days Odoo generates an analysis of "
-#~ "creditors for the past month, past two months, and so on."
-#~ msgstr ""
-#~ "Старосна структура на обврски/побарувања- претставува подетален извештај "
-#~ "на примањата, дадени по интервали. Кога отварате извештај, Odoo прашува "
-#~ "за името на компанијата, почетниот датум и големината на интервалот кој "
-#~ "што ќе се анализира (во денови). Odoo тогаш ви пресметува табела на "
-#~ "кредитна состојба со почетен датум. Така што, доколку побарате интервал "
-#~ "од 30 дена, Odoo ќе генерира анализа на кредитирање од минатиот месец, "
-#~ "два месеци, итн."
-
-#~ msgid "Allows you multi currency environment"
-#~ msgstr "Овозможува околина со повеќе валути"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Аналитичка ставка"
-
-#~ msgid ""
-#~ "Asset management: This allows you to manage the assets owned by a company "
-#~ "or a person. It keeps track of the depreciation occurred on those assets, "
-#~ "and creates account move for those depreciation lines.\n"
-#~ "\n"
-#~ "-This installs the module account_asset. If you do not check this box, "
-#~ "you will be able to do invoicing & payments, but not accounting (Journal "
-#~ "Items, Chart of Accounts, ...)"
-#~ msgstr ""
-#~ "Менаџирање на средства: Ова ви овозможува да ги управувате средствата кои "
-#~ "се поседувани од компанија или лице.\n"
-#~ "                Ја следи амортизацијата која се прави на овие средства, и "
-#~ "креира движење на сметката за овие ставки на амортизацијата.\n"
-#~ "                Ова го инсталира модулот account_asset. Доколку не го "
-#~ "означите ова поле, ќе може да правите фактурирање и плаќања,\n"
-#~ "                но не и сметководство (Ставки на Дневник, Контен "
-#~ "план, ...)"
-
-#~ msgid ""
-#~ "Chart of Accounts has been\n"
-#~ "                            installed. You should review it and create "
-#~ "any additionnal accounts."
-#~ msgstr ""
-#~ "Модулот - Контен план ви беше \n"
-#~ "инсталиран. Слободно прегледајте го и креирајте ги вашите сметки."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Direct Costs"
-#~ msgstr "Директни трошоци"
-
-#~ msgid "Due Payments"
-#~ msgstr "Доспеани плаќања"
-
-#~ msgid "Exchange Rate Entry of"
-#~ msgstr "Внес во девизен курс од"
-
-#~ msgid "Financial Report"
-#~ msgstr "Финансиски извештај"
-
-#~ msgid "Fixed day of the following month"
-#~ msgstr "Фиксен ден од следувачкиот месец"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid ""
-#~ "Get your bank statements from you bank and import them through plaid."
-#~ "com.\n"
-#~ "-that installs the module account_plaid."
-#~ msgstr ""
-#~ "Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги "
-#~ "преку plaid.com\n"
-#~ "-тоа ви го инсталира модулот account_plaid"
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "OFX format.\n"
-#~ "This installs the module account_bank_statement_import_ofx."
-#~ msgstr ""
-#~ "Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги "
-#~ "во Odoo во .OFX формат\n"
-#~ "-Ова ви го инсталира модулот account_bank_statement_import_ofx"
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "QIF format.\n"
-#~ "This installs the module account_bank_statement_import_qif."
-#~ msgstr ""
-#~ "Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги "
-#~ "во Odoo во .QIF формат\n"
-#~ "-Ова ви го инсталира модулот account_bank_statement_import_qif"
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them through yodlee."
-#~ "com.\n"
-#~ "-that installs the module account_yodlee."
-#~ msgstr ""
-#~ "Превземете ги вашите банкарски изводи од вашата банка и импортирајте ги "
-#~ "преку yodlee.com\n"
-#~ "-тоа ви го инсталира модулот account_yodlee"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "Invoicing"
-#~ msgstr "Фактурирање"
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Less Cost of Sales"
-#~ msgstr "Помалку трошоци од продажби"
-
-#~ msgid "Less Current Liabilities"
-#~ msgstr "Помалку тековни обврски"
-
-#~ msgid "Less Expenses"
-#~ msgstr "Помалку трошоци"
-
-#~ msgid "Less Non-Current Liabilities"
-#~ msgstr "Помалку не-тековни обврски"
-
-#~ msgid "Less Payable Accounts"
-#~ msgstr "Помалку платежни сметки"
-
-#~ msgid "Messages"
-#~ msgstr "Пораки"
-
-#~ msgid "New Operation"
-#~ msgstr "Нова операција"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Open account dashboard menu"
-#~ msgstr "Отвори мени на комадна табла на сметка"
-
-#~ msgid "PDF Reports"
-#~ msgstr "PDF Извештаи"
-
-#~ msgid "Paypal Account"
-#~ msgstr "Paypal Сметка"
-
-#~ msgid "Paypal account"
-#~ msgstr "Paypal сметка"
-
-#~ msgid ""
-#~ "Paypal account (email) for receiving online payments (credit card, etc.)\n"
-#~ "             If you set a paypal account, the customer  will be able to "
-#~ "pay your invoices or quotations\n"
-#~ "             with a button \"Pay with  Paypal\" in automated emails or "
-#~ "through the Odoo portal."
-#~ msgstr ""
-#~ "Paypal налог (е-маил) за примање плаќања преку интернет (кредитна "
-#~ "картичка, итн.) Ако подесете paypal налог, клиентот  ќе може да ги плаќа "
-#~ "вашите фактури или понуди преку копче \"Плати со  Paypal\" во "
-#~ "автоматизирани е-маил пораки или преку Odoo порталот."
-
-#~ msgid "Paypal username (usually email) for receiving online payments."
-#~ msgstr "Paypal корисничко име (обично e-mail) за примање на online плаќања."
-
-#~ msgid "Price"
-#~ msgstr "Цена"
-
-#~ msgid "Reporting"
-#~ msgstr "Известување"
-
-#~ msgid "Sales Team"
-#~ msgstr "Продажен тим"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "Избери 'Продажба' за дневникот Излезни фактури. Избери 'Набавка' за "
-#~ "дневникот Влезни фактури. Избери 'Готовина' или 'Банка' за дневници кои "
-#~ "се користат за плаќањата на купувач или добавувач. Ивбери 'Општо' за "
-#~ "дневници за разни набавки. Избери 'Ситуација при отварање/затварање' за "
-#~ "внесови генерирани за нови фискални години."
-
-#~ msgid "The bank statement line was already reconciled."
-#~ msgstr "Ставката од изводот е веќе подмирена."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or "
-#~ "select a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Избраната сметка на вашиот внес во дневникот принудува да се обезбеди "
-#~ "секундарна валута. Треба да ја отсраните секундарната валута на сметката "
-#~ "или да изберете повеќе-валутен преглед на вашиот дневник."
-
-#~ msgid ""
-#~ "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-#~ msgstr ""
-#~ "Совет: Притиснете ctrl-enter за да ги порамнете си балансирани предмети "
-#~ "во листата."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитани Пораки"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid "Website Messages"
-#~ msgstr "Пораки на веб сајт"
-
-#~ msgid "Website communication history"
-#~ msgstr "Историја на веб комуникација"
-
-#~ msgid "You cannot change the tax, you should remove and recreate lines."
-#~ msgstr ""
-#~ "Не може да го промените данокот, треба да ги отстраните и повторно да ги "
-#~ "креирате ставките."
-
-#~ msgid "e.g. sales@odoo.com"
-#~ msgstr "на пр. sales@odoo.com"
-
-#, fuzzy
-#~ msgid "View reconciled entries"
-#~ msgstr "Има непорамнети внесови"

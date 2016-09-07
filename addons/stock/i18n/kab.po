@@ -19,15 +19,11 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Ad yernu abrid \"Asiweḍ usrid\" u w-ad yernu ikayaden complexes  - Ayagi ad "
-"isebded azegrir stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:219
@@ -80,7 +76,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -91,15 +86,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Nouveau : Quand le mouvement est crée mais pas encore confirmé.\n"
-"* Attente d'un autre mouvement : Cet état est visible quand un mouvement est "
-"en attente d'au autre, par exemple pour des transferts qui s'enchainent.\n"
-"* En attente de disponibilité : Cet état est atteint lorsque la résolution "
-"de l'approvisionnement n'est pas finie. Le lancement du planificateur peut "
-"être nécessaire, ou la fabrication d'un composant...\n"
-"* Disponible : Quand les produits sont disponibles, l'état est "
-"'Disponible'.\n"
-"* Terminé : Quand le bon d'expédition est traité, l'état est 'Terminé'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -1818,9 +1804,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Asiweḍ"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -3373,15 +3358,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Sefrek Isunen d igadiren usgiten"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Sefrek Isunen d igadiren usgiten"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3420,9 +3403,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Sefrek Iqeţţunen/Uṭṭunen n Umazrar"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3886,9 +3868,8 @@ msgstr "Isem n temhelt"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Timhalin"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4119,15 +4100,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Tawsit n tezdemt"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Tawsit n tezdemt"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -6771,9 +6750,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Afaris"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7278,114 +7257,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Arr Tinectiwin ar 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Ad yernu abrid \"Asiweḍ usrid\" u w-ad yernu ikayaden complexes  - Ayagi "
-#~ "ad isebded azegrir stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr " Fares i tladna"
-
-#~ msgid " On Hand"
-#~ msgstr " ɣef afus"
-
-#~ msgid " Sequence in"
-#~ msgstr " Agzum n unekcum"
-
-#~ msgid " Sequence internal"
-#~ msgstr " Agzum agensan"
-
-#~ msgid " Sequence out"
-#~ msgstr " Agzum n tuffɣa"
-
-#~ msgid " Sequence picking"
-#~ msgstr "Agzum n unerfud"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Nouveau : Quand le mouvement est crée mais pas encore confirmé.\n"
-#~ "* Attente d'un autre mouvement : Cet état est visible quand un mouvement "
-#~ "est en attente d'au autre, par exemple pour des transferts qui "
-#~ "s'enchainent.\n"
-#~ "* En attente de disponibilité : Cet état est atteint lorsque la "
-#~ "résolution de l'approvisionnement n'est pas finie. Le lancement du "
-#~ "planificateur peut être nécessaire, ou la fabrication d'un composant...\n"
-#~ "* Disponible : Quand les produits sont disponibles, l'état est "
-#~ "'Disponible'.\n"
-#~ "* Terminé : Quand le bon d'expédition est traité, l'état est 'Terminé'."
-
-#~ msgid "Claims"
-#~ msgstr "Ismetteren"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#~ msgid "Delivery Method"
-#~ msgstr "Tarrayt n usiweḍ"
-
-#~ msgid "Followers"
-#~ msgstr "Imeltaɣen"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Prévu :"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#~ msgid "Information"
-#~ msgstr "Talɣut"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Pertes d'inventaire"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Azemz n yizen aneggaru"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Sefrek Isunen d igadiren usgiten"
-
-#~ msgid "Messages"
-#~ msgstr "Iznan"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Lli umuɣ n Uselɣas"
-
-#~ msgid "Picking Types"
-#~ msgstr "Tiwsitin n uheggi"
-
-#~ msgid "Qty"
-#~ msgstr "Tanecta"
-
-#~ msgid "Suppliers"
-#~ msgstr "Isseǧǧawen"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Iznan ur neţwaɣer-ara"
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Ɣur-ek: Tuccḍa deg ufardis n usɣel!"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Ɣur-ek: Tuccḍa di tnecta!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Iznan n n usmel  Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Amazray n Taywalt n usmel  Web"
-
-#~ msgid "unknown"
-#~ msgstr "arussin"

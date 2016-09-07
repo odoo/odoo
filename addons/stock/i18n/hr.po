@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-21 08:53+0000\n"
+"PO-Revision-Date: 2016-08-29 13:51+0000\n"
 "Last-Translator: Mario Jureša <mario.juresa@uvid.hr>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "Language: hr\n"
@@ -81,7 +81,6 @@ msgstr "%s: Tranzitna lokacija"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
-#, fuzzy
 msgid ""
 "* New: When the stock move is created and not yet confirmed.\n"
 "* Waiting Another Move: This state can be seen when a move is waiting for "
@@ -92,14 +91,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Novi: Kada je skaldišni prijenos kreiran ali nije potvrđen.\n"
-"* Čeka drugi korak: Ovaj je status vidljiv kada je za prijenos potreban još "
-"jedan prijenos, na primjer u povezanim akcijama.\n"
-"* Čeka dostupnost: ovaj se status javlja kada nema dovoljno zalihe. Možda je "
-"potrebno pokrenuti 'scheduler', ili potrebno završiti proizvodnju ...\n"
-"* Dostupno: Kada su proizvodi rezervirani za isporuku javlja se status "
-"'Dostupno'.\n"
-"* Izvršeno: Na završetku isporuke status je 'Izvršeno'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -211,6 +202,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
 msgstr ""
+"<span class=\"label label-default text-center odoo_purple\">Potvrdi "
+"narudžbu</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -267,6 +260,13 @@ msgid ""
 "vendors</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon="
+"\"&#57408;\"/>\n"
+"                                        <strong>Uvezi</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 50 "
+"dobavljača</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -280,6 +280,14 @@ msgid ""
 "vendors</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon="
+"\"&#57440;\"/>\n"
+"                                        <strong> Kreiraj ručno</strong><br/"
+">\n"
+"                                        <span class=\"small\">&lt; 50 "
+"dobavljača</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -307,6 +315,9 @@ msgid ""
 "application</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Iz Inventara</strong>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -363,6 +374,8 @@ msgid ""
 "<span>You need to install the Accounting or Purchases app to manage vendors."
 "</span>"
 msgstr ""
+"<span>Potrebno je instalirati Računovodstvo i Nabavu da bi upravljali "
+"dobavljačima.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -380,6 +393,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Activate <i>Track lots or serial numbers</i></strong> in your"
 msgstr ""
+"<strong>Uključi <i>Praćenje lotova i serijskih brojeva</i></strong> u vašem"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -413,6 +427,8 @@ msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase "
 "Order"
 msgstr ""
+"<strong>Kupovina:</strong> proizvod je kupljen od dobavljača preko prodajne "
+"narudžbe"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -766,7 +782,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_entire_packs
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_entire_packs
 msgid "Allow moving packs"
-msgstr ""
+msgstr "Dozvoli premještanje paketa"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_dropshipping:0
@@ -1173,7 +1189,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Click here to create a new transfer."
-msgstr ""
+msgstr "Kliknite za dodavanje novog prijenosa."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -1203,17 +1219,17 @@ msgstr "Klikni za dodavanje serijskog broja"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Click to create a new picking type."
-msgstr ""
+msgstr "Kliknite za otvarenje nove vrste dokumenta."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
 msgid "Click to create a stock movement."
-msgstr ""
+msgstr "Klikni za kreiranje skladišnog prijenosa."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree
 msgid "Click to create a stock operation."
-msgstr ""
+msgstr "Klikni za kreiranje skladišne operacije."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
@@ -1223,7 +1239,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 msgid "Click to define a new transfer."
-msgstr ""
+msgstr "Klikni za definiranje novog prijenosa."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
@@ -1233,12 +1249,12 @@ msgstr "Kliknite za definiranje novog skladišta."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receipt_picking_move
 msgid "Click to register a product receipt."
-msgstr ""
+msgstr "Kliknite za stvaranje proizvodne potvrde."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receive_move
 msgid "Click to register a receipt for this product."
-msgstr ""
+msgstr "Kliknite za stvaranje potvrde za ovaj proizvod."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -1281,7 +1297,7 @@ msgstr "Tvrtka"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date_done
 msgid "Completion Date of Transfer"
-msgstr ""
+msgstr "Završetak datuma prijenosa"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_orderpoint_compute
@@ -1333,7 +1349,7 @@ msgstr "Consumable"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_ids
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Contained Packages"
-msgstr ""
+msgstr "Sadržani paketi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_child_ids
@@ -1436,7 +1452,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create an Inventory Adjustment"
-msgstr ""
+msgstr "Kreiraj unos inventure"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1543,12 +1559,12 @@ msgstr "Datum naloga, najčešće vrijeme narudžbe"
 #: code:addons/stock/models/stock_warehouse.py:401
 #, python-format
 msgid "Cross-Dock"
-msgstr ""
+msgstr "Cross-Dock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_crossdock_route_id
 msgid "Crossdock Route"
-msgstr ""
+msgstr "Crossdock ruta"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_cumulative_quantity
@@ -1668,7 +1684,7 @@ msgstr "Datumi inventura i prijenosa"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
 msgid "Dates of Inventories and latest Moves"
-msgstr ""
+msgstr "Datumi inventura i zadnjih prijenosa"
 
 #. module: stock
 #: selection:stock.warehouse.orderpoint,lead_type:0
@@ -1739,12 +1755,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
 msgid "Default incoming route to follow"
-msgstr ""
+msgstr "Predefinirana ulazna ruta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_delivery_steps
 msgid "Default outgoing route to follow"
-msgstr ""
+msgstr "Predefinirana izlazna ruta"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1754,7 +1770,7 @@ msgstr "Zadano: Uzmi sa skladišta"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_route_ids
 msgid "Defaults routes through the warehouse"
-msgstr ""
+msgstr "Predefinirane rute kroz skladište"
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
@@ -1846,9 +1862,8 @@ msgstr "Otpremnica"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Otpremnica"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_route_ids
@@ -2015,9 +2030,8 @@ msgstr "Ne prati pojedinačne artikle"
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
-#, fuzzy
 msgid "Do not use Expiration Date on serial numbers"
-msgstr "Odredite datum isteka na serijskim brojevima"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_is_done
@@ -2037,7 +2051,7 @@ msgstr "Gotovi prenosi"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr ""
+msgstr "Završeni prijenosi po datumu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2063,7 +2077,7 @@ msgstr "Dostava od dobavljača direktno kupcu"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
-msgstr ""
+msgstr "Uredi detalje ili dodaj nove"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2146,7 +2160,7 @@ msgstr "Fiksne lokacije po kategorijama"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_fixed_location_ids
 msgid "Fixed Locations Per Product Category"
-msgstr ""
+msgstr "Fiksne lokacije po kategorijama proizvoda"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2272,7 +2286,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_default_resupply_wh_id
 msgid "Goods will always be resupplied from this warehouse"
-msgstr ""
+msgstr "Roba će uvijek biti opskrbljena iz ovog skladišta."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -2313,7 +2327,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_exist
 msgid "Has Pack Operations"
-msgstr ""
+msgstr "Ima operaciju pakiranja."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
@@ -2377,7 +2391,7 @@ msgstr "Povijest"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "How to use Lot Tracking:"
-msgstr ""
+msgstr "Kako koristiti praćenje lotova:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_id
@@ -2493,7 +2507,7 @@ msgstr "Otkazivanjem ovog prijenosa otkaži i povezani prijenos"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_route_id
 msgid "If route_id is False, the rule is global"
-msgstr ""
+msgstr "Ako je route_id False, ruta je globalna"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_result_package_id
@@ -2517,7 +2531,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Ako je ruta globalna"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_negative_move_id
@@ -2784,27 +2798,27 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_location_id
 msgid "Inventoried Location"
-msgstr ""
+msgstr "Popisana lokacija"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_lot_id
 msgid "Inventoried Lot/Serial Number"
-msgstr ""
+msgstr "Popisani lot/serijski broj"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_partner_id
 msgid "Inventoried Owner"
-msgstr ""
+msgstr "Popisani vlasnici"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_package_id
 msgid "Inventoried Pack"
-msgstr ""
+msgstr "Popisani paket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_product_id
 msgid "Inventoried Product"
-msgstr ""
+msgstr "Popisani proizvodi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_ids
@@ -2830,7 +2844,7 @@ msgstr "Skladište"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr ""
+msgstr "Unos inventure"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
@@ -2842,7 +2856,7 @@ msgstr "Unos inventure"
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
 msgid "Inventory Configuration: a step-by-step guide."
-msgstr ""
+msgstr "Konfiguracija inventara: vodič korak-po-korak."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -2889,7 +2903,7 @@ msgstr "Inventura broj"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Rute zalihe"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3398,15 +3412,13 @@ msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
-#, fuzzy
 msgid "Manage multiple stock_locations"
-msgstr "Upravljanje višestrukim lokacijama i skladištima"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage multiple warehouses"
-msgstr "Upravljanje višestrukim lokacijama i skladištima"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,warehouse_and_location_usage_level:0
@@ -3440,15 +3452,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_locations
-#, fuzzy
 msgid "Manage several stock locations"
-msgstr "Upravljajte višestrukim lokacijama unutar skladišta"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
-#, fuzzy
 msgid "Manage several warehouses"
-msgstr "Upravljajte višestrukim lokacijama unutar skladišta"
+msgstr ""
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3914,9 +3924,8 @@ msgstr "Operation Name"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
-#, fuzzy
 msgid "Operation Types"
-msgstr "Vrste operacija"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4138,24 +4147,22 @@ msgstr "Referenca paketa"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Package To Move"
-msgstr ""
+msgstr "Paketi za micanje"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr ""
+msgstr "Prijenosi paketa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
-#, fuzzy
 msgid "Package Type"
-msgstr "Tip pakiranja"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
-#, fuzzy
 msgid "Package Types"
-msgstr "Tip pakiranja"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4532,7 +4539,7 @@ msgstr "Zahtjev za nabavkom"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Zahtjevnica nabave"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
@@ -4545,7 +4552,7 @@ msgstr "Pravilo nabave"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_pull_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Procurement Rules"
-msgstr ""
+msgstr "Pravila nabave"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_procurement_op
@@ -5089,15 +5096,13 @@ msgstr "Rezerva"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
-#, fuzzy
 msgid "Reserve products immediately after the sale order confirmation"
-msgstr "Rezerviraj prodajne naloge odmah po potvrdi"
+msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
-#, fuzzy
 msgid "Reserve products manually or based on automatic scheduler"
-msgstr "Rezerviraj prodajne naloge ručno ili prema rasporedu"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -5517,12 +5522,9 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Neki proizvodi mogu se prodavati/kupiti u različitim jedinicama mjere "
-"(napredno)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:780
@@ -5835,9 +5837,8 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Fedex integracija"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_tmpl_id
@@ -6001,7 +6002,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sale Order and a Transfer Order is created"
-msgstr ""
+msgstr "Upit postaje prodajni nalog i nalog za prijenos je kreiran"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:167
@@ -6049,7 +6050,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_warehouse_id
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "Skladište za koje je ovo pravilo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate_warehouse_id
@@ -6146,7 +6147,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "Ovo je vlasnik količine."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_picking_type_id
@@ -6172,6 +6173,11 @@ msgid ""
 "product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
+" Ovaj meni nudi punu sljedivost skladišnih\n"
+"                operacija određenog proizvoda. Moguće je filtrirati na "
+"proizvodu\n"
+"                kako bi vidjeli sve prošle ili buduće skladišne prijenose "
+"proizvoda."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_group_stock_adv_location
@@ -6429,7 +6435,7 @@ msgstr "USPS integracija"
 #: code:addons/stock/models/stock_quant.py:98
 #, python-format
 msgid "Under no circumstances should you delete or change quants yourselves!"
-msgstr ""
+msgstr "Ni pod kojim uvjetima ne brisati ili mijenjati kvante!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
@@ -6567,7 +6573,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "Koristi se za raspored \"Svih operacija\" na kanban pogledu"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -6602,7 +6608,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_product_variant_count
 msgid "Variant Number"
-msgstr ""
+msgstr "Varijanta broja"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
@@ -6790,9 +6796,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
-#, fuzzy, python-format
+#, python-format
 msgid "Weighted Product"
-msgstr "Proizvod"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6921,12 +6927,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
-#, fuzzy
 msgid ""
 "You can either do it immediately or mark it as Todo for future processing. "
 "Use your scanner to validate the transferred quantity quicker."
 msgstr ""
-"Možete to uraditi odmah ili označiti kao obavezu za buduće procesiranje."
 
 #. module: stock
 #: code:addons/stock/models/product.py:464
@@ -7311,249 +7315,3 @@ msgstr "↳stavi u paket"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ postavi količine na 0"
-
-#~ msgid " MTO"
-#~ msgstr "MTO"
-
-#~ msgid " On Hand"
-#~ msgstr "Dostupno:"
-
-#~ msgid " Sequence in"
-#~ msgstr " Primke"
-
-#~ msgid " Sequence internal"
-#~ msgstr " Međuskladišnice"
-
-#~ msgid " Sequence out"
-#~ msgstr "Otpremnice"
-
-#~ msgid " Sequence packing"
-#~ msgstr " Pakiranja"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Skladišnice"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Novi: Kada je skaldišni prijenos kreiran ali nije potvrđen.\n"
-#~ "* Čeka drugi korak: Ovaj je status vidljiv kada je za prijenos potreban "
-#~ "još jedan prijenos, na primjer u povezanim akcijama.\n"
-#~ "* Čeka dostupnost: ovaj se status javlja kada nema dovoljno zalihe. Možda "
-#~ "je potrebno pokrenuti 'scheduler', ili potrebno završiti proizvodnju ...\n"
-#~ "* Dostupno: Kada su proizvodi rezervirani za isporuku javlja se status "
-#~ "'Dostupno'.\n"
-#~ "* Izvršeno: Na završetku isporuke status je 'Izvršeno'."
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Adresa kontakta:</strong></span>"
-
-#~ msgid "<strong>Serial Number</strong>"
-#~ msgstr "<strong>Serijski broj</strong>"
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Status</strong>"
-
-#~ msgid "A barcode nomenclature"
-#~ msgstr "Barkod nomenklatura"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna dodatna radnja"
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "Dozvoli prigovore na dostavama"
-
-#~ msgid "Claims"
-#~ msgstr "Prigovori/pritužbe"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjeg zapisa"
-
-#~ msgid "Delivery Method"
-#~ msgstr "Način dostave"
-
-#~ msgid "Do not manage claims"
-#~ msgstr "Ne upravljaj prigovorima"
-
-#~ msgid "Do not record internal moves within a warehouse"
-#~ msgstr "Ne pratite interne prijenose unutar skladišta"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "Ne koristi datum isteka"
-
-#~ msgid "Followers"
-#~ msgstr "Pratitelji"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratitelji (Kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratitelji (Partneri)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Predviđeno"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "Ima skladišne prijenose"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
-
-#~ msgid "Information"
-#~ msgstr "Informacije"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Stavke inventure"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Naziv inventure"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Gubitak inventure"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratitelj"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Lot is required"
-#~ msgstr "Lot je obavezan"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Upravljanje višestrukim lokacijama i skladištima"
-
-#~ msgid "Manage several locations per warehouse"
-#~ msgstr "Upravljajte višestrukim lokacijama unutar skladišta"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Move Lines"
-#~ msgstr "stavke"
-
-#~ msgid "Multi Locations"
-#~ msgstr "Višestruke lokacije"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtijevaju aktivnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Otvori izbornik Sladište"
-
-#~ msgid "Packagings"
-#~ msgstr "Pakiranje"
-
-#~ msgid ""
-#~ "Periodical Inventories are used to count the number of products\n"
-#~ "                available per location. You can use it once a year when "
-#~ "you do\n"
-#~ "                the general inventory or whenever you need it, to adapt "
-#~ "the\n"
-#~ "                current inventory level of a product."
-#~ msgstr ""
-#~ "Periodične inventure se koriste za prebrojavanje broja proizvoda "
-#~ "dostupnih na pojedinoj lokaciji. Možete ih koristiti jednom godišnje kada "
-#~ "radite kompletnu inventuru ili kada god to poželite, kako bi prilagodili "
-#~ "trenutno stanje zaliha. "
-
-#~ msgid "Picking Types"
-#~ msgstr "Vrste skladišnica"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Pushed Flows"
-
-#~ msgid "Qty"
-#~ msgstr "Kol."
-
-#~ msgid "Reserve sale orders immediately on confirmation"
-#~ msgstr "Rezerviraj prodajne naloge odmah po potvrdi"
-
-#~ msgid "Reserve sale orders manually or by running the schedulers"
-#~ msgstr "Rezerviraj prodajne naloge ručno ili prema rasporedu"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Popuni sa drugih skladišta"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Neki proizvodi mogu se prodavati/kupiti u različitim jedinicama mjere "
-#~ "(napredno)"
-
-#~ msgid "Suppliers"
-#~ msgstr "Dobavljači"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Tehničko polje korišteno za skrivanje pomočnog oblačića ako je potrebno"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Jedinica mjere"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Unused field"
-#~ msgstr "Nekorišteno polje"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Koristite ovaj konfigurator za generiranje zahtjeva za nabavkom za\n"
-#~ "                        ovaj proizvod. Ovisno o konfiguraciji proizvoda, "
-#~ "moguće je\n"
-#~ "                        kreirati nalog za nabavu u statusu 'Nacrt', "
-#~ "proizvodni nalog\n"
-#~ "                        ili novi zadatak."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Upozorenje: pogrešna JM!"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website poruke"
-
-#~ msgid "Website communication history"
-#~ msgstr "Povijest komunikacije Web stranice"
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing."
-#~ msgstr ""
-#~ "Možete to uraditi odmah ili označiti kao obavezu za buduće procesiranje."
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "Možete vratiti samo jedan prijenos odjednom!"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "Možete vratiti samo prijenose koji su potvrđeni!"
-
-#~ msgid "preferred Packaging"
-#~ msgstr "poželjno pakiranje"
-
-#~ msgid "unknown"
-#~ msgstr "nepoznato"
