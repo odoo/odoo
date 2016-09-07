@@ -28,6 +28,7 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'views/project_project_views.xml',
         'views/res_partner_views.xml',
         'views/project_config_settings_views.xml',
+        'views/mail_activity_views.xml',
     ],
     'demo': ['data/project_issue_demo.xml'],
     'application': True,
