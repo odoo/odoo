@@ -282,3 +282,32 @@
         width: 100%!important;
     }
 }
+
+// ===== Margins on td (replaced by paddings) =====
+.o-paddings-all(@factor: 1) {
+    .o-paddings(128, @factor);
+    .o-paddings(96, @factor);
+    .o-paddings(92, @factor);
+    .o-paddings(64, @factor);
+    .o-paddings(48, @factor);
+    .o-paddings(32, @factor);
+    .o-paddings(24, @factor);
+    .o-paddings(16, @factor);
+    .o-paddings(8, @factor);
+    .o-paddings(4, @factor);
+    .o-paddings(0, @factor);
+}
+.o-paddings(@name, @factor: 1) {
+    .o-paddings-define(@name, @factor * @name);
+}
+.o-paddings-define(@name, @size: @name) {
+    td.mt@{name} {
+        margin-top: auto!important;
+        padding-top: ~"@{size}px"!important;
+    }
+    td.mb@{name} {
+        margin-bottom: auto!important;
+        padding-bottom: ~"@{size}px"!important;
+    }
+}
+.o-paddings-all();

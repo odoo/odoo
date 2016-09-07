@@ -2,6 +2,7 @@
 <odoo>
 
 <template id="snippet_options">
+    <t t-call="web_editor.snippet_options"/>
     <t t-raw="0"/>
 
     <div data-js="width-x"
@@ -27,6 +28,14 @@
         data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, .oe_snippet_body"
         data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
         data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure">
+    </div>
+
+    <div data-js="resize"
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div">
+    </div>
+
+    <div data-js="margin-y"
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td, th">
     </div>
 
     <div data-js="colorpicker"
