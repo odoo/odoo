@@ -21,14 +21,23 @@
 
 
             <xpath expr="//field[@name='partner_id']" position="after">
-            <field name="is_templete" groups="base.group_sale_manager"/>
+            <field name="is_templete" groups="base.group_erp_manager"/>
           </xpath>
 
+          <xpath expr="//field[@name='payment_term_id']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+          <xpath expr="//field[@name='validity_date']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
           <xpath expr="//field[@name='payment_term_id']" position="after">
+            <field name="profit_percentage"/>
+          </xpath>
+          <xpath expr="//field[@name='profit_percentage']" position="after">
             <field name="total_confirm_sale"/>
           </xpath>
           <xpath expr="//field[@name='is_templete']" position="after">
-            <field name="templete_id"/>
+            <field name="templete_id" options="{'no_create_edit':True}"/>
           </xpath>
              <xpath expr="//field[@name='is_templete']" position="after">
             <field name="is_copied" invisible="1"/>
@@ -61,6 +70,16 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='team_id']" position="after">
                 <field name="co_sales_ids"  widget="many2many_tags"/>
+            </xpath>
+        </field>
+        </record>
+
+        <record id="sagawa_view_res_partner_filter" model="ir.ui.view">
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <filter string="City" domain="[]" context="{'group_by':'city'}"/>
             </xpath>
         </field>
         </record>
