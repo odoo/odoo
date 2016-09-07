@@ -8,8 +8,6 @@ var web_editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
 var snippets_editor = require('web_editor.snippet.editor');
 
-var _t = core._t;
-
 var $editable_area = $("#editable_area");
 if ($editable_area.length === 0 || !$editable_area.is(".o_mail_area")) {
     return;
@@ -145,54 +143,179 @@ snippets_editor.Class.include({
         return url;
     },
     compute_snippet_templates: function (html) {
+        var self = this;
         var ret = this._super.apply(this, arguments);
 
-        var $themes = this.$("#email_designer_themes").children().addClass("oe_snippet_body");
+        var $themes = this.$("#email_designer_themes").children();
         if ($themes.length === 0) return ret;
 
+        /**
+         * Initialize theme parameters.
+         */
         var all_classes = "";
-        var $dropdown = $(core.qweb.render("mass_mailing.theme_selector", {
-            themes: _.map($themes, function (theme) {
-                var $theme = $(theme);
-                var classname = $theme.data("class");
-                all_classes += " " + classname;
-                return {
-                    className: classname,
-                    imgSource: $theme.data("img"),
-                };
-            }),
-        }));
+        var themes_params = _.map($themes, function (theme) {
+            var $theme = $(theme);
+            var name = $theme.data("name");
+            var classname = "o_" + name + "_theme";
+            all_classes += " " + classname;
+            var images_info = _.defaults($theme.data("imagesInfo") || {}, {all: {}});
+            _.each(images_info, function (info) {
+                info = _.defaults(info, {module: "mass_mailing", format: "jpg"});
+            });
+            return {
+                name: name,
+                className: classname || "",
+                img: $theme.data("img") || "",
+                template: $theme.html().trim(),
+                get_image_info: function (filename) {
+                    if (images_info[filename]) {
+                        return images_info[filename];
+                    }
+                    return images_info.all;
+                }
+            };
+        });
+        $themes.parent().remove();
 
         var $body = $(document.body);
-        $dropdown.on("mouseenter click", "li > a", function (e) {
+        var $snippets = this.$(".oe_snippet");
+
+        /**
+         * Create theme selection screen and check if it must be forced opened.
+         * Reforce it opened if the last snippet is removed.
+         */
+        var $dropdown = $(core.qweb.render("mass_mailing.theme_selector", {
+            themes: themes_params
+        }));
+        var first_choice;
+        check_if_must_force_theme_choice();
+
+        /**
+         * Switch theme when a theme button is hovered. Confirm change if the theme button
+         * is pressed.
+         */
+        var selected_theme = false;
+        $dropdown.on("mouseenter", "li > a", function (e) {
+            if (first_choice) return;
             e.preventDefault();
-            var classname = $(e.currentTarget).data("class");
-            $body.removeClass(all_classes).addClass(classname);
+            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            switch_theme(theme_params);
+        });
+        $dropdown.on("click", "li > a", function (e) {
+            e.preventDefault();
+            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            if (first_choice) {
+                switch_theme(theme_params);
+                $body.removeClass("o_force_mail_theme_choice");
+                first_choice = false;
+            } else {
+                switch_images(theme_params, $snippets);
+            }
+            selected_theme = theme_params;
+
+            // Notify form view
+            window.top.odoo[window.callback+"_downup"]($editable_area.addClass("o_dirty").html());
+        });
+
+        /**
+         * If the user opens the theme selection screen, indicates which one is active and
+         * saves the information...
+         * ... then when the user closes check if the user confirmed its choice and restore
+         * previous state if this is not the case.
+         */
+        $dropdown.on("shown.bs.dropdown", function () {
+            check_selected_theme();
+            $dropdown.find("li").removeClass("selected").filter(function () {
+                return ($(this).has("img[src=\"" + (selected_theme && selected_theme.img) + "\"]").length > 0);
+            }).addClass("selected");
+        });
+        $dropdown.on("hidden.bs.dropdown", function () {
+            switch_theme(selected_theme);
+        });
+
+        /**
+         * On page load, check the selected theme and force switching to it (body needs the
+         * theme style for its edition toolbar).
+         */
+        check_selected_theme();
+        $body.addClass(selected_theme.className);
+
+        $dropdown.insertAfter(this.$el.find("#snippets_menu"));
+
+        return ret;
+
+        function check_if_must_force_theme_choice() {
+            first_choice = editable_area_is_empty();
+            $body.toggleClass("o_force_mail_theme_choice", first_choice);
+        }
+
+        function editable_area_is_empty($layout) {
+            $layout = $layout || $editable_area.find(".o_layout");
+            return ($editable_area.html().trim() === "" || ($layout.length > 0 && $layout.html().trim() === ""));
+        }
+
+        function check_selected_theme() {
             var $layout = $editable_area.find(".o_layout");
+            if ($layout.length === 0) {
+                selected_theme = false;
+            } else {
+                _.each(themes_params, function (theme_params) {
+                    if ($layout.hasClass(theme_params.className)) {
+                        selected_theme = theme_params;
+                    }
+                });
+            }
+        }
+
+        function switch_images(theme_params, $container) {
+            $container.find("img").each(function () {
+                var $img = $(this);
+                var src = $img.attr("src");
+
+                var m = src.match(/^\/web\/image\/\w+\.s_default_image_(?:theme_[a-z]+_)?(.+)$/);
+                if (!m) {
+                    m = src.match(/^\/\w+\/static\/src\/img\/(?:theme_[a-z]+\/)?s_default_image_(.+)\.[a-z]+$/);
+                }
+                if (!m) return;
+
+                var file = m[1];
+                var img_info = theme_params.get_image_info(file);
+
+                if (img_info.format) {
+                    src = "/" + img_info.module + "/static/src/img/theme_" + theme_params.name + "/s_default_image_" + file + "." + img_info.format;
+                } else {
+                    src = "/web/image/" + img_info.module + ".s_default_image_theme_" + theme_params.name + "_" + file;
+                }
+
+                $img.attr("src", src);
+            });
+        }
+
+        function switch_theme(theme_params) {
+            if (!theme_params || switch_theme.last === theme_params) return;
+            switch_theme.last = theme_params;
+
+            $body.removeClass(all_classes).addClass(theme_params.className);
+            switch_images(theme_params, $editable_area);
+
+            var $old_layout = $editable_area.find(".o_layout");
+            var $new_layout = $("<div/>", {"class": "o_layout oe_structure " + theme_params.className});
+
             var $contents;
-            if ($layout.length) {
-                $contents = ($layout.hasClass("oe_structure") ? $layout : $layout.find(".oe_structure").first()).contents();
+            if (first_choice) {
+                $contents = theme_params.template;
+            } else if ($old_layout.length) {
+                $contents = ($old_layout.hasClass("oe_structure") ? $old_layout : $old_layout.find(".oe_structure").first()).contents();
             } else {
                 $contents = $editable_area.contents();
             }
-            var $div = $("<div/>", {"class": "o_layout oe_structure " + classname});
-            $editable_area.append($div);
-            $div.append($contents);
-            $layout.remove();
-        });
 
-        var $snippets_menu = this.$el.find("#snippets_menu");
-        var old_title = $snippets_menu.text();
-        $dropdown.on("shown.bs.dropdown", function () {
-            $snippets_menu.text(_t("Choose a Theme"));
-        });
-        $dropdown.on("hidden.bs.dropdown", function () {
-            $snippets_menu.text(old_title);
-        });
+            $editable_area.empty().append($new_layout);
+            $new_layout.append($contents);
+            $old_layout.remove();
 
-        $dropdown.insertAfter($snippets_menu);
-
-        return ret;
+            self.show_blocks();
+        }
     },
 });
 
@@ -217,7 +340,6 @@ window.top.odoo[window["callback"]+"_updown"] = function (value, fields_values, 
         }
 
         if (value.indexOf('on_change_model_and_list') === -1) {
-
             $editable.html(value);
 
             if (editor_enable) {
