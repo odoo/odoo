@@ -1386,6 +1386,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_all_prices: function(){
         var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
+        var taxtotal = 0;
 
         var product =  this.get_product();
         var taxes_ids = product.taxes_id;
@@ -1401,13 +1402,14 @@ exports.Orderline = Backbone.Model.extend({
 
         var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
+            taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;
         });
 
         return {
             "priceWithTax": all_taxes.total_included,
             "priceWithoutTax": all_taxes.total_excluded,
-            "tax": all_taxes.total_included - all_taxes.total_excluded,
+            "tax": taxtotal,
             "taxDetails": taxdetail,
         };
     },
