@@ -159,6 +159,10 @@ def main():
             gevent.monkey.patch_all()
             import psycogreen.gevent
             psycogreen.gevent.patch_psycopg()
+        # import pkg_resources so the namespace handler is registered,
+        # without this, 'import odoo' could break in some cases (ie when
+        # odoo exists in site-packages and odoo is installed in develop mode)
+        import pkg_resources
         import odoo
         odoo.cli.main()
 
