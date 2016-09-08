@@ -499,8 +499,6 @@ class QWeb(object):
         """
         return ast.parse(dedent("""
             from collections import OrderedDict
-            import itertools
-            from itertools import repeat, imap
             from odoo.addons.base.ir.ir_qweb.qweb import escape, unicodifier, foreach_iterator
             """))
 
