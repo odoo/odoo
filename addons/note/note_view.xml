@@ -49,7 +49,7 @@
           <field name="open"/>
           <field name="memo"/>
           <field name="date_done"/>
-          <field name="message_follower_ids"/>
+          <field name="message_partner_ids"/>
           <field name="tag_ids"/>
           <templates>
             <t t-name="kanban-box">
@@ -76,9 +76,9 @@
                   <!-- title -->
                   <field name="name"/>
                 </span>
-                <t t-if="record.message_follower_ids.raw_value.length &gt; 1">
+                <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
-                      <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
+                      <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
                         <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar pull-right" t-att-data-member_id="follower"/>
                       </t>
                     <div class="clearfix"></div>
