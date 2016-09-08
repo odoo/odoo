@@ -1,0 +1,41 @@
+// out: ../compiled/theme_newsletter.css, sourcemap: false, compress: false
+// lessc@1.4.2
+
+
+// ===========   Variables
+
+// 'Default Theme' Palette
+@o_mm_news_color_alpha   : #f5f5f5;
+@o_mm_news_color_beta    : #ffffff;
+@o_mm_news_color_gamma   : #1cc1a9;
+@o_mm_news_color_delta   : #464646;
+@o_mm_news_color_epsilon : darken(@o_mm_news_color_gamma, 5%);
+@o_mm_news_color_zeta    : #906784;
+@o_mm_news_color_eta     : #87a6b5;
+
+
+// ===========   Components
+
+.o_layout.o_newsletter_theme {
+    .o_mail_snippet_general {
+        .btn.btn-primary {
+            color: @o_mm_news_color_beta;
+            background-color: @o_mm_news_color_gamma;
+        }
+        a, .btn.btn-link {
+            color: @o_mm_news_color_epsilon;
+        }
+        .bg-beta {
+            background-color: @o_mm_news_color_zeta;
+            color:  @o_mm_news_color_beta;
+        }
+        .text-beta {
+            color: @o_mm_news_color_zeta;
+        }
+
+        .bg-delta {
+            background-color: @o_mm_news_color_eta;
+        }
+    }
+}
+

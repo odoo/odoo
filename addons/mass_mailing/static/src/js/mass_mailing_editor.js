@@ -29,7 +29,7 @@ options.registry["width-x"] = options.Class.extend({
         this.$overlay.find(".oe_handle.e, .oe_handle.w").removeClass("readonly");
         if (this.$target.is('img')) {
             this.$overlay.find(".oe_handle.w").addClass("readonly");
-            this.$overlay.find(".oe_snippet_remove, .oe_snippet_move, .oe_snippet_clone").addClass("hidden");
+            this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass("hidden");
             this.is_image=true;
         }
 
@@ -226,7 +226,7 @@ snippets_editor.Class.include({
         $dropdown.on("shown.bs.dropdown", function () {
             check_selected_theme();
             $dropdown.find("li").removeClass("selected").filter(function () {
-                return ($(this).has("img[src=\"" + (selected_theme && selected_theme.img) + "\"]").length > 0);
+                return ($(this).has(".o_thumb[style=\""+ "background-image: url(" + (selected_theme && selected_theme.img) + "_small.png)"+ "\"]").length > 0);
             }).addClass("selected");
         });
         $dropdown.on("hidden.bs.dropdown", function () {
