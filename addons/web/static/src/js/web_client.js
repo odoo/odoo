@@ -77,12 +77,13 @@ return AbstractWebClient.extend({
                     action_buttons: true,
                     headless: true,
                 };
-                self.action_manager.do_action(result);
-                var form = self.action_manager.dialog_widget.views.form.controller;
-                form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
-                form.on('record_saved', self, function() {
-                    self.action_manager.dialog_stop();
-                    self.update_logo();
+                self.action_manager.do_action(result).then(function () {
+                    var form = self.action_manager.dialog_widget.views.form.controller;
+                    form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
+                    form.on('record_saved', self, function() {
+                        self.action_manager.dialog_stop();
+                        self.update_logo();
+                    });
                 });
             });
         });
