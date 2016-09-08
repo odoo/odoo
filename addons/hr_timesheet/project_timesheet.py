@@ -56,7 +56,7 @@ class Task(models.Model):
 
     parent_id = fields.Many2one('project.task', string='Parent Task')
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
-    subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project')
+    subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
 
     _constraints = [(osv.osv._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
