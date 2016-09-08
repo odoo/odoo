@@ -103,7 +103,7 @@
                             This Month
                         </td>
                         <td t-attf-class="#{values and values['done']['target'] and values['done']['this_month'] >= values['done']['target'] ? 'o_main' : 'o_secondary'}" title="To Activity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action" data-context="{'search_default_this_month':'1'}">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="values['done']['this_month']"/>
@@ -187,7 +187,7 @@
                     <tr>
                         <td class="o_text">Last Month</td>
                         <td class="o_secondary" title="To Activity Report">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_activity_report_action" data-context="{'search_default_last_month':'1'}">
                                 <t t-esc="values['done']['last_month']"/>
                             </a>
                         </td>
