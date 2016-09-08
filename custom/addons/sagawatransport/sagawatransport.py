@@ -7,9 +7,10 @@ class sale_order(models.Model):
     crm_lead_id = fields.Many2one('crm.lead', string='Leads', index=True)
     is_copied = fields.Boolean(string='Is Copied?',default=False,copy=False)
     is_templete = fields.Boolean('Is Templete')
+    profit_percentage = fields.Float(string='Profit Percentage (%)', default=10)
     total_confirm_sale = fields.Float(string='Total Sale Value')
     order_details = fields.Html('Quotation Details')
-    templete_id = fields.Many2one('sale.order', 'Chose Templete', domain="[('is_templete', '=', True)]")
+    templete_id = fields.Many2one('sale.order', 'Choose Templete', domain="[('is_templete', '=', True)]")
     state = fields.Selection(selection_add=[('early_payment', 'Early payment: Discount early payment')])
     paid_company_id = fields.Char(string='Mother Company',store=True, related='partner_id.mom_company_id.name', readonly=True)
     state = fields.Selection([
@@ -51,7 +52,10 @@ class sale_order(models.Model):
             'domain': '[]',
             'flags' : {'initial_mode': 'edit'}
         }
-
+    @api.multi
+    def print_quotation(self):
+        self.filtered(lambda s: s.state == 'approve').write({'state': 'sent'})
+        return self.env['report'].get_action(self, 'sale.report_saleorder')
 
 class crm_lead(models.Model):
     _inherit = 'crm.lead'
