@@ -3,11 +3,12 @@
 <template id="FieldTextHtmlInline" name="Editor layout">
     <t t-set="head">
         <t t-if="enable_editor">
-            <link rel="stylesheet" href="/mass_mailing/static/src/css/snippet_styles.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/compiled/theme_default.css" type="text/css"/>
 
-            <link rel="stylesheet" href="/mass_mailing/static/src/css/themes/airmail.css" type="text/css"/>
-            <link rel="stylesheet" href="/mass_mailing/static/src/css/themes/lemon.css" type="text/css"/>
-            <link rel="stylesheet" href="/mass_mailing/static/src/css/themes/tech.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/compiled/theme_newsletter.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/compiled/theme_airmail.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/compiled/theme_resto.css" type="text/css"/>
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/compiled/theme_tech.css" type="text/css"/>
         </t>
     </t>
     <t t-call="web_editor.layout">

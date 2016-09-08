@@ -1,0 +1,111 @@
+// out: ../compiled/theme_resto.css, sourcemap: false, compress: false
+// lessc@1.4.2
+
+@o_mm_resto_color_alpha   : #f0ede0;
+@o_mm_resto_color_beta    : #ffffff;
+@o_mm_resto_color_gamma   : #E96D1F;
+@o_mm_resto_color_delta   : #712b22;
+@o_mm_resto_color_epsilon : darken(@o_mm_resto_color_gamma, 5%);
+@o_mm_resto_color_zeta    : #795745;
+
+#web_editor_inside_iframe.o_resto_theme  {
+    background-color: @o_mm_resto_color_alpha;
+}
+
+.o_layout.o_resto_theme {
+    background-color: @o_mm_resto_color_alpha;
+
+    .o_mail_wrapper {
+        border: none;
+        background-color:transparent;
+    }
+
+
+    // ===========   Components
+
+    .o_mail_snippet_general {
+        background: rgba(0,0,0,0);
+        background: transparent;
+        color: @o_mm_resto_color_delta;
+
+        .btn.btn-primary {
+            color: @o_mm_resto_color_beta;
+            background-color: @o_mm_resto_color_gamma;
+        }
+
+        a, .o_mail_link {
+            font-weight: normal;
+            color: @o_mm_resto_color_epsilon;
+        }
+
+        .bg-beta {
+            background-color: @o_mm_resto_color_zeta;
+            color: @o_mm_resto_color_beta;
+
+            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+                color: @o_mm_resto_color_beta;
+            }
+        }
+
+        .text-beta {
+            color: @o_mm_resto_color_zeta;
+        }
+
+        .bg-delta {
+            background-color: @o_mm_resto_color_gamma;
+            color: @o_mm_resto_color_beta;
+
+            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+                color: @o_mm_resto_color_beta;
+            }
+        }
+
+        .text-delta {
+            color: @o_mm_resto_color_epsilon;
+        }
+
+        .separator {
+            background-color: lighten(@o_mm_resto_color_zeta, 20%);
+        }
+    }
+
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        color: darken(@o_mm_resto_color_zeta, 10%);
+        font-weight: bold;
+    }
+
+    // ===========   Snippets
+    .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
+        .o_mail_snippet_general {
+            border-bottom: 5px solid @o_mm_resto_color_gamma;
+        }
+
+        .o_mail_header_social {
+            a {
+                color: @o_mm_resto_color_gamma;
+            }
+        }
+    }
+
+    .o_mail_block_steps {
+        border-top: 2px solid @o_mm_resto_color_gamma;
+        background: @o_mm_resto_color_beta;
+    }
+
+    .o_mail_block_event {
+        .o_mail_snippet_general{
+            background: darken(@o_mm_resto_color_beta, 2%);
+        }
+    }
+    .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo, .o_mail_block_steps, .o_mail_block_event, .o_mail_block_banner {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .o_mail_block_footer_social {
+        .o_mail_table_styles {
+            border-top: 2px solid lighten(@o_mm_resto_color_zeta, 20%);
+            padding-top: 20px;
+        }
+    }
+}
