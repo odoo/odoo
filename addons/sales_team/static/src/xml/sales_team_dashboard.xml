@@ -130,7 +130,8 @@
                             </a>
                         </td>
                         <td t-if="values['invoiced']" t-attf-class="#{values and values['invoiced']['target'] and values['invoiced']['this_month'] >= values['invoiced']['target'] ? 'o_main' : 'o_secondary'}" title="To Invoice Report">
-                            <a href="#" class="o_dashboard_action" name="account.action_account_invoice_report_all">
+                            <a href="#" class="o_dashboard_action" name="account.action_account_invoice_report_all"
+                                data-context="{'search_default_my_invoice':'1', 'search_default_this_month': '1'}">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="widget.render_monetary_field(values['invoiced']['this_month'], values['currency_id'])"/>
@@ -199,7 +200,8 @@
                             </a>
                         </td>
                         <td t-if="values['invoiced']" class="o_secondary" title="To Invoice Report">
-                            <a href="#" class="o_dashboard_action" name="account.action_account_invoice_report_all">
+                            <a href="#" class="o_dashboard_action" name="account.action_account_invoice_report_all"
+                                 data-context="{'search_default_my_invoice':'1', 'search_default_last_month': '1'}">
                                 <t t-esc="widget.render_monetary_field(values['invoiced']['last_month'], values['currency_id'])"/>
                             </a>
                         </td>
