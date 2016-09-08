@@ -35,30 +35,57 @@ class ResCompany(models.Model):
 class AccountPartialReconcileCashBasis(models.Model):
     _inherit = 'account.partial.reconcile'
 
-    def create_tax_cash_basis_entry(self, value_before_reconciliation):
-        #Search in account_move if we have any taxes account move lines
+    def _check_tax_exigible(self, line):
+        """ Function overwritten in account_tax_exigible to make sure we consider only the lines having tax_exigible set to False """
+        return False
+
+    def _get_tax_cash_basis_lines(self, value_before_reconciliation):
+        # Search in account_move if we have any taxes account move lines
         tax_group = {}
         total_by_cash_basis_account = {}
-        for move in (self.debit_move_id.move_id, self.credit_move_id.move_id):
-            for line in move.line_ids:
-                if line.tax_line_id and line.tax_line_id.use_cash_basis:
-                    #amount to write is the current cash_basis amount minus the one before the reconciliation
-                    matched_percentage = value_before_reconciliation[move.id]
-                    amount = (line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage
-                    #group by line account
-                    acc = line.account_id.id
-                    if tax_group.get(acc, False):
-                        tax_group[acc] += amount
-                    else:
-                        tax_group[acc] = amount
-                    #Group by cash basis account
-                    acc = line.tax_line_id.cash_basis_account.id
-                    if total_by_cash_basis_account.get(acc, False):
-                        total_by_cash_basis_account[acc] += amount
-                    else:
-                        total_by_cash_basis_account[acc] = amount
         line_to_create = []
-        for k,v in tax_group.items():
+        move_date = self.debit_move_id.date
+        for move in (self.debit_move_id.move_id, self.credit_move_id.move_id):
+            if move_date < move.date:
+                move_date = move.date
+            for line in move.line_ids:
+                #TOCHECK: normal and cash basis taxes shoudn't be mixed together (on the same invoice line for example) as it will
+                #create reporting issues. Not sure of the behavior to implement in that case, though.
+                # amount to write is the current cash_basis amount minus the one before the reconciliation
+                matched_percentage = value_before_reconciliation[move.id]
+                amount = (line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage
+                if not self._check_tax_exigible(line):
+                    if line.tax_line_id and line.tax_line_id.use_cash_basis:
+                        # group by line account
+                        acc = line.account_id.id
+                        if tax_group.get(acc, False):
+                            tax_group[acc] += amount
+                        else:
+                            tax_group[acc] = amount
+                        # Group by cash basis account and tax
+                        acc = line.tax_line_id.cash_basis_account.id
+                        key = (acc, line.tax_line_id.id)
+                        if key in total_by_cash_basis_account:
+                            total_by_cash_basis_account[key] += amount
+                        else:
+                            total_by_cash_basis_account[key] = amount
+                    if any([tax.use_cash_basis for tax in line.tax_ids]):
+                        for tax in line.tax_ids:
+                            line_to_create.append((0, 0, {
+                                'name': '/',
+                                'debit': line.debit_cash_basis - line.debit * matched_percentage,
+                                'credit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'account_id': line.account_id.id,
+                                'tax_ids': [(6, 0, [tax.id])],
+                                }))
+                            line_to_create.append((0, 0, {
+                                'name': '/',
+                                'credit': line.debit_cash_basis - line.debit * matched_percentage,
+                                'debit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'account_id': line.account_id.id,
+                                }))
+
+        for k, v in tax_group.items():
             line_to_create.append((0, 0, {
                 'name': '/',
                 'debit': v if v > 0 else 0.0,
@@ -66,27 +93,39 @@ class AccountPartialReconcileCashBasis(models.Model):
                 'account_id': k,
                 }))
 
-        #Create counterpart vals
-        for k,v in total_by_cash_basis_account.items():
+        # Create counterpart vals
+        for key, v in total_by_cash_basis_account.items():
+            k, tax_id = key
             line_to_create.append((0, 0, {
                 'name': '/',
                 'debit': abs(v) if v < 0 else 0.0,
                 'credit': v if v > 0 else 0.0,
                 'account_id': k,
+                'tax_line_id': tax_id,
                 }))
+        return line_to_create, move_date
 
-        #Create move
+    def create_tax_cash_basis_entry(self, value_before_reconciliation):
+        line_to_create, move_date = self._get_tax_cash_basis_lines(value_before_reconciliation)
         if len(line_to_create) > 0:
-            #Check if company_journal for cash basis is set if not, raise exception
+            # Check if company_journal for cash basis is set if not, raise exception
             if not self.company_id.tax_cash_basis_journal_id:
                 raise UserError(_('There is no tax cash basis journal defined ' \
                                     'for this company: "%s" \nConfigure it in Accounting/Configuration/Settings') % \
                                       (self.company_id.name))
-            move = self.env['account.move'].create({
+            move_vals = {
                 'journal_id': self.company_id.tax_cash_basis_journal_id.id,
                 'line_ids': line_to_create,
-                'tax_cash_basis_rec_id': self.id})
-            #post move
+                'tax_cash_basis_rec_id': self.id
+            }
+            # The move date should be the maximum date between payment and invoice (in case
+            # of payment in advance). However, we should make sure the move date is not
+            # recorded after the period lock date as the tax statement for this period is
+            # probably already sent to the estate.
+            if move_date > self.company_id.period_lock_date:
+                move_vals['date'] = move_date
+            move = self.env['account.move'].with_context(dont_create_taxes=True).create(move_vals)
+            # post move
             move.post()
 
     @api.model
