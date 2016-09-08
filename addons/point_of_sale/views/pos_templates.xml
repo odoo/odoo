@@ -24,6 +24,9 @@
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
 
         <t t-call-assets="web.assets_common" t-css="false"/>
+        <script type="text/javascript">
+            odoo.db_info = <t t-raw="db_info"/>;
+        </script>
         <t t-call-assets="web.assets_backend" t-css="false"/>
         <t t-call-assets="web_editor.summernote" t-css="false"/>
         <t t-call-assets="web_editor.assets_editor" t-css="false"/>
