@@ -153,7 +153,7 @@ def main():
     elif len(sys.argv) == 2 and sys.argv[1] in cmds:
         cmds[sys.argv[1]]()
     else:
-        if sys.argv[1] == 'gevent':
+        if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
             sys.argv.remove('gevent')
             import gevent.monkey
             gevent.monkey.patch_all()
