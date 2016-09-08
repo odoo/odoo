@@ -636,16 +636,20 @@ class PurchaseOrderLine(models.Model):
             # Fullfill all related procurements with this po line
             diff_quantity = line.product_qty - qty
             for procurement in line.procurement_ids:
-                procurement_qty = procurement.product_uom._compute_quantity(procurement.product_qty, line.product_uom)
-                tmp = template.copy()
-                tmp.update({
-                    'product_uom_qty': min(procurement_qty, diff_quantity),
-                    'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
-                    'procurement_id': procurement.id,
-                    'propagate': procurement.rule_id.propagate,
-                })
-                done += moves.create(tmp)
-                diff_quantity -= min(procurement_qty, diff_quantity)
+                # If the procurement has some moves already, we should deduct their quantity
+                sum_existing_moves = sum(x.product_qty for x in procurement.move_ids if x.state != 'cancel')
+                existing_proc_qty = procurement.product_id.uom_id._compute_quantity(sum_existing_moves, procurement.product_uom)
+                procurement_qty = procurement.product_uom._compute_quantity(procurement.product_qty, line.product_uom) - existing_proc_qty
+                if float_compare(procurement_qty, 0.0, precision_rounding=procurement.product_uom.rounding) > 0:
+                    tmp = template.copy()
+                    tmp.update({
+                        'product_uom_qty': min(procurement_qty, diff_quantity),
+                        'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
+                        'procurement_id': procurement.id,
+                        'propagate': procurement.rule_id.propagate,
+                    })
+                    done += moves.create(tmp)
+                    diff_quantity -= min(procurement_qty, diff_quantity)
             if float_compare(diff_quantity, 0.0, precision_rounding=line.product_uom.rounding) > 0:
                 template['product_uom_qty'] = diff_quantity
                 done += moves.create(template)
