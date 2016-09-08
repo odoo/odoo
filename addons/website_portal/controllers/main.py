@@ -46,7 +46,7 @@ class website_account(http.Controller):
                         'country_id': post.pop('country_id'),
                         'state_id': post.pop('state_id')
                     }
-                    partner.commercial_partner_id.write(address_fields)
+                    partner.commercial_partner_id.sudo().write(address_fields)
                 partner.sudo().write(post)
                 if redirect:
                     return request.redirect(redirect)
