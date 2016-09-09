@@ -1752,7 +1752,6 @@ class stock_picking(models.Model):
                         # we have to create new ones with new quantities for our original, unfinished stock.pack.operation
                         stock_operation_obj._copy_remaining_pack_lot_ids(cr, uid, new_operation, operation.id, context=context)
 
-
                     op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                 pack_operation_ids.append(op.id)
             if operations:
@@ -4602,17 +4601,17 @@ class stock_pack_operation(osv.osv):
              'context': context,
         }
 
-    def _copy_remaining_pack_lot_ids(self, cr, uid, ids, new_operation_id, context=None):
+    def _copy_remaining_pack_lot_ids(self, cr, uid, id, new_operation_id, context=None):
         stock_pack_operation_lot_obj = self.pool["stock.pack.operation.lot"]
+        old_operation = self.browse(cr, uid, id, context=context)
 
-        for old_operation in self.browse(cr, uid, ids, context=context):
-            for pack_lot_id in old_operation.pack_lot_ids:
-                new_qty_todo = pack_lot_id.qty_todo - pack_lot_id.qty
+        for pack_lot_id in old_operation.pack_lot_ids:
+            new_qty_todo = pack_lot_id.qty_todo - pack_lot_id.qty
 
-                if new_qty_todo > 0:
-                    stock_pack_operation_lot_obj.copy(cr, uid, pack_lot_id.id, {'operation_id': new_operation_id,
-                                                                                'qty_todo': new_qty_todo,
-                                                                                'qty': 0}, context=context)
+            if new_qty_todo > 0:
+                stock_pack_operation_lot_obj.copy(cr, uid, pack_lot_id.id, {'operation_id': new_operation_id,
+                                                                            'qty_todo': new_qty_todo,
+                                                                            'qty': 0}, context=context)
 
 class stock_pack_operation_lot(osv.osv):
     _name = "stock.pack.operation.lot"
