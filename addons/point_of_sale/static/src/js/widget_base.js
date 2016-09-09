@@ -38,7 +38,7 @@ var PosBaseWidget = Widget.extend({
         var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
         var decimals = currency.decimals;
 
-        if (precision && (typeof this.pos.dp[precision]) !== undefined) {
+        if (precision && this.pos.dp[precision] !== undefined) {
             decimals = this.pos.dp[precision];
         }
 

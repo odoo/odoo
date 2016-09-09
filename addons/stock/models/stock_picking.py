@@ -918,6 +918,7 @@ class Picking(models.Model):
             moves.action_confirm()
         return moves
 
+    @api.model
     def _prepare_values_extra_move(self, op, product, remaining_qty):
         """
         Creates an extra move when there is no corresponding original move to be copied
