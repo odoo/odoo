@@ -26,8 +26,8 @@ class AcquirerBuckaroo(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('buckaroo', 'Buckaroo')])
-    brq_websitekey = fields.Char('WebsiteKey', required_if_provider='buckaroo')
-    brq_secretkey = fields.Char('SecretKey', required_if_provider='buckaroo')
+    brq_websitekey = fields.Char('WebsiteKey', required_if_provider='buckaroo', groups='base.group_user')
+    brq_secretkey = fields.Char('SecretKey', required_if_provider='buckaroo', groups='base.group_user')
 
     def _get_buckaroo_urls(self, environment):
         """ Buckaroo URLs

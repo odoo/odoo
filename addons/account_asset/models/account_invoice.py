@@ -51,15 +51,15 @@ class AccountInvoiceLine(models.Model):
 
     @api.one
     def asset_create(self):
-        if self.asset_category_id and self.asset_category_id.method_number > 1:
+        if self.asset_category_id:
             vals = {
                 'name': self.name,
                 'code': self.invoice_id.number or False,
                 'category_id': self.asset_category_id.id,
-                'value': self.price_subtotal,
+                'value': self.price_subtotal_signed,
                 'partner_id': self.invoice_id.partner_id.id,
                 'company_id': self.invoice_id.company_id.id,
-                'currency_id': self.invoice_id.currency_id.id,
+                'currency_id': self.invoice_id.company_currency_id.id,
                 'date': self.asset_start_date or self.invoice_id.date_invoice,
                 'invoice_id': self.invoice_id.id,
             }

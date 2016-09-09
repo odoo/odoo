@@ -15,7 +15,7 @@ class AccountInvoice(models.Model):
                 continue
             if recipient.user_ids and all(recipient.user_ids.mapped('share')):
                 group_data['user'] |= recipient
-            done_ids.add(recipient.id)
+                done_ids.add(recipient.id)
         return super(AccountInvoice, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
     @api.multi

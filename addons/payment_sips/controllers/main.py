@@ -26,7 +26,7 @@ class SipsController(http.Controller):
 
     def sips_validate_data(self, **post):
         sips = request.env['payment.acquirer'].search([('provider', '=', 'sips')], limit=1)
-        security = sips._sips_generate_shasign(post)
+        security = sips.sudo()._sips_generate_shasign(post)
         if security == post['Seal']:
             _logger.debug('Sips: validated data')
             return request.env['payment.transaction'].sudo().form_feedback(post, 'sips')

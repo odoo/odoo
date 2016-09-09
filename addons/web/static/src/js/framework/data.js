@@ -710,6 +710,13 @@ var DataSetSearch = DataSet.extend({
             this._length -= (before - this.ids.length);
         }
     },
+    add_ids: function(ids, at) {
+        var before = this.ids.length;
+        this._super(ids, at);
+        if(this._length){
+            this._length += (this.ids.length - before);
+        }
+    },
     unlink: function(ids, callback, error_callback) {
         var self = this;
         return this._super(ids).done(function() {
