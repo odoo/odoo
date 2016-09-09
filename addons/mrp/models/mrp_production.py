@@ -311,8 +311,7 @@ class MrpProduction(models.Model):
             source_location = self.bom_id.routing_id.location_id
         else:
             source_location = self.location_src_id
-        original_quantity = self.env['product.uom']._compute_qty(self.product_uom_id.id, self.product_qty, self.bom_id.product_uom_id.id)
-
+        original_quantity = self.product_qty - self.qty_produced
         data = {
             'name': self.name,
             'date': self.date_planned_start,
@@ -354,14 +353,21 @@ class MrpProduction(models.Model):
                     move.procure_method = 'make_to_order'
 
     @api.multi
-    def _update_raw_move(self, bom_line, quantity, **kw):
+    def _update_raw_move(self, bom_line, line_data):
+        quantity = line_data['qty']
         self.ensure_one()
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
-            move.write({'product_uom_qty': quantity})
+            if quantity > 0:
+                move[0].write({'product_uom_qty': quantity})
+            else:
+                if move[0].quantity_done > 0:
+                    raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
+                move[0].action_cancel()
+                move[0].unlink()
             return move
         else:
-            self._generate_raw_move(bom_line, quantity)
+            self._generate_raw_move(bom_line, line_data)
 
     @api.multi
     def action_assign(self):
@@ -398,8 +404,7 @@ class MrpProduction(models.Model):
         workorders = self.env['mrp.workorder']
         qty = bom_data['qty']
 
-        use_serial = any(product.tracking == 'serial' for product in self.mapped('move_finished_ids.product_id'))
-        if use_serial:
+        if self.product_id.tracking == 'serial':
             quantity = 1.0
         else:
             quantity = self.product_qty - sum(self.move_finished_ids.mapped('quantity_done'))

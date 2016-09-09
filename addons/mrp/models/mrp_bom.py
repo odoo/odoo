@@ -111,6 +111,10 @@ class MrpBom(models.Model):
         return self.search(domain, order='sequence, product_id', limit=1)
 
     def explode(self, product, quantity, picking_type=False):
+        """
+            Explodes the BoM and creates two lists with all the information you need: bom_done and line_done
+            Quantity should be passed in the UoM of the BoM (don't divide by its quantity)
+        """
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
         templates_done = product.product_tmpl_id

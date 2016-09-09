@@ -37,32 +37,41 @@ class ChangeProductionQty(models.TransientModel):
 
     @api.multi
     def change_prod_qty(self):
-        MrpBom = self.env['mrp.bom']
         for wizard in self:
             production = wizard.mo_id
             produced = sum(production.move_finished_ids.mapped('quantity_done'))
             if wizard.product_qty < produced:
                 raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
             production.write({'product_qty': wizard.product_qty})
-            #production.action_compute()
-            #TODO: Do we still need to change the quantity of a production order?
-            production_move = production.move_finished_ids.filtered(lambda x : x.state not in ('done', 'cancel') and production.product_id.id == x.product_id.id)
-            for move in production.move_raw_ids:
-                bom_point = production.bom_id
-                # TDE FIXME: this is not the place to do that kind of computation, please
-                if not bom_point:
-                    bom_point = MrpBom._bom_find(product=production.product_id, picking_type=production.picking_type_id)
-                    if not bom_point:
-                        raise UserError(_("Cannot find bill of material for this production."))
-                    production.write({'bom_id': bom_point.id})
-                if not bom_point:
-                    raise UserError(_("Cannot find bill of material for this production."))
-                factor = (production.product_qty - production.qty_produced) * production.product_uom_id.factor / bom_point.product_uom_id.factor
-                boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
-                for line, line_data in lines:
-                    production._update_raw_move(line, line_data['qty'])
+            bom_point = production.bom_id
+            factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty - production.qty_produced, production.bom_id.product_uom_id.id)
+            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+            for line, line_data in lines:
+                production._update_raw_move(line, line_data)
             self._update_product_to_produce(production, production.product_qty - production.qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves.do_unreserve()
             moves.action_assign()
+            for wo in production.workorder_ids:
+                if production.product_id.tracking == 'serial':
+                    quantity = 1.0
+                else:
+                    quantity = wo.qty_production - wo.qty_produced
+                    quantity = quantity if (quantity > 0) else 0
+                wo.qty_producing = quantity
+                if wo.qty_produced < wo.qty_production and wo.state == 'done':
+                    wo.state = 'progress'
+                # assign moves; last operation receive all unassigned moves (which case ?)
+                operation = wo.operation_id
+
+                # TODO: following could be put in a function as it is similar as code in _workorders_create
+                # TODO: only needed when creating new moves
+                moves_raw = production.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.state not in ('done', 'cancel'))
+                if wo == production.workorder_ids[-1]:
+                    moves_raw |= production.move_raw_ids.filtered(lambda move: not move.operation_id)
+                moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
+                moves_raw.mapped('move_lot_ids').write({'workorder_id': wo.id})
+                (moves_finished + moves_raw).write({'workorder_id': wo.id})
+                if wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_lot_ids:
+                    wo._generate_lot_ids()
         return {}

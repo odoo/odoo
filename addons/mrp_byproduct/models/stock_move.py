@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class Stok_Move(models.Model):
+class StockMove(models.Model):
     _inherit = 'stock.move'
 
     subproduct_id = fields.Many2one(
