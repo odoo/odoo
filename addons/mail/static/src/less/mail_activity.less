@@ -1,3 +1,4 @@
+/* Form View */
 .o_mail_activity {
     .o_thread_date_separator.o_border_dashed {
         border-bottom: dashed #eeeeee 2px;
@@ -7,43 +8,71 @@
     }
 }
 
-ul.o_activity {
-    width: 270px;
-    & > li:last-child {
-        border-top: 2px solid lightgray;
-        line-height: 3em;
+/* Kanban View */
+.o_kanban_record {
+    &:hover .o_activity_color_default {
+        visibility: visible;
     }
-    li > ul.o_activity_log {
-        max-height: 300px;
-        overflow-y: auto;
-        color: @text-color;
 
-        & > li {
-            width: 100%;
-            display: inline-block;
+    .o_activity_btn {
+        span.fa {
+            vertical-align: -35%;
+        }
+    }
 
-            label.o_activity_label {
-                padding: 5px;
-                font-weight: bold;
-                background-color: @odoo-brand-lightsecondary;
-                display: block;
+    ul.o_activity {
+        width: 290px;
+
+        & > li:last-child {
+            background-color: @odoo-brand-lightsecondary;
+            color: @gray-dark;
+            line-height: 3em;
+        }
+        li > ul.o_activity_log {
+            max-height: 300px;
+            overflow-y: auto;
+            color: @text-color;
+
+            li {
+                width: 100%;
+                display: inline-block;
+
+                &.o_activity_label {
+                    line-height: 2.5em;
+                    padding: 0px 5px;
+                    background-color: @odoo-brand-lightsecondary;
+                }
+
+                &.o_schedule_activity {
+                    padding: 8px 5px 8px 15px;
+                    &:hover {
+                        background-color: @gray-lighter;
+                    }
+
+                    .o_activity_title {
+                        width: 80%;
+                        padding: 0px 5px 0px 10px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
             }
-            .o_wrap_title {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
+        }
+
+        .o_no_activity {
+            padding: 10px;
+            cursor: initial;
         }
     }
 }
 
-.o_no_activity {
-    padding: 10px
+/* Form View + Kanban View */
+.o_activity_color_default {
+    color: @gray;
+    visibility: hidden;
 }
 
-.o_activity_color_default {
-    color: @odoo-main-text-color;
-}
 .o_activity_color_planned {
     color: @brand-primary;
 }
@@ -54,6 +83,9 @@ ul.o_activity {
     color: @brand-success;
 }
 
-.o_mark_as_done:hover {
-    color: @brand-success;
+.o_activity_link {
+    color: @gray;
+    &:hover {
+        color: @brand-success;
+    }
 }

@@ -18,7 +18,7 @@ var QWeb = core.qweb;
 var KanbanActivity = AbstractField.extend({
     template: 'KanbanActivity',
     events: {
-        "click .o_activity_logs": "get_activity_logs",
+        "click .o_activity_btn": "get_activity_logs",
         "click .o_schedule_activity": "on_open_schedule_activity",
         "click .o_mark_as_done": "on_mark_as_done",
     },
@@ -70,8 +70,9 @@ var KanbanActivity = AbstractField.extend({
             .filter([['id', '=', self.parent.id]])
             .first()
             .then(function(record) {
-                var state_color =  (record.activity_state) ? record.activity_state : 'default';
-                self.$(".o_activity_logs > span").removeClass('o_activity_color_' + self.activity_state).addClass('o_activity_color_' + state_color);
+                var state_color_class =  'o_activity_color_' + (record.activity_state || 'default');
+                var current_state_class = 'o_activity_color_' + (self.activity_state || 'default');
+                self.$(".o_activity_btn > span").removeClass(current_state_class).addClass(state_color_class);
                 self.activity_state = record.activity_state;
                 self.parent.record.activity_log_ids.raw_value = record.activity_log_ids;
             });

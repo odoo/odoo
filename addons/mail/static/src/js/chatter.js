@@ -352,6 +352,7 @@ var Chatter = form_common.AbstractField.extend({
     },
 
     on_open_schedule_activity: function(event) {
+        event.preventDefault();
         var self = this,
             activity_id = this.$(event.currentTarget).data('activity-id') || false,
             action = this.activity.add_activity_action(activity_id);

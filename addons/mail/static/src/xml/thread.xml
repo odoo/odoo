@@ -19,7 +19,7 @@
                 <div class="o_thread_message_sidebar">
                     <img t-attf-src="/web/image/res.users/#{activity.create_uid[0]}/image_small"
                         class="o_thread_message_avatar mb8"/>
-                    <a href="#" class="o_mark_as_done" t-att-data-activity-id="activity.id"><span class="fa fa-check-circle fa-2x" /></a>
+                    <a href="#" class="o_mark_as_done o_activity_link" t-att-data-activity-id="activity.id"><span class="fa fa-check-circle fa-2x" /></a>
                 </div>
                 <div class="o_thread_message_core o_mail_note">
                     <div class="o_mail_info">
@@ -30,8 +30,8 @@
                         <span class="fa fa-clock-o ml8" />
                         <span t-attf-class="o_activity_date o_activity_color_#{activity.state}"><t t-esc="activity.day" /></span>
                         <div class="pull-right">
-                            <a href="#" class="o_edit_activity" t-att-data-activity-id="activity.id"><span class="fa fa-pencil fa-lg" /></a>
-                            <a href="#" class="o_remove_activity" t-att-data-activity-id="activity.id"><span class="fa fa-times-circle fa-lg" /></a>
+                            <a href="#" class="o_edit_activity o_activity_link" t-att-data-activity-id="activity.id">edit</a> | 
+                            <a href="#" class="o_remove_activity o_activity_link" t-att-data-activity-id="activity.id">remove</a>
                         </div>
                     </div>
                     <div t-if="activity.title_action">

@@ -18,6 +18,7 @@ class MailActivity(models.Model):
                           help='Number of days before executing the action, allowing you to plan the date of the action.')
     subtype_id = fields.Many2one('mail.message.subtype', string='Message Subtype', required=True, ondelete='cascade')
     icon = fields.Char(help="Font awesome icon. eg. fa-tasks", groups="base.group_no_one")
+    model_id = fields.Many2one('ir.model', string='Related Document Model')
 
     # setting a default value on inherited fields is a bit involved
     internal = fields.Boolean('Internal Only', related='subtype_id.internal', inherited=True, default=True)
@@ -37,13 +38,15 @@ class MailActivityLog(models.Model):
     res_id = fields.Integer('Related Document ID', index=True)
     record_name = fields.Char('Activity Record Name', help="Display name of the related document.")
     model = fields.Char('Related Document Model', index=True)
-    next_activity_id = fields.Many2one('mail.activity', string='Activity')
+    next_activity_id = fields.Many2one('mail.activity', string='Activity',
+                                       domain="['|', ('model_id', '=', False), ('model_id.model', '=', model)]")
     icon = fields.Char(related="next_activity_id.icon")
     title_action = fields.Char('Summary')
     note = fields.Html()
     date_action = fields.Date('Due Date', required=True, index=True, default=fields.Date.today)
     state = fields.Selection([('overdue', 'Overdue'), ('today', 'Today'), ('planned', 'Planned')],
                              compute="_compute_state", default="planned")
+    user_id = fields.Many2one('res.users', string='Assign to', required=True, default=lambda self: self.env.user)
 
     @api.depends('date_action')
     def _compute_state(self):
