@@ -106,35 +106,30 @@ options.registry.slider = options.Class.extend({
         },0);
         return $clone;
     },
-    remove_slide: function (type, value) {
-        if(type !== "click") return;
-
-        if (this.remove_process) {
-            return;
-        }
+    remove_slide: function (type) {
+        if (type !== "click" || this.remove_process) return;
         var self = this;
-        var new_index = 0;
-        var cycle = this.$inner.find('.item').length - 1;
-        var index = this.$inner.find('.item.active').index();
+
+        var $items = this.$inner.find('.item');
+        var cycle = $items.length - 1;
+        var $active = $items.filter('.active');
+        var index = $active.index();
 
         if (cycle > 0) {
             this.remove_process = true;
-            var $el = this.$inner.find('.item.active');
-            self.$target.on('slid.bs.carousel', function (event) {
-                $el.remove();
+            this.$target.on('slid.bs.carousel.slide_removal', function (event) {
+                $active.remove();
                 self.$indicators.find("li:last").remove();
-                self.$target.off('slid.bs.carousel');
+                self.$target.off('slid.bs.carousel.slide_removal');
                 self.rebind_event();
                 self.remove_process = false;
-                if (cycle == 1) {
-                    self.on_remove_slide(event);
+                if (cycle === 1) {
+                    self.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
                 }
             });
-            setTimeout(function () {
-                self.$target.carousel( index > 0 ? --index : cycle );
-            }, 500);
-        } else {
-            this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
+            _.defer(function () {
+                self.$target.carousel(index > 0 ? --index : cycle);
+            });
         }
     },
     interval : function (type, value) {
@@ -162,7 +157,7 @@ options.registry.carousel = options.registry.slider.extend({
     },
     start : function () {
         var self = this;
-        this._super();
+        this._super.apply(this, arguments);
 
         // set background and prepare to clean for save
         var add_class = function (c) {
@@ -170,11 +165,17 @@ options.registry.carousel = options.registry.slider.extend({
             return self._class || "";
         };
         this.$target.on('slid.bs.carousel', function () {
-            if(self.editor && self.editor.styles.background) {
-                self.editor.styles.background.$target = self.$target.find(".item.active");
-                self.editor.styles.background.set_active();
-            }
             self.$target.carousel("pause");
+            if (!self.editor) return;
+
+            _.each(["background", "background_position", "colorpicker"], function (opt_name) {
+                var s_option = self.editor.styles[opt_name];
+                if (!s_option) return;
+
+                s_option.$target = self.$target.find(".item.active");
+                s_option.set_active();
+                s_option.$target.trigger("snippet-option-change", [s_option]);
+            });
         });
         this.$target.trigger('slid.bs.carousel');
     },
@@ -376,7 +377,7 @@ options.registry.marginAndResize = options.Class.extend({
 
         this.$overlay.attr("class", overlay_class);
     },
-    
+
     /* on_resize
     *  called when the box is resizing and the class change, before the cover_target
     *  @compass: resize direction : 'n', 's', 'e', 'w'
