@@ -97,6 +97,9 @@ $('.oe_website_sale').each(function () {
         $inputs.each(function () {
             $(this).val( data[$(this).attr("name")] || "" );
         });
+
+        $selects.filter('[name="shipping_country_id"]').val(data['shipping_country_id']).change();
+        $selects.filter('[name="shipping_state_id"]').val(data['shipping_state_id']);
     });
 
     $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
