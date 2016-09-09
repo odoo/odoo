@@ -57,6 +57,13 @@ return core.Class.extend({
             url: options.url,
             test: options.test,
         };
+
+        var tour_is_consumed = _.contains(this.consumed_tours, name);
+        if (tour_is_consumed || tour.current_step >= tour.steps.length) {
+            local_storage.removeItem(getStepKey(name));
+            tour.current_step = 0;
+        }
+
         if (options.skip_enabled) {
             tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
             tour.skip_handler = function (tip) {
@@ -65,7 +72,7 @@ return core.Class.extend({
             };
         }
         this.tours[name] = tour;
-        if (name === this.running_tour || (!tour.test && !_.contains(this.consumed_tours, name))) {
+        if (name === this.running_tour || (!tour.test && !tour_is_consumed)) {
             this.active_tooltips[name] = steps[tour.current_step];
         }
     },
