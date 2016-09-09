@@ -47,11 +47,11 @@ class PaymentAcquirerOgone(osv.Model):
         return providers
 
     _columns = {
-        'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
-        'ogone_userid': fields.char('API User ID', required_if_provider='ogone'),
-        'ogone_password': fields.char('API User Password', required_if_provider='ogone'),
-        'ogone_shakey_in': fields.char('SHA Key IN', size=32, required_if_provider='ogone'),
-        'ogone_shakey_out': fields.char('SHA Key OUT', size=32, required_if_provider='ogone'),
+        'ogone_pspid': fields.char('PSPID', required_if_provider='ogone', groups='base.group_user'),
+        'ogone_userid': fields.char('API User ID', required_if_provider='ogone', groups='base.group_user'),
+        'ogone_password': fields.char('API User Password', required_if_provider='ogone', groups='base.group_user'),
+        'ogone_shakey_in': fields.char('SHA Key IN', size=32, required_if_provider='ogone', groups='base.group_user'),
+        'ogone_shakey_out': fields.char('SHA Key OUT', size=32, required_if_provider='ogone', groups='base.group_user'),
         'ogone_alias_usage': fields.char('Alias Usage', help="""If you want to use Ogone Aliases,
                                                                 this default Alias Usage will be presented to
                                                                 the customer as the reason you want to

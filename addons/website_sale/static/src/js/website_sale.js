@@ -80,6 +80,9 @@ odoo.define('website_sale.website_sale', function (require) {
     $('.oe_website_sale').each(function () {
         var oe_website_sale = this;
 
+        $selects.filter('[name="shipping_country_id"]').val(data['shipping_country_id']).change();
+        $selects.filter('[name="shipping_state_id"]').val(data['shipping_state_id']);
+
         $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
             var product_ids = [];
             var product_dom = $(".js_product .js_add_cart_variants[data-attribute_value_ids]").last();

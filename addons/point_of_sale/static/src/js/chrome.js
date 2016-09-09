@@ -406,6 +406,23 @@ var ProxyStatusWidget = StatusWidget.extend({
     },
 });
 
+
+/* --------- The Sale Details --------- */
+
+// Generates a report to print the sales of the
+// day on a ticket
+
+var SaleDetailsButton = PosBaseWidget.extend({
+    template: 'SaleDetailsButton',
+    start: function(){
+        var self = this;
+        this.$el.click(function(){
+            self.pos.proxy.print_sale_details();
+        });
+    },
+});
+
+
 /*--------------------------------------*\
  |             THE CHROME               |
 \*======================================*/
@@ -663,6 +680,11 @@ var Chrome = PosBaseWidget.extend({
             'widget': OrderSelectorWidget,
             'replace':  '.placeholder-OrderSelectorWidget',
         },{
+            'name':   'sale_details',
+            'widget': SaleDetailsButton,
+            'append':  '.pos-rightheader',
+            'condition': function(){ return this.pos.config.use_proxy; },
+        },{
             'name':   'proxy_status',
             'widget': ProxyStatusWidget,
             'append':  '.pos-rightheader',
@@ -769,6 +791,7 @@ return {
     HeaderButtonWidget: HeaderButtonWidget,
     OrderSelectorWidget: OrderSelectorWidget,
     ProxyStatusWidget: ProxyStatusWidget,
+    SaleDetailsButton: SaleDetailsButton,
     StatusWidget: StatusWidget,
     SynchNotificationWidget: SynchNotificationWidget,
     UsernameWidget: UsernameWidget,
