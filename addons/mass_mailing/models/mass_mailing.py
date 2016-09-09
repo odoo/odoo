@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import random
+from hashlib import sha256
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -386,6 +387,25 @@ class MassMailing(models.Model):
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
+
+    @api.multi
+    def _unsubscribe_token(self, res_id, email):
+        """Generate a secure hash for this mailing list and parameters.
+
+        This is appended to the unsubscription URL and then checked at
+        unsubscription time to ensure no malicious unsubscriptions are
+        performed.
+
+        :param int res_id:
+            ID of the resource that will be unsubscribed.
+
+        :param str email:
+            Email of the resource that will be unsubscribed.
+        """
+        icp = self.env["ir.config_parameter"].sudo()
+        salt = icp.get_param("database.secret")
+        source = (self.env.cr.dbname, self.id, res_id, email, salt)
+        return sha256(",".join(map(unicode, source))).hexdigest()
 
     def _compute_next_departure(self):
         cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall

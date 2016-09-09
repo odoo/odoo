@@ -3,14 +3,14 @@
 
 import werkzeug
 
-from odoo import http, _
+from odoo import exceptions, http
 from odoo.http import request
 
 
 class MassMailController(http.Controller):
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
-    def mailing(self, mailing_id, email=None, res_id=None, **post):
+    def mailing(self, mailing_id, email=None, res_id=None, token=None, **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
             res_ids = []
@@ -22,6 +22,11 @@ class MassMailController(http.Controller):
                 res_ids = contacts.ids
             else:
                 res_ids = [res_id]
+
+            # Do not save unsubscription if there is any failure or flaw
+            right_token = mailing._unsubscribe_token(res_id, email)
+            if token != right_token:
+                raise exceptions.AccessDenied()
             mailing.update_opt_out(email, res_ids, True)
             return _('You have been unsubscribed successfully')
 
