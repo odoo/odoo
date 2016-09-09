@@ -407,7 +407,7 @@ class ProductTemplate(models.Model):
     location_id = fields.Many2one('stock.location', 'Location')
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
     route_ids = fields.Many2many(
-        'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
+        'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Replenishment Method',
         domain=[('product_selectable', '=', True)],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,...")
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
