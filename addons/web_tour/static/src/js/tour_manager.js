@@ -243,15 +243,22 @@ return core.Class.extend({
     _register: function (do_update, tour, name) {
         if (tour.ready) return $.when();
 
+        var tour_is_consumed = _.contains(this.consumed_tours, name);
+
         return tour.wait_for.then((function () {
             tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
             tour.steps = _.filter(tour.steps, (function (step) {
                 return !step.edition || step.edition === this.edition;
             }).bind(this));
 
+            if (tour_is_consumed || tour.current_step >= tour.steps.length) {
+                local_storage.removeItem(get_step_key(name));
+                tour.current_step = 0;
+            }
+
             tour.ready = true;
 
-            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !_.contains(this.consumed_tours, name)))) {
+            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
                 this._to_next_step(name, 0);
                 this.update(name);
             }
