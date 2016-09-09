@@ -233,10 +233,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var view_controller = this.active_view.controller;
         var view_fragment = this.active_view.$fragment;
-        var view_control_elements = this.render_view_control_elements();
 
         // Show the view
         return $.when(view_controller.do_show(view_options)).done(function () {
+            var view_control_elements = self.render_view_control_elements();
             // Prepare the ControlPanel content and update it
             var cp_status = {
                 active_view_selector: '.o_cp_switch_' + self.active_view.type,
