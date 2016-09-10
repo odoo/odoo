@@ -84,5 +84,43 @@
         </field>
         </record>
 
+        <record id="sagawa_view_crm_case_opportunities_filter" model="ir.ui.view">
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter" />
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='stage']/following-sibling::filter[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='stage']/following-sibling::filter[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='stage']/following-sibling::filter[3]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+        </record>
+
+        <record id="sagawa_view_crm_sales_order_filter" model="ir.ui.view">
+        <field name="inherit_id" ref="sale.view_sales_order_filter" />
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='sales']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='sales']/following-sibling::filter[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='sales']/following-sibling::filter[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='customer']" position="after">
+                <filter string="Mother Company" domain="[]" context="{'group_by':'paid_company_id'}"/>
+            </xpath>
+        </field>
+        </record>
+
     </data>
 </openerp>
