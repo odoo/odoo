@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-08-26 13:42+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>\n"
+"PO-Revision-Date: 2016-09-09 10:38+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -465,7 +465,7 @@ msgid ""
 "                the related sale or puchase invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Valitse lisätäksesi pankkitiliotteen.\n              </p><p>\n                Pankin tiliote on yhteenveto kaikista tilitapahtumista tietyltä ajanjaksolta. Nouda tiliote säännöllisesti pankistasi.\n              </p><p>\n                Odoo mahdollistaa tilitapahtumien täsmäyttämisen suoraan ko. myynti- tai ostolaskun kanssa.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -509,7 +509,7 @@ msgid ""
 "                account and the counterpart \"Account Payable\".\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Valitse jakso ja päiväkirja jonka haluat täyttää.\n              </p><p>\n                Tätä näkymää voi kirjanpitäjä käyttää halutessaan nopeasti lisätä tapahtumia. Jos haluat kirjata toimittajalaskun, aloita lisäämällä kulutilin rivi. Odoo ehdottaa sinulle automaattisesti tähän tiliin liittyvää verotiliä ja vastaavaa maksutiliä.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -1626,14 +1626,14 @@ msgstr "Käytä vain jos kumppanilla on verotunnus"
 msgid ""
 "Apply when the shipping or invoicing country is in this country group, and "
 "no position matches the country directly."
-msgstr ""
+msgstr "Käytä kun toimitus tai laskutusmaa on tässä maaryhmässä, eikä mikään arvo vastaa maata suoraan."
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid ""
 "Apply when the shipping or invoicing country matches. Takes precedence over "
 "positions matching on a country group."
-msgstr ""
+msgstr "Käytä kun toimitus tai laskutusmaat ovat samat. Tämä on etusijalla ennen maaryhmän asetuksia."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -1892,12 +1892,12 @@ msgstr "Pankkitiedot"
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr ""
+msgstr "Pankin täsmäytyssiirron esiasetukset."
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_search
 msgid "Bank Reconciliation Move preset"
-msgstr ""
+msgstr "Pankin täsmäytyssiirron esiasetus"
 
 #. module: account
 #: view:account.bank.statement:account.view_account_bank_statement_filter
@@ -2233,7 +2233,7 @@ msgstr ""
 #: code:addons/account/account.py:3455
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr ""
+msgstr "Ei voida luoda käyttämätöntä päiväkirjakoodia."
 
 #. module: account
 #: field:account.tax.code,code:0 field:account.tax.code.template,code:0
@@ -2276,7 +2276,7 @@ msgstr "Käteinen ja pankit"
 #. module: account
 #: field:account.bank.statement,cash_control:0
 msgid "Cash control"
-msgstr ""
+msgstr "Käteisvalvonta"
 
 #. module: account
 #: field:account.journal,cashbox_line_ids:0
@@ -2286,13 +2286,13 @@ msgstr "Kassakone"
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr ""
+msgstr "Kassakonerivi"
 
 #. module: account
 #: field:account.bank.statement,details_ids:0
 #: view:account.journal:account.view_account_journal_form
 msgid "CashBox Lines"
-msgstr ""
+msgstr "Kassakonerivit"
 
 #. module: account
 #: view:product.template:account.product_template_search_view
@@ -2318,7 +2318,7 @@ msgstr "Keskitys"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Keskitetty vastapuoli"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -2490,7 +2490,7 @@ msgstr "Valitse tämä jos kumppani on alv-velvollinen. Tätä alv-numeroa käyt
 #. module: account
 #: help:account.account,reconcile:0
 msgid "Check this box if this account allows reconciliation of journal items."
-msgstr ""
+msgstr "Valitse jos tämä tili sallii päiväkirjatapahtumien täsmäytyksen"
 
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
@@ -2811,12 +2811,12 @@ msgstr "Vertailu"
 #: field:account.chart.template,complete_tax_set:0
 #: field:wizard.multi.charts.accounts,complete_tax_set:0
 msgid "Complete Set of Taxes"
-msgstr ""
+msgstr "Kaikki verot"
 
 #. module: account
 #: field:account.config.settings,complete_tax_set:0
 msgid "Complete set of taxes"
-msgstr ""
+msgstr "Kaikki verot"
 
 #. module: account
 #: code:addons/account/account_invoice.py:402
@@ -2853,7 +2853,7 @@ msgstr "Laskettu saldo"
 #. module: account
 #: help:account.bank.statement,balance_end_real:0
 msgid "Computed using the cash control lines"
-msgstr ""
+msgstr "Laskettu käteisvalvonna rivien perusteella"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -3353,12 +3353,12 @@ msgstr "Valuuttakurssi"
 #. module: account
 #: help:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency as per company's country."
-msgstr ""
+msgstr "Yrityksen maavaluutta."
 
 #. module: account
 #: help:res.partner.bank,currency_id:0
 msgid "Currency of the related account journal."
-msgstr ""
+msgstr "Tilin päiväkirjaan liittyvä valuutta."
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -4250,7 +4250,7 @@ msgstr ""
 msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
-msgstr ""
+msgstr "Virhe!\nEt voi luoda rekursiivisia Verokoodeja."
 
 #. module: account
 #: constraint:account.account.template:0
@@ -4264,7 +4264,7 @@ msgstr "Virhe!\nEt voi luoda rekursiivia tilimalleja."
 msgid ""
 "Error!\n"
 "You cannot create recursive accounts."
-msgstr ""
+msgstr "Virhe!\nEt voi luoda itseensä viittaavia tilejä."
 
 #. module: account
 #: field:account.account,exchange_rate:0
@@ -4274,7 +4274,7 @@ msgstr "Valuuttakurssi"
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "Vaatii tilikartan"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -4634,7 +4634,7 @@ msgstr "Syötä prosenttimäärä osuutena välillä 0-1."
 #. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr ""
+msgstr "Prosenttimääräisen veron arvoksi syötetään %-osuus välillä 0-1."
 
 #. module: account
 #: field:account.invoice,period_id:0 field:account.invoice.report,period_id:0
@@ -4815,7 +4815,7 @@ msgstr "Antaa tälle riville järjestyksen laskua näytettäessä."
 #: help:account.bank.statement.line,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of bank statement lines."
-msgstr ""
+msgstr "Antaa järjestyksen joka näytetään pankkitiliotteen rivien yhteydessä."
 
 #. module: account
 #: help:account.invoice.tax,sequence:0
@@ -4834,7 +4834,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:726
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
-msgstr ""
+msgstr "Yleisiä veroja määritelty, joita ei ole laskuriveillä!"
 
 #. module: account
 #: view:account.partner.reconcile.process:account.account_partner_reconcile_view
