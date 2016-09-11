@@ -5,13 +5,13 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
-# Mikko Salmela <salmemik@gmail.com>, 2015
+# salmemik <salmemik@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-04-06 15:59+0000\n"
+"PO-Revision-Date: 2016-09-09 10:51+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -43,12 +43,12 @@ msgstr "- asentaa moduulin: payment_paypal."
 #. module: payment
 #: field:payment.transaction,acquirer_id:0
 msgid "Acquirer"
-msgstr ""
+msgstr "Vastaanottaja"
 
 #. module: payment
 #: field:payment.transaction,acquirer_reference:0
 msgid "Acquirer Order Reference"
-msgstr ""
+msgstr "Vastaanottajan tilausviite"
 
 #. module: payment
 #: field:payment.transaction,partner_address:0
@@ -63,7 +63,7 @@ msgstr "Summa"
 #. module: payment
 #: help:payment.transaction,amount:0
 msgid "Amount in cents"
-msgstr ""
+msgstr "Määrä senteissä"
 
 #. module: payment
 #: selection:payment.acquirer,validation:0
@@ -88,7 +88,7 @@ msgstr "Yritys"
 #. module: payment
 #: field:payment.acquirer,fees_active:0
 msgid "Compute fees"
-msgstr ""
+msgstr "Laske kulut"
 
 #. module: payment
 #: field:payment.transaction,partner_country_id:0
@@ -139,7 +139,7 @@ msgstr "Sähköposti"
 #. module: payment
 #: field:payment.acquirer,environment:0
 msgid "Environment"
-msgstr ""
+msgstr "Ympäristö"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -154,22 +154,22 @@ msgstr "Veloitukset"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Kulujen määrä: järjestelmän asettama, koska tämä riippuu maksun vastaanottajasta"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "Kenttä jota käytetään virheen ja/tai vahvistusviestin tallentamiseen"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Kiinteä kustannus kotimaassa"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_fixed:0
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Kiinteä kustannus kansainvälisesti"
 
 #. module: payment
 #: field:payment.transaction,message_follower_ids:0
@@ -184,7 +184,7 @@ msgstr "Lomake"
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
 msgid "Form Button Template"
-msgstr ""
+msgstr "Lomakken napin malli"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
@@ -216,7 +216,7 @@ msgstr "on seuraaja"
 #. module: payment
 #: field:payment.transaction,partner_lang:0
 msgid "Lang"
-msgstr ""
+msgstr "Kieli"
 
 #. module: payment
 #: field:payment.transaction,message_last_post:0
@@ -236,27 +236,27 @@ msgstr "Viimeksi päivitetty"
 #. module: payment
 #: help:payment.acquirer,website_published:0
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Salli tämän maksuntavan käyttö (asiakkaiden maksut, yms.)"
 
 #. module: payment
 #: field:account.config.settings,module_payment_adyen:0
 msgid "Manage Payments Using Adyen"
-msgstr ""
+msgstr "Hallinnoi maksuja käyttäen Adyen-välittäjää"
 
 #. module: payment
 #: field:account.config.settings,module_payment_buckaroo:0
 msgid "Manage Payments Using Buckaroo"
-msgstr ""
+msgstr "Hallinnoi maksuja käyttäen Buckaroo-välittäjää"
 
 #. module: payment
 #: field:account.config.settings,module_payment_ogone:0
 msgid "Manage Payments Using Ogone"
-msgstr ""
+msgstr "Hallinnoi maksuja käyttäen Ogone-välittäjää"
 
 #. module: payment
 #: field:account.config.settings,module_payment_paypal:0
 msgid "Manage Payments Using Paypal"
-msgstr ""
+msgstr "Hallinnoi maksuja käyttäen Paypal-välittäjää"
 
 #. module: payment
 #: selection:payment.acquirer,validation:0
@@ -271,12 +271,12 @@ msgstr "Viesti"
 #. module: payment
 #: help:payment.acquirer,post_msg:0
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Viesti joka näytetään kun maksuprosessi on suoritettu"
 
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Viesti joka näytetään ennen maksutapahtumaa, auttamaan maksuprosessin ymmärtämisessä"
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
@@ -363,7 +363,7 @@ msgstr "Puhelin"
 #. module: payment
 #: field:payment.acquirer,validation:0
 msgid "Process Method"
-msgstr ""
+msgstr "Käsittelytapa"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -374,7 +374,7 @@ msgstr "Tuotanto"
 #: view:payment.acquirer:payment.acquirer_search
 #: field:payment.acquirer,provider:0
 msgid "Provider"
-msgstr ""
+msgstr "Palveluntarjoaja"
 
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
@@ -389,7 +389,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Vaadittuja kenttiä ei ole täytetty"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
@@ -424,7 +424,7 @@ msgstr "Test"
 #. module: payment
 #: field:payment.acquirer,post_msg:0
 msgid "Thanks Message"
-msgstr ""
+msgstr "Kiitosviesti"
 
 #. module: payment
 #: sql_constraint:payment.transaction:0
@@ -466,7 +466,7 @@ msgstr ""
 #. module: payment
 #: field:payment.acquirer,website_published:0
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Näkyvillä portaalissa / verkkosivustolla"
 
 #. module: payment
 #: field:payment.transaction,website_message_ids:0
