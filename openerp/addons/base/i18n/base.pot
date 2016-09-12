@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"POT-Creation-Date: 2016-09-12 14:04+0000\n"
+"PO-Revision-Date: 2016-09-12 14:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -238,6 +238,13 @@ msgid "\n"
 "    PayuMoney Payment Acquirer for India.\n"
 "\n"
 "    PayUmoney payment gateway supports only INR currency.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_tax_exigible
+msgid "\n"
+"    This is a bugfix-module backporting 39d68ac and adding the concept of tax exigibility on journal items.\n"
 "    "
 msgstr ""
 
@@ -4316,7 +4323,7 @@ msgid "Appears by default on the top right corner of your printed documents (rep
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:716
+#: code:addons/base/res/res_users.py:715
 #: model:ir.model,name:base.model_ir_module_category
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
@@ -4894,11 +4901,6 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_6
-msgid "Bronze"
 msgstr ""
 
 #. module: base
@@ -5526,11 +5528,6 @@ msgid "Company"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_17
-msgid "Company Contact"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
 #: model:ir.model.fields,field_description:base.field_res_partner_company_name
 #: model:ir.model.fields,field_description:base.field_res_users_company_name
@@ -5579,11 +5576,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
 msgid "Complete name"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_9
-msgid "Components Buyer"
 msgstr ""
 
 #. module: base
@@ -5709,11 +5701,6 @@ msgstr ""
 #. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_8
-msgid "Consultancy Services"
 msgstr ""
 
 #. module: base
@@ -6808,11 +6795,6 @@ msgid "Display and manage the list of all countries that can be assigned to your
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_13
-msgid "Distributor"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr ""
@@ -6966,7 +6948,7 @@ msgid "El Salvador"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:565
+#: code:addons/base/ir/ir_ui_view.py:572
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
@@ -7002,7 +6984,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
 #: model:ir.model.fields,field_description:base.field_res_users_employee
 #: model:res.groups,name:base.group_user
-#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
 msgstr ""
 
@@ -7071,7 +7052,7 @@ msgid "Error ! You cannot create recursive companies."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:426
+#: code:addons/base/ir/ir_ui_view.py:433
 #, python-format
 msgid "Error context:\n"
 "View `%(view_name)s`"
@@ -7434,7 +7415,7 @@ msgid "Field Type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:877
+#: code:addons/base/ir/ir_ui_view.py:884
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr ""
@@ -7877,11 +7858,6 @@ msgstr ""
 #: code:addons/base/res/res_config.py:666
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_4
-msgid "Gold"
 msgstr ""
 
 #. module: base
@@ -8414,11 +8390,6 @@ msgid "ISO code"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_7
-msgid "IT Services"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.is
 msgid "Iceland"
 msgstr ""
@@ -8896,7 +8867,7 @@ msgid "Invalid model name %r in action definition."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:557
+#: code:addons/base/ir/ir_ui_view.py:564
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr ""
@@ -8920,8 +8891,8 @@ msgid "Invalid type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:296
-#: code:addons/base/ir/ir_ui_view.py:298
+#: code:addons/base/ir/ir_ui_view.py:297
+#: code:addons/base/ir/ir_ui_view.py:299
 #, python-format
 msgid "Invalid view definition"
 msgstr ""
@@ -9832,11 +9803,6 @@ msgid "Manual: Launched manually.\n"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_14
-msgid "Manufacturer"
-msgstr ""
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
@@ -10193,8 +10159,8 @@ msgid "Model name on which the method to be called is located, e.g. 'res.partner
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:666
-#: code:addons/base/ir/ir_ui_view.py:828
+#: code:addons/base/ir/ir_ui_view.py:673
+#: code:addons/base/ir/ir_ui_view.py:835
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr ""
@@ -10753,11 +10719,6 @@ msgid "Odoo will automatically adds some '0' on the left of the 'Next Number' to
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_12
-msgid "Office Supplies"
-msgstr ""
-
-#. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
 msgstr ""
@@ -10937,8 +10898,8 @@ msgid "Original View"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:730
-#: code:addons/base/res/res_users.py:895
+#: code:addons/base/res/res_users.py:729
+#: code:addons/base/res/res_users.py:894
 #, python-format
 msgid "Other"
 msgstr ""
@@ -11142,7 +11103,6 @@ msgstr ""
 #: model:ir.model,name:base.model_res_partner
 #: model:ir.model.fields,field_description:base.field_res_company_partner_id
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
-#: model:res.partner.category,name:base.res_partner_category_0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
 msgstr ""
@@ -11611,11 +11571,6 @@ msgid "Propose to install a theme on website installation"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_2
-msgid "Prospect"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_write_expression
 msgid "Provide an expression that, applied on the current record, gives the field to update."
 msgstr ""
@@ -11748,7 +11703,7 @@ msgid "Quotations, Sales Orders, Invoicing"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:305
+#: code:addons/base/ir/ir_ui_view.py:306
 #, python-format
 msgid "Qweb view cannot have 'Groups' define on the record. Use 'groups' atttributes inside the view definition"
 msgstr ""
@@ -12155,11 +12110,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_multi
 msgid "Restrict to lists"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_16
-msgid "Retailer"
 msgstr ""
 
 #. module: base
@@ -12663,11 +12613,6 @@ msgid "Server Actions"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_11
-msgid "Services"
-msgstr ""
-
-#. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
 msgstr ""
@@ -12770,11 +12715,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_5
-msgid "Silver"
 msgstr ""
 
 #. module: base
@@ -13022,12 +12962,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_name
 msgid "State Name"
-msgstr ""
-
-#. module: base
-#: code:addons/base/res/res_country.py:138
-#, python-format
-msgid "State with id [%s] (%s) seems to have duplicated code: %s"
 msgstr ""
 
 #. module: base
@@ -13374,6 +13308,11 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_partner_vat
 #: model:ir.model.fields,help:base.field_res_users_vat
 msgid "Tax Identification Number. Fill it if the company is subjected to taxes. Used by the some of the legal statements."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_tax_exigible
+msgid "Tax exigible"
 msgstr ""
 
 #. module: base
@@ -14697,11 +14636,6 @@ msgid "Vehicle, leasing, insurances, costs"
 msgstr ""
 
 #. module: base
-#: model:res.partner.category,name:base.res_partner_category_1
-msgid "Vendor"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Vendors"
@@ -15102,11 +15036,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_translate
 msgid "Whether values for this field can be translated (enables the translation mechanism for that field)"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_15
-msgid "Wholesaler"
 msgstr ""
 
 #. module: base
@@ -15850,7 +15779,7 @@ msgid "log(message, level='info'): a logging function to create ir_logging recor
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:423
+#: code:addons/base/ir/ir_ui_view.py:430
 #, python-format
 msgid "n/a"
 msgstr ""
