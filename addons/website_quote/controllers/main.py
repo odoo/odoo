@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp import SUPERUSER_ID
+from openerp.http import local_redirect
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 import werkzeug
@@ -79,12 +80,12 @@ class sale_quote(http.Controller):
         if token != order.access_token:
             return request.website.render('website.404')
         if order.state != 'sent':
-            return werkzeug.utils.redirect("/quote/%s/%s?message=4" % (order_id, token))
+            return local_redirect("/quote/%s/%s?message=4" % (order_id, token), code=302)
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
         if message:
             self.__message_post(message, order_id, type='comment', subtype='mt_comment')
-        return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
+        return local_redirect("/quote/%s/%s?message=2" % (order_id, token), code=302)
 
     @http.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public", website=True)
     def post(self, order_id, token, **post):
@@ -96,7 +97,7 @@ class sale_quote(http.Controller):
             return request.website.render('website.404')
         if message:
             self.__message_post(message, order_id, type='comment', subtype='mt_comment')
-        return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
+        return local_redirect("/quote/%s/%s?message=1" % (order_id, token), code=302)
 
     def __message_post(self, message, order_id, type='comment', subtype=False, attachments=[]):
         request.session.body =  message
@@ -171,6 +172,4 @@ class sale_quote(http.Controller):
         })
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
-        return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
-
-
+        return local_redirect("/quote/%s/%s#pricing" % (order.id, token), code=302)

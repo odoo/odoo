@@ -111,7 +111,7 @@ class ir_http(osv.AbstractModel):
 
             if (not datas and name != request.httprequest.path and
                     name.startswith(('http://', 'https://', '/'))):
-                return werkzeug.utils.redirect(name, 301)
+                return http.local_redirect(name, code=301)
 
             response = werkzeug.wrappers.Response()
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT

@@ -151,7 +151,13 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
     if keep_hash:
         return redirect_with_hash(url, code)
     else:
-        return werkzeug.utils.redirect(url, code)
+        try:
+            return werkzeug.utils.redirect(path, code, Response)
+        except TypeError:
+            # Werkzeug < 0.10
+            result = werkzeug.utils.redirect(path, code)
+            result.autocorrect_location_header = False
+            return result
 
 def redirect_with_hash(url, code=303):
     # Most IE and Safari versions decided not to preserve location.hash upon
@@ -159,7 +165,7 @@ def redirect_with_hash(url, code=303):
     # inexplicably in case of multiple redirects (and we do have some).
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
-        return werkzeug.utils.redirect(url, code)
+        return local_redirect(url, code=code)
     url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
@@ -1213,6 +1219,7 @@ class Response(werkzeug.wrappers.Response):
         uid = kw.pop('uid', None)
         super(Response, self).__init__(*args, **kw)
         self.set_default(template, qcontext, uid)
+        self.autocorrect_location_header = False
 
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template

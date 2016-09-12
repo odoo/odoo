@@ -16,7 +16,7 @@ from PIL import Image
 import openerp
 from openerp.addons.web.controllers.main import WebClient
 from openerp.addons.web import http
-from openerp.http import request, STATIC_CACHE
+from openerp.http import local_redirect, request, STATIC_CACHE
 from openerp.tools import image_save_for_web
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         if lang == 'default':
             lang = request.website.default_lang_code
             r = '/%s%s' % (lang, r or '/')
-        redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
+        redirect = local_redirect(r or ('/%s' % lang), code=303)
         redirect.set_cookie('website_lang', lang)
         return redirect
 
@@ -183,7 +183,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
-        return werkzeug.utils.redirect(url)
+        return local_redirect(url, code=302)
 
     @http.route('/website/theme_change', type='http', auth="user", website=True)
     def theme_change(self, theme_id=False, **kwargs):

@@ -12,7 +12,7 @@ import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
-from openerp.http import request
+from openerp.http import local_redirect, request, Response
 from openerp.tools import config
 from openerp.osv import orm
 from openerp.tools.safe_eval import safe_eval as eval
@@ -110,7 +110,7 @@ class ir_http(orm.AbstractModel):
             except Exception as e:
                 return self._handle_exception(e)
 
-            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
+            request.redirect = lambda url, code=302: local_redirect(url_for(url), code=code)
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
@@ -187,7 +187,7 @@ class ir_http(orm.AbstractModel):
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string
-                return werkzeug.utils.redirect(path, code=301)
+                return request.redirect(path, code=301)
 
     def _handle_exception(self, exception, code=500):
         is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)

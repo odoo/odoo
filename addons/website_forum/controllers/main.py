@@ -7,6 +7,7 @@ import simplejson
 
 from openerp import tools
 from openerp import SUPERUSER_ID
+from openerp.http import local_redirect
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
@@ -235,7 +236,7 @@ class WebsiteForum(http.Controller):
                 'content': post.get('content'),
                 'tag_ids': question_tag_ids[forum.id],
             }, context=context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), new_question_id), code=302)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
@@ -250,7 +251,7 @@ class WebsiteForum(http.Controller):
 
         if question.parent_id:
             redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
-            return werkzeug.utils.redirect(redirect_url, 301)
+            return local_redirect(redirect_url, code=301)
 
         filters = 'question'
         values = self._prepare_forum_values(forum=forum, searches=post)
@@ -298,27 +299,27 @@ class WebsiteForum(http.Controller):
             if record.create_uid.id == request.uid:
                 answer = record
                 break
-        return werkzeug.utils.redirect("/forum/%s/post/%s/edit" % (slug(forum), slug(answer)))
+        return local_redirect("/forum/%s/post/%s/edit" % (slug(forum), slug(answer)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
     def question_close(self, forum, question, **post):
         request.registry['forum.post'].close(request.cr, request.uid, [question.id], reason_id=int(post.get('reason_id', False)), context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):
         request.registry['forum.post'].reopen(request.cr, request.uid, [question.id], context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)
     def question_delete(self, forum, question, **kwarg):
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'active': False}, context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", methods=['POST'], website=True)
     def question_undelete(self, forum, question, **kwarg):
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'active': True}, context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     # Post
     # --------------------------------------------------
@@ -330,14 +331,14 @@ class WebsiteForum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
         if not user.email or not tools.single_email_re.match(user.email):
-            return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), uid))
+            return local_redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), uid), code=302)
         request.registry['forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum.id,
                 'parent_id': post.id,
                 'content': kwargs.get('content'),
             }, context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(post)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(post)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="public", website=True)
     def post_comment(self, forum, post, **kwargs):
@@ -354,7 +355,7 @@ class WebsiteForum(http.Controller):
                 type='comment',
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
@@ -374,8 +375,8 @@ class WebsiteForum(http.Controller):
         question = post.parent_id
         request.registry['forum.post'].unlink(request.cr, request.uid, [post.id], context=request.context)
         if question:
-            werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
-        return werkzeug.utils.redirect("/forum/%s" % slug(forum))
+            local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
+        return local_redirect("/forum/%s" % slug(forum), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
@@ -432,7 +433,7 @@ class WebsiteForum(http.Controller):
 
         request.registry['forum.post'].write(cr, uid, [post.id], vals, context=context)
         question = post.parent_id if post.parent_id else post
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", website=True)
     def post_upvote(self, forum, post, **kwargs):
@@ -489,8 +490,8 @@ class WebsiteForum(http.Controller):
         if partner_id:
             partner = request.registry['res.partner'].browse(cr, SUPERUSER_ID, partner_id, context=context)
             if partner.exists() and partner.user_ids:
-                return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
-        return werkzeug.utils.redirect("/forum/%s" % slug(forum))
+                return local_redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id), code=302)
+        return local_redirect("/forum/%s" % slug(forum), code=302)
 
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
     def user_avatar(self, user_id=0, **post):
@@ -520,7 +521,7 @@ class WebsiteForum(http.Controller):
         # moderation purposes, IFF they have posted something (see below)
         if (not user.exists() or
                (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
+            return local_redirect("/forum/%s" % slug(forum), code=302)
         values = self._prepare_forum_values(forum=forum, **post)
 
         # questions and answers by user
@@ -634,7 +635,7 @@ class WebsiteForum(http.Controller):
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'
         request.registry['res.users'].write(request.cr, request.uid, [user.id], values, context=request.context)
-        return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))
+        return local_redirect("/forum/%s/user/%d" % (slug(forum), user.id), code=302)
 
     # Badges
     # --------------------------------------------------
@@ -670,18 +671,18 @@ class WebsiteForum(http.Controller):
     def convert_comment_to_answer(self, forum, post, comment, **kwarg):
         new_post_id = request.registry['forum.post'].convert_comment_to_answer(request.cr, request.uid, comment.id, context=request.context)
         if not new_post_id:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
+            return local_redirect("/forum/%s" % slug(forum), code=302)
         post = request.registry['forum.post'].browse(request.cr, request.uid, new_post_id, context=request.context)
         question = post.parent_id if post.parent_id else post
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
         question = post.parent_id
         new_msg_id = request.registry['forum.post'].convert_answer_to_comment(request.cr, request.uid, post.id, context=request.context)
         if not new_msg_id:
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+            return local_redirect("/forum/%s" % slug(forum), code=302)
+        return local_redirect("/forum/%s/question/%s" % (slug(forum), slug(question)), code=302)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):

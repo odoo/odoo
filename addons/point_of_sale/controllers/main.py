@@ -5,7 +5,6 @@ import os
 import openerp
 import time
 import random
-import werkzeug.utils
 
 from openerp import http
 from openerp.http import request
@@ -26,7 +25,9 @@ class PosController(http.Controller):
         PosSession = request.registry['pos.session']
         pos_session_ids = PosSession.search(cr, uid, [('state','=','opened'),('user_id','=',session.uid)], context=context)
         if not pos_session_ids:
-            return werkzeug.utils.redirect('/web#action=point_of_sale.action_pos_session_opening')
+            return http.local_redirect(
+                '/web#action=point_of_sale.action_pos_session_opening',
+                code=302)
         PosSession.login(cr,uid,pos_session_ids,context=context)
         
         modules =  simplejson.dumps(module_boot(request.db))

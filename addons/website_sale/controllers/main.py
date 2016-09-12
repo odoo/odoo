@@ -311,7 +311,8 @@ class website_sale(http.Controller):
                 type='comment',
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
-        return werkzeug.utils.redirect('/shop/product/%s#comments' % product_template_id)
+        return http.local_redirect(
+            '/shop/product/%s#comments' % product_template_id, code=302)
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):

@@ -3,7 +3,6 @@ import logging
 
 import simplejson
 import urlparse
-import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
 import openerp
@@ -112,7 +111,7 @@ class OAuthLogin(Home):
     def web_auth_signup(self, *args, **kw):
         providers = self.list_providers()
         if len(providers) == 1:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+            werkzeug.exceptions.abort(http.local_redirect(providers[0]['auth_link'], code=303))
         response = super(OAuthLogin, self).web_auth_signup(*args, **kw)
         response.qcontext.update(providers=providers)
         return response
@@ -121,7 +120,7 @@ class OAuthLogin(Home):
     def web_auth_reset_password(self, *args, **kw):
         providers = self.list_providers()
         if len(providers) == 1:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+            werkzeug.exceptions.abort(http.local_redirect(providers[0]['auth_link'], code=303))
         response = super(OAuthLogin, self).web_auth_reset_password(*args, **kw)
         response.qcontext.update(providers=providers)
         return response
@@ -161,7 +160,7 @@ class OAuthController(http.Controller):
                 # oauth credentials not valid, user could be on a temporary session
                 _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
                 url = "/web/login?oauth_error=3"
-                redirect = werkzeug.utils.redirect(url, 303)
+                redirect = http.local_redirect(url, code=303)
                 redirect.autocorrect_location_header = False
                 return redirect
             except Exception, e:

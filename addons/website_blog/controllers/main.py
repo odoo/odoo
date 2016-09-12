@@ -4,6 +4,7 @@ import datetime
 import werkzeug
 
 from openerp import tools
+from openerp.http import local_redirect
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
@@ -270,7 +271,10 @@ class WebsiteBlog(http.Controller):
             blog_post.check_access_rights(cr, uid, 'read')
             self._blog_post_message(user, blog_post_id, **post)
         blog_post = request.registry['blog.post'].browse(cr, uid, int(blog_post_id), context=context)
-        return werkzeug.utils.redirect("/blog/%s/post/%s#comments" % (slug(blog_post.blog_id), slug(blog_post)))
+        return local_redirect(
+            "/blog/%s/post/%s#comments" % (slug(blog_post.blog_id),
+                                           slug(blog_post)),
+            code=302)
 
     def _get_discussion_detail(self, ids, publish=False, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -309,7 +313,10 @@ class WebsiteBlog(http.Controller):
             'website_published': False,
         }, context=context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
-        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+        return local_redirect(
+            "/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id),
+                                                  slug(new_blog_post)),
+            code=302)
 
     @http.route('/blogpost/duplicate', type='http', auth="public", website=True)
     def blog_post_copy(self, blog_post_id, **post):
@@ -324,7 +331,10 @@ class WebsiteBlog(http.Controller):
         nid = request.registry['blog.post'].copy(cr, uid, int(blog_post_id), {}, context=create_context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, nid, context=context)
         post = request.registry['blog.post'].browse(cr, uid, nid, context)
-        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(post.blog_id), slug(new_blog_post)))
+        return local_redirect(
+            "/blog/%s/post/%s?enable_editor=1" % (slug(post.blog_id),
+                                                  slug(new_blog_post)),
+            code=302)
 
     @http.route('/blogpost/get_discussion/', type='json', auth="public", website=True)
     def discussion(self, post_id=0, path=None, count=False, **post):

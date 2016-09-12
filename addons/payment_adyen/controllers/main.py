@@ -6,7 +6,6 @@ except ImportError:
     import json
 import logging
 import pprint
-import werkzeug
 
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
@@ -28,7 +27,7 @@ class AdyenController(http.Controller):
         if not return_url:
             custom = json.loads(post.pop('merchantReturnData', '{}'))
             return_url = custom.pop('return_url', '/')
-        return werkzeug.utils.redirect(return_url)
+        return http.local_redirect(return_url, code=302)
 
     @http.route([
         '/payment/adyen/notification',

@@ -5,7 +5,6 @@ try:
 except ImportError:
     import json
 import logging
-import werkzeug
 
 from openerp import http
 from openerp.http import request
@@ -57,4 +56,4 @@ class SipsController(http.Controller):
         """ Sips DPN """
         return_url = self._get_return_url(**post)
         self.sips_validate_data(**post)
-        return werkzeug.utils.redirect(return_url)
+        return http.local_redirect(return_url, code=302)
