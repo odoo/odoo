@@ -42,10 +42,10 @@ class MrpWorkcenter(models.Model):
         ('done', 'In Progress')], 'Status', compute="_compute_working_state", store=True)
     blocked_time = fields.Float(
         'Blocked Time', compute='_compute_blocked_time',
-        help='Blocked hours over the last month')
+        help='Blocked hour(s) over the last month', digits=(16, 2))
     productive_time = fields.Float(
         'Productive Time', compute='_compute_productive_time',
-        help='Productive hours over the last month')
+        help='Productive hour(s) over the last month', digits=(16, 2))
     oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
     oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
@@ -94,7 +94,7 @@ class MrpWorkcenter(models.Model):
             ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
         count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
         for workcenter in self:
-            workcenter.blocked_time = count_data.get(workcenter.id, 0.0)
+            workcenter.blocked_time = count_data.get(workcenter.id, 0.0) / 60.0
 
     @api.multi
     def _compute_productive_time(self):
@@ -107,15 +107,15 @@ class MrpWorkcenter(models.Model):
             ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
         count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
         for workcenter in self:
-            workcenter.productive_time = count_data.get(workcenter.id, 0.0)
+            workcenter.productive_time = count_data.get(workcenter.id, 0.0) / 60.0
 
     @api.depends('blocked_time', 'productive_time')
-    @api.one
     def _compute_oee(self):
-        if self.productive_time:
-            self.oee = round(self.productive_time * 100.0 / (self.productive_time + self.blocked_time), 2)
-        else:
-            self.oee = 0.0
+        for order in self:
+            if order.productive_time:
+                order.oee = round(order.productive_time * 100.0 / (order.productive_time + order.blocked_time), 2)
+            else:
+                order.oee = 0.0
 
     @api.multi
     def _compute_performance(self):
