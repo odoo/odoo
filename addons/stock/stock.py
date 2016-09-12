@@ -4608,7 +4608,7 @@ class stock_pack_operation(osv.osv):
         for pack_lot_id in old_operation.pack_lot_ids:
             new_qty_todo = pack_lot_id.qty_todo - pack_lot_id.qty
 
-            if new_qty_todo > 0:
+            if float_compare(new_qty_todo, 0, precision_rounding=old_operation.product_uom_id.rounding) > 0:
                 stock_pack_operation_lot_obj.copy(cr, uid, pack_lot_id.id, {'operation_id': new_operation_id,
                                                                             'qty_todo': new_qty_todo,
                                                                             'qty': 0}, context=context)
