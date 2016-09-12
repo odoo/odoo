@@ -669,7 +669,7 @@ class AccountTax(models.Model):
         # the 'Account' decimal precision + 5), and that way it's like
         # rounding after the sum of the tax amounts of each line
         prec = currency.decimal_places
-        if company_id.tax_calculation_rounding_method == 'round_globally' or not bool(self.env.context.get("round", True)):
+        if company_id.tax_calculation_rounding_method == 'round_globally' and not bool(self.env.context.get("force_round_per_line", False)) or not bool(self.env.context.get("round", True)):
             prec += 5
         total_excluded = total_included = base = round(price_unit * quantity, prec)
 
@@ -688,7 +688,7 @@ class AccountTax(models.Model):
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            if company_id.tax_calculation_rounding_method == 'round_globally' or not bool(self.env.context.get("round", True)):
+            if company_id.tax_calculation_rounding_method == 'round_globally' and not bool(self.env.context.get("force_round_per_line", False)) or not bool(self.env.context.get("round", True)):
                 tax_amount = round(tax_amount, prec)
             else:
                 tax_amount = currency.round(tax_amount)
