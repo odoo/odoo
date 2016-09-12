@@ -9,9 +9,10 @@
                 <field name="inherit_id" ref="account.partner_view_buttons"/>
                 <field name="arch" type="xml">
                     <xpath expr='//group[@name="banks"]' position="inside">
+                        <field name="payment_token_ids" invisible="1"/>
                         <button type="action" class="btn-link"
                             name="%(payment.payment_token_action)d"
-                            context="{'search_default_partner_id': active_id}">
+                            context="{'search_default_partner_id': active_id}" attrs="{'invisible': [('payment_token_ids', '=', [])]}">
                             <field name="payment_token_count" widget="statinfo" string="Credit card(s)"/>
                         </button>
                     </xpath>

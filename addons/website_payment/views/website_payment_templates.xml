@@ -37,6 +37,13 @@
                             </ol>
                         </div>
                     </div>
+                    <div class="row" t-if="not acquirers">
+                        <div class="col-sm-6">
+                            <div class="alert alert-danger">
+                                You can use this feature only when s2s payment supported modules are installed/published.
+                            </div>
+                        </div>
+                    </div>
                     <h1>Payment Methods</h1>
                     <h4 t-if="acquirers">Add a new payment method:</h4>
                     <div t-if="acquirers" class="row">
@@ -80,7 +87,7 @@
         </t>
     </template>
 
-    <template id="pay_meth_link" inherit_id="website_portal.portal_layout" customize_show="True">
+    <template id="pay_meth_link" inherit_id="website_portal.portal_layout" name="Manage Your Payment Methods" customize_show="True" active="False">
         <xpath expr="//div[@class='o_my_details']" position="inside">
             <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)])">
                 <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
