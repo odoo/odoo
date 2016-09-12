@@ -71,7 +71,7 @@ class PosConfig(models.Model):
     iface_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale', default=True)
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens')
     iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
-        help='The receipt will automatically be p-rinted at the end of each order')
+        help='The receipt will automatically be printed at the end of each order')
     iface_print_skip_screen = fields.Boolean(string='Skip Receipt Screen', default=True,
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
     iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
