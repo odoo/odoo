@@ -116,12 +116,6 @@ class Lead(FormatAddress, models.Model):
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
     planned_revenue = fields.Float('Expected Revenue', track_visibility='always')
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
-
-    # CRM Actions
-    next_activity_id = fields.Many2one(related="activity_log_ids.next_activity_id", string="Next Activity")
-    date_action = fields.Date(related="activity_log_ids.date_action", string='Next Activity Date')
-    title_action = fields.Char(related="activity_log_ids.title_action", string='Next Activity Summary')
-
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
