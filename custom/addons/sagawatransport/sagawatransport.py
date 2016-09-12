@@ -28,7 +28,7 @@ class sale_order(models.Model):
     @api.constrains('profit_percentage')
     def _check_values(self):
         if self.profit_percentage < 0.0 or self.profit_percentage > 100.0:
-            raise Warning(_('Values should in range 0 .. 100!.'))
+            raise Warning(_('Profit percentage should be in range 0 .. 100!.'))
 
     @api.multi
     def action_quotation_approve(self):
