@@ -380,7 +380,12 @@ var Chatter = form_common.AbstractField.extend({
             .then(function (msg_id) {
                 self.activity.fetch_and_render_activity_log();
                 self.msg_ids.unshift(msg_id);
-                self.fetch_and_render_thread(self.msg_ids);
+                // to stop scrollbar flickering add min hedight of the thread and remove after
+                // render. on render thread it will remove and add all it's element which cause flickering
+                self.thread.$el.css('min-height', self.thread.$el.height());
+                self.fetch_and_render_thread(self.msg_ids).then(function(){
+                    self.thread.$el.css('min-height', '');
+                });
             });
     },
 
