@@ -9,58 +9,52 @@
         <xpath expr="//notebook" position="attributes" >
             <attribute name="invisible">1</attribute>
         </xpath>
-
-            <xpath expr="//field[@name='validity_date']" position="before">
+        <xpath expr="//field[@name='validity_date']" position="before">
             <field name="paid_company_id" groups="base.group_sale_manager"/>
-          </xpath>
-
-
-            <xpath expr="//field[@name='partner_id']" position="after">
-            <field name="crm_lead_id" groups="base.group_sale_manager"/>
-          </xpath>
-
-
-            <xpath expr="//field[@name='partner_id']" position="after">
-            <field name="is_templete" groups="base.group_erp_manager"/>
-          </xpath>
-
-          <xpath expr="//field[@name='payment_term_id']" position="attributes">
+        </xpath>
+        <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="crm_lead_id" groups="base.group_sale_manager" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+        </xpath>
+        <xpath expr="//field[@name='partner_id']" position="after">
+            <field name="is_templete" groups="base.group_erp_manager" attrs="{'readonly':[('state', '!=', 'draft')]}/>
+        </xpath>
+        <xpath expr="//field[@name='payment_term_id']" position="attributes">
             <attribute name="invisible">1</attribute>
-          </xpath>
-          <xpath expr="//field[@name='validity_date']" position="attributes">
+        </xpath>
+        <xpath expr="//field[@name='validity_date']" position="attributes">
             <attribute name="invisible">1</attribute>
-          </xpath>
-          <xpath expr="//field[@name='payment_term_id']" position="after">
+        </xpath>
+        <xpath expr="//field[@name='payment_term_id']" position="after">
             <field name="profit_percentage"/>
-          </xpath>
-          <xpath expr="//field[@name='profit_percentage']" position="after">
+        </xpath>
+        <xpath expr="//field[@name='profit_percentage']" position="after">
             <field name="total_confirm_sale"/>
-          </xpath>
-          <xpath expr="//field[@name='is_templete']" position="after">
-            <field name="templete_id" options="{'no_create_edit':True}"/>
-          </xpath>
-             <xpath expr="//field[@name='is_templete']" position="after">
+        </xpath>
+        <xpath expr="//field[@name='is_templete']" position="after">
+            <field name="templete_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+        </xpath>
+        <xpath expr="//field[@name='is_templete']" position="after">
             <field name="is_copied" invisible="1"/>
-          </xpath>
-
-          <xpath expr="//sheet">
+        </xpath>
+        <xpath expr="//sheet" attrs="{'readonly':[('state', '!=', 'draft')]}">
             <field name="order_details"/>
-          </xpath>
+        </xpath>
 
         </field>
         </record>
-
 
         <record id="sagawa_view_quotation_tree" model="ir.ui.view">
         <field name="inherit_id" ref="sale.view_quotation_tree" />
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <field name="amount_total" position="attributes">
-                <attribute name = "invisible">1</attribute>
-            </field>
-            <xpath expr="//field[@name='user_id']" position="after">
+        <field name="amount_total" position="attributes">
+            <attribute name = "invisible">1</attribute>
+        </field>
+
+        <xpath expr="//field[@name='user_id']" position="after">
             <field name="total_confirm_sale" sum="Total:"/>
-          </xpath>
+        </xpath>
+
         </field>
         </record>
 
@@ -68,9 +62,11 @@
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
         <field name="model">crm.lead</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='team_id']" position="after">
-                <field name="co_sales_ids"  widget="many2many_tags"/>
-            </xpath>
+
+        <xpath expr="//field[@name='team_id']" position="after">
+            <field name="co_sales_ids"  widget="many2many_tags"/>
+        </xpath>
+
         </field>
         </record>
 
@@ -78,9 +74,11 @@
         <field name="inherit_id" ref="base.view_res_partner_filter" />
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <xpath expr="//group" position="after">
-                <filter string="City" domain="[]" context="{'group_by':'city'}"/>
-            </xpath>
+
+        <xpath expr="//group" position="after">
+            <filter string="City" domain="[]" context="{'group_by':'city'}"/>
+        </xpath>
+
         </field>
         </record>
 
@@ -88,15 +86,17 @@
         <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter" />
         <field name="model">crm.lead</field>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='stage']/following-sibling::filter[1]" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='stage']/following-sibling::filter[2]" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='stage']/following-sibling::filter[3]" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
+
+        <xpath expr="//filter[@name='stage']/following-sibling::filter[1]" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//filter[@name='stage']/following-sibling::filter[2]" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//filter[@name='stage']/following-sibling::filter[3]" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
         </field>
         </record>
 
@@ -104,23 +104,26 @@
         <field name="inherit_id" ref="sale.view_sales_order_filter" />
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='draft']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='sales']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='sales']/following-sibling::filter[1]" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='sales']/following-sibling::filter[2]" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//filter[@name='customer']" position="after">
-                <filter string="Mother Company" domain="[]" context="{'group_by':'paid_company_id'}"/>
-            </xpath>
+
+        <xpath expr="//filter[@name='draft']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//filter[@name='sales']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//filter[@name='sales']/following-sibling::filter[1]" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//filter[@name='sales']/following-sibling::filter[2]" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//filter[@name='customer']" position="after">
+            <filter string="Mother Company" domain="[]" context="{'group_by':'paid_company_id'}"/>
+        </xpath>
+
         </field>
         </record>
 
     </data>
 </openerp>
+
