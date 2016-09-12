@@ -443,7 +443,8 @@ class BaseModel(object):
                     raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
                 vals['serialization_field_id'] = serialization_field_id[0]
 
-            if k not in cols:
+            col = cols.pop(k, None)
+            if not col:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
                 vals['id'] = id
@@ -463,13 +464,19 @@ class BaseModel(object):
                     )
             else:
                 for key, val in vals.items():
-                    if cols[k][key] != vals[key]:
+                    if col[key] != vals[key]:
                         names = set(vals) - set(['model', 'name'])
                         query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
                             ",".join("%s=%%(%s)s" % (name, name) for name in names),
                         )
                         cr.execute(query, vals)
                         break
+
+        # remove ir_model_fields that should not be there
+        if cols:
+            ids = tuple(col['id'] for col in cols.itervalues())
+            cr.execute("DELETE FROM ir_model_fields WHERE id IN %s", (ids,))
+
         self.invalidate_cache(cr, SUPERUSER_ID)
 
     @api.model
@@ -636,6 +643,7 @@ class BaseModel(object):
                 '_register': False,
                 '_original_module': cls._module,
                 '_inherit_children': OrderedSet(),      # names of children models
+                '_inherits_children': set(),            # names of children models
                 '_fields': {},                          # populated in _setup_base()
                 '_defaults': {},                        # populated in _setup_base()
             })
@@ -721,7 +729,11 @@ class BaseModel(object):
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._constraints = cls._constraints.values()
 
-        # recompute attributes of children models
+        # update _inherits_children of parent models
+        for parent_name in cls._inherits:
+            pool[parent_name]._inherits_children.add(cls._name)
+
+        # recompute attributes of _inherit_children models
         for child_name in cls._inherit_children:
             child_class = type(pool[child_name])
             child_class._build_model_attributes(pool)
