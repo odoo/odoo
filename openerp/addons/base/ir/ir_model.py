@@ -402,6 +402,7 @@ class IrModelFields(models.Model):
                 any(field.state != 'manual' for field in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
 
+        model_names = self.mapped('model')
         self._drop_column()
         res = super(IrModelFields, self).unlink()
 
@@ -410,7 +411,9 @@ class IrModelFields(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             self._cr.commit()
             api.Environment.reset()
-            RegistryManager.new(self._cr.dbname)
+            registry = RegistryManager.new(self._cr.dbname)
+            models = registry.descendants(model_names, '_inherits')
+            init_models(models, self._cr, dict(self._context, update_custom_fields=True))
             RegistryManager.signal_registry_change(self._cr.dbname)
 
         return res
@@ -443,9 +446,9 @@ class IrModelFields(models.Model):
             if vals['model'] in self.pool:
                 # setup models; this re-initializes model in registry
                 self.pool.setup_models(self._cr, partial=(not self.pool.ready))
-                # update database schema
-                model = self.pool[vals['model']]
-                init_models([model], self._cr, dict(self._context, update_custom_fields=True))
+                # update database schema of model and its descendant models
+                models = self.pool.descendants([vals['model']], '_inherits')
+                init_models(models, self._cr, dict(self._context, update_custom_fields=True))
                 RegistryManager.signal_registry_change(self._cr.dbname)
 
         return res
@@ -527,7 +530,7 @@ class IrModelFields(models.Model):
 
         if patched_models:
             # update the database schema of the models to patch
-            models = [self.pool[name] for name in patched_models]
+            models = self.pool.descendants(patched_models, '_inherits')
             init_models(models, self._cr, dict(self._context, update_custom_fields=True))
 
         if column_rename or patched_models:
