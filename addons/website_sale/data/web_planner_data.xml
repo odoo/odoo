@@ -8,25 +8,24 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Product Pages</t>
                     <p class="text-muted">
-                        The best way to start your online shop is by creating 3 products pages directly in the website.<br/>
-                        To help you, here are some guidelines that will convert customers:
+                        Start your online shop by creating 3 products pages.<br/>
                     </p>
                     <h4>Example of Good Product Page <a data-toggle="collapse" data-parent="#accordion" href="#productpage"><i class="fa fa-question-circle"></i></a></h4>
                     <div id="productpage" class="col-md-12 panel-collapse collapse">
-                        <div style="height:300px;width:100%; overflow:auto">
-                            <img src="/website/static/src/img/website_planner_clean.png"></img>
+                        <div>
+                            <img src="/website_sale/static/src/img/planner_product_page.png"></img>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-1 col-md-2 icon"><span class="fa fa-check-circle-o"/></div>
                         <div class="col-sm-11 col-md-10">
                             <p><strong>Mandatory content</strong><br/>
-                            <li><strong>Name</strong> of your product</li>
+                            <li><strong>Product/Service name</strong></li>
                             <li><strong>Price</strong> with currency</li>
-                            <li><strong>Variants</strong> of the product like size or color (see below)</li>
-                            <li><strong>Call to action</strong> short and clear: (Add to Cart, Ask for quote,...)</li>
-                            <li><strong>High-quality picture</strong></li>
-                            <li><strong>Short description</strong> of the product or service</li>
+                            <li><a href="https://www.odoo.com/documentation/user/9.0/ecommerce/managing_products/variants.html" target="_blank"><strong>Variants</strong> like size or color</a></li>
+                            <li><strong>Call-to-action</strong> short and clear: Add to Cart, Ask for quote, etc.</li>
+                            <li><strong>High-quality pictures</strong></li>
+                            <li><strong>Short description</strong></li>     
                             </p>
                         </div>
                     </div>
@@ -34,14 +33,14 @@
                         <div class="col-sm-1 col-md-2 icon"><span class="fa fa-heart"/></div>
                         <div class="col-sm-11 col-md-10">
                             <p><strong>Key features, emotional and commercial content</strong><br/>
-                            Recommended for at least for your top products, because it can have a big impact on your sales and conversion rates.
+                            Recommended for at least your top products, because it may have a big impact on your sales and conversion rates.
                             </p>
                             <p>
-                                <li><strong>Pictures gallery of the product:</strong> all angles, detailed view, package,etc.</li>
+                                <li><strong><a href="https://www.odoo.com/documentation/user/9.0/ecommerce/managing_products/multi_images.html" target="_blank">Pictures gallery:</a></strong> all angles, detailed view, package, etc.</li>
                                 <li><strong>Value proposition:</strong> what’s the end-benefit of this product and who is it for?</li>
                                 <li><strong>Features and benefits:</strong> what the product does and why that is good</li>
                                 <li><strong>Technical information:</strong> what do you get and how does it work?</li>
-                                <li><strong>Customers review:</strong> what do the customers think of the product</li>
+                                <li><strong><a href="https://www.odoo.com/documentation/user/9.0/ecommerce/maximizing_revenue/reviews.html" target="_blank">Customers review:</a></strong> what do the customers think of the product</li>
                                 <li><strong>Bonuses:</strong> what you get on top of the offer</li>
                             </p>
                         </div>
@@ -50,141 +49,141 @@
                         <div class="col-sm-1 col-md-2 icon"><span class="fa fa-question-circle "/></div>
                         <div class="col-sm-11 col-md-10">
                             <p><strong>Reassurance arguments</strong><br/>
-                            Anticipate your customers questions &amp; worries on practical details like Shipping rates &amp; policies, Return &amp; replacement policies, Payment methods &amp; security, General Conditions, etc.
+                            Anticipate your customers questions &amp; worries on practical details like shipping rates &amp; policies, return &amp; replacement policies, payment methods &amp; security and your <a href="https://www.odoo.com/documentation/user/9.0/ecommerce/managing_products/stock.html" target="_blank">product's availability (In Stock, Not Available, etc.)</a>.
                             </p>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-1 col-md-2 icon"><span class="fa fa-sitemap"/></div>
-                        <div class="col-sm-11 col-md-10">
-                            <p><strong>Product variants</strong><br/>
-                            Product variants are used to offer variations of the same product to your customers on the products page.<br/>
-                            For example, the customer choose a T-shirt and then select its size or color.
-                            </p>
-                            <p>To use them:
-                            <li>Activate the 'Support multiple variants per products' option in
-                            <a t-att-href="prepare_backend_url('sales_team.action_sale_config')">Sales / Settings</a>
-                            </li>
-                            <li>Select a product from the <a t-att-href="prepare_backend_url('product.product_template_action')">Products list</a>, go to the 'Variants' tab</li>
-                            <li>Add as many variants as you need from 3 different types: radio buttons, drop-down menu or color buttons.</li>
-                            <li>You can also define different prices for the variants you created by activating the 'Use pricelists to adapt your price per customers' option in <a t-att-href="prepare_backend_url('sales_team.action_sale_config')">Sales / Settings</a></li>
-                            </p>
-                        </div>
-                    </div>
+
                     <div class="alert alert-info info_icon" role="alert">
                         <span class="fa fa-lightbulb-o fa-2x"></span>
-                        <p>
-                            <li>Put the practical details (shipping, payment options,...) as links in the footer; that way, they will be accessible from all your product pages.</li>
-                            <li> Focus on adding content and improving the pages for your best-selling products: don't try to create complete pages for all your products at first!</li>
-                        </p>
+                        <p>Put the practical details (shipping, payment methods, etc.) as links in the footer; That way, they will be accessible 
+                            all your product pages.</p>
                     </div>
-                    <div class="row">
-                        <div class="col-md-7 col-xs-12">
-                            <div class="well well-lg">
-                                <strong>Recommended actions:</strong>
-                                <p>Try to apply what you've learned above by manually creating three Product pages from the Content menu.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-5 col-xs-12">
-                            <div class="well well-lg">
-                                <strong>Contact us now:</strong><br/>
-                                <a href="#" target="_blank" ><i class="fa fa-comment-o"/> Website Live Chat on</a><br/>
-                                <a href="https://www.odoo.com/help" target="_blank"><i class="fa fa-envelope-o"/> Email Our Website Expert</a>
-                            </div>
-                        </div>
-                    </div>
+            
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Import Your Products</t>
-                    <p class="text-muted">Now you can also <strong>import your existing products:</strong></p>
+                    <t t-set="page_title">Populate Your Catalog</t>
                     <div class="row">
-                        <div class="col-md-6 col-xs-12">
+                        <div class="col-md-6">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <span class="panel-title"><span class="fa fa-sitemap"/><strong> Import</strong><br/>by using a CSV file</span>
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe060;"/>
+                                        <strong> Create manually</strong><br/>
+                                        <span class="small">Recommended if &lt;50 items</span>
+                                    </span>
                                 </div>
                                 <div class="panel-body">
-                                    <li>Go to the <a t-att-href="prepare_backend_url('product.product_template_action')">Products list view</a> of the Sales module</li>
-                                    <li>Export the 3 products you have already created by checking them and choosing 'Export' from the 'Action' menu</li>
-                                    <li>Enter your existing products into this CSV file, respecting its structure.</li>
-                                    <li>Save and import the modified CSV file from the 'More' menu of the <a t-att-href="prepare_backend_url('product.product_template_action')">Products list view</a></li>
+                                        <a t-att-href="prepare_backend_url('product.product_template_action', 'form')" target="_blank">Create your product items</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-xs-12">
+                        <div class="col-md-6">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <span class="panel-title"><span class="fa fa-pencil-square-o"/><strong> Web-Services</strong><br/>scripts development</span>
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe040;"/>
+                                        <strong>Import a file</strong><br/>
+                                        <span class="small">Recommended if &gt;50 items</span>
+                                    </span>
                                 </div>
                                 <div class="panel-body">
                                     <p>
-                                        Odoo's web-services allows developers to create scripts that will load data automatically into the system.
-                                    </p>
-                                    <p>
-                                        Read the <a href="https://www.odoo.com/documentation/8.0/api_integration.html" target="_blank">Web Service technical documentation.</a>
+                                        <a href="https://www.odoo.com/documentation/user/9.0/sales/products_prices/products/import.html" target="_blank">Use our import templates to get your catalog ready in no time!</a>
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <div class="row">
-                            <div class="col-md-7 col-xs-12">
+                    <div class="row">
+                            <div class="col-md-12 col-xs-12">
                                 <div class="well well-lg">
-                                    <strong>Need help to import your products?</strong>
-                                    <p>Odoo offers an import service to handle the whole process for you!</p>
-                                </div>
-                            </div>
-                            <div class="col-md-5 col-xs-12">
-                                <div class="well well-lg">
-                                    <strong>Contact us now:</strong><br/>
-                                    <a href="#" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Website Live Chat on</a><br/>
-                                    <a href="https://www.odoo.com/help" target="_blank"><i class="fa fa-envelope-o"/> Email Our Website Expert</a>
+                                    <strong>For complex imports</strong> (&gt;5000 items, product variants, pictures, etc.):
+                        
+                                    <li>Online users: we do it for you! <a href="https://www.odoo.com/help" target="_blank"><i class="fa fa-envelope-o"/> Ask Our Experts</a></li>
+                                    <li>Community &amp; Enterprise users: <a href="https://www.odoo.com/documentation/9.0/api_integration.html" target="_blank">use Odoo API to import through scripts</a></li>                                    
                                 </div>
                             </div>
                         </div>
+                </t>
+
+               <t t-call="web_planner.page">
+                    <t t-set="page_title">Delivery Strategy</t>
+                    <p class="text-muted">
+                        Imagine a new customer adds a product to cart and leaves your website because of shipping costs... Defining a good delivery strategy is difficult. You don't want to cut into your margins, but you want to remain price-competitive.</p>
+                    <h4>Here are <strong>some pros and cons</strong> to help you decide:<br/>
+                    </h4>
+                    
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <span class="panel-title"><span class="fa fa-smile-o"/><strong> Free delivery</strong><br/>
+                            <span class="small">Advised if both cart content and shipping costs are homogeneous</span>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <p><strong>Pros:</strong> gives you a significant advantage over any competitors that don't offer the same perk.</p>
+                            <p><strong>Cons:</strong> will require you to either absorb the cost or slightly increase your prices to cover it.</p>
+                            <div class="alert alert-info info_icon" role="alert">
+                                <span class="fa fa-lightbulb-o fa-2x"></span>
+                                Offering free delivery with a minimum amount or minimum number of items should drive up your average order value and help to compensate for the delivery costs.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <span class="panel-title"><span class="fa fa-table"/><strong> Flat rates</strong> (everybody pays the same)<br/>
+                            <span class="small">Advised if you target a local audience</span>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <p><strong>Pros:</strong> simple to understand</p>
+                            <p><strong>Cons:</strong> may be discouraging for your cheapest items</p>
+                            <div class="alert alert-info info_icon" role="alert">
+                                <span class="fa fa-lightbulb-o fa-2x"></span>
+                                You can create different rates based on order amount ranges (e.g. $10 up to a $50 order, then $5 beyond).
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <span class="panel-title"><span class="fa fa-shopping-cart"/><strong> At cost price</strong> (customer pays what you pay)<br/>
+                            <span class="small">Advised if your packs vary in size/weight and/or if you ship worldwide</span>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <p><strong>Pros:</strong> being transparent about your charges can help you gain the trust of your customers.</p>
+                            <p><strong>Cons:</strong> customers have to check out to find out the delivery price.</p>
+                        </div>
+                        <div class="alert alert-info info_icon" role="alert">
+                            <span class="fa fa-lightbulb-o fa-2x"></span><p>If you deal with a major shipper (UPS, FedEx, DHL, etc.), activate the related connector in Odoo to compute accurate costs and print labels.</p>
+                        </div>
+                    </div>
+
+                    <div class="well well-lg">
+                        <strong>Next actions:</strong>
+                        <li><a t-att-href="prepare_backend_url('website.action_website_configuration')" target="blank"> Select your shipping management policy</a></li>
+                        <li><a t-att-href="prepare_backend_url('website.action_website_configuration')" target="blank"> Install shipping connectors</a></li>
+                        <li><a t-att-href="prepare_backend_url('delivery.action_delivery_carrier_form')" target="blank"> Configure your delivery methods (pricing, destinations)</a></li>
+                        <li><a href="https://www.odoo.com/documentation/user/9.0/inventory/shipping.html" target="blank"> Read the documentation about delivery methods and shipping connectors</a></li>
                     </div>
                 </t>
+
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Payment Methods</t>
                     <p class="text-muted">
-                        In order to take money from customers, you need a way of accepting payments.<br/>
-                        That's what a payment gateway is for: it helps you make money, but that does cost money.<br/>
-                        That why it's important to choose the right provider for your online payments.
+                        To collect payments, you can either request your customers to process it manually (wire transfer, etc.) or redirect them to payment acquirers.<br/>
+                        Using payment acquirers costs you money, so take some time to compare them.
                     </p>
                     <h4>You can setup 3 types of <strong>payment methods in Odoo:</strong></h4>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    <span class="panel-title"><span class="fa fa-lock"/><strong>Wire transfer</strong> (Slow and inefficient)</span>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="col-md-6 col-xs-12">
-                                        <p><strong>Pros:</strong>
-                                        <li>Free and easy to setup</li>
-                                        <li>Some customers prefer to pay this way</li>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6 col-xs-12">
-                                        <p><strong>Cons:</strong>
-                                        <li>Can take up to several days for you to receive the money</li>
-                                        <li>You have to reconcile the payment manually</li>
-                                        </p>
-                                    </div>
-                                    <p>
-                                        > <a t-att-href="prepare_backend_url('base.action_res_company_form', 'form')">Configure your bank account(s)</a><br/>
-                                        > <a t-att-href="prepare_backend_url('payment.action_payment_acquirer')">Customize your Payment message</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-6 col-xs-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <span class="panel-title"><span class="fa fa-cc-paypal"/><strong> Paypal</strong> (Recommended for starters)</span>
+                                    <span class="panel-title"><span class="fa fa-cc-paypal"/><strong> Paypal</strong>
+                                    <span class="small">Recommended for Starters</span>
+                                    </span>
                                 </div>
                                 <div class="panel-body">
                                     <p><strong>Pros:</strong>
@@ -197,7 +196,7 @@
                         <div class="col-md-6 col-xs-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <span class="panel-title"><span class="fa fa-credit-card"/><strong> Ogone, Adyen, Authorize.net, Buckaroo...</strong></span>
+                                    <span class="panel-title"><span class="fa fa-credit-card"/><strong> Authorize.net, Ingenico, etc.</strong></span>
                                 </div>
                                 <div class="panel-body">
                                     <p>It's difficult to recommend one over the others. So, simply pick the one that is more popular in your country!
@@ -205,136 +204,165 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="well well-lg">
-                            <p>
-                                <strong>Recommended actions:</strong>
-                                <li><a t-att-href="prepare_backend_url('account.action_account_config')">Activate the payment options you want to use</a><br/>
-                                <small>(don't forget to apply the changes)</small></li>
-                                <li><a t-att-href="prepare_backend_url('payment.action_payment_acquirer')">Enter their identification credentials</a><br/>
-                                <small>(you'll have to subscribe directly on each of the payment companies' websites)</small></li>
-                            </p>
-                        </div>
                     </div>
-                    <p class="text-muted">
-                        Electronic payments have the advantage of being integrated into the buying process. This means your customers will be less likely to drop out before the payment, resulting in a higher conversion rate at the end.
-                    </p>
-                </t>
-                <t t-call="web_planner.page">
-                    <t t-set="page_title">Delivery Strategy</t>
-                    <p class="text-muted">
-                        Imagine a new customer who comes to your website, finds the product they want and add it to their cart.<br/>
-                        Then they get to the checkout page and are hit with the delivery and handling charges.<br/>
-                        Suddenly, a product that looked like it was a fair price seems little expensive, and the customer leaves your website disappointed.
-                    </p>
-                    <p>Defining a good delivery strategy is difficult: you don't want to cut into your margins, but you want to be attractive to customers.</p>
-                    <h4>Here are <strong>some pros and cons</strong> to help you decide:</h4>
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <span class="panel-title"><span class="fa fa-smile-o"/><strong> Free delivery</strong> (risky, but has best potential)</span>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title"><span class="fa fa-lock"/><strong>Wire transfer</strong> (slow and inefficient)</span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="col-md-6 col-xs-12">
+                                        <p><strong>Pros:</strong>
+                                        <li>Free and no setup</li>
+                                        <li>Prefered by some customers</li>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 col-xs-12">
+                                        <p><strong>Cons:</strong>
+                                        <li>Can take up to several days to receive the money</li>
+                                        <li>Payment must be reconciled manually</li>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="panel-body">
-                            <p><strong>Pros:</strong> gives you a significant advantage over any competitors that don't offer the same perk.</p>
-                            <p><strong>Cons:</strong> will require you to either absorb the cost or slightly increase your prices to cover it.</p>
-                            <p>Example: you sell T-shirts in the US only. You can offer free delivery because your items are medium priced and the delivery costs are limited and well defined.</p>
-                        </div>
-                    </div>
-                    <div class="alert alert-info info_icon" role="alert">
-                        <span class="fa fa-lightbulb-o fa-2x"></span>
-                        Offering free delivery with a minimum amount or minimum number of items should drive up your average order value and help to compensate for the delivery costs.
-                    </div>
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <span class="panel-title"><span class="fa fa-table"/><strong> Flat rates</strong> (everybody pays the same)</span>
-                        </div>
-                        <div class="panel-body">
-                            <p><strong>Pros:</strong> simple for your customers to understand.</p>
-                            <p><strong>Cons:</strong> The delivery cost may be discouraging for your cheapest items.</p>
-                            <p>Example: you sell cheap specialized electronic components. You choose flat rates because the price of an item is sometimes lower than the delivery costs.</p>
-                        </div>
-                    </div>
-                    <div class="alert alert-info info_icon" role="alert">
-                        <span class="fa fa-lightbulb-o fa-2x"></span>
-                        You can also create different rates based on order amount ranges, for example 10€ up to a 50€ order, then 5€ after.
-                    </div>
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <span class="panel-title"><span class="fa fa-shopping-cart"/><strong> At cost price</strong> (customer pay what you pay)</span>
-                        </div>
-                        <div class="panel-body">
-                            <p><strong>Pros:</strong> being transparent about your charges can win you the trust of your customers.</p>
-                            <p><strong>Cons:</strong> customers have to wait until checkout to find out the delivery price.</p>
-                            <p>Example: you sell custom-made wood sculptures, and because your customers are all over the world, each delivery is different and at cost price.</p>
-                        </div>
-                    </div>
-                    <div class="alert alert-info info_icon" role="alert">
-                        <span class="fa fa-lightbulb-o fa-2x"></span>
-                        At cost price is a good option for heavy or oversized packages.
                     </div>
                     <div class="well well-lg">
-                        <strong>Recommended action:</strong>
-                        <li><a t-att-href="prepare_backend_url('delivery.action_delivery_carrier_form')"> Configure your delivery prices</a> using one or several of the strategies above</li>
+                            <p>
+                                <strong>Next actions:</strong>
+                                <li><a t-att-href="prepare_backend_url('payment.action_payment_acquirer')" target="blank">Activate and set up the payment methods you want to use</a><br/></li>
+                                <li><a href="https://www.odoo.com/documentation/user/9.0/ecommerce/shopper_experience/payment.html" target="blank">Read the documentation about payment acquirers</a><br/></li><br/>
+                                <div class="alert alert-info info_icon" role="alert">
+                                        <span class="fa fa-lightbulb-o fa-2x"></span>
+                                        <li>Some acquirers like Authorize.net and Ingenico can be used as payment gateways with your own payment processor.</li>
+                                        <li><strong>Tip for B2B users:</strong> you can create new manually-processed payment methods (check, purchase order, etc.) by renaming 'Wire Transfer' or duplicating it.</li>
+                                </div>
+                            </p>
                     </div>
                 </t>
-            </t>
+            </t>                   
         </xpath>
+
         <xpath expr="//t[@name='translate_placeholder']/.." position="after">
             <t t-call="web_planner.page">
                 <t t-set="page_title">Sell More</t>
                 <p class="text-muted">
-                    If you have an eCommerce, one of your objectives is of course to grow your revenues by
-                    selling more and pricier products. Luckily for you, Odoo integrates three powerful
-                    customizations for that.
+                    There are two notorious strategies to sell more to a customer:
                 </p>
+
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong>Upselling</strong>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                <p>
+                                Suggest pricier alternatives
+                                </p>         
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong> Cross-selling</strong>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                <p>
+                                Suggest options and accessories<br/>
+                                e.g. for computers:
+                                <li>Options: warranty, software</li> 
+                                <li>Accessories: screen, mouse</li>                             
+                                </p>
+                                </div>
+                            </div>                        
+                        </div>   
+
                 <div class="text-center mb16">
-                    <strong>See it in action</strong><br/>
+                    <strong>See it in action in Odoo</strong><br/>
                     <iframe width="100%" height="300" src="//www.youtube.com/embed/204DbheXfWw" frameborder="0" allowfullscreen="True"></iframe>
                 </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">
-                        <span class="panel-title">
-                            <span class="fa fa-tag"/>
-                            <strong> 1. On Product pages:</strong> Show suggested products
-                        </span>
+
+                <div class="well well-lg">
+                            <p>
+                                <strong>Next actions:</strong>
+                                <li><a t-att-href="prepare_backend_url('website.action_website_configuration')" target="blank">Install Optional Products (cross-selling)</a><br/></li>
+                                <li><a t-att-href="prepare_backend_url('product.product_template_action', 'form')" target="blank">Set alternatives, accessories and options in product detail form (in Sales tab)</a><br/></li>
+                                <li><a href="https://www.odoo.com/documentation/user/9.0/ecommerce/maximizing_revenue.html" target="blank">Read the documentation about upselling and cross-selling</a><br/></li>
+                            </p>
+                    </div>        
+            </t>
+
+            <t t-call="web_planner.page">
+                    <t t-set="page_title">Pricing &amp; Discounts</t>
+                    <p class="text-muted">
+                    A few % discount can bring you twice more customers! Here are a few kinds of discounts to boost your sales:
+                    <ul>
+                        <li>Cash amount or percentage discounts</li>
+                        <li>Quantity-based discounts (B2B)</li>
+                        <li>Multi-buy offers (2 products sold together for less than their individual price)</li>
+                        <li>Free delivery (see Delivery Strategy section)</li>
+                    </ul>
+                    </p>                     
+                    <h4>To do so, take the most out of Odoo' <strong>pricing options</strong>:<br/></h4>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong>Unique Price</strong>
+                                    </span>
+                                 </div>
+                                 <div class="panel-body">
+                                    <p>
+                                        Default mode
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong>Several Prices</strong>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                        <li>Customer Segments</li>
+                                        <li>Min. qty or period</li>
+                                        <li>Currencies</li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong> Rules &amp; Formulas</strong>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Discount % or amounts, margins, roundings, periods, etc.
+                                    </p>
+                                </div>
+                            </div>                        
+                        </div>   
                     </div>
-                    <div class="panel-body">
-                        <p>
-                            Increase your chances to make a sale by displaying suggested products.
-                        </p>
-                        <li>On your website, go to the product page where you want to add suggested products.</li>
-                        <li>Activate 'Suggested products' from the 'Customize' menu.</li>
-                        <li>Go to the <a t-att-href="prepare_backend_url('product.product_template_action', 'kanban')">Product detail form</a> and fill in one or more <strong>'Suggested Products'</strong>.</li>
+
+                    <div class="well well-lg">
+                        <strong>Next actions:</strong>
+                        <li><a t-att-href="prepare_backend_url('sales_team.action_sale_config')" target="blank"> Select your pricing preference and allow discounts</a></li>
+                        <li><a t-att-href="prepare_backend_url('product.product_pricelist_action2')" target="blank"> Configure your pricelists</a></li>
+                        <li><a t-att-href="prepare_backend_url('account.action_account_config')" target="blank"> Apply multi-currencies</a></li>
+                        <li><a href="https://www.odoo.com/documentation/user/9.0/ecommerce/maximizing_revenue/pricing.html" target="blank"> Read the documentation about pricing &amp; discounts</a></li>
                     </div>
-                </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">
-                        <span class="panel-title">
-                            <span class="fa fa-shopping-cart"/>
-                            <strong>2. On Add to Cart window:</strong> Show accessories, services
-                        </span>
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            Users will buy more accessories and services if they can add them to their cart in one click.
-                        </p>
-                        <li>From a <a t-att-href="prepare_backend_url('product.product_template_action', 'kanban')">Product detail form</a>, go to the 'Sales' tab</li>
-                        <li>Simply add one or more products as an <strong>'Accessory Product'</strong>.</li>
-                    </div>
-                </div>
-                <div class="panel panel-success">
-                    <div class="panel-heading">
-                        <span class="panel-title">
-                            <span class="fa fa-shopping-cart"/>
-                            <strong>3. On Check-out page:</strong> Show optional products
-                        </span>
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            Increase your average cart amount by proposing complementary products to your visitors.
-                        </p>
-                        <li> From a <a t-att-href="prepare_backend_url('product.product_template_action')">Product detail form</a>, go to the 'Sales' tab</li>
-                        <li>Simply add the product you want as an <strong>'Optional Product'</strong></li>
-                    </div>
-                </div>
             </t>
         </xpath>
     </template>
