@@ -59,10 +59,10 @@ return AbstractWebClient.extend({
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
     },
-    update_logo: function() {
+    update_logo: function(reload) {
         var company = session.company_id;
         var img = session.url('/web/binary/company_logo' + '?db=' + session.db + (company ? '&company=' + company : ''));
-        this.$('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.o_sub_menu_logo img').attr('src', '').attr('src', img + (reload ? "#" + Date.now() : ''));
         this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', session.uid === 1);
     },
     logo_edit: function(ev) {
@@ -77,12 +77,13 @@ return AbstractWebClient.extend({
                     action_buttons: true,
                     headless: true,
                 };
-                self.action_manager.do_action(result);
-                var form = self.action_manager.dialog_widget.views.form.controller;
-                form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
-                form.on('record_saved', self, function() {
-                    self.action_manager.dialog_stop();
-                    self.update_logo();
+                self.action_manager.do_action(result).then(function () {
+                    var form = self.action_manager.dialog_widget.views.form.controller;
+                    form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
+                    form.on('record_saved', self, function() {
+                        self.action_manager.dialog_stop();
+                        self.update_logo();
+                    });
                 });
             });
         });
