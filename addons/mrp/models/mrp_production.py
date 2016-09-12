@@ -79,12 +79,12 @@ class MrpProduction(models.Model):
         states={'confirmed': [('readonly', False)]},
         help="Location where the system will stock the finished products.")
     date_planned_start = fields.Datetime(
-        'Expected Start Date', copy=False, default=fields.Datetime.now,
-        index=True, required=True, readonly=True,
+        'Deadline Start', copy=False, default=fields.Datetime.now,
+        index=True, required=True,
         states={'confirmed': [('readonly', False)]}, oldname="date_planned")
     date_planned_finished = fields.Datetime(
-        'Expected End Date', copy=False, default=fields.Datetime.now,
-        index=True, readonly=True,
+        'Deadline End', copy=False, default=fields.Datetime.now,
+        index=True, 
         states={'confirmed': [('readonly', False)]})
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)

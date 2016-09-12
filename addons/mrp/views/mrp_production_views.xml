@@ -103,14 +103,10 @@
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
-                            <label for="date_planned_start_wo" string="Expected Date"/>
-                            <div name="date_planned" class="o_row">
-                                <field name="date_planned_start" attrs="{'readonly': [('move_raw_ids', '!=', False)]}"/>
-                                <label string="to" attrs="{'invisible': [('date_planned_finished', '=', False)]}"/>
-                                <field name="date_planned_finished" attrs="{'readonly': [('move_raw_ids', '!=', False)]}"/>
-                            </div>
-                            <field name="user_id" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                            <field name="origin" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="date_planned_start"/>
+                            <field name="date_planned_finished" invisible="1"/>
+                            <field name="user_id"/>
+                            <field name="origin"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                         </group>
                     </group>
