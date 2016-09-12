@@ -7,9 +7,9 @@
     'version': '1.0',
     'category': 'Point of Sale',
     'sequence': 99,
-    'summary': 'Common Drinks data for point of sales',
+    'summary': 'Common Drinks data for points of sale',
     'description': """
-        Common drinks data for point of sales
+        Common drinks data for points of sale
     """,
     'depends': ['point_of_sale'],
     'data': [
