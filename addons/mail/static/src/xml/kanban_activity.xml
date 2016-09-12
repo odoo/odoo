@@ -37,6 +37,10 @@
                         <div>
                             <span class="fa fa-clock-o" />
                             <span t-att-title="log.date_action"><t t-esc="log.day" /></span>
+                            <t t-if="log.user_id[0] != uid">
+                                <span class="ml4 fa fa-user" />
+                                <span><t t-esc="log.user_id[1]" /></span>
+                            </t>
                         </div>
                     </div>
                     <div class="pull-right">

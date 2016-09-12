@@ -6,7 +6,6 @@ var kanban_widgets = require('web_kanban.widgets');
 var Model = require('web.Model');
 var ActivityLog = require('mail.ActivityLog');
 
-
 var AbstractField = kanban_widgets.AbstractField;
 var fields_registry = kanban_widgets.registry;
 var QWeb = core.qweb;
@@ -38,7 +37,8 @@ var KanbanActivity = AbstractField.extend({
             .then(function(records) {
                 self.$('.o_activity').html($(QWeb.render("KanbanActivityDropdown", {
                     selection: self.selection,
-                    records: _.groupBy(records, 'state')
+                    records: _.groupBy(records, 'state'),
+                    uid: self.session.uid,
                 })));
             });
     },

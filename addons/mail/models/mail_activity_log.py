@@ -18,7 +18,7 @@ class MailActivity(models.Model):
                           help='Number of days before executing the action, allowing you to plan the date of the action.')
     subtype_id = fields.Many2one('mail.message.subtype', string='Message Subtype', required=True, ondelete='cascade')
     icon = fields.Char(help="Font awesome icon. eg. fa-tasks", groups="base.group_no_one")
-    model_id = fields.Many2one('ir.model', string='Related Document Model')
+    model_id = fields.Many2one('ir.model', string='Related Document Model', groups="base.group_no_one")
 
     # setting a default value on inherited fields is a bit involved
     internal = fields.Boolean('Internal Only', related='subtype_id.internal', inherited=True, default=True)
@@ -46,7 +46,7 @@ class MailActivityLog(models.Model):
     date_action = fields.Date('Due Date', required=True, index=True, default=fields.Date.today)
     state = fields.Selection([('overdue', 'Overdue'), ('today', 'Today'), ('planned', 'Planned')],
                              compute="_compute_state", default="planned")
-    user_id = fields.Many2one('res.users', string='Assign to', required=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Assigned to', required=True, default=lambda self: self.env.user)
 
     @api.depends('date_action')
     def _compute_state(self):
@@ -62,7 +62,7 @@ class MailActivityLog(models.Model):
                 record.state = 'planned'
 
     @api.onchange('next_activity_id')
-    def onchange_next_activity_id(self):
+    def _onchange_next_activity_id(self):
         self.title_action = self.next_activity_id.description
         if self.next_activity_id.days:
             self.date_action = (datetime.now() + timedelta(days=self.next_activity_id.days))
@@ -113,7 +113,7 @@ class MailActivityLog(models.Model):
             if diff > 0:
                 day = _("Yesterday") if diff == 1 else _("%d days overdue") % abs(diff)
             elif diff < 0:
-                date_action_str = datetime.strptime(log['date_action'], DEFAULT_SERVER_DATE_FORMAT).strftime(date_format)
+                date_action_str = datetime.strptime(log['date_action'], DEFAULT_SERVER_DATE_FORMAT).strftime(date_format.encode('utf-8'))
                 day = _("Tomorrow") if diff == -1 else _("Due in %d days") % abs(diff) if diff > -self.DUE_DAYS else date_action_str
             else:
                 day = _("Today")
