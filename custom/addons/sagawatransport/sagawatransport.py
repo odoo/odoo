@@ -1,5 +1,7 @@
 import time
 import re
+from lxml import etree
+
 from openerp import models, fields, api, tools, _
 class sale_order(models.Model):
     _inherit = 'sale.order'
@@ -21,6 +23,12 @@ class sale_order(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+
+    @api.one
+    @api.constrains('profit_percentage')
+    def _check_values(self):
+        if self.profit_percentage < 0.0 or self.profit_percentage > 100.0:
+            raise Warning(_('Values should in range 0 .. 100!.'))
 
     @api.multi
     def action_quotation_approve(self):
