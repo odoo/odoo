@@ -36,8 +36,8 @@
         <xpath expr="//field[@name='is_templete']" position="after">
             <field name="is_copied" invisible="1"/>
         </xpath>
-        <xpath expr="//sheet" attrs="{'readonly':[('state', '!=', 'draft')]}">
-            <field name="order_details"/>
+        <xpath expr="//sheet">
+            <field name="order_details" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
         </xpath>
 
         </field>
