@@ -663,7 +663,7 @@ var BuildingBlock = Widget.extend({
                         animation.start(true, $target);
 
                         self.call_for_all_snippets($target, function (editor, $snippet) {
-                            editor.drop_and_build_snippet();
+                            _.defer(function () { editor.drop_and_build_snippet(); });
                         });
                         self.create_snippet_editor($target);
                         self.cover_target($target.data('overlay'), $target);
@@ -683,12 +683,10 @@ var BuildingBlock = Widget.extend({
         var self = this;
         $snippet.add(globalSelector.all($snippet)).each(function () {
             var $snippet = $(this);
-            setTimeout(function () {
-                self.create_snippet_editor($snippet);
-                if ($snippet.data("snippet-editor")) {
-                    callback.call(self, $snippet.data("snippet-editor"), $snippet);
-                }
-            });
+            self.create_snippet_editor($snippet);
+            if ($snippet.data("snippet-editor")) {
+                callback.call(self, $snippet.data("snippet-editor"), $snippet);
+            }
         });
     },
 
