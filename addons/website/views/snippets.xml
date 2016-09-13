@@ -528,11 +528,9 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="parallax s_parallax oe_img_bg"
-            style="background-image: url(/web/image/website.s_background_image_04);"
-            data-scroll-background-ratio="0.3">
-            <div><div class="oe_structure"/></div>
-    </section>
+    <section class="parallax s_parallax oe_custom_bg oe_img_bg"
+        style="background-image: url(/web/image/website.s_background_image_04);"
+        data-scroll-background-ratio="0.3"><div class="oe_structure"/></section>
 </template>
 
 <template id="s_parallax_slider" name="Parallax Slider">
@@ -846,8 +844,7 @@
         </li>
     </div>
 
-    <div data-js='parallax'
-        data-selector=".parallax">
+    <div data-js="parallax" data-selector=".parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-clock-o"/>Scroll Speed</a>
             <ul class="dropdown-menu" name="parallax-scroll">

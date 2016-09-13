@@ -520,43 +520,41 @@ options.registry.resize = options.registry.marginAndResize.extend({
 
 options.registry.parallax = options.Class.extend({
     getSize: function () {
-        this.grid = this._super();
+        this.grid = this._super.apply(this, arguments);
         this.grid.size = 8;
         return this.grid;
     },
     on_resize: function () {
+        this._refresh();
+    },
+    _refresh: function () {
         this.$target.data("snippet-view").set_values();
     },
-    start : function () {
-        var self = this;
-        this._super();
-        if (!self.$target.data("snippet-view")) {
+    start: function () {
+        this._super.apply(this, arguments);
+        if (!this.$target.data("snippet-view")) {
             this.$target.data("snippet-view", new animation.registry.parallax(this.$target));
         }
         this.scroll();
-        this.$target.on('snippet-option-change snippet-option-preview', function () {
-            self.$target.data("snippet-view").set_values();
-        });
-        this.$target.attr('contentEditable', 'false');
-
-        this.$target.find('> div > .oe_structure').attr('contentEditable', 'true'); // saas-3 retro-compatibility
-
-        this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
+        this.buildingBlock.$el.on("snippet-dropped snippet-activated", this._refresh.bind(this));
+        this.$target.on('snippet-option-change snippet-option-preview', this._refresh.bind(this));
     },
     scroll: function (type, value) {
-        this.$target.attr('data-scroll-background-ratio', value);
-        this.$target.data("snippet-view").set_values();
+        this.$target.attr("data-scroll-background-ratio", value);
+        this._refresh();
     },
     set_active: function () {
         this.$el.find('[data-scroll]').removeClass("active")
             .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass("active");
     },
     clean_for_save: function () {
-        this._super();
-        this.$target.find(".parallax")
-            .css("background-position", '')
-            .removeAttr("data-scroll-background-offset");
-    }
+        this._super.apply(this, arguments);
+        this.$target.css("background-position", '').css("background-attachment", '');
+    },
+    on_move: function () {
+        this._super.apply(this, arguments);
+        this._refresh();
+    },
 });
 
 options.registry.ul = options.Class.extend({

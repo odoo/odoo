@@ -103,3 +103,13 @@ table.editorbar-panel {
 .note-editable .fa {
     cursor: pointer;
 }
+
+// parallax dropzones are in conflict with outside of parallax dropzones
+.parallax > .oe_structure > .oe_drop_zone {
+    &:first-child {
+        top: 16px;
+    }
+    &:last-child {
+        bottom: 16px;
+    }
+}
