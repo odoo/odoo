@@ -44,7 +44,7 @@
           </xpath>
 
           <xpath expr="//sheet">
-            <field name="order_details"/>
+            <field name="order_details" attrs="{'readonly': [('state', '=', 'approve')]}"/>
           </xpath>
 
         </field>
@@ -83,6 +83,34 @@
             </xpath>
         </field>
         </record>
+
+         <record id="action_quotations_1" model="ir.actions.act_window">
+            <field name="name">Quotations 1</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="context">{}</field>
+            <field name="domain">[('is_templete','=',True)]</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create a Quotation, the first step of a new sale.
+              </p><p>
+                Your next actions should flow efficiently: confirm the Quotation
+                to a Sale Order, then create the Invoice and collect the Payment.
+              </p><p>
+                Note that once a Quotation becomes a Sale Order, it will be moved
+                from the Quotations list to the Sales Order list.
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Quote Templete" id="menu_sale_quotations_2"
+                action="action_quotations_1" groups="base.group_erp_manager" parent="base.menu_sales"
+                sequence="12"/>
+
 
     </data>
 </openerp>
