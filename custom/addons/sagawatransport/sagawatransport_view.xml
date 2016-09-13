@@ -2,76 +2,120 @@
 <openerp>
     <data>
         <record id="sagawa_view_order_form" model="ir.ui.view">
-        <field name="inherit_id" ref="sale.view_order_form" />
-        <field name="model">sale.order</field>
-        <field name="arch" type="xml">
-
-        <xpath expr="//notebook" position="attributes" >
-            <attribute name="invisible">1</attribute>
-        </xpath>
-
-            <xpath expr="//field[@name='validity_date']" position="before">
-            <field name="paid_company_id" groups="base.group_sale_manager"/>
-          </xpath>
-
-
-            <xpath expr="//field[@name='partner_id']" position="after">
-            <field name="crm_lead_id" groups="base.group_sale_manager"/>
-          </xpath>
-
-
-            <xpath expr="//field[@name='partner_id']" position="after">
-            <field name="is_templete" groups="base.group_erp_manager"/>
-          </xpath>
-
-          <xpath expr="//field[@name='payment_term_id']" position="attributes">
-            <attribute name="invisible">1</attribute>
-          </xpath>
-          <xpath expr="//field[@name='validity_date']" position="attributes">
-            <attribute name="invisible">1</attribute>
-          </xpath>
-          <xpath expr="//field[@name='payment_term_id']" position="after">
-            <field name="profit_percentage"/>
-          </xpath>
-          <xpath expr="//field[@name='profit_percentage']" position="after">
-            <field name="total_confirm_sale"/>
-          </xpath>
-          <xpath expr="//field[@name='is_templete']" position="after">
-            <field name="templete_id" options="{'no_create_edit':True}"/>
-          </xpath>
-             <xpath expr="//field[@name='is_templete']" position="after">
-            <field name="is_copied" invisible="1"/>
-          </xpath>
-
-          <xpath expr="//sheet">
-            <field name="order_details" attrs="{'readonly': [('state', '=', 'approve')]}"/>
-          </xpath>
-
-        </field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="attributes" >
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='validity_date']" position="before">
+                    <field name="paid_company_id" groups="base.group_sale_manager"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="crm_lead_id" groups="base.group_sale_manager" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="is_templete" groups="base.group_erp_manager" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='validity_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="profit_percentage"/>
+                </xpath>
+                <xpath expr="//field[@name='profit_percentage']" position="after">
+                    <field name="total_confirm_sale"/>
+                </xpath>
+                <xpath expr="//field[@name='is_templete']" position="after">
+                    <field name="templete_id" options="{'no_create_edit':True,'no_open':True}" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='is_templete']" position="after">
+                    <field name="is_copied" invisible="1"/>
+                </xpath>
+                <xpath expr="//sheet">
+                    <field name="order_details" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                </xpath>
+            </field>
         </record>
 
-
         <record id="sagawa_view_quotation_tree" model="ir.ui.view">
-        <field name="inherit_id" ref="sale.view_quotation_tree" />
-        <field name="model">sale.order</field>
-        <field name="arch" type="xml">
-            <field name="amount_total" position="attributes">
-                <attribute name = "invisible">1</attribute>
+            <field name="inherit_id" ref="sale.view_quotation_tree" />
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="attributes">
+                    <attribute name = "invisible">1</attribute>
+                </field>
+
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="total_confirm_sale" sum="Total:"/>
+                </xpath>
             </field>
-            <xpath expr="//field[@name='user_id']" position="after">
-            <field name="total_confirm_sale" sum="Total:"/>
-          </xpath>
-        </field>
+        </record>
+
+        <record id="sagawa_view_order_tree" model="ir.ui.view">
+            <field name="inherit_id" ref="sale.view_order_tree" />
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <field name="amount_total" position="attributes">
+                    <attribute name = "invisible">1</attribute>
+                </field>
+
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="total_confirm_sale" sum="Total:"/>
+                </xpath>
+            </field>
         </record>
 
         <record id="sagawa_view_oppor_form" model="ir.ui.view">
-        <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
-        <field name="model">crm.lead</field>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='team_id']" position="after">
-                <field name="co_sales_ids"  widget="many2many_tags"/>
-            </xpath>
-        </field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='team_id']" position="after">
+                    <field name="co_sales_ids"  widget="many2many_tags"/>
+                </xpath>
+                <xpath expr="//field[@name='phone']" position="after">
+                    <field name="sg_partner_id" string="Customer 2" context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+                </xpath>
+                <xpath expr="//field[@name='title']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='opt_out']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='lead']/group/group[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='lead']/group/group[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='lead']/group/group[2]" position="after">
+                    <group>
+                        <field name="sg_partner_name"/>
+                        <label for="sg_street" string="Address"/>
+                        <div class="o_address_format">
+                            <field name="sg_street" placeholder="Street..." class="o_address_street"/>
+                            <field name="sg_street2" placeholder="Street 2..." class="o_address_street"/>
+                            <field name="sg_city" placeholder="City" class="o_address_city"/>
+                            <field name="sg_state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}" on_change="onchange_state(state_id)"/>
+                            <field name="sg_zip" placeholder="ZIP" class="o_address_zip"/>
+                            <field name="sg_country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="sg_contact_name"/>
+                        <div class="o_row">
+                            <field name="sg_contact_name"/>
+                        </div>
+                        <field name="sg_function"/>
+                        <field name="sg_phone"/>
+                        <field name="sg_mobile"/>
+                        <field name="sg_fax"/>
+                    </group>
+                </xpath>
+            </field>
         </record>
 
         <record id="sagawa_view_res_partner_filter" model="ir.ui.view">
@@ -84,7 +128,53 @@
         </field>
         </record>
 
-         <record id="action_quotations_1" model="ir.actions.act_window">
+        <record id="sagawa_view_crm_case_opportunities_filter" model="ir.ui.view">
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter" />
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='stage']/following-sibling::filter[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='stage']/following-sibling::filter[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='stage']/following-sibling::filter[3]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+        </record>
+
+        <record id="sagawa_view_crm_sales_order_filter" model="ir.ui.view">
+        <field name="inherit_id" ref="sale.view_sales_order_filter" />
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='sales']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='sales']/following-sibling::filter[1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='sales']/following-sibling::filter[2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='customer']" position="after">
+                <filter string="Mother Company" domain="[]" context="{'group_by':'paid_company_id'}"/>
+            </xpath>
+        </field>
+        </record>
+
+        <!-- override quotations/orders action -->
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="domain">[('state','in',('draft','approve','sent','cancel')),('is_templete','=',False)]</field>
+        </record>
+        <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="domain">[('state','not in',('draft','approve','sent','cancel')),('is_templete','=',False)]</field>
+        </record>
+
+        <record id="action_quotations_1" model="ir.actions.act_window">
             <field name="name">Quotations 1</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
@@ -107,10 +197,10 @@
             </field>
         </record>
 
-        <menuitem name="Quote Templete" id="menu_sale_quotations_2"
-                action="action_quotations_1" groups="base.group_erp_manager" parent="base.menu_sales"
-                sequence="12"/>
-
+        <menuitem name="Quote Template" id="menu_sale_quotations_2"
+            action="action_quotations_1" groups="base.group_erp_manager" parent="base.menu_sales"
+            sequence="12"/>
 
     </data>
 </openerp>
+

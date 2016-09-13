@@ -8,7 +8,7 @@
         This module will send daily work need to be done that automatically runs daily.
         """,
 
-    'author': "@dohoangan",
+    'author': "E+Craftman Vietnam Co., Ltd.",
 
     'category': 'Uncategorized',
     'version': '0.1',
