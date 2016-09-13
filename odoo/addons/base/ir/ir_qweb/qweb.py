@@ -682,7 +682,7 @@ class QWeb(object):
         """
         return [
             'debug',
-            'groups', 'foreach', 'if', 'else',
+            'groups', 'foreach', 'if', 'elif', 'else',
             'field', 'esc', 'raw',
             'tag',
             'call',
@@ -947,10 +947,21 @@ class QWeb(object):
         el.attrib['t-else'] = '_t_skip_else_'
         return compiled
 
+    def _compile_directive_elif(self, el, options):
+        _elif = el.attrib.pop('t-elif')
+        if _elif == '_t_skip_else_':
+            return []
+        if not options.pop('t_if', None):
+            raise ValueError("t-elif directive must be preceded by t-if directive")
+        el.attrib['t-if'] = _elif
+        compiled = self._compile_directive_if(el, options)
+        el.attrib['t-elif'] = '_t_skip_else_'
+        return compiled
+
     def _compile_directive_if(self, el, options):
         orelse = []
         next_el = el.getnext()
-        if next_el is not None and 't-else' in next_el.attrib:
+        if next_el is not None and {'t-else', 't-elif'} & set(next_el.attrib.keys()):
             if el.tail and not el.tail.isspace():
                 raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
             el.tail = None
