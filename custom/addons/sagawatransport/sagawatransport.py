@@ -17,7 +17,7 @@ class sale_order(models.Model):
     paid_company_id = fields.Char(string='Mother Company',store=True, related='partner_id.mom_company_id.name', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('approve', 'Approve'),
+        ('approve', 'Approved'),
         ('sent', 'Quotation Sent'),
         ('sale', 'Sale Order'),
         ('done', 'Done'),

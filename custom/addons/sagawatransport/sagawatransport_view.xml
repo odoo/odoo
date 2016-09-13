@@ -62,6 +62,9 @@
                 <field name="amount_total" position="attributes">
                     <attribute name = "invisible">1</attribute>
                 </field>
+                <field name="invoice_status" position="attributes">
+                    <attribute name = "invisible">1</attribute>
+                </field>
 
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="total_confirm_sale" sum="Total:"/>
