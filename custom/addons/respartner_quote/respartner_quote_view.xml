@@ -5,13 +5,24 @@
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
+
             <xpath expr="//field[@name='website']" position="before">
                 <field name="mom_company_id" placeholder="Mother company" class="o_address_country" options='{"no_open": True, "no_create": True}'
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
             </xpath>
+
             <xpath expr="//field[@name='parent_id']" position="attributes">
                 <attribute name="on_change"></attribute>
             </xpath>
+
+            <xpath expr="//div[@t-if='record.phone.raw_value']" position="attributes">
+                <attribute name="invisible">[('phone','=','parent_id.phone')]</attribute>
+            </xpath>
+
+            <xpath expr="//div[@t-if='record.fax.raw_value']" position="attributes">
+                <attribute name="invisible">[('fax','=','parent_id.fax')]</attribute>
+            </xpath>
+
             <xpath expr="//field[@name='child_ids']" position="attributes">
                 <attribute name="context">{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang, 'default_phone': phone, 'default_fax': fax}</attribute>
             </xpath>
