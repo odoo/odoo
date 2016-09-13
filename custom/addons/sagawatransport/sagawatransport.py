@@ -71,4 +71,36 @@ class crm_lead(models.Model):
     reason_to_fail = fields.Text('Reason to fail')
     co_sales_ids = fields.Many2many('res.users', 'crm_lead_user_rel', 'lead_id', 'user_id', 'Co Sale man')
 
+    sg_partner_id = fields.Many2one('res.partner', 'Partner 2', ondelete='set null', track_visibility='onchange',select=True, help="Linked partner 2")
+    sg_email_from = fields.Char('Email', size=128, help="Email address of the contact 2", select=1)
+    sg_contact_name = fields.Char('Contact Name 2', size=64)
+    sg_partner_name = fields.Char('Customer Name 2', size=64)
+    sg_street = fields.Char('Street')
+    sg_street2 = fields.Char('Street2')
+    sg_zip = fields.Char('Zip', change_default=True, size=24)
+    sg_city = fields.Char('City')
+    sg_state_id = fields.Many2one("res.country.state", 'State')
+    sg_country_id = fields.Many2one('res.country', 'Country')
+    sg_phone = fields.Char('Phone')
+    sg_fax = fields.Char('Fax')
+    sg_mobile = fields.Char('Mobile')
+    sg_function = fields.Char('Function')
 
+    @api.onchange('sg_partner_id')
+    def _change_sg_partner_id(self):
+        if self.sg_partner_id:
+            partner = self.env['res.partner'].browse(self.sg_partner_id.id)
+            partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
+            self.sg_partner_name = partner_name
+            self.sg_contact_name = (not partner.is_company and partner.name) or False
+            self.sg_street = partner.street
+            self.sg_street2 = partner.street2
+            self.sg_city = partner.city
+            self.sg_state_id = partner.state_id and partner.state_id.id or False
+            self.sg_country_id = partner.country_id and partner.country_id.id or False
+            self.sg_email_from = partner.email
+            self.sg_phone = partner.phone
+            self.sg_mobile = partner.mobile
+            self.sg_fax = partner.fax
+            self.sg_zip = partner.zip
+            self.sg_function = partner.function

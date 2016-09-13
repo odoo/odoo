@@ -67,6 +67,52 @@
             <field name="co_sales_ids"  widget="many2many_tags"/>
         </xpath>
 
+        <xpath expr="//field[@name='phone']" position="after">
+            <field name="sg_partner_id" string="Customer 2" context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+        </xpath>
+
+        <xpath expr="//field[@name='title']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//field[@name='opt_out']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//page[@name='lead']/group/group[3]" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//page[@name='lead']/group/group[4]" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//page[@name='lead']/group/group[2]" position="after">
+            <group>
+                <field name="sg_partner_name"/>
+                <label for="sg_street" string="Address"/>
+                <div class="o_address_format">
+                    <field name="sg_street" placeholder="Street..." class="o_address_street"/>
+                    <field name="sg_street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="sg_city" placeholder="City" class="o_address_city"/>
+                    <field name="sg_state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}" on_change="onchange_state(state_id)"/>
+                    <field name="sg_zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="sg_country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                </div>
+            </group>
+
+            <group>
+                <label for="sg_contact_name"/>
+                <div class="o_row">
+                    <field name="sg_contact_name"/>
+                </div>
+                <field name="sg_function"/>
+                <field name="sg_phone"/>
+                <field name="sg_mobile"/>
+                <field name="sg_fax"/>
+            </group>
+        </xpath>
+
         </field>
         </record>
 
