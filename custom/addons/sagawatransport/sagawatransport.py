@@ -73,7 +73,7 @@ class crm_lead(models.Model):
 
     sg_partner_id = fields.Many2one('res.partner', 'Partner 2', ondelete='set null', track_visibility='onchange',select=True, help="Linked partner 2")
     sg_email_from = fields.Char('Email', size=128, help="Email address of the contact 2", select=1)
-    sg_contact_name = fields.Char('Contact Name 2', size=64)
+    sg_contact_name = fields.Char('Contact Name', size=64)
     sg_partner_name = fields.Char('Customer Name 2', size=64)
     sg_street = fields.Char('Street')
     sg_street2 = fields.Char('Street2')
