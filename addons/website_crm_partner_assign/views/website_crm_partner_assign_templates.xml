@@ -194,7 +194,7 @@
     </template>
     <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="website_portal.portal_layout" priority="22">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <t t-if="user.partner_id.grade_id.id != False">
+            <t t-if="user.commercial_partner_id.grade_id">
                 <li t-att-class="page_name == 'lead' and 'active'">
                      <a href="/my/leads">Leads</a>
                 </li>
@@ -207,7 +207,7 @@
 
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="website_portal.portal_my_home" priority="22">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <t t-if="user.partner_id.grade_id.id != False">
+            <t t-if="user.commercial_partner_id.grade_id">
                 <h3 class="page-header">
                     <a href="/my/leads">Your Leads
                         <small class="ml8">
@@ -259,20 +259,18 @@
                 <table class="table table-hover">
                     <thead>
                         <tr class="active">
-                            <th class="col-md-5">Name</th>
+                            <th class="col-xs-2">Date</th>
+                            <th class="col-xs-5">Name</th>
                             <th>Contact Name</th>
-                            <th>Stage</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr t-foreach="leads" t-as="lead">
+                            <td><span t-field="lead.create_date" t-field-options='{"widget": "date"}' /></td>
                             <td>
                                 <a t-attf-href="/my/lead/#{lead.id}"><span t-field="lead.name"/></a>
                             </td>
                             <td><span t-field="lead.contact_name" /></td>
-                            <td>
-                                <span class="label label-primary" title="Current stage of the lead" t-esc="lead.stage_id.name" />
-                            </td>
                         </tr>
                     </tbody>
                 </table>
