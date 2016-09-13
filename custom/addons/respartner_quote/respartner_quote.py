@@ -9,10 +9,9 @@ class res_partner(models.Model):
 
     @api.onchange('parent_id')
     def _onchange_partner_id(self):
-        if not self.id:
-            parent = self.env['res.partner'].browse(self.parent_id.id)
-            if parent:
-                self.phone = parent.phone
-                self.fax = parent.fax
-                self.lang = parent.lang
+        parent = self.env['res.partner'].browse(self.parent_id.id)
+        if parent:
+            self.phone = parent.phone
+            self.fax = parent.fax
+            self.lang = parent.lang
         return super(res_partner, self).onchange_parent_id(self)

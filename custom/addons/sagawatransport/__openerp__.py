@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     'name': "SagawaTransport",
-    'author': "@andh",
+    'author': "E+Craftman Vietnam Co., Ltd.",
     'version': '0.1',
     'depends': ['crm', 'sale'],
-    'description': 'An custom module for Saga Transport',
+    'description': 'An custom module for Sagawa Transport',
     'installable': True,
     'data': [
         'sagawatransport_view.xml',
