@@ -14,7 +14,9 @@ class WebsiteAccount(website_account):
     def _prepare_portal_layout_values(self):
         values = super(WebsiteAccount, self)._prepare_portal_layout_values()
         # domain is needed to hide non portal project for employee
-        issue_count = request.env['project.issue'].search_count([('project_id.privacy_visibility','=','portal')])
+        # portal users can't see the privacy_visibility, fetch the domain for them in sudo
+        portal_projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
+        issue_count = request.env['project.issue'].search_count([('project_id', 'in', portal_projects.ids)])
         values.update({
             'issue_count': issue_count,
         })
