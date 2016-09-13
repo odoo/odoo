@@ -959,17 +959,25 @@ var Editor = Class.extend({
     },
     _drag_and_drop_stop: function (){
         var self = this;
-        var $dropzone = this.$target.prev();
-        var prev = $dropzone.length && $dropzone[0].previousSibling;
+
+        $(".oe_drop_zone").droppable('destroy').remove();
+
+        var prev = this.$target.first()[0].previousSibling;
         var next = this.$target.last()[0].nextSibling;
         var $parent = this.$target.parent();
 
-        $(".oe_drop_clone").after(this.$target);
+        var $clone = $(".oe_drop_clone");
+        if (prev === $clone[0]) {
+            prev = $clone[0].previousSibling;
+        } else if (next === $clone[0]) {
+            next = $clone[0].nextSibling;
+        }
+        $clone.after(this.$target);
 
         this.$overlay.removeClass("hidden");
         $("body").removeClass('move-important');
-        $('.oe_drop_zone').droppable('destroy').remove();
-        $(".oe_drop_clone, .oe_drop_to_remove").remove();
+        $clone.remove();
+        $(".oe_drop_to_remove").remove();
 
         if (this.dropped) {
             this.buildingBlock.parent.rte.historyRecordUndo(this.$target);

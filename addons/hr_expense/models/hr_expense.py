@@ -85,7 +85,7 @@ class HrExpense(models.Model):
             user_ids.append(employee.parent_id.user_id.id)
         if employee.department_id and employee.department_id.manager_id and employee.parent_id != employee.department_id.manager_id:
             user_ids.append(employee.department_id.manager_id.user_id.id)
-        self.message_subscribe_users(user_ids=user_ids)
+        self.sudo().message_subscribe_users(user_ids=user_ids)
 
     @api.model
     def create(self, vals):
