@@ -173,6 +173,39 @@
         <record id="sale.action_orders" model="ir.actions.act_window">
             <field name="domain">[('state','not in',('draft','approve','sent','cancel')),('is_templete','=',False)]</field>
         </record>
+        <record id="sale.action_view_sale_advance_payment_inv" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_crm_send_mass_convert" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.merge_opportunity_act" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_merge_opportunities" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_lead_mass_mail" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_partner_merge" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="base.action_partner_mass_mail" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="portal.partner_wizard_action" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_crm_send_mass_convert" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="account.action_move_line_select_by_partner" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="account.action_report_print_overdue" model="ir.actions.report.xml">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
 
         <record id="action_quotations_1" model="ir.actions.act_window">
             <field name="name">Quotations 1</field>
