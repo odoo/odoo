@@ -300,6 +300,7 @@
                                     <field name="categ_ids"/>
                                     <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
                                     <i><field name="name"/></i><br/>
+                                    <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
                                     <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
