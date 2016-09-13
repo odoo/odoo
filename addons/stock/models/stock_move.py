@@ -490,7 +490,7 @@ class StockMove(models.Model):
         for key, moves in to_assign.items():
             moves.assign_picking()
         self._push_apply()
-        return True
+        return self
 
     def set_default_price_unit_from_product(self):
         """ Set price to move, important in inter-company moves or receipts with only one partner """
