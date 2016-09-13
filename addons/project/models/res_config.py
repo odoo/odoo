@@ -12,7 +12,7 @@ class ProjectConfiguration(models.TransientModel):
         default=lambda self: self.env.user.company_id)
     project_time_mode_id = fields.Many2one(related='company_id.project_time_mode_id', string="Project Time Unit *")
     module_pad = fields.Selection([
-        (0, "Task description is a plain text"),
+        (0, "Task description is plain text"),
         (1, "Collaborative rich text on task description")
         ], string="Pads",
         help='Lets the company customize which Pad installation should be used to link to new pads '
