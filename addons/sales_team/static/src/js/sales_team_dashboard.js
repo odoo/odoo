@@ -34,6 +34,10 @@ var SalesTeamDashboardView = KanbanView.extend({
         return this.fetch_data().then(function(result){
             self.show_demo = result && result['nb_opportunities'] == 0;
 
+            /*-- remove invoiced box in dashboard (START) --*/
+            if (typeof result.invoiced != 'undefined') delete result.invoiced;
+            /*-- remove invoiced box in dashboard (END) --*/
+
             var sales_dashboard = QWeb.render('sales_team.SalesDashboard', {
                 widget: self,
                 show_demo: self.show_demo,
