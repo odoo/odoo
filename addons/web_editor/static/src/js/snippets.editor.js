@@ -900,7 +900,6 @@ data.Editor = Class.extend({
         this.$overlay.removeClass("hidden");
         $("body").removeClass('move-important');
         $clone.remove();
-        $(".oe_drop_to_remove").remove();
 
         if (this.dropped) {
             this.buildingBlock.getParent().rte.historyRecordUndo(this.$target);

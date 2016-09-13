@@ -478,34 +478,6 @@ options.registry["margin-x"] = options.registry.marginAndResize.extend({
 
         return this.grid;
     },
-    _drag_and_drop_after_insert_dropzone: function () {
-        var self = this;
-        $(".row:has(> .oe_drop_zone)").each(function () {
-            var $row = $(this);
-            var width = $row.innerWidth();
-            var pos = 0;
-            while (width > pos + self.size.width) {
-                var $last = $row.find("> .oe_drop_zone:last");
-                $last.each(function () {
-                    pos = $(this).position().left;
-                });
-                if (width > pos + self.size.width) {
-                    $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
-                    var $add_drop = $last.clone();
-                    $row.append($add_drop);
-                    self._drag_and_drop_active_drop_zone($add_drop);
-                }
-            }
-        });
-    },
-    _drag_and_drop_start: function () {
-        this._super();
-        this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, ''));
-    },
-    _drag_and_drop_stop: function () {
-        this.$target.addClass("col-md-offset-" + this.$target.prevAll(".oe_drop_to_remove").length);
-        this._super();
-    },
     on_clone: function ($clone) {
         var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
         $clone.attr("class", _class);
