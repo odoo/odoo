@@ -2024,13 +2024,6 @@ class MailThread(models.AbstractModel):
                 auto_delete=True,
                 auto_delete_message=True,
                 subtype_id=self.env.ref('mail.mt_note').id)
-            messages = self.env['mail.message'].sudo().search([
-                ('model', '=', self._name),
-                ('res_id', '=', record.id),
-                ('subtype_id', '!=', False),
-                ('subtype_id.internal', '=', False)], limit=1)
-            if messages:
-                messages.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
 
     @api.multi
     def message_auto_subscribe(self, updated_fields, values=None):
