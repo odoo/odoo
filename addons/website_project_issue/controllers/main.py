@@ -42,7 +42,9 @@ class WebsiteAccount(website_account):
                 str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
             })
 
-        domain = [('project_id.privacy_visibility','=','portal')]
+        # portal users can't see the privacy_visibility, fetch the domain for them in sudo
+        portal_projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
+        domain = [('project_id', 'in', portal_projects.ids)]
         domain += project_filters.get(project, project_filters['all'])['domain']
         order = sortings.get(sortby, sortings['date'])['order']
 
