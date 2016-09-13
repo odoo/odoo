@@ -40,7 +40,7 @@ class AccountAnalyticLine(models.Model):
             return {
                 'amount': -unit_amount * cost,
                 'product_uom_id': uom.id,
-                'account_id': emp.account_id.id,
+                'account_id': values.get('account_id') or self.account_id.id or emp.account_id.id,
             }
         return {}
 
