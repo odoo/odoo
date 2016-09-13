@@ -21,7 +21,7 @@
     <li t-if="_.isEmpty(records)" class="text-center o_no_activity">
         <span>No activities.</span>
     </li>
-    <li t-if="!_.isUndefined(records)">
+    <li t-if="!_.isEmpty(records)">
         <ul class="o_activity_log">
             <t t-foreach="_.keys(records)" t-as="key">
                 <t t-set="logs" t-value="records[key]" />

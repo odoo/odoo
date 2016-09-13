@@ -81,4 +81,6 @@ var KanbanActivity = AbstractField.extend({
 
 fields_registry.add('kanban_activity', KanbanActivity);
 
+return KanbanActivity;
+
 });
