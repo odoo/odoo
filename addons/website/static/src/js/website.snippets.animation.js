@@ -45,55 +45,52 @@ animation.registry.slider = animation.Class.extend({
 
 animation.registry.parallax = animation.Class.extend({
     selector: ".parallax",
+
     start: function () {
-        var self = this;
-        setTimeout(function () {self.set_values();});
-        this.on_scroll = function () {
-            var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
-            if (speed == 1) return;
-            var offset = parseFloat(self.$target.attr("data-scroll-background-offset") || 0);
-            var top = offset + window.scrollY * speed;
-            self.$target.css("background-position", "0px " + top + "px");
-        };
-        this.on_resize = function () {
-            self.set_values();
-        };
-        $(window).on("scroll", this.on_scroll);
-        $(window).on("resize", this.on_resize);
+        _.defer((function () { this.set_values(); }).bind(this));
+        $(window).on("scroll.animation_parallax", _.throttle(this.on_scroll.bind(this), 10))
+                 .on("resize.animation_parallax", _.debounce(this.set_values.bind(this), 500));
+
+        return this._super.apply(this, arguments);
     },
     stop: function () {
-        $(window).off("scroll", this.on_scroll)
-                .off("resize", this.on_resize);
+        $(window).off(".animation_parallax");
     },
+
     set_values: function () {
         var self = this;
-        var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+        this.speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+        this.offset = 0;
 
-        if (speed === 1 || this.$target.css("background-image") === "none") {
+        if (this.speed === 1 || this.$target.css("background-image") === "none") {
             this.$target.css("background-attachment", "fixed").css("background-position", "0px 0px");
             return;
-        } else {
-            this.$target.css("background-attachment", "scroll");
         }
 
-        this.$target.attr("data-scroll-background-offset", 0);
+        this.$target.css("background-attachment", "scroll");
+
         var img = new Image();
         img.onload = function () {
             var offset = 0;
             var padding =  parseInt($(document.body).css("padding-top"));
-            if (speed > 1) {
+            if (self.speed > 1) {
                 var inner_offset = - self.$target.outerHeight() + this.height / this.width * document.body.clientWidth;
                 var outer_offset = self.$target.offset().top - (document.body.clientHeight - self.$target.outerHeight()) - padding;
-                offset = - outer_offset * speed + inner_offset;
+                offset = - outer_offset * self.speed + inner_offset;
             } else {
-                offset = - self.$target.offset().top * speed;
+                offset = - self.$target.offset().top * self.speed;
             }
-            self.$target.attr("data-scroll-background-offset", offset > 0 ? 0 : offset);
-            $(window).scroll();
+            self.offset = offset > 0 ? 0 : offset;
+            self.on_scroll();
         };
         img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
-        $(window).scroll();
-    }
+    },
+
+    on_scroll: function () {
+        if (this.speed === 1) return;
+        var top = this.offset + window.scrollY * this.speed;
+        this.$target.css("background-position", "0px " + top + "px");
+    },
 });
 
 animation.registry.share = animation.Class.extend({
