@@ -231,6 +231,7 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <search string="Survey">
+                    <field string="Title" name="title"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
