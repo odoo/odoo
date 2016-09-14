@@ -279,7 +279,7 @@ class HrExpense(models.Model):
         if help_message:
             alias_record = self.env.ref('hr_expense.mail_alias_expense')
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
-                link = "<a id='o_mail_test' href='mailto:%(email)s&subject=Lunch+with+customer%%3A+%%2412.32'>%(email)s</a>" % {
+                link = "<a id='o_mail_test' href='mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32'>%(email)s</a>" % {
                     'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
                 }
                 return '<p class="oe_view_nocontent_create">%s<br/>%s</p>%s' % (
