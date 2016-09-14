@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from openerp.tools import float_compare
+from odoo.tools import float_compare
 
 
 class AccountAssetCategory(models.Model):
@@ -455,7 +455,7 @@ class AccountAssetDepreciationLine(models.Model):
             current_currency = line.asset_id.currency_id
             amount = current_currency.compute(line.amount, company_currency)
             sign = (category_id.journal_id.type == 'purchase' or category_id.journal_id.type == 'sale' and 1) or -1
-            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, line.asset_id.method_number)
+            asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
             prec = self.env['decimal.precision'].precision_get('Account')
             move_line_1 = {
                 'name': asset_name,

@@ -82,7 +82,7 @@ class Quant(models.Model):
             if quant.company_id != self.env.user.company_id:
                 # if the company of the quant is different than the current user company, force the company in the context
                 # then re-do a browse to read the property fields for the good company.
-                quant = quant.with_context(force_company=quant.company__id.id)
+                quant = quant.with_context(force_company=quant.company_id.id)
             quant.inventory_value = quant.product_id.standard_price * quant.qty
 
     @api.model_cr

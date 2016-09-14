@@ -80,9 +80,10 @@ class RatingMixin(models.AbstractModel):
     def rating_get_access_token(self, partner=None):
         if not partner:
             partner = self.rating_get_partner_id()
+        rated_partner = self.rating_get_rated_partner_id()
         ratings = self.rating_ids.filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
-            rating = self.env['rating.rating'].create({'partner_id': partner.id, 'res_model': self._name, 'res_id': self.id})
+            rating = self.env['rating.rating'].create({'partner_id': partner.id, 'rated_partner_id': rated_partner.id, 'res_model': self._name, 'res_id': self.id})
         else:
             rating = ratings[0]
         return rating.access_token

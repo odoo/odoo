@@ -313,7 +313,7 @@ class Users(models.Model):
         if self._uid != SUPERUSER_ID:
             groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
             if groupby_fields.intersection(USER_PRIVATE_FIELDS):
-                raise AccessError(_('Invalid groupby'))
+                raise AccessError(_('Invalid group by'))
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model

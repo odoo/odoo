@@ -32,6 +32,7 @@ class AutoVacuum(models.AbstractModel):
 
     @api.model
     def power_on(self):
+        self.env['ir.attachment']._file_gc()
         self._gc_transient_models()
         self._gc_user_logs()
         return True

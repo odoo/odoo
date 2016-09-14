@@ -170,7 +170,7 @@ class CrmLead(models.Model):
                                   ORDER BY distance LIMIT 1""", (longitude, latitude, lead.id))
                     res = self._cr.dictfetchone()
                     if res:
-                        partner_ids.append(res['id'])
+                        partner_ids = Partner.browse([res['id']])
 
                 total_weight = 0
                 toassign = []

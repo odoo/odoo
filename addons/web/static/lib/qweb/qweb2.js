@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var QWeb2 = {
     expressions_cache: { },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,elif,else,call,set,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
@@ -111,6 +111,15 @@ var QWeb2 = {
                 }
             }
             return -1;
+        },
+        get_element_sibling: function(node, dom_attr) {
+            // This helper keeps support for IE8 which does not
+            // implement DOMNode.(previous|next)ElementSibling
+            var sibling = node[dom_attr];
+            while (sibling && sibling.nodeType !== 1) {
+                sibling = sibling[dom_attr];
+            }
+            return sibling;
         },
         xml_node_to_string : function(node, childs_only) {
             if (childs_only) {
@@ -242,13 +251,11 @@ QWeb2.Engine = (function() {
                     self.add_template(xDoc, callback);
                 });
             }
+            template = this.preprocess(template);
             var ec = (template.documentElement && template.documentElement.childNodes) || template.childNodes || [];
             for (var i = 0; i < ec.length; i++) {
                 var node = ec[i];
                 if (node.nodeType === 1) {
-                    if (node.nodeName == 'parsererror') {
-                        return this.tools.exception(node.innerText);
-                    }
                     var name = node.getAttribute(this.prefix + '-name');
                     var extend = node.getAttribute(this.prefix + '-extend');
                     if (name && extend) {
@@ -277,6 +284,56 @@ QWeb2.Engine = (function() {
                 callback(null, template);
             }
             return true;
+        },
+        preprocess: function(doc) {
+            /**
+             * Preprocess a template's document at load time.
+             * This method is mostly used for template sanitization but could
+             * also be overloaded for extended features such as translations, ...
+             * Throws an exception if a template is invalid.
+             *
+             * @param {Document} doc Document containg the loaded templates
+             * @return {Document} Returns the pre-processed/sanitized template
+             */
+            var self = this;
+            var childs = (doc.documentElement && doc.documentElement.childNodes) || doc.childNodes || [];
+
+            // Check for load errors
+            for (var i = 0; i < childs.length; i++) {
+                var node = childs[i];
+                if (node.nodeType === 1 && node.nodeName == 'parsererror') {
+                    return this.tools.exception(node.innerText);
+                }
+            }
+
+            // Sanitize t-elif and t-else directives
+            var tbranch = doc.querySelectorAll('[t-elif], [t-else]');
+            for (var i = 0, ilen = tbranch.length; i < ilen; i++) {
+                var node = tbranch[i];
+                var prev_elem = self.tools.get_element_sibling(node, 'previousSibling');
+                var pattr = function(name) { return prev_elem.getAttribute(name); }
+                var nattr = function(name) { return +!!node.getAttribute(name); }
+                if (prev_elem && (pattr('t-if') || pattr('t-elif'))) {
+                    if (pattr('t-foreach')) {
+                        return self.tools.exception("Error: t-if cannot stay at the same level as t-foreach when using t-elif or t-else");
+                    }
+                    if (['t-if', 't-elif', 't-else'].map(nattr).reduce(function(a, b) { return a + b; }) > 1) {
+                        return self.tools.exception("Error: only one conditional branching directive is allowed per node");
+                    }
+                    // All text nodes between branch nodes are removed
+                    var text_node;
+                    while ((text_node = node.previousSibling) !== prev_elem) {
+                        if (self.tools.trim(text_node.nodeValue)) {
+                            return self.tools.exception("Error: text is not allowed between branching directives");
+                        }
+                        text_node.remove();
+                    }
+                } else {
+                    return self.tools.exception("Error: t-elif and t-else directives must be preceded by a t-if or t-elif directive");
+                }
+            }
+
+            return doc;
         },
         load_xml : function(s, callback) {
             var self = this;
@@ -701,6 +758,16 @@ QWeb2.Element = (function() {
         },
         compile_action_if : function(value) {
             this.top("if (" + (this.format_expression(value)) + ") {");
+            this.bottom("}");
+            this.indent();
+        },
+        compile_action_elif : function(value) {
+            this.top("else if (" + (this.format_expression(value)) + ") {");
+            this.bottom("}");
+            this.indent();
+        },
+        compile_action_else : function(value) {
+            this.top("else {");
             this.bottom("}");
             this.indent();
         },

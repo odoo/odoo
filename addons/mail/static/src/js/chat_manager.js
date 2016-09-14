@@ -672,7 +672,7 @@ var chat_manager = {
             // post a message in a channel or execute a command
             return ChannelModel.call(data.command ? 'execute_command' : 'message_post', [options.channel_id], _.extend(msg, {
                 message_type: 'comment',
-                content_subtype: 'plaintext',
+                content_subtype: 'html',
                 subtype: 'mail.mt_comment',
                 command: data.command,
             }));

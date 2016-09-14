@@ -150,7 +150,7 @@ class Lang(models.Model):
     def install_lang(self):
         """
 
-        This method is called from openerp/addons/base/base_data.xml to load
+        This method is called from odoo/addons/base/base_data.xml to load
         some language and set it as the default for every partners. The
         language is set via tools.config by the RPC 'create' method on the
         'db' object. This is a fragile solution and something else should be

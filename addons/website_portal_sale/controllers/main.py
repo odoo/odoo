@@ -13,7 +13,7 @@ class website_account(website_account):
     @http.route()
     def account(self, **kw):
         """ Add sales documents to main account page """
-        response = super(website_account, self).account()
+        response = super(website_account, self).account(**kw)
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
