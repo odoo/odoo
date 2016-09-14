@@ -57,6 +57,7 @@ Main Features
         'views/res_config_view.xml',
         'views/report_statement.xml',
         'views/report_userlabel.xml',
+        'views/report_saledetails.xml',
         'views/point_of_sale.xml',
         'views/point_of_sale_dashboard.xml',
     ],

@@ -72,7 +72,7 @@ var PartnerInviteDialog = Dialog.extend({
         var data = this.$input.select2('data');
         if(data.length >= 1){
             var ChannelModel = new Model('mail.channel');
-            return ChannelModel.call('channel_invite', [], {ids : [this.channel_id], partner_ids: _.pluck(data, 'id')})
+            return ChannelModel.call('channel_invite', [this.channel_id], {partner_ids: _.pluck(data, 'id')})
                 .then(function(){
                     var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);

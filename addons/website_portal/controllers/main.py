@@ -50,7 +50,7 @@ class website_account(http.Controller):
             })
         return groups
 
-    @http.route(['/my', '/my/home'], type='http', auth="public", website=True)
+    @http.route(['/my', '/my/home'], type='http', auth="user", website=True)
     def account(self, **kw):
         values = self._prepare_portal_layout_values()
         return request.render("website_portal.portal_my_home", values)

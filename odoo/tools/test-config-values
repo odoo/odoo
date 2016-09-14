@@ -9,10 +9,10 @@ import threading
 import traceback
 import time
 
-import openerp
+import odoo
 
-openerp.tools.config.parse_config(sys.argv[1:])
-config = openerp.tools.config
+odoo.tools.config.parse_config(sys.argv[1:])
+config = odoo.tools.config
 
 for name in [
     'db_name',

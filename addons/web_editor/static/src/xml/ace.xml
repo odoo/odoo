@@ -4,15 +4,18 @@
 <t t-name="web_editor.ace_view_editor">
     <div class="o_ace_view_editor oe_ace_closed">
         <div class="form-inline o_ace_view_editor_title">
-            <select id="ace-view-list" class="form-control oe_view_list">
-                <!-- filled in JS -->
-            </select>
+            <select id="ace-view-list" class="form-control oe_view_list"/>
             <label class="oe_include_bundles">
-                <input type="checkbox" class="js_include_bundles"/> Include Asset Bundles
+                <div class="o_checkbox">
+                    <input type="checkbox" class="js_include_bundles"/><span/>
+                </div>
+                Include Asset Bundles
             </label>
-            <button data-action="save" type="submit" class="btn btn-success">Save</button>
-            <button data-action="format" type="button" class="btn btn-warning">Format</button>
-            <button data-action="close" type="button" class="btn btn-info">Close</button>
+            <div class="o_button_section">
+                <button data-action="save" type="submit" class="btn btn-sm btn-primary">Save</button>
+                <button data-action="format" type="button" class="btn btn-sm btn-default">Format</button>
+                <button data-action="close" type="button" class="btn btn-sm btn-default">Close</button>
+            </div>
         </div>
         <div id="ace-view-id"/>
         <div id="ace-view-editor"/>

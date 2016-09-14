@@ -56,7 +56,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                 modules.update_translations(lang)
 
             if country_code:
-                countries = env['res.country'].search_read([('code', 'ilike', country_code)], fields=['id'])
+                countries = env['res.country'].search([('code', 'ilike', country_code)])
                 if countries:
                     env['res.company'].browse(1).country_id = countries[0]
 

@@ -2,7 +2,7 @@
 {%- set model = "%s.%s"|format(mod, mod) -%}
 {%- set root = "/%s/%s"|format(mod, mod) -%}
 # -*- coding: utf-8 -*-
-from openerp import http
+from odoo import http
 
 # class {{ mod|pascal }}(http.Controller):
 #     @http.route('{{ root }}/', auth='public')

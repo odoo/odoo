@@ -324,49 +324,62 @@ body .modal {
 
 // ACE EDITOR
 .o_ace_view_editor {
+    @o-ace-color: #2F3129;
+
     .o-position-absolute(@odoo-navbar-height, 0, 0);
     position: fixed;
+    .o-flex-display();
+    .o-flex-flow(column, nowrap);
     z-index: 1001;
-    background: #2F3129;
+    background: @o-ace-color;
     color: white;
+
     .o_ace_view_editor_title {
-        width: 100%;
-        height: 30px;
-        padding-top: 0;
-        padding-left: 0;
-        .oe_view_list, .btn {
-            font-size: 14px;
-            font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
-            line-height: normal;
+        .o-flex(0, 0, auto);
+        .o-flex-display();
+        .o-align-items(center);
+        .o-justify-content(space-between);
+        padding: @grid-gutter-width/4;
+
+        > * {
+            .o-flex(0, 0, auto);
+            margin: 0 @grid-gutter-width/4;
+
+            &.oe_include_bundles {
+                .o-flex-display();
+                .o-align-items(center);
+                font-size: 11px;
+
+                > .o_checkbox {
+                    margin-right: @grid-gutter-width/4;
+                }
+            }
         }
-        .oe_view_list {
-            width: 50%;
-            height: 30px;
-        }
-        .btn {
-            height: 100%;
-            padding: 0 4px;
+
+        > select {
+            .o-flex(0, 1, auto);
+            min-width: 60px;
         }
     }
-    .ace_editor {
-        .o-position-absolute(50px, 0, 0, 0);
+    #ace-view-id {
+        .o-flex(0, 0, auto);
+        padding: @grid-gutter-width/4 @grid-gutter-width/2;
+        background-color: lighten(@o-ace-color, 10%);
+    }
+    #ace-view-editor {
+        height: 70%; // in case flex is not supported
+        .o-flex(1, 1, auto);
         .ace_gutter {
             cursor: ew-resize;
         }
     }
-    #ace-view-id {
-        padding: 0 1em;
-    }
+
     &.oe_ace_open {
         opacity: 0.97;
     }
     &.oe_ace_closed {
         z-index: -1000;
         opacity: 0;
-    }
-    .oe_include_bundles {
-        font-weight: normal;
-        padding: 0 8px;
     }
 }
 

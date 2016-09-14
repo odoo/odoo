@@ -19,7 +19,7 @@ and Ubuntu distros, we have to override the search path, too.
 _logger = logging.getLogger(__name__)
 
 # Alternatives for the [broken] builtin PDF fonts. Default order chosen to match
-# the pre-v8 mapping from openerp.report.render.rml2pdf.customfonts.CustomTTFonts.
+# the pre-v8 mapping from odoo.report.render.rml2pdf.customfonts.CustomTTFonts.
 # Format: [ (BuiltinFontFamily, mode, [AlternativeFontName, ...]), ...]
 BUILTIN_ALTERNATIVES = [
     ('Helvetica', "normal", ["DejaVuSans", "LiberationSans"]),
