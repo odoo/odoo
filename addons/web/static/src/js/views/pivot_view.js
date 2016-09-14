@@ -814,6 +814,12 @@ var PivotView = View.extend({
             error: crash_manager.rpc_error.bind(crash_manager)
         });    
     },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').off(); // remove jquery's tooltip() handlers
+        }
+        return this._super.apply(this, arguments);
+    },
 });
 
 function traverse_tree(root, f, arg1, arg2, arg3) {
