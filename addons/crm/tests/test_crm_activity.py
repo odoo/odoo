@@ -78,7 +78,7 @@ class TestCrmMailActivity(TestCrmCases):
             'model': 'crm.lead'
           })
         # trigger onchange and set the due date (date_action)
-        activity_log.onchange_next_activity_id()
+        activity_log._onchange_next_activity_id()
         activity_log.mark_as_done()
 
         # Check message recipients
@@ -96,7 +96,7 @@ class TestCrmMailActivity(TestCrmCases):
             'res_id': self.lead.id,
             'model': 'crm.lead',
         })
-        activity_log.onchange_next_activity_id()
+        activity_log._onchange_next_activity_id()
 
         # Check the next activity is correct
         self.assertEqual(self.lead.title_action, activity_log.next_activity_id.description, 'Activity title should be the same on the lead and on the chosen activity')
@@ -105,7 +105,7 @@ class TestCrmMailActivity(TestCrmCases):
             'next_activity_id': self.activity2.id,
             'note': 'Content of the activity to log',
           })
-        activity_log.onchange_next_activity_id()
+        activity_log._onchange_next_activity_id()
         activity_log.mark_as_done()
 
         # Check the next activity on the lead has been removed
@@ -119,7 +119,7 @@ class TestCrmMailActivity(TestCrmCases):
             'res_id': self.lead.id,
             'model': 'crm.lead',
         })
-        activity_log.onchange_next_activity_id()
+        activity_log._onchange_next_activity_id()
 
         # Check the activity is well scheldule on lead
         delta_days = (fields.Date.from_string(activity_log.date_action) - date.today()).days
