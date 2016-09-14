@@ -188,7 +188,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts" attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True, 'default_lang': lang}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -289,6 +289,7 @@
                                         </group>
                                         <field name="supplier" invisible="True"/>
                                         <field name="customer" invisible="True"/>
+                                        <field name="lang" invisible="True"/>
                                     </sheet>
                                 </form>
                             </field>
