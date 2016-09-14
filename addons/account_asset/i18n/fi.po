@@ -5,14 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-08-26 16:08+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>\n"
+"PO-Revision-Date: 2016-09-09 10:37+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +59,7 @@ msgstr "Lisää tähän sisäinen muistiinpano..."
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
-msgstr ""
+msgstr "Tehtyjen poistojen määrä"
 
 #. module: account_asset
 #: field:asset.asset.report,depreciation_value:0
@@ -143,7 +143,7 @@ msgstr "Varojen kategoria"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr ""
+msgstr "Omaisuuserän poistorivi"
 
 #. module: account_asset
 #: view:account.asset.history:account_asset.view_account_asset_history_tree
@@ -188,7 +188,7 @@ msgstr "Ehdotetut varat"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Assets in running state"
-msgstr ""
+msgstr "Käytössäolevat omaisuuserät"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
@@ -285,13 +285,13 @@ msgstr "Vahvista varat"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Create Move"
-msgstr ""
+msgstr "Luo siirto"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "Luodut omaisuuseräsiirrot"
 
 #. module: account_asset
 #: field:account.asset.asset,create_uid:0
@@ -358,7 +358,7 @@ msgstr "Degressiivinen kerroin"
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
-msgstr ""
+msgstr "Poiston kulutili"
 
 #. module: account_asset
 #: field:account.asset.category,account_depreciation_id:0
@@ -400,7 +400,7 @@ msgstr "Poistomenetelmä"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "Poistokuukausi"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
@@ -438,7 +438,7 @@ msgstr "Kirjaukset"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Virhe ! Et voi luoda rekursiivisiä omaisuuseriä."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
@@ -635,12 +635,12 @@ msgstr "Kirjattu"
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
 msgid "Posted Amount"
-msgstr ""
+msgstr "Kirjattu summa"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "Kirjatut poistorivit"
 
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
@@ -705,7 +705,7 @@ msgstr "Järjestysluku"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Set to Close"
-msgstr ""
+msgstr "Sulje omaisuuserä"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -767,7 +767,7 @@ msgstr "Kahden poiston väli kuukauden aikana"
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Kirjaamaton määrä"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
@@ -799,7 +799,7 @@ msgstr ""
 #: code:addons/account_asset/account_asset.py:81
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
+msgstr "Et voi poistaa omaisuuserää jossa on kirjattuja poistorivejä!"
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
