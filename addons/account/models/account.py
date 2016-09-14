@@ -596,6 +596,7 @@ class AccountTax(models.Model):
             raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
     @api.one
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)
