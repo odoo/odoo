@@ -1774,10 +1774,10 @@ class _RelationalMulti(_Relational):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
         for record in records:
             if self in record._cache:
-                value = self.convert_to_cache(record[self.name] | value, record, validate=False)
+                val = self.convert_to_cache(record[self.name] | value, record, validate=False)
             else:
-                value = UnionUpdate(self, record, value)
-            record._cache[self] = value
+                val = UnionUpdate(self, record, value)
+            record._cache[self] = val
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
