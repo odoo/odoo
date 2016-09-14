@@ -46,7 +46,7 @@ class MailActivityLog(models.Model):
     date_action = fields.Date('Due Date', required=True, index=True, default=fields.Date.today)
     state = fields.Selection([('overdue', 'Overdue'), ('today', 'Today'), ('planned', 'Planned')],
                              compute="_compute_state", default="planned")
-    user_id = fields.Many2one('res.users', string='Assigned to', required=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Assigned to', default=lambda self: self.env.user)
 
     @api.depends('date_action')
     def _compute_state(self):
@@ -72,23 +72,49 @@ class MailActivityLog(models.Model):
         res_id = vals.get('res_id')
         model = vals.get('model')
         vals['record_name'] = self.env[model].browse(res_id).display_name
-        return super(MailActivityLog, self).create(vals)
+        activity_log = super(MailActivityLog, self).create(vals)
+        if 'user_id' in vals and vals['user_id'] != self.env.uid:
+            activity_log._send_mail()
+        return activity_log
+
+    @api.multi
+    def write(self, vals):
+        logs = super(MailActivityLog, self).write(vals)
+        if 'user_id' in vals:
+            self._send_mail()
+        return logs
+
+    def _send_mail(self):
+        for log in self:
+            record = self.env[log.model].browse(log.res_id)
+            message = _("""
+                    Activity: %(activity)s - %(title)s
+                    <ul>
+                        <li>Assigned to: %(user)s</li>
+                    </ul>""") % {
+                        'activity': log.next_activity_id.name,
+                        'title': log.title_action,
+                        'user': log.user_id.name
+                    }
+            record.with_context(mail_post_autofollow=True).message_post(
+                body=message, subtype="mt_comment", partner_ids=log.user_id.partner_id.ids)
 
     @api.multi
     def mark_as_done(self):
         msg_id = None
         for log in self:
-            body_html = """
+            body_html = _("""
                 <div>
                     <strong>%(name)s - <i>%(title_action)s</i></strong>
                     <br />
                     %(note)s
-                </div> """ % {
+                </div> """) % {
                     'name': log.next_activity_id.name,
                     'title_action': log.title_action,
                     'note': log.note or '',
                 }
-            msg_id = self.env[log.model].browse(log.res_id).message_post(body_html, subject=log.title_action, subtype_id=log.next_activity_id.subtype_id.id).id
+            msg_id = self.env[log.model].browse(log.res_id).message_post(
+                body_html, subject=log.title_action, subtype_id=log.next_activity_id.subtype_id.id).id
         # Because activity already logged in chatter
         self.unlink()
         return msg_id

@@ -359,6 +359,8 @@ var Chatter = form_common.AbstractField.extend({
         this.do_action(action, {
             on_close: function() {
                 self.activity.fetch_and_render_activity_log();
+                self.refresh_followers();
+                chat_manager.get_messages({model: self.view.model, res_id: self.view.datarecord.id});
             },
         });
     },
