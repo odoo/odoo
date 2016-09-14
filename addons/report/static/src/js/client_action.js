@@ -18,8 +18,7 @@ var AUTHORIZED_MESSAGES = [
 
 var ReportAction = Widget.extend(ControlPanelMixin, {
 
-    tagName: 'iframe',
-    className: 'o_report_iframe',
+    template: 'report.client_action',
 
     init: function (parent, action, options) {
         this._super.apply(this, arguments);
@@ -43,6 +42,7 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
     start: function () {
         var self = this;
         this.set('title', this.title);
+        this.iframe = this.$('iframe')[0];
         return $.when(this._super.apply(this, arguments), session.is_bound).then(function () {
             var web_base_url = session['web.base.url'];
             var trusted_host = utils.get_host_from_url(web_base_url);
@@ -58,10 +58,10 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
             self._update_control_panel();
 
             // Load the report in the iframe. Note that we use a relative URL.
-            self.el.src = self.report_url;
+            self.iframe.src = self.report_url;
 
             // Once the iframe is loaded, check if we can edit the report.
-            self.el.onload = function () {
+            self.iframe.onload = function () {
                 self._on_iframe_loaded();
             };
         });
@@ -84,7 +84,7 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
     },
 
     _on_iframe_loaded: function () {
-        var editable = this.$el.contents().find('html').data('editable');
+        var editable = $(this.iframe).contents().find('html').data('editable');
         if (editable === 1) {
             this.edit_mode_available = true;
             this._update_control_panel();
@@ -132,13 +132,13 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
             switch(message) {
                 case 'report.editor:save_ok':
                     // Reload the iframe in order to disable the editor.
-                    this.el.src = this.report_url;
+                    this.iframe.src = this.report_url;
                     this.in_edit_mode = false;
                     this._update_control_panel_buttons();
                     break;
                 case 'report.editor:discard_ok':
                     // Reload the iframe in order to disable the editor.
-                    this.el.src = this.report_url;
+                    this.iframe.src = this.report_url;
                     this.in_edit_mode = false;
                     this._update_control_panel_buttons();
                     break;
@@ -156,15 +156,15 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
      * this method we only send the message to a trusted domain.
      */
     _post_message: function (message) {
-        this.el.contentWindow.postMessage(message, this.trusted_origin);
+        this.iframe.contentWindow.postMessage(message, this.trusted_origin);
     },
 
     on_click_edit: function () {
         // We reload the iframe with a special query string to enable the editor.
         if (this.report_url.indexOf('?') === -1) {
-            this.el.src = this.report_url + '?enable_editor=1';
+            this.iframe.src = this.report_url + '?enable_editor=1';
         } else {
-            this.el.src = this.report_url + '&enable_editor=1';
+            this.iframe.src = this.report_url + '&enable_editor=1';
         }
         this.in_edit_mode = true;
         this._update_control_panel_buttons();
@@ -194,5 +194,7 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
 });
 
 core.action_registry.add('report.client_action', ReportAction);
+
+return ReportAction;
 
 });
