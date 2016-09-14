@@ -91,8 +91,8 @@ var SalesTeamDashboardView = KanbanView.extend({
         var target_name = $input.attr('name');
         var target_value = $input.val();
 
-        if(isNaN(target_value)) {
-            this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
+        if (isNaN(target_value) || target_value.length >= 10) {
+            this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value less than 10 digits should be valid."));
         } else {
             this._updated = new Model('crm.lead')
                             .call('modify_target_sales_dashboard', [target_name, parseInt(target_value)])
