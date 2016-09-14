@@ -113,3 +113,99 @@ class IrUiView(models.Model):
             view.write({'arch': view._pretty_arch(arch)})
 
         self.sudo().mapped('model_data_id').write({'noupdate': True})
+
+    @api.model
+    def _view_obj(self, view_id):
+        if isinstance(view_id, basestring):
+            return self.env.ref(view_id)
+        elif isinstance(view_id, (int, long)):
+            return self.browse(view_id)
+        # assume it's already a view object (WTF?)
+        return view_id
+
+    # Returns all views (called and inherited) related to a view
+    # Used by translation mechanism, SEO and optional templates
+
+    @api.model
+    def _views_get(self, view_id, options=True, bundles=False, root=True):
+        """ For a given view ``view_id``, should return:
+                * the view itself
+                * all views inheriting from it, enabled or not
+                  - but not the optional children of a non-enabled child
+                * all views called from it (via t-call)
+            :returns recordset of ir.ui.view
+        """
+        try:
+            view = self._view_obj(view_id)
+        except ValueError:
+            _logger.warning("Could not find view object with view_id '%s'", view_id)
+            return []
+
+        while root and view.inherit_id:
+            view = view.inherit_id
+
+        views_to_return = view
+
+        node = etree.fromstring(view.arch)
+        xpath = "//t[@t-call]"
+        if bundles:
+            xpath += "| //t[@t-call-assets]"
+        for child in node.xpath(xpath):
+            try:
+                called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
+            except ValueError:
+                continue
+            if called_view not in views_to_return:
+                views_to_return += self._views_get(called_view, options=options, bundles=bundles)
+
+        extensions = view.inherit_children_ids
+        if not options:
+            # only active children
+            extensions = view.inherit_children_ids.filtered(lambda view: view.active)
+
+        # Keep options in a deterministic order regardless of their applicability
+        for extension in extensions.sorted(key=lambda v: v.id):
+            # only return optional grandchildren if this child is enabled
+            for ext_view in self._views_get(extension, options=extension.active, root=False):
+                if ext_view not in views_to_return:
+                    views_to_return += ext_view
+        return views_to_return
+
+    @api.model
+    def customize_template_get(self, key, full=False, bundles=False):
+        """ Get inherit view's informations of the template ``key``.
+            returns templates (which can be active or not)
+            ``bundles=True`` returns also the asset bundles
+        """
+        user = self.env.user
+        user_groups = set(user.groups_id)
+        views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
+        done = set()
+        result = []
+        for view in views:
+            if full:
+                if not user_groups.issuperset(view.groups_id):
+                    continue
+                if view.inherit_id not in done:
+                    result.append({
+                        'name': view.inherit_id.name,
+                        'id': view.id,
+                        'key': view.key,
+                        'xml_id': view.xml_id,
+                        'arch': view.arch,
+                        'inherit_id': view.inherit_id.id,
+                        'header': True,
+                        'active': False
+                    })
+                    done.add(view.inherit_id)
+                result.append({
+                    'name': view.name,
+                    'id': view.id,
+                    'key': view.key,
+                    'xml_id': view.xml_id,
+                    'arch': view.arch,
+                    'inherit_id': view.inherit_id.id,
+                    'header': False,
+                    'active': view.active,
+                })
+        return result
