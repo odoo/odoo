@@ -14,6 +14,7 @@ class WebsiteBackend(http.Controller):
         ga_client_id = params.get_param('google_management_client_id', default='')
 
         return {
+            'groups': {'system': request.env['res.users'].has_group('base.group_system')},
             'currency': request.env.user.company_id.currency_id.id,
             'dashboards': {
                 'visits': {

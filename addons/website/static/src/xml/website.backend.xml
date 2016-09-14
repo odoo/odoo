@@ -25,8 +25,9 @@
                         <div class="o_layer">
                         </div>
                         <div class="o_buttons text-center">
-                            <h3>Currently there is no data available.</h3>
-                            <button class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
+                            <h3>There is no data currently available.</h3>
+                            <button t-if="widget.groups.system" class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
+                            <h5 t-if="!widget.groups.system">You do not have sufficient access rights to configure the Google Analytics account.</h5>
                         </div>
                     </div>
                 </div>
