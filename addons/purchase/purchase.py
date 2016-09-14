@@ -391,7 +391,7 @@ class PurchaseOrder(models.Model):
                 res = order._prepare_picking()
                 picking = self.env['stock.picking'].create(res)
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
-                moves.action_confirm()
+                moves = moves.action_confirm()
                 order.order_line.mapped('move_ids').force_assign()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
