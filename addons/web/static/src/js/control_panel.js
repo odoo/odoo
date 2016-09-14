@@ -67,7 +67,7 @@ var ControlPanel = Widget.extend({
         };
 
         // Prevent the search dropdowns to close when clicking inside them
-        this.$el.on('click.bs.dropdown', '.oe-search-options .dropdown-menu', function (e) {
+        this.$el.on('click.bs.dropdown', '.o_search_options .dropdown-menu', function (e) {
             e.stopPropagation();
         });
 

@@ -18,17 +18,23 @@ from odoo.addons.website_portal.controllers.main import website_account
 
 class WebsiteAccount(website_account):
 
-    @http.route()
-    def account(self):
-        response = super(WebsiteAccount, self).account()
-        lead_count = request.env['crm.lead'].search_count([
-            ('partner_assigned_id', '=', request.env.user.partner_id.id),
+    def get_domain_my_lead(self, user):
+        return [
+            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
             ('type', '=', 'lead')
-        ])
-        opp_count = request.env['crm.lead'].search_count([
-            ('partner_assigned_id', '=', request.env.user.partner_id.id),
+        ]
+
+    def get_domain_my_opp(self, user):
+        return [
+            ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
             ('type', '=', 'opportunity')
-        ])
+        ]
+
+    @http.route()
+    def account(self, **kw):
+        response = super(WebsiteAccount, self).account(**kw)
+        lead_count = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
+        opp_count = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
         response.qcontext.update({'lead_count': lead_count, 'opp_count': opp_count})
         return response
 
@@ -36,7 +42,7 @@ class WebsiteAccount(website_account):
     def portal_my_leads(self, page=1, date_begin=None, date_end=None, lead=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
-        domain = [('partner_assigned_id', '=', request.env.user.partner_id.id), ('type', '=', 'lead')]
+        domain = self.get_domain_my_lead(request.env.user)
 
         sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
@@ -79,7 +85,7 @@ class WebsiteAccount(website_account):
     def portal_my_opportunities(self, page=1, date_begin=None, date_end=None, opportunity=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         CrmLead = request.env['crm.lead']
-        domain = [('partner_assigned_id', '=', request.env.user.partner_id.id), ('type', '=', 'opportunity')]
+        domain = self.get_domain_my_opp(request.env.user)
 
         today = fields.Date.today()
         this_week_end_date = fields.Date.to_string(fields.Date.from_string(today) + datetime.timedelta(days=7))
@@ -185,9 +191,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         if not country and not country_all:
             country_code = request.session['geoip'].get('country_code')
             if country_code:
-                country_ids = country_obj.search([('code', '=', country_code)])
-                if country_ids:
-                    country = country_obj.browse(country_ids[0])
+                country = country_obj.search([('code', '=', country_code)], limit=1)
         if country:
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.sudo().read_group(
