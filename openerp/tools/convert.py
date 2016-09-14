@@ -741,7 +741,8 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(name, name='name'))
         record.append(Field(full_tpl_id, name='key'))
         record.append(Field("qweb", name='type'))
-        record.append(Field(el.get('priority', "16"), name='priority'))
+        if 'priority' in el.attrib:
+            record.append(Field(el.get('priority'), name='priority'))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
         if 'website_id' in el.attrib:

@@ -1748,6 +1748,10 @@ class stock_picking(models.Model):
                         packlots_transfer = [(4, x.id) for x in operation.pack_lot_ids]
                         stock_operation_obj.write(cr, uid, [new_operation], {'pack_lot_ids': packlots_transfer}, context=context)
 
+                        # the stock.pack.operation.lot records now belong to the new, packaged stock.pack.operation
+                        # we have to create new ones with new quantities for our original, unfinished stock.pack.operation
+                        stock_operation_obj._copy_remaining_pack_lot_ids(cr, uid, new_operation, operation.id, context=context)
+
                     op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                 pack_operation_ids.append(op.id)
             if operations:
@@ -4512,6 +4516,7 @@ class stock_pack_operation(osv.osv):
             if pack.product_qty - pack.qty_done > 0.0 and pack.qty_done < pack.product_qty:
                 pack2 = self.copy(cr, uid, pack.id, default={'qty_done': 0.0, 'product_qty': pack.product_qty - pack.qty_done}, context=context)
                 self.write(cr, uid, [pack.id], {'product_qty': pack.qty_done}, context=context)
+                self._copy_remaining_pack_lot_ids(cr, uid, pack.id, pack2, context=context)
             else:
                 raise UserError(_('The quantity to split should be smaller than the quantity To Do.  '))
         return True
@@ -4596,6 +4601,17 @@ class stock_pack_operation(osv.osv):
              'context': context,
         }
 
+    def _copy_remaining_pack_lot_ids(self, cr, uid, id, new_operation_id, context=None):
+        stock_pack_operation_lot_obj = self.pool["stock.pack.operation.lot"]
+        old_operation = self.browse(cr, uid, id, context=context)
+
+        for pack_lot_id in old_operation.pack_lot_ids:
+            new_qty_todo = pack_lot_id.qty_todo - pack_lot_id.qty
+
+            if float_compare(new_qty_todo, 0, precision_rounding=old_operation.product_uom_id.rounding) > 0:
+                stock_pack_operation_lot_obj.copy(cr, uid, pack_lot_id.id, {'operation_id': new_operation_id,
+                                                                            'qty_todo': new_qty_todo,
+                                                                            'qty': 0}, context=context)
 
 class stock_pack_operation_lot(osv.osv):
     _name = "stock.pack.operation.lot"
