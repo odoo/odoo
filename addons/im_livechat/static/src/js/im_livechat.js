@@ -196,6 +196,7 @@ var LivechatButton = Widget.extend({
             date: moment(time.str_to_datetime(data.date)),
             is_needaction: false,
             is_note: data.is_note,
+            customer_email_data: []
         };
 
         // Compute displayed author name or email
