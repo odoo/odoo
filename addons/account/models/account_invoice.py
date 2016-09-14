@@ -479,7 +479,8 @@ class AccountInvoice(models.Model):
             else:
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
-            fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
+            addr = self.partner_id.address_get(['delivery', 'invoice'])
+            fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, addr['delivery'])
             if fiscal_position:
                 self.fiscal_position_id = fiscal_position
 
