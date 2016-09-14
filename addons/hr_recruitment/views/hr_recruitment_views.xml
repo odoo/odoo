@@ -275,7 +275,7 @@
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
                                 <div class="oe_kanban_bottom_right">
-                                    <div class="pull-right ml4">
+                                    <div class="o_kanban_inline_block ml4">
                                         <field name="activity_log_ids" widget="kanban_activity" />
                                     </div>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
