@@ -29,8 +29,8 @@ class WebsiteAccount(website_account):
         ]
 
     @http.route()
-    def account(self):
-        response = super(WebsiteAccount, self).account()
+    def account(self, **kw):
+        response = super(WebsiteAccount, self).account(**kw)
         lead_count = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
         opp_count = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
         response.qcontext.update({'lead_count': lead_count, 'opp_count': opp_count})

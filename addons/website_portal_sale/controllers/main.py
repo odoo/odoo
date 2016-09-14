@@ -11,9 +11,9 @@ from openerp.addons.website_portal.controllers.main import website_account
 class website_account(website_account):
 
     @http.route()
-    def account(self):
+    def account(self, **kw):
         """ Add sales documents to main account page """
-        response = super(website_account, self).account()
+        response = super(website_account, self).account(**kw)
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
