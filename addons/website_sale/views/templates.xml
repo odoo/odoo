@@ -82,7 +82,7 @@
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
-                        <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300'}" t-att-alt="product.name" />
+                        <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
                     </a>
                 </div>
                 <t t-if="show_publish">
@@ -397,17 +397,17 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-7">
-                            <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name'}" groups="!website_sale.group_website_multi_image"/>
+                            <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image'}" groups="!website_sale.group_website_multi_image"/>
                             <t groups="website_sale.group_website_multi_image">
                                 <t t-set="variant_img" t-value="product.product_variant_ids[0].image_variant"/>
                                 <t t-set="image_ids"  t-value="product.product_image_ids"/>
                                 <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
                                   <div class="carousel-outer">
                                     <div class="carousel-inner">
-                                        <div class="item active" itemprop="image" t-field="product.product_variant_ids[0].image" t-options='{"widget": "image", "class": "product_detail_img js_variant_img", "alt-field": "name"}'/>
-                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}'/>
+                                        <div class="item active" itemprop="image" t-field="product.product_variant_ids[0].image" t-options='{"widget": "image", "class": "product_detail_img js_variant_img", "alt-field": "name", "zoom": "image"}'/>
+                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image"}'/>
                                         <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
-                                            <div class="item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}'/>
+                                            <div class="item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
                                         </t>
                                     </div>
 
@@ -481,6 +481,12 @@
                 <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
             </div>
         </t>
+    </template>
+
+    <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Activate Magnify">
+        <xpath expr='//div[contains(@class, "js_sale")]' position='attributes'>
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+        </xpath>
     </template>
 
     <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
@@ -1059,7 +1065,7 @@
                                                     <a class='a-submit btn btn-default mb16 btn-block'>
                                                         <i class="fa fa-plus-square" aria-hidden="true"></i> Add an address
                                                     </a>
-                                                </form>                                                
+                                                </form>
                                             </div>
                                             <t t-foreach="shippings" t-as="ship">
                                                 <div class="col-sm-12 col-md-6 one_kanban">
@@ -1621,7 +1627,7 @@
             <input type="hidden" name="tx_id" t-att-value="tx.id"/>
         </form>
     </template>
- 
+
     <template id="payment_token_form_confirm">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Confirm payment</t>
