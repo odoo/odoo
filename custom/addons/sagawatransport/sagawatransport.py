@@ -65,6 +65,17 @@ class sale_order(models.Model):
         self.filtered(lambda s: s.state == 'approve').write({'state': 'sent'})
         return self.env['report'].get_action(self, 'sale.report_saleorder')
 
+class SagawaMailComposeMessage(models.TransientModel):
+    _inherit = 'mail.compose.message'
+
+    @api.multi
+    def send_mail(self, auto_commit=False):
+        if self._context.get('default_model') == 'sale.order' and self._context.get('default_res_id') and self._context.get('mark_so_as_sent'):
+            order = self.env['sale.order'].browse([self._context['default_res_id']])
+            if order.state in ('draft', 'approve'):
+                order.state = 'sent'
+        return super(SagawaMailComposeMessage, self.with_context(mail_post_autofollow=True)).send_mail(auto_commit=auto_commit)
+
 class crm_lead(models.Model):
     _inherit = 'crm.lead'
     sale_revenue = fields.Float('Revenue')
