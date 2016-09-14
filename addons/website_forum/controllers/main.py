@@ -646,7 +646,7 @@ class WebsiteForum(http.Controller):
                 down_votes = rec['vote_count']
 
         # Votes which given by users on others questions and answers.
-        vote_ids = Vote.search([('user_id', '=', user.id)])
+        vote_ids = Vote.search([('partner_id', '=', user.partner_id.id)])
 
         # activity by user.
         model, comment = Data.get_object_reference('mail', 'mt_comment')

@@ -112,17 +112,17 @@ Are there any automation scripts available I might use?
         <!-- Post Vote  -->
         <record id="post_vote_0" model="forum.post.vote">
             <field name="post_id" ref="question_0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="partner_id" ref="base.partner_demo"/>
             <field name="vote">1</field>
         </record>
         <record id="post_vote_1" model="forum.post.vote">
             <field name="post_id" ref="answer_0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="partner_id" ref="base.partner_demo"/>
             <field name="vote">1</field>
         </record>
         <record id="post_vote_3" model="forum.post.vote">
             <field name="post_id" ref="article_0"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="partner_id" ref="base.partner_demo"/>
             <field name="vote">1</field>
         </record>
 

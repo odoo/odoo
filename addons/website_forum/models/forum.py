@@ -15,7 +15,6 @@ from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
-
 class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
     pass
@@ -324,7 +323,8 @@ class Post(models.Model):
 
     @api.multi
     def _get_user_vote(self):
-        votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
+        partner_id = self.env.user.partner_id.id
+        votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('partner_id', '=', partner_id)], ['vote', 'post_id'])
         mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
@@ -678,7 +678,8 @@ class Post(models.Model):
     @api.multi
     def vote(self, upvote=True):
         Vote = self.env['forum.post.vote']
-        vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
+        partner_id = self.env.user.partner_id.id
+        vote_ids = Vote.search([('post_id', 'in', self._ids), ('partner_id', '=', partner_id)])
         new_vote = '1' if upvote else '-1'
         voted_forum_ids = set()
         if vote_ids:
@@ -851,7 +852,7 @@ class Vote(models.Model):
     _description = 'Vote'
 
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
-    user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
+    partner_id = fields.Many2one('res.partner', string='Partner', required=True, default=lambda self: self.env.user.partner_id)
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
     create_date = fields.Datetime('Create Date', index=True, readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
@@ -870,7 +871,7 @@ class Vote(models.Model):
         vote = super(Vote, self).create(vals)
 
         # own post check
-        if vote.user_id.id == vote.post_id.create_uid.id:
+        if vote.partner_id.id == vote.post_id.sudo().create_uid.partner_id.id:
             raise UserError(_('Not allowed to vote for its own post'))
         # karma check
         if vote.vote == '1' and not vote.post_id.can_upvote:
@@ -890,7 +891,7 @@ class Vote(models.Model):
         if 'vote' in values:
             for vote in self:
                 # own post check
-                if vote.user_id.id == vote.post_id.create_uid.id:
+                if vote.partner_id.id == vote.post_id.sudo().create_uid.partner_id.id:
                     raise UserError(_('Not allowed to vote for its own post'))
                 # karma check
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:

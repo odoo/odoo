@@ -26,7 +26,7 @@
             <field name="condition">higher</field>
             <field name="domain">[('vote', '=', '-1')]</field>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_user_id')" />
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_partner_id')" />
             <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_critic">
@@ -133,7 +133,7 @@
             <field name="condition">higher</field>
             <field name="domain">[('vote', '=', '1')]</field>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_user_id')" />
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_partner_id')" />
             <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_supporter">
