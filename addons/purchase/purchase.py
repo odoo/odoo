@@ -294,15 +294,15 @@ class purchase_order(osv.osv):
         ),
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
-                'purchase.order.line': (_get_order, None, 10),
+                'purchase.order.line': (_get_order, ['product_qty', 'price_unit', 'taxes_id', 'product_id'], 10),
             }, multi="sums", help="The amount without tax", track_visibility='always'),
         'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
-                'purchase.order.line': (_get_order, None, 10),
+                'purchase.order.line': (_get_order, ['product_qty', 'price_unit', 'taxes_id', 'product_id'], 10),
             }, multi="sums", help="The tax amount"),
         'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
             store={
-                'purchase.order.line': (_get_order, None, 10),
+                'purchase.order.line': (_get_order, ['product_qty', 'price_unit', 'taxes_id', 'product_id'], 10),
             }, multi="sums", help="The total amount"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'payment_term_id': fields.many2one('account.payment.term', 'Payment Term'),
