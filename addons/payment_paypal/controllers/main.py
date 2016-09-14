@@ -65,7 +65,7 @@ class PaypalController(http.Controller):
         self.paypal_validate_data(**post)
         return ''
 
-    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST', 'GET'], csrf=False)
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
