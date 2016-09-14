@@ -2,7 +2,7 @@
 
 <templates>
     <t t-name="website_crm.dashboard_leads">
-        <div class="row o_dashboard_leads">
+        <div t-if="widget.dashboards_data.leads" class="row o_dashboard_leads">
             <div class="col-xs-12 o_box">
                 <div class="col-md-6 col-xs-12">
                     <h2>Leads Acquisition / <t t-esc="widget.date_range"></t></h2>
