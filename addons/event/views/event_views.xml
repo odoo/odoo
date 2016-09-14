@@ -259,7 +259,7 @@
                     <field name="user_id"/>
                     <separator/>
                     <filter string="My Activities" name="my_activity"
-                        domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                        domain="[('activity_log_ids.user_id', '=', uid)]"/>
                     <filter string="Today Activities" name="today_activity"
                         domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="This Week Activities" name="this_week_activity"
@@ -408,7 +408,7 @@
                     <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                     <separator/>
                     <filter string="My Activities" name="my_activity"
-                        domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                        domain="[('activity_log_ids.user_id', '=', uid)]"/>
                     <filter string="Today Activities" name="today_activity"
                         domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="This Week Activities" name="this_week_activity"

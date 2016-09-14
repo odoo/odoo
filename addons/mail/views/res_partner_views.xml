@@ -33,7 +33,7 @@
                                 help="Partners that did not ask not to be included in mass mailing campaigns" />
                         <separator/>
                         <filter string="My Activities" name="my_activity"
-                                domain="[('activity_log_ids.create_uid', '=', uid)]"/>
+                                domain="[('activity_log_ids.user_id', '=', uid)]"/>
                         <filter string="Today Activities" name="today_activity"
                                 domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
                         <filter string="This Week Activities" name="this_week_activity"
