@@ -994,8 +994,9 @@ var abstractReconciliationLine = Widget.extend({
             var amount = self.amount_field.get("value");
             var tax_id = self.tax_id_field.get("value");
             if (amount && tax_id) {
+                self.context.force_round_per_line = true;
                 deferred_tax = self.model_tax
-                    .call("compute_all", [[tax_id], amount, self.get("currency_id")])
+                    .call("compute_all", [[tax_id], amount, self.get("currency_id")], {'context': self.context})
                     .then(function(data){
                         line_created_being_edited.length = 1; // remove tax lines
                         line_created_being_edited[0].amount_before_tax = amount;
@@ -2083,7 +2084,8 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         var self = this;
         if (! this.is_consistent) return;
         self.$(".button_ok").attr("disabled", "disabled");
-        this.model_bank_statement_line.call("process_reconciliations", [[this.line_id], [this.prepareDataForPersisting()]]).done(function() {
+        self.context.force_round_per_line = true;
+        this.model_bank_statement_line.call("process_reconciliations", [[this.line_id], [this.prepareDataForPersisting()]], {'context': self.context}).done(function() {
             self.bowOut(self.animation_speed, true);
         }).always(function() {
             self.$(".button_ok").removeAttr("disabled");
