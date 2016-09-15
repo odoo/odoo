@@ -164,6 +164,7 @@ class AccountAccount(models.Model):
         return result
 
     @api.one
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         default.update(code=_("%s (copy)") % (self.code or ''))
@@ -327,6 +328,7 @@ class AccountJournal(models.Model):
         return ret
 
     @api.one
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
         default.update(
