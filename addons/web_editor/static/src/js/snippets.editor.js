@@ -325,39 +325,22 @@ data.Class = Widget.extend({
     show_blocks: function () {
         var self = this;
         var cache = {};
-        this.$(".o_panel").each(function () {
-            var catcheck = false;
-            var $category = $(this);
-            $category.find(".oe_snippet_body").each(function () {
-                var $snippet = $(this);
+        this.$snippets.each(function () {
+            var $snippet = $(this);
+            var $snippet_body = $snippet.find(".oe_snippet_body");
 
-                var check = false;
+            var check = false;
+            _.each(self.templateOptions, function (option, k) {
+                if (check || !$snippet_body.is(option.base_selector)) return;
 
-                for (var k in self.templateOptions) {
-                    var option = self.templateOptions[k];
-                    if ($snippet.is(option.base_selector)) {
-
-                        cache[k] = cache[k] || {
-                            'drop-near': option['drop-near'] ? option['drop-near'].all() : [],
-                            'drop-in': option['drop-in'] ? option['drop-in'].all() : []
-                        };
-
-                        if (cache[k]['drop-near'].length || cache[k]['drop-in'].length) {
-                            catcheck = true;
-                            check = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (check) {
-                    $snippet.closest(".oe_snippet").removeClass("disable");
-                } else {
-                    $snippet.closest(".oe_snippet").addClass("disable");
-                }
+                cache[k] = cache[k] || {
+                    'drop-near': option['drop-near'] ? option['drop-near'].all().length : 0,
+                    'drop-in': option['drop-in'] ? option['drop-in'].all().length : 0
+                };
+                check = (cache[k]['drop-near'] || cache[k]['drop-in']);
             });
 
-            $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]').toggle(catcheck);
+            $snippet.toggleClass("disable", !check);
         });
     },
     bind_snippet_click_editor: function () {
