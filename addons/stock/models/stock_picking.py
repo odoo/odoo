@@ -992,6 +992,10 @@ class Picking(models.Model):
                         packlots_transfer = [(4, x.id) for x in operation.pack_lot_ids]
                         new_operation.write({'pack_lot_ids': packlots_transfer})
 
+                        # the stock.pack.operation.lot records now belong to the new, packaged stock.pack.operation
+                        # we have to create new ones with new quantities for our original, unfinished stock.pack.operation
+                        new_operation._copy_remaining_pack_lot_ids(operation)
+
                     op = new_operation
                 pack_operation_ids |= op
             if operations:

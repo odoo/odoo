@@ -164,8 +164,9 @@ class PackOperation(models.Model):
     def split_quantities(self):
         for operation in self:
             if float_compare(operation.product_qty, operation.qty_done, precision_rounding=operation.product_uom_id.rounding) == 1:
-                operation.copy(default={'qty_done': 0.0, 'product_qty': operation.product_qty - operation.qty_done})
+                cpy = operation.copy(default={'qty_done': 0.0, 'product_qty': operation.product_qty - operation.qty_done})
                 operation.write({'product_qty': operation.qty_done})
+                operation._copy_remaining_pack_lot_ids(cpy)
             else:
                 raise UserError(_('The quantity to split should be smaller than the quantity To Do.  '))
         return True
@@ -237,6 +238,19 @@ class PackOperation(models.Model):
                         if opslot.qty not in (1.0, 0.0):
                             raise UserError(_('You should provide a different serial number for each piece'))
     check_tracking = _check_serial_number
+
+    @api.multi
+    def _copy_remaining_pack_lot_ids(self, new_operation):
+        for op in self:
+            for lot in op.pack_lot_ids:
+                new_qty_todo = lot.qty_todo - lot.qty
+
+                if float_compare(new_qty_todo, 0, precision_rounding=op.product_uom_id.rounding) > 0:
+                    lot.copy({
+                        'operation_id': new_operation.id,
+                        'qty_todo': new_qty_todo,
+                        'qty': 0,
+                    })
 
 
 class PackOperationLot(models.Model):
