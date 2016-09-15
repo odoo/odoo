@@ -470,6 +470,17 @@ class TestNewFields(common.TransactionCase):
         message.important = True
         self.assertIn(message, discussion.important_messages)
 
+    def test_70_in_operator(self):
+        """Test that some records are found in some other recordset."""
+        big = (self.env.ref('test_new_api.message_0_0') |
+               self.env.ref('test_new_api.message_0_1') |
+               self.env.ref('test_new_api.message_0_2'))
+        small = big[1:]
+        self.assertIn(small, big)
+        self.assertNotIn(big, small)
+        with self.assertRaises(except_orm):
+            self.assertIn(self.env.ref("test_new_api.discussion_0"), big)
+
 
 class TestMagicFields(common.TransactionCase):
 
