@@ -95,6 +95,16 @@ not have to be ``<t>``::
 
 will give the same results as the previous example.
 
+Extra conditional branching directives ``t-elif`` and ``t-else`` are also
+available::
+
+    <div>
+        <p t-if="user.birthday == today()">Happy bithday!</p>
+        <p t-elif="user.login == 'root'">Welcome master!</p>
+        <p t-else="">Welcome!</p>
+    </div>
+
+
 .. _reference/qweb/loops:
 
 loops

@@ -58,7 +58,7 @@ class SaleOrder(models.Model):
             ticket = line.event_ticket_id
             old_qty = int(line.product_uom_qty)
             if ticket.id:
-                self = self.with_context(event_ticket_id=ticket.id)
+                self = self.with_context(event_ticket_id=ticket.id, fixed_price=1)
         else:
             line = None
             ticket = self.env['event.event.ticket'].search([('product_id', '=', product_id)], limit=1)

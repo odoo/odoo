@@ -9,7 +9,7 @@ import os
 import re
 from collections import defaultdict
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
@@ -110,24 +110,65 @@ class IrAttachment(models.Model):
             try:
                 with open(full_path, 'wb') as fp:
                     fp.write(bin_value)
+                # add fname to checklist, in case the transaction aborts
+                self._mark_for_gc(fname)
             except IOError:
                 _logger.info("_file_write writing %s", full_path, exc_info=True)
         return fname
 
     @api.model
     def _file_delete(self, fname):
-        # using SQL to include files hidden through unlink or due to record rules
-        self._cr.execute("SELECT COUNT(*) FROM ir_attachment WHERE store_fname = %s", (fname,))
-        count = self._cr.fetchone()[0]
-        full_path = self._full_path(fname)
-        if not count and os.path.exists(full_path):
-            try:
-                os.unlink(full_path)
-            except OSError:
-                _logger.info("_file_delete could not unlink %s", full_path, exc_info=True)
-            except IOError:
-                # Harmless and needed for race conditions
-                _logger.info("_file_delete could not unlink %s", full_path, exc_info=True)
+        # simply add fname to checklist, it will be garbage-collected later
+        self._mark_for_gc(fname)
+
+    def _mark_for_gc(self, fname):
+        """ Add ``fname`` in a checklist for the filestore garbage collection. """
+        # we use a spooldir: add an empty file in the subdirectory 'checklist'
+        full_path = os.path.join(self._full_path('checklist'), fname)
+        if not os.path.exists(full_path):
+            dirname = os.path.dirname(full_path)
+            if not os.path.isdir(dirname):
+                with tools.ignore(OSError):
+                    os.makedirs(dirname)
+            open(full_path, 'ab').close()
+
+    @api.model
+    def _file_gc(self):
+        """ Perform the garbage collection of the filestore. """
+        if self._storage() != 'file':
+            return
+
+        # prevent all concurrent updates on ir_attachment while collecting!
+        cr = self._cr
+        cr.execute("LOCK ir_attachment IN SHARE MODE")
+
+        # retrieve the file names from the checklist
+        checklist = {}
+        for dirpath, _, filenames in os.walk(self._full_path('checklist')):
+            dirname = os.path.basename(dirpath)
+            for filename in filenames:
+                fname = "%s/%s" % (dirname, filename)
+                checklist[fname] = os.path.join(dirpath, filename)
+
+        # determine which files to keep among the checklist
+        whitelist = set()
+        for names in cr.split_for_in_conditions(checklist):
+            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
+            whitelist.update(row[0] for row in cr.fetchall())
+
+        # remove garbage files, and clean up checklist
+        removed = 0
+        for fname, filepath in checklist.iteritems():
+            if fname not in whitelist:
+                try:
+                    os.unlink(self._full_path(fname))
+                    removed += 1
+                except (OSError, IOError):
+                    _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
+            with tools.ignore(OSError):
+                os.unlink(filepath)
+
+        _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
 
     @api.depends('store_fname', 'db_datas')
     def _compute_datas(self):

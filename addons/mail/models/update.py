@@ -26,8 +26,8 @@ class PublisherWarrantyContract(AbstractModel):
         Users = self.env['res.users']
         IrParamSudo = self.env['ir.config_parameter'].sudo()
 
-        dbuuid = IrParamSudo('database.uuid')
-        db_create_date = IrParamSudo('database.create_date')
+        dbuuid = IrParamSudo.get_param('database.uuid')
+        db_create_date = IrParamSudo.get_param('database.create_date')
         limit_date = datetime.datetime.now()
         limit_date = limit_date - datetime.timedelta(15)
         limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
@@ -42,9 +42,9 @@ class PublisherWarrantyContract(AbstractModel):
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])
 
-        enterprise_code = IrParamSudo('database.enterprise_code')
+        enterprise_code = IrParamSudo.get_param('database.enterprise_code')
 
-        web_base_url = IrParamSudo('web.base.url')
+        web_base_url = IrParamSudo.get_param('web.base.url')
         msg = {
             "dbuuid": dbuuid,
             "nbr_users": nbr_users,
@@ -60,7 +60,7 @@ class PublisherWarrantyContract(AbstractModel):
             "enterprise_code": enterprise_code,
         }
         if user.partner_id.company_id:
-            company_id = user.partner_id.company_id.id
+            company_id = user.partner_id.company_id
             msg.update(company_id.read(["name", "email", "phone"])[0])
         return msg
 
@@ -101,7 +101,7 @@ class PublisherWarrantyContract(AbstractModel):
                 raise UserError(_("Error during communication with the publisher warranty server."))
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
-            poster = self.env.sudo().ref('mail.channel_all_employees')
+            poster = self.sudo().env.ref('mail.channel_all_employees')
             if not (poster and poster.exists()):
                 if not user.exists():
                     return True

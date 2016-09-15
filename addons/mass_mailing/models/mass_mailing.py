@@ -7,7 +7,7 @@ import random
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
-from openerp.tools.translate import html_translate
+from odoo.tools.translate import html_translate
 
 
 class MassMailingTag(models.Model):

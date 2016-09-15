@@ -188,7 +188,7 @@ class Warehouse(models.Model):
         color = available_colors and available_colors[0] or 0
 
         # suit for each warehouse: reception, internal, pick, pack, ship
-        max_sequence = PickingType.search_read([], ['sequence'], limit=1, order='sequence desc')
+        max_sequence = PickingType.search_read([('sequence', '!=', False)], ['sequence'], limit=1, order='sequence desc')
         max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
 
         warehouse_data = {}

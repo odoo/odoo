@@ -29,5 +29,5 @@ class ProductTemplate(models.Model):
         result = self.env.ref('account_analytic_default.action_product_default_list').read()[0]
         result['domain'] = [('product_id', 'in', self.mapped('product_variant_ids').ids)]
         # Remove context so it is not going to filter on product_id with active_id of template
-        result['context'] = "{}"
+        result['context'] = {'default_product_id': self.mapped('product_variant_ids').id}
         return result

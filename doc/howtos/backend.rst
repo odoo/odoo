@@ -303,7 +303,7 @@ action more easily.
 
         #. Create ``openacademy/views/openacademy.xml`` with an action and
            the menus triggering the action
-        #. Add it to the ``data`` list of ``openacademy/__openerp__.py``
+        #. Add it to the ``data`` list of ``openacademy/__manifest__.py``
 
         .. patch::
 
@@ -687,7 +687,7 @@ instead of a single view its ``arch`` field is composed of any number of
        #. Create a file ``openacademy/partner.py`` and import it in
           ``__init__.py``
        #. Create a file ``openacademy/views/partner.xml`` and add it to
-          ``__openerp__.py``
+          ``__manifest__.py``
 
        .. patch::
 
@@ -1374,7 +1374,7 @@ rights are usually created by a CSV file named after its model:
            hold the OpenAcademy Manager group
         #. Edit the file ``openacademy/security/ir.model.access.csv`` with
            the access rights to the models
-        #. Finally update ``openacademy/__openerp__.py`` to add the new data
+        #. Finally update ``openacademy/__manifest__.py`` to add the new data
            files to it
 
         .. patch::
@@ -1688,7 +1688,7 @@ Dashboards
            .. note:: Available dashboard styles are ``1``, ``1-1``, ``1-2``,
                      ``2-1`` and ``1-1-1``
 
-        #. Update ``openacademy/__openerp__.py`` to reference the new data
+        #. Update ``openacademy/__manifest__.py`` to reference the new data
            file
 
         .. patch::

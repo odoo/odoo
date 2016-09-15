@@ -12,13 +12,16 @@ import odoo.addons.decimal_precision as dp
 class Pricelist(models.Model):
     _name = "product.pricelist"
     _description = "Pricelist"
-    _order = 'name'
+    _order = "sequence asc, id desc"
 
     def _get_default_currency_id(self):
         return self.env.user.company_id.currency_id.id
 
     def _get_default_item_ids(self):
-        return [[0, False, {'compute_price': 'formula'}]]
+        ProductPricelistItem = self.env['product.pricelist.item']
+        vals = ProductPricelistItem.default_get(ProductPricelistItem._fields.keys())
+        vals.update(compute_price='formula')
+        return [[0, False, vals]]
 
     name = fields.Char('Pricelist Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
@@ -27,6 +30,10 @@ class Pricelist(models.Model):
         copy=True, default=_get_default_item_ids)
     currency_id = fields.Many2one('res.currency', 'Currency', default=_get_default_currency_id, required=True)
     company_id = fields.Many2one('res.company', 'Company')
+
+    sequence = fields.Integer(default=16)
+    country_group_ids = fields.Many2many('res.country.group', 'res_country_group_pricelist_rel',
+                                         'pricelist_id', 'res_country_group_id', string='Country Groups')
 
     @api.multi
     def name_get(self):
@@ -283,6 +290,40 @@ class Pricelist(models.Model):
         """ Mono pricelist, multi product - return price per product """
         return pricelist.get_products_price(zip(**products_by_qty_by_partner))
 
+    def _get_partner_pricelist(self, partner_id, company_id=None):
+        """ Retrieve the applicable pricelist for a given partner in a given company.
+
+            :param company_id: if passed, used for looking up properties,
+             instead of current user's company
+        """
+        Partner = self.env['res.partner']
+        Property = self.env['ir.property'].with_context(force_company=company_id or self.env.user.company_id.id)
+
+        p = Partner.browse(partner_id)
+        pl = Property.get('property_product_pricelist', Partner._name, '%s,%s' % (Partner._name, p.id))
+
+        if not pl:
+            if p.country_id.code:
+                pls = self.env['product.pricelist'].search([('country_group_ids.country_ids.code', '=', p.country_id.code)], limit=1)
+                pl = pls and pls[0].id
+
+        if not pl:
+            pl = Property.get('property_product_pricelist', 'res.partner').id
+
+        if not pl:
+            # search pl where no country
+            pls = self.env['product.pricelist'].search([('country_group_ids', '=', False)], limit=1)
+            pl = pls and pls[0].id
+
+        return pl
+
+
+class ResCountryGroup(models.Model):
+    _inherit = 'res.country.group'
+
+    pricelist_ids = fields.Many2many('product.pricelist', 'res_country_group_pricelist_rel',
+                                     'res_country_group_id', 'pricelist_id', string='Pricelists')
+
 
 class PricelistItem(models.Model):
     _name = "product.pricelist.item"
@@ -416,3 +457,4 @@ class PricelistItem(models.Model):
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
             })
+

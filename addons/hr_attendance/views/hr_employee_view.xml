@@ -13,9 +13,9 @@
             </div>
             </field>
             <field name="user_id" position="after">
-                <field name="barcode" groups="hr.group_hr_user"/>
-                <field name="pin" groups="hr.group_hr_user,hr_attendance.group_hr_attendance_use_pin"/>
-                <field name="manual_attendance" groups="hr.group_hr_user"/>
+                <field name="barcode" groups="hr_attendance.group_hr_attendance_user"/>
+                <field name="pin" groups="hr_attendance.group_hr_attendance_user,hr_attendance.group_hr_attendance_use_pin"/>
+                <field name="manual_attendance" groups="hr_attendance.group_hr_attendance_user"/>
             </field>
         </field>
     </record>

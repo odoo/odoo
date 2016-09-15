@@ -102,9 +102,10 @@
                     </h5>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
-                            <t t-if="(compute_currency(product.lst_price)  - product.price ) &gt; 0.1">
+                            <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.1  and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
+
                             <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             <span itemprop="price" style="display:none;" t-esc="product.price" />
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
@@ -201,7 +202,7 @@
                                 <div class="text-center text-muted">
                                     <h3 class="css_editable_display">No product defined.</h3>
                                     <t groups="website.group_website_publisher">
-                                        <p groups="sales_team.group_sale_manager">Use the <i>'New Page'</i> top menu to create your first product.</p>
+                                        <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                                     </t>
                                 </div>
                             </t>
@@ -482,10 +483,10 @@
         </t>
     </template>
 
-    <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Suggested Products">
+    <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
         <xpath expr="//div[@id='product_full_description']" position="after">
             <div class="container mt32" t-if="product.alternative_product_ids">
-                <h3>Suggested Products:</h3>
+                <h3>Alternative Products:</h3>
                 <div class="row mt16" style="">
                     <t t-foreach="product.alternative_product_ids" t-as="alt_product">
                         <div class="col-md-2 thumbnail" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
@@ -565,7 +566,7 @@
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
           <h4 class="oe_price_h4 css_editable_mode_hidden">
               <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
-                t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}"
+                t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if (compute_currency(product.lst_price) - product.website_price) &gt; 0.2 and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'"
               />
               <b class="oe_price" style="white-space: nowrap;" t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
               <span itemprop="price" style="display:none;" t-esc="product.price"/>
@@ -858,11 +859,11 @@
                             </div>
                         </td>
                         <td class="text-center" id="td-price" name="price">
-                            <t t-if="(compute_currency(line.product_id.lst_price)  - line.price_reduce ) &gt; 0.1">
+                            <t t-if="(compute_currency(line.product_id.lst_price)  - line.price_reduce ) &gt; 0.1  and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(line.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
-                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
-                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': line.company_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
+                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary'}" groups="sale.group_show_price_subtotal" />
+                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary'}" groups="sale.group_show_price_total" />
                         </td>
                     </tr>
                 </t>
@@ -941,7 +942,7 @@
         </t>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Suggested Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <table t-if="suggested_products" class="js_cart_lines table table-striped table-condensed">
                 <colgroup>
@@ -971,7 +972,7 @@
                             <div class="text-muted" t-field="product.description_sale" />
                         </td>
                         <td>
-                            <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
+                            <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1  and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-options="{'widget': 'monetary','from_currency': product.currency_id, 'display_currency': website.currency_id}" />
                             </t>
                             <span t-field="product.price" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}" />
@@ -1326,13 +1327,13 @@
                                   <li>
                                     <label t-if="acquirer.button">
                                         <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
-                                        <span t-field="acquirer.image_small" t-options='{"widget": "image", "alt-field": "name", "style":"display: inline-block;"}'/>
+                                        <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-field-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
                                         <span t-field="acquirer.name" />
                                         <span t-if="acquirer.fees_active">(processing fees apply)</span>
                                     </label>
                                   </li>
                                 </t>
-                                <li t-if="[acq for acq in acquirers if acq.registration_view_template_id]">
+                                <li t-if="tokens">
                                     <label>
                                         <input type="radio" name="acquirer" />
                                         <span class='fa fa-2x fa-credit-card'/>
@@ -1701,7 +1702,7 @@
             <div class="container mt16 mb8">
                 <div class="pull-right" t-ignore="true" t-if="not editable">
                                                       Powered by <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
-                                                      the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source e-Commerce</a>.
+                                                      the #1 <a href="http://www.odoo.com/page/e-commerce">Open Source eCommerce</a>.
                                                     </div>
                 <div class="pull-left text-muted">
                                                       Copyright &amp;copy; <span t-field="res_company.name">Company name</span></div>

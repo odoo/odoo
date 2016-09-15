@@ -118,6 +118,8 @@ html[lang] > body.editor_enable{
             .o-align-items(center);
             .o-justify-content(center);
             padding: 3%;
+            color: white;
+            margin-bottom: 3%;
 
             i {
                 margin-right: 5px;
@@ -133,7 +135,7 @@ html[lang] > body.editor_enable{
             .oe_snippet {
                 float: left;
                 width: 45.5%;
-                margin: 0 0 3% 3%;
+                margin: 0 0 6% 3%;
                 box-shadow: none;
                 background-color: transparent;
                 .user-select(none);
@@ -201,12 +203,12 @@ html[lang] > body.editor_enable{
         }
         .oe_snippet_thumbnail_title {
             display: block;
-            border: 1px solid @o-we-color-normal;
+            border: 1px solid @o-we-color-dark;
             padding: 5px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 300;
             text-shadow: none;
-            color: @o-we-color-text-normal;
+            color: @o-we-color-text-light;
         }
         &:hover .oe_snippet_thumbnail_title {
             color: white;
@@ -833,6 +835,7 @@ html[lang] > body.editor_enable{
                 float: left;
                 margin: 1px 1px 0 0;
                 border-color: black;
+                .o_alpha_button_preview();
 
                 &.o_small {
                     width: 16px;
@@ -843,6 +846,10 @@ html[lang] > body.editor_enable{
 
                 &.o_clear {
                     clear: both;
+                }
+
+                &.o_btn_transparent {
+                    display: none;
                 }
             }
         }
@@ -949,6 +956,9 @@ table.colorpicker {
                 padding: 5px 10px;
                 background-color: @o-we-tab-active-bg;
             }
+            &.o_unique_palette {
+                margin-left: 0;
+            }
         }
     }
     .o_colorpicker_section {
@@ -971,16 +981,10 @@ table.colorpicker {
             font-size: 12px;
             font-weight: bold;
             text-align: left;
+            .o_alpha_button_preview();
+
             &:hover, &.selected {
                 box-shadow: 0px 0px 2px 2px @o-we-color-light;
-            }
-            &.selected:before {
-                content: "\f00c";
-                font-family: "FontAwesome";
-                color: @odoo-brand-optional;
-                .o-position-absolute(@top: 0, @left: 3px);
-                font-size: 13px;
-                line-height: 28px;
             }
 
             &:after {
@@ -988,8 +992,14 @@ table.colorpicker {
                 .o-position-absolute(0, 0);
                 width: 25px;
                 text-align: center;
+                font-size: 13px;
                 line-height: 28px;
                 font-weight: normal;
+            }
+            &.selected:after {
+                content: "\f00c";
+                font-family: "FontAwesome";
+                color: @brand-success;
             }
 
             &[data-event="foreColor"] {
@@ -1006,6 +1016,10 @@ table.colorpicker {
                 padding: 0;
                 margin-right: 5px;
             }
+
+            &.o_btn_transparent::before {
+                background-color: transparent;
+            }
         }
     }
     .note-palette-title {
@@ -1020,7 +1034,7 @@ table.colorpicker {
         .note-color-reset {
             font-size: 20px!important;
             color: desaturate(fade(@o-we-color-danger, 60%), 40%);
-            margin: 3px 0 0;
+            margin: 1px 0 0;
             padding: 0;
             cursor: pointer;
             &:hover {
@@ -1055,29 +1069,15 @@ body.editor_enable {
 #web_editor_inside_iframe {
     background-color: @odoo-brand-secondary;
 
-    #editable_area {
-        font: inherit !important;
-        line-height: inherit !important;
-        color: inherit !important;
-
-        p {
-            margin: initial;
-        }
-        a, a:hover {
-            color: inherit;
-        }
-    }
     &.editor_enable #wrapwrap {
         height: 100%;
-        padding-top: @odoo-navbar-height;
         > main {
             height: 100%;
             #editable_area {
                 position: relative;
                 overflow: hidden;
-                max-width: 600px;
                 min-height: 100%;
-                margin: auto;
+                margin: 0 auto;
 
                 background-color: white;
             }
@@ -1085,5 +1085,21 @@ body.editor_enable {
     }
     .note-color-palette .colorpicker {
         display: none;
+    }
+}
+
+// Mixins for buttons with alpha bg-color
+.o_alpha_button_preview () {
+    position: relative;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAClJREFUeNpivHnzJgMSUFNTQ+YyMeAFNJVm/P//PzL/1q1bg8VpAAEGAMiICJs4Ce8uAAAAAElFTkSuQmCC');
+    background-size: 10px auto;
+    z-index: 1;
+
+    // Place an overlay that inherit the button's bg-color.
+    &::before {
+        content: "";
+        .o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background-color: inherit;
     }
 }

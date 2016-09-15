@@ -1,0 +1,17 @@
+.o_mail_theme_selector {
+    > a {
+        .o-position-absolute(6px, 6px);
+    }
+
+    .dropdown-menu {
+        .o-position-absolute(@odoo-navbar-height - 1, -1px, -1px, -1px);
+        margin: 0;
+        border-radius: 0;
+        overflow: auto;
+        background-color: @o-we-color-dark;
+
+        > li:hover > a {
+            background-color: @o-we-color-darker;
+        }
+    }
+}

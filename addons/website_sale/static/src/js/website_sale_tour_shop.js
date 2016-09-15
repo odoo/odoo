@@ -59,7 +59,7 @@ odoo.define("website_sale.tour_shop", function (require) {
     }, {
         trigger: ".o_web_settings_dashboard_progress_title,.progress",
         extra_trigger: "body:not(.editor_enable)",
-        content: _t("Follow the steps and advises in the Odoo Planner to deploy your e-Commerce website in no time!"),
+        content: _t("Follow the steps and advices in the Odoo Planner to deploy your e-Commerce website in no time!"),
         position: "bottom",
     }]);
 });

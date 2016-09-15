@@ -116,7 +116,7 @@ class ProductProduct(models.Model):
         help="This is the sum of the extra price of all attributes")
     lst_price = fields.Float(
         'Sale Price', compute='_compute_product_lst_price',
-        digits=dp.get_precision('Product Price'), inverse='_set_product_price',
+        digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -195,6 +195,15 @@ class ProductProduct(models.Model):
                 value = self.env['product.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
             else:
                 value = product.price
+            value -= product.price_extra
+            product.write({'list_price': value})
+
+    def _set_product_lst_price(self):
+        for product in self:
+            if self._context.get('uom'):
+                value = self.env['product.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
+            else:
+                value = product.lst_price
             value -= product.price_extra
             product.write({'list_price': value})
 

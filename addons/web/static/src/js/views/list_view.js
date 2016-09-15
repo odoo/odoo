@@ -1402,7 +1402,7 @@ ListView.Groups = Class.extend({
                     
                 // group_label is html-clean (through format or explicit
                 // escaping if format failed), can inject straight into HTML
-                $group_column.html(_.str.sprintf(_t("%s (%d)"),
+                $group_column.html(_.str.sprintf("%s (%d)",
                     group_label, group.length));
 
                 if (group.length && group.openable) {
@@ -2010,7 +2010,7 @@ var ColumnToggleButton = Column.extend({
         var fieldname = this.field_name;
         var has_value = row_data[fieldname] && !!row_data[fieldname].value;
         this.icon = has_value ? 'fa-circle o_toggle_button_success' : 'fa-circle text-muted';
-        this.string = has_value ? _t(button_tips ? button_tips['active']: ''): _t(button_tips ? button_tips['inactive']: '');
+        this.string = has_value ? (button_tips ? button_tips['active']: ''): (button_tips ? button_tips['inactive']: '');
         return QWeb.render('toggle_button', {
             widget: this,
             prefix: session.prefix,

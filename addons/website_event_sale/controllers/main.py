@@ -38,7 +38,7 @@ class WebsiteEventSaleController(WebsiteEventController):
         registrations = self._process_registration_details(post)
         for registration in registrations:
             ticket = request.env['event.event.ticket'].sudo().browse(int(registration['ticket_id']))
-            cart_values = order.with_context(event_ticket_id=ticket.id)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
+            cart_values = order.with_context(event_ticket_id=ticket.id, fixed_price=True)._cart_update(product_id=ticket.product_id.id, add_qty=1, registration_data=[registration])
             attendee_ids |= set(cart_values.get('attendee_ids', []))
 
         # free tickets -> order with amount = 0: auto-confirm, no checkout

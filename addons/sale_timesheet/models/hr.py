@@ -9,3 +9,4 @@ class HrEmployee(models.Model):
 
     # FIXME: this field should be in module hr_timesheet, not sale_timesheet
     timesheet_cost = fields.Float('Timesheet Cost', default=0.0)
+    account_id = fields.Many2one('account.account', string='Account')

@@ -77,8 +77,11 @@ class ProcurementOrder(models.Model):
         })
         self.write({'task_id': task.id})
 
-        self.message_post(body=_("Task created"))
+        msg_body = _("Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>") % (self.product_id.name, task.id, task.name)
+        self.message_post(body=msg_body)
         if self.sale_line_id.order_id:
-            self.sale_line_id.order_id.message_post(body=_("Task created"))
+            self.sale_line_id.order_id.message_post(body=msg_body)
+            task_msg = _("This task has been created from: <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> (%s)") % (self.sale_line_id.order_id.id, self.sale_line_id.order_id.name, self.product_id.name)
+            task.message_post(body=task_msg)
 
         return task

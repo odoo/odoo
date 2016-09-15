@@ -94,7 +94,7 @@
         </record>
 
         <record id="rating_rating_action_project" model="ir.actions.act_window">
-            <field name="name">Customers Ratings</field>
+            <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,pivot,graph</field>
             <field name="domain">[('res_model','in',['project.task', 'project.issue']), ('consumed', '=', True)]</field>

@@ -15,7 +15,7 @@ from odoo.exceptions import UserError
 class PickingType(models.Model):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     name = fields.Char('Picking Type Name', required=True, translate=True)
     color = fields.Integer('Color')
@@ -918,6 +918,7 @@ class Picking(models.Model):
             moves.action_confirm()
         return moves
 
+    @api.model
     def _prepare_values_extra_move(self, op, product, remaining_qty):
         """
         Creates an extra move when there is no corresponding original move to be copied

@@ -55,10 +55,6 @@ class TestIrAttachment(TransactionCase):
         a3.unlink()
         self.assertTrue(os.path.isfile(a2_fn))
 
-        # delete a2 it is unlinked
-        a2.unlink()
-        self.assertFalse(os.path.isfile(a2_fn))
-
     def test_05_change_data_change_file(self):
         a2 = self.Attachment.create({'name': 'a2', 'datas': self.blob1_b64})
         a2_store_fname1 = a2.store_fname
@@ -67,7 +63,6 @@ class TestIrAttachment(TransactionCase):
         self.assertTrue(os.path.isfile(a2_fn))
 
         a2.write({'datas': self.blob2_b64})
-        self.assertFalse(os.path.isfile(a2_fn))
 
         a2_store_fname2 = a2.store_fname
         self.assertNotEqual(a2_store_fname1, a2_store_fname2)

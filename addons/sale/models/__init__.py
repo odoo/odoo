@@ -4,6 +4,7 @@
 import account_config_settings
 import account_invoice
 import procurement_order
+import product_pricelist
 import product_product
 import product_template
 import res_company

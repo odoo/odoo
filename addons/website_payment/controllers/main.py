@@ -48,7 +48,7 @@ class WebsitePayment(http.Controller):
 
         partner_id = user.partner_id.id if user.partner_id.id != request.website.partner_id.id else False
 
-        payment_form = acquirer.render(reference, float(amount), currency.id, values={'return_url': '/website_payment/confirm', 'partner_id': partner_id})
+        payment_form = acquirer.sudo().render(reference, float(amount), currency.id, values={'return_url': '/website_payment/confirm', 'partner_id': partner_id})
         values = {
             'reference': reference,
             'acquirer': acquirer,

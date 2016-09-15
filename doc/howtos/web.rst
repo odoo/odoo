@@ -55,7 +55,7 @@ If you browse the ``petstore`` folder, you should see the following content:
     |   `-- mice.jpg
     |-- __init__.py
     |-- oepetstore.message_of_the_day.csv
-    |-- __openerp__.py
+    |-- __manifest__.py
     |-- petstore_data.xml
     |-- petstore.py
     |-- petstore.xml
@@ -103,7 +103,7 @@ sub-folders are conventional and not strictly necessary.
 
 Which only prints a small message in the browser's console.
 
-The files in the ``static`` folder, need to be defined within the module in order for them to be loaded correctly. Everything in ``src/xml`` is defined in ``__openerp__.py`` while the contents of ``src/css`` and ``src/js`` are defined in ``petstore.xml``, or a similar file.
+The files in the ``static`` folder, need to be defined within the module in order for them to be loaded correctly. Everything in ``src/xml`` is defined in ``__manifest__.py`` while the contents of ``src/css`` and ``src/js`` are defined in ``petstore.xml``, or a similar file.
 
 .. warning::
 
@@ -127,7 +127,7 @@ The files in the ``static`` folder, need to be defined within the module in orde
     This will reload the web client with optimizations disabled, making
     development and debugging significantly more comfortable.
 
-.. todo:: qweb files hooked via __openerp__.py, but js and CSS use bundles
+.. todo:: qweb files hooked via __manifest__.py, but js and CSS use bundles
 
 Odoo JavaScript Module
 ======================

@@ -31,7 +31,8 @@ class Issue(models.Model):
                 continue
             if recipient.user_ids and group_project_user_id in recipient.user_ids[0].groups_id.ids:
                 group_data['group_project_user'] |= recipient
+                done_ids.add(recipient.id)
             elif recipient.user_ids and all(recipient.user_ids.mapped('share')):
                 group_data['user'] |= recipient
-            done_ids.add(recipient.id)
+                done_ids.add(recipient.id)
         return super(Issue, self)._notification_group_recipients(message, recipients, done_ids, group_data)
