@@ -197,9 +197,11 @@ class BlogPost(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the post on the website directly """
+        """ Instead of the classic form view, redirect to the post on website
+        directly if user is an employee or if the post is published. """
         self.ensure_one()
+        if self.env.user.share and not self.sudo().website_published:
+            return super(BlogPost, self).get_access_action()
         return {
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (self.blog_id.id, self.id),
