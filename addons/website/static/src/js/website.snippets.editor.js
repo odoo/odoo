@@ -6,6 +6,7 @@ var core = require("web.core");
 var Dialog = require("web.Dialog");
 var Model = require("web.Model");
 var editor = require("web_editor.editor");
+var animation = require('web_editor.snippets.animation');
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
 var website = require('website.website');
