@@ -33,7 +33,7 @@
                 </a>
             </xpath>
             <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
-                <div>
+                <div attrs="{'invisible': [('use_issues', '=', False)]}">
                     <a name="%(action_project_issue_report_filtered)d" type="action">Issues</a>
                 </div>
             </xpath>
