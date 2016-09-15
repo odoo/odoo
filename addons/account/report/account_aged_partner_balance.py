@@ -61,7 +61,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
         # Build a string like (1,2,3) for easy use in SQL query
         partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
-        lines = dict([(partner['partner_id'], []) for partner in partners if partner['partner_id']])
+        lines = dict((partner['partner_id'] or False, []) for partner in partners)
         if not partner_ids:
             return [], [], []
 
@@ -80,7 +80,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         aml_ids = cr.fetchall()
         aml_ids = aml_ids and [x[0] for x in aml_ids] or []
         for line in self.env['account.move.line'].browse(aml_ids):
-            partner_id = line.partner_id.id or None
+            partner_id = line.partner_id.id or False
             if partner_id not in undue_amounts:
                 undue_amounts[partner_id] = 0.0
             line_amount = line.balance
@@ -131,7 +131,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             aml_ids = cr.fetchall()
             aml_ids = aml_ids and [x[0] for x in aml_ids] or []
             for line in self.env['account.move.line'].browse(aml_ids):
-                partner_id = line.partner_id.id or None
+                partner_id = line.partner_id.id or False
                 if partner_id not in partners_amount:
                     partners_amount[partner_id] = 0.0
                 line_amount = line.balance
