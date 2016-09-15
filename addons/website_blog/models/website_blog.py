@@ -204,7 +204,7 @@ class BlogPost(models.Model):
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (self.blog_id.id, self.id),
             'target': 'self',
-            'res_id': post.id,
+            'res_id': self.id,
         }
 
     @api.multi
