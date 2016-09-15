@@ -1,7 +1,7 @@
 import time
 from datetime import datetime, timedelta
 from openerp import api, fields, models, _
-
+from openerp.exceptions import UserError
 
 class MessageActivity(models.TransientModel):
 
@@ -32,6 +32,8 @@ class MessageActivity(models.TransientModel):
         result = {}
         result['date1'] = data['form']['date1'] or False
         result['date2'] = data['form']['date2'] or False
+        if result['date1'] and result['date2'] and result['date1'] > result['date2']:
+            raise UserError(_('Start date must be before end date'))
         return result
 
     @api.multi
