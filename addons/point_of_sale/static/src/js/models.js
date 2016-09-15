@@ -1337,13 +1337,14 @@ exports.Orderline = Backbone.Model.extend({
     },
     compute_all: function(taxes, price_unit, quantity, currency_rounding) {
         var self = this;
-        var total_excluded = round_pr(price_unit * quantity, currency_rounding);
-        var total_included = total_excluded;
-        var base = total_excluded;
         var list_taxes = [];
+        var currency_rounding_bak = currency_rounding;
         if (this.pos.company.tax_calculation_rounding_method == "round_globally"){
            currency_rounding = currency_rounding * 0.00001;
         }
+        var total_excluded = round_pr(price_unit * quantity, currency_rounding);
+        var total_included = total_excluded;
+        var base = total_excluded;
         _(taxes).each(function(tax) {
             tax = self._map_tax_fiscal_position(tax);
             if (tax.amount_type === 'group'){
@@ -1377,7 +1378,11 @@ exports.Orderline = Backbone.Model.extend({
                 }
             }
         });
-        return {taxes: list_taxes, total_excluded: total_excluded, total_included: total_included};
+        return {
+            taxes: list_taxes,
+            total_excluded: round_pr(total_excluded, currency_rounding_bak),
+            total_included: round_pr(total_included, currency_rounding_bak)
+        };
     },
     get_all_prices: function(){
         var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));

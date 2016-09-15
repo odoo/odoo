@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-09-03 15:09+0000\n"
+"PO-Revision-Date: 2016-09-07 12:10+0000\n"
 "Last-Translator: Robert Frykelius <robert.frykelius@linserv.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -23,14 +23,14 @@ msgstr ""
 msgid ""
 "<b>Procurement Orders</b> represent the need for a certain quantity of "
 "products, at a given time, in a given location."
-msgstr ""
+msgstr "<b>Anskaffningsorder</b> visar behovet av en viss mängd av produkter, på en given tid och plats."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
 "                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr ""
+msgstr "<b>Kundorder</b> är en vanligt ihopblandat med anskaffningsorder (men detta är skilda dokument).\n<br> Beroende på beställningsparametrar och  inställning av produkt, kommer programmet försöka tillgodose behovet genom att reservera från lager, beställa från leverantör, skicka tillverkningsorder ETC...."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -39,7 +39,7 @@ msgid ""
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr ""
+msgstr "Ett <b>Beställnings undantag</b> inträffar när systemet inte kan hitta ett sätt för att fullfölja en beställning. Några undantag löser sig automatiskt, medans andra kräver manuell hantering (dessa identifieras genom ett specifikt fel-meddelande)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -104,14 +104,14 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr ""
+msgstr "Regler för beställningen väljs vanligen av systemet, men kan manuellt ändras av behörig person för att ställa in annorlunda regler."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Click to create a Procurement order in exception state, or remove the filter"
 " on the search bar to display all the procurements."
-msgstr ""
+msgstr "Klicka för att skapa en beställningsorder i undantagsfall,  eller ta bort filtret i sökfältet för att visa alla beställningar. "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -267,12 +267,12 @@ msgstr "Om den är markerad så finns det meddelanden som kräver din uppmärksa
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Om det är en global rutt."
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "Om den ej är ikryssad, kan du dölja regeln utan att ta bort den."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
@@ -321,7 +321,7 @@ msgstr "Lämnas tom"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.mrp_company
 msgid "Logistics"
-msgstr ""
+msgstr "Logistik."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
@@ -463,17 +463,17 @@ msgstr "Produktens måttenhet"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Sprida."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Spridningsalternativ."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Ordergruppens spridning."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
@@ -495,7 +495,7 @@ msgstr "Referens"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
+msgstr "En hänvisning till det dokument som skapade denna upphandling.\nDetta avslutas automatiskt av Odoo. "
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -568,7 +568,7 @@ msgstr "Status"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "Detta fält kommer att visa förpackningens ursprung och dess förflyttning."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -613,14 +613,14 @@ msgid ""
 "When the procurement order is confirmed, it automatically\n"
 "                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr ""
+msgstr "När upphandlingsordern bekräftats, sker resten som behövs för att fullfölja den automatiskt såsom: inköp, orderförslag, tillverkningsorder etc."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr ""
+msgstr "t.ex. Köp"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
-msgstr ""
+msgstr "t.ex. SO005"

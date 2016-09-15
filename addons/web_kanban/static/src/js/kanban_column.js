@@ -116,6 +116,7 @@ var KanbanColumn = Widget.extend({
                     } else {
                         // adding record to this column
                         self.records.push(record);
+                        self.dataset.add_ids([record.id]);
                         record.setParent(self);
                         ui.item.addClass('o_updating');
                         self.trigger_up('kanban_column_add_record', {record: record});

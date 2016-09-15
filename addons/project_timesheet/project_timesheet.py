@@ -122,15 +122,6 @@ class task(osv.osv):
             vals[task.id]['planned_hours'] += task.effective_hours
         return vals
 
-    def onchange_project(self, cr, uid, ids, project_id, context=None):
-        result = super(task, self).onchange_project(cr, uid, ids, project_id, context=context)
-        if not project_id:
-            return result
-        if 'value' not in result:
-            result['value'] = {}
-        project = self.pool['project.project'].browse(cr, uid, project_id, context=context)
-        return result
-
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
