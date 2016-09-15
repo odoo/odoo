@@ -225,26 +225,6 @@
             </field>
         </record>
 
-        <record id="action_hr_expense_refused_expenses" model="ir.actions.act_window">
-            <field name="name">Refused Expenses</field>
-            <field name="res_model">hr.expense</field>
-            <field name="view_mode">tree,kanban,form,graph,pivot</field>
-            <field name="search_view_id" ref="view_hr_expense_filter"/>
-            <field name="domain">[('employee_id.user_id', '=', uid)]</field>
-            <field name="context">{'search_default_refused': 1}</field>
-            <field name="help" type="html">
-              <p>
-                The steps to process expenses are:
-                <ol>
-                    <li>You record expenses,</li>
-                    <li>Periodically, you submit expenses report to your manager,</li>
-                    <li>Once approved, your expense report, goes to the accounting,</li>
-                    <li>The accountant validates entries and reimburse you.</li>
-                </ol>
-              </p>
-            </field>
-        </record>
-
         <record id="view_product_hr_expense_form" model="ir.ui.view">
             <field name="name">product.template.expense.form</field>
             <field name="model">product.template</field>
@@ -387,7 +367,7 @@
             <field name="name">hr.expense.sheet.tree</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <tree string="Expense Reports" decoration-warning="state=='draft'" decoration-bf="message_unread == True">
+                <tree string="Expense Reports" decoration-warning="state=='draft'" decoration-bf="message_unread == True" decoration-danger="state=='cancel'">
                     <field name="name" string="Expense Sheet"/>
                     <field name="accounting_date"/>
                     <field name="employee_id"/>
@@ -407,11 +387,10 @@
                 <form string="Expense Reports" class="o_expense_sheet">
                  <header>
                     <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_user" class="oe_highlight o_expense_sheet_approve"/>
-                    <button name="action_sheet_move_create" states="approve" string="Validate" type="object" groups="account.group_account_manager" class="oe_highlight o_expense_sheet_post"/>
-                    <button name="%(hr_expense.hr_expense_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_manager"/>
+                    <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_manager" class="oe_highlight o_expense_sheet_post"/>
+                    <button name="%(hr_expense.hr_expense_sheet_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_manager"/>
                     <button name="reset_expense_sheets" states="cancel" string="Resubmit" type="object"/>
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit" string="Refuse" type="action" groups="hr_expense.group_hr_expense_user" />
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="hr_expense.group_hr_expense_manager"/>
+                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
                 </header>
                 <sheet>
@@ -443,8 +422,8 @@
                     </group>
                      <notebook>
                         <page string="Expense Lines">
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'not_delete': True}">
-                            <tree>
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'not_delete': True, 'reload_on_button': True}">
+                            <tree decoration-danger="is_refused">
                                 <field name="date"/>
                                 <field name="name"/>
                                 <field name="state" invisible="1"/>
@@ -455,6 +434,8 @@
                                 <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip"/>
                                 <field name="tax_ids" widget="many2many_tags"/>
                                 <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="is_refused" invisible="True"/>
+                                <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="reported, refused" string="Refuse" context="{'hr_expense_refuse_model':'hr.expense'}" type="action" groups="hr_expense.group_hr_expense_user, account.group_account_user" icon="fa-times" attrs="{'invisible': ['|', ('is_refused', '=', True),('state', 'in', ['done'])]}"/>
                            </tree>
                         </field>
                         </page>
@@ -462,15 +443,15 @@
                             <group>
                                 <group>
                                     <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
-                                    <field name="bank_journal_id" groups="account.group_account_invoice" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
-                                    <field name="accounting_date" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
+                                    <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
+                                    <field name="accounting_date" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
                                 </group>
                                 <group>
                                     <field name="account_move_id" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
                                 </group>
                         </group>
                         </page>
-                    </notebook>
+                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -581,7 +562,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
-            <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+            <field name="domain">[('employee_id.user_id', '=', uid), ('state', '!=', 'cancel')]</field>
             <field name="context">{}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -589,6 +570,18 @@
               </p><p>
                 Once you have created your expense, submit it to your manager who will validate it.
               </p>
+            </field>
+        </record>
+
+        <record id="action_hr_expense_sheet_my_refused" model="ir.actions.act_window">
+            <field name="name">My Refused Reports</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="view_mode">tree,kanban,form,graph,pivot</field>
+            <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
+            <field name="domain">[('employee_id.user_id', '=', uid), ('state', '=', 'cancel')]</field>
+            <field name="context">{'create': False}</field>
+            <field name="help" type="html">
+              <p>No refused reports to display.</p>
             </field>
         </record>
 
@@ -748,7 +741,7 @@ if records:
 
         <menuitem id="menu_hr_expense_my_expenses" name="My Expenses" sequence="1" parent="menu_hr_expense_root" groups="base.group_user"/>
         <menuitem id="menu_hr_expense_my_expenses_to_submit" name="Expenses to Submit" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_unsubmitted"/>
-        <menuitem id="menu_hr_expense_my_expenses_refused" name="Refused Expenses" sequence="2" parent="menu_hr_expense_my_expenses" action="action_hr_expense_refused_expenses"/>
+        <menuitem id="menu_hr_expense_sheet_my_reports_refused" name="Refused Reports" sequence="2" parent="menu_hr_expense_my_expenses" action="action_hr_expense_sheet_my_refused"/>
         <menuitem id="menu_hr_expense_sheet_my_reports" name="Expense Reports" sequence="3" parent="menu_hr_expense_my_expenses" action="action_hr_expense_sheet_my_all"/>
 
         <menuitem id="menu_hr_expense_to_approve" name="To Approve" sequence="2" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_user"/>

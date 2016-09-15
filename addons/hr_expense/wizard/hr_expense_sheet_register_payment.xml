@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="hr_expense_register_payment_view_form" model="ir.ui.view">
-            <field name="name">hr.expense.register.payment.wizard.form</field>
-            <field name="model">hr.expense.register.payment.wizard</field>
+        <record id="hr_expense_sheet_register_payment_view_form" model="ir.ui.view">
+            <field name="name">hr.expense.sheet.register.payment.wizard.form</field>
+            <field name="model">hr.expense.sheet.register.payment.wizard</field>
             <field name="arch" type="xml">
                 <form string="Register Payment">
                     <sheet>
@@ -37,12 +37,12 @@
         </record>
 
         <!-- Expenses -->
-        <record id="hr_expense_register_payment_wizard_action" model="ir.actions.act_window">
+        <record id="hr_expense_sheet_register_payment_wizard_action" model="ir.actions.act_window">
             <field name="name">Register Payment</field>
-            <field name="res_model">hr.expense.register.payment.wizard</field>
+            <field name="res_model">hr.expense.sheet.register.payment.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="hr_expense_register_payment_view_form"/>
+            <field name="view_id" ref="hr_expense_sheet_register_payment_view_form"/>
             <field name="target">new</field>
             <field name="context">{'default_payment_type': 'inbound'}</field>
             <field name="domain">[('partner_type', '=', 'customer')]</field>

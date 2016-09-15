@@ -4,7 +4,7 @@ from odoo import models, fields, api
 
 
 class HrExpenseRegisterPaymentWizard(models.TransientModel):
-    _inherit = "hr.expense.register.payment.wizard"
+    _inherit = "hr.expense.sheet.register.payment.wizard"
 
     check_amount_in_words = fields.Char(string="Amount in Words")
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')

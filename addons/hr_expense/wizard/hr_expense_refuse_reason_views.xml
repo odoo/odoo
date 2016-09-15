@@ -5,11 +5,13 @@
         <field name="model">hr.expense.refuse.wizard</field>
         <field name="arch" type="xml">
             <form string="Expense refuse reason">
-                <separator string="Reason to refuse expense."/>
-                <field name="description"/>
+                <separator string="Reason to refuse Expense"/>
+                <field name="hr_expense_ids" invisible="1"/>
+                <field name="hr_expense_sheet_id" invisible="1"/>
+                <field name="reason"/>
                 <footer>
                     <button string='Refuse' name="expense_refuse_reason" type="object" class="oe_highlight"/>
-                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
                 </footer>
            </form>
         </field>
