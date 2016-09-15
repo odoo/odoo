@@ -780,8 +780,7 @@ class Post(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the post on the website directly """
+        """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',

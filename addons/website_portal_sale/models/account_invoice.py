@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, exceptions, models
 
 
 class AccountInvoice(models.Model):
@@ -20,12 +20,18 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the online invoice if exists. """
+        """ Instead of the classic form view, redirect to the online invoice for portal users. """
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/my/invoices',  # No controller /my/invoices/<int>, only a report pdf
-            'target': 'self',
-            'res_id': self.id,
-        }
+        if self.env.user.share:
+            try:
+                self.check_access_rule('read')
+            except exceptions.AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/invoices',  # No controller /my/invoices/<int>, only a report pdf
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return super(AccountInvoice, self).get_access_action()
