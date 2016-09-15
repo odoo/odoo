@@ -79,7 +79,7 @@
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="after">
+                <button name="toggle_active" position="before">
                     <button name="%(act_project_task_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
                             attrs="{'invisible' : [('subtask_project_id', '=', False)]}"
                             context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" >

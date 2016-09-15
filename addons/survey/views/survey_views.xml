@@ -126,14 +126,14 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
                             <button name="action_survey_user_input"
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-pencil-square-o">
                                 <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
+                            </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
                         <div class="oe_title" style="width: 100%;">

@@ -639,7 +639,7 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.string_true = _t("Active");
                 this.hover_true = _t("Archive");
                 this.string_false = _t("Archived");
-                this.hover_false = _t("Unarchive");
+                this.hover_false = _t("Restore");
                 break;
             default:
                 var terms = typeof this.options["terminology"] === 'string' ? {} : this.options["terminology"];

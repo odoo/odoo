@@ -233,7 +233,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button name="%(act_hr_employee_2_hr_timesheet)d"
                         type="action"
                         class="oe_stat_button"
@@ -241,7 +241,7 @@
                         groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
                     </button>
-                </div>
+                </button>
             </field>
         </record>
 
