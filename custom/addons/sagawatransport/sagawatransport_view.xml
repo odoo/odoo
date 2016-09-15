@@ -74,7 +74,7 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='team_id']" position="after">
-                    <field name="co_sales_ids"  widget="many2many_tags"/>
+                    <field name="co_sales_ids"  widget="many2many_tags" domain="[('id','!=', uid)]"/>
                 </xpath>
                 <xpath expr="//field[@name='phone']" position="after">
                     <field name="sg_partner_id" string="Customer 2" context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
