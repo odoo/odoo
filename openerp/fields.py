@@ -1717,6 +1717,10 @@ class Many2one(_Relational):
     def convert_to_display_name(self, value, record=None):
         return ustr(value.display_name)
 
+    def convert_to_onchange(self, value, fnames=None):
+        if not value.id:
+            return False
+        return super(Many2one, self).convert_to_onchange(value, fnames)
 
 class UnionUpdate(SpecialValue):
     """ Placeholder for a value update; when this value is taken from the cache,
