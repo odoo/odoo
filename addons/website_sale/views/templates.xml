@@ -483,10 +483,10 @@
         </t>
     </template>
 
-    <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Suggested Products">
+    <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
         <xpath expr="//div[@id='product_full_description']" position="after">
             <div class="container mt32" t-if="product.alternative_product_ids">
-                <h3>Suggested Products:</h3>
+                <h3>Alternative Products:</h3>
                 <div class="row mt16" style="">
                     <t t-foreach="product.alternative_product_ids" t-as="alt_product">
                         <div class="col-md-2 thumbnail" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
@@ -942,7 +942,7 @@
         </t>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Suggested Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <table t-if="suggested_products" class="js_cart_lines table table-striped table-condensed">
                 <colgroup>

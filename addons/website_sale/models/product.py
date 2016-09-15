@@ -110,21 +110,26 @@ class ProductTemplate(models.Model):
     )
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=True)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
-                                               string='Suggested Products', help='Appear on the product page')
+                                               string='Alternative Products', help='Suggest more expensive alternatives to '
+                                               'your customers (upsell strategy). Those products show up on the product page.')
     accessory_product_ids = fields.Many2many('product.product', 'product_accessory_rel', 'src_id', 'dest_id',
-                                             string='Accessory Products', help='Appear on the shopping cart')
+                                             string='Accessory Products', help='Accessories show up when the customer reviews the '
+                                             'cart before paying (cross-sell strategy, e.g. for computers: mouse, keyboard, etc.). '
+                                             'An algorithm figures out a list of accessories based on all the products added to cart.')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
                                       default=lambda self: self._default_website_sequence())
     public_categ_ids = fields.Many2many('product.public.category', string='Website Product Category',
-                                        help="Those categories are used to group similar products for e-commerce.")
+                                        help="Categories can be published on the Shop page (online catalog grid) to help "
+                                        "customers find all the items within a category. To publish them, go to the Shop page, "
+                                        "hit Customize and turn *Product Categories* on. A product can belong to several categories.")
     availability = fields.Selection([
         ('empty', 'Display Nothing'),
         ('in_stock', 'In Stock'),
         ('warning', 'Warning'),
-    ], "Availability", default='empty', help="This field is used to display a availability banner with a message on the ecommerce")
+    ], "Availability", default='empty', help="Adds an availability status on the web product page.")
     availability_warning = fields.Text("Availability Warning", translate=True)
     product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
 
