@@ -46,6 +46,7 @@ class ProjectIssue(models.Model):
     priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', index=True, default='0')
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
                                domain="[('project_ids', '=', project_id)]", copy=False,
+                               group_expand='_read_group_stage_ids',
                                default=_get_default_stage_id)
     project_id = fields.Many2one('project.project', string='Project', track_visibility='onchange', index=True)
     duration = fields.Float('Duration')
@@ -67,31 +68,14 @@ class ProjectIssue(models.Model):
     legend_done = fields.Char(related="stage_id.legend_done", string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related="stage_id.legend_normal", string='Kanban Ongoing Explanation', readonly=True)
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
-        access_rights_uid = access_rights_uid or self.env.uid
-        ProjectTaskType = self.env['project.task.type']
-        order = ProjectTaskType._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        search_domain = [('id', 'in', stages.ids)]
         # retrieve project_id from the context, add them to already fetched columns (ids)
         if 'default_project_id' in self.env.context:
-            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id']), ('id', 'in', self.ids)]
-        else:
-            search_domain = [('id', 'in', self.ids)]
+            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
         # perform search
-        project_task_types = ProjectTaskType.sudo(access_rights_uid).search(search_domain, order=order)
-        result = project_task_types.sudo(access_rights_uid).name_get()
-        # restore order of the search
-        project_task_type_ids = project_task_types.mapped('id')
-        result.sort(lambda x, y: cmp(project_task_type_ids.index(x[0]), project_task_type_ids.index(y[0])))
-        fold = {project_task_type.id: project_task_type.fold for project_task_type in project_task_types}
-        return result, fold
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+        return stages.search(search_domain, order=order)
 
     @api.multi
     @api.depends('create_date', 'date_closed', 'date_open')

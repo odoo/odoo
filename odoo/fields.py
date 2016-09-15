@@ -335,6 +335,7 @@ class Field(object):
 
         'related_field': None,          # corresponding related field
         'group_operator': None,         # operator for aggregating values
+        'group_expand': None,           # name of method to expand groups in read_group()
         'prefetch': True,               # whether the field is prefetched
     }
 

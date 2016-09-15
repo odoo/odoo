@@ -258,15 +258,13 @@ class BaseModel(object):
     _parent_store = False       # set to True to compute MPTT (parent_left, parent_right)
     _parent_order = False       # order to use for siblings in MPTT
     _date_name = 'date'         # field to use for default calendar view
+    _fold_name = 'fold'         # field to determine folded groups in kanban views
 
     _needaction = False         # whether the model supports "need actions" (see mail)
     _translate = True           # False disables translations export for this model
 
     _depends = {}               # dependencies of models backed up by sql views
                                 # {model_name: field_names, ...}
-
-    _group_by_full = {}         # {field: method}, where method returns (records
-                                # name_get, {id: fold}) used by read_group()
 
     # default values for _transient_vacuum()
     _transient_check_count = 0
@@ -610,7 +608,6 @@ class BaseModel(object):
         cls._log_access = cls._auto
         cls._inherits = {}
         cls._depends = {}
-        cls._group_by_full = {}
         cls._constraints = {}
         cls._sql_constraints = []
 
@@ -626,9 +623,6 @@ class BaseModel(object):
 
             for mname, fnames in base._depends.iteritems():
                 cls._depends[mname] = cls._depends.get(mname, []) + fnames
-
-            for fname, func in base._group_by_full.iteritems():
-                cls._group_by_full[fname] = api.guess(func)
 
             for cons in base._constraints:
                 # cons may override a constraint with the same function name
@@ -1674,22 +1668,26 @@ class BaseModel(object):
                                  read_group_result, read_group_order=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
+        field = self._fields[groupby]
+        if not field.group_expand:
+            return read_group_result
 
-        # self._group_by_full should map groupable fields to a method that returns
-        # a list of all aggregated values that we want to display for this field,
-        # in the form of a m2o-like pair (key,label).
-        # This is useful to implement kanban views for instance, where all columns
-        # should be displayed even if they don't contain any record.
+        # field.group_expand is the name of a method that returns a list of all
+        # aggregated values that we want to display for this field, in the form
+        # of a m2o-like pair (key,label).
+        # This is useful to implement kanban views for instance, where all
+        # columns should be displayed even if they don't contain any record.
 
         # Grab the list of all groups that should be displayed, including all present groups
-        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        all_groups, folded = self._group_by_full[groupby](
-            # Beware: present_group_ids do not belong to model self!
-            self.browse(present_group_ids),
-            domain,
-            read_group_order=read_group_order,
-            access_rights_uid=odoo.SUPERUSER_ID,
-        )
+        group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+        groups = self.env[field.comodel_name].browse(group_ids)
+        # determine order on groups's model
+        order = groups._order
+        if read_group_order == groupby + ' desc':
+            order = tools.reverse_order(order)
+        groups = getattr(self, field.group_expand)(groups, domain, order)
+        groups = groups.sudo()
+        all_groups = groups.name_get()
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
@@ -1737,9 +1735,10 @@ class BaseModel(object):
             else:
                 append_right(all_groups.pop(0))
 
-        if folded:
+        if groups._fold_name in groups._fields:
             for r in result:
-                r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
+                group = groups.browse(r[groupby] and r[groupby][0])
+                r['__fold'] = group[groups._fold_name]
         return result
 
     @api.model
@@ -2056,7 +2055,7 @@ class BaseModel(object):
 
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
-        if lazy and groupby_fields[0] in self._group_by_full:
+        if lazy:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
