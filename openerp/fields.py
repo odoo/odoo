@@ -29,6 +29,7 @@ from types import NoneType
 import logging
 import pytz
 import xmlrpclib
+from re import sub as regex_sub
 
 from openerp.sql_db import LazyCursor
 from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
@@ -402,6 +403,7 @@ class Field(object):
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
+            name = regex_sub(r'(_id$|_ids$)', '', name)
             self.string = name.replace('_', ' ').capitalize()
 
         # determine self.default and cls._defaults in a consistent way
