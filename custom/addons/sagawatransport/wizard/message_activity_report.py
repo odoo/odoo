@@ -1,7 +1,7 @@
 import time
 from datetime import datetime, timedelta
 from openerp import api, fields, models, _
-
+from openerp.exceptions import UserError
 
 class MessageActivity(models.TransientModel):
 
@@ -32,6 +32,8 @@ class MessageActivity(models.TransientModel):
         result = {}
         result['date1'] = data['form']['date1'] or False
         result['date2'] = data['form']['date2'] or False
+        if result['date1'] > result['date2']:
+            raise UserError(_('Start Date should less than End Date!.'))
         return result
 
     @api.multi
@@ -47,9 +49,5 @@ class MessageActivity(models.TransientModel):
 
 
     def _print_report(self, data):
-        res = {}
-        data['form'].update(self.read(['date1'])[0])
-        data['form'].update(self.read(['date1'])[0])
-        data['form'].update(res)
         return self.env['report'].with_context(landscape=True).get_action(self, 'sagawatransport.report_crm_activity_mail',
                                                                           data=data)
