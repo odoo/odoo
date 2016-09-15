@@ -422,9 +422,7 @@ class Slide(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the slide on the website directly
-        if it is published. """
+        """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
         if self.website_published:
             return {

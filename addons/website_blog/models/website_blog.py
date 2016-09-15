@@ -264,7 +264,10 @@ class BlogPost(osv.Model):
     def get_access_action(self, cr, uid, ids, context=None):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the post on the website directly """
-        post = self.browse(cr, uid, ids[0], context=context)
+        post = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
+        user = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+        if user.share and not post.website_published:
+            return super(BlogPost, self).get_access_action(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (post.blog_id.id, post.id),

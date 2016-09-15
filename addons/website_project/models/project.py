@@ -1,22 +1,29 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, exceptions, models
 
 class Project(models.Model):
     _inherit = ['project.project']
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the post on the website directly """
+        """ Instead of the classic form view, redirect to website for portal users
+        that can read the project. """
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/my/project/%s' % self.id,
-            'target': 'self',
-            'res_id': self.id,
-        }
+        if self.env.user.share:
+            try:
+                self.check_access_rule('read')
+            except exceptions.AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/project/%s' % self.id,
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return super(Project, self).get_access_action()
 
     @api.multi
     def _notification_group_recipients(self, message, recipients, done_ids, group_data):
@@ -35,15 +42,22 @@ class Task(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the post on the website directly """
+        """ Instead of the classic form view, redirect to website for portal users
+        that can read the task. """
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/my/task/%s' % self.id,
-            'target': 'self',
-            'res_id': self.id,
-        }
+        if self.env.user.share:
+            try:
+                self.check_access_rule('read')
+            except exceptions.AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/task/%s' % self.id,
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return super(Task, self).get_access_action()
 
     @api.multi
     def _notification_group_recipients(self, message, recipients, done_ids, group_data):
@@ -55,4 +69,3 @@ class Task(models.Model):
                 group_data['user'] |= recipient
                 done_ids.add(recipient.id)
         return super(Task, self)._notification_group_recipients(message, recipients, done_ids, group_data)
-
