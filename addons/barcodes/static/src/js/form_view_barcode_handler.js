@@ -52,6 +52,11 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         }
     },
 
+    destroy: function () {
+        this.stop_listening();
+        this._super.apply(this, arguments);
+    },
+
     _display_no_edit_mode_warning: function() {
         this.do_warn(_t('Error : Document not editable'), _t('To modify this document, please first start edition.'));
     },
