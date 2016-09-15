@@ -49,9 +49,5 @@ class MessageActivity(models.TransientModel):
 
 
     def _print_report(self, data):
-        res = {}
-        data['form'].update(self.read(['date1'])[0])
-        data['form'].update(self.read(['date1'])[0])
-        data['form'].update(res)
         return self.env['report'].with_context(landscape=True).get_action(self, 'sagawatransport.report_crm_activity_mail',
                                                                           data=data)
