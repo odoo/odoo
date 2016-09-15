@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -125,6 +125,7 @@ class Applicant(models.Model):
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
                                copy=False, index=True,
+                               group_expand='_read_group_stage_ids',
                                default=_default_stage_id)
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
@@ -180,33 +181,18 @@ class Applicant(models.Model):
         for record in self:
             record.attachment_number = attach_data.get(record.id, 0)
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
-        access_rights_uid = access_rights_uid or self.env.uid
-        Stage = self.env['hr.recruitment.stage']
-        order = Stage._order
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
         # retrieve job_id from the context and write the domain: ids + contextual columns (job or default)
         job_id = self._context.get('default_job_id')
         search_domain = [('job_id', '=', False)]
         if job_id:
-            search_domain = ['|'] + search_domain + [('job_id', '=', job_id)]
-        if self.ids:
-            search_domain = ['|'] + search_domain + [('id', 'in', self.ids)]
+            search_domain = ['|', ('job_id', '=', job_id)] + search_domain
+        if stages:
+            search_domain = ['|', ('id', 'in', stages.ids)] + search_domain
 
-        stage_ids = Stage._search(search_domain, order=order, access_rights_uid=access_rights_uid)
-        stages = Stage.sudo(access_rights_uid).browse(stage_ids)
-        result = stages.name_get()
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stages:
-            fold[stage.id] = stage.fold or False
-        return result, fold
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
     @api.onchange('job_id')
     def onchange_job_id(self):

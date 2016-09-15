@@ -3,7 +3,7 @@
 
 from lxml import etree
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
@@ -304,28 +304,14 @@ class Task(models.Model):
             return False
         return self.stage_find(project_id, [('fold', '=', False)])
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
-        TaskType = self.env['project.task.type']
-        order = TaskType._order
-        access_rights_uid = access_rights_uid or self.env.uid
-        if read_group_order == 'stage_id desc':
-            order = '%s desc' % order
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        search_domain = [('id', 'in', stages.ids)]
         if 'default_project_id' in self.env.context:
-            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id']), ('id', 'in', self.ids)]
-        else:
-            search_domain = [('id', 'in', self.ids)]
-        stage_ids = TaskType._search(search_domain, order=order, access_rights_uid=access_rights_uid)
-        stages = TaskType.sudo(access_rights_uid).browse(stage_ids)
-        result = stages.name_get()
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
+            search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
-        return result, {stage.id: stage.fold for stage in stages}
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids,
-    }
+        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
     active = fields.Boolean(default=True)
     name = fields.Char(string='Task Title', track_visibility='onchange', required=True, index=True)
@@ -337,7 +323,7 @@ class Task(models.Model):
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
-        default=_get_default_stage_id,
+        default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
     kanban_state = fields.Selection([
