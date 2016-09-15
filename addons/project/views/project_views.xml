@@ -248,7 +248,7 @@
                                             <div groups="project.group_project_manager">
                                                 <a type="edit">Settings</a>
                                             </div>
-                                            <div>
+                                            <div attrs="{'invisible': [('use_tasks', '=', False)]}">
                                                 <a name="%(project.action_project_task_user_tree_filtered)d" type="action">Tasks</a>
                                             </div>
                                         </div>

@@ -26,7 +26,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets"/>
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                 </div>
                 <field name="user_id" position="after">
                     <field name="subtask_project_id" groups="base.group_no_one" />
@@ -121,8 +121,11 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="allow_timesheets" invisible="1"/>
+                </field>
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
-                    <div>
+                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
                     </div>
                 </xpath>

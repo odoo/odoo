@@ -8,7 +8,7 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     task_id = fields.Many2one('project.task', 'Task')
-    project_id = fields.Many2one('project.project', 'Project')
+    project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
     department_id = fields.Many2one('hr.department', "Department", related='user_id.employee_ids.department_id', store=True)
 
     @api.onchange('project_id')
