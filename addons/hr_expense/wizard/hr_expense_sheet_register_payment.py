@@ -5,10 +5,10 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from werkzeug import url_encode
 
-class HrExpenseRegisterPaymentWizard(models.TransientModel):
+class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
-    _name = "hr.expense.register.payment.wizard"
-    _description = "Hr Expense Register Payment wizard"
+    _name = "hr.expense.sheet.register.payment.wizard"
+    _description = "Expense Report Register Payment wizard"
 
     @api.model
     def _default_partner_id(self):

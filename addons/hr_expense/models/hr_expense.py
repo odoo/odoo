@@ -44,6 +44,7 @@ class HrExpense(models.Model):
         help="Status of the expense.")
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", readonly=True, copy=False)
     reference = fields.Char(string="Bill Reference")
+    is_refused = fields.Boolean(string="Explicitely Refused by manager or acccountant", readonly=True, copy=False)
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -307,6 +308,13 @@ class HrExpense(models.Model):
         res['context'] = {'default_res_model': 'hr.expense', 'default_res_id': self.id}
         return res
 
+    @api.multi
+    def refuse_expense(self,reason):
+        self.write({'is_refused': True})
+        self.sheet_id.write({'state': 'cancel'})
+        self.sheet_id.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
+                                             values={'reason': reason, 'is_sheet':False, 'name':self.name})
+
     @api.model
     def get_empty_list_help(self, help_message):
         if help_message:
@@ -392,7 +400,7 @@ class HrExpenseSheet(models.Model):
                               ('done', 'Paid'),
                               ('cancel', 'Refused')
                               ], string='Status', index=True, readonly=True, track_visibility='onchange', copy=False, default='submit', required=True,
-        help='Expense Report State')
+    help='Expense Report State')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'submit': [('readonly', False)]}, default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1))
     address_id = fields.Many2one('res.partner', string="Employee Home Address")
     payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Payment By")
@@ -512,11 +520,11 @@ class HrExpenseSheet(models.Model):
         self.attachment_number = sum(self.expense_line_ids.mapped('attachment_number'))
 
     @api.multi
-    def refuse_expenses(self, reason):
+    def refuse_sheet(self, reason):
         self.write({'state': 'cancel'})
         for sheet in self:
-            body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (sheet.name, reason))
-            sheet.message_post(body=body)
+            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
+                                         values={'reason': reason ,'is_sheet':True ,'name':self.name})
 
     @api.multi
     def approve_expense_sheets(self):
@@ -528,6 +536,7 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def reset_expense_sheets(self):
+        self.mapped('expense_line_ids').write({'is_refused': False})
         return self.write({'state': 'submit'})
 
     @api.multi
