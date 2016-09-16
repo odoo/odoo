@@ -71,7 +71,7 @@
                     <t t-snippet="mass_mailing.s_mail_block_steps" t-thumbnail="/mass_mailing/static/src/img/blocks/block_steps.png"/>
                 </div>
             </div>
-            <div t-if="website" id="email_designer_default_footer" class="o_panel">
+            <div id="email_designer_default_footer" class="o_panel">
                 <div class="o_panel_header">
                     <i class="fa fa-angle-double-down"/> Footers
                 </div>
@@ -795,7 +795,7 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
                 <tbody>
-                    <tr>
+                    <tr t-if="website">
                         <td class="o_mail_footer_social">
                             &amp;nbsp;
                             <t t-if="website.social_facebook">
@@ -844,7 +844,7 @@
                 <tbody>
                     <tr>
                         <td class="o_mail_footer_description">
-                            <p class="o_mail_no_margin">
+                            <p t-if="res_company" class="o_mail_no_margin">
                                 <strong><t t-esc="res_company.partner_id.name"/></strong>
                             </p>
                             <div class="o_mail_footer_links">
@@ -854,7 +854,7 @@
                                 <p class="o_mail_footer_copy">© 2016 All Rights Reserved</p>
                             </div>
                         </td>
-                        <td class="o_mail_footer_social">
+                        <td t-if="website" class="o_mail_footer_social">
                             &amp;nbsp;
                             <t t-if="website.social_facebook">
                                 <a t-att-href="website.social_facebook" class="btn btn-link">
