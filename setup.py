@@ -8,15 +8,15 @@ from setuptools import find_packages, setup
 from os.path import join, dirname
 
 
-execfile(join(dirname(__file__), 'openerp', 'release.py'))  # Load release variables
-lib_name = 'openerp'
+execfile(join(dirname(__file__), 'odoo', 'release.py'))  # Load release variables
+lib_name = 'odoo'
 
 
 def py2exe_datafiles():
     data_files = {}
     data_files['Microsoft.VC90.CRT'] = glob('C:\Microsoft.VC90.CRT\*.*')
 
-    for root, dirnames, filenames in os.walk('openerp'):
+    for root, dirnames, filenames in os.walk('odoo'):
         for filename in filenames:
             if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
                 data_files.setdefault(root, []).append(join(root, filename))
@@ -84,7 +84,7 @@ def py2exe_options():
                         'markupsafe',
                         'mock',
                         'ofxparse',
-                        'openerp',
+                        'odoo',
                         'openid',
                         'passlib',
                         'PIL',
@@ -131,7 +131,7 @@ setup(
     license=license,
     scripts=['openerp-server', 'odoo.py'],
     packages=find_packages(),
-    package_dir={'%s' % lib_name: 'openerp'},
+    package_dir={'%s' % lib_name: 'odoo'},
     include_package_data=True,
     install_requires=[
         'babel >= 1.0',
