@@ -77,30 +77,30 @@
 </div>
 % endif
 % if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access'):
-<div summary="o_mail_notification">
-<table cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
+<div summary="o_mail_notification" style="padding: 0px; width:600px;">
+<table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
 <tbody><tr>
     <td valign="center">
-        % if ctx.get('button_access') or ctx.get('button_follow') or ctx.get('button_unfollow'):
-        <a href="${ctx['button_access']['url']}" style="padding: 8px 12px; font-size: 12px; text-decoration: none; color: #FFFFFF; text-decoration:none !important; font-weight: 400; background-color: #a24689; border: 0px solid #a24689; border-radius:3px">${ctx['button_access']['title']}</a>
+        % if ctx.get('button_access'):
+        <a href="${ctx['button_access']['url']}" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #a24689; border: 0px solid #a24689; border-radius:3px">${ctx['button_access']['title']}</a>
         % endif
 
         % if ctx.get('button_follow'):
-        % if ctx.get('actions'):
+        % if ctx.get('button_access'):
            |
         % endif
-        <a href="${ctx['button_follow']['url']}" style="text-decoration:none; color: #a24689; text-decoration:none !important;">${ctx['button_follow']['title']}</a>
+        <a href="${ctx['button_follow']['url']}" style="color: #a24689; text-decoration: none !important;">${ctx['button_follow']['title']}</a>
         % elif ctx.get('button_unfollow'):
-        % if ctx.get('actions'):
+        % if ctx.get('button_access'):
            |
         % endif
-        <a href="${ctx['button_unfollow']['url']}" style="text-decoration:none; color: #a24689; text-decoration:none !important;">${ctx['button_unfollow']['title']}</a>
+        <a href="${ctx['button_unfollow']['url']}" style="color: #a24689; text-decoration: none !important;">${ctx['button_unfollow']['title']}</a>
         % endif
 
         % if ctx.get('actions'):
         % for action in ctx['actions']:
         |
-        <a href="${action['url']}" style="text-decoration:none; color: #a24689; text-decoration:none !important;">${action['title']}</a>
+        <a href="${action['url']}" style="color: #a24689; text-decoration:none !important;">${action['title']}</a>
         % endfor
         % endif
     </td>
