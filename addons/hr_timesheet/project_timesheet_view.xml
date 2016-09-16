@@ -31,6 +31,12 @@
                 <field name="user_id" position="after">
                     <field name="subtask_project_id" groups="base.group_no_one" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                 </field>
+                <xpath expr="//div[@name='options_active']" position="inside">
+                    <div>
+                        <field name="allow_timesheets" class="oe_inline" string="Allow timesheets"/>
+                        <label for="allow_timesheets"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 
