@@ -1,66 +1,67 @@
-// out: ../compiled/theme_tech.css, sourcemap: false, compress: false
 // lessc@1.4.2
 
+// =========================
+// Mass Mailing "Theme Tech"
+// =========================
 
-@o_mm_tech_color_alpha   : #333;
-@o_mm_tech_color_beta    : white;
-@o_mm_tech_color_gamma   : #59cdcd;
-@o_mm_tech_color_delta   : #bdbdbd;
-@o_mm_tech_color_epsilon : black;
-@o_mm_tech_color_zeta    : #a17e92;
+@o_mm_tech_color_alpha: #333;
+@o_mm_tech_color_beta: white;
+@o_mm_tech_color_gamma: #59cdcd;
+@o_mm_tech_color_delta: #bdbdbd;
+@o_mm_tech_color_epsilon: black;
+@o_mm_tech_color_zeta: #a17e92;
 
+.o_tech_theme {
+    // ===== Colors =====
+    .bg-beta {
+        background-color: @o_mm_tech_color_gamma;
 
-
-.o_layout.o_tech_theme {
-    background-color: @o_mm_tech_color_alpha;
-
-    .o_mail_wrapper {
-        background-color: transparent;
-        color: @o_mm_tech_color_delta;
-        border: none;
+        .btn.btn-primary {
+            color: @o_mm_tech_color_beta;
+            background-color: @o_mm_tech_color_zeta;
+        }
+    }
+    .text-beta {
+        color: @o_mm_tech_color_gamma;
+    }
+    .bg-delta {
+        background-color: @o_mm_tech_color_zeta;
     }
 
-    // ===========   Components
+    // ===== Layout =====
+    &.o_layout {
+        background-color: @o_mm_tech_color_alpha;
 
+        > .o_mail_wrapper {
+            background-color: transparent;
+            color: @o_mm_tech_color_delta;
+            border: none;
+        }
+    }
+
+    // ===== Snippets (general) =====
     .o_mail_snippet_general {
-
         .btn.btn-primary {
             color: @o_mm_tech_color_beta;
             background-color: @o_mm_tech_color_gamma;
         }
+
         .o_mail_full_width_padding {
             padding-left: 20px;
             padding-right: 20px;
         }
+
         a, .o_mail_link {
             font-weight: normal;
             color: @o_mm_tech_color_gamma;
         }
-
-        .bg-beta {
-            background-color: @o_mm_tech_color_gamma;
-
-            .btn.btn-primary {
-                color: @o_mm_tech_color_beta;
-                background-color: @o_mm_tech_color_zeta;
-            }
-        }
-        .text-beta {
-            color: @o_mm_tech_color_gamma;
-        }
-
-        .bg-delta {
-            background-color: @o_mm_tech_color_zeta;
-        }
-
 
         h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
             color: darken(@o_mm_tech_color_beta, 10%);
         }
     }
 
-    // =========== Snippets
-
+    // ===== Snippets (specific) =====
     .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
         .o_mail_snippet_general {
             margin-top: 10px;
@@ -124,9 +125,6 @@
             background-color: @o_mm_tech_color_beta;
             color: @o_mm_tech_color_alpha;
         }
-    }
-
-    .o_mail_block_footer_tag_line {
     }
 
     .o_mail_block_footer_social {
