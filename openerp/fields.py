@@ -861,10 +861,17 @@ class Field(object):
             env.invalidate(spec)
 
         else:
-            # simply write to the database, and update cache
+            # Write to database
             record.write({self.name: self.convert_to_write(value)})
+            try:
+                # If there were any NewId records, invalidate cache
+                if len(value.ids) < len(value._ids):
+                    record.modified([self.name])
+                    return
+            except AttributeError:
+                pass
+            # Update cache with new value
             record._cache[self] = value
-            record.invalidate_cache([self.name], record.ids)
 
     ############################################################################
     #
