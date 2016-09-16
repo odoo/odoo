@@ -27,7 +27,7 @@ db_host = False
 db_port = False
 db_user = $ODOO_USER
 db_password = False
-addons_path = /usr/lib/python2.7/site-packages/openerp/addons
+addons_path = /usr/lib/python2.7/site-packages/odoo/addons
 " > $ODOO_CONFIGURATION_FILE
     chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
     chmod 0640 $ODOO_CONFIGURATION_FILE
