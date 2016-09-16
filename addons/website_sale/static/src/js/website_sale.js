@@ -283,7 +283,6 @@ odoo.define('website_sale.website_sale', function (require) {
                         $default_price.closest('.oe_website_sale').addClass("discount");
                         $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
                     } else {
-                        $default_price.closest('.oe_website_sale').removeClass("discount");
                         $optional_price.closest('.oe_optional').hide();
                     }
                     product_id = variant_ids[k][0];
