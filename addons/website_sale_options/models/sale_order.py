@@ -10,6 +10,7 @@ class SaleOrderLine(models.Model):
     linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
+
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
@@ -32,31 +33,23 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
+        self.ensure_one()
         """ Add or set product quantity, add_qty can be negative """
         value = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
-
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
         line = SaleOrderLineSudo.browse(value.get('line_id'))
-
         # link a product to the sale order
         if kwargs.get('linked_line_id'):
             linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
             line.write({
-                    "name": _("%s\nOption for: %s") % (line.name, linked_line.product_id.display_name),
-                    "linked_line_id": linked_line.id
-                })
+                'linked_line_id': linked_line.id,
+                'name': line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
+            })
+            linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + line.product_id.display_name})
 
-        value['option_ids'] = set()
-        for so in self:
-            # select all optional products linked to the updated line
-            option_lines = so.order_line.filtered(lambda l: l.linked_line_id.id == line.id)
+        option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == line.id)
+        for option_line_id in option_lines:
+            super(SaleOrder, self)._cart_update(option_line_id.product_id.id, option_line_id.id, add_qty, set_qty, **kwargs)
 
-            # update line
-            for option_line_id in option_lines:
-                super(SaleOrder, self)._cart_update(option_line_id.product_id.id, option_line_id.id, add_qty, set_qty, **kwargs)
-                option_line_id.write({"name": _("%s\nOption for: %s") % (option_line_id.name, option_line_id.linked_line_id.product_id.display_name)})
-                value['option_ids'].add(option_line_id.id)
-
-        value['option_ids'] = list(value['option_ids'])
-
+        value['option_ids'] = list(set(option_lines.ids))
         return value
