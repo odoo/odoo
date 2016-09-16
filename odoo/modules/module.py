@@ -156,7 +156,9 @@ def get_module_path(module, downloaded=False, display_warning=True):
     """
     initialize_sys_path()
     for adp in ad_paths:
-        if os.path.exists(opj(adp, module, MANIFEST)) or os.path.exists(opj(adp, '%s.zip' % module)):
+        files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
+                [opj(adp, module + '.zip')]
+        if any(os.path.exists(f) for f in files):
             return opj(adp, module)
 
     if downloaded:
