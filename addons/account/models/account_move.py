@@ -109,10 +109,6 @@ class AccountMove(models.Model):
         return move
 
     @api.multi
-    def copy(self, default=None):
-        return super(AccountMove, self.with_context(dont_create_taxes=True)).copy(default)
-
-    @api.multi
     def write(self, vals):
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
@@ -992,10 +988,9 @@ class AccountMoveLine(models.Model):
 
     #TODO: to check/refactor
     @api.model
-    def create(self, vals, apply_taxes=True):
-        """ :param apply_taxes: set to False if you don't want vals['tax_ids'] to result in the creation of move lines for taxes and eventual
-                adjustment of the line amount (in case of a tax included in price). This is useful for use cases where you don't want to
-                apply taxes in the default fashion (eg. taxes). You can also pass 'dont_create_taxes' in context.
+    def create(self, vals):
+        """ :context's key apply_taxes: set to True if you want vals['tax_ids'] to result in the creation of move lines for taxes and eventual
+                adjustment of the line amount (in case of a tax included in price).
 
             :context's key `check_move_validity`: check data consistency after move line creation. Eg. set to false to disable verification that the move
                 debit-credit == 0 while creating the move lines composing the move.
@@ -1050,7 +1045,7 @@ class AccountMoveLine(models.Model):
 
         # Create tax lines
         tax_lines_vals = []
-        if apply_taxes and not context.get('dont_create_taxes') and vals.get('tax_ids'):
+        if context.get('apply_taxes') and vals.get('tax_ids'):
             # Get ids from triplets : https://www.odoo.com/documentation/master/reference/orm.html#openerp.models.Model.write
             tax_ids = [tax['id'] for tax in self.resolve_2many_commands('tax_ids', vals['tax_ids']) if tax.get('id')]
             # Since create() receives ids instead of recordset, let's just use the old-api bridge

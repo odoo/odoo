@@ -863,7 +863,6 @@ class AccountInvoice(models.Model):
                 'narration': inv.comment,
             }
             ctx['company_id'] = inv.company_id.id
-            ctx['dont_create_taxes'] = True
             ctx['invoice'] = inv
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)

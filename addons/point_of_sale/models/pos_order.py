@@ -317,7 +317,7 @@ class PosOrder(models.Model):
             for value in group_data:
                 all_lines.append((0, 0, value),)
         if move:  # In case no order was changed
-            move.sudo().with_context(dont_create_taxes=True).write({'line_ids': all_lines})
+            move.sudo().write({'line_ids': all_lines})
             move.sudo().post()
         return True
 
