@@ -98,7 +98,6 @@ class AccountInvoiceRefund(models.TransientModel):
                             'invoice_line_ids': invoice_lines,
                             'tax_line_ids': tax_lines,
                             'date': date,
-                            'name': description,
                             'origin': inv.origin,
                             'fiscal_position_id': inv.fiscal_position_id.id,
                         })
