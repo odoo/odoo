@@ -30,7 +30,7 @@ import operator
 import pytz
 import re
 import time
-from collections import defaultdict, MutableMapping
+from collections import defaultdict, MutableMapping, OrderedDict
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
 
@@ -1687,53 +1687,35 @@ class BaseModel(object):
             order = tools.reverse_order(order)
         groups = getattr(self, field.group_expand)(groups, domain, order)
         groups = groups.sudo()
-        all_groups = groups.name_get()
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
         if remaining_groupbys:
             result_template['__context'] = {'group_by': remaining_groupbys}
 
-        # Merge the left_side (current results as dicts) with the right_side (all
-        # possible values as m2o pairs). Both lists are supposed to be using the
-        # same ordering, and can be merged in one pass.
-        result = []
-        known_values = {}
-        def append_left(left_side):
-            grouped_value = left_side[groupby] and left_side[groupby][0]
-            if not grouped_value in known_values:
-                result.append(left_side)
-                known_values[grouped_value] = left_side
+        # Merge the current results (list of dicts) with all groups (recordset).
+        # Determine the global order of results from all groups, which is
+        # supposed to be in the same order as read_group_result.
+        result = OrderedDict((group.id, {}) for group in groups)
+
+        # fill in results from read_group_result
+        for left_side in read_group_result:
+            left_id = (left_side[groupby] or (False,))[0]
+            if not result.get(left_id):
+                result[left_id] = left_side
             else:
-                known_values[grouped_value].update({count_field: left_side[count_field]})
-        def append_right(right_side):
-            grouped_value = right_side[0]
-            if not grouped_value in known_values:
+                result[left_id][count_field] = left_side[count_field]
+
+        # fill in missing results from all groups
+        for right_side in groups.name_get():
+            right_id = right_side[0]
+            if not result[right_id]:
                 line = dict(result_template)
                 line[groupby] = right_side
-                line['__domain'] = [(groupby,'=',grouped_value)] + domain
-                result.append(line)
-                known_values[grouped_value] = line
-        while read_group_result or all_groups:
-            left_side = read_group_result[0] if read_group_result else None
-            right_side = all_groups[0] if all_groups else None
-            assert left_side is None or left_side[groupby] is False \
-                 or isinstance(left_side[groupby], (tuple,list)), \
-                'M2O-like pair expected, got %r' % left_side[groupby]
-            assert right_side is None or isinstance(right_side, (tuple,list)), \
-                'M2O-like pair expected, got %r' % right_side
-            if left_side is None:
-                append_right(all_groups.pop(0))
-            elif right_side is None:
-                append_left(read_group_result.pop(0))
-            elif left_side[groupby] == right_side:
-                append_left(read_group_result.pop(0))
-                all_groups.pop(0) # discard right_side
-            elif not left_side[groupby] or not left_side[groupby][0]:
-                # left side == "Undefined" entry, not present on right_side
-                append_left(read_group_result.pop(0))
-            else:
-                append_right(all_groups.pop(0))
+                line['__domain'] = [(groupby, '=', right_id)] + domain
+                result[right_id] = line
+
+        result = result.values()
 
         if groups._fold_name in groups._fields:
             for r in result:
