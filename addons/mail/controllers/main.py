@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 from operator import itemgetter
 import psycopg2
 import werkzeug
@@ -8,10 +9,14 @@ from werkzeug import url_encode
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import http
+from openerp import _
 from openerp.exceptions import AccessError
 from openerp.http import request
 
+from openerp.addons.mail.models.mail_thread import _generate_notification_token
 from openerp.addons.web.controllers.main import binary_content
+
+_logger = logging.getLogger(__name__)
 
 
 class MailController(http.Controller):
@@ -22,6 +27,15 @@ class MailController(http.Controller):
         messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
         url = '/web#%s' % url_encode({'action': messaging_action})
         return werkzeug.utils.redirect(url)
+
+    @classmethod
+    def _check_token(cls, token):
+        base_link = request.httprequest.environ['PATH_INFO']
+        params = request.params
+        params.pop('token', '')
+        secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
+        valid_token = _generate_notification_token(secret, base_link, params)
+        return valid_token == token
 
     @classmethod
     def _redirect_to_record(cls, model, res_id):
@@ -154,10 +168,14 @@ class MailController(http.Controller):
 
         return self._redirect_to_record(model, res_id)
 
-    @http.route('/mail/follow', type='http', auth='user')
-    def mail_action_follow(self, model, res_id):
+    @http.route('/mail/follow', type='http', auth='user', methods=['GET'])
+    def mail_action_follow(self,  model, res_id, token=None):
+        if not token or not self._check_token(token):
+            _logger.warning(_('Invalid token in route %s') % request.httprequest.url)
+            return self._redirect_to_messaging()
         if model not in request.env:
             return self._redirect_to_messaging()
+
         Model = request.env[model]
         try:
             Model.browse(res_id).message_subscribe_users()
@@ -166,8 +184,11 @@ class MailController(http.Controller):
 
         return self._redirect_to_record(model, res_id)
 
-    @http.route('/mail/unfollow', type='http', auth='user')
-    def mail_action_unfollow(self, model, res_id):
+    @http.route('/mail/unfollow', type='http', auth='user', methods=['GET'])
+    def mail_action_unfollow(self, model, res_id, token=None):
+        if not token or not self._check_token(token):
+            _logger.warning(_('Invalid token in route %s') % request.httprequest.url)
+            return self._redirect_to_messaging()
         if model not in request.env:
             return self._redirect_to_messaging()
         Model = request.env[model]
@@ -179,47 +200,25 @@ class MailController(http.Controller):
         return self._redirect_to_record(model, res_id)
 
     @http.route('/mail/new', type='http', auth='user')
-    def mail_action_new(self, model, res_id, **kwargs):
+    def mail_action_new(self, model, res_id, action_id):
         if model not in request.env:
             return self._redirect_to_messaging()
         params = {'view_type': 'form', 'model': model}
-        if kwargs.get('action_id'):
-            params['action'] = kwargs['action_id']
+        if action_id:
+            # Probably something to do
+            params['action'] = action_id
         return werkzeug.utils.redirect('/web?#%s' % url_encode(params))
 
-    @http.route('/mail/method', type='http', auth='user')
-    def mail_action_method(self, model, res_id, method, **kwargs):
-        # only public methods / check exists
-        if method.strip().startswith('_') or model not in request.env:
+    @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
+    def mail_action_assign(self, model, res_id, token=None):
+        if not token or not self._check_token(token):
+            _logger.warning(_('Invalid token in route %s') % request.httprequest.url)
             return self._redirect_to_messaging()
-        Model = request.env[model]
-        try:
-            record = Model.browse(int(res_id)).exists()
-            getattr(record, method)(**json.loads(kwargs.get('params', {})))
-        except:
-            return self._redirect_to_messaging()
-
-        return self._redirect_to_record(model, res_id)
-
-    @http.route('/mail/assign', type='http', auth='user')
-    def mail_action_assign(self, model, res_id, **kwargs):
         if model not in request.env:
             return self._redirect_to_messaging()
         Model = request.env[model]
         try:
             Model.browse(int(res_id)).exists().write({'user_id': request.uid})
-        except:
-            return self._redirect_to_messaging()
-
-        return self._redirect_to_record(model, res_id)
-
-    @http.route('/mail/workflow', type='http', auth='user')
-    def mail_action_workflow(self, model, res_id, signal, **kwargs):
-        if model not in request.env:
-            return self._redirect_to_messaging()
-        Model = request.env[model]
-        try:
-            Model.browse(int(res_id)).exists().signal_workflow(signal)
         except:
             return self._redirect_to_messaging()
 

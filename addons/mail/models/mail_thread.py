@@ -4,6 +4,8 @@ import base64
 import datetime
 import dateutil
 import email
+import hashlib
+import hmac
 import json
 import lxml
 from lxml import etree
@@ -32,6 +34,12 @@ mail_header_msgid_re = re.compile('<[^<>]+>')
 
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, filter(None, message.get_all(header, []))))
+
+
+def _generate_notification_token(secret, base_link, params):
+    token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params.keys())))
+    hm = hmac.new(str(secret), token, hashlib.sha1).hexdigest()
+    return hm
 
 
 class MailThread(models.AbstractModel):
@@ -551,20 +559,26 @@ class MailThread(models.AbstractModel):
                 'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
             }
 
-        link = False
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
-            link = '/mail/%s?%s' % (link_type, url_encode(params))
-        elif link_type == 'workflow':
-            params = dict(base_params, signal=kwargs['signal'])
-            link = '/mail/workflow?%s' % url_encode(params)
-        elif link_type == 'method':
-            method = kwargs.pop('method')
-            params = dict(base_params, method=method, params=json.dumps(kwargs))
-            link = '/mail/method?%s' % url_encode(params)
+            base_link = '/mail/%s' % link_type
         elif link_type == 'new':
-            params = dict(base_params, action_id=kwargs.get('action_id'))
-            link = '/mail/new?%s' % url_encode(params)
+            params = dict(base_params, action_id=kwargs.get('action_id', ''))
+            base_link = '/mail/new'
+        elif link_type == 'controller':
+            controller = kwargs.pop('controller')
+            params = dict(base_params)
+            params.pop('model')
+            base_link = '%s' % controller
+        else:
+            return ''
+
+        if link_type not in ['view', 'new']:
+            secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+            token = _generate_notification_token(secret, base_link, params)
+            params['token'] = token
+
+        link = '%s?%s' % (base_link, url_encode(params))
         return link
 
     @api.multi
