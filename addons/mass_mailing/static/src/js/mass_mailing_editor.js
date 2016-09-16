@@ -251,7 +251,11 @@ snippets_editor.Class.include({
 
         function editable_area_is_empty($layout) {
             $layout = $layout || $editable_area.find(".o_layout");
-            return ($editable_area.html().trim() === "" || ($layout.length > 0 && $layout.html().trim() === ""));
+            var $mail_wrapper = $layout.children(".o_mail_wrapper");
+            return (
+                $editable_area.html().trim() === ""
+                || ($layout.length > 0 && ($layout.html().trim() === "" || $mail_wrapper.length > 0 && $mail_wrapper.html().trim() === ""))
+            );
         }
 
         function check_selected_theme() {
@@ -299,7 +303,8 @@ snippets_editor.Class.include({
             switch_images(theme_params, $editable_area);
 
             var $old_layout = $editable_area.find(".o_layout");
-            var $new_layout = $("<div/>", {"class": "o_layout oe_structure " + theme_params.className});
+            var $new_wrapper = $("<div/>", {"class": "o_mail_wrapper oe_structure"});
+            var $new_layout = $("<div/>", {"class": "o_layout " + theme_params.className}).append($new_wrapper);
 
             var $contents;
             if (first_choice) {
@@ -311,7 +316,7 @@ snippets_editor.Class.include({
             }
 
             $editable_area.empty().append($new_layout);
-            $new_layout.append($contents);
+            $new_wrapper.append($contents);
             $old_layout.remove();
 
             self.show_blocks();
