@@ -147,7 +147,7 @@
         <field name="arch" type="xml">
             <field name='currency_id' position='after'>
                 <field name="selectable"/>
-                <field name="website_id" string='Allow to use on ' placeholder="None website" groups="base.group_no_one" />
+                <field name="website_id" string='Allow to use on ' placeholder="None website" />
             </field>
         </field>
     </record>
@@ -174,7 +174,7 @@
                         <label class="oe_edit_only" for="name" string="Image Name"/>
                         <h1><field name="name" placeholder="Image Name" required="True"/></h1>
                         <field name="product_tmpl_id" invisible="1"/>
-                    </div>                        
+                    </div>
                 </sheet>
             </form>
         </field>
