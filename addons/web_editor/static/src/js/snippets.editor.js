@@ -287,6 +287,9 @@ data.Class = Widget.extend({
 
         self.make_snippet_draggable(self.$snippets);
         this.associate_snippet_names(this.$snippets);
+
+        this.show_blocks();
+        this.$el.on("snippet-dropped snippet-removed", this.show_blocks.bind(this));
     },
 
     associate_snippet_names: function ($snippets) {
@@ -1051,6 +1054,8 @@ data.Editor = Class.extend({
         // clean editor if they are image or table in deleted content
         $(".note-control-selection").hide();
         $('.o_table_handler').remove();
+
+        this.buildingBlock.$el.trigger("snippet-removed");
 
         return false;
     },
