@@ -11,7 +11,7 @@ class WebsiteBackend(http.Controller):
     def fetch_dashboard_data(self, date_from, date_to):
 
         params = request.env['ir.config_parameter']
-        ga_client_id = params.get_param('google_management_client_id', default='')
+        ga_client_id = params.sudo().get_param('google_management_client_id', default='')
 
         return {
             'groups': {'system': request.env['res.users'].has_group('base.group_system')},
