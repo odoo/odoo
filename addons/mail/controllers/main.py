@@ -193,7 +193,7 @@ class MailController(http.Controller):
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
 
     @http.route('/mail/assign', type='http', auth='user')
-    def mail_action_assign(self, model, res_id, **kwargs):
+    def mail_action_assign(self, model, res_id):
         if model not in request.env:
             return self._redirect_to_messaging()
         Model = request.env[model]

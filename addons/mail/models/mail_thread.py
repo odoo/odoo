@@ -562,16 +562,15 @@ class MailThread(models.AbstractModel):
                 'message_id': kwargs.pop('message_id')
             }
         else:
-            self.ensure_one()
             base_params = {
-                'model': self._name,
-                'res_id': self.ids[0],
+                'model': kwargs.pop('model', self._name),
+                'res_id': kwargs.pop('res_id', self.ids and self.ids[0] or False),
             }
 
         link = False
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
-            link = '/mail/view?%s' % url_encode(params)
+            link = '/mail/%s?%s' % (link_type, url_encode(params))
         elif link_type == 'workflow':
             params = dict(base_params, signal=kwargs['signal'])
             link = '/mail/workflow?%s' % url_encode(params)
@@ -655,8 +654,8 @@ class MailThread(models.AbstractModel):
                 'followers': self.env['res.partner'],
                 'not_followers': self.env['res.partner'],
                 'button_access': {'url': access_link, 'title': view_title},
-                'button_follow': {'url': '/mail/follow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Follow')},
-                'button_unfollow': {'url': '/mail/unfollow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Unfollow')},
+                'button_follow': {'url': self._notification_link_helper('follow', model=message.model, res_id=message.res_id), 'title': _('Follow')},
+                'button_unfollow': {'url': self._notification_link_helper('unfollow', model=message.model, res_id=message.res_id), 'title': _('Unfollow')},
                 'actions': list(),
             }
             group_data[category] = self.env['res.partner']
