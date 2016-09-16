@@ -15,8 +15,11 @@ class ProductStyle(models.Model):
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
+    def _default_website(self):
+        return self.env['website'].search([], limit=1)
+
+    website_id = fields.Many2one('website', string="website", default=_default_website)
     code = fields.Char(string='E-commerce Promotional Code')
-    website_id = fields.Many2one('website', string="Website")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
