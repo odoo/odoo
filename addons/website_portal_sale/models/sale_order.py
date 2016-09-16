@@ -30,6 +30,17 @@ class SaleOrder(models.Model):
                 }
         return super(SaleOrder, self).get_access_action()
 
+    @api.multi
+    def _notification_recipients(self, message, groups):
+        groups = super(SaleOrder, self)._notification_recipients(message, groups)
+
+        self.ensure_one()
+        if self.state not in ('draft', 'cancel'):
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
+
+        return groups
+
     def _force_lines_to_invoice_policy_order(self):
         for line in self.order_line:
             if self.state in ['sale', 'done']:

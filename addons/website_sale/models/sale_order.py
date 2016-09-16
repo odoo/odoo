@@ -160,15 +160,6 @@ class SaleOrder(models.Model):
             accessory_products -= order.website_order_line.mapped('product_id')
             return random.sample(accessory_products, len(accessory_products))
 
-    @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(SaleOrder, self)._notification_recipients(message, groups)
-
-        for group_name, group_method, group_data in groups:
-            group_data['has_button_access'] = True
-
-        return groups
-
 
 class Website(models.Model):
     _inherit = 'website'
