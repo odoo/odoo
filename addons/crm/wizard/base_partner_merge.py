@@ -306,7 +306,7 @@ class MergePartnerAutomatic(models.TransientModel):
             raise UserError(_("You cannot merge a contact with one of his parent."))
 
         # check only admin can merge partners with different emails
-        if SUPERUSER_ID != self.env.uid and len(set(partner.email for partner in Partner.browse(partner_ids))) > 1:
+        if SUPERUSER_ID != self.env.uid and len(set(partner.email for partner in partner_ids)) > 1:
             raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         # remove dst_partner from partners to merge

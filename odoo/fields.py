@@ -1898,6 +1898,10 @@ class Many2one(_Relational):
     def convert_to_display_name(self, value, record):
         return ustr(value.display_name)
 
+    def convert_to_onchange(self, value, record, fnames=()):
+        if not value.id:
+            return False
+        return super(Many2one, self).convert_to_onchange(value, record, fnames)
 
 class UnionUpdate(SpecialValue):
     """ Placeholder for a value update; when this value is taken from the cache,
@@ -1923,10 +1927,10 @@ class _RelationalMulti(_Relational):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
         for record in records:
             if self in record._cache:
-                value = self.convert_to_cache(record[self.name] | value, record, validate=False)
+                val = self.convert_to_cache(record[self.name] | value, record, validate=False)
             else:
-                value = UnionUpdate(self, record, value)
-            record._cache[self] = value
+                val = UnionUpdate(self, record, value)
+            record._cache[self] = val
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)

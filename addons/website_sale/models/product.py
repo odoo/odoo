@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools, _
 import odoo.addons.decimal_precision as dp
+from odoo.tools.translate import html_translate
 
 
 class ProductStyle(models.Model):
@@ -108,7 +109,7 @@ class ProductTemplate(models.Model):
         domain=lambda self: ['&', ('model', '=', self._name), ('message_type', '=', 'comment')],
         string='Website Comments',
     )
-    website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=True)
+    website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
                                                string='Alternative Products', help='Suggest more expensive alternatives to '
                                                'your customers (upsell strategy). Those products show up on the product page.')

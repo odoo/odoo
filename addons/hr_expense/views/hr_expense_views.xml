@@ -56,7 +56,7 @@
                                 <field name="quantity" class="oe_inline"/>
                                 <field name="product_uom_id" widget="selection" class="oe_inline" groups="product.group_uom"/>
                             </div>
-                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_no_one"/>
+                            <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="base.group_no_one"/>
                         </group><group>
                             <field name="reference"/>
                             <field name="date"/>
@@ -161,7 +161,7 @@
                     <field name="product_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <separator />
-                    <filter domain="[('state', '=', 'draft')]" string="To Report" name="to_report" help="New Expense"/>
+                    <filter domain="[('state', '=', 'draft')]" string="To Submit" name="to_report" help="New Expense"/>
                     <filter domain="[('state', '=', 'report')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
                     <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
