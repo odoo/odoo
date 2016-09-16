@@ -279,7 +279,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
                     $price.html(price_to_str(variant_ids[k][2]));
                     $default_price.html(price_to_str(variant_ids[k][3]));
-                    if (variant_ids[k][3]-variant_ids[k][2]>0.2) {
+                    if (variant_ids[k][3]-variant_ids[k][2]>0.01) {
                         $default_price.closest('.oe_website_sale').addClass("discount");
                         $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
                     } else {
