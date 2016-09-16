@@ -1,24 +1,19 @@
-// out: ../compiled/theme_default.css, sourcemap: false, compress: false
 // lessc@1.4.2
 
-// =======================================
-// ========== Mass Mailing "Theme Default"
-// =======================================
+// ============================
+// Mass Mailing "Theme Default"
+// ============================
 
+// ===== Default Theme palette =====
+@o_mm_def_color_alpha: #f5f5f5;
+@o_mm_def_color_beta: #ffffff;
+@o_mm_def_color_gamma: #706482;
+@o_mm_def_color_delta: #464646;
+@o_mm_def_color_epsilon: darken(@o_mm_def_color_gamma, 5%);
+@o_mm_def_color_zeta: #706482;
+@o_mm_def_color_eta: #87a6b5;
 
-// ===========   Variables
-
-// 'Default Theme' Palette
-@o_mm_def_color_alpha   : #f5f5f5;
-@o_mm_def_color_beta    : #ffffff;
-@o_mm_def_color_gamma   : #706482;
-@o_mm_def_color_delta   : #464646;
-@o_mm_def_color_epsilon : darken(@o_mm_def_color_gamma, 5%);
-@o_mm_def_color_zeta    : #706482;
-@o_mm_def_color_eta     : #87a6b5;
-
-
-// Assign 'Default Theme' Variables
+// ===== Default Theme variables =====
 @o_mm_def_body_width    : 600px;
 @o_mm_def_body_bobile   : 480px;
 @o_mm_def_b_radius      : 2px;
@@ -29,18 +24,34 @@
 @o_mm_def_btn_bg        : @o_mm_def_color_gamma;
 @o_mm_def_btn_text      : @o_mm_def_color_beta;
 
-
-// ===========   Editor
-
+// ===== Editor =====
 #web_editor_inside_iframe {
     #wrapwrap > main #editable_area {
         background-color: transparent;
     }
 }
 
+// ===== Colors =====
+.bg-beta {
+    background-color: @o_mm_def_color_zeta;
+    color:  @o_mm_def_color_beta;
 
-// ===========   Components
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        color: @o_mm_def_color_beta;
+    }
+}
+.text-beta {
+    color: @o_mm_def_color_zeta;
+}
+.bg-delta {
+    background-color: @o_mm_def_color_eta;
+}
+.bg-gray-lighter {
+    background-color: @o_mm_def_color_alpha;
+}
 
+
+// ===== Layout =====
 .o_layout {
     font-family: @o_mm_def_font;
     color: lighten(@o_mm_def_text_color, 20%);
@@ -48,9 +59,9 @@
     width: 100%;
     min-height: 100%;
     background-color: @o_mm_def_color_alpha;
-    padding-bottom: 20px;
+    padding: 24px;
 
-    .o_mail_wrapper {
+    > .o_mail_wrapper {
         width: 100%;
         max-width: @o_mm_def_body_width;
         margin: auto;
@@ -59,7 +70,7 @@
     }
 }
 
-
+// ===== Snippets (general) =====
 .o_mail_snippet_general {
     width: 100%;
     max-width: @o_mm_def_body_width;
@@ -68,7 +79,6 @@
     h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
         color: @o_mm_def_text_color;
     }
-
 
     .btn.btn-primary {
         -webkit-user-select: none;
@@ -102,31 +112,9 @@
         height: 2px;
         background-color: @o_mm_def_color_alpha;
     }
-
-    .bg-beta {
-        background-color: @o_mm_def_color_zeta;
-        color:  @o_mm_def_color_beta;
-
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-            color: @o_mm_def_color_beta;
-        }
-    }
-    .text-beta {
-        color: @o_mm_def_color_zeta;
-    }
-
-    .bg-delta {
-        background-color: @o_mm_def_color_eta;
-    }
-
-    .bg-gray-lighter {
-        background-color: @o_mm_def_color_alpha;
-    }
 }
 
-
-// ===========   Snippets
-
+// ===== Snippets (specific) =====
 .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
     .o_mail_logo_container {
         img {
@@ -238,16 +226,12 @@
     }
 }
 
-// ===========   Typography
-
-
 .o_mail_display_coupon {
     font-size: 50px;
     line-height: 1;
 }
 
-/* ======================== MISC ====================== */
-
+// ===== Misc =====
 .o_mail_h_padding {
     padding-left: 20px;
     padding-right: 20px;
@@ -268,8 +252,7 @@
     border-collapse:separate;
 }
 
-// =========== Mobile
-
+// ===== Mobile =====
 @media screen and (max-width: @o_mm_def_body_bobile) {
     .o_mail_col_mv {
         display: block!important;

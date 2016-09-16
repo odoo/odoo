@@ -1,26 +1,53 @@
-// out: ../compiled/theme_airmail.css, sourcemap: false, compress: false
 // lessc@1.4.2
 
+// ============================
+// Mass Mailing "Theme Airmail"
+// ============================
 
-@o_mm_airmail_color_alpha   : #EAECED;
-@o_mm_airmail_color_beta    : white;
-@o_mm_airmail_color_gamma   : #FB3C6B;
-@o_mm_airmail_color_delta   : darken(@o_mm_airmail_color_gamma, 5%);
-@o_mm_airmail_color_epsilon : black;
-@o_mm_airmail_color_zeta    : #a17e92;
+@o_mm_airmail_color_alpha: #EAECED;
+@o_mm_airmail_color_beta: white;
+@o_mm_airmail_color_gamma: #FB3C6B;
+@o_mm_airmail_color_delta: darken(@o_mm_airmail_color_gamma, 5%);
+@o_mm_airmail_color_epsilon: black;
+@o_mm_airmail_color_zeta: #a17e92;
 
+.o_airmail_theme {
+    // ===== Colors =====
+    .bg-beta {
+        background-color: @o_mm_airmail_color_gamma;
 
-.o_layout.o_airmail_theme {
-    background-color: @o_mm_airmail_color_alpha;
+        .btn.btn-primary {
+            color: @o_mm_airmail_color_beta;
+            background-color: @o_mm_airmail_color_zeta;
+        }
 
-    .o_mail_wrapper {
-        background: rgba(0,0,0,0);
-        background: transparent;
-        border: none;
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: @o_mm_airmail_color_beta;
+        }
+    }
+    .text-beta {
+        color: @o_mm_airmail_color_gamma;
+    }
+    .bg-delta {
+        background-color: @o_mm_airmail_color_zeta;
     }
 
-    // ===========   Components
+    // ===== Layout =====
+    &.o_layout {
+        background-color: @o_mm_airmail_color_alpha;
 
+        > .o_mail_wrapper {
+            background: rgba(0, 0, 0, 0);
+            background: transparent;
+            border: none;
+
+            > * {
+                margin-bottom: 16px;
+            }
+        }
+    }
+
+    // ===== Snippets (general) =====
     .o_mail_snippet_general {
         background-color: @o_mm_airmail_color_beta;
         color: @o_mm_airmail_color_epsilon;
@@ -33,55 +60,26 @@
         a, .o_mail_link {
             color: @o_mm_airmail_color_delta;
         }
-
-        .bg-beta {
-            background-color: @o_mm_airmail_color_gamma;
-
-            .btn.btn-primary {
-                color: @o_mm_airmail_color_beta;
-                background-color: @o_mm_airmail_color_zeta;
-            }
-
-            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-                color: @o_mm_airmail_color_beta;
-            }
-        }
-        .text-beta {
-            color: @o_mm_airmail_color_gamma;
-        }
-
-        .bg-delta {
-            background-color: @o_mm_airmail_color_zeta;
-        }
     }
 
-    // =========== Snippets
+    // ===== Snippets (specific) =====
+    .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
+        margin-bottom: 0;
 
-    .o_mail_wrapper {
-        > div { // All snippets
-            margin-bottom: 16px;
+        .o_mail_snippet_general {
+            background: rgba(0,0,0,0);
+            background: transparent;
         }
-    }
 
-    .o_mail_wrapper {
-        .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
-            margin-bottom: 0;
+        .o_mail_h_padding {
+            padding-left: 0;
+            padding-right: 0;
+        }
 
-            .o_mail_snippet_general {
-                background: rgba(0,0,0,0);
-                background: transparent;
-            }
-
-            .o_mail_h_padding {
-                padding-left: 0;
-                padding-right: 0;
-            }
-
-            .o_mail_header_social {
-                margin-right: 0px;
-                a {
-                    color: darken(@o_mm_airmail_color_alpha, 40%);
-                }
+        .o_mail_header_social {
+            margin-right: 0px;
+            a {
+                color: darken(@o_mm_airmail_color_alpha, 40%);
             }
         }
     }
@@ -121,9 +119,6 @@
                 border-bottom: 2px solid darken(white, 3%);
             }
         }
-    }
-
-    .o_mail_block_banner {
     }
 
     .o_mail_block_two_cols, .o_mail_block_three_cols {
