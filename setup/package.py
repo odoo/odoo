@@ -17,6 +17,7 @@ from os.path import abspath, dirname, join
 from sys import stdout
 from tempfile import NamedTemporaryFile
 
+# apt-get install rsync python-pexpect debhelper python-setuptools
 
 #----------------------------------------------------------
 # Utils
