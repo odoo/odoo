@@ -210,15 +210,13 @@ class BlogPost(models.Model):
         }
 
     @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        """ Override to set the access button: everyone can see an access button
-        on their notification email. It will lead on the website view of the
-        post. """
-        res = super(BlogPost, self)._notification_get_recipient_groups(message, recipients)
-        access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
-        for category, data in res.iteritems():
-            res[category]['button_access'] = {'url': access_action, 'title': _('View Blog Post')}
-        return res
+    def _notification_recipients(self, message, groups):
+        groups = super(BlogPost, self)._notification_recipients(message, groups)
+
+        for group_name, group_method, group_data in groups:
+            group_data['has_button_access'] = True
+
+        return groups
 
     @api.multi
     def message_get_message_notify_values(self, message, message_values):
