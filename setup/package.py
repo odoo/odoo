@@ -33,7 +33,6 @@ PUBLISH_DIRS = {
     'windows': 'exe',
 }
 ADDONS_NOT_TO_PUBLISH = [
-    'web_analytics'
 ]
 
 def mkdir(d):
