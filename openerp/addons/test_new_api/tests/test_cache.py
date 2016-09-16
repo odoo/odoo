@@ -10,9 +10,9 @@ class CacheCase(object):
             "name": "What is up?"
         })
 
-    def test_unlink(self):
-        """Unlinking NewId removes it in cache and after invalidating it."""
-        self.multi.lines[-1].unlink()
+    def test_reassign_recordset(self):
+        """Gets updated in cache and after invalidating it."""
+        self.multi.lines = self.multi.lines[:-1]
         self.assertEqual(len(self.multi.lines), 9)
         self.multi.invalidate_cache()
         self.assertEqual(len(self.multi.lines), 9)
