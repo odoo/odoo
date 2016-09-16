@@ -21,7 +21,7 @@ from tempfile import NamedTemporaryFile
 #----------------------------------------------------------
 # Utils
 #----------------------------------------------------------
-execfile(join(dirname(__file__), '..', 'openerp', 'release.py'))
+execfile(join(dirname(__file__), '..', 'odoo', 'release.py'))
 version = version.split('-')[0]
 timestamp = time.strftime("%Y%m%d", time.gmtime())
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
@@ -231,9 +231,9 @@ def _prepare_build_dir(o, win32=False):
     try:
         for addon_path in glob(join(o.build_dir, 'addons/*')):
             if addon_path.split(os.path.sep)[-1] not in ADDONS_NOT_TO_PUBLISH:
-                shutil.move(addon_path, join(o.build_dir, 'openerp/addons'))
+                shutil.move(addon_path, join(o.build_dir, 'odoo/addons'))
     except shutil.Error:
-        # Thrown when the add-on is already in openerp/addons (if _prepare_build_dir
+        # Thrown when the add-on is already in odoo/addons (if _prepare_build_dir
         # has already been called once)
         pass
 
@@ -306,8 +306,8 @@ def test_tgz(o):
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
         wheezy.system('mkdir /var/lib/odoo')
         wheezy.system('chown odoo:odoo /var/lib/odoo')
-        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany -i base --stop-after-init"')
-        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany &"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany -i base --stop-after-init"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany &"')
 
 def test_deb(o):
     with docker('odoo-%s-debian-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
@@ -420,7 +420,7 @@ def options():
     o.pkg = join(o.build_dir, 'pkg')
     o.version_full = '%s-%s' % (o.version, timestamp)
     o.work = join(o.build_dir, 'openerp-%s' % o.version_full)
-    o.work_addons = join(o.work, 'openerp', 'addons')
+    o.work_addons = join(o.work, 'odoo', 'addons')
 
     return o
 
