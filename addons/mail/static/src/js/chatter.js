@@ -39,7 +39,7 @@ var Followers = form_common.AbstractField.extend({
         this.followers_fetched = $.Deferred();
         this.data_subtype = {};
 
-        this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
+        this.view_is_editable = false; //disable add/remove followers - this.__parentedParent.is_action_enabled('edit');
     },
 
     start: function () {
@@ -513,6 +513,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         return this.thread_dataset
             .call('message_get_suggested_recipients', [[this.context.default_res_id], this.context])
             .done(function (suggested_recipients) {
+                return; // prevent sending messages unwantedly
                 var thread_recipients = suggested_recipients[self.context.default_res_id];
                 _.each(thread_recipients, function (recipient) {
                     var parsed_email = parse_email(recipient[1]);

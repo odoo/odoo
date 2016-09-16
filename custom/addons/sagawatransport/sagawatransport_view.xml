@@ -62,6 +62,9 @@
                 <field name="amount_total" position="attributes">
                     <attribute name = "invisible">1</attribute>
                 </field>
+                <field name="invoice_status" position="attributes">
+                    <attribute name = "invisible">1</attribute>
+                </field>
 
                 <xpath expr="//field[@name='user_id']" position="after">
                     <field name="total_confirm_sale" sum="Total:"/>
@@ -73,8 +76,11 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_open':True}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='team_id']" position="after">
-                    <field name="co_sales_ids"  widget="many2many_tags" domain="[('id','!=', uid)]"/>
+                    <field name="co_sales_ids"  widget="many2many_tags" options="{'no_create':True,'no_open':True}" domain="[('id','!=', uid)]"/>
                 </xpath>
                 <xpath expr="//field[@name='phone']" position="after">
                     <field name="sg_partner_id" string="Customer 2" context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
@@ -144,6 +150,29 @@
         </field>
         </record>
 
+        <record id="sagawa_crm_team_salesteams_view_kanban" model="ir.ui.view">
+        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban" />
+        <field name="model">crm.team</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[contains(@class, 'o_kanban_card_manage_settings')]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+        </record>
+
+        <record id="sagawa_sale_crm_team_salesteams_view_kanban" model="ir.ui.view">
+        <field name="inherit_id" ref="sale.crm_team_salesteams_view_kanban" />
+        <field name="model">crm.team</field>
+        <field name="arch" type="xml">
+            <xpath expr="//a[contains(@class, 'sales_team_target_definition')]/parent::div" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//a[@name='286']/parent::div" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+        </record>
+
         <record id="sagawa_view_crm_sales_order_filter" model="ir.ui.view">
         <field name="inherit_id" ref="sale.view_sales_order_filter" />
         <field name="model">sale.order</field>
@@ -172,6 +201,41 @@
         </record>
         <record id="sale.action_orders" model="ir.actions.act_window">
             <field name="domain">[('state','not in',('draft','approve','sent','cancel')),('is_templete','=',False)]</field>
+        </record>
+        <record id="sale.action_view_sale_advance_payment_inv" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_crm_send_mass_convert" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.merge_opportunity_act" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_merge_opportunities" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_lead_mass_mail" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="crm.action_partner_merge" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="base.action_partner_mass_mail" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <!--
+        <record id="portal.partner_wizard_action" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        -->
+        <record id="crm.action_crm_send_mass_convert" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="account.action_move_line_select_by_partner" model="ir.actions.act_window">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
+        </record>
+        <record id="account.action_report_print_overdue" model="ir.actions.report.xml">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_erp_manager')])]"/>
         </record>
 
         <record id="action_quotations_1" model="ir.actions.act_window">
