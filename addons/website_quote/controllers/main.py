@@ -27,7 +27,7 @@ class sale_quote(http.Controller):
             if order and request.session.get('view_quote', False) != now:
                 request.session['view_quote'] = now
                 body = _('Quotation viewed by customer')
-                _message_post_helper(res_model='sale.order', res_id=order.id, message=body, token=token, token_field="access_token", message_type='notification')
+                _message_post_helper(res_model='sale.order', res_id=order.id, message=body, token=token, token_field="access_token", message_type='notification', subtype="mail.mt_note", partner_ids=order.user_id.partner_id.ids)
         else:
             order = request.env['sale.order'].search([('id', '=', order_id)])
 
