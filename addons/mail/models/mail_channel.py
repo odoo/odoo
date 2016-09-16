@@ -172,15 +172,16 @@ class Channel(models.Model):
         return result
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+    def _notification_recipients(self, message, groups):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
         in the backend. Mailing lists should indeed send minimal emails to avoid
         the noise. """
-        for recipient in recipients:
-            group_data['partner'] |= recipient
-            done_ids.add(recipient.id)
-        return super(Channel, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+        groups = super(Channel, self)._notification_recipients(message, groups)
+        for (index, (group_name, group_func, group_data)) in enumerate(groups):
+            if group_name != 'customer':
+                groups[index] = (group_name, lambda partner: False, group_data)
+        return groups
 
     @api.multi
     def message_get_email_values(self, notif_mail=None):

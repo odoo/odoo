@@ -8,15 +8,13 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the method to place the portal customers in the 'user' group data as a portal view now exists"""
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if recipient.user_ids and all(recipient.user_ids.mapped('share')):
-                group_data['user'] |= recipient
-                done_ids.add(recipient.id)
-        return super(AccountInvoice, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        groups = super(AccountInvoice, self)._notification_recipients(message, groups)
+
+        for group_name, group_method, group_data in groups:
+            group_data['has_button_access'] = True
+
+        return groups
 
     @api.multi
     def get_access_action(self):

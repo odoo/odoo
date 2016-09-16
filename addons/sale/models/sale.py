@@ -480,20 +480,6 @@ class SaleOrder(models.Model):
             order.project_id = analytic
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if not recipient.user_ids:
-                group_data['partner'] |= recipient
-            elif all(recipient.user_ids.mapped('share')):
-                group_data['partner'] |= recipient
-            else:
-                group_data['user'] |= recipient
-            done_ids.add(recipient.id)
-        return super(SaleOrder, self)._notification_group_recipients(message, recipients, done_ids, group_data)
-
-    @api.multi
     def order_lines_layouted(self):
         """
         Returns this order lines classified by sale_layout_category and separated in

@@ -225,43 +225,26 @@ class ProjectIssue(models.Model):
         return super(ProjectIssue, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle project users and officers
-        recipients. Indeed those will have specific action in their notification
-        emails: creating tasks, assigning it. """
-        group_project_user_id = self.env.ref('project.group_project_user').id
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if recipient.user_ids and group_project_user_id in recipient.user_ids[0].groups_id.ids:
-                group_data['group_project_user'] |= recipient
-            elif not recipient.user_ids:
-                group_data['partner'] |= recipient
-            elif all(recipient.user_ids.mapped('share')):
-                group_data['partner'] |= recipient
-            else:
-                group_data['user'] |= recipient
-            done_ids.add(recipient.id)
-        return super(ProjectIssue, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        """
+        """
+        groups = super(ProjectIssue, self)._notification_recipients(message, groups)
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
         self.ensure_one()
-        res = super(ProjectIssue, self)._notification_get_recipient_groups(message, recipients)
-
-        actions = []
         if not self.user_id:
             take_action = self._notification_link_helper('assign')
-            actions.append({'url': take_action, 'title': _('I take it')})
+            project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
             new_action_id = self.env.ref('project_issue.project_issue_categ_act0').id
             new_action = self._notification_link_helper('new', action_id=new_action_id)
-            actions.append({'url': new_action, 'title': _('New Issue')})
+            project_actions = [{'url': new_action, 'title': _('New Issue')}]
 
-        res['group_project_user'] = {
-            'actions': actions
-        }
-        return res
+        new_group = (
+            'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'actions': project_actions,
+            })
+
+        return [new_group] + groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

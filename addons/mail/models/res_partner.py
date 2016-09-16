@@ -193,7 +193,7 @@ class Partner(models.Model):
             if recipient_template_values['followers']:
                 # generate notification email content
                 template_fol_values = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none
-                template_fol_values['button_follow'] = False
+                template_fol_values['has_button_follow'] = False
                 template_fol = base_template.with_context(**template_fol_values)
                 # generate templates for followers and not followers
                 fol_values = template_fol.generate_email(message.id, fields=['body_html', 'subject'])
@@ -207,7 +207,7 @@ class Partner(models.Model):
             if recipient_template_values['not_followers']:
                 # generate notification email content
                 template_not_values = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_follow to none
-                template_not_values['button_unfollow'] = False
+                template_not_values['has_button_unfollow'] = False
                 template_not = base_template.with_context(**template_not_values)
                 # generate templates for followers and not followers
                 not_values = template_not.generate_email(message.id, fields=['body_html', 'subject'])
