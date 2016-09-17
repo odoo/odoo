@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-09-10 07:49+0000\n"
+"PO-Revision-Date: 2016-09-16 04:19+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -4480,7 +4480,7 @@ msgstr ""
 msgid ""
 "1. Global rules are combined together with a logical AND operator, and with "
 "the result of the following steps"
-msgstr "1. グローバルなルールは論理AND演算子により、ともに結合されます。その結果は、以下のステップとなります。"
+msgstr "1. グローバル規則は、他のグローバル規則および以下ステップの結果と、論理演算子 AND により結合されます。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4491,7 +4491,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid ""
 "2. Group-specific rules are combined together with a logical OR operator"
-msgstr "2. グループ固有のルールは論理演算子ORによって組み立てられます。"
+msgstr "2. グループ依存規則は論理演算子 OR で結合されます。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4503,7 +4503,7 @@ msgstr ""
 msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
-msgstr "3. ユーザが複数のグループに属している場合は、論理OR演算子により２つが組み合わされた結果となります。"
+msgstr "3. ユーザが複数グループに属す場合、ステップ2の結果は、各グループ内でのグループ依存規則結合結果が論理演算子 OR で結合されたものになります。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -5018,7 +5018,7 @@ msgstr "アクション説明"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 msgid "Action to Trigger"
-msgstr "トリガーとなるアクション"
+msgstr "トリガするアクション"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -5116,7 +5116,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Address"
-msgstr "所在地"
+msgstr "アドレス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_format
@@ -5232,7 +5232,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Advanced Properties"
-msgstr "高度属性"
+msgstr "高度プロパティ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
@@ -5443,12 +5443,12 @@ msgstr "削除に適用"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_read
 msgid "Apply for Read"
-msgstr "読み込みに適用"
+msgstr "読出に適用"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_write
 msgid "Apply for Write"
-msgstr "読み込みに適用"
+msgstr "更新に適用"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_open_categ
@@ -5836,7 +5836,7 @@ msgstr "基本オブジェクト"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Base Properties"
-msgstr "基本属性"
+msgstr "基本プロパティ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
@@ -6659,7 +6659,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_color
 #: model:ir.model.fields,field_description:base.field_res_users_color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_column1
@@ -6774,7 +6774,7 @@ msgstr "会社スローガン"
 #: model:ir.model.fields,field_description:base.field_res_partner_company_type
 #: model:ir.model.fields,field_description:base.field_res_users_company_type
 msgid "Company Type"
-msgstr ""
+msgstr "会社タイプ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
@@ -7102,7 +7102,7 @@ msgstr "国名"
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr "国の状態"
+msgstr "州"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -7853,7 +7853,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_act_to
 msgid "Destination Activity"
-msgstr ""
+msgstr "次の活動"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_instance_id
@@ -7869,7 +7869,7 @@ msgstr "宛先モデル"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Detailed algorithm:"
-msgstr ""
+msgstr "詳細アルゴリズム:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_position
@@ -8150,7 +8150,7 @@ msgstr "直送"
 #. module: base
 #: selection:workflow.activity,kind:0
 msgid "Dummy"
-msgstr ""
+msgstr "ダミー"
 
 #. module: base
 #: code:addons/base/workflow/workflow.py:24
@@ -8443,7 +8443,7 @@ msgstr "Pythonコード例"
 msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
-msgstr ""
+msgstr "例: グローバル規則1 AND グローバル規則2 AND ( (グループA依存規則1 OR グループA依存規則2) OR (グループB依存規則1 OR グループB依存規則2) )"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -8842,19 +8842,19 @@ msgstr "車両管理"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Float"
-msgstr ""
+msgstr "浮動小数点数"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_flow_start
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
 msgid "Flow Start"
-msgstr ""
+msgstr "フロー開始"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_flow_stop
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
 msgid "Flow Stop"
-msgstr ""
+msgstr "フロー停止"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:81
@@ -9031,7 +9031,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Full Access Right"
-msgstr ""
+msgstr "全権限"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_complete_name
@@ -9108,7 +9108,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -9124,7 +9124,7 @@ msgstr "一般設定"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
 msgid "Generic"
-msgstr ""
+msgstr "汎用"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_generic_coa
@@ -9189,7 +9189,7 @@ msgstr "ジブラルタル"
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
 #: model:ir.ui.view,arch_db:base.view_rule_search
 msgid "Global"
-msgstr ""
+msgstr "グローバル"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -9198,7 +9198,7 @@ msgid ""
 "Group-local rules grant additional permissions, but are constrained within "
 "the bounds of global ones. The first group rules restrict further than "
 "global rules, but any additional group rule will add more permissions"
-msgstr ""
+msgstr "グローバル規則 (グループ非依存) は制約であり、回避できません。グループ依存のローカル規則は追加で権限を付与しますが、グローバル規則の制約を越えることはできません。1つ目のグループ依存規則はグローバル規則からさらなる制約を加えますが、その他のグループ依存規則は権限を付与します。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -9311,7 +9311,7 @@ msgstr "グループ名"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_group_id
 msgid "Group Required"
-msgstr ""
+msgstr "必要なグループ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups_share
@@ -9348,7 +9348,7 @@ msgstr "グループ"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Groups (no group = global)"
-msgstr ""
+msgstr "グロープ (グループなし = グローバル)"
 
 #. module: base
 #: model:res.country,name:base.gp
@@ -9972,7 +9972,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_image
 #: model:ir.model.fields,field_description:base.field_res_users_image
 msgid "Image"
-msgstr ""
+msgstr "画像"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -10078,7 +10078,7 @@ msgstr ""
 #. module: base
 #: selection:res.partner,company_type:0
 msgid "Individual"
-msgstr ""
+msgstr "個人"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -10130,7 +10130,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_date_init
 msgid "Init Date"
-msgstr ""
+msgstr "初期化日"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_setup
@@ -10192,7 +10192,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_inst_id
 msgid "Instance"
-msgstr ""
+msgstr "インスタンス"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_instance_form
@@ -10222,7 +10222,7 @@ msgstr ""
 #. module: base
 #: selection:ir.property,type:0
 msgid "Integer"
-msgstr ""
+msgstr "整数"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_inter_company_rules
@@ -10232,7 +10232,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Interaction between rules"
-msgstr ""
+msgstr "規則間の作用"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_inter_company_rules
@@ -10436,7 +10436,7 @@ msgstr "アイルランド"
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
 #: model:ir.model.fields,field_description:base.field_res_users_is_company
 msgid "Is a Company"
-msgstr ""
+msgstr "会社"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_customer
@@ -10554,7 +10554,7 @@ msgstr "仕事、求人、応募、面接、調査"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_join_mode
 msgid "Join Mode"
-msgstr ""
+msgstr "結合モード"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -10602,7 +10602,7 @@ msgstr "キーは一意にしてください。"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_kind
 msgid "Kind"
-msgstr ""
+msgstr "種類"
 
 #. module: base
 #: model:res.country,name:base.ki
@@ -11594,7 +11594,7 @@ msgstr "メッセージおよびソーシャル"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_function
 msgid "Method"
-msgstr "方法"
+msgstr "メソッド"
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -12183,7 +12183,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_noupdate
 msgid "Non Updatable"
-msgstr ""
+msgstr "更新不可"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:307
@@ -12395,7 +12395,7 @@ msgstr "オマーン"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_on_create
 msgid "On Create"
-msgstr ""
+msgstr "作成時"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_on_delete
@@ -12764,7 +12764,7 @@ msgstr "親タグ"
 #: model:ir.model.fields,field_description:base.field_res_partner_parent_name
 #: model:ir.model.fields,field_description:base.field_res_users_parent_name
 msgid "Parent name"
-msgstr ""
+msgstr "親名"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_parser
@@ -12855,7 +12855,7 @@ msgstr "パス"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "決済サービス"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
@@ -13330,7 +13330,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 msgid "Properties"
-msgstr ""
+msgstr "プロパティ"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:501
@@ -13423,7 +13423,7 @@ msgstr "購買"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_action
 msgid "Python Action"
-msgstr ""
+msgstr "Pythonアクション"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_code
@@ -13643,7 +13643,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_parent_id
 #: model:ir.model.fields,field_description:base.field_res_users_parent_id
 msgid "Related Company"
-msgstr ""
+msgstr "関連会社"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_related
@@ -13658,7 +13658,7 @@ msgstr "関連取引先"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines_server_id
 msgid "Related Server Action"
-msgstr ""
+msgstr "関連のサーバアクション"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:319
@@ -13828,7 +13828,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_property_res_id
 #: model:ir.module.module,shortdesc:base.module_resource
 msgid "Resource"
-msgstr ""
+msgstr "リソース"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_field
@@ -13937,7 +13937,7 @@ msgstr "丸め係数"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Rule Definition (Domain Filter)"
-msgstr ""
+msgstr "規則定義 (ドメインフィルタ)"
 
 #. module: base
 #: sql_constraint:ir.rule:0
@@ -14323,7 +14323,7 @@ msgstr "選択可"
 #. module: base
 #: selection:ir.property,type:0 selection:ir.translation,type:0
 msgid "Selection"
-msgstr ""
+msgstr "選択"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selection
@@ -14473,7 +14473,7 @@ msgstr "サーバ"
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
-msgstr ""
+msgstr "サーバアクション"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -14580,12 +14580,12 @@ msgstr "シエラレオネ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_signal
 msgid "Signal (Button Name)"
-msgstr ""
+msgstr "シグナル (ボタン名)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_signal_send
 msgid "Signal (subflow.*)"
-msgstr ""
+msgstr "シグナル (subflow.*)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_wkf_transition_id
@@ -14758,7 +14758,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_act_from
 msgid "Source Activity"
-msgstr ""
+msgstr "ソース活動"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_src_model
@@ -14919,7 +14919,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_split_mode
 msgid "Split Mode"
-msgstr ""
+msgstr "分岐モード"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
@@ -14963,7 +14963,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 #, python-format
 msgid "State"
-msgstr "状態"
+msgstr "州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_code
@@ -15035,7 +15035,7 @@ msgstr "格納ファイル名"
 #: model:ir.model.fields,field_description:base.field_res_partner_street
 #: model:ir.model.fields,field_description:base.field_res_users_street
 msgid "Street"
-msgstr ""
+msgstr "町名番地"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -15058,7 +15058,7 @@ msgstr "町名番地…"
 #: model:ir.model.fields,field_description:base.field_res_partner_street2
 #: model:ir.model.fields,field_description:base.field_res_users_street2
 msgid "Street2"
-msgstr ""
+msgstr "町名番地2"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_sub_model_object_field
@@ -15076,7 +15076,7 @@ msgstr "サブモデル"
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 #: selection:workflow.activity,kind:0
 msgid "Subflow"
-msgstr ""
+msgstr "サブフロー"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_request_link_search_view
@@ -15248,7 +15248,7 @@ msgstr "システムパラメータ"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_ir_config_search
 msgid "System Properties"
-msgstr ""
+msgstr "システムプロパティ"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -16183,12 +16183,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_trigger_expr_id
 msgid "Trigger Expression"
-msgstr ""
+msgstr "トリガ表現"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_trigger_model
 msgid "Trigger Object"
-msgstr ""
+msgstr "トリガオブジェクト"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -16484,7 +16484,7 @@ msgstr "未翻訳"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_data_search
 msgid "Updatable"
-msgstr ""
+msgstr "更新可"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -16580,7 +16580,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_use_parent_address
 #: model:ir.model.fields,field_description:base.field_res_users_use_parent_address
 msgid "Use Company Address"
-msgstr ""
+msgstr "会社アドレスを使用"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -17283,7 +17283,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_workflow_search
 #: model:ir.ui.view,arch_db:base.view_workflow_tree
 msgid "Workflow"
-msgstr ""
+msgstr "ワークフロー"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
