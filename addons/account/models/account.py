@@ -712,7 +712,8 @@ class AccountTax(models.Model):
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            if not round_tax:
+            # Always round to currency precision if tax is included in the price.
+            if not (round_tax or tax.price_include):
                 tax_amount = round(tax_amount, prec)
             else:
                 tax_amount = currency.round(tax_amount)
