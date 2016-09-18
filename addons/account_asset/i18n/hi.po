@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-09-09 21:47+0000\n"
+"PO-Revision-Date: 2016-09-11 13:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hindi (http://www.transifex.com/odoo/odoo-8/language/hi/)\n"
 "MIME-Version: 1.0\n"
@@ -216,7 +216,7 @@ msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
+msgstr "मूल्यह्रास रेखा की मात्रा का परिकलन करने के लिए विधि चुमें।\nरैखिक: गणना का आधार: सकल मूल्य/मूल्यह्रास की संख्या\nअवक्रमिक: गणना का आधार: अवशिष्ट मूल्य*अवक्रमिक कारक"
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -225,7 +225,7 @@ msgid ""
 "Choose the method to use to compute the dates and number of depreciation lines.\n"
 "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
-msgstr ""
+msgstr "मूल्यह्रास रेखा कीतारीख और संख्या का परिकलन करने के लिए विधि चुनें।\nमूल्यह्रासों की संख्या: मूल्यह्रास लाइनों की संख्या और 2 मूल्यह्रासों के बीच के समय को ठीक करें।\nसमाप्त होने की तारीख: 2 मूल्यह्रासों के बीच का समय चुनें और the date the depreciations won't go beyond."
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
@@ -255,7 +255,7 @@ msgstr "संस्था"
 #. module: account_asset
 #: field:account.asset.asset,method:0 field:account.asset.category,method:0
 msgid "Computation Method"
-msgstr ""
+msgstr "परिकलन विधि"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -266,7 +266,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Compute Asset"
-msgstr ""
+msgstr "संपत्ति परिकलन"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
@@ -288,7 +288,7 @@ msgstr ""
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "सम्पत्ति स्थानांतरण सृजन"
 
 #. module: account_asset
 #: field:account.asset.asset,create_uid:0
@@ -318,12 +318,12 @@ msgstr "मुद्रा"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Current"
-msgstr ""
+msgstr "वर्तमान"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "वर्तमान मूल्यह्रास"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
@@ -333,24 +333,24 @@ msgstr "तिथि"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Date of asset purchase"
-msgstr ""
+msgstr "संपत्ति खरीद की तारीख"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Date of depreciation"
-msgstr ""
+msgstr "मूल्यह्रास की तारीख"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Degressive"
-msgstr ""
+msgstr "अवक्रमिक"
 
 #. module: account_asset
 #: field:account.asset.asset,method_progress_factor:0
 #: field:account.asset.category,method_progress_factor:0
 msgid "Degressive Factor"
-msgstr ""
+msgstr "अवक्रमिक कारक"
 
 #. module: account_asset
 #: field:account.asset.category,account_expense_depreciation_id:0
@@ -360,18 +360,18 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,account_depreciation_id:0
 msgid "Depreciation Account"
-msgstr ""
+msgstr "मूल्यह्रास खाता"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Depreciation Board"
-msgstr ""
+msgstr "मूल्यह्रास बोर्ड"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
 #: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
-msgstr ""
+msgstr "मूल्यह्रास तिथि"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
@@ -381,28 +381,28 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
-msgstr ""
+msgstr "मूल्यह्रास प्रविष्टि"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 #: field:account.asset.asset,depreciation_line_ids:0
 msgid "Depreciation Lines"
-msgstr ""
+msgstr "मूल्यह्रास रेखाएँ"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
 msgid "Depreciation Method"
-msgstr ""
+msgstr "मूल्यह्रास का तरीका"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "मूल्यह्रास माह"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr ""
+msgstr "मूल्यह्रास नाम"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
@@ -417,13 +417,13 @@ msgstr "मसौदा"
 #: selection:account.asset.category,method_time:0
 #: selection:account.asset.history,method_time:0
 msgid "Ending Date"
-msgstr ""
+msgstr " समापन तिथि"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
 #: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
 msgid "Ending date"
-msgstr ""
+msgstr " समापन तिथि"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -446,7 +446,7 @@ msgstr "त्रुटि!"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "विस्तारित फिल्टर्स"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
@@ -456,12 +456,12 @@ msgstr ""
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
 msgid "Gross Amount"
-msgstr ""
+msgstr "सकल मात्रा"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "सकल मुल्य"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
@@ -545,19 +545,19 @@ msgstr "अंतिम सुधार की तिथि"
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Linear"
-msgstr ""
+msgstr " रैखिक"
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "Modify"
-msgstr ""
+msgstr "संशोधित"
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 #: model:ir.actions.act_window,name:account_asset.action_asset_modify
 #: model:ir.model,name:account_asset.model_asset_modify
 msgid "Modify Asset"
-msgstr ""
+msgstr "संशोधित सम्पत्ति "
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -801,7 +801,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
 msgid "months"
-msgstr ""
+msgstr "महीने"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
