@@ -63,7 +63,7 @@
                    }'/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
-                    t-field="product.price"
+                    t-field="product.with_context(quantity=1).website_price"
                     t-options='{
                        "widget": "monetary",
                        "display_currency": website.currency_id
