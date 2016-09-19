@@ -244,9 +244,7 @@ class LandedCostLine(models.Model):
     product_id = fields.Many2one('product.product', 'Product', required=True)
     price_unit = fields.Float('Cost', digits=dp.get_precision('Product Price'), required=True)
     split_method = fields.Selection(product.SPLIT_METHOD, string='Split Method', required=True)
-    account_id = fields.Many2one(
-        'account.account', 'Account',
-        domain=[('internal_type', '!=', 'view'), ('internal_type', '!=', 'closed'), ('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
 
     @api.onchange('product_id')
     def onchange_product_id(self):
