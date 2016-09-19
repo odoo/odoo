@@ -976,9 +976,9 @@ Update your business card, phone book, social media,... Send an email right now 
 
         lead = self.browse(cr, uid, ids[0], context=context)
 
-        won_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_won')
-        lost_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_lost')
-        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity', partner_id=lead.partner_id.id)
+        won_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/case_mark_won', context=context)
+        lost_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/case_mark_lost', context=context)
+        convert_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/convert', context=context)
 
         if lead.type == 'lead':
             res['group_sale_salesman'] = {

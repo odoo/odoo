@@ -523,8 +523,8 @@ class hr_holidays(osv.osv):
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(hr_holidays, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
-        app_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': ids[0], 'signal': 'validate'})
-        ref_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': ids[0], 'signal': 'refuse'})
+        app_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/hr_holidays/validate', context=context)
+        ref_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/hr_holidays/refuse', context=context)
 
         holiday = self.browse(cr, uid, ids[0], context=context)
         actions = []

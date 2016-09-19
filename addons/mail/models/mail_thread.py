@@ -4,6 +4,8 @@ import base64
 import datetime
 import dateutil
 import email
+import hashlib
+import hmac
 import json
 import lxml
 from lxml import etree
@@ -539,6 +541,13 @@ class MailThread(models.AbstractModel):
             because portal users have a different Inbox action than classic users. """
         return 'mail.mail_channel_action_client_chat'
 
+    @api.model
+    def _generate_notification_token(self, base_link, params):
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params.keys())))
+        hm = hmac.new(str(secret), token, hashlib.sha1).hexdigest()
+        return hm
+
     @api.multi
     def _notification_link_helper(self, link_type, **kwargs):
         if kwargs.get('message_id'):
@@ -546,26 +555,30 @@ class MailThread(models.AbstractModel):
                 'message_id': kwargs.pop('message_id')
             }
         else:
-            self.ensure_one()
             base_params = {
-                'model': self._name,
-                'res_id': self.ids[0],
+                'model': kwargs.get('model', self._name),
+                'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
             }
 
-        link = False
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
-            link = '/mail/view?%s' % url_encode(params)
-        elif link_type == 'workflow':
-            params = dict(base_params, signal=kwargs['signal'])
-            link = '/mail/workflow?%s' % url_encode(params)
-        elif link_type == 'method':
-            method = kwargs.pop('method')
-            params = dict(base_params, method=method, params=json.dumps(kwargs))
-            link = '/mail/method?%s' % url_encode(params)
+            base_link = '/mail/%s' % link_type
         elif link_type == 'new':
-            params = dict(base_params, action_id=kwargs.get('action_id'))
-            link = '/mail/new?%s' % url_encode(params)
+            params = dict(base_params, action_id=kwargs.get('action_id', ''))
+            base_link = '/mail/new'
+        elif link_type == 'controller':
+            controller = kwargs.pop('controller')
+            params = dict(base_params)
+            params.pop('model')
+            base_link = '%s' % controller
+        else:
+            return ''
+
+        if link_type not in ['view', 'new']:
+            token = self._generate_notification_token(base_link, params)
+            params['token'] = token
+
+        link = '%s?%s' % (base_link, url_encode(params))
         return link
 
     @api.multi
@@ -639,8 +652,8 @@ class MailThread(models.AbstractModel):
                 'followers': self.env['res.partner'],
                 'not_followers': self.env['res.partner'],
                 'button_access': {'url': access_link, 'title': view_title},
-                'button_follow': {'url': '/mail/follow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Follow')},
-                'button_unfollow': {'url': '/mail/unfollow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Unfollow')},
+                'button_follow': {'url': self._notification_link_helper('follow', model=message.model, res_id=message.res_id), 'title': _('Follow')},
+                'button_unfollow': {'url': self._notification_link_helper('unfollow', model=message.model, res_id=message.res_id), 'title': _('Unfollow')},
                 'actions': list(),
             }
             group_data[category] = self.env['res.partner']
