@@ -38,7 +38,7 @@ class Stage(models.Model):
     on_change = fields.Boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity.")
     requirements = fields.Text('Requirements', help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.")
     team_id = fields.Many2one('crm.team', string='Team', ondelete='set null',
-        help='Specific team that uses this stage. Other teams will not ne able to see or use this stage.')
+        help='Specific team that uses this stage. Other teams will not be able to see or use this stage.')
     legend_priority = fields.Text('Priority Management Explanation', translate=True,
         help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
     fold = fields.Boolean('Folded in Pipeline',
