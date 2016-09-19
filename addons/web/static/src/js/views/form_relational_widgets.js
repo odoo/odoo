@@ -1731,9 +1731,13 @@ core.form_widget_registry
     .add('many2many_binary', FieldMany2ManyBinaryMultiFiles)
     .add('many2many_checkboxes', FieldMany2ManyCheckBoxes);
 
+core.one2many_view_registry
+    .add('list', One2ManyListView);
+
 return {
     FieldMany2ManyTags: FieldMany2ManyTags,
     AbstractManyField: AbstractManyField,
+    FieldMany2One: FieldMany2One,
 };
 
 });
