@@ -531,7 +531,7 @@ class Partner(models.Model, FormatAddress):
                 'res_model': 'res.partner',
                 'view_mode': 'form',
                 'res_id': self.commercial_partner_id.id,
-                'target': 'current',
+                'target': 'new',
                 'flags': {'form': {'action_buttons': True}}}
 
     @api.multi
