@@ -80,9 +80,7 @@ class AccountAnalyticLine(models.Model):
         so_line = result.get('so_line', False) or self.so_line
         if not so_line and self.account_id and self.product_id and (self.product_id.expense_policy != 'no'):
             order = self.env['sale.order'].search([('project_id', '=', self.account_id.id)], limit=1)
-            if not order:
-                return False
-            if order.state != 'sale':
+            if order and order.state != 'sale':
                 raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.') % order.name)
 
             order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state', '=', 'sale')], limit=1)
