@@ -144,7 +144,9 @@ class SaleOrder(models.Model):
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
 
-            if not self.env.context.get('fixed_price'):
+
+
+            if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 values['price_unit'] = order_line._get_display_price(order_line.product_id)
 
             order_line.write(values)
