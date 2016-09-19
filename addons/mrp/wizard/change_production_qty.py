@@ -13,7 +13,7 @@ class ChangeProductionQty(models.TransientModel):
     # TDE FIXME: add production_id field
     mo_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True)
     product_qty = fields.Float(
-        'Product Qty',
+        'Quantity To Produce',
         digits=dp.get_precision('Product Unit of Measure'), required=True)
 
     @api.model
@@ -42,7 +42,7 @@ class ChangeProductionQty(models.TransientModel):
             production = wizard.mo_id
             produced = sum(production.move_finished_ids.mapped('quantity_done'))
             if wizard.product_qty < produced:
-                raise UserError(_("You have already produced %d qty , Please give update quantity more then %d ")%(produced, produced))
+                raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
             production.write({'product_qty': wizard.product_qty})
             #production.action_compute()
             #TODO: Do we still need to change the quantity of a production order?
