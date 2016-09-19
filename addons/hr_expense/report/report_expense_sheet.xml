@@ -57,7 +57,14 @@
                                         <span t-field="line.unit_amount"/>
                                     </td>
                                     <td>
-                                        <span t-field="line.tax_ids"/>
+                                        <t t-foreach="line.tax_ids" t-as="tax">
+                                          <t t-if="tax.description">
+                                            <span t-field="tax.description"/>
+                                          </t>
+                                          <t t-if="not tax.description">
+                                            <span t-field="tax.name"/>
+                                          </t>
+                                        </t>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.quantity"/>
