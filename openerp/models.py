@@ -2209,7 +2209,7 @@ class BaseModel(object):
             context = context
         result = self._read_group_raw(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         dt = [
             f for f in groupby
             if self._fields[f.split(':')[0]].type in ('date', 'datetime')
@@ -2234,7 +2234,7 @@ class BaseModel(object):
         query = self._where_calc(cr, uid, domain, context=context) 
         fields = fields or self._columns.keys()
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [
             self._read_group_process_groupby(cr, uid, gb, query, context=context)
