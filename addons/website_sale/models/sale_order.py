@@ -219,7 +219,8 @@ class Website(models.Model):
 
         partner = self.env.user.partner_id
         if not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl:
-            pricelists |= partner.property_product_pricelist
+            if partner.property_product_pricelist.website_id:
+                pricelists |= partner.property_product_pricelist
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
