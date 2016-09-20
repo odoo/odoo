@@ -14,7 +14,7 @@
                     <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
                     <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
                     <filter string="New" domain="[('state', '=', 'new')]"/>
-                    <filter string="Test" domain="[('state','=', 'test')]"/>
+                    <filter string="Test" domain="[('test_entry','=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                         <filter string="Email" domain="[]" context="{'group_by': 'email'}"/>
