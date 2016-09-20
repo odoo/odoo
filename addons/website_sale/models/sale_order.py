@@ -214,13 +214,14 @@ class Website(models.Model):
                     if not show_visible or group_pricelists.selectable or group_pricelists.id in (current_pl, order_pl):
                         pricelists |= group_pricelists
 
-        if not pricelists and not country_code:  # no pricelist for this country, or no GeoIP
-            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
-
         partner = self.env.user.partner_id
-        if not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl:
+        is_public = self.user_id.id == self.env.user.id
+        if not is_public and (not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl):
             if partner.property_product_pricelist.website_id:
                 pricelists |= partner.property_product_pricelist
+
+        if not pricelists:  # no pricelist for this country, or no GeoIP
+            pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
