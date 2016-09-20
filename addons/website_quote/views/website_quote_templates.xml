@@ -587,10 +587,11 @@
   </template>
 
   <template id="optional_products">
-        <section t-if="quotation.options" id="options">
+      <t t-if="any([(not option.line_id) for option in quotation.options])">
+        <section>
             <h1 class="page-header">Suggested Products</h1>
         </section>
-        <section t-if="quotation.options" id="options">
+        <section>
             <table class="table table-hover wq-table">
                 <thead>
                     <tr>
@@ -632,6 +633,7 @@
                 </tbody>
             </table>
         </section>
+      </t>
   </template>
 
   <!-- Template to edit the quotation template with the website editor -->
