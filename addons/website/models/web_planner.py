@@ -19,6 +19,5 @@ class WebsitePlanner(models.Model):
     def _prepare_planner_website_data(self):
         values = {
             'company_id': self.env.user.company_id,
-            'is_coa_installed': bool(self.env['account.account'].search_count([])),
         }
         return values
