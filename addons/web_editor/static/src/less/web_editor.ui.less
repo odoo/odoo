@@ -1069,22 +1069,19 @@ body.editor_enable {
 #web_editor_inside_iframe {
     background-color: @odoo-brand-secondary;
 
-    &.editor_enable #wrapwrap {
+    #wrapwrap {
         height: 100%;
+
         > main {
             height: 100%;
+
             #editable_area {
                 position: relative;
-                overflow: hidden;
-                min-height: 100%;
-                margin: 0 auto;
-
+                width: 100%;
+                height: 100%;
                 background-color: white;
             }
         }
-    }
-    .note-color-palette .colorpicker {
-        display: none;
     }
 }
 

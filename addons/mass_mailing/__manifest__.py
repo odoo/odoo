@@ -34,6 +34,7 @@ professional emails and reuse templates in a few clicks.
         'views/email_template.xml',
         'security/ir.model.access.csv',
         'views/editor_field_html.xml',
+        'views/themes_templates.xml',
         'views/snippets_themes.xml',
         'views/snippets_themes_options.xml',
     ],
