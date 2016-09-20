@@ -4,3 +4,4 @@
 import event
 import event_mail
 import event_config_settings
+import res_partner
