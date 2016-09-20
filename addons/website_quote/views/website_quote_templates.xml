@@ -24,7 +24,7 @@
                     <tr>
                         <th>Products</th>
                         <th>Quantity</th>
-                        <th>Taxes</th>
+                        <th><span t-if="any([line.tax_id for line in quotation.order_line])">Taxes</span></th>
                         <th><span t-if="True in [line.discount > 0 for line in quotation.order_line]">Discount</span></th>
                         <th class="text-right">Unit Price</th>
                         <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
@@ -104,23 +104,25 @@
                         </t>
                     </t>
                     <t t-if="page_index == page_size - 1">
-                        <tr>
-                            <td></td><td></td><td></td><td></td>
-                            <td class="text-right"><strong>Subtotal:</strong></td>
-                            <td class="text-right">
-                                <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
-                            </td>
-                            <td></td>
-                        </tr>
+                        <t t-if="any([line.tax_id for line in quotation.order_line])">
+                            <tr>
+                                <td></td><td></td><td></td><td></td>
+                                <td class="text-right"><strong>Subtotal:</strong></td>
+                                <td class="text-right">
+                                    <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
+                                </td>
+                                <td></td>
+                            </tr>
 
-                        <tr>
-                            <td></td><td></td><td></td><td></td>
-                            <td class="text-right">Taxes:</td>
-                            <td class="text-right">
-                                <span data-id="total_amount" t-field="quotation.amount_tax" t-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
-                            </td>
-                            <td></td>
-                        </tr>
+                            <tr>
+                                <td></td><td></td><td></td><td></td>
+                                <td class="text-right">Taxes:</td>
+                                <td class="text-right">
+                                    <span data-id="total_amount" t-field="quotation.amount_tax" t-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </t>
                         <tr>
                             <td></td><td></td><td></td><td></td>
                             <td class="text-right"><strong>Total:</strong></td>
