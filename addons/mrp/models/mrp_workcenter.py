@@ -180,7 +180,7 @@ class MrpWorkcenterProductivity(models.Model):
     loss_type = fields.Selection(
         "Effectiveness", related='loss_id.loss_type', store=True)
     description = fields.Text('Description')
-    date_start = fields.Datetime('Start Date', default=fields.Datetime.now(), required=True)
+    date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True)
     date_end = fields.Datetime('End Date')
     duration = fields.Float('Duration', compute='_compute_duration', store=True)
 
