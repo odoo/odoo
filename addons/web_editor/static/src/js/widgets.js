@@ -1087,7 +1087,9 @@ var LinkDialog = Dialog.extend({
                 self.data.isNewWindow = new_window;
                 self.data.text = label;
                 self.data.className = classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
-
+                if (classes.replace(/(^|[ ])(btn-default|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
+                    self.data.style = {'background-color': '', 'color': ''};
+                }
                 self.trigger("save", self.data);
             }).then(_super);
     },
