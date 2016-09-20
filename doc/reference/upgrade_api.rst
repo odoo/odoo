@@ -341,7 +341,7 @@ The ``request_sftp_access`` method returns a JSON dictionary containing the foll
         SSH_KEYS=/path/to/your/authorized_keys
         KEY="Aw7pItGVKFuZ_FOR3U8VFQ=="
         REQUEST_ID="10534"
-        URL_PARAMS="key=${KEY}&request=${REQUEST}"
+        URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
 
         curl -sS "${REQUEST_SFTP_ACCESS_URL}?${URL_PARAMS}" -F ssh_keys=@${SSH_KEYS} > request_sftp_result.json
 
