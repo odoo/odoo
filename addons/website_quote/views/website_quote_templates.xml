@@ -538,6 +538,13 @@
                           <span t-field="quotation.client_order_ref"/>
                       </div>
                   </div>
+                  <div class="clearfix"/>
+                  <div t-if="quotation.payment_term_id">
+                      <label class="col-sm-5 col-xs-5 text-right">Payment Terms:</label>
+                      <div class="col-sm-7 col-xs-7">
+                          <span t-field="quotation.payment_term_id"/>
+                      </div>
+                  </div>
               </div>
           </div>
       </div>
