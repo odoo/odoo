@@ -54,7 +54,7 @@ class SaleOrder(models.Model):
             # update line
             for option_line_id in option_lines:
                 super(SaleOrder, self)._cart_update(option_line_id.product_id.id, option_line_id.id, add_qty, set_qty, **kwargs)
-                option_line_id.write({"name": _("%s\nOption for: %s") % (option_line_id.name, option_line_id.linked_line_id.product_id.display_name)})
+                option_line_id.write({"name": _("%s\nOption for: %s") % (option_line_id.product_id.id, option_line_id.linked_line_id.product_id.display_name)})
                 value['option_ids'].add(option_line_id.id)
 
         value['option_ids'] = list(value['option_ids'])
