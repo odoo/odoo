@@ -3,12 +3,8 @@ odoo.define('web_editor.transcoder', function (require) {
 
 var widget = require('web_editor.widget');
 
-var cache = {};
 var rulesCache = [];
 var getMatchedCSSRules = function (a) {
-    if(cache[a.tagName + "." +a.className]) {
-        return cache[a.tagName + "." +a.className];
-    }
     if (!rulesCache.length) {
         var sheets = document.styleSheets;
         for(var i = sheets.length-1; i >= 0 ; i--) {
@@ -117,7 +113,7 @@ var getMatchedCSSRules = function (a) {
         delete style['padding-left'];
     }
 
-    return a.className ? cache[a.tagName + "." +a.className] = style : style;
+    return style;
 };
 
 // convert font awsome into image
