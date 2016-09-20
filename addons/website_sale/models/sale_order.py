@@ -222,7 +222,7 @@ class Website(models.Model):
             pricelists |= partner.property_product_pricelist
 
         # This method is cached, must not return records! See also #8795
-        return pricelists.sorted(lambda pl: pl.name).ids
+        return pricelists.ids
 
     def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
         pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)
