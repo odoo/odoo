@@ -204,7 +204,7 @@ widget.LinkDialog.include({
     },
     fetch_pages: function (term) {
         return this.call('search_pages', [null, term], {
-            limit: 9,
+            limit: 100,
             context: base.get_context(),
         });
     },
