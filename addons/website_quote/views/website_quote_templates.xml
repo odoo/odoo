@@ -70,9 +70,8 @@
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                                         t-att-style="line.discount and 'text-decoration: line-through' or None"
                                         t-att-class="(line.discount and 'text-danger' or '') + ' text-right'"/>
-                                    <!-- TODO: apply monetary widget formating -->
                                     <div t-if="line.discount">
-                                        <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
+                                        <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                     </div>
                               </td>
                               <td class="text-right" groups="sale.group_show_price_subtotal">
@@ -619,7 +618,7 @@
                                     t-att-style="option.discount and 'text-decoration: line-through' or None"
                                     t-att-class="option.discount and 'text-danger' or None"/>
                                     <div t-if="option.discount">
-                                        <t t-esc="'%.2f' % ((1-option.discount / 100.0) * option.price_unit)"/>
+                                        <t t-esc="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                     </div>
                                 </strong>
                             </td>
