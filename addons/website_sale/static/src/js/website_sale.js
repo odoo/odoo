@@ -378,10 +378,7 @@ odoo.define('website_sale.website_sale', function (require) {
                                 // populate states and display
                                 var selectStates = $("select[name='state_id']");
                                 // dont reload state at first loading (done in qweb)
-                                if (selectStates.data('init')===1) {
-                                    selectStates.data('init', 0);
-                                }
-                                else {
+                                if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
                                     if (data.states.length) {
                                         selectStates.html('');
                                         _.each(data.states, function(x) {
@@ -392,9 +389,13 @@ odoo.define('website_sale.website_sale', function (require) {
                                         });
                                         selectStates.parent('div').show();
                                     }
-                                    else{
+                                    else {
                                         selectStates.val('').parent('div').hide();
                                     }
+                                    selectStates.data('init', 0);
+                                }
+                                else {
+                                    selectStates.data('init', 0);
                                 }
 
                                 // manage fields order / visibility
