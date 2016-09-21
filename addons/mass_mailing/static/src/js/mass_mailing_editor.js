@@ -319,6 +319,9 @@ snippets_editor.Class.include({
             $new_wrapper.append($contents);
             $old_layout.remove();
 
+            if (first_choice) {
+                self.add_default_snippet_text_classes($new_wrapper);
+            }
             self.show_blocks();
         }
     },
