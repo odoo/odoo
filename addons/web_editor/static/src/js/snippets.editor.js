@@ -258,11 +258,7 @@ data.Class = Widget.extend({
         $("body").toggleClass("editor_has_snippets", !!number);
 
         // select all default text to edit (if snippet default text)
-        self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
-            .contents()
-            .filter(function () {
-                return this.nodeType === 3 && this.textContent.match(/\S/);
-            }).parent().addClass("o_default_snippet_text");
+        this.add_default_snippet_text_classes();
         $(document).on("click", ".o_default_snippet_text", function (event) {
             $(event.target).selectContent();
         });
@@ -302,6 +298,18 @@ data.Class = Widget.extend({
             }
             $("#wrapwrap ." + snippet_classes).data("name", $snippet.find(".oe_snippet_thumbnail_title").text());
         });
+    },
+
+    add_default_snippet_text_classes: function ($in) {
+        if ($in === undefined) {
+            $in = this.$snippets.find(".oe_snippet_body");
+        }
+
+        $in.find("*").addBack()
+            .contents()
+            .filter(function () {
+                return this.nodeType === 3 && this.textContent.match(/\S/);
+            }).parent().addClass("o_default_snippet_text");
     },
 
     cover_target: function ($el, $target) {
