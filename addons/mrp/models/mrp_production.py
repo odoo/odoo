@@ -264,7 +264,7 @@ class MrpProduction(models.Model):
     def _generate_moves(self):
         for production in self:
             production._generate_finished_moves()
-            factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty, production.bom_id.product_uom_id.id)
+            factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty, production.bom_id.product_uom_id.id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             production._generate_raw_moves(lines)
             # Check for all draft moves whether they are mto or not
@@ -382,7 +382,7 @@ class MrpProduction(models.Model):
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
         UoM = self.env['product.uom']
         for order in orders_to_plan:
-            quantity = UoM._compute_qty_obj(order.product_uom_id, order.product_qty, order.bom_id.product_uom_id)
+            quantity = UoM._compute_qty_obj(order.product_uom_id, order.product_qty, order.bom_id.product_uom_id) / order.bom_id.product_qty
             boms, lines = order.bom_id.explode(order.product_id, quantity, picking_type=order.bom_id.picking_type_id)
             order._generate_workorders(boms)
         orders_to_plan.write({'state': 'planned'})
@@ -402,18 +402,18 @@ class MrpProduction(models.Model):
                     BoMs
         """
         workorders = self.env['mrp.workorder']
-        qty = bom_data['qty']
+        bom_qty = bom_data['qty']
 
+        # Initial qty producing
         if self.product_id.tracking == 'serial':
             quantity = 1.0
         else:
             quantity = self.product_qty - sum(self.move_finished_ids.mapped('quantity_done'))
             quantity = quantity if (quantity > 0) else 0
 
-        # TDE FIXME: what is qty compared to quantity ??
         for operation in bom.routing_id.operation_ids:
             # create workorder
-            cycle_number = math.ceil(qty / bom.product_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
+            cycle_number = math.ceil(bom_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)

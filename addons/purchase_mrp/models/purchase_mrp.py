@@ -27,7 +27,7 @@ class PurchaseOrderLine(models.Model):
         bom_delivered = {}
         if bom:
             bom_delivered[bom.id] = False
-            product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, bom.product_uom_id)
+            product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_qty, bom.product_uom_id) / bom.product_qty
             boms, lines = bom.explode(self.product_id, product_uom_qty_bom)
             for bom_line, data in lines:
                 qty = 0.0

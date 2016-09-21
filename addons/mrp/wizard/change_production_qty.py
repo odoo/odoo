@@ -44,7 +44,7 @@ class ChangeProductionQty(models.TransientModel):
                 raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
             production.write({'product_qty': wizard.product_qty})
             bom_point = production.bom_id
-            factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty - production.qty_produced, production.bom_id.product_uom_id.id)
+            factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty - production.qty_produced, production.bom_id.product_uom_id.id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for line, line_data in lines:
                 production._update_raw_move(line, line_data)
@@ -61,7 +61,7 @@ class ChangeProductionQty(models.TransientModel):
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
-                # assign moves; last operation receive all unassigned moves (which case ?)
+                # assign moves; last operation receive all unassigned moves
                 operation = wo.operation_id
 
                 # TODO: following could be put in a function as it is similar as code in _workorders_create
