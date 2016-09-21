@@ -11,13 +11,7 @@ var TourManager = require('web_tour.TourManager');
 var QWeb = core.qweb;
 
 if (config.device.size_class <= config.device.SIZES.XS) {
-    return {
-        register: function () {},
-        run: function () {
-            console.warn("Tours are disabled for mobile mode.");
-        },
-        STEPS: {},
-    };
+    return $.Deferred().reject();
 }
 
 return session.is_bound.then(function () {
