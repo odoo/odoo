@@ -1,4 +1,4 @@
-USA, 9/22/16
+USA, 2016-09-22
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Nick Ross https://github.com/nicknomo
+Nick Ross nicknomo@gmail.com https://github.com/nicknomo
