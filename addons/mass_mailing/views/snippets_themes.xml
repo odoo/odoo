@@ -97,46 +97,36 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
                 <tr>
-                    <td width="80%"  class="o_mail_logo_container o_mail_h_padding o_mail_v_padding">
+                    <td width="70%"  class="o_mail_logo_container o_mail_h_padding o_mail_v_padding">
                         &amp;nbsp;
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
                              <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;" alt="Your Logo" />
                         </a>
                         &amp;nbsp;
                     </td>
-                    <td width="20%">
-                        <table t-if="website" class="o_mail_header_social" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate;">
-                            <tr>
-                                <t t-if="website.social_facebook">
-                                    <td align="right">
-                                        <a t-att-href="website.social_facebook">
-                                          <span class="fa fa-facebook"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_googleplus">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_googleplus">
-                                            <span class="fa fa-google-plus"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_linkedin">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_linkedin">
-                                            <span class="fa fa-linkedin"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_twitter">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_twitter">
-                                            <span class="fa fa-twitter"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                            </tr>
-                        </table>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div t-if="website" class="o_mail_header_social">
+                            <t t-if="website.social_facebook">
+                                <a t-att-href="website.social_facebook">
+                                  <span class="fa fa-facebook"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_googleplus">
+                                <a t-att-href="website.social_googleplus" style="margin-left:10px">
+                                    <span class="fa fa-google-plus"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_linkedin">
+                                <a t-att-href="website.social_linkedin" style="margin-left:10px">
+                                    <span class="fa fa-linkedin"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_twitter">
+                                <a t-att-href="website.social_twitter" style="margin-left:10px">
+                                    <span class="fa fa-twitter"></span>
+                                </a>
+                            </t>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -149,7 +139,7 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
                 <tr>
-                    <td width="80%" class="o_mail_h_padding o_mail_v_padding">
+                    <td width="70%" class="o_mail_h_padding o_mail_v_padding">
                         &amp;nbsp;
                         <h3>
                             <a t-att-href="(company_id.website) or '#'">
@@ -158,39 +148,29 @@
                         </h3>
                         &amp;nbsp;
                     </td>
-                    <td valign="center" width="20%">
-                        <table t-if="website" class="o_mail_header_social" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate;">
-                            <tr>
-                                <t t-if="website.social_facebook">
-                                    <td align="right">
-                                        <a t-att-href="website.social_facebook">
-                                          <span class="fa fa-facebook"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_googleplus">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_googleplus">
-                                          <span class="fa fa-google-plus"></span>
-                                          </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_linkedin">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_linkedin">
-                                          <span class="fa fa-linkedin"></span>
-                                          </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_twitter">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_twitter">
-                                          <span class="fa fa-twitter"></span>
-                                          </a>
-                                    </td>
-                                </t>
-                            </tr>
-                        </table>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div t-if="website" class="o_mail_header_social">
+                            <t t-if="website.social_facebook">
+                                <a t-att-href="website.social_facebook">
+                                  <span class="fa fa-facebook"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_googleplus">
+                                <a t-att-href="website.social_googleplus" style="margin-left:10px">
+                                    <span class="fa fa-google-plus"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_linkedin">
+                                <a t-att-href="website.social_linkedin" style="margin-left:10px">
+                                    <span class="fa fa-linkedin"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_twitter">
+                                <a t-att-href="website.social_twitter" style="margin-left:10px">
+                                    <span class="fa fa-twitter"></span>
+                                </a>
+                            </t>
+                        </div>
                     </td>
                 </tr>
             </table>
