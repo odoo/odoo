@@ -129,7 +129,7 @@ var Record = Class.extend(/** @lends Record# */{
             if (typeof val !== 'object') {
                 output[k] = val;
             } else if (val instanceof Array) {
-                output[k] = val[0];
+                output[k] = val.length > 0 ? val[0] : null;
             } else {
                 throw new Error(_.str.sprintf(_t("Can't convert value %s to context"), val));
             }
