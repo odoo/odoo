@@ -530,7 +530,6 @@
 
         <record model="ir.actions.act_window" id="action_open_purchase_from_procurement">
             <field name="name">action.open.purchase.from.procurement</field>
-            <field name="domain">[('id','=',context.get('active_id'))]</field>
             <field name="res_model">purchase.order</field>
             <field name="view_id" ref="purchase_order_form"/>
         </record>
@@ -541,8 +540,7 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='do_view_procurements']" position="before">
-                    <button class="oe_stat_button" name="open_purchase_order" type="object" icon="fa-shopping-cart" string="Purchases" context="{'active_id':purchase_id}" attrs="{'invisible':[('purchase_id', '=', False)]}">
-                    </button>
+                    <button class="oe_stat_button" name="open_purchase_order" type="object" icon="fa-shopping-cart" string="Purchases" attrs="{'invisible':[('purchase_id', '=', False)]}"/>
                 </xpath>
             </field>
         </record>

@@ -1013,11 +1013,9 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def open_purchase_order(self):
-        action = self.env.ref('purchase.action_open_purchase_from_procurement')
-        action_dict = action.read()[0]
-        action_dict['res_id'] = self.purchase_id.id
-        action_dict['target'] = 'current'
-        return action_dict
+        [action] = self.env.ref('purchase.action_open_purchase_from_procurement').read()
+        action['res_id'] = self.purchase_id.id
+        return action
 
 
 class ProductTemplate(models.Model):
