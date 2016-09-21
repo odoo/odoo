@@ -5,7 +5,6 @@
             <xpath expr="//div[@name='mail_button']" position="replace">
                 <div>
                     <form action="/website_form/" method="post" data-model_name="crm.lead" data-success_page="/page/website_crm.contactus_thanks" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data">
-                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
                             <div class="col-md-7 col-sm-8">
