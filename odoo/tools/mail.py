@@ -13,6 +13,7 @@ import time
 from email.header import decode_header
 from email.utils import getaddresses, formataddr
 from lxml import etree
+from lxml import html as lxml_html
 
 import odoo
 from odoo.loglevels import ustr
@@ -210,6 +211,10 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         })
 
     try:
+        # check that html code is well-formed, else it may lead to save
+        # "HTML soup" that is accepted by the parser but refused later, eg. when you
+        # try to translate the field, it is not XML valid
+        lxml_html.fragments_fromstring(src, parser=lxml_html.HTMLParser(recover=False))
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
@@ -230,11 +235,11 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             raise
         logger.warning('ParserError obtained when sanitizing %r', src, exc_info=True)
         cleaned = '<p>ParserError when sanitizing</p>'
-    except Exception:
+    except Exception as e:
         if not silent:
             raise
-        logger.warning('unknown error obtained when sanitizing %r', src, exc_info=True)
-        cleaned = '<p>Unknown error when sanitizing</p>'
+        logger.warning('Error obtained when sanitizing %r', src, exc_info=True)
+        cleaned = '<pre>%s</pre>' % e.message
 
     # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
     if cleaned.startswith('<div>') and cleaned.endswith('</div>'):
