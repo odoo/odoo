@@ -113,7 +113,8 @@ class MrpBom(models.Model):
     def explode(self, product, quantity, picking_type=False):
         """
             Explodes the BoM and creates two lists with all the information you need: bom_done and line_done
-            Quantity should be passed in the UoM of the BoM (don't divide by its quantity)
+            Quantity describes the number of times you need the BoM: so the quantity divided by the number created by the BoM
+            and converted into its UoM
         """
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
@@ -129,11 +130,11 @@ class MrpBom(models.Model):
             if current_line.product_id.product_tmpl_id in templates_done:
                 raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
 
-            line_quantity = current_qty * current_line.product_qty / current_line.bom_id.product_qty
+            line_quantity = current_qty * current_line.product_qty
             bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id)
             if bom.type == 'phantom':
-                converted_line_quantity = self.env['product.uom']._compute_qty_obj(current_line.product_uom_id, line_quantity, bom.product_uom_id)
-                bom_lines = [(line, current_line.product_id, line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
+                converted_line_quantity = self.env['product.uom']._compute_qty_obj(current_line.product_uom_id, line_quantity / bom.product_qty, bom.product_uom_id)
+                bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
                 templates_done |= current_line.product_id.product_tmpl_id
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
