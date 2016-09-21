@@ -7,6 +7,7 @@ Details : called in list view with "<button name="create_move" type="object" wid
 odoo.define('account_asset.widget', function(require) {
 "use strict";
 
+require('web.ListView');
 var core = require('web.core');
 var QWeb = core.qweb;
 var session = require('web.session');

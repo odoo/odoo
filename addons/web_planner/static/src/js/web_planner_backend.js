@@ -99,7 +99,7 @@ var PlannerLauncher = Widget.extend({
     },
 });
 
-SystrayMenu.Items.push(PlannerLauncher);
+SystrayMenu.add(PlannerLauncher);
 
 return {
     PlannerLauncher: PlannerLauncher,

@@ -643,7 +643,7 @@ var RequestDetails = Widget.extend({
 });
 
 if (core.debug) {
-    SystrayMenu.Items.push(DebugManager);
+    SystrayMenu.add(DebugManager);
 
     WebClient.include({
         current_action_updated: function(action) {

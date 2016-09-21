@@ -30,13 +30,13 @@
 (function() {
     "use strict";
 
-    var jobs = [];
-    var factories = Object.create(null);
-    var job_names = [];
-    var job_deps = [];
-    var job_deferred = [];
-
-    var services = Object.create({});
+    var jobs = {};
+    var services = {};
+    var jobs_deferred = {};
+    var require = function (name) { return services[name]; };
+    var timeDeferred;
+    var masterDef = new $.Deferred();
+    masterDef.__deferred__ = [];
 
     var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg;
     var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
@@ -47,35 +47,46 @@
     _.extend(odoo, {
         testing: typeof QUnit === "object",
         debug: debug,
-        remaining_jobs: jobs,
+        subsets: [],
 
         __DEBUG__: {
-            get_dependencies: function (name, transitive) {
-                var deps = name instanceof Array ? name: [name],
-                    changed;
-                do {
-                    changed = false;
-                    _.each(job_deps, function (dep) {
-                        if (_.contains(deps, dep.to) && (!_.contains(deps, dep.from))) {
-                            deps.push(dep.from);
-                            changed = true;
-                        }
+            get_dependencies: function (name) {
+                if (!jobs[name]) return [];
+                if (!jobs[name].dependencies) {
+                    var self = this;
+                    var deps = [];
+                    _.each(jobs[name].deps, function (dep) {
+                        deps.push(dep);
+                        deps = deps.concat(self.get_dependencies(dep));
                     });
-                } while (changed && transitive);
-                return deps;
+                    jobs[name].dependencies = _.uniq(deps);
+                }
+                return jobs[name].dependencies;
             },
             get_dependents: function (name) {
-                return _.pluck(_.where(job_deps, {from: name}), 'to');
+                if (!jobs[name]) return [];
+                if (!jobs[name].dependents) {
+                    var self = this;
+                    var deps = [];
+                    _.each(jobs, function (job, key) {
+                        if (job.deps.indexOf(name) !== -1) {
+                            deps.push(key);
+                            deps = deps.concat(self.get_dependencies(key));
+                        }
+                    });
+                    jobs[name].dependents = _.uniq(deps);
+                }
+                return jobs[name].dependents;
             },
             get_waited_jobs: function () {
-                return _.uniq(_.map(jobs, function(job) {return job.name;}));
+                return _.uniq(_.map(jobs, function (job, key) {return key;}));
             },
             get_missing_jobs: function () {
                 var self = this;
                 var waited = this.get_waited_jobs();
                 var missing = [];
-                _.each(waited, function(job) {
-                    _.each(self.get_dependencies(job), function(job) {
+                _.each(waited, function (job) {
+                    _.each(self.get_dependencies(job), function (job) {
                         if (!(job in self.services)) {
                             missing.push(job);
                         }
@@ -84,19 +95,34 @@
                 return _.filter(_.difference(_.uniq(missing), waited), function (job) {return !job.error;});
             },
             get_failed_jobs: function () {
-                return _.filter(jobs, function (job) {return !!job.error;});
+                return _.filter(jobs, function (job, key) {return !!job.error;});
             },
-            factories: factories,
+            jobs: jobs,
             services: services,
         },
+        deferred: masterDef,
         define: function () {
             var args = Array.prototype.slice.call(arguments);
             var name = typeof args[0] === 'string' ? args.shift() : _.uniqueId('__job');
-            var factory = args[args.length - 1];
-            var deps;
-            if (args[0] instanceof Array) {
-                deps = args[0];
+            var deps = args[0] instanceof Array && args.shift();
+            var factory = args.shift();
+            var subset = args.shift();
+            var _jobs_deferred, _require, _deferred, _services, _jobs;
+            clearTimeout(timeDeferred);
+
+            if (subset) {
+                _jobs_deferred = subset.jobs_deferred;
+                _require = subset.require;
+                _services = subset.services;
+                _jobs = subset.jobs;
             } else {
+                _jobs_deferred = jobs_deferred;
+                _require = require;
+                _services = services;
+                _jobs = jobs;
+            }
+
+            if (!deps) {
                 deps = [];
                 factory.toString()
                     .replace(commentRegExp, '')
@@ -105,7 +131,7 @@
                     });
             }
 
-            if (odoo.debug) {
+            if (!subset && odoo.debug) {
                 if (!(deps instanceof Array)) {
                     throw new Error ('Dependencies should be defined by an array', deps);
                 }
@@ -115,156 +141,210 @@
                 if (typeof name !== 'string') {
                     throw new Error("Invalid name definition (should be a string", name);
                 }
-                if (name in factories) {
+                if (_jobs[name] && _jobs[name].defined) {
                     throw new Error("Service " + name + " already defined");
                 }
             }
 
-            factory.deps = deps;
-            factories[name] = factory;
+            var def = _jobs_deferred[name] || (_jobs_deferred[name] = $.Deferred());
+            _jobs[name] = {
+                'defined': true,
+                'name': name,
+                'deps': deps,
+                'factory': factory
+            };
 
-            jobs.push({
-                name: name,
-                factory: factory,
-                deps: deps,
+            // launch module when deps are ready
+
+            if (subset) {
+                deps = deps.map(function (dep) {
+                    if (!_jobs_deferred[dep]) {
+                        var job = subset.jobs[dep] || jobs[dep];
+                        odoo.define(job.name, job.deps, job.factory, subset);
+                    }
+                    return _jobs_deferred[dep];
+                });
+            } else {
+                deps = deps.map(function (dep) {
+                    return _jobs_deferred[dep] || (_jobs_deferred[dep] = $.Deferred());
+                });
+            }
+
+            $.when.apply($, deps).then(
+                function () {
+                    setTimeout(function process_job () {
+                        try {
+                            var job_exec = factory(_require);
+                            if (job_exec && job_exec.then && job_exec.promise) {
+                                job_exec.then(
+                                    function (data) {
+                                        _services[name] = data;
+                                        def.resolve();
+                                    },
+                                    def.reject);
+                            } else {
+                                _services[name] = job_exec;
+                                def.resolve();
+                            }
+                        } catch (e) {
+                            console.error(e);
+                            def.reject(_jobs[name].error = e);
+                        }
+                    });
+                },
+                def.reject);
+
+            // Global deferred
+
+            var masterDef = subset ? subset.deferred : odoo.deferred;
+            masterDef.__deferred__.push(def);
+            def.always(function () {
+                clearTimeout(timeDeferred);
+                timeDeferred = setTimeout(function () {
+                    var waited = _.filter(_jobs_deferred, function (def) { return def.state() === 'pending';}).length;
+                    if (masterDef.state() === "pending" && !waited) {
+                        masterDef.resolve(_services);
+                    }
+                });
             });
+        },
+        subset: function (modules, subset, replace) {
+            var masterDef = new $.Deferred();
+            masterDef.__deferred__ = [];
+            var options = subset ? Object(subset) : {
+                "id": odoo.subsets.length,
+                "jobs_deferred": {},
+                "jobs": {},
+                "replace": {},
+                "services": {},
+                "modules": [],
+                "deferred": masterDef,
+                "require": function require (name) { return options.services[name]; }
+            };
 
-            job_names.push(name);
-            _.each(deps, function (dep) {
-                job_deps.push({from:dep, to:name});
+            if (subset) {
+                options.jobs_deferred = Object(options.jobs_deferred);
+                options.jobs = Object(options.jobs);
+                options.replace = Object(options.replace);
+                options.services = Object(options.services);
+                options.modules = Object(options.modules);
+            }
+
+            odoo.subsets.push(options);
+
+
+            if (replace) {
+                for (var k in replace) {
+                    options.replace[k] = replace[k];
+                }
+            }
+
+            var _jobs = Object(jobs);
+            for (var k in options.replace) {
+                _jobs[k] = options.replace[k];
+            }
+
+            for (var k in _jobs) {
+                var job = _jobs[k];
+                if (!(job.name in options.services) && (!modules || modules.indexOf(job.name) !== -1)) {
+                    options.modules.push(job.name);
+                    odoo.define(job.name, job.deps, job.factory, options);
+                }
+            }
+
+            return options.deferred.then(function (subset_services) {
+                // reset original services and prepare for extend subset
+                if (odoo.debug) {
+                    console.log("Use a subset's services ("+options.id+")",
+                        "\nNeed: ", options.modules,
+                        "\nUsed: ", _.pluck(options.jobs, 'name'));
+                }
+                subset_services.subset = options;
+                return subset_services;
             });
-
-            this.process_jobs(jobs, services);
         },
         log: function () {
-            if (jobs.length) {
-                var debug_jobs = {};
-                var rejected = [];
-                var rejected_linked = [];
-                var job;
-                var jobdep;
-
-                for (var k=0; k<jobs.length; k++) {
-                    debug_jobs[jobs[k].name] = job = {
-                        dependencies: jobs[k].deps,
-                        dependents: odoo.__DEBUG__.get_dependents(jobs[k].name),
-                        name: jobs[k].name
-                    };
-                    if (jobs[k].error) {
-                        job.error = jobs[k].error;
-                    }
-                    if (jobs[k].rejected) {
-                        job.rejected = jobs[k].rejected;
-                        rejected.push(job.name);
-                    }
-                    var deps = odoo.__DEBUG__.get_dependencies( job.name );
-                    for (var i=0; i<deps.length; i++) {
-                        if (job.name !== deps[i] && !(deps[i] in services)) {
-                            jobdep = debug_jobs[deps[i]] || (deps[i] in factories && _.find(jobs, function (job) { return job.name === deps[i];}));
-                            if (jobdep && jobdep.rejected) {
-                                if (!job.rejected) {
-                                    job.rejected = [];
-                                    rejected_linked.push(job.name);
-                                }
-                                job.rejected.push(deps[i]);
-                            } else {
-                                if (!job.missing) {
-                                    job.missing = [];
-                                }
-                                job.missing.push(deps[i]);
-                            }
-                        }
-                    }
-                }
-                var missing = odoo.__DEBUG__.get_missing_jobs();
-                var failed = odoo.__DEBUG__.get_failed_jobs();
-                var unloaded = _.filter(debug_jobs, function (job) { return job.missing; });
-
-                var log = [(_.isEmpty(failed) ? (_.isEmpty(unloaded) ? 'info' : 'warning' ) : 'error') + ':', 'Some modules could not be started'];
-                if (missing.length)             log.push('\nMissing dependencies:   ', missing);
-                if (!_.isEmpty(failed))         log.push('\nFailed modules:         ', _.pluck(failed, 'name'));
-                if (!_.isEmpty(rejected))       log.push('\nRejected modules:       ', rejected);
-                if (!_.isEmpty(rejected_linked))log.push('\nRejected linked modules:', rejected_linked);
-                if (!_.isEmpty(unloaded))       log.push('\nNon loaded modules:     ', _.pluck(unloaded, 'name'));
-                if (odoo.debug && !_.isEmpty(debug_jobs)) log.push('\nDebug:                  ', debug_jobs);
-
-                if (odoo.debug || !_.isEmpty(failed) || !_.isEmpty(unloaded)) {
-                    console[_.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
+            if (!_.keys(jobs).length || odoo.__DEBUG__.create_subset) {
+                return;
+            }
+            if (!debug) {
+                var errors = _.filter(jobs, function (job) {return job.error;}).map(function (job) {return job.name;});
+                if (errors.length) {
+                    console.error('Failed modules: ' + errors.join(","));
                 }
             }
-        },
-        process_jobs: function (jobs, services) {
+
+            var debug_jobs = {};
+            var rejected = [];
+            var rejected_linked = [];
             var job;
-            var require;
+            var jobdep;
 
-            function process_job (job) {
-                var require = make_require(job);
-
-                var job_exec;
-                var def = $.Deferred();
-                try {
-                    job_exec = job.factory.call(null, require);
-                    jobs.splice(jobs.indexOf(job), 1);
-                    job_deferred.push(def);
-                } catch (e) {
-                    job.error = e;
+            _.each(jobs, function (value, key) {
+                if (key in services) {
+                    return;
                 }
-                if (!job.error) {
-                    $.when(job_exec).then(
-                        function (data) {
-                            services[job.name] = data;
-                            def.resolve();
-                            odoo.process_jobs(jobs, services);
-                        }, function (e) {
-                            job.rejected = e || true;
-                            jobs.push(job);
-                            def.resolve();
+                debug_jobs[key] = job = {'name': key};
+                var deps = odoo.__DEBUG__.get_dependents(key);
+                if (deps.length) {
+                    job.dependents = deps;
+                }
+                if (value.deps.length) {
+                    job.dependencies = value.deps;
+                }
+                if (value.error) {
+                    job.error = value.error;
+                } else if (jobs_deferred[key].state() === 'rejected') {
+                    job.rejected = true;
+                    rejected.push(job.name);
+                }
+
+                var deps = odoo.__DEBUG__.get_dependencies( job.name );
+                for (var i=0; i<deps.length; i++) {
+                    if (job.name !== deps[i] && !(deps[i] in services) && (!jobs[deps[i]] || jobs[deps[i]].error)) {
+                        if (!job.missing) {
+                            job.missing = [];
                         }
-                    );
-                }
-            }
-
-            function is_ready (job) {
-                return !job.error && !job.rejected && _.every(job.factory.deps, function (name) { return name in services; });
-            }
-
-            function make_require (job) {
-                var deps = _.pick(services, job.deps);
-
-                function require (name) {
-                    if (!(name in deps)) {
-                        console.error('Undefined dependency: ', name);
-                    } else {
-                        require.__require_calls++;
+                        job.missing.push(deps[i]);
+                        if (job.rejected) {
+                            rejected.splice(rejected.indexOf(deps[i]), 1);
+                            delete job.rejected;
+                        }
                     }
-                    return deps[name];
-                }
-
-                require.__require_calls = 0;
-                return require;
-            }
-
-            while (jobs.length && (job = _.find(jobs, is_ready))) {
-                process_job(job);
-            }
-
-            return services;
-        }
-    });
-
-    // automatically log errors detected when loading modules
-    var log_when_loaded = function () {
-        _.delay(function () {
-            var len = job_deferred.length;
-            $.when.apply($, job_deferred).then(function () {
-                if (len === job_deferred.length) {
-                    odoo.log();
-                } else {
-                    log_when_loaded();
                 }
             });
-        }, 4000);
-    };
-    $(log_when_loaded);
+            var missing = odoo.__DEBUG__.get_missing_jobs();
+            var failed = odoo.__DEBUG__.get_failed_jobs();
+            var unloaded = _.filter(debug_jobs, function (job) { return !!job.missing; });
+
+            var log = [(_.isEmpty(failed) ? (_.isEmpty(unloaded) ? 'info' : 'warning' ) : 'error') + ':', 'Some modules could not be started'];
+            if (missing.length)             log.push('\nMissing dependencies:   ', missing);
+            if (!_.isEmpty(failed))         log.push('\nFailed modules:         ', _.pluck(failed, 'name'));
+            if (!_.isEmpty(rejected))       log.push('\nRejected modules:       ', rejected);
+            if (!_.isEmpty(rejected_linked))log.push('\nRejected linked modules:', rejected_linked);
+            if (!_.isEmpty(unloaded))       log.push('\nNon loaded modules:     ', _.pluck(unloaded, 'name'));
+            if (odoo.debug && !_.isEmpty(debug_jobs)) log.push('\nDebug:                  ', debug_jobs);
+
+            if ((odoo.debug || !_.isEmpty(failed) || !_.isEmpty(unloaded)) && log.length > 2) {
+                console[_.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
+            }
+        },
+    });
+
+    // automatically log errors
+    $(function () {
+        var last_check = 0;
+        var checktime = setInterval(function () {
+            if (odoo.deferred.state() === 'pending') {
+                var pending = _.filter(jobs_deferred, function (def) { return def.state() === 'pending';}).length;
+                if (pending !== last_check) {
+                    last_check = pending;
+                    return;
+                }
+            }
+            clearInterval(checktime);
+            odoo.log();
+        }, 500);
+    });
 
 })();

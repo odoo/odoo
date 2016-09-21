@@ -145,7 +145,7 @@ var MessagingMenu = Widget.extend({
     },
 });
 
-SystrayMenu.Items.push(MessagingMenu);
-SystrayMenu.Items.push(InboxItem);
+SystrayMenu.add(MessagingMenu);
+SystrayMenu.add(InboxItem);
 
 });

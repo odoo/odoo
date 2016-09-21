@@ -2,6 +2,8 @@ odoo.define('web.SystrayMenu', function (require) {
 "use strict";
 
 var Widget = require('web.Widget');
+var Items = [];
+var ItemsEvent = $({});
 
 var SystrayMenu = Widget.extend({
     /**
@@ -25,18 +27,24 @@ var SystrayMenu = Widget.extend({
     },
     load_items: function() {
         var self = this;
-        SystrayMenu.Items = _.sortBy(SystrayMenu.Items, function (item) {
+        Items = _.sortBy(Items, function (item) {
             return !_.isUndefined(item.prototype.sequence) ? item.prototype.sequence : 50;
         });
-        _.each(SystrayMenu.Items, function(widgetCls) {
+        
+        function add (widgetCls) {
             var cur_systray_item = new widgetCls(self);
             self.widgets.push(cur_systray_item);
-            self.items.push(cur_systray_item.prependTo(self.$el));
-        });
+            self.items.push(cur_systray_item.appendTo(self.$el));
+        }
+        _.each(Items, add);
+        ItemsEvent.on('add', function (e, widgetCls) {add(widgetCls);});
     },
 });
 
-SystrayMenu.Items = [];
+SystrayMenu.add = function (Widget) {
+    Items.push(Widget);
+    ItemsEvent.trigger('add', Widget);
+};
 
 return SystrayMenu;
 

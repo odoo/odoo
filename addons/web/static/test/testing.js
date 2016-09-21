@@ -1,20 +1,6 @@
 
 odoo.testing = {};
 
-odoo.testing.start_services = function () {
-    var factories = odoo.__DEBUG__.factories;
-    delete factories['mail.chat_manager'];
-    var jobs = _.map(factories, function (factory, name) {
-        return {
-            name: name,
-            factory: factory,
-            deps: factory.deps,
-        };
-    });
-    var services = Object.create({});
-  return odoo.process_jobs(jobs, services);
-};
-
 odoo.testing.MockRPC = function (session) {
     this.responses = {};
 };
@@ -70,8 +56,8 @@ odoo.testing.MockRPC.prototype.rpc =  function (url, rparams, options) {
 
 odoo.testing.noop = function () {};
 
-odoo.define_section = function (name, section_deps) {
-    var section_body, options, mock;
+odoo.define_section = function (name, section_deps, section_body) {
+    var section_body, options;
 
     if (typeof arguments[2] === 'function') {
         options = {};
@@ -81,40 +67,52 @@ odoo.define_section = function (name, section_deps) {
         section_body = arguments[3];
     }
 
-    QUnit.module(name, options);
-
-
-    function test () { 
-        var name = arguments[0], 
-            dep_names = arguments[1] instanceof Array ? arguments[1] : [], 
-            body = arguments[arguments.length - 1];
-
-        QUnit.test(name, function (assert) {
-            var services = odoo.testing.start_services();
-            var deps = _.map(section_deps.concat(dep_names), function (name) { return services[name]; });
-            services['web.core'].qweb.add_template(odoo.testing.templates);
-            mock.clear();
-            mock.interceptRPC(services['web.session']);
-            var info = {
-                assert: assert,
-                mock: mock,
-                deps: _.pick.apply(null, [services].concat(section_deps).concat(dep_names)),
+    odoo.subset(function filter (_name) {
+            return _name === 'web.core' || _name === 'web.session' || section_deps.indexOf(_name) !== -1;
+        })
+        .then(function (services) {
+            var mock = new odoo.testing.MockRPC();
+            if (odoo.testing.templates) {
+                services['web.core'].qweb.add_template(odoo.testing.templates);
             }
-            return body.apply(info, [assert].concat(deps));
-        });
-    }
 
-    var mock = new odoo.testing.MockRPC();
-    section_body(test, mock);
+            function test () {
+                var _name = arguments[0],
+                    dep_names = arguments[1] instanceof Array ? arguments[1] : [],
+                    body = arguments[arguments.length - 1],
+                    deps = _.map(section_deps.concat(dep_names), function (name) { return services[name]; });
+
+                QUnit.module(name, options);
+
+                odoo.subset(function filter (_name) { return dep_names.indexOf(_name) !== -1; }, services.subset)
+                    .then(function (services) {
+                        QUnit.test(_name, function (assert) {
+                            mock.clear();
+                            mock.interceptRPC(services['web.session']);
+                            var info = {
+                                'assert': assert,
+                                'mock': mock,
+                                'deps': _.pick.apply(null, [services].concat(section_deps).concat(dep_names)),
+                            };
+                            return body.apply(info, [assert].concat(deps));
+                        });
+                    });
+            }
+            section_body(test, mock);
+
+        });
 };
 
-
+var time_done;
 QUnit.done(function(result) {
-    if (result.failed === 0) {
-        console.log('ok');
-    } else {
-        console.log('error');
-    }
+    clearTimeout(time_done);
+    time_done = setTimeout(function () {
+        if (result.failed === 0) {
+            console.log('ok');
+        } else {
+            console.log('error');
+        }
+    }, 500);
 });
 
 QUnit.log(function(result) {
