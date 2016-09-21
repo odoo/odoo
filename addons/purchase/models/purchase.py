@@ -331,7 +331,9 @@ class PurchaseOrder(models.Model):
                 continue
             order._add_supplier_to_product()
             # Deal with double validation process
-            if order.company_id.po_double_validation == 'one_step':
+            if order.company_id.po_double_validation == 'one_step'\
+            or (self.company_id.po_double_validation == 'two_step'\
+            and self.amount_total < self.env.user.company_id.currency_id.compute(self.company_id.po_double_validation_amount, self.currency_id)):
                 order.button_approve(force=True)
             else:
                 order.write({'state': 'to approve'})
