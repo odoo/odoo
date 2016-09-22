@@ -76,12 +76,12 @@
                 <sheet string="Project">
                     <field name="analytic_account_id" invisible="1" required="0"/>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                         <button class="oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', False)]}"
+                        <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
+                            <field string="Documents" name="doc_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', False)]}"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
-                        </button>
-                        <button  class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
-                            <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
                         <button name="toggle_active" type="object"
                                 confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
@@ -106,15 +106,17 @@
                     <notebook>
                         <page string="Settings">
                             <group>
+                                <field name="user_id" string="Project Manager"
+                                        attrs="{'readonly':[('active','=',False)]}"/>
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="partner_id" string="Customer"/>
-                                <field name="user_id" string="Project Manager"
-                                        attrs="{'readonly':[('active','=',False)]}"
-                                        groups="base.group_no_one"/>
                             </group>
                             <group name="misc">
                                 <group string="Configuration" groups="base.group_no_one">
                                     <field name="sequence" groups="base.group_no_one"/>
+                                </group>
+                                <group string="Time Scheduling" groups="base.group_no_one">
+                                    <field name="resource_calendar_id" groups="base.group_no_one"/>
                                 </group>
                             </group>
                         </page>
@@ -128,9 +130,9 @@
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
                                 </div>
-                                <label for="alias_model" string="Incoming Emails create" groups="base.group_no_one"/>
-                                <field name="alias_model" class="oe_inline" nolabel="1" groups="base.group_no_one"/>
-                                <field name="alias_contact" class="oe_inline" groups="base.group_no_one"
+                                <label for="alias_model" string="Incoming Emails create" class="oe_edit_only"/>
+                                <field name="alias_model" class="oe_inline oe_edit_only" nolabel="1"/>
+                                <field name="alias_contact" class="oe_inline oe_edit_only"
                                         string="Accept Emails From"/>
                             </group>
                         </page>
@@ -186,12 +188,17 @@
                 <form string="Project">
                     <sheet>
                         <group>
-                            <field name="name" class="o_project_name oe_inline"
-                                string="Project Name" placeholder="e.g. Office Party"/>
-                            <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                            <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            </div>
+                            <group>
+                                <field name="name" class="o_project_name oe_inline"
+                                    string="Project Name" placeholder="e.g. Office Party"/>
+                                <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
+                            </group>
+                            <group name='options' invisible="1">
+                                <field name="use_tasks"/>
+                            </group>
                         </group>
                         <footer>
                             <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
@@ -243,7 +250,8 @@
                                                 <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
                                             </div>
                                         </div>
-                                    </div><div class="o_kanban_card_manage_pane o_invisible">
+                                    </div>
+                                    <div class="o_kanban_card_manage_pane o_invisible">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
                                             <div groups="project.group_project_manager">
                                                 <a type="edit">Settings</a>
@@ -272,10 +280,12 @@
                                             <t t-esc="record.task_needaction_count.raw_value"/>
                                         </a>
                                     </div>
-                                    <a t-if="record.doc_count.raw_value" class="o_project_kanban_box" name="attachment_tree_view" type="object">
-                                        <span class="o_value"><t t-esc="record.doc_count.value"/></span>
-                                        <span class="o_label">Documents</span>
-                                    </a>
+                                    <div t-if="record.doc_count.raw_value" class="o_project_kanban_box">
+                                        <a name="attachment_tree_view" type="object">
+                                            <span class="o_value"><t t-esc="record.doc_count.value"/></span>
+                                            <span class="o_label">Documents</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -607,43 +617,43 @@ action = model.activate_sample_project()
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <form string="Task Stage">
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="mail_template_id" groups="base.group_no_one"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="mail_template_id"/>
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                                <field name="project_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="fold"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                        <group string="Stage Description and Tooltips">
+                            <p class="text-muted" colspan="2">
+                                At each stage employees can block or make task/issue ready for next stage.
+                                You can define here labels that will be displayed for the state instead
+                                of the default labels.
+                            </p>
+                            <label for="legend_normal" string=" " class="oe_kanban_status oe_project_kanban_legend"/>
+                            <field name="legend_normal" nolabel="1"/>
+                            <label for="legend_blocked" string=" " class="oe_kanban_status oe_kanban_status_red oe_project_kanban_legend"/>
+                            <field name="legend_blocked" nolabel="1"/>
+                            <label for="legend_done" string=" " class="oe_kanban_status oe_kanban_status_green oe_project_kanban_legend"/>
+                            <field name="legend_done" nolabel="1"/>
+
+                            <p class="text-muted" colspan="2">
+                                You can also give a tooltip about the use of the stars available in the kanban and form views.
+                            </p>
+                            <label for="legend_priority" string=" " class="fa fa-star fa-lg o_star_on oe_project_kanban_legend"/>
+                            <field name="legend_priority" nolabel="1"/>
+
+                            <p class="text-muted" colspan="2">
+                                You can also add a description to help your coworkers understand the meaning and purpose of the stage.
+                            </p>
+                            <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
                         </group>
-                    </group>
-                    <group string="Stage Description and Tooltips">
-                        <p class="text-muted" colspan="2">
-                            At each stage employees can block or make task/issue ready for next stage.
-                            You can define here labels that will be displayed for the state instead
-                            of the default labels.
-                        </p>
-                        <label for="legend_normal" string=" " class="oe_kanban_status oe_project_kanban_legend"/>
-                        <field name="legend_normal" nolabel="1"/>
-                        <label for="legend_blocked" string=" " class="oe_kanban_status oe_kanban_status_red oe_project_kanban_legend"/>
-                        <field name="legend_blocked" nolabel="1"/>
-                        <label for="legend_done" string=" " class="oe_kanban_status oe_kanban_status_green oe_project_kanban_legend"/>
-                        <field name="legend_done" nolabel="1"/>
-
-                        <p class="text-muted" colspan="2">
-                            You can also give a tooltip about the use of the stars available in the kanban and form views.
-                        </p>
-                        <label for="legend_priority" string=" " class="fa fa-star fa-lg o_star_on oe_project_kanban_legend"/>
-                        <field name="legend_priority" nolabel="1"/>
-
-                        <p class="text-muted" colspan="2">
-                            You can also add a description to help your coworkers understand the meaning and purpose of the stage.
-                        </p>
-                        <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
-                    </group>
-                    <group string="Projects using this stage" groups="base.group_no_one">
-                        <field name="project_ids" widget="many2many_tags"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
