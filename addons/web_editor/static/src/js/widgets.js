@@ -784,7 +784,9 @@ var fontIconsDialog = Widget.extend({
 });
 
 
-function createVideoNode(url) {
+function createVideoNode(url, options) {
+    options = options || {};
+
     // video url patterns(youtube, instagram, vimeo, dailymotion, youku)
     var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     var ytMatch = url.match(ytRegExp);
@@ -842,6 +844,10 @@ function createVideoNode(url) {
             .attr('src', url);
     }
 
+    if (options.autoplay) {
+        $video.attr("src", $video.attr("src") + "?autoplay=1");
+    }
+
     $video.attr('frameborder', 0);
 
     return $video;
@@ -856,6 +862,7 @@ var VideoDialog = Widget.extend({
     events : _.extend({}, Dialog.prototype.events, {
         'click input#urlvideo ~ button': 'get_video',
         'click input#embedvideo ~ button': 'get_embed_video',
+        'change input#autoplay': 'get_video',
         'change input#urlvideo': 'change_input',
         'keyup input#urlvideo': 'change_input',
         'change input#embedvideo': 'change_input',
@@ -874,6 +881,7 @@ var VideoDialog = Widget.extend({
         if ($media.hasClass("media_iframe_video")) {
             var src = $media.data('src');
             this.$("input#urlvideo").val(src);
+            this.$("input#autoplay").prop("checked", (src || "").indexOf("autoplay") >= 0);
             this.get_video();
         }
         return this._super();
@@ -898,7 +906,7 @@ var VideoDialog = Widget.extend({
     },
     get_video: function (event) {
         if (event) event.preventDefault();
-        var $video = createVideoNode(this.$("input#urlvideo").val());
+        var $video = createVideoNode(this.$("input#urlvideo").val(), {autoplay: this.$("input#autoplay").is(":checked")});
         this.$iframe.replaceWith($video);
         this.$iframe = $video;
         return false;

@@ -225,9 +225,7 @@ var DashBoard = form_common.FormWidget.extend({
         this.action_managers.push(am);
         am.appendTo($action);
         am.do_action(action);
-        am.do_action = function (action) {
-            self.do_action(action);
-        };
+        am.do_action = this.do_action.bind(this);
         if (am.inner_widget) {
             var new_form_action = function(id, editable) {
                 var new_views = [];
