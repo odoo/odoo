@@ -14,6 +14,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.product_id_1 = self.env.ref('product.product_product_8')
         self.product_id_2 = self.env.ref('product.product_product_11')
         res_users_purchase_user = self.env.ref('purchase.group_purchase_user')
+        res_users_purchase_manager = self.env.ref('purchase.group_purchase_manager')
 
         Users = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
         self.user_purchase_user = Users.create({
@@ -22,6 +23,13 @@ class TestCreatePicking(common.TestProductCommon):
             'email': 'pur@example.com',
             'notify_email': 'none',
             'groups_id': [(6, 0, [res_users_purchase_user.id])]})
+
+        self.user_purchase_manager = Users.create({
+            'name': 'Patrick Frigosier',
+            'login': 'patrick',
+            'email': 'patoch@example.com',
+            'notify_email': 'none',
+            'groups_id': [(6, 0, [res_users_purchase_manager.id])]})
 
         self.po_vals = {
             'partner_id': self.partner_id.id,
@@ -79,11 +87,9 @@ class TestCreatePicking(common.TestProductCommon):
         self.env.user.company_id.write({'po_double_validation': 'two_step'})
         # set the treshold amount lower than the total amount
         self.env.user.company_id.write({'po_double_validation_amount': 100})
-        # set the user rights to purchase manager to be able to confirm & approve
-        self.user_purchase_user.write({'group_ids': [(4, 0, [self.env.ref('purchase.group_purchase_manager').id])]})
 
         # Draft purchase order created
-        self.po = self.env['purchase.order'].sudo(self.user_purchase_user).create(self.po_vals)
+        self.po = self.env['purchase.order'].sudo(self.user_purchase_manager).create(self.po_vals)
         self.assertTrue(self.po, 'Purchase: no purchase order created')
 
         # Purchase order confirm
