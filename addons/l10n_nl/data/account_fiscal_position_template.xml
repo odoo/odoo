@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<openerp>
+    <data>
+
         <!-- Fiscal Position Templates -->
-        
-        <record id="fiscal_position_template_domestic" model="account.fiscal.position.template">
+        <record id="fiscal_position_template_national" model="account.fiscal.position.template">
             <field name="name">Binnenland</field>
             <field name="chart_template_id" ref="l10nnl_chart_template" />
         </record>
@@ -18,4 +19,6 @@
             <field name="name">Niet-EU landen</field>
             <field name="chart_template_id" ref="l10nnl_chart_template" />
         </record>
-</odoo>
+
+    </data>
+</openerp>
