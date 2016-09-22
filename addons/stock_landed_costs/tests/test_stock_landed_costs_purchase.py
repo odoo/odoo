@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
 class TestLandedCosts(TestStockLandedCostsCommon):
 
     def setUp(self):
@@ -177,7 +174,44 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         account_entry = self.env['account.move.line'].read_group(
             [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], ['debit', 'credit', 'move_id'], ['move_id'])[0]
         self.assertEqual(account_entry['debit'], account_entry['credit'], 'Debit and credit are not equal')
-        self.assertEqual(account_entry['debit'], 134.336, 'Wrong Account Entry')
+        move_lines = [
+            ('split by volume - Microwave Oven', 3.75, 0.0),
+            ('split by volume - Microwave Oven', 0.0, 3.75),
+            ('split by weight - Microwave Oven', 40.0, 0.0),
+            ('split by weight - Microwave Oven', 0.0, 40.0),
+            ('split by quantity - Microwave Oven', 33.33, 0.0),
+            ('split by quantity - Microwave Oven', 0.0, 33.33),
+            ('equal split - Microwave Oven', 2.5, 0.0),
+            ('equal split - Microwave Oven', 0.0, 2.5),
+            ('split by volume - Refrigerator: 2.0 already out', 0.5, 0.0),
+            ('split by volume - Refrigerator: 2.0 already out', 0.0, 0.5),
+            ('split by volume - Refrigerator', 1.25, 0.0),
+            ('split by volume - Refrigerator', 0.0, 1.25),
+            ('split by weight - Refrigerator: 2.0 already out', 4.0, 0.0),
+            ('split by weight - Refrigerator: 2.0 already out', 0.0, 4.0),
+            ('split by weight - Refrigerator', 10.0, 0.0),
+            ('split by weight - Refrigerator', 0.0, 10.0),
+            ('split by quantity - Refrigerator: 2.0 already out', 6.67, 0.0),
+            ('split by quantity - Refrigerator: 2.0 already out', 0.0, 6.67),
+            ('split by quantity - Refrigerator', 16.67, 0.0),
+            ('split by quantity - Refrigerator', 0.0, 16.67),
+            ('equal split - Refrigerator: 2.0 already out', 1.0, 0.0),
+            ('equal split - Refrigerator: 2.0 already out', 0.0, 1.0),
+            ('equal split - Refrigerator', 2.5, 0.0),
+            ('equal split - Refrigerator', 0.0, 2.5)
+        ]
+        if stock_negative_landed_cost.account_move_id.company_id.anglo_saxon_accounting:
+            move_lines += [
+                ('split by volume - Refrigerator: 2.0 already out', 0.5, 0.0),
+                ('split by volume - Refrigerator: 2.0 already out', 0.0, 0.5),
+                ('split by weight - Refrigerator: 2.0 already out', 4.0, 0.0),
+                ('split by weight - Refrigerator: 2.0 already out', 0.0, 4.0),
+                ('split by quantity - Refrigerator: 2.0 already out', 6.67, 0.0),
+                ('split by quantity - Refrigerator: 2.0 already out', 0.0, 6.67),
+                ('equal split - Refrigerator: 2.0 already out', 1.0, 0.0),
+                ('equal split - Refrigerator: 2.0 already out', 0.0, 1.0),
+            ]
+        self.check_complete_move(stock_negative_landed_cost.account_move_id, move_lines)
 
     def _process_incoming_shipment(self):
         """ Two product incoming shipment. """
