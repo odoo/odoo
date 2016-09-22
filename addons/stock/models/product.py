@@ -214,8 +214,8 @@ class Product(models.Model):
             dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, [location.id for location in other_locations])]
         return (
             domain + loc_domain,
-            domain + ['&'] + dest_loc_domain + ['!'] + loc_domain,
-            domain + ['&'] + loc_domain + ['!'] + dest_loc_domain
+            domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
+            domain + loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else domain + loc_domain
         )
 
     def _search_virtual_available(self, operator, value):
