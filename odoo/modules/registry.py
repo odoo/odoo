@@ -234,7 +234,7 @@ class Registry(Mapping):
         queue = deque(model_names)
         while queue:
             model = self[queue.popleft()]
-            models.add(model)
+            models.add(model._name)
             for func in funcs:
                 queue.extend(func(model))
         return models
