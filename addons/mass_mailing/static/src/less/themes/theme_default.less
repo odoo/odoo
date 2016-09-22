@@ -35,10 +35,6 @@
 .bg-beta {
     background-color: @o_mm_def_color_zeta;
     color:  @o_mm_def_color_beta;
-
-    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-        color: @o_mm_def_color_beta;
-    }
 }
 .text-beta {
     color: @o_mm_def_color_zeta;
@@ -111,6 +107,20 @@
     .separator {
         height: 2px;
         background-color: @o_mm_def_color_alpha;
+    }
+
+    .bg-beta {
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: @o_mm_def_color_beta;
+        }
+
+        .btn.btn-primary {
+            background-color: @o_mm_def_color_eta;
+        }
+
+        a, .btn.btn-link {
+            color: @o_mm_def_color_eta;
+        }
     }
 }
 

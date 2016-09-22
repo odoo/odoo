@@ -21,10 +21,6 @@
     .bg-beta {
         background-color: @o_mm_resto_color_zeta;
         color: @o_mm_resto_color_beta;
-
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-            color: @o_mm_resto_color_beta;
-        }
     }
     .text-beta {
         color: @o_mm_resto_color_zeta;
@@ -32,10 +28,6 @@
     .bg-delta {
         background-color: @o_mm_resto_color_gamma;
         color: @o_mm_resto_color_beta;
-
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-            color: @o_mm_resto_color_beta;
-        }
     }
     .text-delta {
         color: @o_mm_resto_color_epsilon;
@@ -62,13 +54,33 @@
             background-color: @o_mm_resto_color_gamma;
         }
 
-        a, .o_mail_link {
+        a, .btn.btn-link {
             font-weight: normal;
             color: @o_mm_resto_color_epsilon;
         }
 
         .separator {
             background-color: lighten(@o_mm_resto_color_zeta, 20%);
+        }
+
+        .bg-beta, .bg-delta {
+            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+                color: @o_mm_resto_color_beta;
+            }
+        }
+
+        .bg-delta {
+            background-color: @o_mm_resto_color_gamma;
+            color: @o_mm_resto_color_beta;
+
+            a, .btn.btn-link {
+                color: @o_mm_resto_color_zeta;
+            }
+
+            .btn.btn-primary {
+                color: @o_mm_resto_color_beta;
+                background-color: @o_mm_resto_color_zeta;
+            }
         }
     }
 
