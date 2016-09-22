@@ -42,7 +42,7 @@ class ProjectTaskType(models.Model):
         string='Email Template',
         domain=lambda self: self._get_mail_template_id_domain(),
         help="If set an email will be sent to the customer when the task or issue reaches this step.")
-    fold = fields.Boolean(string='Folded in Tasks Pipeline',
+    fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
 
 
