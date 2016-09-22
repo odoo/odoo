@@ -509,7 +509,7 @@ var RTE = Widget.extend({
              */
             $target.attr('contenteditable', true);
             _.defer(function () {
-                $editable.attr('contenteditable', false);
+                $editable.not($target).attr('contenteditable', false);
                 $target.focus();
             });
 

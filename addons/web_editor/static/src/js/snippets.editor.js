@@ -1001,10 +1001,12 @@ data.Editor = Class.extend({
     },
 
     on_remove: function (event) {
-        event.preventDefault();
-        this.on_blur();
+        if (event !== undefined) {
+            event.preventDefault();
+            this.buildingBlock.getParent().rte.historyRecordUndo(this.$target);
+        }
 
-        this.buildingBlock.getParent().rte.historyRecordUndo(this.$target);
+        this.on_blur();
 
         var index = _.indexOf(this.buildingBlock.snippets, this.$target.get(0));
         this.buildingBlock.call_for_all_snippets(this.$target, function (editor, $snippet) {
@@ -1037,7 +1039,7 @@ data.Editor = Class.extend({
             }
             if ($parent.children().length === 0 && $parent.text().trim() === "") {
                 _.defer(function () {
-                    $parent.data("snippet-editor").on_remove(event);
+                    $parent.data("snippet-editor").on_remove();
                 });
             }
         }

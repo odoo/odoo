@@ -25,7 +25,7 @@ class TestQWebTField(TransactionCase):
         field = etree.Element('span', {'t-field': u'company.name'})
         company = self.env['res.company'].create({'name': "My Test Company"})
 
-        result = self.engine.render(field, {'company': company}).encode('utf-8')
+        result = self.engine.render(field, {'company': company})
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
@@ -41,7 +41,7 @@ class TestQWebTField(TransactionCase):
         s = u"Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!"
         company = self.env['res.company'].create({'name': s})
 
-        result = self.engine.render(field, {'company': company}).encode('utf-8')
+        result = self.engine.render(field, {'company': company})
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
@@ -56,13 +56,13 @@ class TestQWebTField(TransactionCase):
         field = etree.Element('td', {'t-field': u'company.name'})
 
         with self.assertRaisesRegexp(QWebException, r'^RTE widgets do not work correctly'):
-            self.engine.render(field, {'company': None}).encode('utf-8')
+            self.engine.render(field, {'company': None})
 
     def test_reject_t_tag(self):
         field = etree.Element('t', {'t-field': u'company.name'})
 
         with self.assertRaisesRegexp(QWebException, r'^t-field can not be used on a t element'):
-            self.engine.render(field, {'company': None}).encode('utf-8')
+            self.engine.render(field, {'company': None})
 
 
 from copy import deepcopy
@@ -128,7 +128,7 @@ class TestQWeb(TransactionCase):
 
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
-                qweb.render(template, values=params, load=loader).strip().encode('utf-8'),
+                qweb.render(template, values=params, load=loader).strip(),
                 (result or u'').strip().encode('utf-8'),
                 template
             )

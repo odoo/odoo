@@ -204,8 +204,8 @@ class CrmLead(models.Model):
         else:
             message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
         partner_ids = self.env['res.partner'].search(
-            [('id', 'child_of', self.env.uid.partner_id.commercial_partner_id.id)])
-        self.sudo().message_unsubscribe(partner_ids)
+            [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
+        self.sudo().message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
             message += '<p>%s</p>' % comment
         self.message_post(body=message, subtype="mail.mt_note")
@@ -213,8 +213,8 @@ class CrmLead(models.Model):
             'partner_assigned_id': False
         }
         if partner_ids:
-            values['partner_declined_ids'] = map(lambda p: (4, p, 0), partner_ids)
-        self.write(values)
+            values['partner_declined_ids'] = map(lambda p: (4, p, 0), partner_ids.ids)
+        self.sudo().write(values)
 
     @api.multi
     def update_lead_portal(self, values):

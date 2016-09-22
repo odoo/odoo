@@ -6,6 +6,7 @@ import json
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import ustr
 from odoo.tools.misc import xlwt
 
 
@@ -69,7 +70,7 @@ class TableExporter(http.Controller):
         # Step 3: writing data
         x = 0
         for row in jdata['rows']:
-            worksheet.write(y, x, row['indent'] * '     ' + row['title'], header_plain)
+            worksheet.write(y, x, row['indent'] * '     ' + ustr(row['title']), header_plain)
             for cell in row['values']:
                 x = x + 1
                 if cell.get('is_bold', False):
