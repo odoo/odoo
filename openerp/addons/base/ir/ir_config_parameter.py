@@ -24,10 +24,13 @@ Store database-specific configuration parameters
 
 import uuid
 import datetime
+import logging
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp.tools import misc, config
+from openerp.tools import misc, config, mute_logger
+
+_logger = logging.getLogger(__name__)
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -55,6 +58,7 @@ class ir_config_parameter(osv.osv):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
+    @mute_logger('openerp.addons.base.ir.ir_config_parameter')
     def init(self, cr, force=False):
         """
         Initializes the parameters listed in _default_parameters.
@@ -100,6 +104,8 @@ class ir_config_parameter(osv.osv):
             res_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, group_xml)
             if res_id:
                 gids.append((4, res_id))
+            else:
+                _logger.warning('Potential Security Issue: Group [%s] is not found.' % group_xml)
 
         vals = {'value': value}
         if gids:
