@@ -24,3 +24,12 @@ def pg_varchar(size=0):
         if size > 0:
             return 'VARCHAR(%d)' % size
     return 'VARCHAR'
+
+def reverse_order(order):
+    """ Reverse an ORDER BY clause """
+    items = []
+    for item in order.split(','):
+        item = item.lower().split()
+        direction = 'asc' if item[1:] == ['desc'] else 'desc'
+        items.append('%s %s' % (item[0], direction))
+    return ', '.join(items)

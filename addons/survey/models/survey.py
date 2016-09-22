@@ -9,7 +9,7 @@ from urlparse import urljoin
 from collections import Counter, OrderedDict
 from itertools import product
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.website.models.website import slug
@@ -60,7 +60,8 @@ class Survey(models.Model):
 
     title = fields.Char('Title', required=True, translate=True)
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
-    stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage, ondelete="set null", copy=False)
+    stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
+                               ondelete="set null", copy=False, group_expand='_read_group_stage_ids')
     auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey",
         oldname="authenticate")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
@@ -110,26 +111,13 @@ class Survey(models.Model):
             survey.result_url = urljoin(base_url, "survey/results/%s" % (slug(survey)))
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, _("Click here to start survey"))
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
         """ Read group customization in order to display all the stages in the
             kanban view, even if they are empty
         """
-        SurveyStage = self.env['survey.stage']
-        order = SurveyStage._order
-        access_rights_uid = access_rights_uid or self.env.user.id
-
-        if read_group_order == 'stage_id desc':
-            order = '%s desc' % order
-
-        stage_ids = SurveyStage._search([], order=order, access_rights_uid=access_rights_uid)
-        stages = SurveyStage.sudo(user=access_rights_uid).browse(stage_ids)
-        result = stages.name_get()
-        return result, {stage.id: stage.fold for stage in stages}
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
     # Public methods #
     def copy_data(self, default=None):

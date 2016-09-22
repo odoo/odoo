@@ -36,6 +36,33 @@
             </field>
         </record>
 
+        <record id="product_attribute_view_form" model="ir.ui.view">
+            <field name="name">product.attribute.form</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+                <form string="Product Attribute">
+                    <group>
+                        <group name="main_fields">
+                            <label for="name" string="Attribute Name"/>
+                            <field name="name" nolabel="1"/>
+                        </group>
+                    </group>
+                    <group name="values_ids">
+                        <label for="value_ids" string="Attribute Values"/>
+                        <field name="value_ids" widget="one2many_list" nolabel="1">
+                            <tree string="Values" editable="bottom">
+                                <field name="name"/>
+                            </tree>
+                            <form string="Values">
+                                <field name="name"/>
+                            </form>
+                        </field>
+                        <field name="create_variant" groups="base.group_no_one"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="attribute_action" model="ir.actions.act_window">
             <field name="name">Attributes</field>
             <field name="type">ir.actions.act_window</field>
@@ -63,4 +90,28 @@
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
         </record>
+
+    <record id="product_attribute_line_form" model="ir.ui.view">
+        <field name="name">product.attribute.line.form</field>
+        <field name="model">product.attribute.line</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <form string="Product Attribute and Values">
+                <group name="main_field">
+                    <label for="attribute_id" string="Attribute Name"/>
+                    <field name="attribute_id" nolabel="1"/>
+                    <field name="value_ids" widget="one2many_list">
+                        <tree string="Values">
+                            <field name="name"/>
+                        </tree>
+                        <form string="Values">
+                            <field name="name"/>
+                        </form>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
 </odoo>

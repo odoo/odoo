@@ -12,24 +12,6 @@ import datetime
 class TestAccountBudget(TestAccountBudgetCommon):
 
     def test_account_budget(self):
-        # In order to check account budget module in Odoo I created a budget with few budget positions
-        # Checking if the budgetary positions have accounts or not
-        if not self.account_budget_post_sales0.account_ids:
-            a_sale = self.env['account.account'].create({
-                'name': 'Product Sales - (test)',
-                'code': 'X2020',
-                'user_type_id': self.ref('account.data_account_type_revenue'),
-                'tag_ids': [(6, 0, [self.ref('account.account_tag_operating')])],
-            })
-            self.account_budget_post_sales0.write({'account_ids': [(6, 0, [a_sale.id])]})
-        if not self.account_budget_post_purchase0.account_ids:
-            a_expense = self.env['account.account'].create({
-                'name': 'Expense - (test)',
-                'code': 'X2120',
-                'user_type_id': self.ref('account.data_account_type_expenses'),
-                'tag_ids': [(6, 0, [self.ref('account.account_tag_operating')])],
-            })
-            self.account_budget_post_purchase0.write({'account_ids': [(6, 0, [a_expense.id])]})
 
         # Creating a crossovered.budget record
         budget = self.env['crossovered.budget'].create({

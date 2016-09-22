@@ -50,14 +50,17 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
         summary = u''
         for anon_field in self.env['ir.model.fields.anonymization'].search([('state', '!=', 'not_existing')]):
             field = anon_field.field_id
-            values = {
-                'model_name': field.model_id.name,
-                'model_code': field.model_id.model,
-                'field_code': field.name,
-                'field_name': field.field_description,
-                'state': anon_field.state,
-            }
-            summary += u" * %(model_name)s (%(model_code)s) -> %(field_name)s (%(field_code)s): state: (%(state)s)\n" % values
+            if field:
+                values = {
+                    'model_name': field.model_id.name,
+                    'model_code': field.model_id.model,
+                    'field_code': field.name,
+                    'field_name': field.field_description,
+                    'state': anon_field.state,
+                }
+                summary += u" * %(model_name)s (%(model_code)s) -> %(field_name)s (%(field_code)s): state: (%(state)s)\n" % values
+            else:
+                summary += u"* Missing local model (%s) and field (%s): state: (%s) \n" % (anon_field.model_name, anon_field.field_name, anon_field.state)
         return summary
 
     @api.model

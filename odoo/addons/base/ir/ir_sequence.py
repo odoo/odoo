@@ -248,6 +248,7 @@ class IrSequence(models.Model):
         company_ids = self.env['res.company'].search([]).ids + [False]
         seq_ids = self.search(['&', ('code', '=', sequence_code), ('company_id', 'in', company_ids)])
         if not seq_ids:
+            _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
             return False
         force_company = self._context.get('force_company')
         if not force_company:

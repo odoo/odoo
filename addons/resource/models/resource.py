@@ -34,7 +34,7 @@ class ResourceCalendar(models.Model):
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', string='Working Time',
         copy=True)
-    manager = fields.Many2one('res.users', string='Workgroup Manager')
+    manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid)
     leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', string='Leaves')
 

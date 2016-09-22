@@ -60,6 +60,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             self.data = result;
             self.dashboards_data = result.dashboards;
             self.currency_id = result.currency_id;
+            self.groups = result.groups;
         });
     },
 
@@ -150,7 +151,9 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     render_graphs: function() {
         var self = this;
         _.each(this.graphs, function(e) {
-            self.render_graph('#o_graph_' + e, self.dashboards_data[e].graph);
+            if (self.groups[e.group]) {
+                self.render_graph('#o_graph_' + e.name, self.dashboards_data[e.name].graph);
+            }
         });
         this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
     },

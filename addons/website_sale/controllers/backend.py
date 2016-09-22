@@ -18,6 +18,9 @@ class WebsiteSaleBackend(WebsiteBackend):
     def fetch_dashboard_data(self, date_from, date_to):
 
         results = super(WebsiteSaleBackend, self).fetch_dashboard_data(date_from, date_to)
+        results['groups']['sale_salesman'] = request.env['res.users'].has_group('sales_team.group_sale_salesman')
+        if not results['groups']['sale_salesman']:
+            return results
 
         date_from = datetime.strptime(date_from, DEFAULT_SERVER_DATE_FORMAT)
         date_to = datetime.strptime(date_to, DEFAULT_SERVER_DATE_FORMAT)

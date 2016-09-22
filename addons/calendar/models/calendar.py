@@ -616,7 +616,7 @@ class Meeting(models.Model):
         """
         timezone = self._context.get('tz')
         if not timezone:
-            timezone = self.env.user.partner_id.tz
+            timezone = self.env.user.partner_id.tz or 'UTC'
         timezone = tools.ustr(timezone).encode('utf-8')  # make safe for str{p,f}time()
 
         # get date/time format according to context

@@ -8,6 +8,8 @@ import pytz
 import threading
 import urllib2
 import urlparse
+
+from email.utils import formataddr
 from lxml import etree
 
 from odoo import api, fields, models, tools, _
@@ -188,6 +190,9 @@ class Partner(models.Model, FormatAddress):
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     email = fields.Char()
+    email_formatted = fields.Char(
+        'Formatted Email', compute='_compute_email_formatted',
+        help='Format email address "Name <email@domain>"')
     phone = fields.Char()
     fax = fields.Char()
     mobile = fields.Char()
@@ -354,6 +359,11 @@ class Partner(models.Model, FormatAddress):
     def onchange_email(self):
         if not self.image and not self._context.get('yaml_onchange') and self.email:
             self.image = self._get_gravatar_image(self.email)
+
+    @api.depends('name', 'email')
+    def _compute_email_formatted(self):
+        for partner in self:
+            partner.email_formatted = formataddr((partner.name, partner.email))
 
     @api.depends('is_company')
     def _compute_company_type(self):

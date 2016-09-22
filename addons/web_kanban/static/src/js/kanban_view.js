@@ -331,6 +331,7 @@ var KanbanView = View.extend({
                     // Execute the given action
                     self.do_action(self.on_create, {
                         on_close: self.do_reload.bind(self),
+                        additional_context: self.search_context,
                     });
                 } else {
                     // Open the form view

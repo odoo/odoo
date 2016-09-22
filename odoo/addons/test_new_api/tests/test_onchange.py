@@ -75,6 +75,33 @@ class TestOnChange(common.TransactionCase):
         result = self.Message.onchange(values, 'body', field_onchange)
         self.assertNotIn('name', result['value'])
 
+    def test_onchange_many2one(self):
+        Category = self.env['test_new_api.category']
+
+        field_onchange = Category._onchange_spec()
+        self.assertEqual(field_onchange.get('parent'), '1')
+
+        root = Category.create(dict(name='root'))
+
+        values = {
+            'name': 'test',
+            'parent': root.id,
+            'root_categ': False,
+        }
+
+        self.env.invalidate_all()
+        result = Category.onchange(values, 'parent', field_onchange).get('value', {})
+        self.assertIn('root_categ', result)
+        self.assertEqual(result['root_categ'], root.name_get()[0])
+
+        values.update(result)
+        values['parent'] = False
+
+        self.env.invalidate_all()
+        result = Category.onchange(values, 'parent', field_onchange).get('value', {})
+        self.assertIn('root_categ', result)
+        self.assertIs(result['root_categ'], False)
+
     def test_onchange_one2many(self):
         """ test the effect of onchange() on one2many fields """
         BODY = "What a beautiful day!"
