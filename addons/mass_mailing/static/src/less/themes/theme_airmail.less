@@ -15,15 +15,6 @@
     // ===== Colors =====
     .bg-beta {
         background-color: @o_mm_airmail_color_gamma;
-
-        .btn.btn-primary {
-            color: @o_mm_airmail_color_beta;
-            background-color: @o_mm_airmail_color_zeta;
-        }
-
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-            color: @o_mm_airmail_color_beta;
-        }
     }
     .text-beta {
         color: @o_mm_airmail_color_gamma;
@@ -57,8 +48,22 @@
             background-color: @o_mm_airmail_color_gamma;
         }
 
-        a, .o_mail_link {
+        a, .btn.btn-link {
             color: @o_mm_airmail_color_delta;
+        }
+
+        .bg-beta, .bg-delta {
+            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+                color: @o_mm_airmail_color_beta;
+            }
+        }
+
+        .bg-beta {
+            .btn.btn-primary {
+                color: @o_mm_airmail_color_delta;
+                background-color: @o_mm_airmail_color_beta;
+                font-weight: bold;
+            }
         }
     }
 

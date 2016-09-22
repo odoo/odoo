@@ -17,8 +17,8 @@
         background-color: @o_mm_tech_color_gamma;
 
         .btn.btn-primary {
-            color: @o_mm_tech_color_beta;
-            background-color: @o_mm_tech_color_zeta;
+            color: @o_mm_tech_color_gamma;
+            background-color: @o_mm_tech_color_beta;
         }
     }
     .text-beta {
@@ -51,13 +51,26 @@
             padding-right: 20px;
         }
 
-        a, .o_mail_link {
+        a, .btn.btn-link {
             font-weight: normal;
             color: @o_mm_tech_color_gamma;
         }
 
         h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
             color: darken(@o_mm_tech_color_beta, 10%);
+        }
+
+        .bg-beta, .bg-delta {
+            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+                color: @o_mm_tech_color_beta;
+            }
+        }
+
+        .bg-beta {
+            .btn.btn-primary {
+                color: @o_mm_tech_color_gamma;
+                background-color: @o_mm_tech_color_beta;
+            }
         }
     }
 
