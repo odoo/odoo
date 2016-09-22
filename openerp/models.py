@@ -443,7 +443,7 @@ class BaseModel(object):
                     raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
                 vals['serialization_field_id'] = serialization_field_id[0]
 
-            col = cols.pop(k, None)
+            col = cols.get(k)
             if not col:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
@@ -471,11 +471,6 @@ class BaseModel(object):
                         )
                         cr.execute(query, vals)
                         break
-
-        # remove ir_model_fields that should not be there
-        if cols:
-            ids = tuple(col['id'] for col in cols.itervalues())
-            cr.execute("DELETE FROM ir_model_fields WHERE id IN %s", (ids,))
 
         self.invalidate_cache(cr, SUPERUSER_ID)
 
