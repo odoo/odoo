@@ -213,9 +213,10 @@ snippets_editor.Class.include({
                 switch_theme(theme_params);
                 $body.removeClass("o_force_mail_theme_choice");
                 first_choice = false;
-            } else {
-                switch_images(theme_params, $snippets);
             }
+
+            switch_images(theme_params, $snippets);
+
             selected_theme = theme_params;
 
             // Notify form view
