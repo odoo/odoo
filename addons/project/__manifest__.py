@@ -5,7 +5,7 @@
     'name': 'Project',
     'version': '1.1',
     'website': 'https://www.odoo.com/page/project-management',
-    'category': 'Project Management',
+    'category': 'Project',
     'sequence': 10,
     'summary': 'Projects, Tasks',
     'depends': [
