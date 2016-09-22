@@ -28,11 +28,11 @@
                 <field name="mobile" position="after">
                     <field name="sale_order_count"  groups="sales_team.group_sale_salesman"/>
                 </field>
-                <div groups="sales_team.group_sale_salesman">
-                    <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">                       
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <div groups="sales_team.group_sale_salesman">                       
                         <span t-if="record.sale_order_count.value>0" class="badge"><i class="fa fa-fw fa-usd"/><t t-esc="record.sale_order_count.value"/></span>  
-                    </xpath>
-                </div>
+                    </div>
+                </xpath>
             </field>
         </record>
 
