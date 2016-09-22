@@ -133,7 +133,7 @@ class ProjectIssue(models.Model):
     def _onchange_task_id(self):
         self.user_id = self.task_id.user_id
 
-    @api.one
+    @api.multi
     def copy(self, default=None):
         if default is None:
             default = {}
