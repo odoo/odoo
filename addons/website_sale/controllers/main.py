@@ -134,7 +134,8 @@ class website_sale(http.Controller):
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
-        return 'website_published desc,%s' % post.get('order', 'website_sequence desc')
+        # id is added to be sure that order is a unique sort key
+        return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):

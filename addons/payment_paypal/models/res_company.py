@@ -10,7 +10,6 @@ class ResCompany(osv.Model):
         Acquirer = self.pool['payment.acquirer']
         company_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.id
         paypal_ids = Acquirer.search(cr, uid, [
-            ('website_published', '=', True),
             ('name', 'ilike', 'paypal'),
             ('company_id', '=', company_id),
         ], limit=1, context=context)
@@ -24,7 +23,6 @@ class ResCompany(osv.Model):
         company_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.id
         paypal_account = self.browse(cr, uid, id, context=context).paypal_account
         paypal_ids = Acquirer.search(cr, uid, [
-            ('website_published', '=', True),
             ('paypal_email_account', '=', paypal_account),
             ('company_id', '=', company_id),
         ], context=context)

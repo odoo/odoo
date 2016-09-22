@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-08-29 01:40+0000\n"
+"PO-Revision-Date: 2016-09-17 03:19+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -226,7 +226,7 @@ msgstr "受注明細での値引を許可"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "「受注」メニューから受注の編集を許可 (「見積」メニューからでなく)"
+msgstr "受注メニューから受注の編集を許可 (見積メニューからでなく)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -363,7 +363,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Create a task and track hours"
-msgstr ""
+msgstr "タスクを生成して時間追跡"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -427,7 +427,7 @@ msgstr "オーダ日"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "受注日:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_last_post
@@ -560,33 +560,33 @@ msgstr "完了"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "前受金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "前受金額"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "前受金製品"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "前受金 (固定金額)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "前受金 (パーセント)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:67
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "%s%% の前受金"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -797,12 +797,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr ""
+msgstr "請求可能な明細につき請求"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr ""
+msgstr "請求可能な明細につき請求 (前受金分マイナス)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -843,7 +843,7 @@ msgstr "請求書の統計情報"
 msgid ""
 "Invoices will be created in draft so that you can update\n"
 "                        them before validation."
-msgstr ""
+msgstr "ドラフトの請求書を作成します。更新の上検証してください。"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -920,7 +920,7 @@ msgstr "サブスクリプションと繰返請求を管理"
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "オーダに数量を手動で設定"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -999,7 +999,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "請求対象なし"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction_counter
@@ -1557,7 +1557,7 @@ msgstr "完了に設定"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "見積に設定"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1620,7 +1620,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_tax_id
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "税金"
+msgstr "税"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
@@ -1728,7 +1728,7 @@ msgid ""
 " partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
-msgstr "このレポートは見積と受注上の分析を実行します。分析は受注高をチェックし別のグループ基準（販売員、パートナ、製品など）により並べ替えます。まだ請求されていない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
+msgstr "このレポートは見積と受注上の分析を実行します。分析は受注高をチェックし別のグループ基準 (販売員、パートナ、製品など) により並べ替えます。まだ請求されていない受注の分析を実行するためにこのレポートを使います。総売上高を分析したい場合は、会計アプリケーションの中の請求書分析レポートを使用する必要があります。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -1753,7 +1753,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on contract"
-msgstr ""
+msgstr "契約のタイムシートより集計"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1786,7 +1786,7 @@ msgstr "税込合計"
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
 #: model:ir.model.fields,field_description:sale.field_product_template_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "サービス追跡"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit

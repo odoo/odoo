@@ -18,6 +18,7 @@ var pyeval = require('web.pyeval');
 var web_client = require('web.web_client');
 var parse_value = require('web.web_client');
 var Widget = require('web.Widget');
+var session = require('web.session');
 
 var FieldMany2One = core.form_widget_registry.get('many2one');
 var FieldChar = core.form_widget_registry.get('char');
@@ -76,8 +77,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
 
         this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof ActionManager });
         this.crash_manager = new CrashManager();
-        // Method that tests if a monetary amount == 0, we use 4 digits because no currency uses more
-        this.monetaryIsZero = _.partial(utils.float_is_zero, _, 4);
         this.formatCurrencies; // Method that formats the currency ; loaded from the server
         this.model_res_users = new Model("res.users");
         this.model_tax = new Model("account.tax");
@@ -370,6 +369,11 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         line.q_popover = QWeb.render(template_name, {line: line});
         if (line.ref && line.ref !== line.name)
             line.q_label = line.q_label + " : " + line.ref;
+    },
+
+    // Method that tests if a monetary amount == 0, we use 4 digits because no currency uses more
+    monetaryIsZero: function(amount, digits) {
+        return utils.float_is_zero(amount, digits === undefined ? 4 : digits);
     },
 });
 
@@ -1875,7 +1879,11 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 
         // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
         var balance_type = undefined;
-        if (self.monetaryIsZero(self.get("balance"))) balance_type = "equal";
+        var digits = 4;
+        if (this.get("currency_id") && session.get_currency(this.get("currency_id"))) {
+            digits = session.get_currency(this.get("currency_id")).digits[1];
+        }
+        if (self.monetaryIsZero(self.get("balance"), digits)) balance_type = "equal";
         else if (self.get("balance") * self.st_line.amount > 0) balance_type = "greater";
         else if (self.get("balance") * self.st_line.amount < 0) balance_type = "lower";
 
@@ -2070,7 +2078,11 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         var payment_aml = _.filter(this.get("mv_lines_selected"), function(line) { return line.already_paid });
         var payment_aml_ids = _.collect(payment_aml, function(line) { return line.id });
         var new_aml_dicts = this.prepareCreatedMoveLinesForPersisting(this.getCreatedLines());
-        if (! self.monetaryIsZero(this.get("balance"))) new_aml_dicts.push(this.prepareOpenBalanceForPersisting());
+        var digits = 4;
+        if (this.get("currency_id") && session.get_currency(this.get("currency_id"))) {
+            digits = session.get_currency(this.get("currency_id")).digits[1];
+        }
+        if (! self.monetaryIsZero(this.get("balance"), digits)) new_aml_dicts.push(this.prepareOpenBalanceForPersisting());
         return {
             'counterpart_aml_dicts': counterpart_aml_dicts,
             'payment_aml_ids': payment_aml_ids,

@@ -82,6 +82,7 @@ class Category(models.Model):
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category')
+    root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
     dummy = fields.Char(store=False)
     discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
@@ -94,6 +95,14 @@ class Category(models.Model):
             self.display_name = self.parent.display_name + ' / ' + self.name
         else:
             self.display_name = self.name
+
+    @api.depends('parent')
+    def _compute_root_categ(self):
+        for cat in self:
+            current = cat
+            while current.parent:
+                current = current.parent
+            cat.root_categ = current
 
     @api.one
     def _inverse_display_name(self):

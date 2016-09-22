@@ -232,6 +232,7 @@ class sale_order_line(osv.osv):
             result['warning'] = warning
         return result
 
+    @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
         warning = self.onchange_product_id_warning()

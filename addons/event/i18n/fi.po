@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-08-24 07:20+0000\n"
+"PO-Revision-Date: 2016-09-13 13:29+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr " Luonnosilmoittautumisten määrä"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "(stats)"
-msgstr ""
+msgstr "(tilastot)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -114,7 +114,7 @@ msgid ""
 "Please, Find your <b>Event Badge</b> attached with this mail.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Hei ${object.name},</p>\n<p>Ilmoittautumisesi tapahtumaan \"${object.event_id.name}\" on vastaanotettu. \n<b>Nimilappusi</b> on tämän sähköpostin liitteenä</p>\n<p>Kiitos osallistumisestasi!</p>\n<p>Ystävällisin terveisin,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -124,7 +124,7 @@ msgid ""
 "You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "<p>Thank you for your participation!</p>\n"
 "<p>Best regards</p>"
-msgstr ""
+msgstr "<p>Hei ${object.name},</p>\n<p>Ilmoittautumisesi tapahtumaan \"${object.event_id.name}\" on vastaanotettu.\nTulet saamaan automaattisesti sähköpostin, jossa kerrotaan tarkemmin käytännön järjestelyistä (kuten aikataulut, aiheet...) heti kun tapahtuma on vahvistettu.</p>\n<p>Kiitos osallistumisestasi!</p>\n<p>Ystävällisin terveisin,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_thanks
@@ -138,7 +138,7 @@ msgid ""
 "        <strong>${object.event_id.organizer_id.name}</strong>\n"
 "    % endif\n"
 "</p>"
-msgstr ""
+msgstr "<p>Hei ${object.name},</p>\n<p>Kiitos kun kävit ${object.event_id.name} -tapahtumassa.\n<br/><br/>\n% if object.event_id.organizer_id and object.event_id.organizer_id.is_company:\n<strong>${object.event_id.organizer_id.name} -tiimi</strong>\n% elif object.event_id.organizer_id:\n<strong>${object.event_id.organizer_id.name}</strong>\n% endif\n</p>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -178,7 +178,7 @@ msgstr ""
 msgid ""
 "<strong>Having attended this course, participants should be able "
 "to:</strong>"
-msgstr ""
+msgstr "<strong>Käytyään kurssin osallistujat kykenevät:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -186,31 +186,31 @@ msgstr ""
 #: model:event.event,description:event.event_2
 #: model:event.event,description:event.event_3
 msgid "<strong>Objectives:</strong>"
-msgstr ""
+msgstr "<strong>Tavoitteet:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
-msgstr ""
+msgstr "<strong>Hintaan kuuluu:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr ""
+msgstr "<strong>Ohjelma:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Requirements:</strong>"
-msgstr ""
+msgstr "<strong>Vaatimukset:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr ""
+msgstr "<strong>Löydät meidät:</strong>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_needaction
@@ -233,32 +233,32 @@ msgstr ""
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After each subscription"
-msgstr ""
+msgstr "Ilmoittautumisen jälkeen"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "After the event"
-msgstr ""
+msgstr "Tapahtuman jälkeen"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "All events are free"
-msgstr ""
+msgstr "Kaikki tapahtumat ovat ilmaisia"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "Allow adding extra questions on subscriptions"
-msgstr ""
+msgstr "Salli lisäkysymysten lisääminen osallistujille"
 
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "Allow selling tickets"
-msgstr ""
+msgstr "Salli lippujen myynti"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "Allow tracks, agenda and dedicated menus/website per event"
-msgstr ""
+msgstr "Salli seuranta, agenda ja tapahtumakohtaiset valikot & sivut"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -304,13 +304,13 @@ msgstr "Osallistuja"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Attendee / Contact"
-msgstr ""
+msgstr "Osallistuja / Yhdyshenkilö"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "Osallistujan nimi"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -324,27 +324,27 @@ msgstr "Osallistujat"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_auto_confirmation
 msgid "Auto Confirmation"
-msgstr ""
+msgstr "Automaattinen vahvistus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
-msgstr ""
+msgstr "Nimilapun takapuoli"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_front
 msgid "Badge Front"
-msgstr ""
+msgstr "Nimilapun etupuoli"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
-msgstr ""
+msgstr "Nimilapun sisä-oikea"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
 msgid "Badge Innner Left"
-msgstr ""
+msgstr "Nimilapun sisä-vasen"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -356,12 +356,12 @@ msgstr "Bannerin Odoo-kuva"
 #. module: event
 #: selection:event.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "Ennen tapahtumaa"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr ""
+msgstr "Ystävällisin terveisin,"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -375,7 +375,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "Tuo oma kannettava tietokoneesi."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -468,7 +468,7 @@ msgstr "Asetukset"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
 msgid "Configure Event"
-msgstr ""
+msgstr "Tapahtuman konfigurointi"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -494,7 +494,7 @@ msgstr "Vahvista rekisteröinti"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Confirmation not required"
-msgstr ""
+msgstr "Vahvistusta ei tarvita"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -536,7 +536,7 @@ msgstr "Maa"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Course Summary"
-msgstr ""
+msgstr "Kurssin yhteenveto"
 
 #. module: event
 #: model:web.tip,description:event.event_tip_1
@@ -595,21 +595,21 @@ msgstr "Viimeisen viestin päivämäärä"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 1"
-msgstr ""
+msgstr "Päivä 1"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 2"
-msgstr ""
+msgstr "Päivä 2"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Day 3"
-msgstr ""
+msgstr "Päivä 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -658,7 +658,7 @@ msgstr "Näytä nimi"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
 msgid "Display order"
-msgstr ""
+msgstr "Näyttöjärjestys"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -694,17 +694,17 @@ msgstr "Sähköposti"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "Sähköpostien aikataulu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_group_email_scheduling
 msgid "Email Scheduling"
-msgstr ""
+msgstr "Sähköpostien aikataulutus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 msgid "Email to Send"
-msgstr ""
+msgstr "Lähetettävä sähköposti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
@@ -714,7 +714,7 @@ msgstr "Loppupäivä"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
 msgid "End Date Located"
-msgstr ""
+msgstr "Päättymispäivä"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event
@@ -729,7 +729,7 @@ msgstr "Tapahtuma"
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr ""
+msgstr "Nimilappu"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -755,22 +755,22 @@ msgstr "Tapahtuman päättymispäivä"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr ""
+msgstr "Tapahtuman tiedot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_logo
 msgid "Event Logo"
-msgstr ""
+msgstr "Tapahtuman logo"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "Tapahtuman sähköpostiajastus"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "Tapahtuman sähköpostiajastukset"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -849,12 +849,12 @@ msgstr "Tapahtumien analyysi"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr ""
+msgstr "Tapahtumien sähköpostiajastukset"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 msgid "Events Types"
-msgstr ""
+msgstr "Tapahtumatyypit"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -874,7 +874,7 @@ msgstr "Tapahtumat jotka ovat vahvistettu tilassa"
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr ""
+msgstr "Näyttely"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -917,7 +917,7 @@ msgstr "Seuraajat (kumppanit)"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "Lisätietoja varten ota yhteyttä"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
@@ -961,7 +961,7 @@ msgstr "Ryhmittele"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
-msgstr ""
+msgstr "Käytyään kurssin, osallistujat kykenevät:"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1027,7 +1027,7 @@ msgstr "Jos tapahtuma luodaan, tila on \"Luonnos\".\nJos tapahtuma hyväksytää
 #. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "Välittömästi"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1056,7 +1056,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Integrated Help"
-msgstr ""
+msgstr "Integroitu avustus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
@@ -1153,7 +1153,7 @@ msgstr "Viimeksi päivitetty"
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Rajattu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
@@ -1175,32 +1175,32 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
 msgid "Mail Schedule"
-msgstr ""
+msgstr "Sähköpostin ajastus"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduler_id
 msgid "Mail Scheduler"
-msgstr ""
+msgstr "Sähköpostin ajastus"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Mail Schedulers"
-msgstr ""
+msgstr "Sähköpostin ajastimet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr ""
+msgstr "Sähköposti lähetetty"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
 msgid "Mail Sent on Event"
-msgstr ""
+msgstr "Tapahtuman sähköposti lähetetty"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
 msgid "Mail registration ids"
-msgstr ""
+msgstr "Sähköpostirekisteröintien id:t"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1210,7 +1210,7 @@ msgstr "Päällikkö"
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
 msgid "Manually confirm every subscription"
-msgstr ""
+msgstr "Vahvista osallistumiset käsin"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_seats_max
@@ -1270,17 +1270,17 @@ msgstr "Uusi"
 #. module: event
 #: selection:event.config.settings,group_email_scheduling:0
 msgid "No automated emails"
-msgstr ""
+msgstr "Ei automaattisia sähköposteja"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "No extra questions on subscriptions"
-msgstr ""
+msgstr "Ei lisäkysymyksiä osallistujille"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
 msgid "No mini website per event"
-msgstr ""
+msgstr "Ei tapahtumakohtaista sivustoa"
 
 #. module: event
 #: code:addons/event/models/event.py:198
@@ -1292,12 +1292,12 @@ msgstr "Ei vapaita paikkoja."
 #: code:addons/event/models/event.py:298
 #, python-format
 msgid "No more seats available for this event."
-msgstr ""
+msgstr "Vapaita paikkoja ei ole jäljellä."
 
 #. module: event
 #: selection:event.config.settings,auto_confirmation:0
 msgid "No validation step on subscription"
-msgstr ""
+msgstr "Ei vahvistusvaihetta osallistujille"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_message_needaction_counter
@@ -1323,7 +1323,7 @@ msgstr "Osallistujien lukumäärä"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_nbregistration
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Rekisteröityneitä"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_message_needaction_counter
@@ -1446,7 +1446,7 @@ msgstr ""
 msgid ""
 "Reference of the document that created the registration, for example a sale "
 "order"
-msgstr ""
+msgstr "Viite dokumenttiin, joka loi tämän rekisteröinnin. Esim. myyntitilaus"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1464,7 +1464,7 @@ msgstr "Rekisteröinti"
 #. module: event
 #: model:ir.actions.report.xml,name:event.report_event_registration_badge
 msgid "Registration Badge"
-msgstr ""
+msgstr "Rekisteröinnin nimilappu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_open
@@ -1479,17 +1479,17 @@ msgstr "Rekisteröitymispäivä"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
-msgstr ""
+msgstr "Rekisteröinnin ID"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "Rekisteröinnin sähköpostiajastus"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
-msgstr ""
+msgstr "Rekisteröintisähköpostit"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1509,7 +1509,7 @@ msgstr "Rekisteröitymisen kontakti"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
-msgstr ""
+msgstr "Rekisteröintisähköposti"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1519,7 +1519,7 @@ msgstr "Rekisteröinnit"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "Reminder of event ${object.event_id.name}"
-msgstr ""
+msgstr "Muistutus ${object.event_id.name} -tapahtumasta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_reply_to
@@ -1536,7 +1536,7 @@ msgstr "Vastaussähköposti"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Report Engine"
-msgstr ""
+msgstr "Raportointimoottori"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -1564,7 +1564,7 @@ msgstr "Vastuuhenkilö"
 #. module: event
 #: model:res.groups,name:event.group_email_scheduling
 msgid "Schedule Emails on Event Subscription"
-msgstr ""
+msgstr "Ajasta sähköpostit tapahtumaan ilmoittautuessa"
 
 #. module: event
 #: selection:event.config.settings,group_email_scheduling:0
@@ -1574,7 +1574,7 @@ msgstr "Aikatauluta sähköposteja osallistujille ja tilaajille"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
 msgid "Scheduled Sent Mail"
-msgstr ""
+msgstr "Ajastetut lähetetyt sähköpostit"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_scheduled_date
@@ -1584,7 +1584,7 @@ msgstr "Ajoitettu aika"
 #. module: event
 #: model:event.type,name:event.event_type_0
 msgid "Seminar"
-msgstr ""
+msgstr "Seminaari"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1614,7 +1614,7 @@ msgstr "Asetukset"
 #. module: event
 #: model:event.type,name:event.event_type_3
 msgid "Show"
-msgstr ""
+msgstr "Näytä"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
@@ -1662,7 +1662,7 @@ msgstr "Tekninen koulutus"
 #. module: event
 #: model:mail.template,subject:event.event_thanks
 msgid "Thanks for attending ${object.event_id.name}"
-msgstr ""
+msgstr "Kiitos osallistumisestasi ${object.event_id.name} -tapahtumaan"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
@@ -1686,12 +1686,12 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr ""
+msgstr "Tämä kenttä kertoo sähköpostimallin, joka lähetetään automaattisesti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
 msgid "Tickets"
-msgstr ""
+msgstr "Liput"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_tz
@@ -1703,7 +1703,7 @@ msgstr "Aikavyöhyke"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "To get more information, visit the"
-msgstr ""
+msgstr "Lisätietoja saat"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_track
@@ -1819,12 +1819,12 @@ msgstr "Varoitus: Tapahtuma ei ole saavuttanut osallistujien minimimäärää. O
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Verkkosivun ilmoitukset"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Verkkosivun viestihistoria"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1836,19 +1836,19 @@ msgstr "viikko(a)"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What do people say about this course?"
-msgstr ""
+msgstr "Mitä muut sanovat tästä kurssista?"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "What you will learn?"
-msgstr ""
+msgstr "Mitä tulet oppimaan?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "When to Run "
-msgstr ""
+msgstr "Milloin ajetaan"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1881,12 +1881,12 @@ msgstr "Voit konfiguroida sähköpostit ja aikatauluttaa ne lähtemään automaa
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for ${object.event_id.name}"
-msgstr ""
+msgstr "Nimilappusi ${object.event_id.name} -tapahtumaan"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your subscription at ${object.event_id.name}"
-msgstr ""
+msgstr "Rekisteröitymisesi  ${object.event_id.name} -tapahtumaan"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge

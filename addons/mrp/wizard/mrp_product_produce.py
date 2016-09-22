@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api, _
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 
@@ -104,3 +105,27 @@ class mrp_product_produce(osv.osv_memory):
         self.pool.get('mrp.production').action_produce(cr, uid, production_id,
                             data.product_qty, data.mode, data, context=context)
         return {}
+
+    @api.onchange('consume_lines')
+    def _onchange_consume_lines(self):
+        '''
+        The purpose of the method is to warn the user if we plan to consume more than one unit of
+        a product with unique serial number.
+        '''
+        for product in self.consume_lines.mapped('product_id'):
+            if product.tracking != 'serial':
+                continue
+
+            qty_by_lot = {}
+            lines = self.consume_lines.filtered(lambda r: r.product_id == product)
+            for line in lines:
+                qty_by_lot.setdefault(line.lot_id, 0.0)
+                qty_by_lot[line.lot_id] += line.product_qty
+
+                if qty_by_lot[line.lot_id] > 1.0:
+                    warning_mess = {
+                        'title': _('Issue with lot quantity!'),
+                        'message' : _('You plan to consume more than 1.00 unit of product %s with unique lot number %s') % \
+                            (product.name, line.lot_id.name)
+                    }
+                    return {'warning': warning_mess}

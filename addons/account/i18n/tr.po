@@ -5,22 +5,24 @@
 # Translators:
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
+# Esin Kandemir <esaykandemir@gmail.com>, 2016
 # Haluk Buguner <haluk@buguner.name.tr>, 2016
 # ilyas kurt <ilyaskrt19@gmail.com>, 2016
 # Martin Trigaux, 2016
+# Mesut TAVUKÇU <mesut@data-net.com.tr>, 2016
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2016
 # Ömer Kaan Gürbüz <omerkaan0101omerkaangrbz@gmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2015-2016
 # selim kartal <kartalselim37@gmail.com>, 2016
-# Taner HASRET <tanerhasret@gmail.com>, 2015-2016
+# tanerhasret <tanerhasret@gmail.com>, 2015-2016
 # Yigit Aga <yagabey@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-17 08:21+0000\n"
-"PO-Revision-Date: 2016-08-24 08:55+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-09-17 08:58+0000\n"
+"Last-Translator: Mesut TAVUKÇU <mesut@data-net.com.tr>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +115,7 @@ msgstr "Basamak sayısı"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "Satırlar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -123,7 +125,7 @@ msgstr "İşlem Sayısı"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Fatura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -331,7 +333,7 @@ msgstr "<span class=\"panel-title\">\n                                        <s
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Hesap Bakiyesi</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1912,7 +1914,7 @@ msgstr "Banka hesap özetleri tamamen uzlaştırılmıştır."
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Base"
-msgstr ""
+msgstr "Temel"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4764,7 +4766,7 @@ msgstr "Takipçi mi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr ""
+msgstr "Sıfır"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5254,7 +5256,7 @@ msgstr "Yasal İsim"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr ""
+msgstr "Yasal notlar..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
@@ -5642,7 +5644,7 @@ msgstr "Yeni İşlem"
 #: code:addons/account/models/account_move.py:1004
 #, python-format
 msgid "New expected payment date: "
-msgstr ""
+msgstr "Beklenen yeni ödeme günü"
 
 #. module: account
 #. openerp-web
@@ -6181,7 +6183,7 @@ msgstr "İş Ortağı"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_commercial_partner_id
 msgid "Partner Company"
-msgstr ""
+msgstr "Partner Kuruluş"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
@@ -6403,7 +6405,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Payments to do"
-msgstr ""
+msgstr "Yapılacak ödemeler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_payments_widget
@@ -6452,7 +6454,7 @@ msgstr ""
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price"
-msgstr ""
+msgstr "Fiyat Yüzdesi"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -6463,7 +6465,7 @@ msgstr ""
 #. module: account
 #: selection:account.operation.template,second_amount_type:0
 msgid "Percentage of amount"
-msgstr ""
+msgstr "Tutar yüzdesi"
 
 #. module: account
 #: selection:account.operation.template,amount_type:0
@@ -6610,7 +6612,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr ""
+msgstr "Ön ödemeler"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -7062,7 +7064,7 @@ msgstr ""
 #. module: account
 #: selection:account.account.type,type:0
 msgid "Regular"
-msgstr ""
+msgstr "Düzenli"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
@@ -7136,7 +7138,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual
 msgid "Residual Amount"
-msgstr ""
+msgstr "Kalan Tutar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual_currency
@@ -7147,7 +7149,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
-msgstr ""
+msgstr "Sorumlu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
@@ -7518,7 +7520,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr ""
+msgstr "İl/Eyalet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_statement_id
@@ -7596,7 +7598,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "Etiketler"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_out
@@ -8731,7 +8733,7 @@ msgstr "Ölçü Birimi"
 #: code:addons/account/report/account_aged_partner_balance.py:264
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
+msgstr "Bilinmeyen partner"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8743,7 +8745,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 msgid "Unpaid Invoices"
-msgstr ""
+msgstr "Ödenmemiş Faturalar"
 
 #. module: account
 #: selection:account.move,state:0
@@ -8766,7 +8768,7 @@ msgstr "İşlenmemiş Yevmiye Kalemleri"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_unread
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Okunmamış Mesajlar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_unread_counter
@@ -9377,7 +9379,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_general_ledger.py:21
 #, python-format
 msgid "You must define a Start Date"
-msgstr ""
+msgstr "Bir başlangıç günü belirlemelisiniz."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1097

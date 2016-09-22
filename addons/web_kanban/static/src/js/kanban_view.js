@@ -528,9 +528,7 @@ var KanbanView = View.extend({
             active_ids: [event.target.id],
             active_model: this.dataset.model,
         });
-        this.do_execute_action(event.data, this.dataset, event.target.id).then(function () {
-            self.reload_record(event.target);
-        });
+        this.do_execute_action(event.data, this.dataset, event.target.id, _.bind(self.reload_record, this, event.target));
     },
 
     /*
