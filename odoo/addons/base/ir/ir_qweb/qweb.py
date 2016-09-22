@@ -246,7 +246,7 @@ class QWeb(object):
         """
         body = []
         self.compile(template, options)(self, body.append, values or {})
-        return u''.join(body)
+        return u''.join(body).encode('utf8')
 
     def compile(self, template, options):
         """ Compile the given template into a rendering function::

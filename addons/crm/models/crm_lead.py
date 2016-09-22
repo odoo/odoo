@@ -673,8 +673,8 @@ class Lead(FormatAddress, models.Model):
             'partner_id': customer.id if customer else False,
             'type': 'opportunity',
             'date_open': fields.Datetime.now(),
-            'email_from': customer.email if customer else self.email_from,
-            'phone': customer.phone if customer else self.phone,
+            'email_from': customer and customer.email or self.email_from,
+            'phone': customer and customer.phone or self.phone,
             'date_conversion': fields.Datetime.now(),
         }
         if not self.stage_id:

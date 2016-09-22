@@ -136,8 +136,7 @@ class Report(models.Model):
                 'doc_model': report.model,
                 'docs': docs,
             }
-            return self.render(report.report_name, docargs).encode('utf-8')
-
+            return self.render(report.report_name, docargs)
     @api.model
     def get_pdf(self, docids, report_name, html=None, data=None):
         """This method generates and returns pdf version of a report.
@@ -171,6 +170,8 @@ class Report(models.Model):
         # the html version.
         if isinstance(self.env.cr, TestCursor):
             return html
+
+        html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(report_name)

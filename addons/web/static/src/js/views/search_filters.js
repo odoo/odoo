@@ -129,7 +129,7 @@ ExtendedSearchProposition.Field = Widget.extend({
         }
     },
     show_inputs: function ($operator) {
-        var $value = this.$('.o_searchview_extended_prop_value');
+        var $value = this.$el.parent();
         switch ($operator.val()) {
             case '∃':
             case '∄':

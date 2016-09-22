@@ -35,7 +35,7 @@ $('.interested_partner_assign_confirm').on('click',function(e){
 $('.desinterested_partner_assign_confirm').on('click',function(e){
 	new Model('crm.lead')
 		.call("partner_desinterested",
-			[[$('.desinterested_partner_assign_form .assign_lead_id').val()],
+			[[parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
 			$('.desinterested_partner_assign_form .comment_desinterested').val(),
 			$('.desinterested_partner_assign_form .contacted_desinterested').prop('checked')])
 		.then(function(){
