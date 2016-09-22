@@ -56,7 +56,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                     var $parent = $(this).parents('.js_product:first');
                     $parent.find("a.js_add, span.js_remove").toggleClass("hidden");
                     $parent.find("input.js_optional_same_quantity").val( $(this).hasClass("js_add") ? 1 : 0 );
-                    var $remove = $parent.find(".js_remove");
+                    $parent.find(".js_remove");
                 });
 
                 $modal.on("change", "input.js_quantity", function () {
@@ -77,9 +77,6 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
 
                     $modal.on("change", 'input[name="add_qty"]', function (event) {
                         var product_id = $($modal.find('span.oe_price[data-product-id]')).first().data('product-id');
-                        var default_price = parseInt($('.text-danger.oe_default_price > span.oe_currency_value').text());
-                        var $dom = $(event.target).closest('tr');
-                        var qty = $dom.find('input[name="add_qty"]').val();
                         var product_ids = [product_id];
                         var $products_dom = [];
                         $modal.find(".js_add_cart_variants[data-attribute_value_ids]").each(function(){

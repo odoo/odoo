@@ -98,7 +98,20 @@ class PadCommon(models.AbstractModel):
     @api.model
     def create(self, vals):
         self._set_pad_value(vals)
-        return super(PadCommon, self).create(vals)
+        pad = super(PadCommon, self).create(vals)
+
+        # In case the pad is created programmatically, the content is not filled in yet since it is
+        # normally initialized by the JS layer
+        for k, field in self._fields.iteritems():
+            if hasattr(field, 'pad_content_field') and k not in vals:
+                ctx = {
+                    'model': self._name,
+                    'field_name': k,
+                    'object_id': pad.id,
+                }
+                pad_info = self.with_context(**ctx).pad_generate_url()
+                pad[k] = pad_info.get('url')
+        return pad
 
     # Set the pad content in vals
     def _set_pad_value(self, vals):

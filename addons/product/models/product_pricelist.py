@@ -308,11 +308,16 @@ class Pricelist(models.Model):
                 pl = pls and pls[0].id
 
         if not pl:
-            pl = Property.get('property_product_pricelist', 'res.partner').id
-
-        if not pl:
             # search pl where no country
             pls = self.env['product.pricelist'].search([('country_group_ids', '=', False)], limit=1)
+            pl = pls and pls[0].id
+
+        if not pl:
+            prop = Property.get('property_product_pricelist', 'res.partner')
+            pl = prop and prop[0].id
+
+        if not pl:
+            pls = self.env['product.pricelist'].search([], limit=1)
             pl = pls and pls[0].id
 
         return pl

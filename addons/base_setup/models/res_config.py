@@ -14,7 +14,7 @@ class BaseConfigSettings(models.TransientModel):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
     module_share = fields.Boolean(string='Allow documents sharing',
-        help="""Share or embbed any screen of Odoo.""")
+        help="""Share or embed any screen of Odoo.""")
     module_portal = fields.Boolean(string='Activate the customer portal',
         help="""Give your customers access to their documents.""")
     module_auth_oauth = fields.Boolean(string='Use external authentication providers (OAuth)')

@@ -35,7 +35,7 @@
                     </group>
                     <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}" class="oe_survey_email_public">
                         <div>
-                            You can share your survey web public link and/or send private invitations to your audience. People can answer once per invitation, and whenever they want with the public web link (in this case, the "Public in website" setting must be enabled).
+                            You can share your survey web public link and/or send private invitations to your audience. People can answer once per invitation, and whenever they want with the public web link (in this case, the "Login Required" setting must be disabled).
                         </div>
                         <div>Copy, paste and share the web link below to your audience.</div>
                         <code><field name="public_url"/></code>
@@ -69,7 +69,7 @@
                         <group class="oe_right" col="1">
                             <div>
                                 Use template
-                                <field name="template_id" nolabel="1" on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)" />
+                                <field name="template_id" nolabel="1"/>
                             </div>
                             <button icon="/email_template/static/src/img/email_template_save.png" type="object" name="save_as_template" string="Save as new template" class="oe_link" help="Save as a new template" />
                         </group>

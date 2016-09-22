@@ -1,0 +1,165 @@
+// lessc@1.4.2
+
+// =========================
+// Mass Mailing "Theme Tech"
+// =========================
+
+@o_mm_tech_color_alpha: #333;
+@o_mm_tech_color_beta: white;
+@o_mm_tech_color_gamma: #59cdcd;
+@o_mm_tech_color_delta: #bdbdbd;
+@o_mm_tech_color_epsilon: black;
+@o_mm_tech_color_zeta: #a17e92;
+
+.o_tech_theme {
+    // ===== Colors =====
+    .bg-beta {
+        background-color: @o_mm_tech_color_gamma;
+
+        .btn.btn-primary {
+            color: @o_mm_tech_color_beta;
+            background-color: @o_mm_tech_color_zeta;
+        }
+    }
+    .text-beta {
+        color: @o_mm_tech_color_gamma;
+    }
+    .bg-delta {
+        background-color: @o_mm_tech_color_zeta;
+    }
+
+    // ===== Layout =====
+    &.o_layout {
+        background-color: @o_mm_tech_color_alpha;
+
+        > .o_mail_wrapper {
+            background-color: transparent;
+            color: @o_mm_tech_color_delta;
+            border: none;
+        }
+    }
+
+    // ===== Snippets (general) =====
+    .o_mail_snippet_general {
+        .btn.btn-primary {
+            color: @o_mm_tech_color_beta;
+            background-color: @o_mm_tech_color_gamma;
+        }
+
+        .o_mail_full_width_padding {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        a, .o_mail_link {
+            font-weight: normal;
+            color: @o_mm_tech_color_gamma;
+        }
+
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: darken(@o_mm_tech_color_beta, 10%);
+        }
+    }
+
+    // ===== Snippets (specific) =====
+    .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
+        .o_mail_snippet_general {
+            margin-top: 10px;
+            margin-bottom: 25px;
+            padding-left: 20px;
+            padding-right: 20px;
+
+            > table {
+                max-width: 560px;
+                border-bottom: 1px solid darken(@o_mm_tech_color_beta, 60%);
+            }
+        }
+
+        .o_mail_h_padding.o_mail_v_padding {
+            padding: 10px 0 5px;
+        }
+
+        .o_mail_header_social {
+            margin-right: 0px;
+            a {
+                color: darken(@o_mm_tech_color_beta, 40%);
+            }
+        }
+    }
+
+    .o_mail_block_footer_separator {
+        .separator {
+            height: 1px;
+            background-color: darken(@o_mm_tech_color_beta, 60%);
+        }
+    }
+
+    .o_mail_block_event {
+        margin-left: 20px;
+        margin-right: 20px;
+
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: @o_mm_tech_color_alpha;
+        }
+    }
+
+    .o_mail_block_discount2 {
+        .o_code {
+            color: @o_mm_tech_color_alpha;
+        }
+    }
+
+    .o_mail_block_footer_separator {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .o_mail_block_steps {
+        background-color: transparent;
+
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: @o_mm_tech_color_alpha;
+        }
+
+        .o_mail_full_width_padding > tbody > tr  {
+            background-color: @o_mm_tech_color_beta;
+            color: @o_mm_tech_color_alpha;
+        }
+    }
+
+    .o_mail_block_footer_social {
+        .o_mail_snippet_general {
+            background: rgba(0,0,0,0);
+            background: transparent;
+        }
+
+        .o_mail_table_styles {
+            border-top: none;
+        }
+
+        .o_mail_footer_social {
+            a {
+                color: darken(@o_mm_tech_color_beta, 40%);
+            }
+        }
+
+        .o_mail_footer_links a {
+            color: darken(@o_mm_tech_color_beta, 40%);
+        }
+
+        .o_mail_footer_copy {
+            font-weight: bold;
+            font-size: 9px;
+            color: darken(@o_mm_tech_color_beta, 30%);
+        }
+
+        &.o_mail_footer_social_left {
+            .o_mail_footer_description {
+                padding-left: 0;
+            }
+            .o_mail_footer_social {
+                padding-right: 0;
+            }
+        }
+    }
+}

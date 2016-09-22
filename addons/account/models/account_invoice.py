@@ -863,7 +863,6 @@ class AccountInvoice(models.Model):
                 'narration': inv.comment,
             }
             ctx['company_id'] = inv.company_id.id
-            ctx['dont_create_taxes'] = True
             ctx['invoice'] = inv
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
@@ -1063,11 +1062,15 @@ class AccountInvoice(models.Model):
         if payment_method not in journal_payment_methods:
             raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
 
+        communication = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
+        if self.origin:
+            communication = '%s (%s)' % (communication, self.origin)
+
         payment = self.env['account.payment'].create({
             'invoice_ids': [(6, 0, self.ids)],
             'amount': pay_amount or self.residual,
             'payment_date': date or fields.Date.context_today(self),
-            'communication': self.type in ('in_invoice', 'in_refund') and self.reference or self.number,
+            'communication': communication,
             'partner_id': self.partner_id.id,
             'partner_type': self.type in ('out_invoice', 'out_refund') and 'customer' or 'supplier',
             'journal_id': pay_journal.id,

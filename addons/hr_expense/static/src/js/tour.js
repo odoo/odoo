@@ -16,7 +16,7 @@ tour.register('hr_expense_tour', [{
     position: 'right',
 }, {
     trigger: '.o_expense_submit:visible',
-    content: _t("<p>Once completed, you can <b>submit the expense</b> for approval.</p><p><i>Tip: from the list view, select all expenses to submit them all at once, in a single report.</i>"),
+    content: _t("<p>Once completed, you can <b>submit the expense</b> for approval.</p><p><i>Tip: from the list view, select all expenses to submit them all at once, in a single report.</i></p>"),
     extra_trigger: '.o_form_readonly',
     position: 'bottom',
 }, {

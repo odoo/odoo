@@ -276,10 +276,10 @@ class Message(models.Model):
             handle partners in batch to avoid doing numerous queries.
 
             :param list messages: list of message, as get_dict result
-            :param dict message_tree: {[msg.id]: msg browse record}
+            :param dict message_tree: {[msg.id]: msg browse record as super user}
         """
         # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
-        partners = self.env['res.partner']
+        partners = self.env['res.partner'].sudo()
         attachments = self.env['ir.attachment']
         trackings = self.env['mail.tracking.value']
         for key, message in message_tree.iteritems():
@@ -295,8 +295,8 @@ class Message(models.Model):
                 attachments |= message.attachment_ids
             if message.tracking_value_ids:
                 trackings |= message.tracking_value_ids
-        # Read partners as SUPERUSER -> display the names like classic m2o even if no access
-        partners_names = partners.sudo().name_get()
+        # Read partners as SUPERUSER -> message being browsed as SUPERUSER it is already the case
+        partners_names = partners.name_get()
         partner_tree = dict((partner[0], partner) for partner in partners_names)
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
@@ -411,7 +411,7 @@ class Message(models.Model):
             'needaction_partner_ids',  # list of partner ids for whom the message is a needaction
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ])
-        message_tree = dict((m.id, m) for m in self)
+        message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
 
         # add subtype data (is_note flag, subtype_description). Do it as sudo

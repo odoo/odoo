@@ -144,7 +144,9 @@ class SaleOrder(models.Model):
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
 
-            if not self.env.context.get('fixed_price'):
+
+
+            if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 values['price_unit'] = order_line._get_display_price(order_line.product_id)
 
             order_line.write(values)
@@ -212,15 +214,17 @@ class Website(models.Model):
                     if not show_visible or group_pricelists.selectable or group_pricelists.id in (current_pl, order_pl):
                         pricelists |= group_pricelists
 
-        if not pricelists and not country_code:  # no pricelist for this country, or no GeoIP
+        partner = self.env.user.partner_id
+        is_public = self.user_id.id == self.env.user.id
+        if not is_public and (not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl):
+            if partner.property_product_pricelist.website_id:
+                pricelists |= partner.property_product_pricelist
+
+        if not pricelists:  # no pricelist for this country, or no GeoIP
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
 
-        partner = self.env.user.partner_id
-        if not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl:
-            pricelists |= partner.property_product_pricelist
-
         # This method is cached, must not return records! See also #8795
-        return pricelists.sorted(lambda pl: pl.name).ids
+        return pricelists.ids
 
     def _get_pl(self, country_code, show_visible, website_pl, current_pl, all_pl):
         pl_ids = self._get_pl_partner_order(country_code, show_visible, website_pl, current_pl, all_pl)

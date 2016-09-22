@@ -122,7 +122,7 @@ class WebsiteBlog(http.Controller):
 
         blog_posts = BlogPost.search(domain, order="post_date desc")
         pager = request.website.pager(
-            url=request.httprequest.path,
+            url=request.httprequest.path.partition('/page/')[0],
             total=len(blog_posts),
             page=page,
             step=self._blog_post_per_page,

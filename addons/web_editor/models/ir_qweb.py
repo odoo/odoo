@@ -303,8 +303,14 @@ class Image(models.AbstractModel):
         elif options.get('alt'):
             alt = options['alt']
 
-        img = '<img class="%s" src="%s" style="%s"%s/>' % \
-            (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '')
+        src_zoom = None
+        if options.get('zoom') and getattr(record, options['zoom'], None):
+            src_zoom = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, sha)
+        elif options.get('zoom'):
+            src_zoom = options['zoom']
+
+        img = '<img class="%s" src="%s" style="%s"%s%s/>' % \
+            (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '', ' data-zoom="1" data-zoom-image="%s"' % src_zoom if src_zoom else '')
         return ir_qweb.unicodifier(img)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
