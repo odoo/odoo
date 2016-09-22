@@ -105,12 +105,12 @@ class MailActivityLog(models.Model):
         for log in self:
             body_html = _("""
                 <div>
-                    <strong>%(name)s - <i>%(title_action)s</i></strong>
+                    <strong>%(name)s <i>%(title_action)s</i></strong>
                     <br />
                     %(note)s
                 </div> """) % {
                     'name': log.next_activity_id.name,
-                    'title_action': log.title_action,
+                    'title_action': log.title_action and '- %s' % log.title_action or '',
                     'note': log.note or '',
                 }
             msg_id = self.env[log.model].browse(log.res_id).message_post(

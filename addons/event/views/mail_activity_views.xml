@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="event_activity_tree_view" model="ir.ui.view">
+        <field name="name">event.activity.tree.view</field>
+        <field name="model">event.event</field>
+        <field name="arch" type="xml">
+            <tree string="Next Activity" decoration-danger="date_action &lt; current_date" default_order="date_action">
+                <field name="name"/>
+                <field name="date_action"/>
+                <field name="next_activity_id"/>
+                <field name="title_action"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="mail_activity_log_event_action" model="ir.actions.act_window">
         <field name="name">Activity</field>
-        <field name="res_model">mail.activity.log</field>
+        <field name="res_model">event.event</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,calendar</field>
-        <field name="domain">[('model', '=', 'event.event')]</field>
-        <field name="view_id" ref="mail.mail_activity_log_view"/>
+        <field name="view_mode">tree,form,kanban,calendar</field>
+        <field name="view_id" ref="event_activity_tree_view"/>
         <field name="context">{
             'state_btn': True,
             'search_default_my_activity':1
