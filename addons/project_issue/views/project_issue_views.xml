@@ -41,16 +41,18 @@
                         <page string="Extra Info" name="extra_info" groups="project.group_project_manager,project.group_project_user">
                             <group>
                                 <group>
-                                    <field name="id"/>
+                                    <field name="id" groups="base.group_no_one"/>
                                     <field name="day_open"/>
                                     <field name="day_close"/>
+                                    <field name="legend_blocked" invisible="1"/>
+                                    <field name="legend_done" invisible="1"/>
+                                    <field name="legend_normal" invisible="1"/>
+                                </group>
+                                <group>
                                     <field name="working_hours_open" widget="float_time"/>
                                     <field name="working_hours_close" widget="float_time"/>
                                     <field name="inactivity_days"/>
                                     <field name="days_since_creation"/>
-                                    <field name="legend_blocked" invisible="1"/>
-                                    <field name="legend_done" invisible="1"/>
-                                    <field name="legend_normal" invisible="1"/>
                                 </group>
                             </group>
                         </page>

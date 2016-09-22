@@ -20,6 +20,22 @@
               </p>
             </field>
         </record>
+
+        <record id="project_project_view_form_simplified_inherit_timesheet" model="ir.ui.view">
+            <field name="name">project.project.view.form.simplified.inherit.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <group name="options" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <field name="use_tasks" position="after">
+                    <field name="allow_timesheets"/>
+                </field>
+            </field>
+        </record>
+
         <record id="project_invoice_form" model="ir.ui.view">
             <field name="name">Inherit project form : Invoicing Data</field>
             <field name="model">project.project</field>
