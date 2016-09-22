@@ -36,12 +36,38 @@
             </field>
         </record>
 
+        <record id="product_attribute_view_form" model="ir.ui.view">
+            <field name="name">product.attribute.form</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+                <form string="Variant Values">
+                    <group>
+                        <field name="name"/>
+                        <field name="create_variant" groups="base.group_no_one"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="attribute_action" model="ir.actions.act_window">
             <field name="name">Attributes</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.attribute</field>
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
+        </record>
+
+        <record id="product_attribute_value_view_form" model="ir.ui.view">
+            <field name="name">product.attribute.value.form</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <form string="Variant Values">
+                    <group>
+                        <field name="name"/>
+                        <field name="price_extra"/>
+                    </group>
+                </form>
+            </field>
         </record>
 
         <record id="variants_tree_view" model="ir.ui.view">
@@ -62,5 +88,17 @@
             <field name="res_model">product.attribute.value</field>
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
+        </record>
+
+        <record id="product_attribute_line_view_form" model="ir.ui.view">
+            <field name="name">product.attribute.line.form</field>
+            <field name="model">product.attribute.line</field>
+            <field name="arch" type="xml">
+                <form string="Product Attributes">
+                    <group>
+                        <field name="value_ids"/>
+                    </group>
+                </form>
+            </field>
         </record>
 </odoo>
