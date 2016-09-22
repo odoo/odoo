@@ -453,6 +453,7 @@ class BaseModel(object):
                     cr.execute(query, vals)
         self.invalidate_cache()
 
+
     @api.model
     def _add_field(self, name, field):
         """ Add the given ``field`` under the given ``name`` in the class """
@@ -615,6 +616,7 @@ class BaseModel(object):
                 '_register': False,
                 '_original_module': cls._module,
                 '_inherit_children': OrderedSet(),      # names of children models
+                '_inherits_children': set(),            # names of children models
                 '_fields': {},                          # populated in _setup_base()
                 '_defaults': {},                        # populated in _setup_base()
             })
@@ -704,7 +706,11 @@ class BaseModel(object):
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._constraints = cls._constraints.values()
 
-        # recompute attributes of children models
+        # update _inherits_children of parent models
+        for parent_name in cls._inherits:
+            pool[parent_name]._inherits_children.add(cls._name)
+
+        # recompute attributes of _inherit_children models
         for child_name in cls._inherit_children:
             child_class = type(pool[child_name])
             child_class._build_model_attributes(pool)
@@ -2086,7 +2092,7 @@ class BaseModel(object):
         """
         result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         dt = [
             f for f in groupby
             if self._fields[f.split(':')[0]].type in ('date', 'datetime')
@@ -2110,7 +2116,7 @@ class BaseModel(object):
         query = self._where_calc(domain)
         fields = fields or self._columns.keys()
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
