@@ -78,6 +78,7 @@
             <field name="arch" type="xml">
                 <tree string="Bill of Materials" default_order="product_tmpl_id">
                     <field name="active" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="product_tmpl_id"/>
                     <field name="code"/>
                     <field name="product_id" groups="product.group_product_variant"/>
