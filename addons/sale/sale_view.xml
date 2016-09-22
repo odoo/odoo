@@ -248,7 +248,10 @@
                                     <field name="qty_invoiced"
                                         invisible="not context.get('show_sale')"/>
                                     <field name="qty_to_invoice" invisible="1"/>
+                                    <!-- A default domain is added to the UoM in order to preserve the proper UoM category. it uses a new DB field relcatid -->
+                                    <field name="relcatid" invisible="1"/>
                                     <field name="product_uom"
+                                        domain="[('category_id', '=', relcatid)]"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                         context="{'company_id': parent.company_id}"
                                         groups="product.group_uom" options='{"no_open": True}'/>

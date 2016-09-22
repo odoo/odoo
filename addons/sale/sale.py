@@ -661,6 +661,8 @@ class SaleOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
+    #We've added a related field to store the category of the UoM for this line. We use this as a default domain in the view.
+    relcatid = fields.Many2one(related='product_uom.category_id', store=True)
 
     qty_delivered_updateable = fields.Boolean(compute='_compute_qty_delivered_updateable', string='Can Edit Delivered', readonly=True, default=True)
     qty_delivered = fields.Float(string='Delivered', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
@@ -742,7 +744,8 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_id')
     def product_id_change(self):
         if not self.product_id:
-            return {'domain': {'product_uom': []}}
+            # we are no longer returning the domain, as it sets the domain for ALL lines. We instead use a default domain in the view.
+            return {}
 
         vals = {}
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
@@ -768,7 +771,8 @@ class SaleOrderLine(models.Model):
         if self.order_id.pricelist_id and self.order_id.partner_id:
             vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(product.price, product.taxes_id, self.tax_id)
         self.update(vals)
-        return {'domain': domain}
+        #we are no longer returning the domain, as it sets the domain for ALL lines. We instead use a default domain in the view.
+        return {}
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
