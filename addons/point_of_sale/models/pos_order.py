@@ -577,7 +577,7 @@ class PosOrder(models.Model):
                 Move += Move.create({
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
-                    'picking_id': picking_id.id,
+                    'picking_id': picking_id and picking_id.id or False,
                     'picking_type_id': picking_type.id,
                     'product_id': line.product_id.id,
                     'product_uom_qty': abs(line.qty),

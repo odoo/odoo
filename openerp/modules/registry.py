@@ -4,7 +4,8 @@
 """ Models registries.
 
 """
-from collections import Mapping, defaultdict
+from collections import Mapping, defaultdict, deque
+from operator import attrgetter
 import logging
 import os
 import threading
@@ -149,6 +150,22 @@ class Registry(Mapping):
         """ Add or replace a model in the registry."""
         self.models[model_name] = model
 
+    def descendants(self, model_names, *kinds):
+        """ Return the models corresponding to ``model_names`` and all those
+        that inherit/inherits from them.
+        """
+        assert all(kind in ('_inherit', '_inherits') for kind in kinds)
+        funcs = [attrgetter(kind + '_children') for kind in kinds]
+
+        models = OrderedSet()
+        queue = deque(model_names)
+        while queue:
+            model = self[queue.popleft()]
+            models.add(model)
+            for func in funcs:
+                queue.extend(func(model))
+        return models
+
     def load(self, cr, module):
         """ Load a given module in the registry.
 
@@ -160,23 +177,17 @@ class Registry(Mapping):
         """
         from .. import models
 
-        loaded_models = OrderedSet()
-        def mark_loaded(model):
-            # recursively mark model and its children
-            loaded_models.add(model._name)
-            for child_name in model._inherit_children:
-                mark_loaded(self[child_name])
-
         lazy_property.reset_all(self)
 
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
+        model_names = []
         for cls in models.MetaModel.module_to_models.get(module.name, []):
             # models register themselves in self.models
             model = cls._build_model(self, cr)
-            mark_loaded(model)
+            model_names.append(model._name)
 
-        return map(self, loaded_models)
+        return self.descendants(model_names, '_inherit')
 
     def setup_models(self, cr, partial=False):
         """ Complete the setup of models.
