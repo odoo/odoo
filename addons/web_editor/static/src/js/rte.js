@@ -516,7 +516,7 @@ var RTE = Widget.extend({
             // add contenteditable on link to improve its editing behaviour
             $target.attr('contenteditable', true);
             setTimeout(function () {
-                $editable.attr('contenteditable', false);
+                $editable.not($target).attr('contenteditable', false);
             });
             // once clicked outside, remove contenteditable on link
             var reactive_editable = function(e){
