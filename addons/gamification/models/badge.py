@@ -40,7 +40,7 @@ class BadgeUser(models.Model):
             # .ids would trigger the "multi mode" which returns a mapping of
             # res_id to templates
             template = template_id.get_email_template(badge_user.id)
-            body_html = Template.with_context(template._context).render_template(template.body_html, 'gamification.badge.user', badge_user.ids)
+            body_html = Template.with_context(template._context).render_template(template.body_html, 'gamification.badge.user', badge_user.id)
             badge_user.user_id.message_post(
                 body=body_html,
                 subtype='gamification.mt_badge_granted',
