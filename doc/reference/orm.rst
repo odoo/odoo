@@ -91,6 +91,10 @@ preserve order.
 * ``record in set`` returns whether ``record`` (which must be a 1-element
   recordset) is present in ``set``. ``record not in set`` is the inverse
   operation
+* ``set1 <= set2`` and ``set1 < set2`` return whether ``set1`` is a subset
+  of ``set2`` (resp. strict)
+* ``set1 >= set2`` and ``set1 > set2`` return whether ``set1`` is a superset
+  of ``set2`` (resp. strict)
 * ``set1 | set2`` returns the union of the two recordsets, a new recordset
   containing all records present in either source
 * ``set1 & set2`` returns the intersection of two recordsets, a new recordset
