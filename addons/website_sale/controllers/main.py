@@ -691,7 +691,6 @@ class WebsiteSale(http.Controller):
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
-
          - a draft sale order with lines; otherwise, clean context / session and
            back to the shop
          - no transaction in context / session, or only a draft one, if the customer
@@ -719,10 +718,23 @@ class WebsiteSale(http.Controller):
         values['errors'] = SaleOrder._get_errors(order)
         values.update(SaleOrder._get_website_data(order))
         if not values['errors']:
-            button_values = dict(return_url='/shop/payment/validate',
-                                 partner_id=shipping_partner_id,
-                                 billing_partner_id=order.partner_invoice_id.id)
-            values['acquirers'] = request.env['payment.acquirer'].with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now'))._get_acquirer_buttons(order, button_values)
+            acquirers = request.env['payment.acquirer'].search(
+                [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
+            )
+            values['acquirers'] = []
+            for acquirer in acquirers:
+                acquirer_button = acquirer.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
+                    '/',
+                    order.amount_total,
+                    order.pricelist_id.currency_id.id,
+                    values={
+                        'return_url': '/shop/payment/validate',
+                        'partner_id': shipping_partner_id,
+                        'billing_partner_id': order.partner_invoice_id.id,
+                    }
+                )
+                acquirer.button = acquirer_button
+                values['acquirers'].append(acquirer)
 
             values['tokens'] = request.env['payment.token'].search([('partner_id', '=', order.partner_id.id), ('acquirer_id', 'in', acquirers.ids)])
 
@@ -795,13 +807,13 @@ class WebsiteSale(http.Controller):
                 'reference': Transaction.get_next_reference(order.name),
                 'sale_order_id': order.id,
             }
-            #transaction state should be in 'pending' state in case of prosessing COD(Collect on delivery) 
-            if tx.acquirer_id.is_cod:
-                tx.state = 'pending'
             if token and request.env['payment.token'].sudo().browse(int(token)).partner_id == order.partner_id:
                 tx_values['payment_token_id'] = token
 
             tx = Transaction.create(tx_values)
+            #transaction state should be in 'pending' state in case of prosessing COD(Collect on delivery) 
+            if tx.acquirer_id.is_cod:
+                tx.state = 'pending'
             request.session['sale_transaction_id'] = tx.id
 
         # update quotation
