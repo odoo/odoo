@@ -548,36 +548,26 @@ class Task(models.Model):
         return super(Task, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle project users and officers
-        recipients. Indeed those will have specific action in their notification
-        emails: creating tasks, assigning it. """
-        group_project_user = self.env.ref('project.group_project_user')
-        for recipient in recipients.filtered(lambda recipient: recipient.id not in done_ids):
-            if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id:
-                group_data['group_project_user'] |= recipient
-                done_ids.add(recipient.id)
-        return super(Task, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        """ Handle project users and managers recipients that can convert assign
+        tasks and create new one directly from notification emails. """
+        groups = super(Task, self)._notification_recipients(message, groups)
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
         self.ensure_one()
-        res = super(Task, self)._notification_get_recipient_groups(message, recipients)
-
-        take_action = self._notification_link_helper('assign')
-        new_action_id = self.env.ref('project.action_view_task').id
-        new_action = self._notification_link_helper('new', action_id=new_action_id)
-
-        actions = []
         if not self.user_id:
-            actions.append({'url': take_action, 'title': _('I take it')})
+            take_action = self._notification_link_helper('assign')
+            project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
-            actions.append({'url': new_action, 'title': _('New Task')})
+            new_action_id = self.env.ref('project.action_view_task').id
+            new_action = self._notification_link_helper('new', action_id=new_action_id)
+            project_actions = [{'url': new_action, 'title': _('New Task')}]
 
-        res['group_project_user'] = {
-            'actions': actions
-        }
-        return res
+        new_group = (
+            'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'actions': project_actions,
+            })
+
+        return [new_group] + groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

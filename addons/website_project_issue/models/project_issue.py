@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, exceptions, models, _
 
 
 class Issue(models.Model):
@@ -10,29 +10,28 @@ class Issue(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the post on the website directly """
+        """ Instead of the classic form view, redirect to website for portal users
+        that can read the issue. """
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/my/issues/%s' % self.id,
-            'target': 'self',
-            'res_id': self.id,
-        }
+        if self.env.user.share:
+            try:
+                self.check_access_rule('read')
+            except exceptions.AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/issues/%s' % self.id,
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return super(Issue, self).get_access_action()
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle project users and officers
-        recipients. Indeed those will have specific action in their notification
-        emails: creating tasks, assigning it. """
-        group_project_user_id = self.env.ref('project.group_project_user').id
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if recipient.user_ids and group_project_user_id in recipient.user_ids[0].groups_id.ids:
-                group_data['group_project_user'] |= recipient
-                done_ids.add(recipient.id)
-            elif recipient.user_ids and all(recipient.user_ids.mapped('share')):
-                group_data['user'] |= recipient
-                done_ids.add(recipient.id)
-        return super(Issue, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        groups = super(Issue, self)._notification_recipients(message, groups)
+
+        for group_name, group_method, group_data in groups:
+            group_data['has_button_access'] = True
+
+        return groups

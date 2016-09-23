@@ -562,16 +562,15 @@ class MailThread(models.AbstractModel):
                 'message_id': kwargs.pop('message_id')
             }
         else:
-            self.ensure_one()
             base_params = {
-                'model': self._name,
-                'res_id': self.ids[0],
+                'model': kwargs.pop('model', self._name),
+                'res_id': kwargs.pop('res_id', self.ids and self.ids[0] or False),
             }
 
         link = False
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
-            link = '/mail/view?%s' % url_encode(params)
+            link = '/mail/%s?%s' % (link_type, url_encode(params))
         elif link_type == 'workflow':
             params = dict(base_params, signal=kwargs['signal'])
             link = '/mail/workflow?%s' % url_encode(params)
@@ -585,57 +584,57 @@ class MailThread(models.AbstractModel):
         return link
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Given the categories of partners to emails in group_data, set the
-        right group for the recipients. The basic behavior is simply to
-        distinguish users from partners.
+    def _notification_recipients(self, message, groups):
+        """ Return groups used to classify recipients of a notification email.
+        Groups is a list of tuple containing of form (group_name, group_func,
+        group_data) where
 
-        Inherit this method to group recipients according to specific criterions
-        allowing to tune the notification email. Generally this will be based
-        on user groups (res.groups), but not necessarily.
+         * group_name is an identifier used only to be able to override and manipulate
+           groups. Default groups are user (recipients linked to an employee user),
+           portal (recipients linked to a portal user) and customer (recipients not
+           linked to any user). An example of override use would be to add a group
+           linked to a res.groups like Hr Officers to set specific action buttons to
+           them.
+         * group_func is a function pointer taking a partner record as parameter. This
+           method will be applied on recipients to know whether they belong to a given
+           group or not. Only first matching group is kept. Evaluation order is the
+           list order.
+         * group_data is a dict containing parameters for the notification email
 
-        Example: having defined a group_hr_user entry, store HR users and
-        officers. """
-        # TDE note: recipients is normally sudo-ed
-        group_user = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if recipient.user_ids and group_user in recipient.user_ids[0].groups_id.ids:
-                group_data['user'] |= recipient
-            else:
-                group_data['partner'] |= recipient
-        return group_data
+          * has_button_access: whether to display Access <Document> in email. True
+            by default for new groups, False for portal / customer.
+          * button_access: dict with url and title of the button
+          * has_button_follow: whether to display Follow in email (if recipient is
+            not currently following the thread). True by default for new groups,
+            False for portal / customer.
+          * button_follow: dict with url adn title of the button
+          * has_button_unfollow: whether to display Unfollow in email (if recipient
+            is currently following the thread). True by default for new groups,
+            False for portal / customer.
+          * button_unfollow: dict with url and title of the button
+          * actions: list of action buttons to display in the notification email.
+            Each action is a dict containing url and title of the button.
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        """ Give the categories of recipients for notification emails. As emails
-        are generated once for group of recipients to work in batch, the first
-        thing to do is to categorize them. The basic behavior is simply
-        to distinguish users from partners.
-
-        Specific values :
-
-         - button_access: used to display 'View Document' in email, if set
-         - button_follow: used to display 'Follow' in email, if set
-         - button unfollow: used to display 'Unfollow' in email, if set
+        Groups has a default value that you can find in mail_thread
+        _message_notification_recipients method.
         """
-        # TDE note: recipients is normally sudo-ed
-        return {
-            'partner': {
-                'button_access': None,
-                'button_follow': False,
-                'button_unfollow': False,
-            },
-            'user': {
-            }
-        }
+        return groups
 
     @api.multi
     def _message_notification_recipients(self, message, recipients):
         # At this point, all access rights should be ok. We sudo everything to
         # access rights checks and speedup the computation.
         recipients_sudo = recipients.sudo()
+        result = {}
+
+        doc_followers = self.env['mail.followers']
+        if message.model and message.res_id:
+            doc_followers = self.env['mail.followers'].sudo().search([
+                ('res_model', '=', message.model),
+                ('res_id', '=', message.res_id),
+                ('partner_id', 'in', recipients_sudo.ids)])
+        partner_followers = doc_followers.mapped('partner_id')
+
         if self._context.get('auto_delete', False):
             access_link = self._notification_link_helper('view')
         else:
@@ -647,37 +646,50 @@ class MailThread(models.AbstractModel):
         else:
             view_title = _('View')
 
-        result = {}
-        group_data = {}
+        default_groups = [
+            ('user', lambda partner: bool(partner.user_ids) and not any(user.share for user in partner.user_ids), {}),
+            ('portal', lambda partner: bool(partner.user_ids) and all(user.share for user in partner.user_ids), {
+                'has_button_access': False,
+                'has_button_follow': False,
+                'has_button_unfollow': False,
+            }),
+            ('customer', lambda partner: True, {
+                'has_button_access': False,
+                'has_button_follow': False,
+                'has_button_unfollow': False,
+            })
+        ]
 
-        for category, data in self._notification_get_recipient_groups(message, recipients).iteritems():
-            result[category] = {
-                'followers': self.env['res.partner'],
-                'not_followers': self.env['res.partner'],
-                'button_access': {'url': access_link, 'title': view_title},
-                'button_follow': {'url': '/mail/follow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Follow')},
-                'button_unfollow': {'url': '/mail/unfollow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Unfollow')},
-                'actions': list(),
-            }
-            group_data[category] = self.env['res.partner']
-            result[category].update(data)
+        groups = self._notification_recipients(message, default_groups)
 
-        doc_followers = self.env['mail.followers']
-        if message.model and message.res_id:
-            doc_followers = self.env['mail.followers'].sudo().search([
-                ('res_model', '=', message.model),
-                ('res_id', '=', message.res_id),
-                ('partner_id', 'in', recipients_sudo.ids)])
-        partner_followers = doc_followers.mapped('partner_id')
+        for group_name, group_func, group_data in groups:
+            group_data.setdefault('has_button_access', True)
+            group_data.setdefault('button_access', {
+                'url': access_link,
+                'title': view_title})
+            group_data.setdefault('has_button_follow', True)
+            group_data.setdefault('button_follow', {
+                'url': self._notification_link_helper('follow', model=message.model, res_id=message.res_id),
+                'title': _('Follow')})
+            group_data.setdefault('has_button_unfollow', True)
+            group_data.setdefault('button_unfollow', {
+                'url': self._notification_link_helper('unfollow', model=message.model, res_id=message.res_id),
+                'title': _('Unfollow')})
+            group_data.setdefault('actions', list())
+            group_data.setdefault('followers', self.env['res.partner'])
+            group_data.setdefault('not_followers', self.env['res.partner'])
 
-        # classify recipients, then set them in followers / not followers
-        group_data = self._notification_group_recipients(message, recipients, set(), group_data)
-        for category, recipients in group_data.iteritems():
-            for recipient in recipients:
-                if recipient in partner_followers:
-                    result[category]['followers'] |= recipient
-                else:
-                    result[category]['not_followers'] |= recipient
+        for recipient in recipients:
+            for group_name, group_func, group_data in groups:
+                if group_func(recipient):
+                    if recipient in partner_followers:
+                        group_data['followers'] |= recipient
+                    else:
+                        group_data['not_followers'] |= recipient
+                    break
+
+        for group_name, group_method, group_data in groups:
+            result[group_name] = group_data
 
         return result
 
