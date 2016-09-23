@@ -194,7 +194,7 @@ class account_journal(models.Model):
             for result in late_query_results:
                 cur = self.env['res.currency'].browse(result.get('currency'))
                 number_late += 1
-                sum_late += cur.compute(result.get('amount_total'),currency)
+                sum_late += cur.compute(result.get('amount_total'), currency)
 
         return {
             'number_to_reconcile': number_to_reconcile,
