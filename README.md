@@ -42,9 +42,9 @@ For Odoo employees
 
 To add the odoo-dev remote use this command:
 
-    $ ./odoo.py setup_git_dev
+    $ ./setup/setup_dev.py setup_git_dev
 
 To fetch odoo merge pull requests refs use this command:
 
-    $ ./odoo.py setup_git_review
+    $ ./setup/setup_dev.py setup_git_review
 

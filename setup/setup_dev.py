@@ -4,7 +4,7 @@
 #
 # To install your odoo development environement type:
 #
-# wget -O- https://raw.githubusercontent.com/odoo/odoo/9.0/odoo.py | python
+# wget -O- https://raw.githubusercontent.com/odoo/odoo/10.0/setup/setup_dev.py | python
 #
 # The setup_* subcommands used to boostrap odoo are defined here inline and may
 # only depends on the python 2.7 stdlib

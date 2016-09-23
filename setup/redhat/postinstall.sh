@@ -52,7 +52,7 @@ After=network.target
 Type=simple
 User=odoo
 Group=odoo
-ExecStart=/usr/bin/odoo.py --config=/etc/odoo/openerp-server.conf
+ExecStart=/usr/bin/odoo --config=/etc/odoo/odoo.conf
 
 [Install]
 WantedBy=multi-user.target

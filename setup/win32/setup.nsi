@@ -233,7 +233,7 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
         WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
-    nsExec::Exec '"$INSTDIR\server\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\server\openerp-server.log" -s'
+    nsExec::Exec '"$INSTDIR\server\odoo-bin.exe" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
     nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
 
     nsExec::Exec "net stop ${SERVICENAME}"

@@ -57,7 +57,7 @@ def py2exe_options():
         import py2exe
         return {
             'console': [
-                {'script': 'openerp-server', 'icon_resources': [
+                {'script': 'odoo-bin', 'icon_resources': [
                     (1, join('setup', 'win32', 'static', 'pixmaps', 'openerp-icon.ico'))
                 ]},
             ],
@@ -128,7 +128,7 @@ setup(
     author_email=author_email,
     classifiers=filter(None, classifiers.split('\n')),
     license=license,
-    scripts=['openerp-server'],
+    scripts=['setup/odoo'],
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'odoo'},
     include_package_data=True,
