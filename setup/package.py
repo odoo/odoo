@@ -217,7 +217,7 @@ class KVMWinTestExe(KVM):
         self.rsync('"%s" %s@127.0.0.1:' % (setuppath, self.login))
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
-        self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe -d mycompany -i base --stop-after-init' % setupversion)
+        self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/odoo-bin.exe -d mycompany -i base --stop-after-init' % setupversion)
         self.ssh('net start %s' % nt_service_name)
         _rpc_count_modules(port=18069)
 
@@ -307,8 +307,8 @@ def test_tgz(o):
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
         wheezy.system('mkdir /var/lib/odoo')
         wheezy.system('chown odoo:odoo /var/lib/odoo')
-        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany -i base --stop-after-init"')
-        wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany &"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany -i base --stop-after-init"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany &"')
 
 def test_deb(o):
     with docker('odoo-%s-debian-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
@@ -317,8 +317,8 @@ def test_deb(o):
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
         wheezy.system('/usr/bin/dpkg -i /opt/release/%s' % wheezy.release)
         wheezy.system('/usr/bin/apt-get install -f -y')
-        wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany &"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_rpm(o):
     with docker('odoo-%s-centos-nightly-tests' % version, o.build_dir, o.pub) as centos7:
@@ -329,8 +329,8 @@ def test_rpm(o):
         centos7.system('su postgres -c "createdb mycompany"')
         # Odoo install
         centos7.system('yum install -d 0 -e 0 /opt/release/%s -y' % centos7.release)
-        centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        centos7.system('su odoo -s /bin/bash -c "openerp-server -c /etc/odoo/openerp-server.conf -d mycompany &"')
+        centos7.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
+        centos7.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_exe(o):
     KVMWinTestExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
