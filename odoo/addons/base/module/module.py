@@ -261,6 +261,7 @@ class Module(models.Model):
         ('LGPL-3', 'LGPL Version 3'),
         ('Other OSI approved licence', 'Other OSI Approved Licence'),
         ('OEEL-1', 'Odoo Enterprise Edition License v1.0'),
+        ('OPL-1', 'Odoo Proprietary License v1.0'),
         ('Other proprietary', 'Other Proprietary')
     ], string='License', default='LGPL-3', readonly=True)
     menus_by_module = fields.Text(string='Menus', compute='_get_views', store=True)
