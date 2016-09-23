@@ -264,11 +264,6 @@ class StockMove(models.Model):
             raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
 
         propagated_changes_dict = {}
-        #propagation of quantity change
-        if vals.get('product_uom_qty'):
-            propagated_changes_dict['product_uom_qty'] = vals['product_uom_qty']
-        if vals.get('product_uom_id'):
-            propagated_changes_dict['product_uom_id'] = vals['product_uom_id']
         #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
