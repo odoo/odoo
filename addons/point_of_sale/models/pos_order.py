@@ -790,13 +790,13 @@ class ReportSaleDetails(models.AbstractModel):
 
 
     @api.model
-    def get_sale_details(self, date_start=False, date_stop=False, company=False):
+    def get_sale_details(self, date_start=False, date_stop=False, configs=False):
         """ Serialise the orders of the day information
 
-        params: date_start, date_stop string representing the day of order
+        params: date_start, date_stop string representing the datetime of order
         """
-        if not company:
-            company = self.env.user.company_id
+        if not configs:
+            configs = self.env['pos.config'].search([])
 
         today = fields.Datetime.from_string(fields.Date.context_today(self))
         if date_start:
@@ -807,7 +807,7 @@ class ReportSaleDetails(models.AbstractModel):
 
         if date_stop:
             # set time to 23:59:59
-            date_stop = fields.Datetime.from_string(date_stop) + timedelta(days=1, seconds=-1)
+            date_stop = fields.Datetime.from_string(date_stop)
         else:
             # stop by default today 23:59:59
             date_stop = today + timedelta(days=1, seconds=-1)
@@ -817,9 +817,13 @@ class ReportSaleDetails(models.AbstractModel):
 
         date_start = fields.Datetime.to_string(date_start)
         date_stop = fields.Datetime.to_string(date_stop)
-        orders = self.env['pos.order'].search([('date_order', '>=', date_start), ('date_order', '<=', date_stop),
-                              ('state', 'in', ['paid','invoiced','done']),
-                              ('company_id', '=', company.id)])
+
+        orders = self.env['pos.order'].search([
+            ('date_order', '>=', date_start),
+            ('date_order', '<=', date_stop),
+            ('state', 'in', ['paid','invoiced','done']),
+            ('config_id', 'in', configs.ids)])
+
         user_currency = self.env.user.company_id.currency_id
 
         total = 0.0
@@ -876,7 +880,7 @@ class ReportSaleDetails(models.AbstractModel):
         }
 
     @api.multi
-    def render_html(self, data=None):
+    def render_html(self, docids, data=None):
         company = request.env.user.company_id
         date_start = self.env.context.get('date_start', False)
         date_stop = self.env.context.get('date_stop', False)
