@@ -45,3 +45,48 @@ body.o_connected_user {
         }
     }
 }
+
+// RESPONSIVE TABLE (should be implemented in a generic way according to the theme...)
+.responsive_table {
+    min-width: 300px;
+
+    tr > td {
+        border-top: 0px !important;
+    }
+
+    tr {
+        border-bottom: 2px solid #ddd;
+    }
+  
+    th {
+        display: none;
+    }
+  
+    td {
+        display: block;
+
+        &:first-child {
+            padding-top: .5em;
+        }
+        &:last-child {
+            padding-bottom: .5em;
+        }
+    }
+  
+    th, td {
+        text-align: left;
+    
+        @media (min-width: @screen-xs-min) {
+            display: table-cell;
+            padding: .25em .5em;
+      
+            &:first-child {
+                padding-left: 0;
+            }
+              
+            &:last-child {
+                padding-right: 0;
+            }
+        }
+    }  
+}
