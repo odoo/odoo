@@ -794,18 +794,14 @@ class WebsiteSale(http.Controller):
                 'partner_country_id': order.partner_id.country_id.id,
                 'reference': Transaction.get_next_reference(order.name),
                 'sale_order_id': order.id,
-<<<<<<< HEAD
             }
+            #transaction state should be in 'pending' state in case of prosessing COD(Collect on delivery) 
+            if tx.acquirer_id.is_cod:
+                tx.state = 'pending'
             if token and request.env['payment.token'].sudo().browse(int(token)).partner_id == order.partner_id:
                 tx_values['payment_token_id'] = token
 
             tx = Transaction.create(tx_values)
-=======
-            })
-            #transaction state should be in 'pending' state in case of prosessing COD(Collect on delivery) 
-            if tx.acquirer_id.is_cod:
-                tx.state = 'pending'
->>>>>>> 34c5941... [IMP]website_sale: handled the payment transaction flow for COD type payment.
             request.session['sale_transaction_id'] = tx.id
 
         # update quotation
