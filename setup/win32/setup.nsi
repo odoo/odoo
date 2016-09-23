@@ -116,7 +116,7 @@ Var HWNDPostgreSQLPassword
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
-!define POSTGRESQL_EXE_FILENAME "postgresql-9.3.5-1-windows.exe"
+!define POSTGRESQL_EXE_FILENAME "postgresql-9.5.4-2-windows.exe"
 !define POSTGRESQL_EXE "${STATIC_PATH}\${POSTGRESQL_EXE_FILENAME}"
 
 !define MUI_ABORTWARNING
