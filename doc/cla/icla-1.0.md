@@ -36,12 +36,11 @@ You accept and agree to the following terms and conditions for Your present and 
 
 
 ```
-Full Name: _________________________________________________
-Email: _____________________________________________________
-Telephone: _________________________________________________
-Mailing Address: ___________________________________________
-                 ___________________________________________
-Country: ___________________________________________________
-Signature: _________________________________________________
-Date: ______________________________________________________
+Full Name: Basilis Fotopoulos
+Email: bfotop@tax-solutions.gr
+Telephone: +306932088023
+Mailing Address: Kyparissias 30, Athens
+Country: Greece
+Signature: bfotop
+Date: 23/09/2016
 ```
