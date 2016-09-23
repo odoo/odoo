@@ -771,7 +771,6 @@
   // Source: https://code.launchpad.net/~openerp-dev/openerp-web/7.0-opw-587404-msh/+merge/159790
   function focus(editor) {
     setTimeout(function() {
-      setTimeout(function() {
       if (sourceMode(editor)) editor.$area.focus();
       else
       if(!(sourceMode(editor) || editor.$frame[0].contentWindow)) return;
