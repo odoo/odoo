@@ -261,6 +261,11 @@ class Website(models.Model):
     def sale_product_domain(self):
         return [("sale_ok", "=", True)]
 
+    @api.model
+    def sale_get_payment_term(self, partner):
+        DEFAULT_PAYMENT_TERM = 'account.account_payment_term_immediate'
+        return self.env.ref(DEFAULT_PAYMENT_TERM, False).id or partner.property_payment_term_id.id
+
     @api.multi
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
         """ Return the current sale order after mofications specified by params.
@@ -301,7 +306,7 @@ class Website(models.Model):
             sale_order = self.env['sale.order'].sudo().create({
                 'partner_id': partner.id,
                 'pricelist_id': pricelist_id,
-                'payment_term_id': partner.property_payment_term_id.id,
+                'payment_term_id': self.sale_get_payment_term(partner),
                 'team_id': self.salesteam_id.id,
                 'partner_invoice_id': addr['invoice'],
                 'partner_shipping_id': addr['delivery'],
@@ -342,6 +347,7 @@ class Website(models.Model):
                 sale_order.write({'partner_id': partner.id})
                 sale_order.onchange_partner_id()
                 sale_order.onchange_partner_shipping_id() # fiscal position
+                sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
 
                 # check the pricelist : update it if the pricelist is not the 'forced' one
                 values = {}
