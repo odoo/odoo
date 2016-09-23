@@ -96,11 +96,11 @@
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button type="action"
+                    <button type="object"
                         class="oe_stat_button"
                         id="invoice_button"
                         icon="fa-pencil-square-o"
-                        name="%(account.action_invoice_refund_out_tree)d"
+                        name="open_partner_history"
                         attrs="{'invisible': [('customer', '=', False)]}"
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
