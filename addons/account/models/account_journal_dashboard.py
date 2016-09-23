@@ -188,7 +188,7 @@ class account_journal(models.Model):
                     sum_draft += cur.compute(result.get('amount_total'), currency)
                 elif result.get('state') == 'open':
                     number_waiting += 1
-                    sum_waiting += cur.compute(result.get('residual_signed'), currency)
+                    sum_waiting += cur.compute(result.get('residual_signed'),currency)
             sum_late = 0.0
             number_late = 0
             for result in late_query_results:
