@@ -68,9 +68,12 @@
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
-        <record id="action_report_pos_details" model="ir.actions.client">
+
+        <record id="action_report_pos_details" model="ir.actions.act_window">
             <field name="name">Sale Details</field>
-            <field name="tag">report_pos_details</field>
+            <field name="res_model">pos.details.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
 
         <menuitem id="menu_report_pos_order_all" name="Orders" action="action_report_pos_order_all" parent="menu_point_rep" sequence="3"/>
