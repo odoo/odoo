@@ -218,7 +218,7 @@ class KVMWinTestExe(KVM):
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
         self.ssh('/cygdrive/c/"Program Files"/"Odoo %s"/server/openerp-server.exe -d mycompany -i base --stop-after-init' % setupversion)
-        self.ssh('net start odoo-server-%s' % version)
+        self.ssh('net start %s' % nt_service_name)
         _rpc_count_modules(port=18069)
 
 #----------------------------------------------------------
