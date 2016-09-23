@@ -70,12 +70,17 @@
     margin: 10px;
     padding: 4px;
 }
-html[lang] > body.editor_enable{
-    [data-oe-translation-state] {
-        background: rgba(255, 255, 90, 0.5) !important;
+html[lang] > body.editor_enable [data-oe-translation-state] {
+    @o-color-content-to-translate: rgb(255, 255, 90);
+    @o-color-translated-content: rgb(120, 215, 110);
+
+    background: fade(@o-color-content-to-translate, 50%)!important;
+
+    &[data-oe-translation-state="translated"] {
+        background: fade(@o-color-translated-content, 50%)!important;
     }
-    [data-oe-translation-state="translated"] {
-        background: rgba(120, 215, 110, 0.5) !important;
+    &.o_dirty {
+        background: fade(@o-color-translated-content, 25%)!important;
     }
 }
 
