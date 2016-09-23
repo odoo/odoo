@@ -375,12 +375,6 @@ class ProductTemplate(models.Model):
             variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids if line.value_ids and line.value_ids[0].attribute_id.create_variant))
             variant_matrix = map(lambda record_list: reduce(lambda x, y: x+y, record_list, self.env['product.attribute.value']), variant_matrix)
             to_create_variants = filter(lambda rec_set: set(rec_set.ids) not in existing_variants, variant_matrix)
-            
-            # archive dummy variant
-            if len(existing_variants) > 0:
-                for variant in tmpl_id.product_variant_ids:
-                    if len(variant.attribute_value_ids.ids) == 0:
-                        variant.write({'active': False})
 
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
