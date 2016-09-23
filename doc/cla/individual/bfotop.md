@@ -8,4 +8,4 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Basilis Fotopoulos bfotop@users.noreply.github.com https://github.com/bfotop
+Basilis Fotopoulos bfotop@tax-solutions.gr https://github.com/bfotop
