@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 08:21+0000\n"
-"PO-Revision-Date: 2016-08-24 08:55+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:57+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -1701,7 +1701,14 @@ msgid "Automatic formatting"
 msgstr "Automatické formátovanie"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:326
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Automatic reconciliation"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:469
 #, python-format
 msgid "Automatically reconciled items"
 msgstr "Automaticky vyrovnané položky"
@@ -3294,12 +3301,6 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "Rozdiel medzi vypočítaným konečným zostatkom a špecifikovaným konečným zostatkom."
-
-#. module: account
-#: model:account.account.type,name:account.data_account_type_direct_costs
-#: model:ir.ui.view,arch_db:account.view_account_form
-msgid "Direct Costs"
-msgstr "Priame náklady"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5279,10 +5280,17 @@ msgid "Less Payable Accounts"
 msgstr "Menej splatných účtov"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:138
+#: code:addons/account/models/account_invoice.py:145
 #, python-format
 msgid "Less Payment"
 msgstr "Menej platby"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Let odoo try to reconcile entries for the user"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6708,15 +6716,7 @@ msgid "Proforma"
 msgstr "Proforma"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:554
-#, python-format
-msgid ""
-"Programmation error : domain_maker_move_line_amount requires comparator '=' "
-"or '<'"
-msgstr "Chyba programovania : domain_maker_move_line_amount vyžaduje porovnávač '=' alebo '<'"
-
-#. module: account
-#: code:addons/account/models/account_payment.py:117
+#: code:addons/account/models/account_payment.py:123
 #, python-format
 msgid ""
 "Programmation error: the expected model for this action is "
@@ -6724,7 +6724,7 @@ msgid ""
 msgstr "Chyba programovania: očakávaný model pre túto akciu je \"account.invoice\". Poskytnutý je '%d'."
 
 #. module: account
-#: code:addons/account/models/account_payment.py:115
+#: code:addons/account/models/account_payment.py:121
 #, python-format
 msgid ""
 "Programmation error: wizard action executed without active_model or "
@@ -7226,11 +7226,6 @@ msgstr "Predaje"
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_rate
 msgid "Sales Tax(%)"
 msgstr "Dane z predaja(%)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
-msgid "Sales Team"
-msgstr "Predajný tým"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_sale_tax_rate
@@ -7965,7 +7960,7 @@ msgid ""
 msgstr "Množstvo vyjadrené v súvisiacom účte meny, pokiaľ nie je rovnaká ako mena spoločnosti."
 
 #. module: account
-#: code:addons/account/models/account_move.py:387
+#: code:addons/account/models/account_move.py:432
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
@@ -7973,7 +7968,7 @@ msgid ""
 msgstr "Suma vyjadrená v sekundárnej mene musí byť kladná ak je účet debetný, a záporná keď je účet kreditovaný."
 
 #. module: account
-#: code:addons/account/models/account.py:524
+#: code:addons/account/models/account.py:554
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -7981,17 +7976,11 @@ msgid ""
 msgstr "Oblasť použitia daní v skupine musí byť buď rovnaká ako skupina alebo \"Žiadny\"."
 
 #. module: account
-#: code:addons/account/models/account.py:268
+#: code:addons/account/models/account.py:278
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
 msgstr "Bankový účet bankovej účtovnej knihy musí patriť rovnakej spoločnosti (%s)."
-
-#. module: account
-#: code:addons/account/models/account_bank_statement.py:786
-#, python-format
-msgid "The bank statement line was already reconciled."
-msgstr "Riadok bankového výpisu už bol zosúladený."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
@@ -9241,13 +9230,7 @@ msgid ""
 msgstr "Nemôžete zmeniť majiteľa spoločnosti účtu ktorý už obsahuje položky účtovnej knihy."
 
 #. module: account
-#: code:addons/account/models/account_move.py:997
-#, python-format
-msgid "You cannot change the tax, you should remove and recreate lines."
-msgstr "Nemôžete zmeniť daň, musíte odstrániť a nanovo vytvoriť riadky."
-
-#. module: account
-#: code:addons/account/models/account_move.py:379
+#: code:addons/account/models/account_move.py:424
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -9255,7 +9238,7 @@ msgid ""
 msgstr "Nemôžete vytvoriť položky účtovnej knihy s druhotnou menou bez vyplnenia polí 'mena' a 'mena sumy'."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:406
+#: code:addons/account/models/account_invoice.py:438
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -9264,7 +9247,7 @@ msgid ""
 msgstr "Nemôžete zmazať faktúru o tom ako bola potvrdená (a dostala číslo). Môžete ju nastaviť naspäť na 'Koncept' stav a upraviť jej obsah, potom ju opäť potvrdiť."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:404
+#: code:addons/account/models/account_invoice.py:436
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
