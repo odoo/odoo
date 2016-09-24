@@ -3,7 +3,7 @@
 # * mail
 # 
 # Translators:
-# Alexey Bilkevich <mmmbrsk@gmail.com>, 2015
+# Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2015
 # Alex Puchkov <ap@alteco.co>, 2016
 # Gennady Marchenko <gennadym@gmail.com>, 2016
 # Paul <korotkov.paul@gmail.com>, 2015
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-22 13:00+0000\n"
-"PO-Revision-Date: 2016-07-23 09:04+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -251,7 +251,7 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Раскрыть</span> <span class=\"o_stat_text\">Контекст</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -666,7 +666,7 @@ msgstr "Тип канала"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
 msgid "Channel message ids"
-msgstr ""
+msgstr "Сообщение, поступающее в канал или передаваемое по каналу ids"
 
 #. module: mail
 #. openerp-web
@@ -836,7 +836,7 @@ msgstr "Содержание"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_fold_state
 msgid "Conversation Fold State"
-msgstr ""
+msgstr "Переговоры Fold State"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
@@ -852,10 +852,15 @@ msgstr "Беседы"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:250
+#: code:addons/mail/static/src/js/client_action.js:300
 #, python-format
 msgid "Create %s"
 msgstr "Создать %s"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
+msgid "Create Date"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -876,7 +881,6 @@ msgstr "Создано"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_alias_create_date
-#: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_mail_create_date

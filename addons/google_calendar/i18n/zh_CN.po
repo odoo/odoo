@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-06-22 12:58+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:28+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,6 +189,15 @@ msgid "Google ID should be unique!"
 msgstr "Google ID 必须是唯一的!"
 
 #. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:718
+#, python-format
+msgid ""
+"Google is lost... the next synchro will be a full synchro. \n"
+"\n"
+" %s"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
 msgid "ID"
 msgstr "ID"
@@ -332,6 +341,12 @@ msgstr "用户"
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr "您将被重定向到Google来授权Odoo访问你的日历!"
+
+#. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:298
+#, python-format
+msgid "Your token is invalid or has been revoked !"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2016-09-23 09:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -421,14 +421,14 @@ msgstr "팔로워"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_channel_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "팔로워"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_partner_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "팔로워(파트너)"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
@@ -616,13 +616,6 @@ msgid "Messages"
 msgstr "메시지"
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "메시지 및 대화 기록"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
 msgid "Model"
 msgstr "모델"
@@ -732,8 +725,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "메일 게이트웨이를 이용해서 문서에 메시지를 게시하는 보안정책.\n- 모두 : 모두다 메시지 게시 가능\n- 파트너 : 인증된 파트너만 가능\n- 팔로워 : 관련 문서의 팔로워만 가능\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -968,7 +961,7 @@ msgstr "읽지 않은 메시지"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread_counter
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix

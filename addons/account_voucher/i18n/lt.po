@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2016-02-11 11:35+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -116,6 +116,12 @@ msgid "Company"
 msgstr "Įmonė"
 
 #. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
 msgid "Created by"
@@ -196,12 +202,12 @@ msgstr "Prenumeratoriai"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Prenumeratoriai (kanalų)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Prenumeratoriai (partneriai)"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
@@ -229,7 +235,7 @@ msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Jeigu pažymėtas - naujos  žinutės reikalauja Jūsų dėmesio."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
@@ -246,7 +252,7 @@ msgstr "Vidinės pastabos"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Yra prenumeratorius"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -294,11 +300,6 @@ msgstr "Paskutinį kartą atnaujinta"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_message_ids
 msgid "Messages"
 msgstr "Pranešimai"
-
-#. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_message_ids
-msgid "Messages and communication history"
-msgstr "Pranešimų ir komunikacijos istorija"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration

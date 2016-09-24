@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-02-07 13:41+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 09:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,11 @@ msgstr "<b>Prosím vyberte typ dokumentu pred nastavením podmienok.</b>"
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
 msgstr "Pravidlo akcie"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+msgid "Action Rule Line Test"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -119,11 +124,13 @@ msgstr "Dátum vytvorenia"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
 msgid "Created by"
 msgstr "Vytvoril"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
 msgstr "Vytvorené"
 
@@ -158,6 +165,7 @@ msgstr "Typ meškania"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
 msgid "Display Name"
 msgstr "Zobraziť meno"
 
@@ -202,6 +210,7 @@ msgstr "Hodiny"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
 msgid "ID"
 msgstr "ID"
 
@@ -247,6 +256,7 @@ msgstr "Posledná akcia"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
 msgstr "Posledná modifikácia"
 
@@ -257,15 +267,22 @@ msgstr "Naposledy spustené"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
 msgid "Last Updated by"
 msgstr "Naposledy upravoval"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
+msgid "Lead id"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -281,6 +298,11 @@ msgstr "Model"
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Months"
 msgstr "Mesiace"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+msgid "Name"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -416,6 +438,11 @@ msgid ""
 msgstr "Používajte automatické akcie, ktoré automaticky spustia akcie pre \nrôzne obrazovky. Príklad: Iniciatíva vytvorená konkrétnym užívateľom môže \nbyť automaticky nastavené na špecifický predajný tím, alebo \npríležitosť ktorá má stále status nevybavené po 14 dňoch by mohla \nspustiť automatický pripomienkový e-mail."
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
+msgid "User id"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
@@ -445,3 +472,8 @@ msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
 msgstr "Môžete použiť tiež filtre namiesto vyberania záznamov. Aby ste mohli vytvoriť nový filter:"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "unknown"
+msgstr ""

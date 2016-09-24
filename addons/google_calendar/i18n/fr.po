@@ -6,18 +6,18 @@
 # Clo <clo@odoo.com>, 2015
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2015
 # Lucas Deliege <lud@odoo.com>, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015-2016
 # Maxime Solinas <msolinas@t2o.ca>, 2015
 # Miguel Vidali <mvidali129@gmail.com>, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Symons Xavier <xsy@openerp.com>, 2015
+# Xavier Symons <xsy@openerp.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-02-23 07:02+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:28+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,6 +189,15 @@ msgid "Google ID should be unique!"
 msgstr "L'identifiant Google devrait être unique!"
 
 #. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:718
+#, python-format
+msgid ""
+"Google is lost... the next synchro will be a full synchro. \n"
+"\n"
+" %s"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
 msgid "ID"
 msgstr "ID"
@@ -332,6 +341,12 @@ msgstr "Utilisateurs"
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr "Vous allez être redirigé sur Google pour autoriser l'accès au calendrier."
+
+#. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:298
+#, python-format
+msgid "Your token is invalid or has been revoked !"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings
