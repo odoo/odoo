@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-30 12:39+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2016-09-23 13:52+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -1090,12 +1090,6 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_ids
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
@@ -1636,6 +1630,24 @@ msgstr "Minél alacsonyabb annál jobb"
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
 msgstr "Maximum, ahányszor ezt a kitűzőt havonta, személyenként ki lehet adni."
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:150
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not found"
+msgstr "A %s definícióhoz beállított modell nem megfelelő, kérem ellenőrizze.\n\n%s nem található"
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:147
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not stored"
+msgstr "A %s definícióhoz beállított modell nem megfelelő, kérem ellenőrizze.\n\n%s nem található"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
