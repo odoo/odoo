@@ -3,7 +3,7 @@
 set -e
 
 ODOO_CONFIGURATION_DIR=/etc/odoo
-ODOO_CONFIGURATION_FILE=$ODOO_CONFIGURATION_DIR/openerp-server.conf
+ODOO_CONFIGURATION_FILE=$ODOO_CONFIGURATION_DIR/odoo.conf
 ODOO_DATA_DIR=/var/lib/odoo
 ODOO_GROUP="odoo"
 ODOO_LOG_DIR=/var/log/odoo
@@ -52,7 +52,7 @@ After=network.target
 Type=simple
 User=odoo
 Group=odoo
-ExecStart=/usr/bin/odoo.py --config=/etc/odoo/openerp-server.conf
+ExecStart=/usr/bin/odoo.py --config=/etc/odoo/odoo.conf
 
 [Install]
 WantedBy=multi-user.target
