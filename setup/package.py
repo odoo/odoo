@@ -291,11 +291,11 @@ def _prepare_testing(o):
         subprocess.call(["docker", "build", "-t", "odoo-%s-debian-nightly-tests" % version, "."],
                         cwd=os.path.join(o.build_dir, "docker_debian"))
     if not o.no_rpm:
-        subprocess.call(["mkdir", "docker_centos"], cwd=o.build_dir)
-        subprocess.call(["cp", "package.dfcentos", os.path.join(o.build_dir, "docker_centos", "Dockerfile")],
+        subprocess.call(["mkdir", "docker_fedora"], cwd=o.build_dir)
+        subprocess.call(["cp", "package.dffedora", os.path.join(o.build_dir, "docker_fedora", "Dockerfile")],
                         cwd=os.path.join(o.odoo_dir, "setup"))
-        subprocess.call(["docker", "build", "-t", "odoo-%s-centos-nightly-tests" % version, "."],
-                        cwd=os.path.join(o.build_dir, "docker_centos"))
+        subprocess.call(["docker", "build", "-t", "odoo-%s-fedora-nightly-tests" % version, "."],
+                        cwd=os.path.join(o.build_dir, "docker_fedora"))
 
 def test_tgz(o):
     with docker('odoo-%s-src-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
@@ -321,16 +321,16 @@ def test_deb(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_rpm(o):
-    with docker('odoo-%s-centos-nightly-tests' % version, o.build_dir, o.pub) as centos7:
-        centos7.release = '*.noarch.rpm'
+    with docker('odoo-%s-fedora-nightly-tests' % version, o.build_dir, o.pub) as fedora24:
+        fedora24.release = '*.noarch.rpm'
         # Start postgresql
-        centos7.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
-        centos7.system('sleep 5')
-        centos7.system('su postgres -c "createdb mycompany"')
+        fedora24.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
+        fedora24.system('sleep 5')
+        fedora24.system('su postgres -c "createdb mycompany"')
         # Odoo install
-        centos7.system('yum install -d 0 -e 0 /opt/release/%s -y' % centos7.release)
-        centos7.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        centos7.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany &"')
+        fedora24.system('dnf install -d 0 -e 0 /opt/release/%s -y' % fedora24.release)
+        fedora24.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
+        fedora24.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_exe(o):
     KVMWinTestExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
