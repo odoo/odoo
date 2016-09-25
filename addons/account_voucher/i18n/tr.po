@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Murat Kaplan <muratk@projetgrup.com>, 2015
+# Murat Kaplan <muratk@projetgrup.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-12-11 13:24+0000\n"
+"PO-Revision-Date: 2016-09-24 08:52+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr " * Bir kullanıcı yeni bir ve uzlaşılmamış bir Fiş kodlarken 'Tasl
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr "Çek Satır Sayısı"
+msgstr "Ödeme Satır Sayısı"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -205,7 +205,7 @@ msgstr "Makbuz İptal et"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Cancel Voucher"
-msgstr "Fiş İptal et"
+msgstr "Makbuzu İptal et"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
@@ -216,7 +216,7 @@ msgstr "İptal Edildi"
 #: code:addons/account_voucher/account_voucher.py:959
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr "Hali hazırda açık ya da ödenmiş olan fiş(ler) silinemiyor."
+msgstr "Hali hazırda açık ya da ödenmiş olan makbuz(lar) silinemiyor."
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -237,7 +237,7 @@ msgstr "Firma"
 msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
-msgstr "Fişte belirtilen tutar ve fiş satırlarının toplamı arasındaki fark olarak hesaplanmıştır."
+msgstr "Makbuzda belirtilen tutar ve makbuz satırlarının toplamı arasındaki fark olarak hesaplanmıştır."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1057
@@ -369,7 +369,7 @@ msgstr "Taslak"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Draft Vouchers"
-msgstr "Taslak Fişler"
+msgstr "Taslak Makbuzlar"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
@@ -414,7 +414,7 @@ msgstr "Genişletilmiş Filtreler..."
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr "Fişin çoklu para birimli olup olmadığını belirten yalnızca iç amaçlı alanlar"
+msgstr "Makbuzun çoklu para birimli olup olmadığını belirten yalnızca iç amaçlı alanlar"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -568,7 +568,7 @@ msgstr "Mesaj ve iletişim geçmişi"
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr "Çoklu Para Birimi Fişi"
+msgstr "Çoklu Para Birimi Makbuzu"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -769,7 +769,7 @@ msgstr "İşlendi"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Posted Vouchers"
-msgstr "İşlenmiş Fişler"
+msgstr "İşlenmiş Makbuzlar"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
@@ -786,7 +786,7 @@ msgstr "Proforma"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Pro-forma Vouchers"
-msgstr "Pro-forma Fişleri"
+msgstr "Pro-forma Makbuzları"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
@@ -807,7 +807,7 @@ msgstr "Satınalma Makbuzları"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr "Satınalma Fişi"
+msgstr "Satınalma Makbuzları"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
@@ -882,7 +882,7 @@ msgstr "Satış Temsilcisi"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Search Vouchers"
-msgstr "Fiş Arama"
+msgstr "Makbuz Arama"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -944,7 +944,7 @@ msgstr "Tedarikçi Ödemeleri"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Supplier Voucher"
-msgstr "Tedarikçi Fişi"
+msgstr "Tedarikçi Makbuzu"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -961,7 +961,7 @@ msgstr "Vergi Tutarı"
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr "Fiş tamamen ödenmiştir."
+msgstr "Makbuz tamamen ödenmiştir."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1202
@@ -974,7 +974,7 @@ msgstr "Ödemek istediğiniz fatura artık geçerli değil."
 msgid ""
 "The specific rate that will be used, in this voucher, between the selected "
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
-msgstr "Bu fişte kullanılacak özel oran, seçilen para birimi (Ödeme Kuru Alanı) ile fiş para birimi arasındaki"
+msgstr "Bu makbuzda kullanılacak özel oran, seçilen para birimi (Ödeme Kuru Alanı) ile makbuz para birimi arasındaki oran."
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
@@ -1072,7 +1072,7 @@ msgstr "Ödeme Doğrula"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Validated Vouchers"
-msgstr "Doğrulanmış Fişler"
+msgstr "Doğrulanmış Makbuzlar"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1085,51 +1085,51 @@ msgstr "Doğrulanmış Fişler"
 #: model:res.request.link,name:account_voucher.req_link_voucher
 #, python-format
 msgid "Voucher"
-msgstr "Fiş"
+msgstr "Makbuz"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_tree
 #: view:account.voucher:account_voucher.view_voucher_tree_nocreate
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr "Fiş Girişleri"
+msgstr "Makbuz Girişleri"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Entry"
-msgstr "Fiş Girişi"
+msgstr "Makbuz Girişi"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Items"
-msgstr "Fiş Öğeleri"
+msgstr "Makbuz Öğeleri"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
 #: view:account.voucher.line:account_voucher.view_voucher_line_form
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr "Fiş Satırları"
+msgstr "Makbuz Satırları"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Voucher Payment"
-msgstr "Fiş Ödemesi"
+msgstr "Makbuz Ödemesi"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr "Fiş İstatistikleri"
+msgstr "Makbuz İstatistikleri"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr "Fiş Durumu"
+msgstr "Makbuz Durumu"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Fiş Girişleri"
+msgstr "Makbuz Girişleri"
 
 #. module: account_voucher
 #: field:account.voucher,website_message_ids:0
@@ -1156,7 +1156,7 @@ msgstr "Borç Silme Analitik Hesap"
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "Wrong voucher line"
-msgstr "Yanlış fiş satırı"
+msgstr "Yanlış makbuz satırı"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
