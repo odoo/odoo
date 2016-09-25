@@ -317,8 +317,8 @@ def test_deb(o):
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
         wheezy.system('/usr/bin/dpkg -i /opt/release/%s' % wheezy.release)
         wheezy.system('/usr/bin/apt-get install -f -y')
-        wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany &"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany -i base --stop-after-init"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany &"')
 
 def test_rpm(o):
     with docker('odoo-%s-fedora-nightly-tests' % version, o.build_dir, o.pub) as fedora24:
@@ -329,8 +329,8 @@ def test_rpm(o):
         fedora24.system('su postgres -c "createdb mycompany"')
         # Odoo install
         fedora24.system('dnf install -d 0 -e 0 /opt/release/%s -y' % fedora24.release)
-        fedora24.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany -i base --stop-after-init"')
-        fedora24.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/openerp-server.conf -d mycompany &"')
+        fedora24.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany -i base --stop-after-init"')
+        fedora24.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany &"')
 
 def test_exe(o):
     KVMWinTestExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
