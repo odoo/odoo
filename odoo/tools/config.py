@@ -98,7 +98,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Common options")
         group.add_option("-c", "--config", dest="config", help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", default=False,
-                          help="save configuration to ~/.openerp_serverrc")
+                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
         group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update",
                           help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
@@ -352,7 +352,15 @@ class configmanager(object):
         if os.name == 'nt':
             rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
         else:
-            rcfilepath = os.path.expanduser('~/.openerp_serverrc')
+            rcfilepath = os.path.expanduser('~/.odoorc')
+            old_rcfilepath = os.path.expanduser('~/.openerp_serverrc')
+
+            die(os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath),
+                "Found '.odoorc' and '.openerp_serverrc' in your path. Please keep only one of "\
+                "them, preferrably '.odoorc'.")
+
+            if not os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath):
+                rcfilepath = old_rcfilepath
 
         self.rcfile = os.path.abspath(
             self.config_file or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)

@@ -96,7 +96,7 @@ Running the server
 .. option:: -s, --save
 
     saves the server configuration to the current configuration file
-    (:file:`{$HOME}/.openerp_serverrc` by default, and can be overridden using
+    (:file:`{$HOME}/.odoorc` by default, and can be overridden using
     :option:`-c`)
 
 .. option:: --proxy-mode
@@ -343,7 +343,7 @@ Some conversions don't match the pattern:
 * :option:`--i18n-import` and :option:`--i18n-export` aren't available at all
   from configuration files
 
-The default configuration file is :file:`{$HOME}/.openerp_serverrc` which
+The default configuration file is :file:`{$HOME}/.odoorc` which
 can be overridden using :option:`--config <odoo.py -c>`. Specifying
 :option:`--save <odoo.py -s>` will save the current configuration state back
 to that file.
