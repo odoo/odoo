@@ -196,7 +196,7 @@ class KVM(object):
 class KVMWinBuildExe(KVM):
     def run(self):
         with open(join(self.o.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
-            f.write("VERSION=%s\n" % self.o.version_full)
+            f.write("VERSION=%s\n" % version)
         with open(join(self.o.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
             f.write("PYTHON_VERSION=%s\n" % self.o.vm_winxp_python_version.replace('.', ''))
         with open(join(self.o.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
@@ -210,8 +210,6 @@ class KVMWinBuildExe(KVM):
 
 class KVMWinTestExe(KVM):
     def run(self):
-        # Cannot use o.version_full when the version is not correctly parsed
-        # (for instance, containing *rc* or *dev*)
         setuppath = glob("%s/openerp-server-setup-*.exe" % self.o.build_dir)[0]
         setupfile = setuppath.split('/')[-1]
         setupversion = setupfile.split('openerp-server-setup-')[1].split('.exe')[0]
@@ -404,7 +402,6 @@ def options():
     op.add_option("-b", "--build-dir", default=build_dir, help="build directory (%default)", metavar="DIR")
     op.add_option("-p", "--pub", default=None, help="pub directory (%default)", metavar="DIR")
     op.add_option("", "--no-testing", action="store_true", help="don't test the builded packages")
-    op.add_option("-v", "--version", default='9.0', help="version (%default)")
 
     op.add_option("", "--no-debian", action="store_true", help="don't build the debian package")
     op.add_option("", "--no-rpm", action="store_true", help="don't build the rpm package")
@@ -421,8 +418,7 @@ def options():
     # derive other options
     o.odoo_dir = root
     o.pkg = join(o.build_dir, 'pkg')
-    o.version_full = '%s-%s' % (o.version, timestamp)
-    o.work = join(o.build_dir, 'openerp-%s' % o.version_full)
+    o.work = join(o.build_dir, 'openerp-%s' % version)
     o.work_addons = join(o.work, 'odoo', 'addons')
 
     return o
