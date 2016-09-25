@@ -236,11 +236,10 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     nsExec::Exec '"$INSTDIR\server\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\server\openerp-server.log" -s'
     nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
 
-    # TODO: don't hardcode the service name
-    nsExec::Exec "net stop odoo-server-10.0"
+    nsExec::Exec "net stop ${SERVICENAME}"
     sleep 2
 
-    nsExec::Exec "net start odoo-server-10.0"
+    nsExec::Exec "net start ${SERVICENAME}"
     sleep 2
 
 SectionEnd

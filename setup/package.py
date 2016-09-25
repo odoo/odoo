@@ -199,6 +199,8 @@ class KVMWinBuildExe(KVM):
             f.write("VERSION=%s\n" % self.o.version_full)
         with open(join(self.o.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
             f.write("PYTHON_VERSION=%s\n" % self.o.vm_winxp_python_version.replace('.', ''))
+        with open(join(self.o.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
+            f.write("SERVICENAME=%s\n" % nt_service_name)
 
         self.ssh("mkdir -p build")
         self.rsync('%s/ %s@127.0.0.1:build/server/' % (self.o.build_dir, self.login))
