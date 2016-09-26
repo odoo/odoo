@@ -14,6 +14,9 @@ class PrintPreNumberedChecks(models.TransientModel):
     def print_checks(self):
         check_number = self.next_check_number
         payments = self.env['account.payment'].browse(self.env.context['payment_ids'])
+        payments = payments.filtered(lambda r: r.payment_method_id.code == 'check_printing' and r.state != 'reconciled')
+        payments.filtered(lambda r: r.state == 'draft').post()
+        payments.write({'state': 'sent'})
         for payment in payments:
             payment.check_number = check_number
             check_number += 1
