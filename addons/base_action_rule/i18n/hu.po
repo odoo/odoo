@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_action_rule
-#
+# 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:44+0000\n"
-"PO-Revision-Date: 2016-04-12 10:04+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_action_rule
@@ -113,8 +112,8 @@ msgstr "Lezárt"
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
 msgstr ""
-"Vesszővel elválasztott mezőnevek listája melyek elindítják a változtatáskori "
-"műveletet."
+"Vesszővel elválasztott mezőnevek listája melyek elindítják a változtatáskori"
+" műveletet."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -149,16 +148,12 @@ msgstr "Késleltetés az indítás dátuma után"
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 "A emlékeztető dátumának késleltetése.\n"
-"                                    Negatív számot is írhat ha az "
-"emlékeztető kapcsolására az\n"
-"                                    emlékeztető ideje előtt van szüksége, "
-"mint emlékeztető küldése 15 perccel a találkozó előtt."
+"                                    Negatív számot is írhat ha az emlékeztető kapcsolására az\n"
+"                                    emlékeztető ideje előtt van szüksége, mint emlékeztető küldése 15 perccel a találkozó előtt."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -224,7 +219,7 @@ msgstr "Órák"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_domain
@@ -233,14 +228,15 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
-"Ha fellelhető, akkor ennek a feltételnek teljesülnie kell a műveleti szabály "
-"végrehajtása előtt."
+"Ha fellelhető, akkor ennek a feltételnek teljesülnie kell a műveleti szabály"
+" végrehajtása előtt."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr ""
 "Ha létezik, ennek a feltételnek teljesülnie kell a rekord frissítése előtt."
 
@@ -252,13 +248,13 @@ msgstr "Folyamatban"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
-"Ugyanebben a \"Keresés\" nézetben, válassza ki a \"Mentse a jelenlegi szűrőt"
-"\" menüt, írja be a nevet (Pl.: Hozza létre 01/01/2012) és adja hozzá a "
-"\"Ossza meg az összes felhasználóval\" feltételt"
+"Ugyanebben a \"Keresés\" nézetben, válassza ki a \"Mentse a jelenlegi "
+"szűrőt\" menüt, írja be a nevet (Pl.: Hozza létre 01/01/2012) és adja hozzá "
+"a \"Ossza meg az összes felhasználóval\" feltételt"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
@@ -275,7 +271,7 @@ msgstr "Utolsó művelet"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
@@ -289,7 +285,7 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve"
+msgstr "Utoljára frissítve "
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
@@ -314,7 +310,7 @@ msgstr "Percek"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model
 msgid "Model"
-msgstr "Model"
+msgstr "Modell"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -455,19 +451,14 @@ msgstr "Használja a naptárat"
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"Használjon automatikus műveleteket automatikus művelet indításához "
-"különböző \n"
-"                képernyőkön. Például: ha egy érdeklődést egy felhasználó "
-"létrehozott akkor \n"
-"                az automatikusan egy csoporthoz lesz iktatva, vagy egy "
-"lehetőség,\n"
+"Használjon automatikus műveleteket automatikus művelet indításához különböző \n"
+"                képernyőkön. Például: ha egy érdeklődést egy felhasználó létrehozott akkor \n"
+"                az automatikusan egy csoporthoz lesz iktatva, vagy egy lehetőség,\n"
 "                vagy egy lehetőség, mely függőben van 14 nap után is el fog\n"
 "                indítani egy automatikus emlékeztető e-mailt. "
 
@@ -489,12 +480,10 @@ msgstr ""
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
-"scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "Mikor kell a feltételeket állítani.\n"
-"                                  Ha elérhető, az ütemező jelöli ki. Ha "
-"üres, a frissítés létrehozásakor lesz kijelölve."
+"                                  Ha elérhető, az ütemező jelöli ki. Ha üres, a frissítés létrehozásakor lesz kijelölve."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind

@@ -1,26 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-#
+# 
 # Translators:
-# fausthuang, 2015
-# fausthuang, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liulixia <liu.lixia@elico-corp.com>, 2016
+# mrshelly <mrshelly@hotmail.com>, 2016
+# fausthuang <faust_huang@hotmail.com>, 2016
+# glovebx <ruinning@163.com>, 2016
+# 钟小华 <mackz@sina.com>, 2016
+# Talway <9010446@qq.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Gary Wei <Gary.wei@elico-corp.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # Joray <13637815@qq.com>, 2016
-# Joray <13637815@qq.com>, 2016
+# Shenglan Chen <dodolobox@gmail.com>, 2016
+# ben x <0668866@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:45+0000\n"
-"PO-Revision-Date: 2016-07-22 05:53+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-22 10:10+0000\n"
+"Last-Translator: ben x <0668866@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_delivery
@@ -29,18 +36,16 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
-"<span class=\"col-xs-6 text-right text-muted\" title=\"交货将被更新当选择了一"
-"个新的交货方式后\"> 交货:</span>"
+"<span class=\"col-xs-6 text-right text-muted\" "
+"title=\"交货将被更新当选择了一个新的交货方式后\"> 交货:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
-"一个传达给客户的、关于该产品的说明。这个描述将会拷贝到每一个销售单，交货单和"
-"客户发票/退款单。"
+msgstr "一个传达给客户的、关于该产品的说明。这个描述将会拷贝到每一个销售单，交货单和客户发票/退款单。"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -50,12 +55,12 @@ msgstr "配件"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
 msgid "Appear on the product page"
-msgstr "显示在产品页"
+msgstr "在产品网页显示"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Appear on the shopping cart"
-msgstr "加入购物车"
+msgstr "在购物车显示"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
@@ -65,7 +70,7 @@ msgstr "可用"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
 msgid "Availability Warning"
-msgstr ""
+msgstr "货品不足提示"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
@@ -101,7 +106,7 @@ msgstr "国家"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
-msgstr "交货总额"
+msgstr "交货金额"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
@@ -171,14 +176,14 @@ msgstr "到岸成本"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Last Value"
-msgstr ""
+msgstr "最近评级"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/models/sale_order.py:106
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address. "
-"Please contact us for more information."
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
 msgstr "订单上没有选择正确的送货方式及送货地址，请完善。"
 
 #. module: website_sale_delivery
@@ -209,12 +214,12 @@ msgstr "评级"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "评级数"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating value"
-msgstr ""
+msgstr "评级值"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -224,12 +229,12 @@ msgstr "销售订单"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
 msgid "Size X"
-msgstr "X 码"
+msgstr "尺寸 X"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_y
 msgid "Size Y"
-msgstr "Y 码"
+msgstr "尺寸 Y"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/models/sale_order.py:105
@@ -255,7 +260,7 @@ msgstr "推荐的产品"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
 msgid "The amount without tax."
-msgstr "不含税金的总额"
+msgstr "不含税金的总额。"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
@@ -267,12 +272,12 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Those categories are used to group similar products for e-commerce."
-msgstr "那些分类是为了将相似的产品进行分组以进行电子商务的销售."
+msgstr "那些类别是为了将相似的产品进行分组以进行电子商务的销售."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "这些分类用于为POS的类似产品分组。"
+msgstr "这些类别用于为POS的类似产品分组。"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_to_weight
@@ -307,7 +312,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
 msgid "Website meta description"
-msgstr "网站meta描述"
+msgstr "网站meta说明"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_keywords

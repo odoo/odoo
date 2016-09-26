@@ -1,22 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll
-#
+# 
 # Translators:
-# Friderici Claude, 2015
-# Martin Trigaux, 2015-2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Friderici Claude <claude@friderici.org>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Dayssam Med <m.habou@gmail.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-01-08 20:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Nancy Bolognesi <nb@microcom.ca>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_payroll
@@ -29,8 +41,7 @@ msgstr "%s (copie)"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
 "* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is "
-"'Waiting'.             \n"
+"* If the payslip is under verification, the status is 'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
@@ -43,7 +54,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr "<strong>Addresse</strong>"
+msgstr "<strong>Adresse</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -55,7 +66,7 @@ msgstr "<strong>Signature autorisée</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
-msgstr "<strong>Comptes bancaires</strong>"
+msgstr "<strong>Compte bancaire</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -83,7 +94,7 @@ msgstr "<strong>Date au</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
-msgstr "<strong>Description</strong>"
+msgstr "<strong>Désignation</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -95,7 +106,7 @@ msgstr "<strong>Courriel</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Identification No</strong>"
-msgstr "<strong>Identification no</strong>"
+msgstr "<strong>N° d'identification</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -123,8 +134,7 @@ msgstr "<strong>Total</strong>"
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
 "A contribution register is a third party involved in the salary\n"
-"                payment of the employees. It can be the social security, "
-"the\n"
+"                payment of the employees. It can be the social security, the\n"
 "                estate or anyone that collect or inject money on payslips."
 msgstr ""
 "Un registre de contribution est un tiers impliqué dans le paiement du "
@@ -444,8 +454,8 @@ msgid ""
 msgstr ""
 "Défini les règles qui doivent être appliquées à ce bulletin de paie, "
 "conformément au contrat choisi. Si vous laissez vide le champ contrat, ce "
-"champ n'est plus obligatoire et donc les règles appliquées seront toutes les "
-"règles établies sur la structure de tous les contrats valides de l'employé "
+"champ n'est plus obligatoire et donc les règles appliquées seront toutes les"
+" règles établies sur la structure de tous les contrats valides de l'employé "
 "pour la période déterminée"
 
 #. module: hr_payroll
@@ -471,7 +481,7 @@ msgstr "Détails par catégorie de règle salariale"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_details_by_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Details by Salary Rule Category"
-msgstr "Détails par catégorie de règle salariale"
+msgstr "Détails par catégorie de règle de salaire"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_display_name
@@ -498,7 +508,7 @@ msgstr "Afficher le nom"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
-msgstr "Terminé"
+msgstr "Fait"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -641,8 +651,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
-"Si coché, indique que tous les bulletins de paie générés à partir d'ici sont "
-"des bulletins de paie de remboursement."
+"Si coché, indique que tous les bulletins de paie générés à partir d'ici sont"
+" des bulletins de paie de remboursement."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
@@ -691,20 +701,20 @@ msgid ""
 msgstr ""
 "Utilisé dans le calcul du montant en pourcentage et en valeur. Une règle "
 "pour une indemnité de repas ayant un montant fixe de 1€ par jour travaillé "
-"peut avoir sa quantité définie dans une expression du type worked_days."
-"WORK100.number_of_days."
+"peut avoir sa quantité définie dans une expression du type "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
 msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of "
-"basic salary for per product can defined in expression like result = inputs."
-"SALEURO.amount * contract.wage*0.01."
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
 "Il est utilisé dans le calcul. Par exemple : une règle sur les ventes pour "
-"quelqu'un percevant une commission de 1% du salaire de base par article peut "
-"être défini par l'expression \"résultat = inputs.SALEURO.amount * contract."
-"wage * 0,01\"."
+"quelqu'un percevant une commission de 1% du salaire de base par article peut"
+" être défini par l'expression \"résultat = inputs.SALEURO.amount * "
+"contract.wage * 0,01\"."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
@@ -724,7 +734,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
@@ -741,7 +751,7 @@ msgstr "Dernière modification le"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
@@ -758,7 +768,7 @@ msgstr "Mis à jour par"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
@@ -1102,7 +1112,7 @@ msgstr "Référence"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "Retour"
+msgstr "Avoir"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:315
@@ -1320,9 +1330,9 @@ msgstr "Le montant minimum appliqué pour cette règle"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
 msgid ""
-"This will be used to compute the % fields values; in general it is on basic, "
-"but you can also use categories code fields in lowercase as a variable names "
-"(hra, ma, lta, etc.) and the variable basic."
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
 msgstr ""
 "Sera utilisé pour calculer le % des valeurs des champs, en général "
 "s'applique à la base, mais vous pouvez également utiliser les catégories de "
@@ -1332,12 +1342,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the "
-"dates and credit note specified on Payslips Run."
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
 msgstr ""
 "Cet assistant va générer les fiches de paie de l' (des) employé(s) "
-"sélectionné(s) sur la base des dates et des notes de crédit figurant sur les "
-"bulletins de paie."
+"sélectionné(s) sur la base des dates et des notes de crédit figurant sur les"
+" bulletins de paie."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
@@ -1394,8 +1404,8 @@ msgstr "Jours travaillés et entrées"
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
-"Mauvaise base de pourcentage ou quantité définie pour la règle de salaire %s "
-"(%s)"
+"Mauvaise base de pourcentage ou quantité définie pour la règle de salaire %s"
+" (%s)"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:890
@@ -1435,8 +1445,8 @@ msgstr ""
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
-"Vous devez sélectionnner un (des) employé(s) pour générer une (des) fiche(s) "
-"de paie."
+"Vous devez sélectionnner un (des) employé(s) pour générer une (des) fiche(s)"
+" de paie."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:964

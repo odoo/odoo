@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * membership
-#
+# 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2015
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-06-22 13:04+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2016-08-22 10:09+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: membership
@@ -28,7 +27,7 @@ msgstr "# 已开票"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_paid
 msgid "# Paid"
-msgstr "# 已付款"
+msgstr "# 已支付"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_waiting
@@ -45,7 +44,7 @@ msgstr "你将作为哪个客户的附属会籍。你的会员资格会随着主
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
 msgid "Account Invoice line"
-msgstr "帐户发票明细"
+msgstr "会计发票明细"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -72,7 +71,7 @@ msgstr "会籍的价格"
 #: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr "附属会员"
+msgstr "协会会员"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -137,7 +136,7 @@ msgstr "联系人"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_create_uid
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_create_date
@@ -198,7 +197,7 @@ msgstr "已实现收入"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_date_to
 msgid "End Date"
-msgstr "终止日期"
+msgstr "结束日期"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -208,7 +207,7 @@ msgstr "会籍终止日期"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Month"
-msgstr "终止月"
+msgstr "终止月份"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership_date_to
@@ -279,7 +278,7 @@ msgstr "ID"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Inactive"
-msgstr "不可用"
+msgstr "无效"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice
@@ -308,7 +307,7 @@ msgstr "已开发票的会员"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr "已开发票/已付款/免费"
+msgstr "已开票/已支付/免费"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_state
@@ -317,15 +316,14 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
 "它表明会员的状态。\n"
 "                    -非会员：业务伙伴没有申请任何会员。\n"
 "                    -取消会员：会员已取消他的会员资格。\n"
-"                    -过期会员:其成员日期已经过期。\n"
+"                    -到期会员:其成员日期已经到期。\n"
 "                    -未审核会员：已申请成为成员的人，他们的发票即将被创建。\n"
 "                    -开具发票的会员：会员的发票已创建。\n"
 "                    -付费会员：已支付会员费的会员。"
@@ -334,18 +332,12 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
 msgstr ""
 "该指示显示成员状态：\n"
 "                    -非成员：伙伴未申请任何成员。\n"
@@ -365,13 +357,13 @@ msgstr "加入日期"
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line___last_update
 #: model:ir.model.fields,field_description:membership.field_report_membership___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_write_uid
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_write_date
@@ -495,7 +487,7 @@ msgstr "会籍"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Month"
-msgstr "月份"
+msgstr "月"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -513,8 +505,7 @@ msgstr "无/已取消/旧的/等待中"
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of "
-"Membership, etc."
+"                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
 "Odoo帮你快捷的管理会员相关的所有的活动：\n"
 "当前会员状态,讨论和会员历史等等"
@@ -569,7 +560,7 @@ msgstr "数量"
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Reports"
-msgstr "报告"
+msgstr "报表"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -601,7 +592,7 @@ msgstr "开始月份"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Month Of Membership"
-msgstr "会籍开始月份"
+msgstr "会员资格起始月份"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -621,7 +612,7 @@ msgstr "此说明将显示在报价单上..."
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr "将显示已付、旧的、实现收入总计三列"
+msgstr "将显示已支付、旧的、实现收入总计三列"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -631,7 +622,7 @@ msgstr "将显示等待、已开票、应付总额三列"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
 msgid "To"
-msgstr "到"
+msgstr "至"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -649,12 +640,3 @@ msgstr "等待会员"
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
 msgstr "membership.membership_line"
-
-#~ msgid "Basic Membership"
-#~ msgstr "基础会籍"
-
-#~ msgid "Gold Membership"
-#~ msgstr "金牌会籍"
-
-#~ msgid "Silver Membership"
-#~ msgstr "银牌会籍"

@@ -1,29 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_asset
-#
+# 
 # Translators:
-# Clo <clo@odoo.com>, 2015
-# Cyrille de Lambert <cdelambert@teclib.com>, 2015
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2015
-# jalal <j.zahid@gmail.com>, 2015
-# Martin Trigaux, 2016
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
-# Nancy Bolognesi <nb@microcom.ca>, 2015
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Lionel Sausin <ls@numerigraphe.com>, 2016
+# Not Telling <levequevincel2@gmail.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Cyrille de Lambert <cdelambert@teclib.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
-# Vanosmael Didier <info@sc4b.com>, 2015
+# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Clo <clo@odoo.com>, 2016
+# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
+# Quentin THEURET <quentin@theuret.net>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# jalal <j.zahid@gmail.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-05-27 15:49+0000\n"
-"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Leo Schmitt <inactive+lschmitt@transifex.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_asset
@@ -77,7 +89,8 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
-msgid "Account used to record the purchase of the asset at its original price."
+msgid ""
+"Account used to record the purchase of the asset at its original price."
 msgstr ""
 
 #. module: account_asset
@@ -157,14 +170,14 @@ msgstr "Nom de l'immobilisation"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset Start Date"
-msgstr "Date de début de l'immobilisation"
+msgstr "Date de début d'immobilisation"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
-msgstr "Type d'immobilisation"
+msgstr "Type d'Actif"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal_purchase
@@ -196,7 +209,8 @@ msgstr "Ligne d'amortissement"
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
-"Immobilisation vendue ou éliminée. Saisie comptable en attente de validation."
+"Immobilisation vendue ou éliminée. Saisie comptable en attente de "
+"validation."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -281,7 +295,8 @@ msgid ""
 "when created by invoices."
 msgstr ""
 "Cochez cette case si vous souhaitez confirmer automatiquement les "
-"immobilisations de cette catégorie lorsqu'elles sont créées par des factures."
+"immobilisations de cette catégorie lorsqu'elles sont créées par des "
+"factures."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
@@ -296,29 +311,21 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
-"Veuillez choisir la méthode pour calculer le montant des lignes "
-"d'amortissement.\n"
-"  * Linéaire : Calculé sur la base de : Valeur brute / Nombre "
-"d'amortissements\n"
+"Veuillez choisir la méthode pour calculer le montant des lignes d'amortissement.\n"
+"  * Linéaire : Calculé sur la base de : Valeur brute / Nombre d'amortissements\n"
 "  * Dégressif : Calculé sur la base de : Valeur résiduelle * Taux dégressif"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_time
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
+"Choose the method to use to compute the dates and number of depreciation lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
-"Choisissez la méthode à utiliser pour calculer les dates et le nombre de "
-"lignes d'amortissement.\n"
-"    * Nombre d'amortissements : fixer le nombre d'amortissements et le temps "
-"entre 2 amortissements.\n"
-"    * Date de fin : choisissez le temps entre 2 amortissements et la date de "
-"fin d'amortissement."
+"Choisissez la méthode à utiliser pour calculer les dates et le nombre de lignes d'amortissement.\n"
+"    * Nombre d'amortissements : fixer le nombre d'amortissements et le temps entre 2 amortissements.\n"
+"    * Date de fin : choisissez le temps entre 2 amortissements et la date de fin d'amortissement."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -361,7 +368,7 @@ msgstr "Calcul des amortissements"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Compute Depreciation"
-msgstr "Calcule les amortissements"
+msgstr "Calcul des amortissements"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -429,7 +436,7 @@ msgstr "Client"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_date
 msgid "Date"
-msgstr "Date"
+msgstr "Date "
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -561,7 +568,7 @@ msgstr "Ligne d'amortissement comptabilisée."
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_display_name
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher le nom"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:293
@@ -603,18 +610,16 @@ msgstr "Date de Fin"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Extended Filters..."
-msgstr "Filtres étendus"
+msgstr "Filtres étendus..."
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
-"            search bar can also be used to personalize your assets "
-"depreciation reporting."
+"            search bar can also be used to personalize your assets depreciation reporting."
 msgstr ""
 "Ce rapport donne un vue d'ensemble de tous les amortissements. La\n"
-"barre de recherche peut aussi être utilisée pour personnaliser votre rapport "
-"d'amortissement des immobilisations."
+"barre de recherche peut aussi être utilisée pour personnaliser votre rapport d'amortissement des immobilisations."
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
@@ -683,8 +688,8 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
 msgstr ""
-"Indique que le premier amortissement de cet immobilisation doit être calculé "
-"à partir de la date d'achat au lieu du 1er janvier. "
+"Indique que le premier amortissement de cet immobilisation doit être calculé"
+" à partir de la date d'achat au lieu du 1er janvier. "
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -696,7 +701,7 @@ msgstr "Facture"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Ligne de facuration"
+msgstr "Ligne de facture"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
@@ -728,7 +733,7 @@ msgstr "Pièces comptables"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard___last_update
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_write_uid
@@ -737,7 +742,7 @@ msgstr "Dernière modification le"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_write_uid
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_write_date
@@ -746,7 +751,7 @@ msgstr "Mis à jour par"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_write_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -889,7 +894,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Purchase"
-msgstr "Achat"
+msgstr "Achats"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -924,7 +929,7 @@ msgstr "Référence"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Residual"
-msgstr "Solde dû"
+msgstr "Résiduel"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value_residual
@@ -1003,15 +1008,11 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
-"This wizard will post installment/depreciation lines for the selected month."
-"<br/>\n"
-"                        This will generate journal entries for all related "
-"installment lines on this period of asset/revenue recognition as well."
+"This wizard will post installment/depreciation lines for the selected month.<br/>\n"
+"                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
-"Cet assistant comptabilisera les lignes de versement/d'amortissement pour le "
-"mois sélectionné.<br/>\n"
-"Ceci générera aussi des pièces pour toutes les lignes de versement associées "
-"dans cette période de reconnaissance des immobilisations/revenus."
+"Cet assistant comptabilisera les lignes de versement/d'amortissement pour le mois sélectionné.<br/>\n"
+"Ceci générera aussi des pièces pour toutes les lignes de versement associées dans cette période de reconnaissance des immobilisations/revenus."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1054,17 +1055,13 @@ msgstr "Fournisseur"
 #: model:ir.model.fields,help:account_asset.field_account_asset_depreciation_line_parent_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
 "Lorsqu'une immobilisation est créée, le statut est 'Brouillon'.\n"
-"A la confirmation, le statut passe à 'En cours' et les amortissement peuvent "
-"être passé en comptabilité.\n"
+"A la confirmation, le statut passe à 'En cours' et les amortissement peuvent être passé en comptabilité.\n"
 "Vous pouvez cloturer manuellement une immobilisation.. \n"
-"Lors de la comptabilisation du dernier amortissement, le statut passe "
-"automatiquement à ''Terminé'"
+"Lors de la comptabilisation du dernier amortissement, le statut passe automatiquement à ''Terminé'"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1118,72 +1115,3 @@ msgstr "ex : ordinateur portable iBook"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "mois"
-
-#~ msgid "Action Needed"
-#~ msgstr "A besoin d'une action"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message posté sur cet enregistrement"
-
-#~ msgid "Depreciation Account"
-#~ msgstr "Compte de dépréciation"
-
-#~ msgid "Entries"
-#~ msgstr "Ecritures"
-
-#~ msgid "Every"
-#~ msgstr "Chaque"
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Si elle est cochée, de nouveaux messages requièrent votre attention."
-
-#~ msgid "Income Account"
-#~ msgstr "Compte de revenus"
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Post Journal Entries"
-#~ msgstr "Valider les écritures"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Messages non lus"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid ""
-#~ "You already have assets with the reference %s.\n"
-#~ "Please delete these assets before creating new ones for this invoice."
-#~ msgstr ""
-#~ "Vous disposez déjà d'immobilisations comportant la référence %s.\n"
-#~ "Veuillez supprimer ces immobilisations avant d'en créer de nouvelles pour "
-#~ "cette facture."

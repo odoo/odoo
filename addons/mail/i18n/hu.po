@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mail
-#
+# 
 # Translators:
-# Kisrobert <kisrobi@gmail.com>, 2015
-# krnkris, 2015-2016
-# krnkris, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+# Kisrobert <kisrobi@gmail.com>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-06 07:43+0000\n"
-"PO-Revision-Date: 2016-08-02 08:32+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"PO-Revision-Date: 2016-09-06 07:43+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mail
@@ -26,8 +27,7 @@ msgstr ""
 msgid ""
 "\n"
 "<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
-"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/"
-"ViewAction\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
 "        % if ctx.get('button_access'):\n"
 "        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
@@ -35,51 +35,35 @@ msgid ""
 "        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
 "    </div>\n"
 "</div>\n"
-"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx."
-"get('button_access') or ctx.get('is_accessible'):\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access') or ctx.get('is_accessible'):\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
-"5px; font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
-"            <td valign=\"center\" align=\"right\" width=\"340\" style="
-"\"padding:0px 10px 5px 5px; font-size: 12px;\">\n"
+"            <td valign=\"center\" align=\"right\" width=\"340\" style=\"padding:0px 10px 5px 5px; font-size: 12px;\">\n"
 "                <p>\n"
-"                % if ctx.get('button_access') or ctx.get('button_follow') or "
-"ctx.get('button_unfollow'):\n"
-"                <a href=\"${ctx['button_access']['url']}\" style=\"padding: "
-"5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:"
-"#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; "
-"font-weight: 400; text-align: center; vertical-align: middle; cursor: "
-"pointer; white-space: nowrap; background-image: none; background-color: "
-"#a24689; border: 1px solid #a24689; border-radius:3px\"><strong>"
-"${ctx['button_access']['title']}</strong></a>\n"
+"                % if ctx.get('button_access') or ctx.get('button_follow') or ctx.get('button_unfollow'):\n"
+"                <a href=\"${ctx['button_access']['url']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\"><strong>${ctx['button_access']['title']}</strong></a>\n"
 "                % endif\n"
 "\n"
 "                % if ctx.get('button_follow'):\n"
 "                % if ctx.get('actions'):\n"
 "                   |\n"
 "                % endif\n"
-"                <a href=\"${ctx['button_follow']['url']}\" style=\"text-"
-"decoration:none; color: #a24689;\">${ctx['button_follow']['title']}</a>\n"
+"                <a href=\"${ctx['button_follow']['url']}\" style=\"text-decoration:none; color: #a24689;\">${ctx['button_follow']['title']}</a>\n"
 "                % elif ctx.get('button_unfollow'):\n"
 "                % if ctx.get('actions'):\n"
 "                   |\n"
 "                % endif\n"
-"                <a href=\"${ctx['button_unfollow']['url']}\" style=\"text-"
-"decoration:none; color: #a24689;\">${ctx['button_unfollow']['title']}</a>\n"
+"                <a href=\"${ctx['button_unfollow']['url']}\" style=\"text-decoration:none; color: #a24689;\">${ctx['button_unfollow']['title']}</a>\n"
 "                % endif\n"
 "\n"
 "                % if ctx.get('actions'):\n"
 "                |\n"
 "                % for action in ctx['actions']:\n"
-"                <a href=\"${action['url']}\" style=\"text-decoration:none; "
-"color: #a24689;\">${action['title']}</a>\n"
+"                <a href=\"${action['url']}\" style=\"text-decoration:none; color: #a24689;\">${action['title']}</a>\n"
 "                % endfor\n"
 "                % endif\n"
 "                </p>\n"
@@ -87,31 +71,22 @@ msgid ""
 "        </tr>\n"
 "    </tbody></table>\n"
 "</div>\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
-"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
-"\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
 "% else:\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%;>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;>\n"
 "% endif\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
-"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "\n"
 "        <tbody>\n"
 "            % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:\n"
@@ -121,8 +96,7 @@ msgid ""
 "                    % if ctx.get('tracking'):\n"
 "                        <ul>\n"
 "                        % for tracking in ctx['tracking']\n"
-"                            <li>${tracking[0]} : ${tracking[1]} -&gt; "
-"${tracking[2]}</li>\n"
+"                            <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
 "                        % endfor\n"
 "                        </ul>\n"
 "                    % endif\n"
@@ -135,8 +109,7 @@ msgid ""
 "                    % if ctx.get('tracking'):\n"
 "                        <ul>\n"
 "                        % for tracking in ctx['tracking']\n"
-"                            <li>${tracking[0]} : ${tracking[1]} -&gt; "
-"${tracking[2]}</li>\n"
+"                            <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
 "                        % endfor\n"
 "                        </ul>\n"
 "                    % endif\n"
@@ -146,24 +119,17 @@ msgid ""
 "        </tbody>\n"
 "    </table>\n"
 "</div>\n"
-"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx."
-"get('button_access'):\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access'):\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
 "% else:\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%;>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;>\n"
 "% endif\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
-"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody>\n"
 "            % if ctx.get('signature'):\n"
-"                % if not ctx['is_discussion'] or not len(ctx['actions']) == "
-"0:\n"
+"                % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:\n"
 "                    <tr>\n"
-"                        <td style=\"padding:0px 10px 5px 5px;font-size: "
-"14px; text-align: left;\">\n"
+"                        <td style=\"padding:0px 10px 5px 5px;font-size: 14px; text-align: left;\">\n"
 "                            ${ctx['signature'] | safe}\n"
 "                        </td>\n"
 "                    </tr>\n"
@@ -178,20 +144,17 @@ msgid ""
 "\n"
 "            % if not ctx['is_discussion'] or not len(ctx['actions']) == 0:\n"
 "            <tr>\n"
-"                <td style=\"padding:0px 10px 5px 5px;font-size: 11px; text-"
-"align: left;\">\n"
+"                <td style=\"padding:0px 10px 5px 5px;font-size: 11px; text-align: left;\">\n"
 "                    <strong>Sent by</strong>\n"
 "                    % if ctx.get('website_url'):\n"
-"                    <a href=\"${ctx['website_url']}\" style=\"text-"
-"decoration:none; color: #a24689;\">\n"
+"                    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #a24689;\">\n"
 "                    % endif\n"
 "                    <strong>${ctx.get('company_name')}</strong>\n"
 "                    % if ctx.get('website_url'):\n"
 "                    </a>\n"
 "                    % endif\n"
 "                    <strong>using</strong>\n"
-"                    <a href=\"https://www.odoo.com\" style=\"text-decoration:"
-"none; color: #a24689;\"><strong>Odoo</strong></a>\n"
+"                    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #a24689;\"><strong>Odoo</strong></a>\n"
 "                </td>\n"
 "            </tr>\n"
 "            % else:\n"
@@ -199,16 +162,14 @@ msgid ""
 "                <td style=\"font-size: 14px; text-align: left;\">\n"
 "                    <strong>Sent by</strong>\n"
 "                    % if ctx.get('website_url'):\n"
-"                    <a href=\"${ctx['website_url']}\" style=\"text-"
-"decoration:none;\">\n"
+"                    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none;\">\n"
 "                    % endif\n"
 "                    <strong>${ctx.get('company_name')}</strong>\n"
 "                    % if ctx.get('website_url'):\n"
 "                    </a>\n"
 "                    % endif\n"
 "                    <strong>using</strong>\n"
-"                    <a href=\"https://www.odoo.com\" style=\"text-decoration:"
-"none;\"><strong>Odoo</strong></a>\n"
+"                    <a href=\"https://www.odoo.com\" style=\"text-decoration:none;\"><strong>Odoo</strong></a>\n"
 "                </td>\n"
 "            </tr>\n"
 "            % endif\n"
@@ -227,14 +188,14 @@ msgstr "Ez egy privát csatorna. Meghívottként csatlakozhat hozzá."
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
 msgid ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
-"or (object.parent_id and object.parent_id.subject and 'Re: %s' % object."
-"parent_id.subject) or (object.parent_id and object.parent_id.record_name and "
-"'Re: %s' % object.parent_id.record_name)}"
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
+"object.parent_id.subject) or (object.parent_id and "
+"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
-"or (object.parent_id and object.parent_id.subject and 'Re: %s' % object."
-"parent_id.subject) or (object.parent_id and object.parent_id.record_name and "
-"'Re: %s' % object.parent_id.record_name)}"
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
+"object.parent_id.subject) or (object.parent_id and "
+"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
@@ -296,51 +257,47 @@ msgstr "-------- Régebbi üzenetek mutatása --------"
 #, python-format
 msgid ""
 "<br><br>\n"
-"            You can mention someone by typing <b>@username</b>, this will "
-"grab its attention.<br>\n"
+"            You can mention someone by typing <b>@username</b>, this will grab its attention.<br>\n"
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
-"            You can insert canned responses in your message by typing <b>:"
-"shortcut</b>.<br>"
+"            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
 "<br><br>\n"
-"            Megemlíthet valakit ide írva <b>@felhasznalonev</b>, ez felhívja "
-"a figyelmét.<br>\n"
+"            Megemlíthet valakit ide írva <b>@felhasznalonev</b>, ez felhívja a figyelmét.<br>\n"
 "            Csatornát is megemlíthet ide írva <b>#csatorna</b>.<br>\n"
 "            Parancsot hajthat végre ide írva <b>/parancs</b>.<br>\n"
-"            Beilleszthet régebbi válaszokat az üzenetébe ide írva <b>:"
-"hivatkozas</b>.<br>"
+"            Beilleszthet régebbi válaszokat az üzenetébe ide írva <b>:hivatkozas</b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:537
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">created <a href=\"#\" class="
-"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">created <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">létrehozta <a href=\"#\" class="
-"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">létrehozta <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:460
 #: code:addons/mail/models/mail_channel.py:513
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">joined <a href=\"#\" class="
-"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">joined <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">csatlakozott <a href=\"#\" class="
-"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">csatlakozott <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:164
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">left <a href=\"#\" class="
-"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">left <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">lecsatlakozott <a href=\"#\" class="
-"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">lecsatlakozott <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:22
@@ -348,13 +305,14 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
-"<div><p>Tisztelt,</p><p>%s meghívást kapott a %s dokumentum követéséhez: %s."
-"</p></div>"
+"<div><p>Tisztelt,</p><p>%s meghívást kapott a %s dokumentum követéséhez: "
+"%s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:25
 #, python-format
-msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
+msgid ""
+"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
 "<div><p>Jó napot,</p><p>%s meghívta egy új dokumentum követésére.</p></div>"
 
@@ -363,8 +321,9 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:28
 #, python-format
 msgid ""
-"<p><b>Chat with collegues</b> in real-time using direct messages.</"
-"p><p><i>You might need to invite users from the Settings app first.</i></p>"
+"<p><b>Chat with collegues</b> in real-time using direct "
+"messages.</p><p><i>You might need to invite users from the Settings app "
+"first.</i></p>"
 msgstr ""
 
 #. module: mail
@@ -372,21 +331,21 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:15
 #, python-format
 msgid ""
-"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can "
-"notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
+" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Írjon egy üzenetet</b> itt a csatorna tagoknak.</p> <p>Értesíteni tud "
-"valakit ezzel <i>'@'</i> vagy hivatkozzon másik csatornára ezzel <i>'#'</i>. "
-"Kezdje az üzenetét ezzel <i>'/'</i> a lehetséges parancsok listáihoz.</p>"
+"valakit ezzel <i>'@'</i> vagy hivatkozzon másik csatornára ezzel <i>'#'</i>."
+" Kezdje az üzenetét ezzel <i>'/'</i> a lehetséges parancsok listáihoz.</p>"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/tour.js:11
 #, python-format
 msgid ""
-"<p>Channels make it easy to organize information across different topics and "
-"groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"<p>Channels make it easy to organize information across different topics and"
+" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
 "<p>Csatornák könnyűvé teszik az információk  szervezését a különböző "
@@ -399,47 +358,35 @@ msgstr ""
 msgid ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
 "                                <strong>Email mass mailing</strong> on\n"
-"                                <span attrs=\"{'invisible': "
-"[('use_active_domain', '=', True)]}\">the selected records</span>\n"
-"                                <span attrs=\"{'invisible': "
-"[('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">the selected records</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible':['|', ('model', '=', "
-"False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document "
-"and</span>"
+"                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
 "                                <strong>Tömeges Email küldés</strong> on\n"
-"                                <span attrs=\"{'invisible': "
-"[('use_active_domain', '=', True)]}\">a kiválasztott feljegyzések</span>\n"
-"                                <span attrs=\"{'invisible': "
-"[('use_active_domain', '=', False)]}\">a jelenlegi keresési szűrő</span>.\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">a kiválasztott feljegyzések</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">a jelenlegi keresési szűrő</span>.\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible':['|', ('model', '=', "
-"False), ('composition_mode', '=', 'mass_mail')]}\">Dokumentum követői és</"
-"span>"
+"                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Dokumentum követői és</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                    <span class=\"o_stat_text\">Context "
-"Action</span>"
+"                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Hozzáad</span>\n"
-"                                    <span class=\"o_stat_text\">Összefüggő "
-"művelet</span>"
+"                                    <span class=\"o_stat_text\">Összefüggő művelet</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                    <span class=\"o_stat_text\">Context "
-"Action</span>"
+"                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Elvesz</span>\n"
-"                                    <span class=\"o_stat_text\">Összefüggő "
-"művelet</span>"
+"                                    <span class=\"o_stat_text\">Összefüggő művelet</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
@@ -450,32 +397,23 @@ msgstr "<span>hibás email-ok</span>"
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>All records matching your current search filter will be mailed,\n"
-"                                    not only the ids selected in the list "
-"view.</strong><br/>\n"
-"                                If you want to work only with selected ids, "
-"please uncheck the\n"
+"                                    not only the ids selected in the list view.</strong><br/>\n"
+"                                If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
 msgstr ""
-"<strong>A jelenlegi szűrő kritériumnak megfelelő feljegyzéseket elküldjük "
-"email-en,\n"
-"                                    nem csak a lista nézetben jelölt id "
-"azonosítóval rendelkezőket.</strong><br/>\n"
-"                               Ha csak a kiválasztott azonosítókkal szeretne "
-"dolgozni, vegye ki a jelölést\n"
+"<strong>A jelenlegi szűrő kritériumnak megfelelő feljegyzéseket elküldjük email-en,\n"
+"                                    nem csak a lista nézetben jelölt id azonosítóval rendelkezőket.</strong><br/>\n"
+"                               Ha csak a kiválasztott azonosítókkal szeretne dolgozni, vegye ki a jelölést\n"
 "                                a fejléc jelölő négyzetéből."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
-"<strong>Moreover, if you want to send a lot of emails, we recommend you to "
-"use the mass mailing module</strong>. <br/>\n"
-"                                Confirming this wizard will probably take a "
-"few minutes blocking your browser."
+"<strong>Moreover, if you want to send a lot of emails, we recommend you to use the mass mailing module</strong>. <br/>\n"
+"                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
-"<strong>Továbbá, ha szeretne egy csomó email-t küldeni, javasoljuk a tömeges "
-"email modul használatát</strong>. <br/>\n"
-"                                Ennek a varázslónak a jóváhagyása a "
-"böngészőjének több perces blokkolását eredményezheti."
+"<strong>Továbbá, ha szeretne egy csomó email-t küldeni, javasoljuk a tömeges email modul használatát</strong>. <br/>\n"
+"                                Ennek a varázslónak a jóváhagyása a böngészőjének több perces blokkolását eredményezheti."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -637,7 +575,7 @@ msgstr "További kapcsolatok"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Advanced"
-msgstr "Speciális"
+msgstr "Haladó"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -729,8 +667,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
-"A válaszok nem kerülnek be a az eredeti dokumentum  beszélgetés folyamatába. "
-"Ez hatással van a létrehozott üzenet azonosító ID-vel."
+"A válaszok nem kerülnek be a az eredeti dokumentum  beszélgetés folyamatába."
+" Ez hatással van a létrehozott üzenet azonosító ID-vel."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
@@ -801,8 +739,8 @@ msgstr "Szerző aláírása (csak tömeges levelezéskor)"
 #: model:ir.model.fields,help:mail.field_mail_message_author_id
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
 msgstr ""
 "Az üzenet szerzője. Ha nincs beállítva,  az e-mail ettől, egy címet "
 "tartalmaz ami nem mutat egyik partnerre sem."
@@ -872,7 +810,7 @@ msgstr "Ugrálás"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Mégse"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
@@ -882,7 +820,7 @@ msgstr "Email elvetése"
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr "Visszavont"
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -915,7 +853,7 @@ msgstr "Másodpéldány"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Change"
-msgstr "Átváltás"
+msgstr "Megváltoztatni"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
@@ -1184,7 +1122,7 @@ msgstr ""
 #: code:addons/mail/models/res_partner.py:17
 #, python-format
 msgid "Customers"
-msgstr "Vevők"
+msgstr "Vásárlók"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_date
@@ -1291,8 +1229,7 @@ msgid ""
 "- email (using email_from or email field)"
 msgstr ""
 "A feljegyzések alapértelmezett címzettei:\n"
-"- partner (azonosító id használata a partnerhez vagy a partner_id mező) "
-"VAGY\n"
+"- partner (azonosító id használata a partnerhez vagy a partner_id mező) VAGY\n"
 "- email (email_from használatával vagy email mező)"
 
 #. module: mail
@@ -1382,7 +1319,7 @@ msgstr "Hozzászólások"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_display_name
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1434,7 +1371,7 @@ msgstr "Feliratkozás szerkesztése"
 #: selection:mail.message,message_type:0
 #: selection:survey.mail.compose.message,message_type:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -1559,7 +1496,8 @@ msgstr "Hiba, egy ügyfél nem tudja kétszer ugyanazt követni."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
-msgid "Error: A follower must be either a partner or a channel (but not both)."
+msgid ""
+"Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
 "Hiba: Partner vagy csatorna (de nem mind a kettő) kell legyen egy követő."
 
@@ -1571,7 +1509,7 @@ msgstr "Mindenki"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "Kiterjesztett szűrők"
+msgstr "Kiterjesztett szűrők..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_fail_counter
@@ -1626,7 +1564,7 @@ msgstr "Mező leírása"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field_type
 msgid "Field Type"
-msgstr "Mező típus"
+msgstr "Típus mező"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_relation_field
@@ -1879,7 +1817,7 @@ msgstr "Követés"
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_from
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_email_from
 msgid "From"
-msgstr "Feladó"
+msgstr "Kezdő dátum"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -1896,7 +1834,7 @@ msgstr "Menjen a beállítások panelhez"
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_email_template_search
@@ -1947,7 +1885,7 @@ msgstr "Rejtse el a követők lehetőségeinek az altípusait"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_id
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_thread_id
@@ -1955,8 +1893,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
 "A szülő feljegyzés azonosító ID-je fogja az álneveket (például: projekt "
 "fogja a részfeladat létrehozó álnevet)"
@@ -2113,8 +2051,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_email_template_preview_user_signature
 #: model:ir.model.fields,help:mail.field_mail_template_user_signature
 msgid ""
-"If checked, the user's signature will be appended to the text version of the "
-"message"
+"If checked, the user's signature will be appended to the text version of the"
+" message"
 msgstr ""
 "Ha be van jelölve, akkor a felhasználó aláírása lesz mellékelve az üzenet "
 "szöveges változatához"
@@ -2127,10 +2065,10 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
 msgstr ""
-"Ha az elutasít be van jelölve, akkor ez a kapcsolat ki lesz iktatva az e-"
-"mailek és tömeges levelezés és értékesítési kampány listáiból. Az 'Elérhető "
-"a tömeges levelezéshez' szűrő lehetővé teszi a felhasználók részére a "
-"partnerek szűrését tömeges levelezések létrehozásánál."
+"Ha az elutasít be van jelölve, akkor ez a kapcsolat ki lesz iktatva az "
+"e-mailek és tömeges levelezés és értékesítési kampány listáiból. Az "
+"'Elérhető a tömeges levelezéshez' szűrő lehetővé teszi a felhasználók "
+"részére a partnerek szűrését tömeges levelezések létrehozásánál."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_scheduled_date
@@ -2138,8 +2076,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
-"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs "
-"beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül."
+"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs"
+" beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2148,8 +2086,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
-"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs "
-"beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül. Jinja2 "
+"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs"
+" beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül. Jinja2 "
 "üres mező kitöltést használhat."
 
 #. module: mail
@@ -2203,8 +2141,8 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:1711
 #, python-format
 msgid ""
-"Invalid record set: should be called as model (without records) or on single-"
-"record recordset"
+"Invalid record set: should be called as model (without records) or on "
+"single-record recordset"
 msgstr ""
 "Nem érvényes feljegyzés beállítás: modellnek kell hívni (feljegyzések "
 "nélkül) vagy egyedi-feljegyzés feljegyzésbeállító"
@@ -2323,7 +2261,7 @@ msgstr "Csak személy meghívása"
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_is_follower
 msgid "Is Follower"
-msgstr "Ez egy követő"
+msgstr "Ő egy követő"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_notification
@@ -2442,7 +2380,7 @@ msgstr "Utolsó üzenet dátuma"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite___last_update
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract___last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_last_seen_partner_ids
@@ -2470,7 +2408,7 @@ msgstr "Utoljára látott Many2many"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_write_date
@@ -2571,12 +2509,10 @@ msgstr "Egy belső megjegyzés rögzítése"
 #: code:addons/mail/static/src/xml/chatter.xml:12
 #, python-format
 msgid ""
-"Log an internal note which will not be sent to followers, but which can be "
-"read\n"
+"Log an internal note which will not be sent to followers, but which can be read\n"
 "                    by users accessing this document."
 msgstr ""
-"Egy belső üzenet rögzítése, mely nem lesz kiküldve a követők részére, de "
-"olvasható lesz azoknak\n"
+"Egy belső üzenet rögzítése, mely nem lesz kiküldve a követők részére, de olvasható lesz azoknak\n"
 "                    akik a dokumentumhoz hozzáférnek."
 
 #. module: mail
@@ -2599,8 +2535,8 @@ msgstr "Lavelezés követés értéke"
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
 msgid "Mail has been created to notify people of an existing mail.message"
 msgstr ""
-"Levelet hozott létre az ügyfelek értesítésére ehhez a meglévő üzenethez mail."
-"message"
+"Levelet hozott létre az ügyfelek értesítésére ehhez a meglévő üzenethez "
+"mail.message"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_emails_partner_info_form
@@ -2714,14 +2650,14 @@ msgstr "Üzenet elküldve \""
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new "
-"record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new"
+" record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
 "Üzenet altípus sokkal pontosabb típust ad az üzenetekhez, főként a rendszer "
-"értesítésekhez. Például,  az értesítés kapcsolódhat új feljegyzéshez (Új), "
-"vagy egy szakasz változás a műveletben (Szakasz változás). Üzenet altípusok "
+"értesítésekhez. Például,  az értesítés kapcsolódhat új rekordhoz (Új), vagy "
+"egy szintre változás a műveletben (Szint változás). Üzenet altípusok "
 "lehetővé teszik az értesítések pontos behangolását, melyeket a felhasználó "
 "az üzenet falán látni szeretne."
 
@@ -2748,8 +2684,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
-"Üzenet típus: email az email üzenetre, figyelmeztetés egy rendszer üzenetre, "
-"hozzászólás egy másik üzenetre mint felhasználói válaszok"
+"Üzenet típus: email az email üzenetre, figyelmeztetés egy rendszer üzenetre,"
+" hozzászólás egy másik üzenetre mint felhasználói válaszok"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_id
@@ -2910,8 +2846,7 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
-"Név, amit a létrehozott jelentés fájlhoz használ (üres mezőket is "
-"tartalmazhat)\n"
+"Név, amit a létrehozott jelentés fájlhoz használ (üres mezőket is tartalmazhat)\n"
 "A kiterjesztés elhagyható, a jelentés típusából lesz létrehozva."
 
 #. module: mail
@@ -3034,7 +2969,7 @@ msgstr "Válaszokhoz nincs hozzáfűzve"
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_note
 msgid "Note"
-msgstr "Megjegyzés"
+msgstr "Jegyzet"
 
 #. module: mail
 #. openerp-web
@@ -3184,7 +3119,7 @@ msgstr "Műveletek száma"
 #: model:ir.model.fields,help:mail.field_stock_production_lot_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_survey_survey_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_unread_counter
@@ -3298,11 +3233,11 @@ msgstr "Szöveg régi értéke"
 #: code:addons/mail/static/src/js/tour.js:24
 #, python-format
 msgid ""
-"Once a message has been starred, you can come back and review it at any time "
-"here."
+"Once a message has been starred, you can come back and review it at any time"
+" here."
 msgstr ""
-"Miután kedvencnek jelölt egy üzenetet, visszatérhet és felülvizsgálhatja azt "
-"ide visszatérve."
+"Miután kedvencnek jelölt egy üzenetet, visszatérhet és felülvizsgálhatja azt"
+" ide visszatérve."
 
 #. module: mail
 #. openerp-web
@@ -3475,8 +3410,8 @@ msgstr "Szülő feljegyzés folyamat azonosító ID"
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Szülő modell fogja az álnevet. Az álnév hivatkozást megfogó modell\n"
@@ -3486,9 +3421,9 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_parent_id
 msgid ""
-"Parent subtype, used for automatic subscription. This field is not correctly "
-"named. For example on a project, the parent_id of project subtypes refers to "
-"task-related subtypes."
+"Parent subtype, used for automatic subscription. This field is not correctly"
+" named. For example on a project, the parent_id of project subtypes refers "
+"to task-related subtypes."
 msgstr ""
 "Szülő altípus, az automatikus feliratkozáshoz használt. Ez a mező nincs "
 "helyesen megnevezve. Például egy projekten, a a projekt altípus szülő "
@@ -3575,15 +3510,12 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following "
-"channels\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó "
-"üzenetek kiküldéséhez.\n"
+"Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó üzenetek kiküldéséhez.\n"
 "- mindenki: mindenki tud üzenni\n"
 "- ügyfelek: csak a hitelesített partnerek\n"
-"- követők: csak az idevonatkozó dokumentum követői vagy a következő "
-"csatornák tagjai\n"
+"- követők: csak az idevonatkozó dokumentum követői vagy a következő csatornák tagjai\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_notify_email
@@ -3593,11 +3525,9 @@ msgid ""
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
 msgstr ""
-"Az üzenet fogadásának alapvető irányvonalai egy új üzenet küldéséhez a "
-"személyes Beérkező üzenetek mappába:\n"
+"Az üzenet fogadásának alapvető irányvonalai egy új üzenet küldéséhez a személyes Beérkező üzenetek mappába:\n"
 "- Soha: nem küldhető email\n"
-"- Össze üzenet: az össze beérkező üzenet mappába érkező levélről szóló "
-"értesítés"
+"- Össze üzenet: az össze beérkező üzenet mappába érkező levélről szóló értesítés"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -3700,7 +3630,7 @@ msgstr "Kapcsolódó dokumentum azonosító ID"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_model
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_model
 msgid "Related Document Model"
-msgstr "Kapcsolódó dokumentum modell"
+msgstr "Vonatkozó dokumentum modell"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -3748,8 +3678,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"Válasz email címek. Az automatikus  eszmecsere létrehozásban a  válasz-ennek "
-"figyelmen kívül hagyásoknak beállítása."
+"Válasz email címek. Az automatikus  eszmecsere létrehozásban a  válasz-ennek"
+" figyelmen kívül hagyásoknak beállítása."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_reply_to
@@ -3837,12 +3767,10 @@ msgstr "Csoportok keresése"
 #: model:ir.model.fields,help:mail.field_mail_template_model_object_field
 msgid ""
 "Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at "
-"the destination of the relationship."
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
 "Az ide vonatkozó dokumentum modellből válasszon cél mezőt.\n"
-"Ha ez egy kapcsolódó mező akkor lehetősége lesz mezőt választani a cél mezőt "
-"a kapcsolat célálomásán."
+"Ha ez egy kapcsolódó mező akkor lehetősége lesz mezőt választani a cél mezőt a kapcsolat célállomásán."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -3860,7 +3788,7 @@ msgstr "Küldés"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_send_mail
 msgid "Send Email"
-msgstr "E-mail küldése"
+msgstr "E-mail küldés"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:252
@@ -3979,12 +3907,12 @@ msgstr "Oldalkeret billentyű az oldalkeret megnyitás művelethez"
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_avatar
 msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr ""
 "Ennek a kapcsolatnak a kisméretű arcképe. Automatikusan át lesz méretezve "
-"64x64px képpé, megtartva a képarányt. Használja ezt a mezőt bárhol, ahol kis "
-"képre van szükség."
+"64x64px-es méretű képpé, megtartva a képarányt. Használja ezt a mezőt "
+"bárhol, ahol kis képre van szükség."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small
@@ -3995,11 +3923,11 @@ msgstr "Kis-méretű fotó"
 #: model:ir.model.fields,help:mail.field_mail_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr ""
-"Kis mérető fotó a csoportról. Automatikusan át lesz méretezve 64x64px képpé, "
-"az arány megtartása mellett. Használja ezt a mezőt bárhol ahol kisméretű "
+"Kis mérető fotó a csoportról. Automatikusan át lesz méretezve 64x64px képpé,"
+" az arány megtartása mellett. Használja ezt a mezőt bárhol ahol kisméretű "
 "képet szeretne."
 
 #. module: mail
@@ -4134,9 +4062,9 @@ msgstr "A kivett html kód helyettesíti a gyorsbillentyűt"
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_model_id
 #: model:ir.model.fields,help:mail.field_res_users_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
 "a modell (Odoo rendszer Dokumentum féle), amelyhez ez az álnév tartozik. "
 "Bármely bejövő email, mely nem válaszol egy meglévő feljegyzésre egy új "
@@ -4176,13 +4104,11 @@ msgstr ""
 #: code:addons/mail/models/mail_message.py:822
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. "
-"Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Az igényelt műveletet nem lehetett végrehajtani biztonsági korlátok miatt. "
-"Kérem vegye fel a kapcsolatot a rendszer adminisztrátorral.\n"
+"Az igényelt műveletet nem lehetett végrehajtani biztonsági korlátok miatt. Kérem vegye fel a kapcsolatot a rendszer adminisztrátorral.\n"
 "\n"
 "(Dokumentum típus: %s, Művelet: %s)"
 
@@ -4200,12 +4126,10 @@ msgstr "Ennek a sablonnak a dokumentum típusát használhatja ezzel"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid ""
-"The values displayed hereunder are informative. When sending the email, the "
-"values\n"
+"The values displayed hereunder are informative. When sending the email, the values\n"
 "                                will be taken from the email template."
 msgstr ""
-"Az it feltüntetett értékek csak információként szolgálnak. Ha emailt küld, "
-"az értékek\n"
+"Az it feltüntetett értékek csak információként szolgálnak. Ha emailt küld, az értékek\n"
 "                                az email sablonból lesznek kiküldve."
 
 #. module: mail
@@ -4351,7 +4275,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:119
 #, python-format
 msgid "Undo"
-msgstr "Visszavon"
+msgstr "Visszavonás"
 
 #. module: mail
 #. openerp-web
@@ -4589,13 +4513,10 @@ msgstr "Nézet"
 #, python-format
 msgid ""
 "Warning! \n"
-" If you remove a follower, he won't be notified of any email or discussion "
-"on this document. Do you really want to remove this follower ?"
+" If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
 msgstr ""
 "Figyelem! \n"
-"Ha kiiktat egy követőt, Ő nem lesz értesítve erről a dokumentumról szóló "
-"levelekről vagy fórumokról. Tényleg el akarja távolítani a dokumentum a "
-"nyomkövetéséről?"
+"Ha kiiktat egy követőt, Ő nem lesz értesítve erről a dokumentumról szóló levelekről vagy fórumokról. Tényleg el akarja távolítani a dokumentum a nyomkövetéséről?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -4604,9 +4525,9 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
-"Ha a kapcsolat mező van kiválasztva mint első mező, akkor ez a mező lehetővé "
-"teszi a cél dokumentum modell (alárendelt-modell) közül kiválasztani a cél "
-"mezőt."
+"Ha a kapcsolat mező van kiválasztva, mint első mező, akkor ez a mező "
+"lehetővé teszi a cél-dokumentum modell (alárendelt-modell) közül "
+"kiválasztani a cél-mezőt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -4673,7 +4594,8 @@ msgstr "Ebben a csatornában van: <b>#%s</b>."
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:29
 #, python-format
-msgid "You can mark any message as 'starred', and it shows up in this channel."
+msgid ""
+"You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
 "Bármely üzenetet 'csillaggal' kedvencnek jelölheti, és ez feltűnik ebben a "
 "csatornában."
@@ -4695,14 +4617,15 @@ msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr ""
-"Nem törölheti a csoportokat, mivel a teljes vállalati csoportra szüksége van "
-"másik moduloknak."
+"Nem törölheti a csoportokat, mivel a teljes vállalati csoportra szüksége van"
+" másik moduloknak."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:354
 #, python-format
 msgid ""
-"You could also add a new %(document)s by sending an email to: %(email_link)s."
+"You could also add a new %(document)s by sending an email to: "
+"%(email_link)s."
 msgstr ""
 "Hozzáadhat egy új %(document)s egy email elküldésével ehhez a címzetthez: "
 "%(email_link)s."
@@ -4858,7 +4781,7 @@ msgstr "most"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
-msgstr "ezen:"
+msgstr "ezen"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract

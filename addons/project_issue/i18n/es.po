@@ -1,23 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-#
+# 
 # Translators:
-# Ana Juaristi <ajuaristio@gmail.com>, 2015
-# Antonio Trueba, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Luis Triana <luis.triana@jarsa.com.mx>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# Rafael Blasco <rafabn@antiun.com>, 2016
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
+# Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:44+0000\n"
-"PO-Revision-Date: 2016-05-13 10:42+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
-"Language: es\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: José Vicente <txusev@gmail.com>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
@@ -36,7 +51,7 @@ msgid "# of Issues"
 msgstr "Nº de incidencias"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:170
+#: code:addons/project_issue/models/project_issue.py:162
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -54,8 +69,7 @@ msgstr "<b>Proyecto:</b>"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-msgstr ""
-"<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">como </span>"
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">como </span>"
 
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
@@ -77,14 +91,11 @@ msgstr "Añadir una nota interna..."
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
-"                                           * Normal is the default "
-"situation\n"
+"                                           * Normal is the default situation\n"
 "\n"
-"                                           * Blocked indicates something is "
-"preventing the progress of this issue\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
 "\n"
-"                                           * Ready for next stage indicates "
-"the issue is ready to be pulled to the next stage"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
@@ -169,12 +180,12 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
 msgid "Closed"
-msgstr "Cerrada"
+msgstr "Cerrado"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
-msgstr "Índice de colores"
+msgstr "Índice de Colores"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
@@ -205,7 +216,7 @@ msgstr "Contacto"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Date"
-msgstr "Fecha creación"
+msgstr "Fecha de Creación"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -226,16 +237,16 @@ msgstr "Creado el"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Creation Date"
-msgstr "Fecha creación"
+msgstr "Fecha de Creación"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:310
+#: code:addons/project_issue/models/project_issue.py:300
 #, python-format
 msgid "Customer"
 msgstr "Cliente"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:312
+#: code:addons/project_issue/models/project_issue.py:302
 #, python-format
 msgid "Customer Email"
 msgstr "Correo electrónico del cliente"
@@ -314,7 +325,7 @@ msgstr "Diferencia en días desde la última acción a la fecha actual"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
@@ -334,7 +345,7 @@ msgstr "Editar incidencia"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
 msgid "Email"
-msgstr "Email"
+msgstr "Correo electrónico"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -363,12 +374,13 @@ msgid "Helpdesk & Support"
 msgstr "Mesa de ayuda (helpdesk) y soporte"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Alta"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:285
+#: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "I take it"
 msgstr "Lo tengo"
@@ -377,7 +389,7 @@ msgstr "Lo tengo"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -407,7 +419,7 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr "Estapa de incidencia cambiada"
+msgstr "Etapa de incidencia cambiada"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -506,7 +518,7 @@ msgstr "última actualización de la etapa"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización de"
+msgstr "Última actualización por"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -514,7 +526,8 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Baja"
 
@@ -533,7 +546,7 @@ msgstr "Mis incidencias"
 #: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Necesita ayuda funcional o técnica"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -542,7 +555,7 @@ msgid "New"
 msgstr "Nuevo"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:289
+#: code:addons/project_issue/models/project_issue.py:279
 #, python-format
 msgid "New Issue"
 msgstr "Nueva incidencia"
@@ -553,7 +566,7 @@ msgid "Next Action"
 msgstr "Próxima acción"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:336
+#: code:addons/project_issue/models/project_issue.py:326
 #, python-format
 msgid "No Subject"
 msgstr "Sin asunto"
@@ -617,8 +630,8 @@ msgstr "Empresa"
 #: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want "
-"to delete."
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
 msgstr ""
 
 #. module: project_issue
@@ -664,8 +677,7 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
-"Proveer de soporte de partes de horas para la gestión de incidencias/errores "
-"en los proyectos.\n"
+"Proveer de soporte de partes de horas para la gestión de incidencias/errores en los proyectos.\n"
 "- Esto instala el módulo project_issue_sheet."
 
 #. module: project_issue
@@ -729,8 +741,7 @@ msgstr "Etapa de la tarea"
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
+"                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -746,8 +757,7 @@ msgstr ""
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
-"        and outbound emails for this record before being sent. Separate "
-"multiple email addresses with a comma"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
 
 #. module: project_issue
@@ -800,7 +810,7 @@ msgstr "No asignado"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
-msgstr "Mensajes sin leer"
+msgstr "Mensajes por leer"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
@@ -843,7 +853,7 @@ msgstr ""
 "aquí"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:205
+#: code:addons/project_issue/models/project_issue.py:197
 #, python-format
 msgid "issues"
 msgstr "incidencias"

@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
-# Javier Ramirez <elbomba887@gmail.com>, 2015
-# Luis Triana <luistriana.28@gmail.com>, 2015
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Javier Ramirez <elbomba887@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-02-18 16:47+0000\n"
-"Last-Translator: David Perez <david@closemarketing.es>\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
-"Language: es\n"
+"PO-Revision-Date: 2016-08-22 10:09+0000\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -75,7 +78,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
 msgid "Current Membership Status"
-msgstr "Estado actual de asociación"
+msgstr "Estado actual de socio"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
@@ -100,7 +103,7 @@ msgstr "Fecha hasta la que el socio permanece activo."
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
 msgid "Free Member"
-msgstr "Socio gratis"
+msgstr "Socio gratuito"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -119,19 +122,17 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
 "Indica el estado de la afiliación.\n"
-"- No miembro: Una empresa que no ha solicitado ninguna afiliación.\n"
-"- Miembro cancelado: Un miembro que ha cancelado su afiliación.\n"
-"- Antiguo miembro: Un miembro cuya afiliación ha expirado.\n"
-"- Miembro en espera: Un miembro que ha solicitado la afiliación y cuya "
-"factura va a crearse.\n"
-"- Miembro facturado: Un miembro cuya factura se ha creado.\n"
-"- Miembro pagado: Un miembro que ha pagado su cuota de afiliación."
+"- No socio: Una empresa que no ha solicitado ninguna afiliación.\n"
+"- Socio cancelado: Un socio que ha cancelado su afiliación.\n"
+"- Socio antiguo: Un socio cuya afiliación ha expirado.\n"
+"- Socio en espera: Un socio que ha solicitado la afiliación y cuya factura debe crearse.\n"
+"- Socio facturado: Un socio cuya factura ha sido creada.\n"
+"- Socio pagado: Un socio que ha pagado la tasa de afiliación."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -158,7 +159,7 @@ msgstr "Socio"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr "Importe de la asociación"
+msgstr "Importe de la afiliación"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
@@ -225,7 +226,7 @@ msgstr "Aviso para pedido de venta"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr "Seleccione si quiere dar asociación gratuita"
+msgstr "Seleccione si quiere dar la cuota de afiliación gratuita"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
@@ -287,56 +288,4 @@ msgstr "Usuarios"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr "Localización Vendedor"
-
-#~ msgid "# Claims"
-#~ msgstr "Nº reclamaciones"
-
-#~ msgid "# Tasks"
-#~ msgstr "Nº tareas"
-
-#~ msgid "Campaign"
-#~ msgstr "Campaña"
-
-#~ msgid "Count Payment Method"
-#~ msgstr "Contar Metodo de Pago"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Geo latitud"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Fecha geolocalización"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Geo longitud"
-
-#~ msgid "Medium"
-#~ msgstr "Media"
-
-#~ msgid "Payment Methods"
-#~ msgstr "Formas de pago"
-
-#~ msgid "Source"
-#~ msgstr "Texto original"
-
-#~ msgid "Tasks"
-#~ msgstr "Tareas"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Éste es un nombre que facilita la búsqueda de los diferentes esfuerzos de "
-#~ "campañas. Por ejemplo: campaña de Navidad, rebajas de otoño"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Éste es el método de envío. Por ejemplo: carta postal, correo "
-#~ "electrónico, publicidad web"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Ésta es la fuente del enlace. Por ejemplo: motor de búsqueda, otro "
-#~ "dominio o nombre de unos lista de correos"
+msgstr "Ubicación del Proveedor"

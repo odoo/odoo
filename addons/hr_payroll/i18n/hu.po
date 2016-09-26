@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll
-#
+# 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
@@ -30,18 +30,14 @@ msgstr "%s (másolat)"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
 "* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is "
-"'Waiting'.             \n"
+"* If the payslip is under verification, the status is 'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
 "* Fizetési jegyzék létrehozásakor annak állapota 'Tervezet'.           \n"
-"* Ha a fizetési jegyzék ellenőrzés alatt van akkor annak az állapota "
-"'Várakozó'.            \n"
-"* Ha a fizetési jegyzék visszaigazolt akkor annak állapota "
-"'Elvégezve'.           \n"
-"* amikor egy fizetési jegyzéket visszavon akkor annak az állapota "
-"'Elutasítva'."
+"* Ha a fizetési jegyzék ellenőrzés alatt van akkor annak az állapota 'Várakozó'.            \n"
+"* Ha a fizetési jegyzék visszaigazolt akkor annak állapota 'Elvégezve'.           \n"
+"* amikor egy fizetési jegyzéket visszavon akkor annak az állapota 'Elutasítva'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -121,14 +117,13 @@ msgstr "<strong>Regisztrációs név:</strong>"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Total</strong>"
-msgstr "<strong>Teljes</strong>"
+msgstr "<strong>Összesen</strong>"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
 "A contribution register is a third party involved in the salary\n"
-"                payment of the employees. It can be the social security, "
-"the\n"
+"                payment of the employees. It can be the social security, the\n"
 "                estate or anyone that collect or inject money on payslips."
 msgstr ""
 "Egy közreműködő nyilvántartó egy harmadik fél a munkavállalók \n"
@@ -229,7 +224,7 @@ msgstr "Számítások"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr "Mégse"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -274,7 +269,7 @@ msgstr "Kattintson új közreműködő nyilvántartó hozzáadásához."
 #: selection:hr.payslip.run,state:0
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Close"
-msgstr "Bezár"
+msgstr "Bezárás"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_code
@@ -344,7 +339,7 @@ msgstr "Bérjegyzék beállítás"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Confirm"
-msgstr "Jóváhagyás"
+msgstr "Megerősít"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
@@ -383,7 +378,7 @@ msgstr "Közreműködő nyilvántartók"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
 msgid "Create journal entries from payslips"
-msgstr "Napló belyegyzések létrehozása fizetési jegyzékekből"
+msgstr "Napló bejegyzések létrehozása fizetési jegyzékekből"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
@@ -496,14 +491,14 @@ msgstr "Részletek fizetési szabályok szerint"
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
-msgstr "Kész"
+msgstr "Elvégezve"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -618,7 +613,7 @@ msgstr "Fizetési jegyzék létrehozása az összes kijelölt alkalmazottnak"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
@@ -638,7 +633,7 @@ msgstr "Csoportosítás..."
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run_credit_note
@@ -702,14 +697,14 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
 msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of "
-"basic salary for per product can defined in expression like result = inputs."
-"SALEURO.amount * contract.wage*0.01."
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
 "Egy számításhoz használja. Például, egy szabály az értékesítéshez 1% "
 "jutalékot ad az alap eladásra egy terméknél akkor a ennek a kifejezésnek a "
-"végeredménye = inputs.SALEURO.amount * contract.wage*0.01.  -  bevitt."
-"ELADÁSIEURO.összeg * szerződés.fizetés*0.01."
+"végeredménye = inputs.SALEURO.amount * contract.wage*0.01.  -  "
+"bevitt.ELADÁSIEURO.összeg * szerződés.fizetés*0.01."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
@@ -729,7 +724,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
@@ -746,7 +741,7 @@ msgstr "Utolsó frissítés dátuma"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
@@ -828,7 +823,7 @@ msgstr "Normál munkanap 100%-an fizetve"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Notes"
-msgstr "Jegyzetek"
+msgstr "Megjegyzések"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
@@ -1108,7 +1103,7 @@ msgstr "Hivatkozás"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "Jóváíró számla"
+msgstr "Visszatérítés"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:315
@@ -1326,9 +1321,9 @@ msgstr "A minimum mennyiség, amit erre a szabályra alkalmaz."
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
 msgid ""
-"This will be used to compute the % fields values; in general it is on basic, "
-"but you can also use categories code fields in lowercase as a variable names "
-"(hra, ma, lta, etc.) and the variable basic."
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
 msgstr ""
 "Ez a % mező értékeinek a számítására használt; általánosan ez van alapban, "
 "de tud kategorizált kód mezőket is használni kisbetűvel mint változó nevek "
@@ -1337,12 +1332,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the "
-"dates and credit note specified on Payslips Run."
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
 msgstr ""
 "Ez a varázsló fizetési jegyzéket készít minden kiválasztott alkalmazott "
-"részére a fizetési jegyzék futásán lévő dátumok és a fizetési meghagyások /"
-"tartozások/ alapján."
+"részére a fizetési jegyzék futásán lévő dátumok és a fizetési meghagyások "
+"/tartozások/ alapján."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
@@ -1481,30 +1476,3 @@ msgstr "report.hr_payroll.report_payslipdetails"
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage_base
 msgid "result will be affected to a variable"
 msgstr "az eredmény egy változóhoz lesz rendelve"
-
-#~ msgid ""
-#~ "* When the payslip is created the status is 'Draft'\n"
-#~ "                \n"
-#~ "* If the payslip is under verification, the status is 'Waiting'.\n"
-#~ "                \n"
-#~ "* If the payslip is confirmed then status is set to 'Done'.\n"
-#~ "                \n"
-#~ "* When user cancel payslip the status is 'Rejected'."
-#~ msgstr ""
-#~ "* Fizetési jegyzék létrehozásakor annak állapota 'Tervezet'.           \n"
-#~ "* Ha a fizetési jegyzék ellenőrzés alatt van akkor annak az állapota "
-#~ "'Várakozó'.            \n"
-#~ "* Ha a fizetési jegyzék visszaigazolt akkor annak állapota "
-#~ "'Elvégezve'.           \n"
-#~ "* amikor egy fizetési jegyzéket visszavon akkor annak az állapota "
-#~ "'Elutasítva'."
-
-#~ msgid ""
-#~ "It is used in computation for percentage and fixed amount. For e.g. A "
-#~ "rule for Meal Voucher having fixed amount of 1€ per worked day can have "
-#~ "its quantity defined in expression like worked_days.WORK100."
-#~ "number_of_days."
-#~ msgstr ""
-#~ "Ezt használja a százalékos és a fix ár számítására. Például, az Ebéd jegy-"
-#~ "nek fix ára van, aminek 1€ per munkanap lehet  meghatározva mint "
-#~ "ledolgozott_napok.WORK100.napok_száma."

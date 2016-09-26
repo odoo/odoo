@@ -1,39 +1,54 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_expense
-#
+# 
 # Translators:
-# Ana Juaristi <ajuaristio@gmail.com>, 2015
-# Antonio Trueba, 2015-2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Denis Ledoux <dle@odoo.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Luis Triana <luis.triana@jarsa.com.mx>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-06 07:44+0000\n"
-"PO-Revision-Date: 2016-08-17 08:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
-"Language: es\n"
+"PO-Revision-Date: 2016-09-06 07:44+0000\n"
+"Last-Translator: Luis Triana <luis.triana@jarsa.com.mx>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
 "<b>Note:</b> Set the same email address on your employee form than\n"
-"                            the one you use are your \"From:\". Otherwise, "
-"your\n"
+"                            the one you use are your \"From:\". Otherwise, your\n"
 "                            expenses will not be accepted by email."
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for "
-"incoming receipts</i>"
+"<i class=\"text-muted oe_edit_only\">Use [Reference] as a subject prefix for"
+" incoming receipts</i>"
 msgstr ""
 
 #. module: hr_expense
@@ -42,8 +57,8 @@ msgstr ""
 #, python-format
 msgid ""
 "<p>Managers can validate or refuse expense reports.</p><p>If you refuse a "
-"report, explain the reason using the <i>New Message</i> button in the bottom."
-"</p>"
+"report, explain the reason using the <i>New Message</i> button in the "
+"bottom.</p>"
 msgstr ""
 
 #. module: hr_expense
@@ -51,9 +66,9 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:19
 #, python-format
 msgid ""
-"<p>Once completed, you can <b>submit the expense</b> for approval.</"
-"p><p><i>Tip: from the list view, select all expenses to submit them all at "
-"once, in a single report.</i>"
+"<p>Once completed, you can <b>submit the expense</b> for "
+"approval.</p><p><i>Tip: from the list view, select all expenses to submit "
+"them all at once, in a single report.</i></p>"
 msgstr ""
 
 #. module: hr_expense
@@ -68,8 +83,8 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong "
-"class=\"text-primary\">PRICE</strong>"
+"<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong"
+" class=\"text-primary\">PRICE</strong>"
 msgstr ""
 
 #. module: hr_expense
@@ -105,18 +120,16 @@ msgstr "<strong>Validado por:</strong>"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"<strong>Your email gateway is not configured.</strong> Please configure your "
-"email\n"
-"                            gateway from the Settings app, menu <i>General "
-"Settings</i>."
+"<strong>Your email gateway is not configured.</strong> Please configure your email\n"
+"                            gateway from the Settings app, menu <i>General Settings</i>."
 msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
 #, python-format
 msgid ""
-"A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related "
-"to your expense %s has been made."
+"A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
+" to your expense %s has been made."
 msgstr ""
 
 #. module: hr_expense
@@ -127,7 +140,7 @@ msgstr "Cuenta"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_accountant
 msgid "Accountant"
-msgstr ""
+msgstr "Contable"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -319,7 +332,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_create_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_create_date
 msgid "Created on"
-msgstr "Creado en"
+msgstr "Creado el"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_currency_id
@@ -357,7 +370,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -574,8 +587,8 @@ msgid ""
 "Expenses must have an expense journal specified to generate accounting "
 "entries."
 msgstr ""
-"Los gastos deben tener un diario de gastos establecido para generar entradas "
-"contables."
+"Los gastos deben tener un diario de gastos establecido para generar entradas"
+" contables."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:384
@@ -678,7 +691,7 @@ msgstr "Asistente de razones de rechazo de gastos RRHH"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8947
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_account_move_id
@@ -706,7 +719,7 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_write_uid
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización de"
+msgstr "Última actualización por"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_write_date
@@ -715,7 +728,7 @@ msgstr "Última actualización de"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_write_date
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_write_date
 msgid "Last Updated on"
-msgstr "Última actualización en"
+msgstr "Última actualización el"
 
 #. module: hr_expense
 #. openerp-web
@@ -737,7 +750,7 @@ msgstr "Mis gastos"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
-msgid "My Expenses to Report"
+msgid "My Expenses to Submit"
 msgstr ""
 
 #. module: hr_expense
@@ -907,7 +920,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Post Journal Entries"
-msgstr "Asentar asientos"
+msgstr "Publicar asientos"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0 selection:hr.expense.sheet,state:0
@@ -933,12 +946,12 @@ msgstr "Nombre del producto"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
 msgid "Product Template"
-msgstr "Plantilla producto"
+msgstr "Plantilla de producto"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Qty"
-msgstr "Ctdad"
+msgstr "Cant."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_quantity
@@ -1006,7 +1019,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
 msgid "Reports"
-msgstr ""
+msgstr "Informes"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
@@ -1041,8 +1054,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:87
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
 msgstr ""
 "La unidad de medida seleccionada no pertenece a la misma categoría que la "
 "unidad de medida del producto"
@@ -1076,7 +1089,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_state
@@ -1134,12 +1147,9 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"The <strong class=\"text-info\">PRODUCT CODE</strong> is optional and should "
-"be the\n"
-"                            internal code of one of your expense product. "
-"This\n"
-"                            will set the right product automatically on "
-"your\n"
+"The <strong class=\"text-info\">PRODUCT CODE</strong> is optional and should be the\n"
+"                            internal code of one of your expense product. This\n"
+"                            will set the right product automatically on your\n"
 "                            expense Odoo."
 msgstr ""
 
@@ -1177,8 +1187,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
 "The photo of the receipt and the description of the email will\n"
-"                            be attached to the expense. That way, you get "
-"everything attached\n"
+"                            be attached to the expense. That way, you get everything attached\n"
 "                            to fill the remaining fields later on."
 msgstr ""
 
@@ -1207,15 +1216,14 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense,state:0
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
-msgid "To Report"
-msgstr ""
+msgid "To Submit"
+msgstr "A enviar"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
 "To create expenses by email, take photos of your\n"
-"                            receipts and send them by email with the "
-"following\n"
+"                            receipts and send them by email with the following\n"
 "                            information:"
 msgstr ""
 
@@ -1241,7 +1249,7 @@ msgstr "Importe total"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_unit_amount
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
-msgstr "Precio unidad"
+msgstr "Precio unitario"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_uom_id
@@ -1307,16 +1315,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid ""
 "You can setup a generic email alias to create\n"
-"                                    incoming expenses easily. Write an email "
-"with the receipt\n"
-"                                    in attachment to create an expense line "
-"in one click. If the mail\n"
-"                                    subject contains the product's internal "
-"reference between brackets,\n"
-"                                    the product will be set automatically. "
-"Type the expense amount\n"
-"                                    in the mail subject to set it on the "
-"expense too."
+"                                    incoming expenses easily. Write an email with the receipt\n"
+"                                    in attachment to create an expense line in one click. If the mail\n"
+"                                    subject contains the product's internal reference between brackets,\n"
+"                                    the product will be set automatically. Type the expense amount\n"
+"                                    in the mail subject to set it on the expense too."
 msgstr ""
 
 #. module: hr_expense

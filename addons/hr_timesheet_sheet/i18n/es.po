@@ -1,40 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_timesheet_sheet
-#
+# 
 # Translators:
-# Antonio Trueba, 2016
-# Luis Triana <luistriana.28@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-01-25 18:16+0000\n"
-"Last-Translator: Antonio Trueba\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
-"Language: es\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by "
-"user.                 \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her "
-"senior."
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her senior."
 msgstr ""
-" Se usa el estado 'Borrador' cuando un usuario está introduciendo un parte "
-"de horas nuevo aún sin confirmar.\n"
-"El estado 'Confirmado' se establece cuando el usuario confirma el parte de "
-"horas.\n"
-"El estado 'Realizado' se establece cuando el responsable acepta el parte de "
-"horas."
+" Se usa el estado 'Borrador' cuando un usuario está introduciendo un parte de horas nuevo aún sin confirmar.\n"
+"El estado 'Confirmado' se establece cuando el usuario confirma el parte de horas.\n"
+"El estado 'Realizado' se establece cuando el responsable acepta el parte de horas."
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -59,8 +64,9 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
-"Diferencia permitida, en horas, entre el fichaje/salida y el cómputo de hoja "
-"de asistencia para una hoja. Póngalo a 0 si no desea ningún tipo de control."
+"Diferencia permitida, en horas, entre el fichaje/salida y el cómputo de hoja"
+" de asistencia para una hoja. Póngalo a 0 si no desea ningún tipo de "
+"control."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
@@ -129,7 +135,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_create_date
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_create_date
 msgid "Created on"
-msgstr "Creado en"
+msgstr "Creado el"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state_attendance
@@ -179,7 +185,7 @@ msgstr "Diferencias"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
@@ -229,7 +235,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_id
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -241,8 +247,8 @@ msgstr "En borrador"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:74
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link him/her to a "
-"user."
+"In order to create a timesheet for this employee, you must link him/her to a"
+" user."
 msgstr ""
 "Para crear un parte de horas para este empleado, debe enlazarlo con un "
 "usuario."
@@ -259,13 +265,13 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_uid
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización de"
+msgstr "Última actualización por"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_date
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_date
 msgid "Last Updated on"
-msgstr "Última actualización en"
+msgstr "Última actualización el"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -306,7 +312,7 @@ msgstr "Nota"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
-msgstr "Abrir"
+msgstr "Abierto"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:30
@@ -404,8 +410,8 @@ msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
 msgstr ""
-"No se puede validar el parte de horas, ya que no contiene el mismo número de "
-"registros de entrada y de salida."
+"No se puede validar el parte de horas, ya que no contiene el mismo número de"
+" registros de entrada y de salida."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
@@ -480,7 +486,7 @@ msgstr "Hoja de Horas por aprobar"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Timesheets"
-msgstr "Partes de tiempo"
+msgstr "Partes de horas"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
@@ -557,7 +563,7 @@ msgstr "Total hoja servicios"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unread Messages"
-msgstr "Mensajes sin leer"
+msgstr "Mensajes por leer"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -597,8 +603,8 @@ msgstr "Semanalmente"
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
 msgstr ""
-"No puede introducir una fecha de asistencia fuera de las fechas del parte de "
-"horas."
+"No puede introducir una fecha de asistencia fuera de las fechas del parte de"
+" horas."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:468
@@ -614,7 +620,8 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:240
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr "No se puede borrar un parte de horas que tenga entradas de asistencia."
+msgstr ""
+"No se puede borrar un parte de horas que tenga entradas de asistencia."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:238
@@ -634,8 +641,8 @@ msgstr "No puede duplicar un parte de horas"
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
 msgstr ""
-"No puede introducir una fecha de asistencia fuera de las fechas del parte de "
-"horas actual."
+"No puede introducir una fecha de asistencia fuera de las fechas del parte de"
+" horas actual."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
@@ -712,129 +719,3 @@ msgstr "a"
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "waiting approval"
 msgstr "Esperando aprobación"
-
-#~ msgid "# Nbr Timesheet"
-#~ msgstr "Nº partes de horas"
-
-#~ msgid "# Total Attendance"
-#~ msgstr "Nº total de asistencias"
-
-#~ msgid "# Total Diff"
-#~ msgstr "Nº total de diferencias"
-
-#~ msgid "# Total Timesheet"
-#~ msgstr "Nº total de partes de horas"
-
-#~ msgid "Action Needed"
-#~ msgstr "Necesaria acción"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Confirmed"
-#~ msgstr "Confirmado"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Day"
-#~ msgstr "Día"
-
-#~ msgid "Done"
-#~ msgstr "Realizado"
-
-#~ msgid "Draft"
-#~ msgstr "Borrador"
-
-#~ msgid "External Timesheet"
-#~ msgstr "Parte de horas externo"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Empresas)"
-
-#~ msgid "HR Department"
-#~ msgstr "Departamento Recursos Humanos"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
-
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the "
-#~ "employee to a product."
-#~ msgstr ""
-#~ "Para crear un parte de horas para este empleado, debe enlazar el empleado "
-#~ "a un producto."
-
-#~ msgid "Internal Timesheet"
-#~ msgstr "Parte de horas interno"
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un seguidor"
-
-#~ msgid "It will open your current timesheet"
-#~ msgstr "Abrirá su hoja de asistencia actual"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid ""
-#~ "My Timesheet opens your timesheet so that you can book your activities "
-#~ "into the system. From the same form, you can register your attendances "
-#~ "(Sign In/Out) and describe the working hours made on the different "
-#~ "projects. At the end of the period defined in the company, the timesheet "
-#~ "is confirmed by the user and can be validated by his manager. If "
-#~ "required, as defined on the project, you can generate the invoices based "
-#~ "on the timesheet."
-#~ msgstr ""
-#~ "Mi parte de horas abre su parte de horas para que pueda registrar sus "
-#~ "actividades en el sistema. De la misma forma, puede registrar sus "
-#~ "asistencias (entrar/salir) y describir las horas de trabajo realizadas en "
-#~ "los diferentes proyectos. Al final del período definido en la empresa, el "
-#~ "parte de horas se confirma por el usuario y puede ser validado por su "
-#~ "gerente. Si es necesario, tal como se define en el proyecto, puede "
-#~ "generar las facturas en base a la tabla de tiempos."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Abrir menú RRHH"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de mensajes no leidos"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del sitio web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicaciones del sitio web"
-
-#~ msgid "Date From"
-#~ msgstr "Fecha desde"
-
-#~ msgid "Date To"
-#~ msgstr "Fecha hasta"
-
-#~ msgid "My Current Timesheet"
-#~ msgstr "Mi hoja de servicios actual"
-
-#~ msgid "Related user name for the resource to manage its access."
-#~ msgstr "Usuario relacionado con el recurso para gestionar su acceso."

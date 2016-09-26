@@ -1,27 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_action_rule
-#
+# 
 # Translators:
-# Agathe Mollé <molleagathe@gmail.com>, 2015
-# Benjamin Delagoutte <ben@ampletus.fr>, 2015
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2015
-# Loic <loic.richard2@gmail.com>, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
-# Melanie Bernard <mbe@odoo.com>, 2015
-# Quentin THEURET <quentin@theuret.net>, 2015
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Lionel Sausin <ls@numerigraphe.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Benjamin Delagoutte <ben@ampletus.fr>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Richard Mathot <rim@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Loic <loic.richard2@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Agathe Mollé <molleagathe@gmail.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Quentin THEURET <quentin@theuret.net>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2015-12-02 16:50+0000\n"
-"Last-Translator: Agathe Mollé <molleagathe@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_action_rule
@@ -154,10 +163,8 @@ msgstr "Délai après la date de déclenchement"
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 
 #. module: base_action_rule
@@ -175,7 +182,7 @@ msgstr "Type de délai"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher le nom"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_domain
@@ -195,7 +202,7 @@ msgstr "Champs à modifier"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_id
 msgid "Filter"
-msgstr "Filtre"
+msgstr "Filtrer"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_sequence
@@ -240,7 +247,8 @@ msgstr ""
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr ""
 "Si présent, la condition doit être satisfaite avant la mise à jour de "
 "l'enregistrement."
@@ -253,8 +261,8 @@ msgstr "En cours"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
 "Dans cette même vue de \"Recherche\", sélectionner le menu \"Sauvegarder le "
@@ -276,21 +284,21 @@ msgstr "Dernière action"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
@@ -400,7 +408,7 @@ msgstr "Séquence"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_server_action_ids
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Server Actions"
-msgstr "Actions du serveur"
+msgstr "Actions-serveur"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -425,7 +433,7 @@ msgstr "Statut"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
 msgid "Subject"
-msgstr "Objet"
+msgstr "Sujet"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
@@ -456,18 +464,16 @@ msgstr "Utiliser le calendrier"
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
 "Utiliser des actions automatisées pour déclencher automatiquement des "
 "actions pour différents écrans. Par exemple : une piste créée par un "
 "utilisateur spécifique peut être automatiquement affectée à une équipe de "
-"vente, ou une opportunité en attente depuis plus de 14 jours peut déclencher "
-"un rappel automatique par courriel."
+"vente, ou une opportunité en attente depuis plus de 14 jours peut déclencher"
+" un rappel automatique par courriel."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
@@ -487,8 +493,7 @@ msgstr ""
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
-"scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 
 #. module: base_action_rule
@@ -509,25 +514,3 @@ msgid ""
 msgstr ""
 "Vous pouvez utiliser des filtres plutôt que de sélectionner des "
 "enregistrements. Pour créer un nouveau filtre : "
-
-#~ msgid "Create Date"
-#~ msgstr "Date de création"
-
-#~ msgid ""
-#~ "Delay after the trigger date.You can put a negative number if you need a "
-#~ "delay before thetrigger date, like sending a reminder 15 minutes before a "
-#~ "meeting."
-#~ msgstr ""
-#~ "Délai après la date de déclenchement. Vous pouvez mettre une valeur "
-#~ "négative si vous avez besoin d'un délai avant la date de déclenchement, "
-#~ "comme envoyer un rappel 15 minutes avant une réunion."
-
-#~ msgid "Last Run"
-#~ msgstr "Dernière exécution"
-
-#~ msgid ""
-#~ "When should the condition be triggered. If present, will be checked by "
-#~ "the scheduler. If empty, will be checked at creation and update."
-#~ msgstr ""
-#~ "Cas où devrait être déclenché la condition. Si renseigné, la valeur sera "
-#~ "vérifiée par le planificateur de tâches"

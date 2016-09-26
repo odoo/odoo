@@ -1,22 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-#
+# 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:44+0000\n"
-"PO-Revision-Date: 2016-08-06 10:39+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
-"Language: nl\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
@@ -35,7 +39,7 @@ msgid "# of Issues"
 msgstr "# Issues"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:170
+#: code:addons/project_issue/models/project_issue.py:162
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -75,20 +79,17 @@ msgstr "Voeg interne notitie toe..."
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
-"                                           * Normal is the default "
-"situation\n"
+"                                           * Normal is the default situation\n"
 "\n"
-"                                           * Blocked indicates something is "
-"preventing the progress of this issue\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
 "\n"
-"                                           * Ready for next stage indicates "
-"the issue is ready to be pulled to the next stage"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Kostenplaatsen"
+msgstr "Kostenplaats"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -106,7 +107,7 @@ msgstr "Toegewezen"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Assigned to"
-msgstr "Toegekend aan"
+msgstr "Toegewezen aan"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
@@ -143,7 +144,7 @@ msgstr "Geblokkeerd"
 #: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "Buzz of stel in als gereed"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -160,12 +161,12 @@ msgstr "Kanaal"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr "Vink deze optie aan om acties van klanten via dit project te beheren"
+msgstr "Vink deze optie aan om klantactiviteiten te beheren via dit project"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
 msgid "Closed"
-msgstr "Gesloten"
+msgstr "Afgesloten"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
@@ -188,13 +189,13 @@ msgstr "Communicatiekanaal."
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Company"
-msgstr "Bedrijf"
+msgstr "Bedijf"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
-msgstr "Contactpersoon"
+msgstr "Contact"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_create_date
@@ -225,13 +226,13 @@ msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:310
+#: code:addons/project_issue/models/project_issue.py:300
 #, python-format
 msgid "Customer"
 msgstr "Klant"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:312
+#: code:addons/project_issue/models/project_issue.py:302
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
@@ -290,7 +291,7 @@ msgstr "Vertraging"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Delete"
-msgstr "Verwijderen"
+msgstr "Verwijder"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -311,7 +312,7 @@ msgstr "Verschil in dagen tussen laatste actie en huidige datum"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
@@ -331,7 +332,7 @@ msgstr "Issue wijzigen"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -352,7 +353,7 @@ msgstr "Verbetering omschrijving"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
@@ -360,15 +361,16 @@ msgid "Helpdesk & Support"
 msgstr "Helpdesk & Support"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Hoog"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:285
+#: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "I take it"
-msgstr "Ik neem hem"
+msgstr "Ik neem het"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
@@ -434,7 +436,7 @@ msgstr "Issue geopend"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next stage"
-msgstr ""
+msgstr "Issue gereed voor volgende fase"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -511,7 +513,8 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Laag"
 
@@ -530,7 +533,7 @@ msgstr "Mijn issues"
 #: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Functionele of technische hulp nodig"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -539,7 +542,7 @@ msgid "New"
 msgstr "Nieuw"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:289
+#: code:addons/project_issue/models/project_issue.py:279
 #, python-format
 msgid "New Issue"
 msgstr "Nieuw issue"
@@ -550,7 +553,7 @@ msgid "Next Action"
 msgstr "Volgende actie"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:336
+#: code:addons/project_issue/models/project_issue.py:326
 #, python-format
 msgid "No Subject"
 msgstr "Geen onderwerp"
@@ -572,12 +575,12 @@ msgstr "Normaal"
 #: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
 msgid "Not validated"
-msgstr ""
+msgstr "Niet gevalideerd"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
 msgid "Number of Days to close the project issue"
-msgstr "Aantal dagen tot sluiten issue"
+msgstr "Aantal dagen tot sluiten project issue"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
@@ -590,8 +593,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Overschrijf de standaard waarde die getoond wordt voor de geblokkeerde staat "
-"van de kanban selectie, wanneer de taak of issue zich in die fase bevind."
+"Overschrijf de standaard waarde die getoond wordt voor de geblokkeerde staat"
+" van de kanban selectie, wanneer de taak of issue zich in die fase bevind."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
@@ -599,8 +602,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Overschrijf de standaard waarde die getoond wordt voor de klaar staat van de "
-"kanban selectie, wanneer de taak of issue zich in die fase bevind."
+"Overschrijf de standaard waarde die getoond wordt voor de klaar staat van de"
+" kanban selectie, wanneer de taak of issue zich in die fase bevind."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
@@ -620,8 +623,8 @@ msgstr "Relatie"
 #: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want "
-"to delete."
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
 msgstr ""
 "Verwijder eerst de bestaande issues van het project dat aan deze klant is "
 "gekoppeld."
@@ -655,7 +658,7 @@ msgstr "Project"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
-msgstr "Incidenten"
+msgstr "Project issues"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
@@ -669,24 +672,23 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
-"Geeft de mogelijkheid voor het beheren van urenstaten op bugs/issues in "
-"projecten.\n"
+"Geeft de mogelijkheid voor het beheren van urenstaten op bugs/issues in projecten.\n"
 "- Dit installeert de module project_issue-sheet."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on issue"
-msgstr ""
+msgstr "Beoordeling op issue"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr "Gereed voor volgende fase"
+msgstr "Klaar voor volgende fase"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
 msgid "Ready to reopen"
-msgstr ""
+msgstr "Klaar om te heropenen"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -734,8 +736,7 @@ msgstr "Taak fase"
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
+"                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -751,8 +752,7 @@ msgstr ""
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
-"        and outbound emails for this record before being sent. Separate "
-"multiple email addresses with a comma"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
 
 #. module: project_issue
@@ -776,8 +776,8 @@ msgid ""
 msgstr ""
 "Dit overzicht van project issues laat u de kwaliteit van uw support of "
 "nazorg analyseren. U kunt de isuue op leeftijd volgen. U kunt de tijd "
-"analyseren die nodig is voor het openen en sluiten van een issue, het aantal "
-"uitgewisselde emails en de gemiddelde besteedde tijd per issue."
+"analyseren die nodig is voor het openen en sluiten van een issue, het aantal"
+" uitgewisselde emails en de gemiddelde besteedde tijd per issue."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_config_settings_form_inherit_project_issue
@@ -787,7 +787,7 @@ msgstr "Urenstaten"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
-msgstr ""
+msgstr "Urenstaten op issues"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
@@ -843,11 +843,11 @@ msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
 msgstr ""
-"U kunt dit issue aan een bestaande taak koppelen, of onmiddellijk een nieuwe "
-"taak van hieruit aanmaken"
+"U kunt dit issue aan een bestaande taak koppelen, of onmiddellijk een nieuwe"
+" taak van hieruit aanmaken"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:205
+#: code:addons/project_issue/models/project_issue.py:197
 #, python-format
 msgid "issues"
 msgstr "issues"

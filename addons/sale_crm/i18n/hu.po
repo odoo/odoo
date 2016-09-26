@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-#
+# 
 # Translators:
-# Kisrobert <kisrobi@gmail.com>, 2015
-# Kris Krnacs, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Kisrobert <kisrobi@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2015-10-26 20:55+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"PO-Revision-Date: 2016-08-22 10:09+0000\n"
+"Last-Translator: Kisrobert <kisrobi@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -28,7 +28,7 @@ msgstr "# Bejelentések"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr "# megrendelésszámból"
+msgstr "# vásárlói megrendelésszámból"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -46,8 +46,8 @@ msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított tag "
-"tagságának állapotát."
+"Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított tag"
+" tagságának állapotát."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -84,12 +84,12 @@ msgstr "Ügyfél helye"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
 msgid "Date from which membership becomes active."
-msgstr "Dátum amitől a tagság aktiválódik."
+msgstr "Dátum ahonnan a tagság aktiválódik."
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr "Dátum melyen a tagság vissza lett vonva"
+msgstr "Dátum melyen a tagság érvénytelenítve lett"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
@@ -118,14 +118,13 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
 "Ez mutatja meg a tagság szintjét.\n"
-"-nem tag: Az ügyfél még nem nyújtott be kérvényt egyik tagságra sem.\n"
-"-Törölt tag: Olyan tag, aki a törlését kérte.\n"
+"-Nem tag: Az ügyfél még nem nyújtott be kérvényt egyik tagságra sem.\n"
+"-Törölt tag: Olyan tag, aki visszavonta tagságát.\n"
 "-Régi tag: Egy olyan tag, akinek a tagsága lejárt.\n"
 "-Várakozó tag: Egy olyan tag, aki tagságot igényelt és készül a számlája.\n"
 "-Kiszámlázott tag: Tag, akinek a számlája elkészült.\n"
@@ -218,7 +217,7 @@ msgstr "Árajánlatok"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
-msgstr "Vevői megrendelés"
+msgstr "Vásárlói megrendelés"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
@@ -272,8 +271,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
-"Ez a raktár termékhely lesz használva, az alapértelmezett helyett, ami a "
-"forrás helye lesz a jelenlegi partnertől érkezett termékekre"
+"Ezt a raktár termékhelyet használja, az alapértelmezett helyett, ami a "
+"forrás helye lesz a jelenlegi partnertől érkeztetett termékekre"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -283,62 +282,4 @@ msgstr "Felhasználók"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr "Beszállító helye"
-
-#~ msgid "# Claims"
-#~ msgstr "# Reklamációk száma"
-
-#~ msgid "# Tasks"
-#~ msgstr "# Feladatok"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampány"
-
-#~ msgid "Count Payment Method"
-#~ msgstr "Fizetés számlálási módja"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Földrajzi szélesség"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Földrajzi helymeghatározás dátuma"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Földrajzi hosszúság"
-
-#~ msgid "Medium"
-#~ msgstr "Közepes"
-
-#~ msgid "Payment Methods"
-#~ msgstr "Elérhető fizetési módok"
-
-#~ msgid "Source"
-#~ msgstr "Forrás"
-
-#~ msgid "Tasks"
-#~ msgstr "Feladatok"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Ez a név ami segít követni a különböző kampány törekvéseit. Pl: "
-#~ "Őszi_árhullás, Karácsonyi_speciál"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Ez a kivitelezés módja. Ex: Posta, Email, vagy Transzparens hirdetés"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Ez az elérési út forrása. Pl: Kereső motor, másik domain, vagy email "
-#~ "lista neve"
-
-#~ msgid ""
-#~ "A member with whom you want to associate your membership. It will "
-#~ "consider the membership state of the associated member."
-#~ msgstr ""
-#~ "Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított "
-#~ "tag tagságának állapotát."
+msgstr "Beszállító helyszíne"

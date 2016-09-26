@@ -1,76 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum
-#
+# 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:10+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"PO-Revision-Date: 2016-08-22 10:10+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_forum
 #: model:mail.template,body_html:website_forum.validation_email
 msgid ""
 "\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
-"5px; font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
-"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
-"\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%; color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
-"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Dear ${object.name},</p>\n"
-"                <p>You have been invited to validate your email in order to "
-"get access to\n"
+"                <p>You have been invited to validate your email in order to get access to\n"
 "                \"${object.company_id.name}\" Q/A Forums.</p>\n"
-"                <p>To validate your email, please click on the following "
-"link:</p>\n"
-"                <a style=\"margin-left: 15px; padding:5px 10px; border-"
-"radius: 3px; background-color:#a24689; text-align:center; text-decoration:"
-"none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
-"                    Validate my account for \"${object.company_id.name}\" Q/"
-"A Forums\n"
+"                <p>To validate your email, please click on the following link:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Validate my account for \"${object.company_id.name}\" Q/A Forums\n"
 "                </a>\n"
 "                <p>Thanks for your participation!</p>\n"
 "            </td>\n"
@@ -79,53 +62,36 @@ msgid ""
 "</div>"
 msgstr ""
 "\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
-"5px; font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
-"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
-"\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%; color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
-"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Tisztelt ${object.name},</p>\n"
-"                <p>Meghívtuk az email érvényesítésére, hogy hozzáférést "
-"kapjon a \n"
+"                <p>Meghívtuk az email érvényesítésére, hogy hozzáférést kapjon a \n"
 "                \"${object.company_id.name}\" K/F fórumok eléréséhez.</p>\n"
-"                <p>Email érvényesítéséhez, kérjük kattintson a következő "
-"link elérési útra:</p>\n"
-"                <a style=\"margin-left: 15px; padding:5px 10px; border-"
-"radius: 3px; background-color:#a24689; text-align:center; text-decoration:"
-"none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
-"                    Érvényesítse emailemet a  \"${object.company_id.name}\" "
-"K/F fórumokhoz\n"
+"                <p>Email érvényesítéséhez, kérjük kattintson a következő link elérési útra:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Érvényesítse emailemet a  \"${object.company_id.name}\" K/F fórumokhoz\n"
 "                </a>\n"
 "                <p>Köszönjük részvételét!</p>\n"
 "            </td>\n"
@@ -138,8 +104,8 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:21
 #, python-format
 msgid ""
-" karma is required to perform this action. You can earn karma by having your "
-"answers upvoted by the community."
+" karma is required to perform this action. You can earn karma by having your"
+" answers upvoted by the community."
 msgstr ""
 " karmára van szükség ennek a műveletnek a végrehajtásához. Karmát szerezhet "
 "a válaszai közösség általi felértékelő szavazatával."
@@ -245,8 +211,7 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead\n"
 "    either edit the question or add a comment."
 msgstr ""
-"<b>Válaszok ne adjanak többletet vagy kiegészítést a kérdésekhez</b>. "
-"Inkább\n"
+"<b>Válaszok ne adjanak többletet vagy kiegészítést a kérdésekhez</b>. Inkább\n"
 "    szerkessze a kérdést vagy adjon megjegyzést hozzá."
 
 #. module: website_forum
@@ -255,8 +220,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
 msgstr ""
-"<b>Válaszok nem adnak hozzá vagy bont ki kérdéseket</b>. Inkább szerkessze a "
-"kérdést vagy adjon hozzá kérdés megjegyzést."
+"<b>Válaszok nem adnak hozzá vagy bont ki kérdéseket</b>. Inkább szerkessze a"
+" kérdést vagy adjon hozzá kérdés megjegyzést."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -280,25 +245,21 @@ msgstr ""
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not start debates</b>\n"
-"    This community Q&amp;A is not a discussion group. Please avoid holding "
-"debates in\n"
-"    your answers as they tend to dilute the essence of questions and "
-"answers. For\n"
+"    This community Q&amp;A is not a discussion group. Please avoid holding debates in\n"
+"    your answers as they tend to dilute the essence of questions and answers. For\n"
 "    brief discussions please use commenting facility."
 msgstr ""
 "<b>Válasz nem kezdődhet megvitatásokkal</b>\n"
-"    Ez a közösség Q&amp;A nem egy megbeszélő csoport. Törekedjen elkerülni a "
-"vitákat\n"
-"    a válaszaiban mivel ez feloldja a kérdések és válaszok lényegét. Tömör "
-"megbeszélésekhez használja a megjegyzések lehetőséget."
+"    Ez a közösség Q&amp;A nem egy megbeszélő csoport. Törekedjen elkerülni a vitákat\n"
+"    a válaszaiban mivel ez feloldja a kérdések és válaszok lényegét. Tömör megbeszélésekhez használja a megjegyzések lehetőséget."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers shouldn't just point to other Questions</b>. Instead add a "
 "question comment indication \"Possible duplicate of...\". However, it's ok "
-"to include links to other questions or answers providing relevant additional "
-"information."
+"to include links to other questions or answers providing relevant additional"
+" information."
 msgstr ""
 "<b>Válaszoknak nem szabad másik kérdésekre hivatkoznia</b>. Ehelyett adjon "
 "egy kérdés észrevétel utalást \"Lehetséges, hogy ismétlése ennek...\". "
@@ -316,9 +277,7 @@ msgid ""
 msgstr ""
 "<b>Válaszoknak nem szabad másik kérdésekre hivatkoznia</b>.\n"
 "    Ehelyett adjon egy észrevétel utalást a <i>\"Lehetséges, hogy  \n"
-"    ismétlése ennek..\"</i>. Azonban, megengedett másik kérdésekre vagy "
-"válaszokra hivatkozó elérési út beillesztése az idevonatkozó további "
-"információ nyújtásához."
+"    ismétlése ennek..\"</i>. Azonban, megengedett másik kérdésekre vagy válaszokra hivatkozó elérési út beillesztése az idevonatkozó további információ nyújtásához."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -339,8 +298,8 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the "
-"solution description text in your answer, even if it's just a copy/paste. "
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
+" solution description text in your answer, even if it's just a copy/paste. "
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
@@ -354,13 +313,11 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Before you ask - please make sure to search for a similar question.</b> "
-"You can\n"
+"<b>Before you ask - please make sure to search for a similar question.</b> You can\n"
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
 msgstr ""
-"<b>Mielőtt kérdezne  - előtte keressen rá a hasonló kérdések között.</b> "
-"Keresést tud\n"
+"<b>Mielőtt kérdezne  - előtte keressen rá a hasonló kérdések között.</b> Keresést tud\n"
 "    végezni a kérdésekre a címére vagy címkéjére hivatkozva.  Az is OK, ha\n"
 "    megválaszolja a saját kérdését."
 
@@ -386,20 +343,14 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid ""
-"<b>Please try to give a substantial answer.</b> If you wanted to comment on "
-"the question or answer, just\n"
-"        <b>use the commenting tool.</b> Please remember that you can always "
-"<b>revise your answers</b>\n"
-"        - no need to answer the same question twice. Also, please <b>don't "
-"forget to vote</b>\n"
+"<b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just\n"
+"        <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>\n"
+"        - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "        - it really helps to select the best questions and answers!"
 msgstr ""
-"<b>Kérem próbáljon meg lényegre törő választ adni.</b> Ha a válaszhoz vagy "
-"kérdéshez észrevételt fűzne hozzá, csak\n"
-"        <b>használja a megjegyzés eszközt.</b> Kérem vegye figyelembe, hogy "
-"bármikor <b>korrigálhatja a válaszait</b>\n"
-"        - nem szükséges kétszer válaszolnia ugyanarra a kérdésre. "
-"Ugyanakkor, kérem <b>ne felejtsen el szavazni</b>\n"
+"<b>Kérem próbáljon meg lényegre törő választ adni.</b> Ha a válaszhoz vagy kérdéshez észrevételt fűzne hozzá, csak\n"
+"        <b>használja a megjegyzés eszközt.</b> Kérem vegye figyelembe, hogy bármikor <b>korrigálhatja a válaszait</b>\n"
+"        - nem szükséges kétszer válaszolnia ugyanarra a kérdésre. Ugyanakkor, kérem <b>ne felejtsen el szavazni</b>\n"
 "        - ez tényleg segít a legjobb kérdések és válaszok kiválasztásában!"
 
 #. module: website_forum
@@ -445,8 +396,7 @@ msgid ""
 "                                <span class=\"sr-only\">Select Post</span>"
 msgstr ""
 "<span class=\"caret\"/>\n"
-"                                <span class=\"sr-only\">Válasszon ki "
-"bejegyzést</span>"
+"                                <span class=\"sr-only\">Válasszon ki bejegyzést</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -517,13 +467,11 @@ msgstr "Egy új kérdés"
 msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
-"            others to find and answer your question. (Hover the mouse to "
-"follow/unfollow tag(s))"
+"            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))"
 msgstr ""
 "A címke egy cédula mely a kérdéseket kategorizálja másik,\n"
 "            hasonló kérdésekkel. A megfelelő címke használatával mások \n"
-"            számára megkönnyíti a kérdésére adott válasz megtalálását. "
-"(Húzza föléé az egeret a követés/követés leállítása címké(k)re)"
+"            számára megkönnyíti a kérdésére adott válasz megtalálását. (Húzza föléé az egeret a követés/követés leállítása címké(k)re)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -1026,7 +974,7 @@ msgstr "Kattintson a kérdései közzétételéhez."
 #: selection:forum.post,state:0
 #, python-format
 msgid "Close"
-msgstr "Bezár"
+msgstr "Bezárás"
 
 #. module: website_forum
 #. openerp-web
@@ -1133,10 +1081,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid ""
-"Congratulations! Your email has just been validated. You may now participate "
-"to our forums."
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
 msgstr ""
-"Gratulálunk! Email-jét most hagytuk jóvá. Most már részt vehet a fórumunkban."
+"Gratulálunk! Email-jét most hagytuk jóvá. Most már részt vehet a "
+"fórumunkban."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_content
@@ -1191,7 +1140,7 @@ msgstr "Ország..."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_date
 msgid "Create Date"
-msgstr "Létrehozás dátuma"
+msgstr "Dátum létrehozás"
 
 #. module: website_forum
 #. openerp-web
@@ -1317,7 +1266,7 @@ msgstr "Hozzászólások"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
@@ -1332,7 +1281,7 @@ msgstr "Leszavazás"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit"
-msgstr "Szerkeszt"
+msgstr "Szerkesztés"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -1389,7 +1338,7 @@ msgstr "Szerkesztési tulajdonságok: ábra és elérési út linkek"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_mail_compose_message
@@ -1513,27 +1462,18 @@ msgstr "Követett kérdések"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"For example, if you ask an interesting question or give a helpful answer, "
-"your\n"
-"    input will be upvoted. On the other hand if the answer is misleading - "
-"it will\n"
-"    be downvoted. Each vote in favor will generate 10 points, each vote "
-"against\n"
-"    will subtract 10 points. There is a limit of 200 points that can be "
-"accumulated\n"
-"    for a question or answer per day. The table given at the end explains "
-"reputation point\n"
+"For example, if you ask an interesting question or give a helpful answer, your\n"
+"    input will be upvoted. On the other hand if the answer is misleading - it will\n"
+"    be downvoted. Each vote in favor will generate 10 points, each vote against\n"
+"    will subtract 10 points. There is a limit of 200 points that can be accumulated\n"
+"    for a question or answer per day. The table given at the end explains reputation point\n"
 "    requirements for each type of moderation task."
 msgstr ""
 "Például, Ha egy érdekes kérdést tesz fel vagy segítőkész választ ad, akkor\n"
-"    a bevitele felértékelő szavazatot kap. Máskülönben ha a válasza "
-"félrevezető - akkor\n"
-"    az le lesz értékelve. Mindegyik felértékelő szavazat 10 pontot generál, "
-"a leértékelő\n"
-"    szavazatok 10 pontot elvesznek. A határérték 200 pont naponta, ennyi "
-"gyűjthető \n"
-"    a kérdésekkel és válaszokkal. A végén szerepló táblázat a magyarázat a "
-"tisztelet pontokra \n"
+"    a bevitele felértékelő szavazatot kap. Máskülönben ha a válasza félrevezető - akkor\n"
+"    az le lesz értékelve. Mindegyik felértékelő szavazat 10 pontot generál, a leértékelő\n"
+"    szavazatok 10 pontot elvesznek. A határérték 200 pont naponta, ennyi gyűjthető \n"
+"    a kérdésekkel és válaszokkal. A végén szerepló táblázat a magyarázat a tisztelet pontokra \n"
 "    az egyes moderátori ügyekre vonatkozólag."
 
 #. module: website_forum
@@ -1676,7 +1616,7 @@ msgstr "Kitűnő kérdés"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -1703,7 +1643,7 @@ msgstr "Már megválaszolt"
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
-msgstr "Segítség"
+msgstr "Súgó"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
@@ -1712,7 +1652,7 @@ msgstr "Segítség"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_karma_dofollow
@@ -1725,12 +1665,10 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"If this approach is not for you, please respect the community and use Google"
-"+\n"
+"If this approach is not for you, please respect the community and use Google+\n"
 "    communities instead."
 msgstr ""
-"Ha ezt a szemléletet nem tartja megfelelőnek, tartsa tiszteletben ezt a "
-"közösséget és használjon inkább \n"
+"Ha ezt a szemléletet nem tartja megfelelőnek, tartsa tiszteletben ezt a közösséget és használjon inkább \n"
 "    Google+ közösséget."
 
 #. module: website_forum
@@ -1740,29 +1678,23 @@ msgid ""
 "            users having a high karma can see closed posts to moderate\n"
 "            them."
 msgstr ""
-"Ha bezárja ezt a közzétett bejegyzést, akkor a legtöbb felhasználó részére "
-"láthatatlanná válik. Csak\n"
-"            a magas karmával rendelkező felhasználók láthatják a lezárt "
-"bejegyzéseket és \n"
+"Ha bezárja ezt a közzétett bejegyzést, akkor a legtöbb felhasználó részére láthatatlanná válik. Csak\n"
+"            a magas karmával rendelkező felhasználók láthatják a lezárt bejegyzéseket és \n"
 "            módosíthatnak rajta."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "If you fit in one of these example or if your motivation for asking the\n"
-"    question is “I would like to participate in a discussion about ______”, "
-"then\n"
+"    question is “I would like to participate in a discussion about ______”, then\n"
 "    you should not be asking here but on our mailing lists.\n"
-"    However, if your motivation is “I would like others to explain ______ to "
-"me”,\n"
+"    However, if your motivation is “I would like others to explain ______ to me”,\n"
 "    then you are probably OK."
 msgstr ""
 "Ha beilleszt ezek közül a példák közül, vagy ösztönözve van megkérdezni\n"
-"    a kérdésbe “Szeretnék részt venni egy megbeszélésen arról,  ______”, "
-"akkor\n"
+"    a kérdésbe “Szeretnék részt venni egy megbeszélésen arról,  ______”, akkor\n"
 "    azt ne itt tegye, hanem a levelező listákon.\n"
-"    Azonban, ösztönözve van megkérdezni “Másokat megkérném, hogy "
-"elmagyarázzák azt ______ nekem”,\n"
+"    Azonban, ösztönözve van megkérdezni “Másokat megkérném, hogy elmagyarázzák azt ______ nekem”,\n"
 "    akkor az lehetséges, hogy rendeben van, OK."
 
 #. module: website_forum
@@ -1857,7 +1789,7 @@ msgstr "Tájékoztatjuk"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote___last_update
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag___last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
@@ -1870,7 +1802,7 @@ msgstr "Utoljára frissítve"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_write_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_write_date
@@ -1888,7 +1820,7 @@ msgstr "Utolsó tevékenység dátuma"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Utolsó figyelmeztetés olvasottnak jelölve az alap naptárban"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2143,7 +2075,7 @@ msgstr "Egyértelmüsítő"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Pending"
-msgstr "Függőben lévő"
+msgstr "Függő"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2197,7 +2129,7 @@ msgstr "Népszerű kérdés (500)"
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "Elküld"
+msgstr "Könyvelésre küld"
 
 #. module: website_forum
 #. openerp-web
@@ -2275,12 +2207,13 @@ msgstr "Egy [Törölt] vagy [Lezárt]  kérdésen nem lehet közzétenni válasz
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Posts"
-msgstr "Bejegyzések"
+msgstr "Bejegyzés közzétételek"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Provide enough details and, if possible, give an example."
-msgstr "Nyújtson elegendő részleteket és, ha lehetséges, adjon meg egy példát."
+msgstr ""
+"Nyújtson elegendő részleteket és, ha lehetséges, adjon meg egy példát."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -2552,12 +2485,10 @@ msgstr "Megosztás"
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid ""
 "Share an awesome link. Your post will appear in the 'Newest' top-menu.\n"
-"            If the community vote on your post, it will get traction by "
-"being promoted\n"
+"            If the community vote on your post, it will get traction by being promoted\n"
 "            in the homepage."
 msgstr ""
-"Osszon meg egy őrületes elérési linket. A közzétett bejegyzése látható lesz "
-"a 'Legújabb' felső-menüben.\n"
+"Osszon meg egy őrületes elérési linket. A közzétett bejegyzése látható lesz a 'Legújabb' felső-menüben.\n"
 "            Ha a közösség szavaz a bejegyzésére, akkor feljebbemelve a \n"
 "             honlapon előreléptetik."
 
@@ -2566,11 +2497,11 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:39
 #, python-format
 msgid ""
-"Share this content to increase your chances to be featured on the front page "
-"and attract more visitors."
+"Share this content to increase your chances to be featured on the front page"
+" and attract more visitors."
 msgstr ""
-"Ossza meg ezt a tartalmat az első oldalra kerülésének esélyei növeléséhez és "
-"több látogató bevonzásához."
+"Ossza meg ezt a tartalmat az első oldalra kerülésének esélyei növeléséhez és"
+" több látogató bevonzásához."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_share
@@ -2633,7 +2564,7 @@ msgstr "Elnézést, nem szavazhat a saját közzétett bejegyzéseire"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Sort by"
-msgstr "Rendezés"
+msgstr "Rendezés feltétele"
 
 #. module: website_forum
 #. openerp-web
@@ -2757,8 +2688,7 @@ msgid ""
 "The goal of this site is create a relevant knowledge base that would answer\n"
 "    questions related to Odoo."
 msgstr ""
-"Ennek az oldalnak a célja lényeges ismeret forrás létrehozása, melyekből "
-"válaszokat kaphatnak\n"
+"Ennek az oldalnak a célja lényeges ismeret forrás létrehozása, melyekből válaszokat kaphatnak\n"
 "    az Odoo rendszerrel kapcsolatos kérdésekre."
 
 #. module: website_forum
@@ -2774,20 +2704,14 @@ msgstr "A jóváhagyási folyamat üres."
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"Therefore questions and answers can be edited like wiki pages by experienced "
-"users of\n"
-"    this site in order to improve the overall quality of the knowledge base "
-"content.\n"
-"    Such privileges are granted based on user karma level: you will be able "
-"to do the same\n"
+"Therefore questions and answers can be edited like wiki pages by experienced users of\n"
+"    this site in order to improve the overall quality of the knowledge base content.\n"
+"    Such privileges are granted based on user karma level: you will be able to do the same\n"
 "    once your karma gets high enough."
 msgstr ""
-"Ezért a kérdések ás válaszok szerkeszthetőek az oldalt látogató gyakorlott "
-"felhasználók által wiki \n"
-"    oldal szerűen az ismeret anyag alap tartalma általános minőségének "
-"fejlesztése érdekében.\n"
-"    Ilyen előjogokkal ruház fel a felhasználók karma szintjei alapján: meg "
-"fogja tudni csinálni ugyanezt\n"
+"Ezért a kérdések ás válaszok szerkeszthetőek az oldalt látogató gyakorlott felhasználók által wiki \n"
+"    oldal szerűen az ismeret anyag alap tartalma általános minőségének fejlesztése érdekében.\n"
+"    Ilyen előjogokkal ruház fel a felhasználók karma szintjei alapján: meg fogja tudni csinálni ugyanezt\n"
 "    miután a karmája elég magas lesz."
 
 #. module: website_forum
@@ -2808,8 +2732,8 @@ msgid ""
 msgstr ""
 "Ez a szakemberek és a programjaink és szolgáltatásain iránt elkötelezettek "
 "közössége. Ossza meg és szóljon hozzá a legjobb bejegyzésekhez és új "
-"marketing ötletekhez, építse fel a szakszerű profilját és legyen közösen egy "
-"jobb marketingje."
+"marketing ötletekhez, építse fel a szakszerű profilját és legyen közösen egy"
+" jobb marketingje."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_relevancy_post_vote
@@ -2899,12 +2823,10 @@ msgstr "Címzett"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"To prevent your question from being flagged and possibly removed, avoid "
-"asking\n"
+"To prevent your question from being flagged and possibly removed, avoid asking\n"
 "    subjective questions where …"
 msgstr ""
-"Azért, hogy megakadályozza a kérdésének kijelölését és lehetséges törlését, "
-"kerülje itt kerülje \n"
+"Azért, hogy megakadályozza a kérdésének kijelölését és lehetséges törlését, kerülje itt kerülje \n"
 "    a szubjektív kérdések adását …"
 
 #. module: website_forum
@@ -2955,7 +2877,7 @@ msgstr "Lekapcsolja a saját megjegyzéseit"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Update"
-msgstr "Frissít"
+msgstr "Frissítés"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_write_date
@@ -3067,18 +2989,16 @@ msgstr "Várakozó bejegyzés közzététel"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid ""
-"We keep a high level of quality in showcased posts, around 20% of the "
-"submited\n"
+"We keep a high level of quality in showcased posts, around 20% of the submited\n"
 "            posts will be featured."
 msgstr ""
-"Meghagyjuk a tárolt bejegyzések magas szintű minőségét, körülbelül a "
-"beküldött bejegyzések 20% \n"
+"Meghagyjuk a tárolt bejegyzések magas szintű minőségét, körülbelül a beküldött bejegyzések 20% \n"
 "            kerül felhasználásra."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Website"
-msgstr "Honlap"
+msgstr "Weboldal"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_welcome_message
@@ -3103,21 +3023,15 @@ msgstr "Mire ügyeljek kérdéseimben?"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"When a question or answer is upvoted, the user who posted them will gain "
-"some\n"
-"    points, which are called \"karma points\". These points serve as a "
-"rough\n"
+"When a question or answer is upvoted, the user who posted them will gain some\n"
+"    points, which are called \"karma points\". These points serve as a rough\n"
 "    measure of the community trust to him/her. Various moderation tasks are\n"
 "    gradually assigned to the users based on those points."
 msgstr ""
-"Ha egy kérdés vagy válasz felértékelt, a bejegyzést közzétevő felhasználó "
-"kap egy pár\n"
-"    pontot, melyeket \"karma pontoknak\" neveznek. Ezek a pontok durva "
-"mérceként\n"
-"    használhatók a közösségben a hitelességhez. Különböző moderáló "
-"folyamatok\n"
-"    folyamatosan kiosztásra kerülnek a felhasználó részére a  pontjai "
-"alapján."
+"Ha egy kérdés vagy válasz felértékelt, a bejegyzést közzétevő felhasználó kap egy pár\n"
+"    pontot, melyeket \"karma pontoknak\" neveznek. Ezek a pontok durva mérceként\n"
+"    használhatók a közösségben a hitelességhez. Különböző moderáló folyamatok\n"
+"    folyamatosan kiosztásra kerülnek a felhasználó részére a  pontjai alapján."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_link
@@ -3133,17 +3047,16 @@ msgstr "Miért tudja másik ember szerkeszteni a kérdéseimet/válaszaimat?"
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "You already have one pending post.<br/>\n"
-"            Please wait for a moderator to validate your previous post "
-"before continuing."
+"            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
 "Már van egy várakozó bejegyzés közzététele.<br/>\n"
-"            Kérem várja meg a felülvizsgálatot az előző bejegyzés "
-"közzétételéhez, mielőtt folytatná."
+"            Kérem várja meg a felülvizsgálatot az előző bejegyzés közzétételéhez, mielőtt folytatná."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:142
 #, python-format
-msgid "You cannot choose %s as default post since the forum does not allow it."
+msgid ""
+"You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
 "Nem választhatja %s alapértelmezett bejegyzés közzétételnek, mivel a fórum "
 "nem engedélyezi azt."
@@ -3161,10 +3074,8 @@ msgid ""
 "    questions diminish the usefulness of this site and push\n"
 "    other questions off the front page."
 msgstr ""
-"Lehetőleg kizárólag aktuálisan szembesült problémán alapuló praktikus, "
-"megválaszolható kérdéseket tegyen fel. Csevegés,\n"
-"láthatatlan-végű kérdések csökkentik ennek az oldalnak felhasználhatóságát  "
-"és másik kérdés lesz kiemelve az\n"
+"Lehetőleg kizárólag aktuálisan szembesült problémán alapuló praktikus, megválaszolható kérdéseket tegyen fel. Csevegés,\n"
+"láthatatlan-végű kérdések csökkentik ennek az oldalnak felhasználhatóságát  és másik kérdés lesz kiemelve az\n"
 "első oldalra."
 
 #. module: website_forum
@@ -3346,7 +3257,8 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "has been posted. Click here to access the question :"
-msgstr "bejegyzés közzététele megtörtént. Kattintson ide a kérdés eléréséhez :"
+msgstr ""
+"bejegyzés közzététele megtörtént. Kattintson ide a kérdés eléréséhez :"
 
 #. module: website_forum
 #. openerp-web
@@ -3381,8 +3293,7 @@ msgid ""
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
 "ha a \n"
-"        válaszát megfelelőnek választották. Nézze meg mit tud a karmájával "
-"kezdeni"
+"        válaszát megfelelőnek választották. Nézze meg mit tud a karmájával kezdeni"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
@@ -3434,7 +3345,7 @@ msgstr "ekkortól tag"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real post"
-msgstr "nem egy valós bejegyzés"
+msgstr "nem egy valós bejegyzés közzététel"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
@@ -3452,7 +3363,7 @@ msgstr "off-topic/témán kívül vagy nem ide vonatkozó"
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "on"
-msgstr "ezen:"
+msgstr "ezen"
 
 #. module: website_forum
 #. openerp-web
@@ -3576,8 +3487,8 @@ msgid ""
 "your answer is provided along with the question, and you expect more "
 "answers: “I use ______ for ______, what do you use?”"
 msgstr ""
-"a válaszát megadta a kérdésével együtt, és még több választ vár: “Én  ______ "
-"használom ______ erre, te mit használsz?”"
+"a válaszát megadta a kérdésével együtt, és még több választ vár: “Én  ______"
+" használom ______ erre, te mit használsz?”"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq

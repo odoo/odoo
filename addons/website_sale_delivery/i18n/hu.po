@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-#
+# 
 # Translators:
-# Kris Krnacs, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:45+0000\n"
-"PO-Revision-Date: 2016-03-08 19:50+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-22 10:10+0000\n"
+"PO-Revision-Date: 2016-08-22 10:10+0000\n"
+"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
@@ -31,13 +31,13 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 "Egy termék leírása, melyről beszélgetést szeretne fojtatni a vásárlókkal.  "
-"Ez a leírás lesz átmásolva minden egyes árajánlatra, szállítási megbízásra/"
-"szállítólevélre és vásárlói számlára/visszatérítésre."
+"Ez a leírás lesz átmásolva minden egyes árajánlatra, szállítási "
+"megbízásra/szállítólevélre és vásárlói számlára/visszatérítésre."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -62,7 +62,7 @@ msgstr "Elérhetőség"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
 msgid "Availability Warning"
-msgstr ""
+msgstr "Elérhetőségi figyelmeztetés"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
@@ -72,7 +72,7 @@ msgstr "Elérhető az értékesítési pontban"
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
-msgstr "Fuvarozás"
+msgstr "Fuvarozó"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_to_weight
@@ -84,7 +84,8 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési Pontban"
+msgstr ""
+"Jelölje be, ha a ezt a terméket látni szeretné az Értékesítési Pontban"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -143,8 +144,7 @@ msgid ""
 msgstr ""
 "Egyenlő : Költségeket egyenlő részekre osztja.\n"
 "Mennyiségenként : Költségeket a termékek mennyisége szerint osztja el.\n"
-"Jelenlegi költségenként : Költségeket a termékek jelenlegi költségeiknek "
-"megfelelően osztja el.\n"
+"Jelenlegi költségenként : Költségeket a termékek jelenlegi költségeiknek megfelelően osztja el.\n"
 "Súlyonként : Költségeket a súlyok szerint osztja el.\n"
 "Térfogatonként : Költségeket a térfogatok szerint osztja el."
 
@@ -182,8 +182,8 @@ msgstr ""
 #: code:addons/website_sale_delivery/models/sale_order.py:106
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address. "
-"Please contact us for more information."
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
 msgstr ""
 "Nincs elérhető szállítási mód a jelenlegi vásárlói megrendelésére és "
 "szállítási címre. Kérem lépjen velünk kapcsolatba további információért."
@@ -216,17 +216,17 @@ msgstr "Értékelés"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Érték számolás"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating value"
-msgstr ""
+msgstr "Értékelés értéke"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Vevői megrendelés"
+msgstr "Vásárlói megrendelés"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -270,6 +270,8 @@ msgid ""
 "This field is used to display a availability banner with a message on the "
 "ecommerce"
 msgstr ""
+"Ez a mező meg szokott jeleníteni egy elérhetőségi transzparenst egy "
+"üzenettel az ekereskedelemben"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
@@ -311,7 +313,7 @@ msgstr "Weboldal termék kategória"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Website Sequence"
-msgstr ""
+msgstr "Weboldal sorszám"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description

@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-#
+# 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Rona Lin <ssauapw@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# ChinaMaker <tiexinliu@126.com>, 2016
+# Oliver Yuan <oliver.yuan@openstone.cn>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-06-26 00:56+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_CN/)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Oliver Yuan <oliver.yuan@openstone.cn>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_setup
@@ -44,12 +43,12 @@ msgstr "允许用户同步Google日历"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "允许用户使用CSV/XLS/XLSX/ODS文件导入数据"
+msgstr "允许用过通过 CSV/XLS/XLSX/ODS文档导入数据"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "允许在多货币环境中使用"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -74,17 +73,17 @@ msgstr "取消"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Configure outgoing email servers"
-msgstr "配置出去的邮件服务器"
+msgstr "配置发信邮件服务器"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Configure your company data"
-msgstr "配置你的公司数据"
+msgstr "配置公司数据"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
@@ -105,7 +104,7 @@ msgstr "Email"
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "General Settings"
-msgstr "通用设置"
+msgstr "常规设置"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
@@ -145,22 +144,22 @@ msgstr "公司间关联交易"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
 msgid "Last Updated on"
-msgstr "最后更新日期"
+msgstr "最后更新时间"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "管理公司间关联交易"
+msgstr "管理公司间交易"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
@@ -180,8 +179,8 @@ msgstr "多币种"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google calendar"
-"\""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
 msgstr "一旦安装。您可以为\"Google日历\"设置您的API证书"
 
 #. module: base_setup
@@ -197,21 +196,18 @@ msgstr "共享或嵌入odoo页面"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
 msgid "Share partners to all companies"
-msgstr "将合作伙伴，客户或供应商设为所有公司共享"
+msgstr "多公司间所有公司的公共用户"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is "
-"defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company "
-"is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
-"在实例中将合作伙伴(客户或供应商)设为所有公司共享。\n"
-"* 选中 ：所有合作伙伴对每个公司都是可见的\n"
-"* 未选中 ：每个公司只能看到自己定义的合作伙伴。但是对于未关联任何公司的合作伙"
-"伴，每个公司是可见的。"
+"在你实例中把产品定义为公司间分享选择：产品队每个公司可见，即便是某个\n"
+"公司只针对某一个业务伙伴不选择：每个公司只能看到自己的产品（定义产品的\n"
+"公司）。但是没有关联到某一公司的产品对全部的公司都是可见的"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -221,50 +217,41 @@ msgstr "共享的资源"
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
-msgstr "安装google_calendar模块"
+msgstr "安装模块 google_calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_drive
 msgid "This installs the module google_docs."
-msgstr "安装google_docs 模块"
+msgstr "安装模块 google_docs"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your "
-"company sells/buys to another of your company."
-msgstr ""
-"安装公司间关联交易规则模块。\n"
-"当你的一个公司与你的另一个公司发生买卖行为时，配置公司关联交易规则将会自动生"
-"成销售订单/采购订单。"
+" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
+msgstr "需要安装inter_company_rules。当其中的一个公司卖给其它另外一家公司的时候可以配置自动创建SO/PO"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgstr "使用外部验证提供者 (OAuth)"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will "
-"be\n"
-"                                    able to signup to get all his "
-"documents,\n"
-"                                    read your company news, check his "
-"projects,\n"
+"                                    (quotation, invoice), your customer will be\n"
+"                                    able to signup to get all his documents,\n"
+"                                    read your company news, check his projects,\n"
 "                                    etc."
-msgstr ""
-"当你发送单据给客户（报价单，发票），你的可能能登录，获取他单据，阅读你的公司"
-"新闻，检查他的项目等。"
+msgstr "当你发送单据给客户(报价单，发票)，你的可登录并获取他的单据以及阅读你的公司内部新闻，兼且能检查他的项目等。。"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies."
-msgstr "在多公司环境中工作，公司之间有适当地安全访问权限。"
+"Work in multi-company environments, with appropriate security access between"
+" companies."
+msgstr "在有安全访问设置的前提下在多公司环境下运行"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -277,53 +264,3 @@ msgstr "你能在你的公司明细里找到多个选项：用于页首和页脚
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
-
-#~ msgid "Client"
-#~ msgstr "客户端"
-
-#~ msgid "Configure Sales"
-#~ msgstr "配置销售"
-
-#~ msgid "Customer"
-#~ msgstr "客户"
-
-#~ msgid "Donor"
-#~ msgstr "捐助者"
-
-#~ msgid "Guest"
-#~ msgstr "客人"
-
-#~ msgid "How do you call a Customer"
-#~ msgstr "你如何称呼您的客户"
-
-#~ msgid "Member"
-#~ msgstr "成员"
-
-#~ msgid "Partner"
-#~ msgstr "业务伙伴"
-
-#~ msgid "Patient"
-#~ msgstr "病人"
-
-#~ msgid "Specify Your Terminology"
-#~ msgstr "指定你的术语"
-
-#~ msgid "Tenant"
-#~ msgstr "承租人"
-
-#~ msgid "Use another word to say \"Customer\""
-#~ msgstr "称呼“客户”的另一种方式"
-
-#~ msgid "Use external authentication providers, sign in with Google..."
-#~ msgstr "使用外部验证提供商，使用Google登陆......"
-
-#~ msgid ""
-#~ "You can use this wizard to change the terminologies for customers in the "
-#~ "whole application."
-#~ msgstr "你用这个向导能在整个系统中用其他称谓来标识客户"
-
-#~ msgid "base.setup.terminology"
-#~ msgstr "base.setup.terminology"
-
-#~ msgid "sale.config.settings"
-#~ msgstr "sale.config.settings"
