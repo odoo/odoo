@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-09-09 10:38+0000\n"
+"PO-Revision-Date: 2016-09-19 08:10+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -449,7 +449,7 @@ msgid ""
 "                draft invoices automatically from purchase orders or receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi uuden toimittajan laskun.\n</p><p>\nVoit hallinnoida toimittajan laskua riippuen siitä mitä on ostettu tai vastaanotettu. Odoo voi myös luoda ostotilauksista tai kuiteista luonnoslaskut automaattisesti.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -4905,12 +4905,12 @@ msgstr "Ryhmät"
 #. module: account
 #: field:account.installer,has_default_company:0
 msgid "Has Default Company"
-msgstr ""
+msgstr "Oletusyritys on asetettu"
 
 #. module: account
 #: field:account.config.settings,has_default_company:0
 msgid "Has default company"
-msgstr ""
+msgstr "Oletusyritys on asetettu"
 
 #. module: account
 #: help:account.bank.statement,message_summary:0
@@ -5738,7 +5738,7 @@ msgstr "Päiväkirjavientien tarkastus"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Journal Entries with period in current period"
-msgstr ""
+msgstr "Päiväkirjaviennit joiden jakso on kuluva jakso"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -5854,7 +5854,7 @@ msgstr "Päiväkirja analyyttisille kirjauksille"
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Journal invoices with period in current year"
-msgstr ""
+msgstr "Päiväkirjan laskut joiden jakso on kuluvana vuonna"
 
 #. module: account
 #: field:account.journal.period,name:0
@@ -6211,7 +6211,7 @@ msgstr "Vastuu"
 #. module: account
 #: model:account.account.type,name:account.account_type_liability_view1
 msgid "Liability View"
-msgstr ""
+msgstr "Vastattavien näkymä"
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0 field:account.tax.code,line_ids:0
@@ -6702,7 +6702,7 @@ msgstr "lasku ei ole tulostettavissa"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Not due"
-msgstr ""
+msgstr "Ei erääntynyt"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -6748,7 +6748,7 @@ msgstr "Muistiinpanot"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing more to reconcile"
-msgstr ""
+msgstr "Ei muuta täsmäytettävää"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -6764,7 +6764,7 @@ msgstr "Numero"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Number (Move)"
-msgstr ""
+msgstr "Numero (siirto)"
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -7214,7 +7214,7 @@ msgstr "Kumppanin"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Partner's:"
-msgstr ""
+msgstr "Kumppanin:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -7665,7 +7665,7 @@ msgstr "Tulostuspäivämäärä:"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Pro Forma Invoice"
-msgstr ""
+msgstr "Proformalasku"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -7826,7 +7826,7 @@ msgstr "Ostohyvitys"
 #: code:addons/account/account.py:3189
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr ""
+msgstr "Ostohyvitysten päiväkirja"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
@@ -7852,7 +7852,7 @@ msgstr "Ostopäiväkirja"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Ostohyvitysten päiväkirja"
 
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
@@ -7909,7 +7909,7 @@ msgstr "Uudelleen avaus"
 #. module: account
 #: view:account.period:account.view_account_period_form
 msgid "Re-Open Period"
-msgstr ""
+msgstr "Avaa jakso uudelleen"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -8011,14 +8011,14 @@ msgstr "Suorita arvonalennuksella"
 #: code:addons/account/wizard/account_reconcile.py:125
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr ""
+msgstr "Täsmäytä alaskirjaus"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_tour_bank_statement_reconciliation.js:8
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "Täsmäytä demo-pankkitiliote"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -8063,14 +8063,14 @@ msgstr "Suoritustapahtumat"
 #. module: account
 #: field:account.entries.report,reconcile_id:0
 msgid "Reconciliation number"
-msgstr ""
+msgstr "Täsmäytyksen numero"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 #: model:ir.ui.menu,name:account.menu_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "Pankin tiliotteiden täsmäytys"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
@@ -8499,7 +8499,7 @@ msgstr "Myyjä"
 #. module: account
 #: view:account.journal:account.view_account_journal_search
 msgid "Search Account Journal"
-msgstr ""
+msgstr "Hae päiväkirjasta"
 
 #. module: account
 #: view:account.account.template:account.view_account_template_search
@@ -9245,7 +9245,7 @@ msgstr "Kohdekirjaukset:"
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Tasks Month"
-msgstr ""
+msgstr "Tehtävän kuukausi"
 
 #. module: account
 #. openerp-web
@@ -9626,7 +9626,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:728
 #, python-format
 msgid "The bank statement line was already reconciled."
-msgstr ""
+msgstr "Tämä tiliotteen rivi oli jo täsmäytetty"
 
 #. module: account
 #: help:account.move.line,statement_id:0
@@ -10203,7 +10203,7 @@ msgstr ""
 #: help:account.move,balance:0
 msgid ""
 "This is a field only used for internal purpose and shouldn't be displayed"
-msgstr ""
+msgstr "Tämä kenttä on vain sisäiseen käyttöön, eikä sitä pitäisi näyttää"
 
 #. module: account
 #: help:account.model,name:0
@@ -10480,7 +10480,7 @@ msgstr "Saatavat yhteensä"
 #: field:account.invoice.report,residual:0
 #: field:account.invoice.report,user_currency_residual:0
 msgid "Total Residual"
-msgstr ""
+msgstr "Jäännöksen summa"
 
 #. module: account
 #: field:account.bank.statement,total_entry_encoding:0
@@ -10631,7 +10631,7 @@ msgstr "Alkusaldot eivät kelpaa (negatiivinen arvo)."
 #: code:addons/account/account_move_line.py:1171
 #, python-format
 msgid "Unable to change tax!"
-msgstr ""
+msgstr "Veroa ei voitu muuttaa!"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -10895,7 +10895,7 @@ msgstr "Vahvista tilisiirto"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
 msgid "Validate Account Move Lines"
-msgstr ""
+msgstr "Vahvista kirjanpidon tapahtumarivejä"
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -11082,7 +11082,7 @@ msgstr "Arvonalennuksen määrä"
 #: code:addons/account/wizard/account_reconcile.py:115
 #, python-format
 msgid "Write-off"
-msgstr ""
+msgstr "Alaskirjaus"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -11368,7 +11368,7 @@ msgstr ""
 #: code:addons/account/account.py:659
 #, python-format
 msgid "You cannot remove an account that contains journal items."
-msgstr ""
+msgstr "Et voi poistaa tiliä jolla on jo päiväkirjavientejä"
 
 #. module: account
 #: code:addons/account/account.py:664
@@ -11686,7 +11686,7 @@ msgstr "Sulje jakso"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
-msgstr ""
+msgstr "täsmäytyksiä ctrl-enter pikanäppäimellä."
 
 #. module: account
 #. openerp-web
