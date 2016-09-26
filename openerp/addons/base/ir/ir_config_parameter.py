@@ -8,7 +8,7 @@ import uuid
 import datetime
 import logging
 
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp.osv import osv, fields
 from openerp.tools import misc, config, ormcache, mute_logger
 
@@ -41,6 +41,7 @@ class ir_config_parameter(osv.osv):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
+    @api.cr
     @mute_logger('openerp.addons.base.ir.ir_config_parameter')
     def init(self, cr, force=False):
         """
