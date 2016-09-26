@@ -165,7 +165,7 @@ class IrModel(models.Model):
 
     @api.model
     def _instanciate(self, model_data):
-        """ Instanciate a model class for the custom model given by parameters ``model_data``. """
+        """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
             _name = encode(model_data['model'])
             _description = model_data['name']
@@ -174,7 +174,7 @@ class IrModel(models.Model):
             _transient = bool(model_data['transient'])
             __doc__ = model_data['info']
 
-        CustomModel._build_model(self.pool, self._cr)
+        return CustomModel
 
 
 class IrModelFields(models.Model):
