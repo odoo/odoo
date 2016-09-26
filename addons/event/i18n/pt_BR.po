@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event
-#
+# 
 # Translators:
-# Adriel Kotviski <kotviski@gmail.com>, 2015
+# grazziano <g.negocios@outlook.com.br>, 2016
+# Adriel Kotviski <kotviski@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Grazziano Duarte <g.negocios@outlook.com.br>, 2016
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-03-15 18:45+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
-"language/pt_BR/)\n"
-"Language: pt_BR\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: event
@@ -39,8 +42,7 @@ msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
 "<p>Thank you for your inquiry.</p>\n"
-"<p>We confirm your registration to the event <b>${object.event_id.name}</b>. "
-"You will receive emails with practical information.</p>\n"
+"<p>We confirm your registration to the event <b>${object.event_id.name}</b>. You will receive emails with practical information.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
@@ -50,14 +52,12 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
-"<p>Thank you for your registration to the event ${object.event_id.name}.</"
-"p>\n"
+"<p>Thank you for your registration to the event ${object.event_id.name}.</p>\n"
 "<p>The event will take place at ${object.event_id.address_id.city}\n"
 "% if object.event_id.address_id.street\n"
 ", ${object.event_id.address_id.street}\n"
 "% endif\n"
-"from ${object.event_id.date_begin_located} to ${object.event_id."
-"date_end_located}.</p>\n"
+"from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.</p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
@@ -70,12 +70,12 @@ msgstr "# Nº de Inscrições Canceladas"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_confirm_state
 msgid " # No of Confirmed Registrations"
-msgstr " # No de Inscrições Confirmadas"
+msgstr " # No. de Inscrições Confirmadas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_draft_state
 msgid " # No of Draft Registrations"
-msgstr " # No de rascunho de Inscrições"
+msgstr " # No. de Inscrições Provisórias"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -96,8 +96,8 @@ msgstr "5 Dias Intensivos"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
-"event or change the dates on which it is held.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
 msgstr ""
 
 #. module: event
@@ -146,13 +146,11 @@ msgstr "<i>para</i>"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
-"class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" "
-"class=\"oe_read_only\">\n"
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "para \n"
 "</span>"
 
@@ -161,10 +159,10 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated "
-"to developers who need to grasp knowledge of the <strong>business "
-"applications development </strong>process. This course is for new developers "
-"or for IT professionals eager to learn more about technical aspects.</span>"
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
 msgstr ""
 
 #. module: event
@@ -177,10 +175,11 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
-"<strong>Having attended this course, participants should be able to:</strong>"
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
 msgstr ""
-"<strong>Tendo assistido a este curso, os participantes devem ser capazes de:"
-"</strong>"
+"<strong>Tendo assistido a este curso, os participantes devem ser capazes "
+"de:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -207,7 +206,7 @@ msgstr "<strong>Programa:</strong>"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Requirements:</strong>"
-msgstr "<strong>Requirementos:</strong>"
+msgstr "<strong>Requerimentos:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -581,7 +580,7 @@ msgstr "Cliente"
 #: code:addons/event/models/event.py:381
 #, python-format
 msgid "Customer Email"
-msgstr "Email do Cliente"
+msgstr "E-mail do Cliente"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -646,7 +645,7 @@ msgstr "Desenvolver um novo módulo para uma aplicação particular."
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_report_event_registration_display_name
 msgid "Display Name"
-msgstr "Nome de Exibição"
+msgstr "Nome para Exibição"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
@@ -940,7 +939,7 @@ msgstr "Funções"
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Group By"
-msgstr "Agrupar por"
+msgstr "Agrupar Por"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -982,14 +981,14 @@ msgstr "ID"
 #: model:ir.model.fields,help:event.field_event_event_state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
-"particular dates the status is set to 'Confirmed'. If the event is over, the "
-"status is set to 'Done'. If event is cancelled the status is set to "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
 "Quando o evento é criado, a situação é 'Provisóriao'. Se o evento for "
 "confirmado para alguma data em particular a situação é definida como "
-"'Confirmado'. Se o evento finalizou, a situação é definida como 'Concluído'. "
-"Se o evento for cancelado a situação é definida como 'Cancelado'."
+"'Confirmado'. Se o evento finalizou, a situação é definida como 'Concluído'."
+" Se o evento for cancelado a situação é definida como 'Cancelado'."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1087,7 +1086,7 @@ msgstr "Índice Cores do Kanban"
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_report_event_registration___last_update
 msgid "Last Modified on"
-msgstr "Última modificação em"
+msgstr "Última Modificação em"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_write_uid
@@ -1285,8 +1284,7 @@ msgstr "Cliente Web Odoo"
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Odoo helps you schedule and efficiently organize your events:\n"
-"    track registrations and participations, automate the confirmation "
-"emails,\n"
+"    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
 
@@ -1455,7 +1453,7 @@ msgstr "Responder para"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_reply_to
 msgid "Reply-To Email"
-msgstr "Email Responder para"
+msgstr "E-mail Responder para"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1525,12 +1523,12 @@ msgstr "Enviar por e-mail"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
 msgid "Sent"
-msgstr "Enviada"
+msgstr "Enviado"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
-msgstr "Marcar como Rascunho"
+msgstr "Marcar como Provisório"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1588,8 +1586,8 @@ msgstr "Treinamento Técnico"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
-"The email address of the organizer is likely to be put here, with the effect "
-"to be in the 'Reply-To' of the mails sent automatically at event or "
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
@@ -1757,7 +1755,7 @@ msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
 msgstr ""
-"você já está inscrito neste evento como 'Participei'. Por favor volte ao "
+"Você já está inscrito neste evento como 'Participei'. Por favor volte ao "
 "estado provisório se você deseja cancelar este evento."
 
 #. module: event

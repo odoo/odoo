@@ -1,25 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-#
+# 
 # Translators:
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Christophe Dubuit <cdubuit@yahoo.com>, 2016
+# Maxime Solinas <msolinas@t2o.ca>, 2016
 # Guillaume Rancourt <guillaumerancourt971@gmail.com>, 2016
-# Martin Trigaux, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
-# Maxime Solinas <msolinas@t2o.ca>, 2015
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2015
+# Florian Hatat <mininet@wanadoo.fr>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-02-20 05:25+0000\n"
-"Last-Translator: Guillaume Rancourt <guillaumerancourt971@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_setup
@@ -47,7 +52,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "Autoriser l'importation de fichiers CSV/KLS/XLSX/ODS aux utilisateurs"
+msgstr "Permettre aux utilisateurs d'importer des fichiers CSV/KLS/XLSX/ODS"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
@@ -97,7 +102,7 @@ msgstr "Créé le"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher le nom"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -108,7 +113,7 @@ msgstr "Courriel"
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "General Settings"
-msgstr "Paramètres généraux"
+msgstr "Paramètres Généraux"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
@@ -118,7 +123,7 @@ msgstr "Donner à vos clients l'accès à leur documents"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Google Calendar"
-msgstr "Google Calendar"
+msgstr "Calendrier Google"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -138,7 +143,7 @@ msgstr "ID"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Import / Export"
-msgstr "Importer / Exporter"
+msgstr "Import / Export"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -148,22 +153,22 @@ msgstr "inter-compagnie"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "gestion inter-compagnie"
+msgstr "Gérer des Intersociétés"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
@@ -183,8 +188,8 @@ msgstr "Multi-devises"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google calendar"
-"\""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
 msgstr ""
 "Une fois l'API installée, vous pouvez la configurer avec les informations "
 "d'identification pour \"Google Calendar\""
@@ -202,23 +207,18 @@ msgstr "Partagez ou embarquez n'importe quel écran d'Odoo."
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
 msgid "Share partners to all companies"
-msgstr "Suivre les partenaires de toutes les compagnies"
+msgstr "Partager les partenaires à toutes les sociétés"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is "
-"defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company "
-"is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
 "Partagez vos partenaires avec toutes les sociétés définies dans votre base.\n"
-"* Coché : Les partenaires sont visibles par toutes les sociétés, même si une "
-"société est définie pour le partenaire.\n"
-"* Non coché : Chaque société ne peut voir que ses partenaires (partenaires "
-"pour lesquels la société est définie). Les partenaires non reliés à une "
-"société sont visibles par toutes les sociétés."
+"* Coché : Les partenaires sont visibles par toutes les sociétés, même si une société est définie pour le partenaire.\n"
+"* Non coché : Chaque société ne peut voir que ses partenaires (partenaires pour lesquels la société est définie). Les partenaires non reliés à une société sont visibles par toutes les sociétés."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -239,13 +239,10 @@ msgstr "Ceci installe le module google_docs."
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your "
-"company sells/buys to another of your company."
+" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
 msgstr ""
 "Ceci installe le module inter_company_rules.\n"
-"Configurez les règles de votre société pour créer automatiquement des bons "
-"de commande d'achats/ventes quand elle vend / achète à une autre de vos "
-"sociétés."
+"Configurez les règles de votre société pour créer automatiquement des bons de commande d'achats/ventes quand elle vend / achète à une autre de vos sociétés."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
@@ -256,27 +253,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will "
-"be\n"
-"                                    able to signup to get all his "
-"documents,\n"
-"                                    read your company news, check his "
-"projects,\n"
+"                                    (quotation, invoice), your customer will be\n"
+"                                    able to signup to get all his documents,\n"
+"                                    read your company news, check his projects,\n"
 "                                    etc."
 msgstr ""
 "Lorsque vous envoyez un document à un client\n"
 "                                    (devis, facture), votre client pourra\n"
-"                                     s'inscrire pour obtenir tous ses "
-"documents, \n"
-"                                     lire les nouvelles de la société, "
-"consulter ses projets, \n"
+"                                     s'inscrire pour obtenir tous ses documents, \n"
+"                                     lire les nouvelles de la société, consulter ses projets, \n"
 "                                    etc."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies."
+"Work in multi-company environments, with appropriate security access between"
+" companies."
 msgstr ""
 "Travailler en mode multi-sociétés, avec une sécurité d'accès appropriée "
 "entre les sociétés."
@@ -288,64 +280,10 @@ msgid ""
 "and footer, overdue payments texts, etc."
 msgstr ""
 "D'autres options sont disponibles dans les détails de votre société : "
-"adresse pour les en-têtes et pieds de page, textes de relances de paiements, "
-"etc."
+"adresse pour les en-têtes et pieds de page, textes de relances de paiements,"
+" etc."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
-
-#~ msgid "Client"
-#~ msgstr "Client"
-
-#~ msgid "Configure Sales"
-#~ msgstr "Paramétrer les ventes"
-
-#~ msgid "Customer"
-#~ msgstr "Client"
-
-#~ msgid "Donor"
-#~ msgstr "Donateur"
-
-#~ msgid "Guest"
-#~ msgstr "Invité"
-
-#~ msgid "How do you call a Customer"
-#~ msgstr "Comment appelez-vous un client"
-
-#~ msgid "Member"
-#~ msgstr "Membre"
-
-#~ msgid "Partner"
-#~ msgstr "Partenaire"
-
-#~ msgid "Patient"
-#~ msgstr "Patient"
-
-#~ msgid "Specify Your Terminology"
-#~ msgstr "Précisez votre terminologie"
-
-#~ msgid "Tenant"
-#~ msgstr "Résident"
-
-#~ msgid "Use another word to say \"Customer\""
-#~ msgstr "Utiliser un autre mot pour dire \"client\""
-
-#~ msgid "Use external authentication providers, sign in with Google..."
-#~ msgstr ""
-#~ "Utilisez des fournisseurs d'authentification externes pour vous connecter "
-#~ "(Google ...)"
-
-#~ msgid ""
-#~ "You can use this wizard to change the terminologies for customers in the "
-#~ "whole application."
-#~ msgstr ""
-#~ "Vous pouvez lancer cet assistant pour modifier dans toute l'application  "
-#~ "la terminologie que vous souhaitez utiliser pour les clients."
-
-#~ msgid "base.setup.terminology"
-#~ msgstr "base.setup.terminology"
-
-#~ msgid "sale.config.settings"
-#~ msgstr "sale.config.settings"

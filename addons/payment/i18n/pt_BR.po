@@ -1,30 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-#
+# 
 # Translators:
-# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# grazziano <g.negocios@outlook.com.br>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
+# danimaribeiro <danimaribeiro@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:44+0000\n"
-"PO-Revision-Date: 2015-12-16 20:15+0000\n"
-"Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
-"language/pt_BR/)\n"
-"Language: pt_BR\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2016-08-22 10:09+0000\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2016\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i."
-"e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
 "                self.env['my.model'].payment_validated(self)"
 msgstr ""
 "Será safe_eval com `self` sendo a transação atual. i.e .:\n"
@@ -39,16 +41,14 @@ msgstr "HTML 3D Seguro"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</"
-"span>"
+"                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
 
 #. module: payment
@@ -96,6 +96,10 @@ msgid ""
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
 msgstr ""
+"<span><i>Erro,</i> Por favor, esteja ciente de que ocorreu um erro durante a"
+" transação. O pedido foi confirmado, mas não vai ser pago. Não hesite em "
+"contactar-nos se você tiver quaisquer perguntas sobre o status do seu "
+"pedido.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -116,7 +120,8 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
-"<span><i>Pending</i>... The order will be validated after the payment.</span>"
+"<span><i>Pending</i>... The order will be validated after the "
+"payment.</span>"
 msgstr ""
 
 #. module: payment
@@ -311,7 +316,7 @@ msgstr "Determina a ordem de exibição"
 #: model:ir.model.fields,field_description:payment.field_payment_token_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
-msgstr "Nome de Exibição"
+msgstr "Nome para Exibição"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -331,7 +336,7 @@ msgstr "Provisório"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -399,7 +404,7 @@ msgstr "Formulário com armazenamento de credenciais"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
-msgstr "Agrupar por"
+msgstr "Agrupar Por"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
@@ -449,7 +454,7 @@ msgstr "Idioma"
 #: model:ir.model.fields,field_description:payment.field_payment_token___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
-msgstr "Última modificação em"
+msgstr "Última Modificação em"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
@@ -679,7 +684,7 @@ msgstr "Referência da transação armazenada no banco do gateway de pagamento"
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr "Campos obrigatórios não preenchidos"
+msgstr "Campos necessários não preenchidos"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
@@ -725,9 +730,9 @@ msgstr "Imagem pequena"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px"
+" image, with aspect ratio preserved. Use this field anywhere a small image "
+"is required."
 msgstr ""
 "Imagem pequena do produto. Ela é automaticamente redimensionada como uma "
 "imagem de 64x64px, com mantendo a relação de aspecto. Utilize este campo em "
@@ -774,12 +779,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with "
-"the following evaluation context:"
+"                                            It is be rendered with qWeb with the following evaluation context:"
 msgstr ""
 "Este modelo torna o botão adquirente com todos os valores necessários.\n"
-"                                     É ser rendido com Qweb com o seguinte "
-"contexto de avaliação:"
+"                                     É ser rendido com Qweb com o seguinte contexto de avaliação:"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
@@ -815,7 +818,7 @@ msgstr "Visível no Portal / Site"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 msgid "Wire Transfer"
-msgstr "Transferência bancária"
+msgstr "Transferência Eletrônica"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
@@ -843,8 +846,8 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment "
-"button."
+"You will be redirected to the Buckaroo website after clicking on the payment"
+" button."
 msgstr ""
 "<p>Rápido Você Será redirecionado PARA O local não APOS Buckaroo Clicar no "
 "Botão de Pagamento.</p>"
@@ -852,8 +855,8 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
-"You will be redirected to the Ingenico website after clicking on the payment "
-"button."
+"You will be redirected to the Ingenico website after clicking on the payment"
+" button."
 msgstr ""
 
 #. module: payment
@@ -886,7 +889,7 @@ msgstr "CEP"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr "adquirente: payment.acquirer recorde de procura"
+msgstr "adquirente: payment.acquirer procurar registros"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -932,12 +935,12 @@ msgstr "referência: o número de referência da transação"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr "tx_url: URL transação para enviar o formulário"
+msgstr "tx_url: URL de transação para enviar o formulário"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr "tx_values: valores de transação"
+msgstr "tx_values: valores da transação"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented

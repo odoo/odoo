@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-#
+# 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:44+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
-"hu/)\n"
-"Language: hu\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-08-22 10:08+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
@@ -34,7 +34,7 @@ msgstr "Fizetendő, beszállító számla"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
 msgid "Account Receivable"
-msgstr "Vevői,  követelés számla"
+msgstr "Kintlévőség számla"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
@@ -76,13 +76,10 @@ msgstr "CSS osztály"
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "Check that the application type is set on <b>Web Application</b>. \n"
-"                                        Now configure the allowed pages on "
-"which you will be redirected."
+"                                        Now configure the allowed pages on which you will be redirected."
 msgstr ""
-"Ellenőrizze, hogy az alkalmazás típusa beállított itt: <b>Web Alkalmazás</"
-"b>. \n"
-"                                        Most állítsa be a megengedett "
-"oldalakat melyekre át lesz irányítva."
+"Ellenőrizze, hogy az alkalmazás típusa beállított itt: <b>Web Alkalmazás</b>. \n"
+"                                        Most állítsa be a megengedett oldalakat melyekre át lesz irányítva."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -90,8 +87,7 @@ msgid ""
 "Click on <b>Create Project</b> and enter the project name and \n"
 "                                        other details."
 msgstr ""
-"Kattintson ide: <b>Projekt téma létrehozás</b> és írja be a projekt téma "
-"nevet és \n"
+"Kattintson ide: <b>Projekt téma létrehozás</b> és írja be a projekt téma nevet és \n"
 "                                        egyéb részleteket."
 
 #. module: auth_oauth
@@ -154,7 +150,7 @@ msgstr "Ebbe az adósba vetett hitének mértéke"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -168,7 +164,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
 msgid "Fiscal Position"
-msgstr "ÁFA pozíció"
+msgstr "Költségvetési pozíció"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -178,12 +174,12 @@ msgstr "Google Ügyfél ID"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr "Vannak nem egyeztetett tételek"
+msgstr "Vannak egyeztetetlen tételek"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
@@ -204,12 +200,12 @@ msgstr "Könyvelési napló tételsorok"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_date
@@ -223,10 +219,10 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"Az ügyfélre vonatkozó legutolsó számlák & fizetések párosításának időpontja. "
-"Ez elvégzett, ha nincs legalább egy könyveléssel egyeztetetlen terhelés és "
-"egy könyveléssel egyeztetetlen jóváírás vagy ha rákattintott az \"Elvégezve"
-"\" gombra."
+"Az ügyfélre vonatkozó legutolsó számlák & fizetések egyeztetésének "
+"időpontja. Ez elvégzett, ha nincs legalább egy könyveléssel egyeztetetlen "
+"terhelés és egy könyveléssel egyeztetetlen jóváírás vagy ha rákattintott az "
+"\"Elvégezve\" gombra."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
@@ -282,24 +278,20 @@ msgstr "Oauth szolgáltatói felhasználó_id"
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "On the left side menu, select the sub menu <b>Credentials</b> \n"
-"                                        (from <b>API Manager</b>) then "
-"select <b>OAuth consent screen</b>."
+"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
 msgstr ""
 "A bal oldali menüben, válassza az almenüt <b>Megbízók</b> \n"
-"                                        (innen <b>API Kezelő</b>) majd "
-"válassza <b>OAuth jóváhagyó képernyő</b>."
+"                                        (innen <b>API Kezelő</b>) majd válassza <b>OAuth jóváhagyó képernyő</b>."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "Once done, you receive two information (your <b>Client ID</b> and <b>\n"
-"                                        Client Secret</b>). You have to "
-"insert your <b>Client ID</b> in \n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
 "                                        the field below."
 msgstr ""
 "Miután kész, két információt kap ( <b>Kliens ID azonosító</b> és <b>\n"
-"                                        Kliens titkosítás</b>). Be kell "
-"illesztenie a <b>Kliens ID azonosító</b> alsó \n"
+"                                        Kliens titkosítás</b>). Be kell illesztenie a <b>Kliens ID azonosító</b> alsó \n"
 "                                        mezőbe."
 
 #. module: auth_oauth
@@ -374,7 +366,7 @@ msgid ""
 "the invoices & payments matching was performed."
 msgstr ""
 "Az ügyfélnek legalább egy könyveléssel egyeztetetlen terhelése és jóváírása "
-"van a legutóbbi számlák & fizetések párosítás végrehajtásától."
+"van a legutóbbi számlák & fizetések egyeztetés végrehajtásától."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -382,8 +374,7 @@ msgid ""
 "Then click on <b>Add Credentials</b> and select the second option \n"
 "                                        (OAuth 2.0 Client ID)."
 msgstr ""
-"Ezután kattintson erre <b>Megbízók hozzáadása</b> és válassza a második "
-"lehetőséget \n"
+"Ezután kattintson erre <b>Megbízók hozzáadása</b> és válassza a második lehetőséget \n"
 "                                        (OAuth 2.0 kliens ID azonosító)."
 
 #. module: auth_oauth
@@ -406,8 +397,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"A rendszer az alapértelmezett helyett ezt a számlát fogja használni a "
-"partner vevő számlájaként."
+"A rendszer az alapértelmezett helyett ezt a számlát fogja használni ehhez a "
+"partnerhez, mint  vevői Kintlévőség számlát."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
@@ -431,13 +422,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
-"                                        Copy paste the following link in the "
-"box"
+"                                        Copy paste the following link in the box"
 msgstr ""
-"Ennek archiválásához, egészítse ki a mezőt : <b>Felhatalmazott átirányított "
-"URIs</b>.\n"
-"                                        Másolja, illessze a következő "
-"hivatkozást a dobozba"
+"Ennek archiválásához, egészítse ki a mezőt : <b>Felhatalmazott átirányított URIs</b>.\n"
+"                                        Másolja, illessze a következő hivatkozást a dobozba"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -451,17 +439,17 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
 msgid "Total Invoiced"
-msgstr "Teljes számlázva"
+msgstr "Összesen számlázva"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit
 msgid "Total Payable"
-msgstr "Fizetendő tartozás összesen"
+msgstr "Beszállítónak fizetendő összesen"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
 msgid "Total Receivable"
-msgstr "Összes vevőkövetelés"
+msgstr "Összes vevőkövetelés, kintlévőség"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_credit

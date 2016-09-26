@@ -1,22 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report_webkit
-#
+# 
 # Translators:
-# Martin Trigaux, 2015
-# Odoo developer at Praxya.com <sergio.estada@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 9.saas~12c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2015-12-02 13:59+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
-"Language: es\n"
+"PO-Revision-Date: 2016-08-22 10:09+0000\n"
+"Last-Translator: Ivan Nieto <ivan.n.s@tuta.io>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report_webkit
@@ -217,7 +226,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_create_date
 #: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_create_date
 msgid "Created on"
-msgstr "Creado en"
+msgstr "Creado el"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -229,7 +238,7 @@ msgstr "DLE 26 110 x 220 mm"
 #: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_display_name
 #: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_display_name
 msgid "Display Name"
-msgstr "Mostrar nombre"
+msgstr "Nombre a mostrar"
 
 #. module: report_webkit
 #: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_webkit_debug
@@ -266,7 +275,7 @@ msgstr "Imagen de la cabecera"
 #: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_id
 #: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_id
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: report_webkit
 #: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_img
@@ -295,14 +304,14 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_write_uid
 #: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización de"
+msgstr "Última actualización por"
 
 #. module: report_webkit
 #: model:ir.model.fields,field_description:report_webkit.field_ir_header_img_write_date
 #: model:ir.model.fields,field_description:report_webkit.field_ir_header_webkit_write_date
 #: model:ir.model.fields,field_description:report_webkit.field_report_webkit_actions_write_date
 msgid "Last Updated on"
-msgstr "Última actualización en"
+msgstr "Última actualización el"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -367,14 +376,15 @@ msgstr "Tamaño del papel"
 #, python-format
 msgid ""
 "Please install executable on your system (sudo apt-get install wkhtmltopdf) "
-"or download it from here: http://code.google.com/p/wkhtmltopdf/downloads/"
-"list and set the path in the ir.config_parameter with the webkit_path key."
-"Minimal version is 0.9.9"
+"or download it from here: "
+"http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
+"ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
 msgstr ""
 "Por favor, instale el ejecutable en su sistema (sudo apt-get install "
-"wkhtmltopdf) o descárguelo desde aquí: http://code.google.com/p/wkhtmltopdf/"
-"downloads/list y ponga la ruta del archivo en ir.config_parameter la clave "
-"webkit_path. La versión mínima es la 0.9.9"
+"wkhtmltopdf) o descárguelo desde aquí: "
+"http://code.google.com/p/wkhtmltopdf/downloads/list y ponga la ruta del "
+"archivo en ir.config_parameter la clave webkit_path. La versión mínima es la"
+" 0.9.9"
 
 #. module: report_webkit
 #: code:addons/report_webkit/webkit_report.py:262
@@ -444,8 +454,8 @@ msgstr "La cabecera relacionada con el informe"
 #. module: report_webkit
 #: model:ir.model.fields,help:report_webkit.field_ir_act_report_xml_precise_mode
 msgid ""
-"This mode allow more precise element position as each object is printed on a "
-"separate HTML but memory and disk usage are wider."
+"This mode allow more precise element position as each object is printed on a"
+" separate HTML but memory and disk usage are wider."
 msgstr ""
 "Este modo permite una posición más precisa de cada elemento puesto que cada "
 "objeto es imprimido en un HTML separado, pero el uso de memoria y de disco "
@@ -531,7 +541,7 @@ msgstr "_Aceptar"
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr "ir.acciones.informe.xml"
+msgstr "ir.actions.report.xml"
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_header_img
