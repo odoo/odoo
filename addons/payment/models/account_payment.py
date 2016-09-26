@@ -12,8 +12,6 @@ class AccountPayment(models.Model):
     payment_transaction_id = fields.Many2one('payment.transaction', string="Payment Transaction")
     payment_token_id = fields.Many2one('payment.token', string="Saved payment token", domain=[('acquirer_id.auto_confirm', '!=', 'authorize')],
                                        help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
-    payment_type = fields.Selection(selection_add=[('electronic', 'Electronically receive money')])
-    payment_method_id_code = fields.Char(related='payment_method_id.code')
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -25,7 +23,7 @@ class AccountPayment(models.Model):
 
     @api.onchange('payment_method_id', 'journal_id')
     def _onchange_payment_method(self):
-        if self.payment_method_id.code == 'electronic':
+        if self.payment_method_code == 'electronic':
             self.payment_token_id = self.env['payment.token'].search([('partner_id', '=', self.partner_id.id), ('acquirer_id.auto_confirm', '!=', 'authorize')], limit=1)
         else:
             self.payment_token_id = False
