@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
+import dateutil
 import logging
+import time
 from collections import defaultdict
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
@@ -16,6 +19,20 @@ MODULE_UNINSTALL_FLAG = '_force_unlink'
 def encode(s):
     """ Return an UTF8-encoded version of ``s``. """
     return s.encode('utf8') if isinstance(s, unicode) else s
+
+
+# base environment for doing a safe_eval
+SAFE_EVAL_BASE = {
+    'datetime': datetime,
+    'dateutil': dateutil,
+    'time': time,
+}
+
+def make_compute(text, deps):
+    """ Return a compute function from its code body and dependencies. """
+    func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
+    deps = [arg.strip() for arg in (deps or "").split(",")]
+    return api.depends(*deps)(func)
 
 
 #
@@ -556,6 +573,57 @@ class IrModelFields(models.Model):
         for field in self:
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
+
+    @api.model
+    def _instanciate(self, field_data, partial):
+        """ Return a field instance corresponding to parameters ``field_data``. """
+        attrs = {
+            'manual': True,
+            'string': field_data['field_description'],
+            'help': field_data['help'],
+            'index': bool(field_data['index']),
+            'copy': bool(field_data['copy']),
+            'related': field_data['related'],
+            'required': bool(field_data['required']),
+            'readonly': bool(field_data['readonly']),
+            'store': bool(field_data['store']),
+        }
+        # FIXME: ignore field_data['serialization_field_id']
+        if field_data['ttype'] in ('char', 'text', 'html'):
+            attrs['translate'] = bool(field_data['translate'])
+            attrs['size'] = field_data['size'] or None
+        elif field_data['ttype'] in ('selection', 'reference'):
+            attrs['selection'] = safe_eval(field_data['selection'])
+        elif field_data['ttype'] == 'many2one':
+            if partial and field_data['relation'] not in self.env:
+                return
+            attrs['comodel_name'] = field_data['relation']
+            attrs['ondelete'] = field_data['on_delete']
+            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+        elif field_data['ttype'] == 'one2many':
+            if partial and not (
+                field_data['relation'] in self.env and (
+                    field_data['relation_field'] in self.env[field_data['relation']]._fields or
+                    field_data['relation_field'] in self.pool.get_manual_fields(self._cr, field_data['relation'])
+            )):
+                return
+            attrs['comodel_name'] = field_data['relation']
+            attrs['inverse_name'] = field_data['relation_field']
+            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+        elif field_data['ttype'] == 'many2many':
+            if partial and field_data['relation'] not in self.env:
+                return
+            attrs['comodel_name'] = field_data['relation']
+            rel, col1, col2 = self._custom_many2many_names(field_data['model'], field_data['relation'])
+            attrs['relation'] = field_data['relation_table'] or rel
+            attrs['column1'] = field_data['column1'] or col1
+            attrs['column2'] = field_data['column2'] or col2
+            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+        # add compute function if given
+        if field_data['compute']:
+            attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
+
+        return fields.Field.by_type[field_data['ttype']](**attrs)
 
 
 class IrModelConstraint(models.Model):
