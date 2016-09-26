@@ -6,9 +6,12 @@ Store database-specific configuration parameters
 
 import uuid
 import datetime
+import logging
 
 from odoo import api, fields, models
-from odoo.tools import misc, config, ormcache
+from odoo.tools import misc, config, ormcache, mute_logger
+
+_logger = logging.getLogger(__name__)
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -35,6 +38,7 @@ class IrConfigParameter(models.Model):
     ]
 
     @api.model_cr
+    @mute_logger('openerp.addons.base.ir.ir_config_parameter')
     def init(self, force=False):
         """
         Initializes the parameters listed in _default_parameters.
@@ -83,6 +87,8 @@ class IrConfigParameter(models.Model):
             group = self.env.ref(group_xml, raise_if_not_found=False)
             if group:
                 gids.append((4, group.id))
+            else:
+                _logger.warning('Potential Security Issue: Group [%s] is not found.' % group_xml)
 
         vals = {'value': value}
         if gids:
