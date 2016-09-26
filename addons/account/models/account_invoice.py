@@ -353,7 +353,7 @@ class AccountInvoice(models.Model):
         reconciled = self.filtered(lambda invoice: invoice.reconciled)
         not_reconciled = self - reconciled
         (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
-        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_cancel()
+        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_re_open()
         return res
 
     @api.model
@@ -479,7 +479,11 @@ class AccountInvoice(models.Model):
             else:
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
-            fiscal_position = p.property_account_position_id.id
+            addr = self.partner_id.address_get(['delivery', 'invoice'])
+            fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, addr['delivery'])
+            if fiscal_position:
+                self.fiscal_position_id = fiscal_position
+
             bank_id = p.bank_ids and p.bank_ids.ids[0] or False
 
             # If partner has no warning, check its company
@@ -499,7 +503,6 @@ class AccountInvoice(models.Model):
 
         self.account_id = account_id
         self.payment_term_id = payment_term_id
-        self.fiscal_position_id = fiscal_position
 
         if type in ('in_invoice', 'in_refund'):
             self.partner_bank_id = bank_id
@@ -578,7 +581,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_invoice_cancel(self):
         if self.filtered(lambda inv: inv.state not in ['proforma2', 'draft', 'open']):
-            raise UserError(_("Invoice must be in draft or Pro-forma state in order to validate it."))
+            raise UserError(_("Invoice must be in draft,Pro-forma or open state in order to be cancelled."))
         return self.action_cancel()
 
     @api.multi

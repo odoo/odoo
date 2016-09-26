@@ -27,10 +27,12 @@
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
-                    <field name="sale_order_count"/>
+                    <field name="sale_order_count"  groups="sales_team.group_sale_salesman"/>
                 </field>
                 <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
-                    <span t-if="record.sale_order_count.value>0" class="badge"><i class="fa fa-fw fa-usd"/><t t-esc="record.sale_order_count.value"/></span>
+                    <div groups="sales_team.group_sale_salesman">                       
+                        <span t-if="record.sale_order_count.value>0" class="badge"><i class="fa fa-fw fa-usd"/><t t-esc="record.sale_order_count.value"/></span>  
+                    </div>
                 </xpath>
             </field>
         </record>
@@ -45,7 +47,7 @@
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="action" name="%(sale.act_res_partner_2_sale_order)d" 
                         attrs="{'invisible': [('customer', '=', False)]}"
-                        icon="fa-usd">
+                        icon="fa-usd" groups="sales_team.group_sale_salesman">
                         <field string="Sales" name="sale_order_count" widget="statinfo"/>
                     </button>     
                 </div>

@@ -331,10 +331,11 @@ class PurchaseOrder(models.Model):
                 continue
             order._add_supplier_to_product()
             # Deal with double validation process
-            if order.company_id.po_double_validation == 'one_step':
-                order.button_approve(force=True)
-            else:
+            if self.company_id.po_double_validation == 'two_step' and self.company_id.po_double_validation_amount and\
+            self.amount_total >= self.env.user.company_id.currency_id.compute(self.company_id.po_double_validation_amount, self.currency_id):
                 order.write({'state': 'to approve'})
+            else:
+                order.button_approve(force=True)
         return True
 
     @api.multi
@@ -1013,6 +1014,12 @@ class ProcurementOrder(models.Model):
                 vals = procurement._prepare_purchase_order_line(po, supplier)
                 self.env['purchase.order.line'].create(vals)
         return res
+
+    @api.multi
+    def open_purchase_order(self):
+        [action] = self.env.ref('purchase.action_open_purchase_from_procurement').read()
+        action['res_id'] = self.purchase_id.id
+        return action
 
 
 class ProductTemplate(models.Model):
