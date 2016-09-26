@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--Factura Simple-->
+<openerp>
+    <data>
+
+        <!-- Paper Format -->
+        <record id="paperformat_factura" model="report.paperformat">
+            <field name="name">Paper Factura</field>
+            <field name="default" eval="True" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">32</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- QWeb Reports -->
+        <report
+            id="factura_simple_action"
+            model="account.invoice"
+            string="Factura Comercial"
+            report_type="qweb-pdf"
+            name="l10n_ec_ats.factura_simple_template"
+            file="l10n_ec_ats.factura_simple_template"
+            attachment_use="False"
+            paperformat="l10n_ec_ats.paperformat_factura"
+        />
+
+
+        <!-- Templates -->
+        <template id="factura_simple_template">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="l10n_ec_ats.factura_simple_document" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="factura_simple_document">
+            <!-- <t t-call="report.external_layout"> -->
+                <div class="page" style="font-family: 'Consolas';">
+
+                    <div class="row">
+
+                        <div class="col-xs-7 col-xs-offset-5" style="font-size:10px">
+                            <!-- <address t-field="o.partner_id"
+                            t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' /> -->
+                            <t t-foreach="o.partner_id" t-as="l">
+                                <p> <small> RUC: <span t-field="l.x_identificacion"/> <br></br>
+                                    NOMBRE: <span t-field="l.name"/> <br></br>
+                                    DIRECCION: <span t-field="l.street"/> <br></br>
+                                    CIUDAD: <span t-field="l.city"/> - TELEFONO: <span t-field="l.phone"/> <br></br> <br></br>
+                                <span t-field="o.number"/>
+                                    <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> </small>
+                                </p>
+                            </t>
+                            <!-- <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span> -->
+                        </div>
+                    </div>
+
+                    <div class="row" style="font-size:10px">
+                        <div class="col-xs-3 col-xs-offset-9"
+                             style="position:absolute;top:660px; page-break-inside:avoid;text-align:right">
+                            <small> <span t-field="o.amount_untaxed"/> <br></br> <br></br> <br></br> <br></br>
+                            <span t-field="o.amount_untaxed"/> <br></br>
+                            <span t-field="o.x_impuesto"/> <br></br>
+                            <t t-set="computo_final" t-value="o.amount_untaxed + o.x_impuesto"/>
+                            $ <span t-esc="computo_final"/> </small>
+                        </div>
+                    </div>
+
+                    <div class="row" style="font-size:10px">
+                        <small> <br></br>
+                        <div class="col-xs-8 col-xs-offset-2">
+                            <p class="text-center" t-field="o.payment_term_id"/>
+                        </div>
+                        <div class="col-xs-2">
+                            <p class="text-right" t-field="o.date_invoice" t-field-options='{"format":"d MMMM y"}'/>
+                        </div> </small>
+                    </div>
+                    <br></br>
+                    <div class="row" style="font-size:10px">
+                        <small> <div class="col-xs-2">
+                            <p class="text-left" t-field="o.name"/>
+                        </div>
+                        <div class="col-xs-2 col-xs-offset-8">
+                            <p class="text-right" t-field="o.date_due" t-field-options='{"format":"d MMMM y"}'/>
+                        </div> </small>
+                    </div>
+                    <br></br> <br></br>
+
+                    <div class="row" t-foreach="o.invoice_line_ids" t-as="i" style="font-size:10px">
+                        <small> <div class="col-xs-2">
+                            <span t-field="i.product_id.default_code"/>
+                        </div>
+                        <div class="col-xs-6">
+                            <span t-field="i.product_id.name"/> <![CDATA[&nbsp;]]> <span t-field="i.product_id.barcode"/>
+                        </div>
+                        <div class="col-xs-1" style="text-align:right">
+                            <span t-field="i.quantity"/>
+                        </div>
+                        <div class="col-xs-1" style="text-align:right">
+                            <span t-field="i.price_unit"/>
+                        </div>
+                        <div class="col-xs-2" style="text-align:right">
+                            <span t-field="i.price_subtotal"
+                                          t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                        </div> </small>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xs-7 col-xs-offset-5" style="font-size:10px">
+                            <!-- <address t-field="o.partner_id"
+                            t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' /> -->
+                            <div class="col-xs-8 col-xs-offset-2">
+                                ESTE ES UN EJEMPLO DE FACTURA<br></br> SI DESEA UNA PERSONALIZACION GRATIS <br></br> ESCRIBA UN EMAIL A: <br></br>
+                                snowblow07@gmail.com <br></br> Y PONGA EN EL TITULO "YO APOYO EL SOFTWARE LIBRE"
+                        </div>
+                            <!-- <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span> -->
+                        </div>
+                    </div>
+
+
+
+                    <!-- <div class="row" style="font-size:10px;">
+                        <div class="col-xs-1" style="text-right">
+                            <p>uno</p>
+                        </div>
+                        <div class="col-xs-1" style="text-left;">
+                            <p>dos</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center;">
+                            <p>tres</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>cuatro</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>cinco</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>seis</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>siete</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>ocho</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>nueve</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>diez</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>once</p>
+                        </div>
+                        <div class="col-xs-1" style="text-center">
+                            <p>doce</p>
+                        </div>
+                    </div> -->
+                </div>
+            <!-- </t> -->
+        </template>
+
+    </data>
+</openerp>
