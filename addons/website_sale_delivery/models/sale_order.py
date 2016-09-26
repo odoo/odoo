@@ -27,8 +27,16 @@ class SaleOrder(orm.Model):
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = super(SaleOrder, self)._amount_all(cr, uid, ids, field_name, arg, context=context)
         currency_pool = self.pool.get('res.currency')
+        order_line_pool = self.pool.get('sale.order.line')
         for order in self.browse(cr, uid, ids, context=context):
-            line_amount = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
+            line_amount = 0
+            for line in order.order_line:
+                if line.is_delivery:
+                    price = order_line_pool._calc_line_base_price(
+                        cr, uid, line, context=context)
+                    qty = order_line_pool._calc_line_quantity(
+                        cr, uid, line, context=context)
+                    line_amount += price * qty
             currency = order.pricelist_id.currency_id
             res[order.id]['amount_delivery'] = currency_pool.round(cr, uid, currency, line_amount)
         return res
