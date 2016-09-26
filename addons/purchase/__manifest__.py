@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Purchase Management',
+    'name': 'Purchases',
     'version': '1.2',
     'category': 'Purchases',
     'sequence': 60,
