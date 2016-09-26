@@ -1165,7 +1165,7 @@
     <t t-call="website_forum.header">
         <h2 class="page-header mt0">
             <t t-set="count_posts" t-value="len(posts_ids)"/>
-            <t t-esc="count_posts"/>
+            <span id='count_post' t-esc="count_posts"/>
             <span class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <t t-if="queue_type == 'validation'"> Pending</t>
@@ -1175,13 +1175,13 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li t-att-class="queue_type == 'validation' and 'active' or None ">
-                        <a t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
+                        <a data-type='validation' t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
                     </li>
                     <li t-att-class="queue_type == 'flagged' and 'active' or None ">
-                        <a t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
+                        <a data-type='flagged' t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
                     </li>
                     <li t-if="uid" t-att-class="queue_type == 'offensive' and 'active' or None ">
-                        <a t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
+                        <a data-type='offensive' t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
                     </li>
                 </ul>
             </span>
@@ -1191,8 +1191,8 @@
             <t t-if="queue_type == 'flagged'">The flagged queue is empty.</t>
             <t t-if="queue_type == 'offensive'">The offensive queue is empty.</t>
         </div>
-        <div t-foreach="posts_ids" t-as="question" class="mb16 row" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
-            <div class="col-sm-2">
+        <div t-foreach="posts_ids" t-as="question" class="mb16 row post_to_validate" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
+            <div class="col-sm-2 o_js_validation_queue">
                 <div class="panel panel-default text-center" style="background-color:#eee;margin:0;padding:5px 12px 5px 12px;">
                     <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" style="padding-right:8px;"><i class="fa fa-check fa-2x"/></a>
                     <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse"><i class="fa fa-times fa-2x"/></a>
