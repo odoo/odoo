@@ -166,6 +166,48 @@ class StockMove(models.Model):
         return True
 
     @api.multi
+    def _create_extra_move(self):
+        ''' Creates an extra move if necessary depending on extra quantities than foreseen or extra moves'''
+        self.ensure_one()
+        quantity_to_split = 0
+        extra_move = self.env['stock.move']
+        rounding = self.product_uom.rounding
+        link_procurement = False
+        if self.procurement_id and self.production_id and float_compare(self.production_id.qty_produced, self.procurement_id.product_qty, precision_rounding=rounding) > 0:
+            done_moves_total = sum(self.production_id.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state == 'done').mapped('product_uom_qty'))
+            if float_compare(done_moves_total, self.procurement_id.product_qty, precision_rounding=rounding) >= 0:
+                quantity_to_split = 0
+                self.product_uom_qty = self.quantity_done #TODO: could change qty on move_dest_id also (in case of 2-step in/out)
+            else:
+                quantity_to_split = done_moves_total + self.quantity_done - self.procurement_id.product_qty
+        elif float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
+            quantity_to_split = self.quantity_done - self.product_uom_qty 
+            link_procurement = True
+        if quantity_to_split:
+            extra_move = self.copy(default={'quantity_done': quantity_to_split, 'product_uom_qty': quantity_to_split, 'production_id': self.production_id.id, 
+                                            'raw_material_production_id': self.raw_material_production_id.id, 
+                                            'procurement_id': link_procurement and self.procurement_id.id or False})
+            extra_move.action_confirm()
+            if self.has_tracking != 'none':
+                qty_todo = self.quantity_done - quantity_to_split
+                for movelot in self.move_lot_ids.filtered(lambda x: x.done_wo):
+                    if movelot.quantity_done and movelot.done_wo:
+                        if float_compare(qty_todo, movelot.quantity_done, precision_rounding=rounding) >= 0:
+                            qty_todo -= movelot.quantity_done
+                        elif float_compare(qty_todo, 0, precision_rounding=rounding) > 0:
+                            #split
+                            remaining = movelot.quantity_done - qty_todo
+                            movelot.quantity_done = qty_todo
+                            movelot.copy(default={'move_id': extra_move.id, 'quantity_done': remaining})
+                            qty_todo = 0
+                        else:
+                            movelot.move_id = extra_move.id
+            else:
+                self.quantity_done = self.product_uom_qty
+            self.product_uom_qty = self.quantity_done - quantity_to_split
+        return extra_move
+
+    @api.multi
     def move_validate(self):
         ''' Validate moves based on a production order. '''
         moves = self._filter_closed_moves()
@@ -173,25 +215,22 @@ class StockMove(models.Model):
         moves_todo = self.env['stock.move']
         moves_to_unreserve = self.env['stock.move']
         uom_obj = self.env['product.uom']
+        # Create extra moves where necessary
         for move in moves:
             rounding = move.product_uom.rounding
             if float_compare(move.quantity_done, 0.0, precision_rounding=rounding) <= 0:
                 continue
             moves_todo |= move
-            if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding) > 0:
-                remaining_qty = move.quantity_done - move.product_uom_qty  # In UoM of move
-                extra_move = move.copy(default={'quantity_done': remaining_qty, 'product_uom_qty': remaining_qty, 'production_id': move.production_id.id, 
-                                                'raw_material_production_id': move.raw_material_production_id.id})
-                move.quantity_done = move.product_uom_qty
-                extra_move.action_confirm()
-                moves_todo |= extra_move
+            moves_todo |= move._create_extra_move()
+        # Split moves where necessary and move quants
         for move in moves_todo:
-            if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding):
+            rounding = move.product_uom.rounding
+            if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding) < 0:
                 # Need to do some kind of conversion here
                 qty_split = uom_obj._compute_qty(move.product_uom.id, move.product_uom_qty - move.quantity_done, move.product_id.uom_id.id)
                 new_move = move.split(qty_split)
                 # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
-                move.move_lot_ids.filtered(lambda x: not x.done_wo).write({'move_id': new_move})
+                move.move_lot_ids.filtered(lambda x: not x.done_wo or x.quantity_done == 0.0).write({'move_id': new_move})
                 self.browse(new_move).quantity_done = 0.0
             main_domain = [('qty', '>', 0)]
             preferred_domain = [('reservation_id', '=', move.id)]
