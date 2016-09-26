@@ -740,8 +740,8 @@
         <meta name="twitter:site" t-attf-content="@#{res_company.name}" />
         <meta name="twitter:title" t-att-content="question.name" />
         <meta name="twitter:description" t-att-content="question.content" />
-        <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}forum/user/#{question.create_uid.id}/avatar"/>   
-    </t> 
+        <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}forum/user/#{question.create_uid.id}/avatar"/>
+    </t>
     <t t-call="website_forum.header">
         <div class="alert alert-info text-center" role="alert" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
             <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">Accept <i class="fa fa-check"/></a>
@@ -1337,7 +1337,7 @@
         <h1 class="mt0 page-header">
             <span t-field="user.name"/>
             <small>profile</small>
-            <t t-call="website.publish_management" groups="website.group_website_publisher">
+            <t t-call="website.publish_management">
                 <t t-set="object" t-value="user"/>
                 <t t-set="publish_edit" t-value="True"/>
             </t>
@@ -1515,7 +1515,7 @@
 <!-- User Navbar -->
 <template id="content_new_forum" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li groups="base.group_user"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
+        <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
     </xpath>
 </template>
 

@@ -38,12 +38,10 @@
                     <div class="col-md-12" id="jobs_grid">
                         <div t-if="not jobs">
                             <div class="text-center text-muted">
-                              <h3 class="css_editable_hidden"><a t-attf-href="/page/website.contactus">Contact us</a> for job opportunities.</h3>
-                              <t groups="website.group_website_publisher">
+                                <h3 class="css_editable_hidden"><a t-attf-href="/page/website.contactus">Contact us</a> for job opportunities.</h3>
                                 <h4 groups="hr_recruitment.group_hr_recruitment_manager">
                                     Create new job pages from the <strong><i>+New</i></strong> top-right button.
                                 </h4>
-                              </t>
                             </div>
                         </div>
                         <ul class="media-list" t-if="jobs">

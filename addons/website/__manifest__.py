@@ -18,8 +18,8 @@ Odoo Website CMS
     'data': [
         'data/website_data.xml',
         'data/web_planner_data.xml',
-        'security/ir.model.access.csv',
         'security/website_security.xml',
+        'security/ir.model.access.csv',
 
         'views/website_templates.xml',
         'views/website_navbar_templates.xml',
