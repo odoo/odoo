@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 08:21+0000\n"
-"PO-Revision-Date: 2016-08-27 13:08+0000\n"
-"Last-Translator: Ana Sorza <anniedprinceps@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +123,7 @@ msgstr "# de Transacción"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Factura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -331,7 +331,7 @@ msgstr "<span class=\"panel-title\">\n<strong>Registrar sus Facturas</strong>\n<
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Saldo en LM</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1709,7 +1709,14 @@ msgid "Automatic formatting"
 msgstr "Formateado automático"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:326
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Automatic reconciliation"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:469
 #, python-format
 msgid "Automatically reconciled items"
 msgstr "Elementos conciliados automáticamente"
@@ -3302,12 +3309,6 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "Diferencia entre el saldo final calculado y el especificado."
-
-#. module: account
-#: model:account.account.type,name:account.data_account_type_direct_costs
-#: model:ir.ui.view,arch_db:account.view_account_form
-msgid "Direct Costs"
-msgstr "Costos Directos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5287,10 +5288,17 @@ msgid "Less Payable Accounts"
 msgstr "Menos Cuentas por Pagar"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:138
+#: code:addons/account/models/account_invoice.py:145
 #, python-format
 msgid "Less Payment"
 msgstr "Menos Pagos"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Let odoo try to reconcile entries for the user"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6716,15 +6724,7 @@ msgid "Proforma"
 msgstr "Proforma"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:554
-#, python-format
-msgid ""
-"Programmation error : domain_maker_move_line_amount requires comparator '=' "
-"or '<'"
-msgstr "Error de programación: domain_maker_move_line_amount requiere el comparador '=' o '<'"
-
-#. module: account
-#: code:addons/account/models/account_payment.py:117
+#: code:addons/account/models/account_payment.py:123
 #, python-format
 msgid ""
 "Programmation error: the expected model for this action is "
@@ -6732,7 +6732,7 @@ msgid ""
 msgstr "Error de programación: el modelo esperado para esta acción es 'account.invoice'. El proporcionado es '%d'."
 
 #. module: account
-#: code:addons/account/models/account_payment.py:115
+#: code:addons/account/models/account_payment.py:121
 #, python-format
 msgid ""
 "Programmation error: wizard action executed without active_model or "
@@ -7234,11 +7234,6 @@ msgstr "Ventas"
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_rate
 msgid "Sales Tax(%)"
 msgstr "Impuesto sobre Ventas(%)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
-msgid "Sales Team"
-msgstr "Equipo de Ventas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_sale_tax_rate
@@ -7973,7 +7968,7 @@ msgid ""
 msgstr "La cantidad expresada en la moneda asociada a la cuenta si es distinta a la de la compañía."
 
 #. module: account
-#: code:addons/account/models/account_move.py:387
+#: code:addons/account/models/account_move.py:432
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
@@ -7981,7 +7976,7 @@ msgid ""
 msgstr "La cantidad expresada en la divisa secundaria tiene que ser positiva cuando la cuenta es de débito y negativa cuando la cuenta es de crédito."
 
 #. module: account
-#: code:addons/account/models/account.py:524
+#: code:addons/account/models/account.py:554
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -7989,17 +7984,11 @@ msgid ""
 msgstr "El ámbito de aplicación de impuestos en un grupo tiene que ser igual del propio grupo o \"Ninguno\"."
 
 #. module: account
-#: code:addons/account/models/account.py:268
+#: code:addons/account/models/account.py:278
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
 msgstr "La cuenta bancaria de un diario bancario tiene que pertenecer a la misma compañía (%s)."
-
-#. module: account
-#: code:addons/account/models/account_bank_statement.py:786
-#, python-format
-msgid "The bank statement line was already reconciled."
-msgstr "La línea del extracto bancario ya fué conciliada."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
@@ -9249,13 +9238,7 @@ msgid ""
 msgstr "No puede cambiar la compaía propietaria de una cuenta que ya tiene apuntes de diario."
 
 #. module: account
-#: code:addons/account/models/account_move.py:997
-#, python-format
-msgid "You cannot change the tax, you should remove and recreate lines."
-msgstr "No puede cambiar el impuesto, debería eliminar y recrear los apuntes."
-
-#. module: account
-#: code:addons/account/models/account_move.py:379
+#: code:addons/account/models/account_move.py:424
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -9263,7 +9246,7 @@ msgid ""
 msgstr "No puede crear apuntes de diario con una moneda secundaria sin rellenar antes los campos 'moneda' y 'valor en moneda'."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:406
+#: code:addons/account/models/account_invoice.py:438
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -9272,7 +9255,7 @@ msgid ""
 msgstr "No puede borrar una factura una vez validada (y que ha recibido un número). Puede devolverla a estado \"Borrador\", modificar su contenido y volverla a confirmar."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:404
+#: code:addons/account/models/account_invoice.py:436
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "

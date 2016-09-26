@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-08-19 17:45+0000\n"
-"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 10:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +126,11 @@ msgid ""
 msgstr "Сумма заказа, чтобы воспользоваться бесплатной доставкой, выраженная в валюте компании"
 
 #. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
 msgid "Asset Type"
 msgstr "Тип Актива"
@@ -227,6 +232,7 @@ msgstr "Отмена"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "Перевозчик"
@@ -391,6 +397,11 @@ msgstr "Тип Дохода Будущих Периодов"
 #: model:ir.ui.menu,name:delivery.sale_menu_delivery
 msgid "Delivery"
 msgstr "Доставка"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier Search"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -585,6 +596,11 @@ msgstr "Обеспечивает порядок следования при ра
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
 msgid "Gross Weight"
 msgstr "Вес брутто"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -807,11 +823,6 @@ msgid "Messages"
 msgstr "Сообщения"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_ids
-msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
 msgid "Minimum Stock Rules"
 msgstr "Правила минимальных запасов"
@@ -906,6 +917,7 @@ msgstr "Цена"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
+#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Price Computation"
 msgstr "Расчет цены"
 
@@ -1020,6 +1032,7 @@ msgstr "Единицы измерения при закупке"
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line_product_qty
 msgid "Quantity"
 msgstr "Количество"
 
@@ -1055,6 +1068,11 @@ msgstr "Приход"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
 msgid "Reordering Rules"
 msgstr "Правила упорядочивания"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1132,18 +1150,10 @@ msgid "Set price"
 msgstr "Установить цену"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:88
+#: code:addons/delivery/models/stock_picking.py:90
 #, python-format
 msgid "Shipment sent to carrier %s for expedition with tracking number %s"
 msgstr "Груз отправлен перевозчику %s для экспедирования с номером отслеживания %s"
-
-#. module: delivery
-#: code:addons/delivery/models/stock_picking.py:106
-#, python-format
-msgid ""
-"Your delivery method has no redirect on courier provider's website to track "
-"this order."
-msgstr "Ваш метод доставки не переадресован на вебсайт перевозчика для отслеживания этого заказа."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -1569,6 +1579,14 @@ msgid ""
 "this template. The customer will receive an email for each product linked to"
 " an email template."
 msgstr "При проверке счета-фактуры, по электронной почте будет отправлено письмо заказчику на основе этого шаблона. Клиент получит по электронной почте письмо для каждого продукта, связанного с шаблоном электронной почты."
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:106
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr "Ваш метод доставки не переадресован на вебсайт перевозчика для отслеживания этого заказа."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from

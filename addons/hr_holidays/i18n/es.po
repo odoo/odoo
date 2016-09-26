@@ -6,14 +6,14 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Antonio Trueba, 2015-2016
 # Gonzalo Tagliabue <zaphalo@gmail.com>, 2016
-# Ivan Nieto <ivan.nieto.sousa@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2016-03-04 21:03+0000\n"
-"Last-Translator: Ivan Nieto <ivan.nieto.sousa@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:31+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,6 +123,11 @@ msgstr "Activo"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Active Leaves and Allocations"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Active Types"
 msgstr "Tipos activos"
 
@@ -187,6 +192,11 @@ msgstr "Asignación para %s"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr "Asignación por aprobar"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Allocations"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -367,6 +377,11 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Current"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
 msgstr "Estado actual de la ausencia"
@@ -375,11 +390,6 @@ msgstr "Estado actual de la ausencia"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_id
 msgid "Current Leave Type"
 msgstr "Tipo de ausencia actual"
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Current Year Leaves"
-msgstr "Ausencias del año actual"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -684,6 +694,7 @@ msgstr "Ausencia a aprobar"
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr "Ausencias"
 
@@ -773,18 +784,18 @@ msgstr "Ausencias/asignaciones rechazadas"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
-msgid "Leaves/Allocations: first approval"
-msgstr "Ausencias/asignaciones: primera aprobación"
+msgid "Leaves/Allocations Confirmed"
+msgstr ""
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
-msgid "Leaves/Allocations: second approval"
-msgstr "Ausencias/asignacioens: segunda aprobación"
+msgid "Leaves/Allocations First Approval"
+msgstr ""
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2015"
-msgstr "Ausencias legales 2015"
+msgid "Legal Leaves 2016"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -868,11 +879,6 @@ msgid "Messages"
 msgstr "Mensajes"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_message_ids
-msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
-
-#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 msgid "Mode"
@@ -889,13 +895,7 @@ msgid "My Department Leaves"
 msgstr "Ausencias de mi departamento"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Leave Requests"
-msgstr "Mis peticiones de ausencia"
-
-#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Leaves"
 msgstr "Mis ausencias"
 
@@ -1290,13 +1290,6 @@ msgid "Waiting Second Validation"
 msgstr "Esperando segunda validación"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:554
-#: code:addons/hr_holidays/hr_holidays.py:561
-#, python-format
-msgid "Warning!"
-msgstr "¡Aviso!"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_website_message_ids
 msgid "Website Messages"
 msgstr "Mensajes del sitio web"
@@ -1317,11 +1310,6 @@ msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
 msgstr "Si se marca, la petición/asignación de vacaciones de este tipo necesitará de una segunda validación para ser aprobada."
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "Year"
-msgstr "Año"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal

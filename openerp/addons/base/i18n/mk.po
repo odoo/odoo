@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-06-16 08:56+0000\n"
+"POT-Creation-Date: 2016-06-22 07:25+0000\n"
+"PO-Revision-Date: 2016-09-23 09:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -743,6 +743,14 @@ msgid ""
 "For instance when invoicing a training, the training agenda and materials will automatically be sent to your customers.'\n"
 "    "
 msgstr "\nДодадете урнеци на е-пошта на продуктите кои ќе бидат пратени при потврдувањето на фактурата.\n==================================================================\n\nСо овој модул, поврзете ги вашите производи со урнек за да пратите целосни информации и алатки на вашиот клиент.\nНа пример кога фактурирате обука, планот на обуката и материјалите автоматски ќе бидат испратени на вашите клиенти."
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_full_reconcile
+msgid ""
+"\n"
+"Add the concept of full reconciliation back into the accounting.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_project_issue_sheet
@@ -1493,6 +1501,34 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_extra_reports
+msgid ""
+"\n"
+"Extra Accounting Reports.\n"
+"====================================\n"
+"\n"
+"This module adds two new reports:\n"
+"* Sale/Purchase Journal report \n"
+"* Partner Ledger\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_hw_blackbox_be
+msgid ""
+"\n"
+"Fiscal Data Module Hardware Driver\n"
+"==================================\n"
+"\n"
+"This module allows a Point Of Sale client to communicate with a\n"
+"connected Belgian Fiscal Data Module.\n"
+"\n"
+"This module does **not** turn an Odoo Point Of Sale module into a certified\n"
+"Belgian cash register. It allows the communication on with a certified Fiscal\n"
+"Data Module but will not modify the behaviour of the Point of Sale.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
 msgid ""
 "\n"
@@ -2154,6 +2190,21 @@ msgid ""
 "Create some products for which you can re-invoice the costs.\n"
 "This module does not add any feature, despite a few demo data to\n"
 "test the features easily.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_nz
+msgid ""
+"\n"
+"New Zealand Accounting Module\n"
+"=============================\n"
+"\n"
+"New Zealand accounting basic charts and localizations.\n"
+"\n"
+"Also:\n"
+"    - activates a number of regional currencies.\n"
+"    - sets up New Zealand taxes.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -4376,7 +4427,6 @@ msgstr "(повторно вчитај фонтови)"
 #: model:ir.module.module,description:base.module_mrp_repair
 msgid ""
 ",\n"
-"    'summary': 'Repair broken or damaged products',\n"
 "The aim is to have a complete module to manage all products repairs.\n"
 "====================================================================\n"
 "\n"
@@ -4388,7 +4438,7 @@ msgid ""
 "    * Warranty concept\n"
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
-msgstr ",\n\"кратка содржина\": \"Поправај нефункционални или оштетени производи\",\nЦелта е да се има комплетен модул за менаџирање со сите поправки на производите.\n===============================================================================\n\nСледниве проблематики би требало да се покриени од овој модул:\n------------------------------------------------------------------------------------------------------\n* Додај/оттргни производи во репарација\n* Импакт за залихи\n* Фактурирање (производи и/или услуги)\n* Концепт за гаранција\n* Извештај на понуда за поправка\n* Белешки за техничарот и за крајниот клиент\n"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -4701,6 +4751,7 @@ msgstr "Домашна страна на Pos кутијата"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_exceptions
+#: model:ir.module.module,description:base.module_test_mimetypes
 msgid "A module to generate exceptions."
 msgstr "Модул за генерирање исклучоци."
 
@@ -4723,6 +4774,11 @@ msgstr "Модул за тестирање на API."
 #: model:ir.module.module,description:base.module_test_uninstall
 msgid "A module to test the uninstall feature."
 msgstr "Модул за тестирање на функцијата за де-инсталирање."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_assetsbundle
+msgid "A module to verify the Assets Bundle mechanism."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -4907,6 +4963,11 @@ msgstr "Сметководствени конзистентни тестови"
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
 msgstr "Сметководствени извештаи"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_tax_adjustments
+msgid "Accounting Tax Adjustments"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
@@ -5958,6 +6019,11 @@ msgid "Birthdate"
 msgstr "Роденден"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
+msgid "Blackbox Hardware Driver"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blogs"
 msgstr "Блогови"
@@ -6087,6 +6153,11 @@ msgstr "Бугарски / български език"
 #: model:res.country,name:base.bf
 msgid "Burkina Faso"
 msgstr "Буркина фасо"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Burmese / မြန်မာဘာသာ"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bi
@@ -6962,6 +7033,18 @@ msgid "Contact Name"
 msgstr "Име на контактот"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.view_partner_category_form
+msgid "Contact Tag"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_partner_category_form
+#: model:ir.ui.menu,name:base.menu_partner_category_form
+#: model:ir.ui.view,arch_db:base.view_partner_category_list
+msgid "Contact Tags"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 #: model:ir.ui.menu,name:base.menu_partner_title_contact
 msgid "Contact Titles"
@@ -7192,6 +7275,11 @@ msgid "Create surveys, collect answers and print statistics"
 msgstr "Креирај анкети, собирај одговори и печати статистики"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_board
+msgid "Create your custom dashboard"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_crud_model_name
 msgid "Create/Write Target Model Name"
 msgstr "Креирај/запиши таргет име на модел"
@@ -7335,8 +7423,10 @@ msgstr "Креирано од"
 #: model:ir.model.fields,field_description:base.field_res_lang_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_category_create_date
+#: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 #: model:ir.model.fields,field_description:base.field_wkf_activity_create_date
@@ -8293,6 +8383,12 @@ msgid "Employees"
 msgstr "Вработени"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:339
+#, python-format
+msgid "Empty dependency in %r"
+msgstr ""
+
+#. module: base
 #: model:res.groups,name:base.group_light_multi_company
 msgid "Enable Light Multi Company"
 msgstr "Овозможи лесна мулти компанија"
@@ -8367,6 +8463,12 @@ msgstr "Грешен контекст:\nПриказ `%(view_name)s`"
 #, python-format
 msgid "Error details:"
 msgstr "Опис на дисфункцијата/еророт:"
+
+#. module: base
+#: code:addons/models.py:1281
+#, python-format
+msgid "Error while validating constraint"
+msgstr ""
 
 #. module: base
 #: constraint:res.company:0
@@ -8581,6 +8683,11 @@ msgid "Extra"
 msgstr "Екстра"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_extra_reports
+msgid "Extra Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_usability
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Extra Rights"
@@ -8626,6 +8733,56 @@ msgstr "Фед. држава"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_fr_fec
+msgid "Fichier d'Échange Informatisé (FEC) for France"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_fec
+msgid ""
+"Fichier d'Échange Informatisé (FEC) pour la France\n"
+"==================================================\n"
+"\n"
+"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
+"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
+"portant modification des dispositions de l'article A. 47 A-1 du\n"
+"livre des procédures fiscales.\n"
+"\n"
+"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
+"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
+"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
+"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
+"\n"
+"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
+"FEC au format texte et non au format XML, car le format texte sera facilement\n"
+"lisible et vérifiable par le comptable en utilisant un tableur.\n"
+"\n"
+"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
+"*Test Compta Demat* version 1_00_05 disponible sur\n"
+"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
+"en utilisant une base de donnée Odoo réelle.\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Aucune configuration n'est nécessaire.\n"
+"\n"
+"Utilisation\n"
+"===========\n"
+"\n"
+"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* Alexis de Lattre <alexis.delattre@akretion.com>\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -9006,6 +9163,11 @@ msgid "French Guyana"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_french_localization
+msgid "French Localization"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
 msgstr ""
@@ -9039,6 +9201,11 @@ msgstr "Целосно име"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_complete_name
 msgid "Full Path"
 msgstr "Целосна патека"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_full_reconcile
+msgid "Full Reconciliation Concept"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_func
@@ -9159,6 +9326,11 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Georgian / ქართული ენა"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "German (CH) / Deutsch (CH)"
 msgstr ""
 
 #. module: base
@@ -9425,6 +9597,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hw_scanner
 msgid "Hardware Driver for Barcode Scanners"
 msgstr "Хардвер драјвери за баркод читачи"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hw_blackbox_be
+msgid "Hardware Driver for Belgian Fiscal Data Modules"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -10672,6 +10849,12 @@ msgstr "Име на јазик"
 #, python-format
 msgid "Language Pack"
 msgstr "Пакет Јазици"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:187
+#, python-format
+msgid "Language code cannot be modified."
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -12089,7 +12272,12 @@ msgid "New Zealand"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:522
+#: model:ir.module.module,shortdesc:base.module_l10n_nz
+msgid "New Zealand - Accounting"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:536
 #, python-format
 msgid ""
 "New field name must still start with x_ , because it is a custom field!"
@@ -12183,7 +12371,13 @@ msgid "Non Updatable"
 msgstr "Не може да се ажурира"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:307
+#: code:addons/base/ir/ir_model.py:348
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:305
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr ""
@@ -13330,12 +13524,17 @@ msgid "Properties"
 msgstr "Својства"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:501
+#: code:addons/base/ir/ir_model.py:515
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr "Својствата на основните полиња не може да се менуваат на овој начин! Ве молиме менувајте ги преку Python код, пожелно преку прилагоден додаток."
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_theme_install
+msgid "Propose to install a theme on website installation"
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -13715,6 +13914,11 @@ msgstr "Отстрани ја контекстуалната акција кој
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Преименување на ретко поле \"%s\" не е дозловено"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_mrp_repair
+msgid "Repair broken or damaged products"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -15038,6 +15242,7 @@ msgstr "Улица"
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
+#: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
 msgstr "Улица 2..."
 
@@ -15374,6 +15579,12 @@ msgid "Technical Settings"
 msgstr "Технички поставки"
 
 #. module: base
+#: code:addons/base/ir/ir_translation.py:734
+#, python-format
+msgid "Technical Translation"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_company_type
 #: model:ir.model.fields,help:base.field_res_users_company_type
 msgid ""
@@ -15381,7 +15592,9 @@ msgid ""
 " Odoo v9 RadioButton cannot be used on boolean fields, this one serves as "
 "interface. Due to the old API limitations with interface function field, we "
 "implement it by hand instead of a true function field. When migrating to the"
-" new API the code should be simplified."
+" new API the code should be simplified. Changing the company_type of a "
+"company contact into a company will not display this contact as a company "
+"contact but as a standalone company."
 msgstr ""
 
 #. module: base
@@ -16161,6 +16374,14 @@ msgstr "Преведувачките функции се оневозможен�
 #: selection:ir.translation,state:0
 msgid "Translation in Progress"
 msgstr "Прведувањето е во тек"
+
+#. module: base
+#: code:addons/base/ir/ir_translation.py:551
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation

@@ -11,7 +11,7 @@
 # Nicolas Frei, 2016
 # Patrick Belser <patrick.belser@camptocamp.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# darenkster <renkosp@gmail.com>, 2015-2016
+# darenkster <inactive+darenkster@transifex.com>, 2015-2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
 # Wolfgang Taferner, 2016
@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-08-19 11:51+0000\n"
+"POT-Creation-Date: 2016-09-22 13:15+0000\n"
+"PO-Revision-Date: 2016-09-23 09:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,11 @@ msgstr "(kann hier geändert werden)"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ", if accounting or purchase is installed"
 msgstr ", wenn Finanzen und Einkauf installiert sind"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+msgid "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -921,8 +926,6 @@ msgstr "Anpassung des Angebotslayout"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Channel"
 msgstr "Kanal"
 
@@ -1300,8 +1303,8 @@ msgstr "Tage b. Beend."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-msgid "Deduplicate Contact"
-msgstr "Kontakte zusammenführen"
+msgid "Deduplicate Contacts"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1559,7 +1562,6 @@ msgstr "Vorhandene Werkzeuge"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_deadline
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr "Erwartetes Abschlussdatum"
@@ -2037,12 +2039,11 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:834 selection:crm.activity.report,lead_type:0
+#: code:addons/crm/crm_lead.py:851 selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0 selection:crm.opportunity.report,type:0
 #: selection:crm.stage,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost_lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #, python-format
@@ -2099,7 +2100,6 @@ msgstr "Massenmailing an Interessenten/Chancen"
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads"
 msgstr "Interessenten"
 
@@ -2217,7 +2217,6 @@ msgid "List of possible pain points by segment/profile"
 msgstr "Liste der möglichen Schwachstellen nach Segment / Profil"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2265,7 +2264,6 @@ msgid "Mark Lost"
 msgstr "Nicht erfolgreich verkauft"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
 msgstr "Als verkauft markieren"
@@ -2426,11 +2424,6 @@ msgid "Messages"
 msgstr "Mitteilungen"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead_message_ids
-msgid "Messages and communication history"
-msgstr "Nachrichten und Kommunikations-Historie"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_internal
 msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
@@ -2480,7 +2473,6 @@ msgstr "Meine Leads"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Opportunities"
 msgstr "Meine Verkaufschancen"
@@ -2511,14 +2503,8 @@ msgstr "Neue Chance"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action_next
-#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action
 msgid "Next Action"
 msgstr "Nächste Aktion"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action_date
-msgid "Next Action Date"
-msgstr "Datum nächste Aktion"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -2576,11 +2562,6 @@ msgstr "Noch kein Verkäufer"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_res_users_payment_next_action
-msgid "Note regarding the next action."
-msgstr "Hinweis bzgl. nächster Handlung."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2732,7 +2713,6 @@ msgstr "Öffne Menü Verkauf"
 #: model:ir.ui.view,arch_db:crm.crm_case_pivot_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -2990,8 +2970,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Regel für den Versand von Mitteilungen über das E-Mail-Gateways.\n- Alle Benutzer: Jeder kann  uneingeschränkt Mails senden\n- Authentifizierte Partner: Nur angemeldete Partner\n- Nur Verfolger: Nur Verfolger dieses Dokuments\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3133,13 +3113,6 @@ msgstr "Verkaufsmanagement Anwendung"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Settings"
 msgstr "Verkaufseinstellungen"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_lead_tag_action
-#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
-#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
-msgid "Sales Tags"
-msgstr "Verkaufskategorie"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -3468,7 +3441,6 @@ msgstr "Schlagwort existiert bereits!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
-#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Tags"
 msgstr "Tags"
 
@@ -3497,11 +3469,6 @@ msgstr "Emailvorlagen"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
 msgstr "Angebotsvorlagen (benutzen Sie die Online Angebote)"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_res_users_payment_next_action_date
-msgid "The date before which no action should be taken."
-msgstr "Datum vor dem keine Maßnahme ergriffen werden soll."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -3742,11 +3709,6 @@ msgstr "Ungelesene Mitteilungen"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Zähler der ungelelesen Nachrichten"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
-msgid "Unreconciled aml ids"
-msgstr "Offene-Posten ID"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date
@@ -4016,6 +3978,12 @@ msgid ""
 "                            recommend you to select the easiest option that\n"
 "                            suits your needs for now on."
 msgstr "Sie können die Preismethodik jederzeit ändern. Wir \nempfehlen Ihnen die Auswahl der einfachsten Option, \ndie Ihren bisherigen Bedarf abdeckt."
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:309
+#, python-format
+msgid "You cannot merge a contact with one of his parent."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

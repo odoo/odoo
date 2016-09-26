@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2016-01-13 15:01+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2016-09-23 09:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +113,7 @@ msgstr "Apparatuur"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
 msgid "Asset Category"
 msgstr "Categorie apparatuur"
 
@@ -488,13 +488,6 @@ msgid "If checked, new messages require your attention."
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
 #: model:hr.equipment.stage,name:hr_equipment.stage_1
 msgid "In Progress"
@@ -627,13 +620,6 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
 msgid "Model"
 msgstr "Model"
@@ -743,8 +729,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n-iedereen: iedereen mag versturen\n-relaties: alleen geautoriseerde relaties\n-volgers: allen volgers van een bijbehorend document\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -968,6 +954,9 @@ msgstr "In onderhoud"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
