@@ -120,7 +120,6 @@ class PortalWizardUser(models.TransientModel):
         """ From selected partners, add corresponding users to chosen portal group. It either granted
             existing user, or create new one (and add it to the group).
         """
-        self.ensure_one()
         error_msg = self.get_error_messages()
         if error_msg:
             raise UserError("\n\n".join(error_msg))
