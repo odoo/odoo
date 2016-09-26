@@ -23,7 +23,7 @@ var PivotView = View.extend({
     events: {
         'click .o_pivot_header_cell_opened': 'on_open_header_click',
         'click .o_pivot_header_cell_closed': 'on_closed_header_click',
-        'click .o_pivot_field_menu': 'on_field_menu_selection',
+        'click .o_pivot_field_menu a': 'on_field_menu_selection',
         'click td': 'on_cell_click',
         'click .o_pivot_measure_row': 'on_measure_row_click',
     },

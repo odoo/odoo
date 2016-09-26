@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, SUPERUSER_ID
 
 class test_model(models.Model):
     _name = 'test_converter.test_model'
@@ -10,7 +10,7 @@ class test_model(models.Model):
     integer = fields.Integer()
     float = fields.Float()
     numeric = fields.Float(digits=(16, 2))
-    many2one = fields.Many2one('test_converter.test_model.sub')
+    many2one = fields.Many2one('test_converter.test_model.sub', group_expand='_gbf_m2o')
     binary = fields.Binary()
     date = fields.Date()
     datetime = fields.Datetime()
@@ -31,19 +31,12 @@ class test_model(models.Model):
     text = fields.Text()
 
     # `base` module does not contains any model that implement the functionality
-    # `_group_by_full`; test this feature here...
+    # `group_expand`; test this feature here...
 
-    @api.multi
-    def _gbf_m2o(self, domain, read_group_order, access_rights_uid):
-        Sub = self.env['test_converter.test_model.sub']
-        subs = Sub.browse(Sub._search([], access_rights_uid=access_rights_uid))
-        result = subs.sudo(access_rights_uid).name_get()
-        folds = {i: i not in self.ids for i, _ in result}
-        return result, folds
-
-    _group_by_full = {
-        'many2one': _gbf_m2o,
-    }
+    @api.model
+    def _gbf_m2o(self, subs, domain, order):
+        sub_ids = subs._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return subs.browse(sub_ids)
 
 
 class test_model_sub(models.Model):

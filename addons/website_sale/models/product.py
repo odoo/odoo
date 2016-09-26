@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools, _
 import odoo.addons.decimal_precision as dp
+from odoo.tools.translate import html_translate
 
 
 class ProductStyle(models.Model):
@@ -14,8 +15,11 @@ class ProductStyle(models.Model):
 class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
+    def _default_website(self):
+        return self.env['website'].search([], limit=1)
+
+    website_id = fields.Many2one('website', string="website", default=_default_website)
     code = fields.Char(string='E-commerce Promotional Code')
-    website_id = fields.Many2one('website', string="Website")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
@@ -108,7 +112,7 @@ class ProductTemplate(models.Model):
         domain=lambda self: ['&', ('model', '=', self._name), ('message_type', '=', 'comment')],
         string='Website Comments',
     )
-    website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=True)
+    website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
                                                string='Alternative Products', help='Suggest more expensive alternatives to '
                                                'your customers (upsell strategy). Those products show up on the product page.')

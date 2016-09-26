@@ -2,7 +2,7 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -123,7 +123,8 @@ class MaintenanceEquipment(models.Model):
     active = fields.Boolean(default=True)
     technician_user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='user_id')
     owner_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange')
-    category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category', track_visibility='onchange')
+    category_id = fields.Many2one('maintenance.equipment.category', string='Equipment Category',
+                                  track_visibility='onchange', group_expand='_read_group_category_ids')
     partner_id = fields.Many2one('res.partner', string='Vendor', domain="[('supplier', '=', 1)]")
     partner_ref = fields.Char('Vendor Reference')
     location = fields.Char('Location')
@@ -181,26 +182,13 @@ class MaintenanceEquipment(models.Model):
             self.message_subscribe_users(user_ids=[vals['owner_user_id']])
         return super(MaintenanceEquipment, self).write(vals)
 
-    @api.multi
-    def _read_group_category_ids(self, domain, read_group_order=None, access_rights_uid=None):
-        """ Read group customization in order to display all the category in the
-            kanban view, even if they are empty
+    @api.model
+    def _read_group_category_ids(self, categories, domain, order):
+        """ Read group customization in order to display all the categories in
+            the kanban view, even if they are empty.
         """
-        category_obj = self.env['maintenance.equipment.category']
-        order = category_obj._order
-        access_rights_uid = access_rights_uid or self._uid
-        if read_group_order == 'category_id desc':
-            order = '%s desc' % order
-
-        category_ids = category_obj._search([], order=order, access_rights_uid=access_rights_uid)
-        result = [category.name_get()[0] for category in category_obj.browse(category_ids)]
-        # restore order of the search
-        result.sort(lambda x, y: cmp(category_ids.index(x[0]), category_ids.index(y[0])))
-
-        fold = {}
-        for category in category_obj.browse(category_ids):
-            fold[category.id] = category.fold
-        return result, fold
+        category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return categories.browse(category_ids)
 
     @api.model
     def _cron_generate_requests(self):
@@ -213,10 +201,6 @@ class MaintenanceEquipment(models.Model):
                     'equipment_id': equipment.id,
                     'maintenance_type': 'preventive',
                 })
-
-    _group_by_full = {
-        'category_id': _read_group_category_ids
-    }
 
 
 class MaintenanceRequest(models.Model):
@@ -249,7 +233,8 @@ class MaintenanceRequest(models.Model):
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment', index=True)
     technician_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange', oldname='user_id')
-    stage_id = fields.Many2one('maintenance.stage', string='Stage', track_visibility='onchange', default=_default_stage)
+    stage_id = fields.Many2one('maintenance.stage', string='Stage', track_visibility='onchange',
+                               group_expand='_read_group_stage_ids', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
     color = fields.Integer('Color Index')
     close_date = fields.Date('Close Date')
@@ -310,32 +295,13 @@ class MaintenanceRequest(models.Model):
             self.write({'close_date': fields.Date.today()})
         return res
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
         """ Read group customization in order to display all the stages in the
             kanban view, even if they are empty
         """
-        stage_obj = self.env['maintenance.stage']
-        order = stage_obj._order
-        access_rights_uid = access_rights_uid or self._uid
-
-        if read_group_order == 'stage_id desc':
-            order = '%s desc' % order
-
-        stage_ids = stage_obj._search([], order=order, access_rights_uid=access_rights_uid)
-        result = [stage.name_get()[0] for stage in stage_obj.browse(stage_ids)]
-
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stage_obj.browse(stage_ids):
-            fold[stage.id] = stage.fold or False
-        return result, fold
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
 
 class MaintenanceTeam(models.Model):

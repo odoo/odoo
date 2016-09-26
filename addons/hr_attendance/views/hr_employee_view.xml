@@ -5,6 +5,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">10</field>
+        <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="arch" type="xml">
             <field name="name" position="replace">
             <div id="textbox">

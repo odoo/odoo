@@ -414,6 +414,7 @@ class IrModelFields(models.Model):
                 any(field.state != 'manual' for field in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
 
+        model_names = self.mapped('model')
         self._drop_column()
         res = super(IrModelFields, self).unlink()
 
@@ -423,6 +424,8 @@ class IrModelFields(models.Model):
             self._cr.commit()
             api.Environment.reset()
             registry = Registry.new(self._cr.dbname)
+            models = registry.descendants(model_names, '_inherits')
+            registry.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
             registry.signal_registry_change()
 
         return res
@@ -455,8 +458,9 @@ class IrModelFields(models.Model):
             if vals['model'] in self.pool:
                 # setup models; this re-initializes model in registry
                 self.pool.setup_models(self._cr, partial=(not self.pool.ready))
-                # update database schema
-                self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
+                # update database schema of model and its descendant models
+                models = self.pool.descendants([vals['model']], '_inherits')
+                self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
                 self.pool.signal_registry_change()
 
         return res
@@ -538,7 +542,8 @@ class IrModelFields(models.Model):
 
         if patched_models:
             # update the database schema of the models to patch
-            self.pool.init_models(self._cr, patched_models, dict(self._context, update_custom_fields=True))
+            models = self.pool.descendants(patched_models, '_inherits')
+            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
         if column_rename or patched_models:
             self.pool.signal_registry_change()

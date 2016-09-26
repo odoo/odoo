@@ -49,7 +49,7 @@ var TreeView = View.extend({
     },
     willStart: function () {
         _(this.fields_view.arch.children).each(function (field) {
-            if (field.attrs.modifiers) {
+            if (field.attrs.modifiers && typeof field.attrs.modifiers === "string") {
                 field.attrs.modifiers = JSON.parse(field.attrs.modifiers);
             }
         });

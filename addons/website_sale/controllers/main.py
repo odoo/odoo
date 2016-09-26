@@ -128,7 +128,9 @@ class WebsiteSale(http.Controller):
            (variant id, [visible attribute ids], variant price, variant sale price)
         """
         # product attributes with at least two choices
-        visible_attrs_ids = product.mapped('attribute_line_ids.attribute_id').filtered(lambda attr: len(attr.value_ids) > 1).ids
+        product = product.with_context(quantity=1)
+
+        visible_attrs_ids = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id').ids
         to_currency = request.website.get_current_pricelist().currency_id
         attribute_value_ids = []
         for variant in product.product_variant_ids:

@@ -652,6 +652,7 @@ class Database(http.Controller):
     def drop(self, master_pwd, name):
         try:
             dispatch_rpc('db','drop', [master_pwd, name])
+            request._cr = None  # dropping a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception, e:
             error = "Database deletion error: %s" % e

@@ -259,7 +259,7 @@ class AccountVoucher(models.Model):
                 'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
             }
 
-            self.env['account.move.line'].create(move_line)
+            self.env['account.move.line'].with_context(apply_taxes=True).create(move_line)
         return line_total
 
     @api.multi

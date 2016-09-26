@@ -402,7 +402,7 @@ class ProductTemplate(models.Model):
                 })
 
             # unlink or inactive product
-            for variant in variants_to_activate:
+            for variant in variants_to_unlink:
                 try:
                     with self._cr.savepoint(), tools.mute_logger('odoo.sql_db'):
                         variant.unlink()

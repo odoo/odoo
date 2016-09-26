@@ -237,7 +237,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 $img.attr("src", "/web/image/product.product/" + product_id + "/image");
                 $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                     .data('oe-model', 'product.product').data('oe-id', product_id);
-                
+
                 $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img_small');
                 if ($img) { // if only one, thumbnails are not displayed
                     $img.attr("src", "/web/image/product.product/" + product_id + "/image/90x90");
@@ -279,11 +279,10 @@ odoo.define('website_sale.website_sale', function (require) {
                 if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
                     $price.html(price_to_str(variant_ids[k][2]));
                     $default_price.html(price_to_str(variant_ids[k][3]));
-                    if (variant_ids[k][3]-variant_ids[k][2]>0.2) {
+                    if (variant_ids[k][3]-variant_ids[k][2]>0.01) {
                         $default_price.closest('.oe_website_sale').addClass("discount");
                         $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
                     } else {
-                        $default_price.closest('.oe_website_sale').removeClass("discount");
                         $optional_price.closest('.oe_optional').hide();
                     }
                     product_id = variant_ids[k][0];
@@ -379,10 +378,7 @@ odoo.define('website_sale.website_sale', function (require) {
                                 // populate states and display
                                 var selectStates = $("select[name='state_id']");
                                 // dont reload state at first loading (done in qweb)
-                                if (selectStates.data('init')===1) {
-                                    selectStates.data('init', 0);
-                                }
-                                else {
+                                if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
                                     if (data.states.length) {
                                         selectStates.html('');
                                         _.each(data.states, function(x) {
@@ -393,9 +389,13 @@ odoo.define('website_sale.website_sale', function (require) {
                                         });
                                         selectStates.parent('div').show();
                                     }
-                                    else{
+                                    else {
                                         selectStates.val('').parent('div').hide();
                                     }
+                                    selectStates.data('init', 0);
+                                }
+                                else {
+                                    selectStates.data('init', 0);
                                 }
 
                                 // manage fields order / visibility
@@ -419,4 +419,6 @@ odoo.define('website_sale.website_sale', function (require) {
         }
         $("select[name='country_id']").change();
     });
+
+    $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
 });

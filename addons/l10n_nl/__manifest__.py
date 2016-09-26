@@ -1,37 +1,31 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (c) 2009 Veritos - Jan Verlaan - www.veritos.nl
+# Copyright (C) 2016 ONESTEiN BV (<http://www.onestein.eu>).
 
 {
-    'name' : 'Netherlands - Accounting',
-    'version' : '2.0',
-    'category': 'Localization',
-    'description': """
-This is the module to manage the accounting chart for Netherlands in Odoo.
-=============================================================================
-This module installs the a standard chart of accounts and also the Dutch Tax codes and
-fiscal positions for deliveries inside and outside the UE.
-
-In the company settings you can make the following settings:
-- The number of digits of the chart of accounts. 
-By default the chart of accounts are 6 digits. 4 is the minimum number of digits.
-- If you want to use Anglosaxon acounting
-- The prefix of the bank accounts, by default 1100
-- The prefix of the cash account, by default 1000
-- The way of rounding the VAT.
-
-    """,
-    'author'  : 'Veritos - Jan Verlaan',
-    'website' : 'http://www.veritos.nl',
-    'depends' : ['account',
-                 'base_vat',
-                 'base_iban',
+    'name': 'Netherlands - Accounting',
+    'version': '3.0',
+    'category': 'Localization/Account Charts',
+    'author': 'ONESTEiN BV',
+    'website': 'http://www.onestein.eu',
+    'depends': [
+        'account',
+        'base_vat',
+        'base_iban',
     ],
-    'data': ['data/l10n_nl_chart_data.xml',
-             'data/account_tax_fiscal_position_data.xml',
-             'data/account_fiscal_position_tax_template_data.xml',
-             'data/account_fiscal_position_account_template_data.xml',
-             'data/account_chart_template_data.yml',
-             ],
+    'data': [
+        'data/account_account_tag.xml',
+        'data/account_chart_template.xml',
+        'data/account.account.template.xml',
+        'data/account_tax_template.xml',
+        'data/account_fiscal_position_template.xml',
+        'data/account_fiscal_position_tax_template.xml',
+        'data/account_fiscal_position_account_template.xml',
+        'data/account_chart_template.yml',
+        'data/menuitem.xml',
+    ],
+    'demo': [],
+    'auto_install': False,
+    'installable': True,
 }

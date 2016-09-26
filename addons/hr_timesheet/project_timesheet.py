@@ -10,7 +10,7 @@ class Project(models.Model):
     subtask_project_id = fields.Many2one(
         'project.project', string='Sub-task Project', ondelete="restrict",
         help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)")
-
+    allow_timesheets = fields.Boolean("Allow timesheets", default=True)
 
 class Task(models.Model):
     _inherit = "project.task"

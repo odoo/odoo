@@ -97,7 +97,7 @@ class AccountPartialReconcileCashBasis(models.Model):
             # probably already sent to the estate.
             if move_date > self.company_id.period_lock_date:
                 move_vals['date'] = move_date
-            move = self.env['account.move'].with_context(dont_create_taxes=True).create(move_vals)
+            move = self.env['account.move'].create(move_vals)
             # post move
             move.post()
 

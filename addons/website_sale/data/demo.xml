@@ -627,7 +627,7 @@ Weight: 31 grams</field>
           <field name="name">Network</field>
           <field name="sequence">14</field>
         </record>
-        
+
         <record id="services" model="product.public.category">
           <field name="name">Services</field>
           <field name="sequence">16</field>
@@ -712,19 +712,22 @@ Weight: 31 grams</field>
             <field name="html_color">#000000</field>
         </record>
 
+        <record model="product.pricelist" id="product.list0">
+            <field name="name">USD</field>
+            <field name="selectable" eval="True" />
+            <field name="website_id" ref="website.default_website" />
+            <field name="sequence">3</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
         <record id="benelux" model="res.country.group">
             <field name="name">BeNeLux</field>
             <field name="country_ids" eval="[(6,0,[
                 ref('base.be'),ref('base.lu'),ref('base.nl')])]"/>
         </record>
 
-        <record id="country_group_us_ca" model="res.country.group">
-             <field name="name">US-CA</field>
-             <field name="country_ids" eval="[(6,0,[ref('base.us'),ref('base.ca')])]"/>
-        </record>
-
         <record id="list_christmas" model="product.pricelist">
-            <field name="name">Christmas Pricelist</field>
+            <field name="name">Christmas</field>
             <field name="selectable" eval="False" />
             <field name="website_id" ref="website.default_website" />
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
@@ -739,8 +742,8 @@ Weight: 31 grams</field>
         </record>
 
         <record id="list_benelux" model="product.pricelist">
-            <field name="name">Benelux Pricelist</field>
-            <field name="selectable" eval="True" />
+            <field name="name">Benelux</field>
+            <field name="selectable" eval="False" />
             <field name="website_id" ref="website.default_website" />
             <field name="country_group_ids" eval="[(6,0,[ref('benelux')])]" />
             <field name="sequence">2</field>
@@ -756,7 +759,7 @@ Weight: 31 grams</field>
 
 
         <record id="list_europe" model="product.pricelist">
-            <field name="name">Europe Pricelist</field>
+            <field name="name">EUR</field>
             <field name="selectable" eval="True" />
             <field name="website_id" ref="website.default_website" />
             <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
@@ -770,16 +773,8 @@ Weight: 31 grams</field>
             <field name="sequence">10</field>
         </record>
 
-        <record id="list_us" model="product.pricelist">
-            <field name="name">US/CA Pricelist</field>
-            <field name="selectable" eval="True" />
-            <field name="website_id" ref="website.default_website" />
-            <field name="country_group_ids" eval="[(6,0,[ref('country_group_us_ca')])]" />
-            <field name="sequence">3</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
         <record id="item_us" model="product.pricelist.item">
-            <field name="pricelist_id" ref="list_us"/>
+            <field name="pricelist_id" ref="product.list0"/>
             <field name="compute_price">formula</field>
             <field name="base">list_price</field>
             <field name="sequence">10</field>

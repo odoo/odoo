@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import common
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
-class TestStockLandedCostsCommon(common.TransactionCase):
+class TestStockLandedCostsCommon(AccountingTestCase):
 
     def setUp(self):
         super(TestStockLandedCostsCommon, self).setUp()

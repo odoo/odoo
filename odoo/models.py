@@ -30,7 +30,7 @@ import operator
 import pytz
 import re
 import time
-from collections import defaultdict, MutableMapping
+from collections import defaultdict, MutableMapping, OrderedDict
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
 
@@ -258,15 +258,13 @@ class BaseModel(object):
     _parent_store = False       # set to True to compute MPTT (parent_left, parent_right)
     _parent_order = False       # order to use for siblings in MPTT
     _date_name = 'date'         # field to use for default calendar view
+    _fold_name = 'fold'         # field to determine folded groups in kanban views
 
     _needaction = False         # whether the model supports "need actions" (see mail)
     _translate = True           # False disables translations export for this model
 
     _depends = {}               # dependencies of models backed up by sql views
                                 # {model_name: field_names, ...}
-
-    _group_by_full = {}         # {field: method}, where method returns (records
-                                # name_get, {id: fold}) used by read_group()
 
     # default values for _transient_vacuum()
     _transient_check_count = 0
@@ -378,6 +376,7 @@ class BaseModel(object):
                     )
                     cr.execute(query, vals)
         self.invalidate_cache()
+
 
     @api.model
     def _add_field(self, name, field):
@@ -538,6 +537,7 @@ class BaseModel(object):
                 '_register': False,
                 '_original_module': cls._module,
                 '_inherit_children': OrderedSet(),      # names of children models
+                '_inherits_children': set(),            # names of children models
                 '_fields': {},                          # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
@@ -610,7 +610,6 @@ class BaseModel(object):
         cls._log_access = cls._auto
         cls._inherits = {}
         cls._depends = {}
-        cls._group_by_full = {}
         cls._constraints = {}
         cls._sql_constraints = []
 
@@ -627,9 +626,6 @@ class BaseModel(object):
             for mname, fnames in base._depends.iteritems():
                 cls._depends[mname] = cls._depends.get(mname, []) + fnames
 
-            for fname, func in base._group_by_full.iteritems():
-                cls._group_by_full[fname] = api.guess(func)
-
             for cons in base._constraints:
                 # cons may override a constraint with the same function name
                 cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
@@ -639,7 +635,11 @@ class BaseModel(object):
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._constraints = cls._constraints.values()
 
-        # recompute attributes of children models
+        # update _inherits_children of parent models
+        for parent_name in cls._inherits:
+            pool[parent_name]._inherits_children.add(cls._name)
+
+        # recompute attributes of _inherit_children models
         for child_name in cls._inherit_children:
             child_class = pool[child_name]
             child_class._build_model_attributes(pool)
@@ -1674,72 +1674,59 @@ class BaseModel(object):
                                  read_group_result, read_group_order=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
+        field = self._fields[groupby]
+        if not field.group_expand:
+            return read_group_result
 
-        # self._group_by_full should map groupable fields to a method that returns
-        # a list of all aggregated values that we want to display for this field,
-        # in the form of a m2o-like pair (key,label).
-        # This is useful to implement kanban views for instance, where all columns
-        # should be displayed even if they don't contain any record.
+        # field.group_expand is the name of a method that returns a list of all
+        # aggregated values that we want to display for this field, in the form
+        # of a m2o-like pair (key,label).
+        # This is useful to implement kanban views for instance, where all
+        # columns should be displayed even if they don't contain any record.
 
         # Grab the list of all groups that should be displayed, including all present groups
-        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        all_groups, folded = self._group_by_full[groupby](
-            # Beware: present_group_ids do not belong to model self!
-            self.browse(present_group_ids),
-            domain,
-            read_group_order=read_group_order,
-            access_rights_uid=odoo.SUPERUSER_ID,
-        )
+        group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+        groups = self.env[field.comodel_name].browse(group_ids)
+        # determine order on groups's model
+        order = groups._order
+        if read_group_order == groupby + ' desc':
+            order = tools.reverse_order(order)
+        groups = getattr(self, field.group_expand)(groups, domain, order)
+        groups = groups.sudo()
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
         if remaining_groupbys:
             result_template['__context'] = {'group_by': remaining_groupbys}
 
-        # Merge the left_side (current results as dicts) with the right_side (all
-        # possible values as m2o pairs). Both lists are supposed to be using the
-        # same ordering, and can be merged in one pass.
-        result = []
-        known_values = {}
-        def append_left(left_side):
-            grouped_value = left_side[groupby] and left_side[groupby][0]
-            if not grouped_value in known_values:
-                result.append(left_side)
-                known_values[grouped_value] = left_side
+        # Merge the current results (list of dicts) with all groups (recordset).
+        # Determine the global order of results from all groups, which is
+        # supposed to be in the same order as read_group_result.
+        result = OrderedDict((group.id, {}) for group in groups)
+
+        # fill in results from read_group_result
+        for left_side in read_group_result:
+            left_id = (left_side[groupby] or (False,))[0]
+            if not result.get(left_id):
+                result[left_id] = left_side
             else:
-                known_values[grouped_value].update({count_field: left_side[count_field]})
-        def append_right(right_side):
-            grouped_value = right_side[0]
-            if not grouped_value in known_values:
+                result[left_id][count_field] = left_side[count_field]
+
+        # fill in missing results from all groups
+        for right_side in groups.name_get():
+            right_id = right_side[0]
+            if not result[right_id]:
                 line = dict(result_template)
                 line[groupby] = right_side
-                line['__domain'] = [(groupby,'=',grouped_value)] + domain
-                result.append(line)
-                known_values[grouped_value] = line
-        while read_group_result or all_groups:
-            left_side = read_group_result[0] if read_group_result else None
-            right_side = all_groups[0] if all_groups else None
-            assert left_side is None or left_side[groupby] is False \
-                 or isinstance(left_side[groupby], (tuple,list)), \
-                'M2O-like pair expected, got %r' % left_side[groupby]
-            assert right_side is None or isinstance(right_side, (tuple,list)), \
-                'M2O-like pair expected, got %r' % right_side
-            if left_side is None:
-                append_right(all_groups.pop(0))
-            elif right_side is None:
-                append_left(read_group_result.pop(0))
-            elif left_side[groupby] == right_side:
-                append_left(read_group_result.pop(0))
-                all_groups.pop(0) # discard right_side
-            elif not left_side[groupby] or not left_side[groupby][0]:
-                # left side == "Undefined" entry, not present on right_side
-                append_left(read_group_result.pop(0))
-            else:
-                append_right(all_groups.pop(0))
+                line['__domain'] = [(groupby, '=', right_id)] + domain
+                result[right_id] = line
 
-        if folded:
+        result = result.values()
+
+        if groups._fold_name in groups._fields:
             for r in result:
-                r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
+                group = groups.browse(r[groupby] and r[groupby][0])
+                r['__fold'] = group[groups._fold_name]
         return result
 
     @api.model
@@ -1952,7 +1939,7 @@ class BaseModel(object):
         """
         result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         dt = [
             f for f in groupby
             if self._fields[f.split(':')[0]].type in ('date', 'datetime')
@@ -1976,7 +1963,7 @@ class BaseModel(object):
         query = self._where_calc(domain)
         fields = fields or [f.name for f in self._fields.itervalues() if f.store]
 
-        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
@@ -2056,7 +2043,7 @@ class BaseModel(object):
 
         data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
-        if lazy and groupby_fields[0] in self._group_by_full:
+        if lazy:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented

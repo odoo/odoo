@@ -18,6 +18,7 @@ Odoo E-Commerce
         'views/backend.xml',
         'views/templates.xml',
         'views/payment.xml',
+        'views/product_attribute_views.xml',
         'views/sale_order.xml',
         'views/snippets.xml',
         'views/report_shop_saleorder.xml',

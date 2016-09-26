@@ -20,8 +20,8 @@ class HrEmployee(models.Model):
             barcode = "".join(choice(digits) for i in range(8))
         return barcode
 
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", default=_default_random_barcode, copy=False, groups='hr_attendance.group_hr_attendance_user')
-    pin = fields.Char(string="PIN", default=_default_random_pin, help="PIN used for Check In/Out in Attendance.", copy=False, groups='hr_attendance.group_hr_attendance_user')
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", default=_default_random_barcode, copy=False)
+    pin = fields.Char(string="PIN", default=_default_random_pin, help="PIN used for Check In/Out in Attendance.", copy=False)
 
     attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
     last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id')

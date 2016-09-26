@@ -21,7 +21,7 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
         user_type_id = self.ref('account.data_account_type_revenue')
         tag_id = self.ref('account.account_tag_operating')
         account_rev = self.env['account.account'].create({
-            'code': 'X2020',
+            'code': 'Y2020',
             'name': 'Budget - Test Revenue Account',
             'user_type_id': user_type_id,
             'tag_ids': [(4, tag_id, 0)]

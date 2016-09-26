@@ -18,7 +18,7 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     @api.model
-    def create(self, vals, apply_taxes=True):
+    def create(self, vals):
         taxes = False
         if vals.get('tax_line_id'):
             taxes = [{'use_cash_basis': self.env['account.tax'].browse(vals['tax_line_id']).use_cash_basis}]
@@ -26,4 +26,4 @@ class AccountMoveLine(models.Model):
             taxes = self.env['account.move.line'].resolve_2many_commands('tax_ids', vals['tax_ids'])
         if taxes and any([tax['use_cash_basis'] for tax in taxes]) and not vals.get('tax_exigible'):
             vals['tax_exigible'] = False
-        return super(AccountMoveLine, self).create(vals, apply_taxes=apply_taxes)
+        return super(AccountMoveLine, self).create(vals)

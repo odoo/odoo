@@ -392,16 +392,28 @@ div.carousel {
 }
 
 .parallax {
-    background-size: cover;
-    > div {
-        position: relative;
-        display: table;
+    position: relative;
+    min-height: 200px;
+
+    &::before {
+        content: "";
+        display: inline-block;
+        width: 0;
+        min-height: inherit;
+        height: 100%;
+        vertical-align: middle;
+    }
+
+    > .oe_structure {
+        display: inline-block;
         width: 100%;
-        min-height: 200px;
-        > div {
-            display: table-cell;
-            vertical-align: middle;
-            padding: 32px 0;
+        vertical-align: middle;
+
+        > :first-child {
+            margin-top: 32px;
+        }
+        > :last-child {
+            margin-bottom: 32px;
         }
     }
 }

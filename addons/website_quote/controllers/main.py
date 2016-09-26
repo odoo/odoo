@@ -149,7 +149,7 @@ class sale_quote(http.Controller):
 
         OrderLine = request.env['sale.order.line'].sudo().create(vals)
         OrderLine._compute_tax_id()
-        Option.write({'line_id': OrderLine})
+        Option.write({'line_id': OrderLine.id})
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (Order.id, token))
 
     # note dbo: website_sale code

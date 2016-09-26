@@ -16,7 +16,6 @@
     </t>
     <result id="boolean-value-condition-missing"/>
 
-    <!-- TODO: activate this test when qweb.py implements t-elif
     <t t-name="boolean-value-condition-elif">
         <t t-if="color == 'black'">black pearl</t>
         <t t-elif="color == 'yellow'">yellow submarine</t>
@@ -25,7 +24,6 @@
     </t>
     <params id="boolean-value-condition-elif">{"color": "red"}</params>
     <result id="boolean-value-condition-elif">red is dead</result>
-    -->
 
     <t t-name="boolean-value-condition-else">
         <div><span>begin</span><t t-if="condition">ok</t>

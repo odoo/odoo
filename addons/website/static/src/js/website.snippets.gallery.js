@@ -354,18 +354,12 @@ options.registry.gallery_img = options.Class.extend({
             editor.reapply();
         },0);
     },
-    remove: function (type) {
-        if (type !== "click") return;
-
-        var self = this;
+    on_remove: function () {
         var $parent = snippet_editor.globalSelector.closest(this.$target.parent());
-        this.buildingBlock.make_active(false);
-        this.$target.remove();
-        setTimeout(function () {
-            self.buildingBlock.make_active($parent);
-            var gallery = $parent.data('snippet-editor').styles.gallery;
-            gallery.reapply();
-        }, 0);
+        _.defer((function () {
+            this.buildingBlock.make_active($parent);
+            $parent.data('snippet-editor').styles.gallery.reapply();
+        }).bind(this));
     }
 });
 
