@@ -1652,12 +1652,14 @@ class MailThread(models.AbstractModel):
             m2m_attachment_ids += [(4, id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
         for attachment in attachments:
+            cid = False
             if len(attachment) == 2:
                 name, content = attachment
             elif len(attachment) == 3:
                 name, content, info = attachment
                 if info and info.get('cid'):
-                    cid_mapping[info['cid']] = name
+                    cid = info['cid']
+                    cid_mapping[cid] = name
             else:
                 continue
             if isinstance(content, unicode):
@@ -1665,7 +1667,7 @@ class MailThread(models.AbstractModel):
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(str(content)),
-                'datas_fname': name,
+                'datas_fname': cid or name,
                 'description': name,
                 'res_model': message_data['model'],
                 'res_id': message_data['res_id'],
@@ -1678,8 +1680,11 @@ class MailThread(models.AbstractModel):
             postprocessed = False
             for node in root.iter('img'):
                 if node.get('src', '').startswith('cid:'):
-                    fname = cid_mapping.get(node.get('src').split('cid:')[1], node.get('data-filename', ''))
-                    attachment = parameter_attachments.filtered(lambda attachment: attachment.name == fname)
+                    cid = node.get('src').split('cid:')[1]
+                    fname = cid_mapping.get(cid, node.get('data-filename', ''))
+                    attachment = parameter_attachments.filtered(lambda attachment: attachment.datas_fname == cid)
+                    if not attachment:
+                        attachment = parameter_attachments.filtered(lambda attachment: attachment.datas_fname == fname)
                     if attachment:
                         node.set('src', '/web/image/%s' % attachment.ids[0])
                         postprocessed = True
