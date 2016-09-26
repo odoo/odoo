@@ -29,7 +29,6 @@ import logging
 import operator
 import pytz
 import re
-import time
 from collections import defaultdict, MutableMapping, OrderedDict
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
@@ -64,20 +63,6 @@ regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
-
-# base environment for doing a safe_eval
-SAFE_EVAL_BASE = {
-    'datetime': datetime,
-    'dateutil': dateutil,
-    'time': time,
-}
-
-def make_compute(text, deps):
-    """ Return a compute function from its code body and dependencies. """
-    func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
-    deps = [arg.strip() for arg in (deps or "").split(",")]
-    return api.depends(*deps)(func)
-
 
 def check_object_name(name):
     """ Check if the given name is a valid model name.
@@ -646,57 +631,13 @@ class BaseModel(object):
 
     @api.model
     def _add_manual_fields(self, partial):
+        IrModelFields = self.env['ir.model.fields']
         manual_fields = self.pool.get_manual_fields(self._cr, self._name)
-
-        for name, field in manual_fields.iteritems():
-            if name in self._fields:
-                continue
-            attrs = {
-                'manual': True,
-                'string': field['field_description'],
-                'help': field['help'],
-                'index': bool(field['index']),
-                'copy': bool(field['copy']),
-                'related': field['related'],
-                'required': bool(field['required']),
-                'readonly': bool(field['readonly']),
-                'store': bool(field['store']),
-            }
-            # FIXME: ignore field['serialization_field_id']
-            if field['ttype'] in ('char', 'text', 'html'):
-                attrs['translate'] = bool(field['translate'])
-                attrs['size'] = field['size'] or None
-            elif field['ttype'] in ('selection', 'reference'):
-                attrs['selection'] = safe_eval(field['selection'])
-            elif field['ttype'] == 'many2one':
-                if partial and field['relation'] not in self.env:
-                    continue
-                attrs['comodel_name'] = field['relation']
-                attrs['ondelete'] = field['on_delete']
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            elif field['ttype'] == 'one2many':
-                if partial and not (
-                    field['relation'] in self.env and (
-                        field['relation_field'] in self.env[field['relation']]._fields or
-                        field['relation_field'] in self.pool.get_manual_fields(self._cr, field['relation'])
-                )):
-                    continue
-                attrs['comodel_name'] = field['relation']
-                attrs['inverse_name'] = field['relation_field']
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            elif field['ttype'] == 'many2many':
-                if partial and field['relation'] not in self.env:
-                    continue
-                attrs['comodel_name'] = field['relation']
-                rel, col1, col2 = self.env['ir.model.fields']._custom_many2many_names(field['model'], field['relation'])
-                attrs['relation'] = field['relation_table'] or rel
-                attrs['column1'] = field['column1'] or col1
-                attrs['column2'] = field['column2'] or col2
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            # add compute function if given
-            if field['compute']:
-                attrs['compute'] = make_compute(field['compute'], field['depends'])
-            self._add_field(name, Field.by_type[field['ttype']](**attrs))
+        for name, field_data in manual_fields.iteritems():
+            if name not in self._fields:
+                field = IrModelFields._instanciate(field_data, partial)
+                if field:
+                    self._add_field(name, field)
 
     @classmethod
     def _init_constraints_onchanges(cls):
