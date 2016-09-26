@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Mail Frontend Assets">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_mass_mailing/static/src/js/website_mass_mailing.js"/>
+<template id="assets_frontend" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_popup.css" type="text/css"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mass_mailing/static/src/js/website_mass_mailing.js"/>
     </xpath>
 </template>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="wesbite_mass_mailing Editor assets">
-    <xpath expr="/t" position="inside">
-        <script type="text/javascript" src="/website_mass_mailing/static/src/js/website_mass_mailing.editor.js" groups="website.group_website_publisher"/>
+<template id="assets_editor" inherit_id="website.assets_editor">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mass_mailing/static/src/js/website_mass_mailing.editor.js"/>
     </xpath>
 </template>
 

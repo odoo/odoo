@@ -47,10 +47,8 @@
             <div class="row mt32 mb32">
                 <div class="col-md-9" id="middle_column">
                     <div class="text-center text-muted" t-if="not event_ids">
-                      <h1>No event found</h1>
-                      <t groups="website.group_website_publisher">
-                          <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
-                      </t>
+                        <h1>No event found</h1>
+                        <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
                     </div>
                     <ul class="media-list">
                         <li t-foreach="event_ids" t-as="event" class="media">

@@ -46,7 +46,6 @@
 
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
-
 </template>
 
 <!-- Layout -->
@@ -130,14 +129,14 @@
 
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
-            <t t-call-assets="web_editor.summernote" t-js="false" groups="website.group_website_designer"/>
-            <t t-call-assets="web_editor.assets_editor" t-js="false" groups="website.group_website_designer"/>
+            <t t-call-assets="web_editor.summernote" t-js="false" groups="website.group_website_publisher"/>
+            <t t-call-assets="web_editor.assets_editor" t-js="false" groups="website.group_website_publisher"/>
             <t t-call-assets="website.assets_editor" t-js="false" groups="website.group_website_publisher"/>
 
             <t t-call-assets="web.assets_common" t-css="false"/>
             <t t-call-assets="web.assets_frontend" t-css="false"/>
-            <t t-call-assets="web_editor.summernote" t-css="false" groups="website.group_website_designer"/>
-            <t t-call-assets="web_editor.assets_editor" t-css="false" groups="website.group_website_designer"/>
+            <t t-call-assets="web_editor.summernote" t-css="false" groups="website.group_website_publisher"/>
+            <t t-call-assets="web_editor.assets_editor" t-css="false" groups="website.group_website_publisher"/>
             <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher"/>
         </t>
         <t t-set="head" t-value="head_website + (head or '')"/>

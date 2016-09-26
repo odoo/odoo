@@ -201,9 +201,7 @@
                             <t t-if="not bins">
                                 <div class="text-center text-muted">
                                     <h3 class="css_editable_display">No product defined.</h3>
-                                    <t groups="website.group_website_publisher">
-                                        <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
-                                    </t>
+                                    <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                                 </div>
                             </t>
                         </div>
@@ -1139,7 +1137,7 @@
                         <div class="col-md-9 oe_cart">
                             <div class="row">
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h3 class="page-header mt16">Your Address 
+                                    <h3 class="page-header mt16">Your Address
                                         <small> or </small>
                                         <a href='/web/signup?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Sign Up</a>
                                     </h3>
@@ -1349,7 +1347,7 @@
                                     <div class="list-group">
                                         <t t-foreach='tokens' t-as='token'>
                                             <a class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
-                                                <span class="js_radio fa fa-circle-o"></span>&amp;nbsp; 
+                                                <span class="js_radio fa fa-circle-o"></span>&amp;nbsp;
                                                 <t t-esc="token.name" />
                                                 <t t-if="len(set(tokens.mapped('acquirer_id')))>1">
                                                     (<t t-esc='token.acquirer_id.name'/>)
