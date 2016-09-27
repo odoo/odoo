@@ -550,6 +550,13 @@ class IrModelFields(models.Model):
 
         return res
 
+    @api.multi
+    def name_get(self):
+        res = []
+        for field in self:
+            res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
+        return res
+
 
 class IrModelConstraint(models.Model):
     """
