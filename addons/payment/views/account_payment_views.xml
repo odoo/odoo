@@ -18,11 +18,12 @@
                 <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
                 <field name="arch" type="xml">
                     <field name="payment_method_id" position="after">
-                        <field name="payment_method_id_code" invisible="1"/>
-                        <field name="payment_token_id" attrs="{'invisible': [('payment_method_id_code', '!=', 'electronic')],
-                                                              'required': [('payment_method_id_code', '=', 'electronic')]}"/>
+                        <field name="payment_method_code" invisible="1"/>
+                        <field name="payment_token_id" attrs="{'invisible': [('payment_method_code', '!=', 'electronic')],
+                                                              'required': [('payment_method_code', '=', 'electronic')]}"/>
                     </field>
                 </field>
         </record>
+
     </data>
 </odoo>
