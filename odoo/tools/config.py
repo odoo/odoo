@@ -45,7 +45,7 @@ def _get_default_datadir():
 def _deduplicate_loggers(loggers):
     """ Avoid saving multiple logging levels for the same loggers to a save
     file, that just takes space and the list can potentially grow unbounded
-    if for some odd reason people use :option`odoo.py --save`` all the time.
+    if for some odd reason people use :option`--save`` all the time.
     """
     # dict(iterable) -> the last item of iterable for any given key wins,
     # which is what we want and expect. Output order should not matter as
