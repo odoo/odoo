@@ -32,7 +32,7 @@ from the documentation.
 
 If you are a developer you may type the following command at your terminal:
 
-    wget -O- https://raw.githubusercontent.com/odoo/odoo/9.0/odoo.py | python
+    wget -O- https://raw.githubusercontent.com/odoo/odoo/10.0/setup/setup_dev.py | python
 
 Then follow <a href="https://www.odoo.com/documentation/9.0/tutorials.html">the developer tutorials</a>
 
