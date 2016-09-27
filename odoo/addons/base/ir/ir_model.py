@@ -858,11 +858,17 @@ class IrModelData(models.Model):
     noupdate = fields.Boolean(string='Non Updatable', default=False)
     date_update = fields.Datetime(string='Update Date', default=fields.Datetime.now)
     date_init = fields.Datetime(string='Init Date', default=fields.Datetime.now)
+    reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     @api.depends('module', 'name')
     def _compute_complete_name(self):
         for res in self:
             res.complete_name = ".".join(filter(None, [res.module, res.name]))
+
+    @api.depends('model', 'res_id')
+    def _compute_reference(self):
+        for res in self:
+            res.reference = "%s,%s" % (res.model, res.res_id)
 
     def __init__(self, pool, cr):
         models.Model.__init__(self, pool, cr)
