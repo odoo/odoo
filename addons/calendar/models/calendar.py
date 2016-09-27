@@ -654,7 +654,7 @@ class Meeting(models.Model):
     is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
     attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     display_time = fields.Char('Event Time', compute='_compute_display_time')
-    display_start = fields.Date('Date', compute='_compute_display_start', store=True)
+    display_start = fields.Char('Date', compute='_compute_display_start', store=True)
     start = fields.Datetime('Start', required=True, help="Start date of an event, without time for full days events")
     stop = fields.Datetime('Stop', required=True, help="Stop date of an event, without time for full days events")
 
