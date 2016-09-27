@@ -33,6 +33,16 @@ var WebClient = Widget.extend({
         current_action_updated: function (e) {
             this.current_action_updated(e.data.action);
         },
+        perform_rpc: function(event) {
+            if (event.data.on_fail) {
+                event.data.on_fail();
+            }
+        },
+        perform_model_rpc: function(event) {
+            if (event.data.on_fail) {
+                event.data.on_fail();
+            }
+        },
     },
     init: function(parent) {
         this.client_options = {};
