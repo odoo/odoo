@@ -349,7 +349,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             var _editor = new widget.MediaDialog(null, {}, null, $image[0]).open();
             _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
 
-            _editor.on('saved', this, function () {
+            _editor.on('save', this, function () {
                 var value = $image.attr("src");
                 this.background(type, value, $li);
                 this.$target.addClass("oe_custom_bg");

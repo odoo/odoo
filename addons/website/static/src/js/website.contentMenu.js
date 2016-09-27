@@ -180,8 +180,8 @@ var SelectEditMenuDialog = widget.Dialog.extend({
         }, options || {}));
     },
     save: function () {
-        this.trigger("save", parseInt(this.$el.find("select").val() || null));
-        this._super();
+        this.final_data = parseInt(this.$el.find("select").val() || null);
+        this._super.apply(this, arguments);
     }
 });
 
