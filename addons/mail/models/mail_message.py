@@ -604,6 +604,15 @@ class Message(models.Model):
         return allowed_ids
 
     @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = ['|', '|', ('record_name', operator, name), ('subject', operator, name), ('body', operator, name)]
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = domain[2:]
+        rec = self.search(domain + args, limit=limit)
+        return rec.name_get()
+
+    @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to remove
         ids uid could not see according to our custom rules. Please refer to
