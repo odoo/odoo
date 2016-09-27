@@ -97,7 +97,7 @@ odoo.define('website_blog.editor', function (require) {
             if (type !== 'click') return;
             var self = this;
             var editor  = new widget.MediaDialog(null, {only_images: true}, this.$image, this.$image[0]).open();
-            editor.on('saved', self, function (event, img) {
+            editor.on('save', self, function (event, img) {
                 var url = self.$image.attr('src');
                 self.$cover.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()-this.$cover.offset().top});
                 self.$target.addClass('o_dirty cover cover_full');
