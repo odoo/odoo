@@ -14,3 +14,4 @@ This module also conveniently reexports some symbols from odoo.modules.
 Importing them from here is deprecated.
 
 """
+__import__('pkg_resources').declare_namespace(__name__)
