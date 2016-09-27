@@ -299,10 +299,6 @@ class hr_holidays(osv.osv):
         the date_from.
         Also update the number_of_days.
         """
-        # date_to has to be greater than date_from
-        if (date_from and date_to) and (date_from > date_to):
-            raise UserError(_('The start date must be anterior to the end date.'))
-
         result = {'value': {}}
 
         # No date_to set so far: automatically compute one 8 hours later
@@ -323,10 +319,6 @@ class hr_holidays(osv.osv):
         """
         Update the number_of_days.
         """
-        # date_to has to be greater than date_from
-        if (date_from and date_to) and (date_from > date_to):
-            raise UserError(_('The start date must be anterior to the end date.'))
-
         result = {'value': {}}
 
         # Compute and update the number of days
