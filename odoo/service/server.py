@@ -444,7 +444,7 @@ class PreforkServer(CommonServer):
     def long_polling_spawn(self):
         nargs = stripped_sys_argv()
         parent = os.path.dirname(config['root_path'])
-        cmd = [sys.executable, '-m', 'odoo', 'gevent'] + nargs[1:]
+        cmd = [sys.executable, '-c', '__import__("pkg_resources").declare_namespace("odoo.addons"); import odoo; odoo.cli.main()', 'gevent'] + nargs[1:]
         popen = subprocess.Popen(cmd, cwd=parent)
         self.long_polling_pid = popen.pid
 
