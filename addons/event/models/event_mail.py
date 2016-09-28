@@ -71,7 +71,8 @@ class EventMailScheduler(models.Model):
         if self.interval_type == 'after_sub':
             # update registration lines
             lines = []
-            for registration in filter(lambda item: item not in [mail_reg.registration_id for mail_reg in self.mail_registration_ids], self.event_id.registration_ids):
+            reg_ids = [mail_reg.registration_id for mail_reg in self.mail_registration_ids]
+            for registration in filter(lambda item: item not in reg_ids, self.event_id.registration_ids):
                 lines.append((0, 0, {'registration_id': registration.id}))
             if lines:
                 self.write({'mail_registration_ids': lines})
