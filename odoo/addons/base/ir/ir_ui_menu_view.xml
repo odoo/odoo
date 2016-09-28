@@ -9,10 +9,10 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="parent_id"/>
-                            <field name="sequence"/>
+                            <field name="parent_id" groups="base.group_no_one"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
-                        <group>
+                        <group groups="base.group_no_one">
                             <field name="complete_name"/>
                             <field name="action"/>
                             <field name="web_icon"/>
@@ -22,7 +22,7 @@
                         <page string="Access Rights">
                             <field name="groups_id"/>
                         </page>
-                        <page string="Submenus">
+                        <page string="Submenus" groups="base.group_no_one">
                             <!-- Note: make sure you have 'ir.ui.menu.full_list'
                                  in the context to see all submenus! -->
                             <field name="child_id"
