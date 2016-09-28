@@ -5545,13 +5545,13 @@ class BaseModel(object):
             yield self._browse(self.env, (id,))
 
     def __contains__(self, item):
-        """ Test whether ``item`` (record or field name) is an element of ``self``.
+        """ Test whether ``item`` (records or field name) is an element of ``self``.
             In the first case, the test is fully equivalent to::
 
-                any(item == record for record in self)
+                any(id in self._ids for id in item._ids)
         """
         if isinstance(item, BaseModel) and self._name == item._name:
-            return len(item) == 1 and item.id in self._ids
+            return set(item._ids).issubset(set(self._ids))
         elif isinstance(item, basestring):
             return item in self._fields
         else:
