@@ -289,7 +289,9 @@ class BaseModel(object):
             cr.execute(""" INSERT INTO ir_model (model, name, info, state, transient)
                            VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
-        model_id = cr.fetchone()[0]
+        model = self.env['ir.model'].browse(cr.fetchone()[0])
+        self._context['todo'].append((10, model.modified, [list(params)]))
+
         if 'module' in self._context:
             xmlid = 'model_' + self._name.replace('.', '_')
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
@@ -297,7 +299,7 @@ class BaseModel(object):
             if not cr.rowcount:
                 cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
                                VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
-                           (xmlid, self._context['module'], 'ir.model', model_id))
+                           (xmlid, self._context['module'], 'ir.model', model.id))
 
         # create/update the entries in 'ir.model.fields' and 'ir.model.data'
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
@@ -309,7 +311,7 @@ class BaseModel(object):
         model_fields = sorted(self._fields.itervalues(), key=lambda field: field.type == 'sparse')
         for field in model_fields:
             vals = {
-                'model_id': model_id,
+                'model_id': model.id,
                 'model': self._name,
                 'name': field.name,
                 'field_description': field.string,
@@ -344,6 +346,8 @@ class BaseModel(object):
                 )
                 cr.execute(query, vals)
                 field_id = cr.fetchone()[0]
+                self._context['todo'].append((20, Fields.browse(field_id).modified, [list(vals)]))
+
                 module = field._module or self._context.get('module')
                 if module:
                     xmlid = 'field_%s_%s' % (self._table, field.name)
@@ -353,15 +357,17 @@ class BaseModel(object):
                     cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
                                    VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
                                (xmlid, module, 'ir.model.fields', field_id))
-            else:
-                if not all(cols[field.name][key] == vals[key] for key in vals):
-                    names = set(vals) - {'model', 'name'}
-                    query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
-                        ",".join("%s=%%(%s)s" % (name, name) for name in names),
-                    )
-                    cr.execute(query, vals)
-        self.invalidate_cache()
 
+            elif not all(cols[field.name][key] == vals[key] for key in vals):
+                names = set(vals) - {'model', 'name'}
+                query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s AND name=%%(name)s RETURNING id" % (
+                    ",".join("%s=%%(%s)s" % (name, name) for name in names),
+                )
+                cr.execute(query, vals)
+                field_id = cr.fetchone()[0]
+                self._context['todo'].append((20, Fields.browse(field_id).modified, [names]))
+
+        self.invalidate_cache()
 
     @api.model
     def _add_field(self, name, field):
