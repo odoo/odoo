@@ -36,7 +36,8 @@ class Task(models.Model):
         for task in self:
             rating_template = task.stage_id.rating_template_id
             if rating_template:
-                task.rating_send_request(rating_template, reuse_rating=False)
+                force_send = self.env.context.get('force_send', True)
+                task.rating_send_request(rating_template, reuse_rating=False, force_send=force_send)
 
     def _rating_get_partner_id(self):
         res = super(Task, self)._rating_get_partner_id()
@@ -56,7 +57,7 @@ class Project(models.Model):
     @api.model
     def _send_rating_all(self):
         projects = self.search([('rating_status', '=', 'periodic'), ('rating_request_deadline', '<=', fields.Datetime.now())])
-        projects._send_rating_mail()
+        projects.with_context(force_send=False)._send_rating_mail()
         projects._compute_rating_request_deadline()
 
     def _send_rating_mail(self):

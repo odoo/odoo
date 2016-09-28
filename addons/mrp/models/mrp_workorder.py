@@ -214,11 +214,15 @@ class MrpWorkorder(models.Model):
                     for move_lot in move_lots:
                         if qty_todo <= 0:
                             break
-                        if move_lot.quantity_done == 0 and qty_todo > move_lot.quantity:
+                        if not move_lot.lot_id and qty_todo >= move_lot.quantity:
                             qty_todo = qty_todo - move_lot.quantity
                             self.active_move_lot_ids -= move_lot  # Difference operator
                         else:
                             move_lot.quantity = move_lot.quantity - qty_todo
+                            if move_lot.quantity_done - qty_todo > 0:
+                                move_lot.quantity_done = move_lot.quantity_done - qty_todo
+                            else:
+                                move_lot.quantity_done = 0
                             qty_todo = 0
 
     @api.multi

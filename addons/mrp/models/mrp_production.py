@@ -55,7 +55,7 @@ class MrpProduction(models.Model):
         states={'confirmed': [('readonly', False)]})
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
-        'Quantity to Produce',
+        'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
@@ -79,12 +79,12 @@ class MrpProduction(models.Model):
         states={'confirmed': [('readonly', False)]},
         help="Location where the system will stock the finished products.")
     date_planned_start = fields.Datetime(
-        'Expected Start Date', copy=False, default=fields.Datetime.now,
-        index=True, required=True, readonly=True,
+        'Deadline Start', copy=False, default=fields.Datetime.now,
+        index=True, required=True,
         states={'confirmed': [('readonly', False)]}, oldname="date_planned")
     date_planned_finished = fields.Datetime(
-        'Expected End Date', copy=False, default=fields.Datetime.now,
-        index=True, readonly=True,
+        'Deadline End', copy=False, default=fields.Datetime.now,
+        index=True, 
         states={'confirmed': [('readonly', False)]})
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
@@ -264,7 +264,7 @@ class MrpProduction(models.Model):
     def _generate_moves(self):
         for production in self:
             production._generate_finished_moves()
-            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             production._generate_raw_moves(lines)
             # Check for all draft moves whether they are mto or not
@@ -311,8 +311,7 @@ class MrpProduction(models.Model):
             source_location = self.bom_id.routing_id.location_id
         else:
             source_location = self.location_src_id
-        original_quantity = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)
-
+        original_quantity = self.product_qty - self.qty_produced
         data = {
             'name': self.name,
             'date': self.date_planned_start,
@@ -354,14 +353,21 @@ class MrpProduction(models.Model):
                     move.procure_method = 'make_to_order'
 
     @api.multi
-    def _update_raw_move(self, bom_line, quantity, **kw):
+    def _update_raw_move(self, bom_line, line_data):
+        quantity = line_data['qty']
         self.ensure_one()
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
-            move.write({'product_uom_qty': quantity})
+            if quantity > 0:
+                move[0].write({'product_uom_qty': quantity})
+            else:
+                if move[0].quantity_done > 0:
+                    raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
+                move[0].action_cancel()
+                move[0].unlink()
             return move
         else:
-            self._generate_raw_move(bom_line, quantity)
+            self._generate_raw_move(bom_line, line_data)
 
     @api.multi
     def action_assign(self):
@@ -381,7 +387,7 @@ class MrpProduction(models.Model):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
         for order in orders_to_plan:
-            quantity = order.product_uom_id._compute_quantity(order.product_qty, order.bom_id.product_uom_id)
+            quantity = order.product_uom_id._compute_quantity(order.product_qty, order.bom_id.product_uom_id) / order.bom_id.product_qty
             boms, lines = order.bom_id.explode(order.product_id, quantity, picking_type=order.bom_id.picking_type_id)
             order._generate_workorders(boms)
         orders_to_plan.write({'state': 'planned'})
@@ -401,19 +407,18 @@ class MrpProduction(models.Model):
                     BoMs
         """
         workorders = self.env['mrp.workorder']
-        qty = bom_data['qty']
+        bom_qty = bom_data['qty']
 
-        use_serial = any(product.tracking == 'serial' for product in self.mapped('move_finished_ids.product_id'))
-        if use_serial:
+        # Initial qty producing
+        if self.product_id.tracking == 'serial':
             quantity = 1.0
         else:
             quantity = self.product_qty - sum(self.move_finished_ids.mapped('quantity_done'))
             quantity = quantity if (quantity > 0) else 0
 
-        # TDE FIXME: what is qty compared to quantity ??
         for operation in bom.routing_id.operation_ids:
             # create workorder
-            cycle_number = math.ceil(qty / bom.product_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
+            cycle_number = math.ceil(bom_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
@@ -513,7 +518,7 @@ class MrpProduction(models.Model):
         self.post_inventory()
         moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_cancel.action_cancel()
-        self.write({'state': 'done', 'date_finished': fields.datetime.now()})
+        self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         self.env["procurement.order"].search([('production_id', 'in', self.ids)]).check()
         self.write({'state': 'done'})
 

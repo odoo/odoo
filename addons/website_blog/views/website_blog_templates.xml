@@ -124,12 +124,12 @@
               <div class="col-md-8 col-md-offset-2" t-ignore="True" id="main_column">
 
                 <div t-if="not blog_posts" class="container mb64">
-                  <p class="css_editable_hidden">
-                    <h1>No blog post yet.</h1>
-                  </p>
+                    <p class="css_editable_hidden">
+                        <h1>No blog post yet.</h1>
+                    </p>
                   <p groups="website.group_website_designer">
-                    Click on "Content" on the top menu to write your first blog post.
-                  </p>
+                        Click on "New Page" in the top-right corner to write your first blog post.
+                    </p>
                 </div>
 
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32" name="blog_post">

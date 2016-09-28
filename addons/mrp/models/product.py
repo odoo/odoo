@@ -29,11 +29,8 @@ class ProductTemplate(models.Model):
     def action_view_mos(self):
         product_ids = self.mapped('product_variant_ids').ids
         action = self.env.ref('mrp.act_product_mrp_production').read()[0]
-        if len(self) == 1 and len(product_ids) == 1:
-            action['context'] = {'default_product_id': product_ids[0], 'search_default_product_id': product_ids[0]}
-        else:
-            action['domain'] = [('product_id', 'in', product_ids)]
-            action['context'] = {}
+        action['domain'] = [('product_id', 'in', product_ids)]
+        action['context'] = {}
         return action
 
 

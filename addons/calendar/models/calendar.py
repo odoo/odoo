@@ -916,10 +916,10 @@ class Meeting(models.Model):
                 meeting_attendees |= attendee
                 meeting_partners |= partner
 
-                if current_user.email != partner.email:
-                    attendee._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
-
             if meeting_attendees:
+                to_notify = meeting_attendees.filtered(lambda a: a.email != current_user.email)
+                to_notify._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
+
                 meeting.write({'attendee_ids': [(4, meeting_attendee.id) for meeting_attendee in meeting_attendees]})
             if meeting_partners:
                 meeting.message_subscribe(partner_ids=meeting_partners.ids)

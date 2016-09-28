@@ -38,7 +38,7 @@ class SaleOrderLine(models.Model):
         bom = self.env['mrp.bom']._bom_find(product=self.product_id)
         if bom and bom.type == 'phantom':
             bom_delivered[bom.id] = False
-            product_uom_qty_bom = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id)
+            product_uom_qty_bom = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id) / bom.product_qty
             boms, lines = bom.explode(self.product_id, product_uom_qty_bom)
             for bom_line, data in lines:
                 qty = 0.0
