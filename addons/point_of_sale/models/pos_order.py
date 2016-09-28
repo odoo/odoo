@@ -160,7 +160,7 @@ class PosOrder(models.Model):
             'name': self.name,
             'origin': self.name,
             'account_id': self.partner_id.property_account_receivable_id.id,
-            'journal_id': self.sale_journal.id,
+            'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'type': 'out_invoice',
             'reference': self.name,
             'partner_id': self.partner_id.id,
