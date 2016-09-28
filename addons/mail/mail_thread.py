@@ -1050,36 +1050,39 @@ class mail_thread(osv.AbstractModel):
         # 4. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos = \
-             ','.join([decode_header(message, 'Delivered-To'),
-                       decode_header(message, 'To'),
-                       decode_header(message, 'Cc'),
-                       decode_header(message, 'Resent-To'),
-                       decode_header(message, 'Resent-Cc')])
-        local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
-        if local_parts:
-            alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
-            if alias_ids:
-                routes = []
-                for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
-                    user_id = alias.alias_user_id.id
-                    if not user_id:
-                        # TDE note: this could cause crashes, because no clue that the user
-                        # that send the email has the right to create or modify a new document
-                        # Fallback on user_id = uid
-                        # Note: recognized partners will be added as followers anyway
-                        # user_id = self._message_find_user_id(cr, uid, message, context=context)
-                        user_id = uid
-                        _logger.info('No matching user_id for the alias %s', alias.alias_name)
-                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
-                    route = self.message_route_verify(cr, uid, message, message_dict, route,
-                                update_author=True, assert_model=True, create_fallback=True, context=context)
-                    if route:
-                        _logger.info(
-                            'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
-                            email_from, email_to, message_id, route)
-                        routes.append(route)
-                return routes
+        rcpt_tos_1 = ','.join([decode_header(message, 'Delivered-To'),
+                               decode_header(message, 'To'),
+                               decode_header(message, 'Cc'),
+                               decode_header(message, 'Resent-To'),
+                               decode_header(message, 'Resent-Cc')])
+        # Try in a second round whether X-Original-To finds a route (as a first fallback, before using the fallback model):
+        rcpt_tos_2 = ','.join([decode_header(message, 'X-Original-To')])
+        for rcpt_tos in [rcpt_tos_1, rcpt_tos_2]:
+            local_parts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
+            if local_parts:
+                alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
+                if alias_ids:
+                    routes = []
+                    for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
+                        user_id = alias.alias_user_id.id
+                        if not user_id:
+                            # TDE note: this could cause crashes, because no clue that the user
+                            # that send the email has the right to create or modify a new document
+                            # Fallback on user_id = uid
+                            # Note: recognized partners will be added as followers anyway
+                            # user_id = self._message_find_user_id(cr, uid, message, context=context)
+                            user_id = uid
+                            _logger.info('No matching user_id for the alias %s', alias.alias_name)
+                        route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
+                        route = self.message_route_verify(cr, uid, message, message_dict, route,
+                                    update_author=True, assert_model=True, create_fallback=True, context=context)
+                        if route:
+                            _logger.info(
+                                'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
+                                email_from, email_to, message_id, route)
+                            routes.append(route)
+                    if routes:
+                        return routes
 
         # 5. Fallback to the provided parameters, if they work
         if not thread_id:
