@@ -89,6 +89,13 @@ odoo.define('website_blog.editor', function (require) {
 
             this.$image = this.$target.children(".o_blog_cover_image");
             this.$filter = this.$target.children(".o_blog_cover_filter");
+
+            this.$filter_value_options = this.$el.find('li[data-filter_value]');
+            this.$filter_color_options = this.$el.find('li[data-filter_color]');
+
+            this.filter_color_classes = this.$filter_color_options.map(function () {
+                return $(this).data("filter_color");
+            }).get().join(" ");
         },
         clear: function (type, value, $li) {
             if (type !== 'click') return;
@@ -119,30 +126,40 @@ odoo.define('website_blog.editor', function (require) {
             this.$target.addClass('o_dirty');
         },
         filter_color: function (type, value, $li) {
-            var $lis = this.$el.find("[data-filter_color]").addBack("[data-filter_color]");
-            var classes = $lis.map(function () {return $(this).data("filter_color");}).get().join(" ");
-            this.$filter.removeClass(classes);
+            this.$filter.removeClass(this.filter_color_classes);
             if (value) {
                 this.$filter.addClass(value);
             }
             this.$target.addClass("o_dirty");
+
+            var $first_visible_filter_option = this.$filter_value_options.eq(1);
+            if (parseFloat(this.$filter.css('opacity')) < parseFloat($first_visible_filter_option.data("filter_value"))) {
+                this.filter_value(type, $first_visible_filter_option.data("filter_value"), $first_visible_filter_option);
+            }
         },
         set_active: function () {
             this._super.apply(this, arguments);
             var self = this;
 
             this.$el.filter(":not([data-change])").toggleClass("hidden", !this.$target.hasClass("cover"));
+            this.$el.filter("li:has(li[data-select_class])").toggleClass("hidden", this.$target.hasClass("o_list_cover"));
 
-            var $actives = this.$el.find('li[data-filter_value], li[data-filter_color]').removeClass("active")
+            this.$filter_value_options.removeClass("active");
+            this.$filter_color_options.removeClass("active");
+
+            var active_filter_value = this.$filter_value_options
                 .filter(function () {
-                    var data = $(this).data();
-                    return (parseFloat(data.filter_value).toFixed(1) === parseFloat(self.$filter.css('opacity')).toFixed(1)
-                        || self.$filter.hasClass(data.filter_color));
-                }).addClass("active");
+                    return (parseFloat($(this).data('filter_value')).toFixed(1) === parseFloat(self.$filter.css('opacity')).toFixed(1));
+                }).addClass("active").data("filter_value");
+
+            var active_filter_color = this.$filter_color_options
+                .filter(function () {
+                    return self.$filter.hasClass($(this).data("filter_color"));
+                }).addClass("active").data("filter_color");
 
             this.$target.data("cover_class", this.$el.find(".active[data-select_class]").data("select_class") || "");
-            this.$target.data("filter_value", $actives.filter("[data-filter_value]").data("filter_value") || 0.0);
-            this.$target.data("filter_color", $actives.filter("[data-filter_color]").data("filter_color") || "");
+            this.$target.data("filter_value", active_filter_value || 0.0);
+            this.$target.data("filter_color", active_filter_color || "");
         },
     });
 });
