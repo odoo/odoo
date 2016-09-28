@@ -127,7 +127,8 @@ function make_message (data) {
         subtype_description: data.subtype_description,
         is_author: data.author_id && data.author_id[0] === session.partner_id,
         is_note: data.is_note,
-        is_system_notification: data.message_type === 'notification' && data.model === 'mail.channel',
+        is_system_notification: (data.message_type === 'notification' && data.model === 'mail.channel')
+            || data.info === 'transient_message',
         attachment_ids: data.attachment_ids || [],
         subject: data.subject,
         email_from: data.email_from,
