@@ -441,11 +441,14 @@ class MailThread(models.AbstractModel):
          - a set of updated column names
          - a list of changes (initial value, new value, column name, column info) """
         self.ensure_one()
-        changes = set()
+        changes = set()  # contains always and onchange tracked fields that changed
+        displays = set()  # contains always tracked field that did not change but displayed for information
         tracking_value_ids = []
+        display_values_ids = []
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
         for col_name, col_info in tracked_fields.items():
+            track_visibility = getattr(self._fields[col_name], 'track_visibility', 'onchange')
             initial_value = initial[col_name]
             new_value = getattr(self, col_name)
 
@@ -456,6 +459,16 @@ class MailThread(models.AbstractModel):
 
                 if col_name in tracked_fields:
                     changes.add(col_name)
+            # 'always' tracked fields in separate variable; added if other changes
+            elif new_value == initial_value and track_visibility == 'always' and col_name in tracked_fields:
+                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, initial_value, col_name, col_info)
+                if tracking:
+                    display_values_ids.append([0, 0, tracking])
+                    displays.add(col_name)
+
+        if changes and displays:
+            tracking_value_ids = display_values_ids + tracking_value_ids
+
         return changes, tracking_value_ids
 
     @api.multi
