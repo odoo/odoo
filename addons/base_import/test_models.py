@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.osv import orm, fields
 
 def name(n): return 'base_import.tests.models.%s' % n

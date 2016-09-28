@@ -1,5 +1,4 @@
-# -*- coding: utf-'8' "-*-"
-
+# -*- coding: utf-8 -*-
 import datetime
 from hashlib import sha1
 import logging

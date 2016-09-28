@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.addons.account.tests.account_test_users import AccountTestUsers
 from openerp.tests.common import TransactionCase
 from openerp.tools import float_compare

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 
 class TestManualReconciliation(AccountingTestCase):

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Default Theme',
     'description': 'Default website theme to showcase customization possibilities.',

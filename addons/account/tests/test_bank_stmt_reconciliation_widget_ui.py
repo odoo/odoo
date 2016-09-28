@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.tests import HttpCase
 
 class TestUi(HttpCase):

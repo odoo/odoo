@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import base64
 import json
 from operator import itemgetter

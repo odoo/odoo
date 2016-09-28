@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # RFC 2822 - style email validation for Python
 # (c) 2012 Syrus Akbary <me@syrusakbary.com>
 # Extended from (c) 2011 Noel Bush <noel@aitools.org>

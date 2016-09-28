@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'test_convert',
     'description': "Data for xml conversion tests",

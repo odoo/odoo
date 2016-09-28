@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from urlparse import urljoin
 from werkzeug import url_encode
 

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 

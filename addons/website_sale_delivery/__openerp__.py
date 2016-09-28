@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'eCommerce Delivery',
     'category': 'Website',

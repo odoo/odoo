@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from collections import defaultdict
 from openerp.tools import mute_logger
 from openerp.tests import common

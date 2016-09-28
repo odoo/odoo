@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # This test can be run stand-alone with something like:
 # > PYTHONPATH=. python2 openerp/tests/test_view_validation.py
 from lxml import etree

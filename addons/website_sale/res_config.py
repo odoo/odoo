@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from openerp import models, fields
 
 class website_config_settings(models.TransientModel):

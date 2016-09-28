@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.tests.common import TransactionCase
 from mock import patch
 

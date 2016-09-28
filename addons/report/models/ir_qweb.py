@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from reportlab.graphics.barcode import createBarcodeDrawing
 
 from openerp.osv import osv

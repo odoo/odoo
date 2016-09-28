@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import test_acl
 import test_api
 import test_base

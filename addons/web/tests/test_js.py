@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import openerp.tests
 
 class WebSuite(openerp.tests.HttpCase):

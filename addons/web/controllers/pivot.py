@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp import http
 import json
 from openerp.tools import ustr

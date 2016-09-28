@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from openerp import models
 from openerp.tools import mute_logger

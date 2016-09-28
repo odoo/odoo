@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Module to talk to EtherpadLite API."""
 
 import json

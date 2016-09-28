@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp import fields, models, api
 
 class service_tax_rate(models.Model):

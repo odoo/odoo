@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import openerp.sql_db
 
 class Session(object):

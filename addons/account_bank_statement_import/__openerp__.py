@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Account Bank Statement Import',
     'category': 'Accounting',

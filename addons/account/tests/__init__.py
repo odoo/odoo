@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #Accounting tests written in python should extend the class AccountingTestCase.
 #See its doc for more info.
 

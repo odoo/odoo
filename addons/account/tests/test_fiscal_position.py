@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.tests import common
 
 class TestFiscalPosition(common.TransactionCase):

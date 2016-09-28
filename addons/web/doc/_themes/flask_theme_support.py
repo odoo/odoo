@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # flasky extensions.  flasky pygments style based on tango style
 from pygments.style import Style
 from pygments.token import Keyword, Name, Comment, String, Error, \

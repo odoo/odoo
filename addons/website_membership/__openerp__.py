@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name': 'Associations: Members',
     'summary': 'Online Directory of Members',

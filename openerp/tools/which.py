@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """ Which - locate a command
 
     * adapted from Brian Curtin's http://bugs.python.org/file15381/shutil_which.patch

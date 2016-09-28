@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 {
     'name' : 'IM Bus',
     'version': '1.0',

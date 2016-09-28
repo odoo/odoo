@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp import fields
 from openerp import models
 

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 
 # Mock deprecated openerp.addons.web.http module

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # test cases for related fields, etc.
 #

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """ ESC/POS Exceptions classes """
 
 import os
