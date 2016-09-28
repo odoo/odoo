@@ -110,7 +110,7 @@ odoo.define('website_blog.editor', function (require) {
             var $image = $("<img/>", {src: this.$image.css("background-image")});
 
             var editor = new widget.MediaDialog(null, {only_images: true}, $image, $image[0]).open();
-            editor.on("saved", this, function (event, img) {
+            editor.on("save", this, function (event, img) {
                 var src = $image.attr("src");
                 this.$image.css("background-image", src ? ("url(" + src + ")") : "");
                 if (!this.$target.hasClass("cover")) {

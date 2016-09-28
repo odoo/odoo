@@ -4,7 +4,7 @@
         
         <!--  Change Product Quantity -->
         <record id="view_change_production_qty_wizard" model="ir.ui.view">
-            <field name="name">Change Product Qty</field>
+            <field name="name">Change Quantity To Produce</field>
             <field name="model">change.production.qty</field>
             <field name="arch" type="xml">
                 <form string="Change Product Qty">
@@ -21,7 +21,7 @@
         </record>
 
         <record id="action_change_production_qty" model="ir.actions.act_window">
-            <field name="name">Change Product Qty</field>
+            <field name="name">Change Quantity To Produce</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">change.production.qty</field>
             <field name="view_type">form</field>

@@ -48,8 +48,8 @@
                     <button name="button_mark_done" attrs="{'invisible': [('check_to_done', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_assign" attrs="{'invisible': [('availability', 'in', ('assigned', 'none'))]}" string="Check availability" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
-                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', ('availability', 'not in', ['partially_available', 'assigned']), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
-                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', ('availability', '!=', 'waiting'), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
+                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('check_to_done', '=', True), ('availability', 'not in', ['partially_available', 'assigned']), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
+                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('check_to_done', '=', True), ('availability', '!=', 'waiting'), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
                     <button name="post_inventory" string="Post Inventory" type="object" class="oe_highlight" attrs="{'invisible': [('post_visible', '=', False)]}"/>
                     <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('check_to_done', '=', True)]}"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', ('availability', '=', 'none'), ('state', 'in', ('cancel'))]}"/>
@@ -66,7 +66,7 @@
                                 <span class="o_stat_text">Work Orders</span>
                             </div>
                         </button>
-                        <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                        <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'cancel', 'done'))]}"/>
                         <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
                             <div class="o_form_field o_stat_info">
                                 <span class="o_stat_value"><field name="scrap_count"/></span>
@@ -103,14 +103,10 @@
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
-                            <label for="date_planned_start_wo" string="Expected Date"/>
-                            <div name="date_planned" class="o_row">
-                                <field name="date_planned_start" attrs="{'readonly': [('move_raw_ids', '!=', False)]}"/>
-                                <label string="to" attrs="{'invisible': [('date_planned_finished', '=', False)]}"/>
-                                <field name="date_planned_finished" attrs="{'readonly': [('move_raw_ids', '!=', False)]}"/>
-                            </div>
-                            <field name="user_id" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                            <field name="origin" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="date_planned_start"/>
+                            <field name="date_planned_finished" invisible="1"/>
+                            <field name="user_id"/>
+                            <field name="origin"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                         </group>
                     </group>

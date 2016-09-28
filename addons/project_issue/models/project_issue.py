@@ -121,8 +121,9 @@ class ProjectIssue(models.Model):
     @api.onchange('project_id')
     def _onchange_project_id(self):
         if self.project_id:
-            self.partner_id = self.project_id.partner_id.id
-            self.email_from = self.project_id.partner_id.email
+            if not self.partner_id and not self.email_from:
+                self.partner_id = self.project_id.partner_id.id
+                self.email_from = self.project_id.partner_id.email
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
             self.partner_id = False
