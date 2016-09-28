@@ -144,10 +144,13 @@ class PosSession(models.Model):
         pos_config = self.env['pos.config'].browse(config_id)
         ctx = dict(self.env.context, company_id=pos_config.company_id.id)
         if not pos_config.journal_id:
-            jid = pos_config.with_context(ctx).default_get(['journal_id'])['journal_id']
-            if not jid:
+            default_journals = pos_config.with_context(ctx).default_get(['journal_id', 'invoice_journal_id'])
+            if (not default_journals.get('journal_id') or
+                    not default_journals.get('invoice_journal_id')):
                 raise UserError(_("Unable to open the session. You have to assign a sale journal to your point of sale."))
-            pos_config.with_context(ctx).sudo().write({'journal_id': jid})
+            pos_config.with_context(ctx).sudo().write({
+                'journal_id': default_journals['journal_id'],
+                'invoice_journal_id': default_journals['invoice_journal_id']})
         # define some cash journal if no payment method exists
         if not pos_config.journal_ids:
             Journal = self.env['account.journal']
