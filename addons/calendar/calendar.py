@@ -1063,6 +1063,7 @@ class calendar_event(osv.Model):
                 attendees[att.partner_id.id] = True
             new_attendees = []
             new_att_partner_ids = []
+            attendees_to_mail = []
             for partner in event.partner_ids:
                 if partner.id in attendees:
                     continue
@@ -1084,8 +1085,7 @@ class calendar_event(osv.Model):
                 if not current_user.email or current_user.email != partner.email:
                     mail_from = current_user.email or tools.config.get('email_from', False)
                     if not context.get('no_email'):
-                        if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
-                            self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), subtype="calendar.subtype_invitation", context=context)
+                        attendees_to_mail.append((att_id, mail_from, partner.name))
 
             if new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]}, context=context)
@@ -1104,6 +1104,10 @@ class calendar_event(osv.Model):
                 attendee_ids_to_remove = self.pool["calendar.attendee"].search(cr, uid, [('partner_id.id', 'in', partner_ids_to_remove), ('event_id.id', '=', event.id)], context=context)
                 if attendee_ids_to_remove:
                     self.pool['calendar.attendee'].unlink(cr, uid, attendee_ids_to_remove, context)
+
+            for att_id, mail_from, partner_name in attendees_to_mail:
+                if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, att_id, email_from=mail_from, context=context):
+                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner_name,), subtype="calendar.subtype_invitation", context=context)
 
             res[event.id] = {
                 'new_attendee_ids': new_attendees,
