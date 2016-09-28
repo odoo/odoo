@@ -86,14 +86,10 @@
         % endif
 
         % if ctx.get('button_follow'):
-        % if ctx.get('actions'):
-           |
-        % endif
+        |
         <a href="${ctx['button_follow']['url']}" style="text-decoration:none; color: #a24689; text-decoration:none !important;">${ctx['button_follow']['title']}</a>
         % elif ctx.get('button_unfollow'):
-        % if ctx.get('actions'):
-           |
-        % endif
+        |
         <a href="${ctx['button_unfollow']['url']}" style="text-decoration:none; color: #a24689; text-decoration:none !important;">${ctx['button_unfollow']['title']}</a>
         % endif
 
