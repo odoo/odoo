@@ -405,7 +405,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 minimumInputLength: 0,
                 data: filtered_data,
                 initSelection: function (element, callback) {
-                    var default_value = element.val();
+                    var default_value = (element.val() || '').split('/id')[0];
                     if (!default_value) {
                         callback('');
                         return;
