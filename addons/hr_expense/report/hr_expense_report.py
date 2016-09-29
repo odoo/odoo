@@ -64,6 +64,15 @@ class hr_expense_report(osv.osv):
         tools.drop_view_if_exists(cr, 'hr_expense_report')
         cr.execute("""
             create or replace view hr_expense_report as (
+                 WITH currency_rate (currency_id, rate, date_start, date_end) AS (
+                    SELECT r.currency_id, r.rate, r.name AS date_start,
+                        (SELECT name FROM res_currency_rate r2
+                        WHERE r2.name > r.name AND
+                            r2.currency_id = r.currency_id
+                         ORDER BY r2.name ASC
+                         LIMIT 1) AS date_end
+                    FROM res_currency_rate r
+                 )
                  select
                      min(l.id) as id,
                      s.date as date,
@@ -81,8 +90,8 @@ class hr_expense_report(osv.osv):
                      l.analytic_account as analytic_account,
                      sum(l.unit_quantity * u.factor) as product_qty,
                      s.company_id as company_id,
-                     sum(l.unit_quantity*l.unit_amount) as price_total,
-                     (sum(l.unit_quantity*l.unit_amount)/sum(case when l.unit_quantity=0 or u.factor=0 then 1 else l.unit_quantity * u.factor end))::decimal(16,2) as price_average,
+                     sum(l.unit_amount/cr.rate*l.unit_quantity)::decimal(16,2) as price_total,
+                     (sum(l.unit_quantity*l.unit_amount/cr.rate)/sum(case when l.unit_quantity=0 or u.factor=0 then 1 else l.unit_quantity * u.factor end))::decimal(16,2) as price_average,
                      count(*) as nbr,
                      (select unit_quantity from hr_expense_line where id=l.id and product_id is not null) as no_of_products,
                      (select analytic_account from hr_expense_line where id=l.id and analytic_account is not null) as no_of_account,
@@ -90,6 +99,9 @@ class hr_expense_report(osv.osv):
                  from hr_expense_line l
                  left join hr_expense_expense s on (s.id=l.expense_id)
                  left join product_uom u on (u.id=l.uom_id)
+                 left join currency_rate cr on (cr.currency_id = s.currency_id and
+                        cr.date_start <= coalesce(s.date_confirm, now()) and
+                        (cr.date_end is null or cr.date_end > coalesce(s.date_confirm, now())))
                  group by
                      s.date,
                      s.create_date,
