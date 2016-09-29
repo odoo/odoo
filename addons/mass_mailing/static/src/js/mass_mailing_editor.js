@@ -9,10 +9,6 @@ var options = require('web_editor.snippets.options');
 var snippets_editor = require('web_editor.snippet.editor');
 
 var $editable_area = $("#editable_area");
-if ($editable_area.length === 0 || !$editable_area.is(".o_mail_area")) {
-    return;
-}
-
 var odoo_top = window.top.odoo;
 
 // Snippet option for resizing  image and column width inline like excel
@@ -351,9 +347,10 @@ snippets_editor.Class.include({
     },
 });
 
-odoo_top[window["callback"]+"_updown"] = function (value, fields_values, field_name) {
+var callback = window ? window["callback"] : undefined;
+odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
     if (!window) {
-        delete odoo_top[window["callback"]+"_updown"];
+        delete odoo_top[callback+"_updown"];
         return;
     }
 
@@ -383,7 +380,7 @@ odoo_top[window["callback"]+"_updown"] = function (value, fields_values, field_n
 
     if (fields_values.mailing_model && web_editor.editor_bar) {
         if (value.indexOf('on_change_model_and_list') !== -1) {
-            odoo_top[window["callback"]+"_downup"](_val);
+            odoo_top[callback+"_downup"](_val);
         }
     }
 };
