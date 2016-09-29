@@ -12,6 +12,11 @@
                     <div class="o_thumb logo" t-attf-style="background-image: url(#{theme.img}_logo.png)"/>
                 </a>
             </li>
+            <li t-if="themes.length === 1" class="o_mass_mailing_themes_upgrade">
+                <a href="#">
+                    <div class="o_thumb"><i class="fa fa-plus"/></div>
+                </a>
+            </li>
         </div>
     </div>
 </templates>

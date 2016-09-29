@@ -195,6 +195,9 @@ var FieldTextHtml = widget.extend({
             self.trigger('changed_value');
             self.resize();
         };
+        window.odoo[this.callback+"_do_action"] = function () {
+            self.do_action.apply(self, arguments);
+        };
 
         // init jqery objects
         this.$iframe = this.$el.find('iframe');
@@ -379,6 +382,7 @@ var FieldTextHtml = widget.extend({
         delete window.odoo[this.callback+"_content"];
         delete window.odoo[this.callback+"_updown"];
         delete window.odoo[this.callback+"_downup"];
+        delete window.odoo[this.callback+"_do_action"];
     }
 });
 

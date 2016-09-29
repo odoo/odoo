@@ -13,6 +13,8 @@ if ($editable_area.length === 0 || !$editable_area.is(".o_mail_area")) {
     return;
 }
 
+var odoo_top = window.top.odoo;
+
 // Snippet option for resizing  image and column width inline like excel
 options.registry["width-x"] = options.Class.extend({
     start: function () {
@@ -184,6 +186,7 @@ snippets_editor.Class.include({
 
         var $body = $(document.body);
         var $snippets = this.$(".oe_snippet");
+        var $snippets_menu = this.$el.find("#snippets_menu");
 
         /**
          * Create theme selection screen and check if it must be forced opened.
@@ -194,6 +197,16 @@ snippets_editor.Class.include({
         }));
         var first_choice;
         check_if_must_force_theme_choice();
+
+        /**
+         * Add proposition to install enterprise themes if not installed.
+         */
+        var $mail_themes_upgrade = $dropdown.find(".o_mass_mailing_themes_upgrade");
+        $mail_themes_upgrade.on("click", "> a", function (e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            odoo_top[window.callback+"_do_action"]("mass_mailing.action_mass_mailing_configuration");
+        });
 
         /**
          * Switch theme when a theme button is hovered. Confirm change if the theme button
@@ -213,6 +226,11 @@ snippets_editor.Class.include({
                 switch_theme(theme_params);
                 $body.removeClass("o_force_mail_theme_choice");
                 first_choice = false;
+
+                if ($mail_themes_upgrade.length) {
+                    $dropdown.remove();
+                    $snippets_menu.empty();
+                }
             }
 
             switch_images(theme_params, $snippets);
@@ -220,7 +238,7 @@ snippets_editor.Class.include({
             selected_theme = theme_params;
 
             // Notify form view
-            window.top.odoo[window.callback+"_downup"]($editable_area.addClass("o_dirty").html());
+            odoo_top[window.callback+"_downup"]($editable_area.addClass("o_dirty").html());
         });
 
         /**
@@ -246,7 +264,7 @@ snippets_editor.Class.include({
         check_selected_theme();
         $body.addClass(selected_theme.className);
 
-        $dropdown.insertAfter(this.$el.find("#snippets_menu"));
+        $dropdown.insertAfter($snippets_menu);
 
         return ret;
 
@@ -333,8 +351,7 @@ snippets_editor.Class.include({
     },
 });
 
-var odoo_top = window.top.odoo;
-window.top.odoo[window["callback"]+"_updown"] = function (value, fields_values, field_name) {
+odoo_top[window["callback"]+"_updown"] = function (value, fields_values, field_name) {
     if (!window) {
         delete odoo_top[window["callback"]+"_updown"];
         return;
