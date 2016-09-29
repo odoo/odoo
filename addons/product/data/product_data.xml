@@ -191,10 +191,6 @@ parameter) will see those record just disappear.
         <!--
         Property
         -->
-        <record forcecreate="True" id="property_product_pricelist" model="ir.property">
-            <field name="name">property_product_pricelist</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
-            <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
-        </record>
+
     </data>
 </odoo>
