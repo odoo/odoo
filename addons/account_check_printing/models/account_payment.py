@@ -102,9 +102,6 @@ class AccountPayment(models.Model):
         if any(payment.journal_id != self[0].journal_id for payment in self):
             raise UserError(_("In order to print multiple checks at once, they must belong to the same bank journal."))
 
-        self.filtered(lambda r: r.state == 'draft').post()
-        self.write({'state': 'sent'})
-
         if not self[0].journal_id.check_manual_sequencing:
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
@@ -125,6 +122,8 @@ class AccountPayment(models.Model):
                 }
             }
         else:
+            self.filtered(lambda r: r.state == 'draft').post()
+            self.write({'state': 'sent'})
             return self.do_print_checks()
 
     @api.multi
