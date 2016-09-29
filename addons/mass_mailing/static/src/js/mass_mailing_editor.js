@@ -165,7 +165,7 @@ snippets_editor.Class.include({
             all_classes += " " + classname;
             var images_info = _.defaults($theme.data("imagesInfo") || {}, {all: {}});
             _.each(images_info, function (info) {
-                info = _.defaults(info, {module: "mass_mailing", format: "jpg"});
+                info = _.defaults(info, images_info.all, {module: "mass_mailing", format: "jpg"});
             });
             return {
                 name: name,
