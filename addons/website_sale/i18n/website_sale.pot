@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:34+0000\n"
-"PO-Revision-Date: 2016-09-19 12:34+0000\n"
+"POT-Creation-Date: 2016-09-29 13:59+0000\n"
+"PO-Revision-Date: 2016-09-29 13:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,8 +28,8 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "30-day money-back guarantee<br/>\n"
-"              Free Shipping in U.S.<br/>\n"
-"              Buy now, get in 2 days"
+"                              Free Shipping in U.S.<br/>\n"
+"                              Buy now, get in 2 days"
 msgstr ""
 
 #. module: website_sale
@@ -558,7 +558,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
-msgid "Benelux Pricelist"
+msgid "Benelux"
 msgstr ""
 
 #. module: website_sale
@@ -629,7 +629,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas Pricelist"
+msgid "Christmas"
 msgstr ""
 
 #. module: website_sale
@@ -891,6 +891,11 @@ msgid "E-commerce Promotional Code"
 msgstr ""
 
 #. module: website_sale
+#: model:product.pricelist,name:website_sale.list_europe
+msgid "EUR"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:27
 #, python-format
@@ -929,14 +934,9 @@ msgid "Equal : Cost will be equally divided.\n"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:86
+#: code:addons/website_sale/models/product.py:89
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
-msgid "Europe Pricelist"
 msgstr ""
 
 #. module: website_sale
@@ -1102,14 +1102,9 @@ msgid "Installs *e-Commerce Optional Products*"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:472
+#: code:addons/website_sale/controllers/main.py:474
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_account_invoice
-msgid "Invoice"
 msgstr ""
 
 #. module: website_sale
@@ -1231,7 +1226,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:951
+#: code:addons/website_sale/controllers/main.py:953
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1344,8 +1339,8 @@ msgid "Partner"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:725
-#: code:addons/website_sale/controllers/main.py:823
+#: code:addons/website_sale/controllers/main.py:727
+#: code:addons/website_sale/controllers/main.py:825
 #, python-format
 msgid "Pay Now"
 msgstr ""
@@ -1391,19 +1386,19 @@ msgid "Payment must be reconciled manually"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:756
+#: code:addons/website_sale/controllers/main.py:758
 #, python-format
 msgid "Payment transaction (%s) failed : <%s>"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:753
+#: code:addons/website_sale/controllers/main.py:755
 #, python-format
 msgid "Payment transaction failed (%s)"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:757
+#: code:addons/website_sale/controllers/main.py:759
 #, python-format
 msgid "Payment transaction failed (Contact Administrator)"
 msgstr ""
@@ -1868,11 +1863,6 @@ msgid "Show pricelists to customers"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.address
-msgid "Sign Up"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Size"
 msgstr ""
@@ -1910,7 +1900,7 @@ msgid "Some acquirers like Authorize.net and Ingenico can be used as payment gat
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:483
+#: code:addons/website_sale/controllers/main.py:485
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -2114,11 +2104,6 @@ msgid "UPS integration"
 msgstr ""
 
 #. module: website_sale
-#: model:product.pricelist,name:website_sale.list_us
-msgid "US/CA Pricelist"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_usps
 msgid "USPS integration"
 msgstr ""
@@ -2170,7 +2155,6 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Website"
 msgstr ""
@@ -2289,7 +2273,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
-msgid "Your Address \n"
+msgid "Your Address\n"
 "                                        <small> or </small>"
 msgstr ""
 
@@ -2414,6 +2398,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "use Odoo API to import through scripts"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
+msgid "website"
 msgstr ""
 
 #. module: website_sale

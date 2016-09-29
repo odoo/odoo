@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2016-09-29 14:00+0000\n"
+"PO-Revision-Date: 2016-09-29 14:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,13 +32,13 @@ msgid "# Products"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:433
+#: code:addons/product/models/product_pricelist.py:438
 #, python-format
 msgid "%s %% discount"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:435
+#: code:addons/product/models/product_pricelist.py:440
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr ""
@@ -229,6 +229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_active
 #: model:ir.model.fields,field_description:product.field_product_template_active
 #: model:ir.model.fields,field_description:product.field_product_uom_active
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active"
 msgstr ""
 
@@ -238,7 +239,7 @@ msgid "All"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:428
+#: code:addons/product/models/product_pricelist.py:433
 #, python-format
 msgid "All Products"
 msgstr ""
@@ -291,6 +292,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
 msgstr ""
@@ -307,6 +309,12 @@ msgid "Attribute"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_attribute_line_form
+#: model:ir.ui.view,arch_db:product.product_attribute_view_form
+msgid "Attribute Name"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
 msgstr ""
@@ -319,6 +327,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
+#: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
 msgstr ""
 
@@ -500,7 +509,7 @@ msgid "Category name"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:422
+#: code:addons/product/models/product_pricelist.py:427
 #, python-format
 msgid "Category: %s"
 msgstr ""
@@ -641,7 +650,7 @@ msgid "Conversion between Units of Measure can only occur if they belong to the 
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_uom.py:88
+#: code:addons/product/models/product_uom.py:89
 #, python-format
 msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!."
 msgstr ""
@@ -894,19 +903,19 @@ msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:293
+#: code:addons/product/models/product.py:302
 #, python-format
 msgid "Error! It is not allowed to choose more than one value for a given attribute."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:414
+#: code:addons/product/models/product_pricelist.py:419
 #, python-format
 msgid "Error! The minimum margin should be lower than the maximum margin."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:408
+#: code:addons/product/models/product_pricelist.py:413
 #, python-format
 msgid "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 msgstr ""
@@ -1083,6 +1092,11 @@ msgstr ""
 #: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Graphics Card"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Group By"
 msgstr ""
 
 #. module: product
@@ -1740,6 +1754,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_id
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -1751,12 +1766,18 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
+#: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Product Attribute"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
 msgid "Product Attribute Value"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_attribute_line_form
+msgid "Product Attribute and Values"
 msgstr ""
 
 #. module: product
@@ -1870,7 +1891,7 @@ msgid "Products your store in the inventory"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:457
+#: code:addons/product/models/product.py:466
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -1879,11 +1900,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_lst_price
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
-msgstr ""
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
 msgstr ""
 
 #. module: product
@@ -2275,7 +2291,9 @@ msgid "The computed quantity will be a multiple of this value. Use 1.0 for a Uni
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/product_uom.py:43
 #: sql_constraint:product.uom:0
+#, python-format
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr ""
 
@@ -2354,6 +2372,13 @@ msgstr ""
 msgid "The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
 "                                    And at home, you can listen even longer—the charging cradle lets\n"
 "                                    you listen while it charges."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_uom.py:44
+#: sql_constraint:product.uom:0
+#, python-format
+msgid "The rounding precision must be greater than 0!"
 msgstr ""
 
 #. module: product
@@ -2487,6 +2512,11 @@ msgid "USB port allows for software update to ensure ongoing Bluetooth device co
 msgstr ""
 
 #. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
@@ -2574,6 +2604,8 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_ids
+#: model:ir.ui.view,arch_db:product.product_attribute_line_form
+#: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Values"
 msgstr ""
 
