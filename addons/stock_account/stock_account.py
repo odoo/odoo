@@ -88,7 +88,8 @@ class account_invoice(osv.osv):
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
+                        'analytic_tag_ids': i_line.analytic_tag_ids.ids and [(6, 0, i_line.analytic_tag_ids.ids)] or False,
                     },
 
                     {
@@ -100,7 +101,8 @@ class account_invoice(osv.osv):
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
+                        'analytic_tag_ids': i_line.analytic_tag_ids.ids and [(6, 0, i_line.analytic_tag_ids.ids)] or False,
                     },
                 ]
         return []
