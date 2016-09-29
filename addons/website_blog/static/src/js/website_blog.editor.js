@@ -55,7 +55,7 @@ odoo.define('website_blog.editor', function (require) {
                 return ajax.jsonRpc("/blog/post_change_background", 'call', {
                     'post_id' : parseInt($el.closest("[name=\"blog_post\"], .website_blog").find("[data-oe-model=\"blog.post\"]").first().data("oe-id"), 10),
                     'cover_properties' : {
-                        "background-image": $el.children(".o_blog_cover_image").css("background-image").replace(/"/g, ''),
+                        "background-image": $el.children(".o_blog_cover_image").css("background-image").replace(/"/g, '').replace(location.protocol + "//" + location.host, ''),
                         "background-color": $el.data("filter_color"),
                         "opacity": $el.data("filter_value"),
                         "resize_class": $el.data("cover_class"),
