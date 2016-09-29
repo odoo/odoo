@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:33+0000\n"
-"PO-Revision-Date: 2016-09-19 12:33+0000\n"
+"POT-Creation-Date: 2016-09-29 13:59+0000\n"
+"PO-Revision-Date: 2016-09-29 13:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -131,13 +131,28 @@ msgid "\n"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
+msgid "# Days to Assign"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
+msgid "# Days to Close"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
+msgid "# Days to Deadline"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
-msgid "# of Days"
+msgid "# Working Days"
 msgstr ""
 
 #. module: project
@@ -147,7 +162,7 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:240
-#: code:addons/project/models/project.py:402
+#: code:addons/project/models/project.py:410
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -885,8 +900,8 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "At each stage employees can block or make task/issue ready for next stage.\n"
-"                            You can define here labels that will be displayed for the state instead\n"
-"                            of the default labels."
+"                                You can define here labels that will be displayed for the state instead\n"
+"                                of the default labels."
 msgstr ""
 
 #. module: project
@@ -1034,13 +1049,6 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr ""
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/tour.js:88
-#, python-format
-msgid "Click on layers in the path to easily <b>return to tasks</b>."
 msgstr ""
 
 #. module: project
@@ -1261,7 +1269,7 @@ msgid "Current Timesheet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:645
+#: code:addons/project/models/project.py:643
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1270,7 +1278,7 @@ msgid "Customer"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:645
+#: code:addons/project/models/project.py:643
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -1321,16 +1329,6 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
-msgid "Days to Assign"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
-msgid "Days to Close"
 msgstr ""
 
 #. module: project
@@ -1525,7 +1523,7 @@ msgid "Ending Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:410
+#: code:addons/project/models/project.py:418
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr ""
@@ -1605,7 +1603,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
-msgid "Folded in Tasks Pipeline"
+msgid "Folded in Kanban"
 msgstr ""
 
 #. module: project
@@ -1690,6 +1688,13 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr ""
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:102
+#, python-format
+msgid "Good job! Your completed the Project Management tour. You can continue with the <b>implementation guide</b> to help you setup Project Management in your company."
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
 msgstr ""
@@ -1739,7 +1744,7 @@ msgid "Holds visibility of the tasks or issues that belong to the current projec
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:573
+#: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2139,7 +2144,7 @@ msgid "New"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:575
+#: code:addons/project/models/project.py:571
 #, python-format
 msgid "New Task"
 msgstr ""
@@ -2265,11 +2270,6 @@ msgid "Organize your company, from personal tasks to collaborative meeting minut
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
-msgid "Overpassed Deadline"
-msgstr ""
-
-#. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
 msgstr ""
@@ -2333,7 +2333,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:725
+#: code:addons/project/models/project.py:723
 #, python-format
 msgid "Please remove existing tasks in the project linked to the accounts you want to delete."
 msgstr ""
@@ -2465,11 +2465,6 @@ msgstr ""
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.task_type_edit
-msgid "Projects using this stage"
 msgstr ""
 
 #. module: project
@@ -2926,6 +2921,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree_filtered
+#: model:ir.ui.menu,name:project.menu_project_report_task_analysis
 #: model:ir.ui.view,arch_db:project.view_task_project_user_graph
 #: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3059,6 +3055,11 @@ msgid "Time Estimation on Tasks"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+msgid "Time Scheduling"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
@@ -3150,6 +3151,20 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use separate meetings to solve big issues or issues that aren’t important for the entire team."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:106
+#, python-format
+msgid "Use the <b>implementation guide</b> to setup Project Management in your company."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:88
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
 
 #. module: project
@@ -3428,7 +3443,7 @@ msgid "send us an email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:458
+#: code:addons/project/models/project.py:466
 #, python-format
 msgid "tasks"
 msgstr ""

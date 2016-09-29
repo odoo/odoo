@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:35+0000\n"
-"PO-Revision-Date: 2016-09-19 12:35+0000\n"
+"POT-Creation-Date: 2016-09-29 14:00+0000\n"
+"PO-Revision-Date: 2016-09-29 14:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2460,25 +2460,6 @@ msgid "\n"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_nl
-msgid "\n"
-"This is the module to manage the accounting chart for Netherlands in Odoo.\n"
-"=============================================================================\n"
-"This module installs the a standard chart of accounts and also the Dutch Tax codes and\n"
-"fiscal positions for deliveries inside and outside the UE.\n"
-"\n"
-"In the company settings you can make the following settings:\n"
-"- The number of digits of the chart of accounts. \n"
-"By default the chart of accounts are 6 digits. 4 is the minimum number of digits.\n"
-"- If you want to use Anglosaxon acounting\n"
-"- The prefix of the bank accounts, by default 1100\n"
-"- The prefix of the cash account, by default 1000\n"
-"- The way of rounding the VAT.\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
 msgid "\n"
 "This is the module to manage the accounting chart for Vietnam in Odoo.\n"
@@ -3253,7 +3234,7 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
-#: code:addons/base/res/res_partner.py:320
+#: code:addons/base/res/res_partner.py:325
 #: code:addons/base/res/res_users.py:143
 #: code:addons/base/res/res_users.py:404
 #: code:addons/base/res/res_users.py:406
@@ -3262,7 +3243,7 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5651
+#: code:addons/models.py:5628
 #, python-format
 msgid "%s This might be '%s' in the current model, or a field of the same name in an o2m."
 msgstr ""
@@ -3278,7 +3259,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1007
+#: code:addons/base/ir/ir_model.py:1093
 #, python-format
 msgid "'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
 msgstr ""
@@ -3591,7 +3572,7 @@ msgid "<u><strong>Views</strong></u>"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3250
+#: code:addons/models.py:3227
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr ""
@@ -3804,6 +3785,31 @@ msgid "Accounting and Finance"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_nl
+msgid "Accounting chart for Netherlands\n"
+"================================\n"
+"\n"
+"This module is specially made to manage the accounting functionality\n"
+"according to the Dutch best practice.\n"
+"\n"
+"This module contains the Dutch Chart of Accounts and the VAT schema.\n"
+"This schema is made for the most common Companies and therefore suitable\n"
+"to be used for almost every Company.\n"
+"\n"
+"The VAT accounts are linked promptly to generate the required reports. Examples\n"
+"of this reports intercommunitaire transactions.\n"
+"\n"
+"After installation of this module the configuration will be activated.\n"
+"Select the Chart of Accounts named \"Netherlands - Accounting\".\n"
+"\n"
+"Hereafter entering the name of the Company, total digits of Chart of Accounts,\n"
+"Bank Account Number and the default Currency.\n"
+"\n"
+"Note: total digits configured by default are 6.\n"
+""
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_act_window_id
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_action_id
 #: model:ir.model.fields,field_description:base.field_ir_filters_action_id
@@ -3840,7 +3846,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_url_help
 #: model:ir.model.fields,field_description:base.field_ir_act_window_help
 #: model:ir.model.fields,field_description:base.field_ir_actions_help
-#: model:ir.model.fields,field_description:base.field_ir_actions_help_304
+#: model:ir.model.fields,field_description:base.field_ir_actions_help_305
 msgid "Action Description"
 msgstr ""
 
@@ -3874,7 +3880,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_url_type
 #: model:ir.model.fields,field_description:base.field_ir_act_window_type
 #: model:ir.model.fields,field_description:base.field_ir_actions_type
-#: model:ir.model.fields,field_description:base.field_ir_actions_type_310
+#: model:ir.model.fields,field_description:base.field_ir_actions_type_311
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Action Type"
 msgstr ""
@@ -3891,7 +3897,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_url_usage
 #: model:ir.model.fields,field_description:base.field_ir_act_window_usage
 #: model:ir.model.fields,field_description:base.field_ir_actions_usage
-#: model:ir.model.fields,field_description:base.field_ir_actions_usage_308
+#: model:ir.model.fields,field_description:base.field_ir_actions_usage_309
 msgid "Action Usage"
 msgstr ""
 
@@ -4096,9 +4102,9 @@ msgid "Administrative divisions of a country. E.g. Fed. State, Departement, Cant
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:578
-#: code:addons/base/ir/ir_model.py:637
-#: code:addons/base/ir/ir_model.py:1117
+#: code:addons/base/ir/ir_model.py:658
+#: code:addons/base/ir/ir_model.py:717
+#: code:addons/base/ir/ir_model.py:1203
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr ""
@@ -4275,7 +4281,7 @@ msgid "Apply"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:556
+#: code:addons/base/module/module.py:557
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 #, python-format
@@ -4938,13 +4944,13 @@ msgid "Can not create Many-To-One records indirectly, import the field separatel
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:539
+#: code:addons/base/module/module.py:540
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:505
+#: code:addons/base/ir/ir_model.py:526
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr ""
@@ -5001,7 +5007,7 @@ msgid "Cannot duplicate configuration!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:507
+#: code:addons/base/ir/ir_model.py:528
 #, python-format
 msgid "Cannot rename field to %s, because that field already exists!"
 msgstr ""
@@ -5076,25 +5082,25 @@ msgid "Change the user password."
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:333
+#: code:addons/base/res/res_partner.py:338
 #, python-format
 msgid "Changing the company of a contact should only be done if it was never correctly set. If an existing contact starts working for a new company then a new contact should be created under that new company. You can use the \"Discard\" button to abandon this change."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:493
+#: code:addons/base/ir/ir_model.py:514
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:471
+#: code:addons/base/ir/ir_model.py:492
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:496
+#: code:addons/base/ir/ir_model.py:517
 #, python-format
 msgid "Changing the type of a field is not yet supported. Please drop it and create it again!"
 msgstr ""
@@ -5756,7 +5762,7 @@ msgid "Costa Rica - Accounting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:596
+#: code:addons/base/res/res_partner.py:606
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr ""
@@ -5945,7 +5951,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_window_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_create_uid
-#: model:ir.model.fields,field_description:base.field_ir_actions_create_uid_301
+#: model:ir.model.fields,field_description:base.field_ir_actions_create_uid_302
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_create_uid
 #: model:ir.model.fields,field_description:base.field_ir_cron_create_uid
@@ -6015,7 +6021,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_window_create_date
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_create_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_create_date
-#: model:ir.model.fields,field_description:base.field_ir_actions_create_date_309
+#: model:ir.model.fields,field_description:base.field_ir_actions_create_date_310
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_create_date
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_create_date
 #: model:ir.model.fields,field_description:base.field_ir_cron_create_date
@@ -6213,7 +6219,7 @@ msgid "Custom Shortcuts"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:444
+#: code:addons/base/ir/ir_model.py:464
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr ""
@@ -6312,7 +6318,7 @@ msgid "Database Structure"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3175
+#: code:addons/models.py:3152
 #, python-format
 msgid "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request"
 msgstr ""
@@ -6629,7 +6635,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_window_display_name
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_display_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_display_name
-#: model:ir.model.fields,field_description:base.field_ir_actions_display_name_303
+#: model:ir.model.fields,field_description:base.field_ir_actions_display_name_304
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_display_name
 #: model:ir.model.fields,field_description:base.field_ir_attachment_display_name
 #: model:ir.model.fields,field_description:base.field_ir_autovacuum_display_name
@@ -6750,8 +6756,8 @@ msgid "Document Management"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:784
-#: code:addons/base/ir/ir_model.py:787
+#: code:addons/base/ir/ir_model.py:864
+#: code:addons/base/ir/ir_model.py:867
 #, python-format
 msgid "Document model"
 msgstr ""
@@ -6941,7 +6947,7 @@ msgid "Employees"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:310
+#: code:addons/base/ir/ir_model.py:327
 #, python-format
 msgid "Empty dependency in %r"
 msgstr ""
@@ -6973,7 +6979,7 @@ msgid "Eritrea"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:85
+#: code:addons/base/res/res_partner.py:87
 #, python-format
 msgid "Error ! You can not create recursive tags."
 msgstr ""
@@ -6992,19 +6998,19 @@ msgid "Error context:\n"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1096
+#: code:addons/models.py:1049
 #, python-format
 msgid "Error details:"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1109
+#: code:addons/models.py:1062
 #, python-format
 msgid "Error while validating constraint"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:81
+#: code:addons/base/ir/ir_ui_menu.py:88
 #, python-format
 msgid "Error! You cannot create recursive menus."
 msgstr ""
@@ -7160,7 +7166,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_url_xml_id
 #: model:ir.model.fields,field_description:base.field_ir_act_window_xml_id
 #: model:ir.model.fields,field_description:base.field_ir_actions_xml_id
-#: model:ir.model.fields,field_description:base.field_ir_actions_xml_id_302
+#: model:ir.model.fields,field_description:base.field_ir_actions_xml_id_303
 #: model:ir.model.fields,field_description:base.field_ir_module_category_xml_id
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_xml_id
 #: model:ir.ui.view,arch_db:base.view_window_action_form
@@ -7304,19 +7310,19 @@ msgid "Field"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:135
+#: code:addons/base/ir/ir_model.py:152
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:139
+#: code:addons/base/ir/ir_model.py:156
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:137
+#: code:addons/base/ir/ir_model.py:154
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr ""
@@ -7353,7 +7359,7 @@ msgid "Field Type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:884
+#: code:addons/base/ir/ir_ui_view.py:886
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr ""
@@ -7563,13 +7569,13 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:437
+#: code:addons/base/ir/ir_model.py:457
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3310
+#: code:addons/models.py:3287
 #, python-format
 msgid "For this kind of document, you may only access records you created yourself.\n"
 "\n"
@@ -7582,6 +7588,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "Form"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_partner_email_formatted
+#: model:ir.model.fields,help:base.field_res_users_email_formatted
+msgid "Format email address \"Name <email@domain>\""
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_partner_email_formatted
+#: model:ir.model.fields,field_description:base.field_res_users_email_formatted
+msgid "Formatted Email"
 msgstr ""
 
 #. module: base
@@ -8261,9 +8279,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_server_id
 #: model:ir.model.fields,field_description:base.field_ir_act_url_id
 #: model:ir.model.fields,field_description:base.field_ir_act_window_id
-#: model:ir.model.fields,field_description:base.field_ir_act_window_view_id_300
+#: model:ir.model.fields,field_description:base.field_ir_act_window_view_id_301
 #: model:ir.model.fields,field_description:base.field_ir_actions_id
-#: model:ir.model.fields,field_description:base.field_ir_actions_id_311
+#: model:ir.model.fields,field_description:base.field_ir_actions_id_312
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_id
 #: model:ir.model.fields,field_description:base.field_ir_attachment_id
 #: model:ir.model.fields,field_description:base.field_ir_autovacuum_id
@@ -8669,7 +8687,7 @@ msgid "Inline Edit"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:399
+#: code:addons/base/module/module.py:400
 #: model:ir.ui.view,arch_db:base.module_form
 #: model:ir.ui.view,arch_db:base.module_view_kanban
 #, python-format
@@ -8721,13 +8739,13 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1308
+#: code:addons/models.py:1285
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1318
+#: code:addons/models.py:1295
 #, python-format
 msgid "Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay"
 msgstr ""
@@ -8794,9 +8812,15 @@ msgid "Introspection report on objects"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4018
+#: code:addons/models.py:3995
 #, python-format
 msgid "Invalid \"order\" specified. A valid \"order\" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_users.py:316
+#, python-format
+msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
@@ -8821,12 +8845,6 @@ msgstr ""
 #: code:addons/base/ir/ir_actions.py:715
 #, python-format
 msgid "Invalid expression"
-msgstr ""
-
-#. module: base
-#: code:addons/base/res/res_users.py:316
-#, python-format
-msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
@@ -9187,7 +9205,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_window___last_update
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view___last_update
 #: model:ir.model.fields,field_description:base.field_ir_actions___last_update
-#: model:ir.model.fields,field_description:base.field_ir_actions___last_update_305
+#: model:ir.model.fields,field_description:base.field_ir_actions___last_update_306
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo___last_update
 #: model:ir.model.fields,field_description:base.field_ir_attachment___last_update
 #: model:ir.model.fields,field_description:base.field_ir_autovacuum___last_update
@@ -9285,7 +9303,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_window_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_actions_write_uid
-#: model:ir.model.fields,field_description:base.field_ir_actions_write_uid_306
+#: model:ir.model.fields,field_description:base.field_ir_actions_write_uid_307
 #: model:ir.model.fields,field_description:base.field_ir_attachment_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_write_uid
 #: model:ir.model.fields,field_description:base.field_ir_cron_write_uid
@@ -9357,7 +9375,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_window_write_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_write_date
 #: model:ir.model.fields,field_description:base.field_ir_actions_write_date
-#: model:ir.model.fields,field_description:base.field_ir_actions_write_date_307
+#: model:ir.model.fields,field_description:base.field_ir_actions_write_date_308
 #: model:ir.model.fields,field_description:base.field_ir_attachment_write_date
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter_write_date
 #: model:ir.model.fields,field_description:base.field_ir_cron_write_date
@@ -9798,7 +9816,7 @@ msgid "Many2many comodel does not exist: %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:451
+#: code:addons/base/ir/ir_model.py:471
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr ""
@@ -10003,19 +10021,19 @@ msgid "Missing SMTP Server"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3279
+#: code:addons/models.py:3256
 #, python-format
 msgid "Missing document(s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5636
+#: code:addons/models.py:5613
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5633
+#: code:addons/models.py:5610
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr ""
@@ -10060,13 +10078,13 @@ msgid "Model"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:447
+#: code:addons/base/ir/ir_model.py:467
 #, python-format
 msgid "Model %s does not exist!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:115
+#: code:addons/base/ir/ir_model.py:132
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr ""
@@ -10129,8 +10147,8 @@ msgid "Model name on which the method to be called is located, e.g. 'res.partner
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:673
-#: code:addons/base/ir/ir_ui_view.py:835
+#: code:addons/base/ir/ir_ui_view.py:702
+#: code:addons/base/ir/ir_ui_view.py:837
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr ""
@@ -10329,7 +10347,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_name
-#: model:ir.model.fields,field_description:base.field_ir_actions_name_312
+#: model:ir.model.fields,field_description:base.field_ir_actions_name_313
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_name
 #: model:ir.model.fields,field_description:base.field_ir_cron_name
 #: model:ir.model.fields,field_description:base.field_ir_logging_name
@@ -10437,7 +10455,7 @@ msgid "New Zealand - Accounting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:509
+#: code:addons/base/ir/ir_model.py:530
 #, python-format
 msgid "New field name must still start with x_ , because it is a custom field!"
 msgstr ""
@@ -10498,7 +10516,7 @@ msgid "Niue"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1416
+#: code:addons/models.py:1393
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr ""
@@ -10532,13 +10550,13 @@ msgid "Non Updatable"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:319
+#: code:addons/base/ir/ir_model.py:336
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:276
+#: code:addons/base/ir/ir_model.py:293
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr ""
@@ -10660,6 +10678,11 @@ msgid "Odoo Enterprise Edition License v1.0"
 msgstr ""
 
 #. module: base
+#: selection:ir.module.module,license:0
+msgid "Odoo Proprietary License v1.0"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_web_settings_dashboard
 msgid "Odoo Settings Dashboard"
 msgstr ""
@@ -10727,19 +10750,19 @@ msgid "On delete property for many2one fields"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3279
+#: code:addons/models.py:3256
 #, python-format
 msgid "One of the documents you are trying to access has been deleted, please try again after refreshing."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3643
+#: code:addons/models.py:3620
 #, python-format
 msgid "One of the records you are trying to modify has already been deleted (Document type: %s)."
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:376
+#: code:addons/base/res/res_partner.py:386
 #, python-format
 msgid "One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`"
 msgstr ""
@@ -10791,7 +10814,7 @@ msgid "Only applies if this view inherits from an other one (inherit_id is not F
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:784
+#: code:addons/base/ir/ir_model.py:864
 #, python-format
 msgid "Only users with the following access level are currently allowed to do that"
 msgstr ""
@@ -10834,7 +10857,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_act_url_help
 #: model:ir.model.fields,help:base.field_ir_act_window_help
 #: model:ir.model.fields,help:base.field_ir_actions_help
-#: model:ir.model.fields,help:base.field_ir_actions_help_304
+#: model:ir.model.fields,help:base.field_ir_actions_help_305
 msgid "Optional help text for the users with a description of the target view, such as its usage and purpose."
 msgstr ""
 
@@ -11112,7 +11135,7 @@ msgid "Partners Geolocation"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:737
+#: code:addons/base/res/res_partner.py:747
 #, python-format
 msgid "Partners: "
 msgstr ""
@@ -11281,7 +11304,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:787
+#: code:addons/base/ir/ir_model.py:867
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -11456,7 +11479,7 @@ msgid "Priority"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:122
+#: code:addons/models.py:107
 #, python-format
 msgid "Private methods (such as %s) cannot be called remotely."
 msgstr ""
@@ -11527,7 +11550,7 @@ msgid "Properties"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:488
+#: code:addons/base/ir/ir_model.py:509
 #, python-format
 msgid "Properties of base fields cannot be altered in this manner! Please modify them through Python code, preferably through a custom addon!"
 msgstr ""
@@ -11744,6 +11767,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_id_object
+#: model:ir.ui.view,arch_db:base.view_model_data_form
 msgid "Record"
 msgstr ""
 
@@ -11776,7 +11800,7 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:353
-#: code:addons/models.py:4403
+#: code:addons/models.py:4380
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr ""
@@ -11803,7 +11827,7 @@ msgid "Recurring Documents"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:321
+#: code:addons/base/module/module.py:322
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr ""
@@ -11815,9 +11839,14 @@ msgid "Recursion found in child server actions"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3749
+#: code:addons/models.py:3726
 #, python-format
 msgid "Recursivity Detected."
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_model_data_reference
+msgid "Reference"
 msgstr ""
 
 #. module: base
@@ -11859,13 +11888,13 @@ msgid "Related Server Action"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:288
+#: code:addons/base/ir/ir_model.py:305
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:286
+#: code:addons/base/ir/ir_model.py:303
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr ""
@@ -11921,7 +11950,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:473
+#: code:addons/base/ir/ir_model.py:494
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr ""
@@ -12019,7 +12048,7 @@ msgid "Resellers"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:929
+#: code:addons/models.py:882
 #, python-format
 msgid "Resolve other errors first"
 msgstr ""
@@ -12446,7 +12475,7 @@ msgid "Selectable"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:26
+#: code:addons/base/res/res_partner.py:28
 #, python-format
 msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
 msgstr ""
@@ -12551,7 +12580,7 @@ msgid "Serialization Field"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:352
+#: code:addons/models.py:339
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr ""
@@ -12785,25 +12814,25 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:329
-#: code:addons/base/ir/ir_model.py:778
+#: code:addons/base/ir/ir_model.py:858
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:780
+#: code:addons/base/ir/ir_model.py:860
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:781
+#: code:addons/base/ir/ir_model.py:861
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:779
+#: code:addons/base/ir/ir_model.py:859
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr ""
@@ -12814,7 +12843,7 @@ msgid "Sort"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4151
+#: code:addons/models.py:4128
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr ""
@@ -13245,7 +13274,7 @@ msgid "Tag Name"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_partner_category_id_968
+#: model:ir.model.fields,field_description:base.field_res_partner_category_id_970
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 msgid "Tags"
 msgstr ""
@@ -13401,7 +13430,7 @@ msgid "The ISO country code in two chars. \n"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:259
+#: code:addons/base/ir/ir_model.py:276
 #, python-format
 msgid "The Selection Options expression is not a valid Pythonic expression.Please provide an expression in the [('key','Label'), ...] format."
 msgstr ""
@@ -13418,13 +13447,13 @@ msgid "The Separator Format should be like [,n] where 0 < n :starting from Unit 
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:665
+#: code:addons/base/module/module.py:666
 #, python-format
 msgid "The `%s` module appears to be unavailable at the moment, please try again later."
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:510
+#: code:addons/base/module/module.py:511
 #, python-format
 msgid "The `base` module cannot be uninstalled"
 msgstr ""
@@ -13562,13 +13591,13 @@ msgid "The menu action this filter applies to. When left empty the filter applie
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:83
+#: code:addons/base/ir/ir_model.py:100
 #, python-format
 msgid "The model name can only contain lowercase characters, digits, underscores and dots."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:81
+#: code:addons/base/ir/ir_model.py:98
 #, python-format
 msgid "The model name must start with 'x_'."
 msgstr ""
@@ -13667,9 +13696,9 @@ msgid "The record id this is attached to."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2968
-#: code:addons/models.py:3184
-#: code:addons/models.py:3269
+#: code:addons/models.py:2945
+#: code:addons/models.py:3161
+#: code:addons/models.py:3246
 #, python-format
 msgid "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
@@ -13692,7 +13721,7 @@ msgid "The state code."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:372
+#: code:addons/base/ir/ir_model.py:389
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
@@ -13708,7 +13737,7 @@ msgid "The user this filter is private to. When left empty the filter is public 
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5648
+#: code:addons/models.py:5625
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr ""
@@ -13725,7 +13754,7 @@ msgid "There is already a shared filter set as default for %(model)s, delete or 
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2523
+#: code:addons/models.py:2500
 #, python-format
 msgid "There is no reference available for %s"
 msgstr ""
@@ -13741,7 +13770,7 @@ msgid "This Window"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:415
+#: code:addons/base/ir/ir_model.py:432
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr ""
@@ -14205,25 +14234,25 @@ msgid "Ukraine"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3390
+#: code:addons/models.py:3367
 #, python-format
 msgid "Unable to delete this document because it is used as a default property"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:311
+#: code:addons/base/module/module.py:312
 #, python-format
 msgid "Unable to install module \"%s\" because an external dependency is not met: %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:315
+#: code:addons/base/module/module.py:316
 #, python-format
 msgid "Unable to process module \"%s\" because an external dependency is not met: %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:313
+#: code:addons/base/module/module.py:314
 #, python-format
 msgid "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
 msgstr ""
@@ -14234,7 +14263,7 @@ msgid "Uncategorized"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:513
+#: code:addons/base/module/module.py:514
 #: model:ir.ui.view,arch_db:base.module_form
 #, python-format
 msgid "Uninstall"
@@ -14272,25 +14301,25 @@ msgid "Unknown"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1063
+#: code:addons/models.py:1016
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:928
+#: code:addons/models.py:881
 #, python-format
 msgid "Unknown error during import:"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:317
+#: code:addons/base/ir/ir_model.py:334
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:274
+#: code:addons/base/ir/ir_model.py:291
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr ""
@@ -14773,9 +14802,9 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:474
-#: code:addons/base/ir/ir_model.py:296
-#: code:addons/base/ir/ir_model.py:371
-#: code:addons/base/res/res_partner.py:332
+#: code:addons/base/ir/ir_model.py:313
+#: code:addons/base/ir/ir_model.py:388
+#: code:addons/base/res/res_partner.py:337
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -14787,7 +14816,7 @@ msgid "Warning!"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5368
+#: code:addons/models.py:5345
 #, python-format
 msgid "Warnings"
 msgstr ""
@@ -15165,7 +15194,7 @@ msgid "You are creating a new user. After saving, the user will receive an invit
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:394
+#: code:addons/base/module/module.py:395
 #, python-format
 msgid "You are trying to install incompatible themes:\n"
 "%s\n"
@@ -15180,7 +15209,7 @@ msgid "You can either upload a file from your computer or copy/paste an internet
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:485
+#: code:addons/base/res/res_partner.py:495
 #, python-format
 msgid "You can not change the company as the partner/user has multiple user linked with different companies."
 msgstr ""
@@ -15217,7 +15246,7 @@ msgid "You can state here the usual format to use for the addresses belonging to
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:315
+#: code:addons/base/res/res_partner.py:320
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
 msgstr ""
@@ -15259,20 +15288,20 @@ msgid "You should try other search criteria."
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:331
+#: code:addons/base/module/module.py:332
 #, python-format
 msgid "You try to install module '%s' that depends on module '%s'.\n"
 "But the latter module is not available in your system."
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:283
+#: code:addons/base/module/module.py:284
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:551
+#: code:addons/base/module/module.py:552
 #, python-format
 msgid "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
