@@ -2,7 +2,28 @@
 <odoo>
 <data noupdate="1">
 
+
+    <!--  Maintenance teams -->
+    <record id="equipment_team_metrology" model="maintenance.team">
+        <field name="name">Metrology</field>
+    </record>
+    <record id="equipment_team_subcontractor" model="maintenance.team">
+        <field name="name">Subcontractor</field>
+    </record>
+
     <!-- Equipment categories -->
+    <record id="equipment_computer" model="maintenance.equipment.category">
+        <field name="name">Computers</field>
+        <field name="alias_id" ref="mail_alias_equipment"/>
+    </record>
+    <record id="equipment_software" model="maintenance.equipment.category">
+        <field name="name">Software</field>
+        <field name="alias_id" ref="mail_alias_equipment"/>
+    </record>
+    <record id="equipment_printer" model="maintenance.equipment.category">
+        <field name="name">Printers</field>
+        <field name="alias_id" ref="mail_alias_equipment"/>
+    </record>
     <record id="equipment_monitor" model="maintenance.equipment.category">
         <field name="name">Monitors</field>
         <field name="technician_user_id" ref="base.user_root"/>
