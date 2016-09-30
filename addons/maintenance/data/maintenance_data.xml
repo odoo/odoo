@@ -69,30 +69,8 @@
         <field name="parent_id" eval="ref('mt_mat_assign')"/>
         <field name="relation_field">category_id</field>
     </record>
-
-    <record id="equipment_computer" model="maintenance.equipment.category">
-        <field name="name">Computers</field>
-        <field name="alias_id" ref="mail_alias_equipment"/>
-    </record>
-    <record id="equipment_software" model="maintenance.equipment.category">
-        <field name="name">Software</field>
-        <field name="alias_id" ref="mail_alias_equipment"/>
-    </record>
-    <record id="equipment_printer" model="maintenance.equipment.category">
-        <field name="name">Printers</field>
-        <field name="alias_id" ref="mail_alias_equipment"/>
-    </record>
-
     <record id="equipment_team_maintenance" model="maintenance.team">
         <field name="name">Internal Maintenance</field>
-    </record>
-
-    <record id="equipment_team_metrology" model="maintenance.team">
-        <field name="name">Metrology</field>
-    </record>
-
-    <record id="equipment_team_subcontractor" model="maintenance.team">
-        <field name="name">Subcontractor</field>
     </record>
 </data>
 </odoo>
