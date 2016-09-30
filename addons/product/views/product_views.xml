@@ -104,7 +104,7 @@
                 <field name="categ_id" domain="[('categ_id', 'child_of', self)]"/>
                 <separator/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
-                <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]" help="Products your store in the inventory"/>
+                <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]"/>
                 <separator/>
                 <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
                 <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', 1)]"/>
