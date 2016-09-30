@@ -36,6 +36,23 @@
             </field>
         </record>
 
+        <record id="attribute_form_view" model="ir.ui.view">
+            <field name="name">product.attribute.form</field>
+            <field name="model">product.attribute</field>
+            <field name="arch" type="xml">
+                <form string="attribute_form">
+                    <group>
+                        <group>
+                           <field name="name"/> 
+                        </group>
+                        <group>
+                             <field name="sequence" widget="handle"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="attribute_action" model="ir.actions.act_window">
             <field name="name">Attributes</field>
             <field name="type">ir.actions.act_window</field>

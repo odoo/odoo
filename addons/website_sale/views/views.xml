@@ -93,6 +93,21 @@
         </field>
     </record>
 
+  <record id="attribute_form_view" model="ir.ui.view">
+        <field name="name">product.attribute.form</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_form_view"></field>
+        <field name="arch" type="xml">
+            <form string="attribute_form">
+                <group>
+                    <group>
+                       <field name="type"/> 
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
     <!-- Product Public Categories -->
     <record id="product_public_category_form_view" model="ir.ui.view">
         <field name="name">product.public.category.form</field>
