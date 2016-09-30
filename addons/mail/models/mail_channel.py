@@ -430,6 +430,14 @@ class Channel(models.Model):
             })
             self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), session_state.channel_id.channel_info()[0])
 
+    @api.multi
+    def notify_typing(self, status):
+        partner = self.env.user.partner_id
+        for channel in self:
+            channel_partner = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)], limit=1)
+            if channel_partner.partner_id.im_status != 'offline':
+                self.env['bus.bus'].sendone((self._cr.dbname, 'typing.notification', channel_partner.partner_id.id), status)
+
     @api.model
     def channel_minimize(self, uuid, minimized=True):
         values = {

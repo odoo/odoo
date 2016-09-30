@@ -69,7 +69,7 @@ return Widget.extend({
         var start_typing = function(e){
             if (!this.typing) {
                 this.typing = true;
-                this.start_typing();
+                this.notify_typing({'state': 'start'});
             }
         };
         var stop_typing = function(e, delay){
@@ -77,7 +77,7 @@ return Widget.extend({
                 clearTimeout(this.delayedCallback);
                 this.delayedCallback = setTimeout(function () {
                     this.typing = false;
-                    this.stop_typing();
+                    this.notify_typing({'state': 'stop'});
                 }.bind(this), delay || this.typing_timeout);
             }
         };
@@ -92,11 +92,8 @@ return Widget.extend({
             stop_typing.call(self, event, 1);
        });
     },
-    start_typing: function(){
-        console.log('start typing');
-    },
-    stop_typing: function() {
-        console.log('end typing');
+    notify_typing: function(status){
+        this.trigger("notify_typing", this.channel_id, status);
     },
     render: function (messages) {
         this.update_unread(this.unread_msgs);

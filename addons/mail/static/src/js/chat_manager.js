@@ -468,6 +468,8 @@ function on_notification (notifications) {
         } else if (model === 'bus.presence') {
             // update presence of users
             on_presence_notification(notification[1]);
+        } else if (model === 'typing.notification'){
+            console.log('eeee',notification[1]);
         }
     });
 }
@@ -914,6 +916,9 @@ var chat_manager = {
             args.state = folded ? 'folded' : 'open';
         }
         return ChannelModel.call("channel_fold", [], args, {shadow: true});
+    },
+    notify_typing: function(channel_id, status){
+        return ChannelModel.call("notify_typing", [channel_id, status]);
     },
     /**
      * Special redirection handling for given model and id

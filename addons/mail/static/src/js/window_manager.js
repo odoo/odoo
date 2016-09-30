@@ -67,7 +67,9 @@ function open_chat (session, options) {
         chat_session.window.on("fold_channel", null, function (channel_id, folded) {
             chat_manager.fold_channel(channel_id, folded);
         });
-
+        chat_session.window.on("notify_typing", null, function (channel_id, status) {
+            chat_manager.notify_typing(channel_id, status);
+        });
         chat_session.window.on("post_message", null, function (message, channel_id) {
             chat_manager
                 .post_message(message, {channel_id: channel_id})
