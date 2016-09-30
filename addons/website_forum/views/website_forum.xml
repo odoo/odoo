@@ -993,13 +993,6 @@
                     </li>
                 </ul>
                 <ul class="list-inline mb0">
-                    <li t-if="question.post_type == 'question'">
-                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
-                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
-                            t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
-                        </a>
-                    </li>
                     <li t-if="question.post_type != 'question'">
                         <a t-attf-class="fa fa-reply" style="cursor: pointer" data-toggle="collapse"
                             t-attf-data-target="#reply#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Reply
@@ -1022,6 +1015,19 @@
                 <t t-call="website_forum.post_answers">
                     <t t-set="answer" t-value="child_answer"/>
                 </t>
+            </div>
+            <div class="clearfix">
+                <div class="col-sm-offset-2 col-sm-2">
+                    <ul class="list-inline mb0">
+                        <li t-if="question.post_type == 'question'">
+                            <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                                t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
+                                style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
+                                t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
