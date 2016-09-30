@@ -322,7 +322,7 @@ class Task(models.Model):
         return stages.browse(stage_ids)
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Task Title', track_visibility='onchange', required=True, index=True)
+    name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
             ('0','Normal'),
@@ -371,7 +371,7 @@ class Task(models.Model):
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
-        index=True, track_visibility='onchange')
+        index=True, track_visibility='always')
     partner_id = fields.Many2one('res.partner',
         string='Customer',
         default=_get_default_partner)

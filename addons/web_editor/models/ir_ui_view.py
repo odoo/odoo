@@ -2,10 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import copy
+import logging
 from lxml import etree, html
 
 from odoo.exceptions import AccessError
 from odoo import api, models
+
+_logger = logging.getLogger(__name__)
 
 
 class IrUiView(models.Model):
@@ -180,10 +183,12 @@ class IrUiView(models.Model):
         user = self.env.user
         user_groups = set(user.groups_id)
         views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
+
+        view_theme_id = self.env['ir.model.data'].xmlid_to_res_id('website.theme')
         done = set()
         result = []
         for view in views:
-            if full:
+            if full or (view.customize_show and view.inherit_id.id != view_theme_id):
                 if not user_groups.issuperset(view.groups_id):
                     continue
                 if view.inherit_id not in done:
