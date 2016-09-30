@@ -72,6 +72,7 @@ website.TopBarCustomize = Widget.extend({
         var $menu = this.$el.children("ul");
         ajax.jsonRpc('/website/customize_template_get', 'call', {
             key: this.view_name,
+            full: false
         }).then(function (result) {
             _.each(result, function (item) {
                 if (item.header) {
