@@ -593,9 +593,6 @@ class WebsiteSale(http.Controller):
         if checkout.get('shipping_id'):
             order.write({'partner_shipping_id': checkout['shipping_id']})
 
-        order.onchange_partner_shipping_id()
-        order.order_line._compute_tax_id()
-
         order_info = {
             'message_partner_ids': [(4, partner.id), (3, request.website.partner_id.id)],
         }
@@ -635,6 +632,9 @@ class WebsiteSale(http.Controller):
 
         if not int(post.get('shipping_id', 0)):
             order.partner_shipping_id = order.partner_invoice_id
+
+        order.onchange_partner_shipping_id()
+        order.order_line._compute_tax_id()
 
         request.session['sale_last_order_id'] = order.id
 
