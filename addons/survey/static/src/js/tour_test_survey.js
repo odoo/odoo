@@ -2,9 +2,13 @@ odoo.define('survey.tour_test_survey', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
+var base = require("web_editor.base");
 
-
-tour.register('test_survey', { test: true, url: '/survey/start/user-feedback-form-1/phantom' },
+tour.register('test_survey', {
+    test: true,
+    url: '/survey/start/user-feedback-form-1/phantom',
+    wait_for: base.ready()
+},
     [
         // Page-1
         {

@@ -2,8 +2,13 @@ odoo.define('website_sale.tour', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
+var base = require("web_editor.base");
 
-tour.register('shop_buy_product', { test: true, url: '/shop' },
+tour.register('shop_buy_product', {
+    test: true,
+    url: '/shop',
+    wait_for: base.ready()
+},
     [
         {
             content: "search ipod",

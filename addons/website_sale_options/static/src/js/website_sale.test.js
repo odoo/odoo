@@ -3,6 +3,7 @@ odoo.define('website_sale.test', function (require) {
 
 require("website_sale.tour");
 var tour = require("web_tour.tour");
+var base = require("web_editor.base");
 
 var steps = tour.tours.shop_buy_product.steps;
 for (var k=0; k<steps.length; k++) {
@@ -15,7 +16,11 @@ for (var k=0; k<steps.length; k++) {
     }
 }
 
-tour.register('shop_customize', { test: true, url: '/shop' },
+tour.register('shop_customize', {
+    test: true,
+    url: '/shop',
+    wait_for: base.ready()
+},
     [
         {
             content: "open customize menu",
