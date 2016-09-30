@@ -261,7 +261,7 @@ class Website(Home):
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=True, bundles=False):
+    def customize_template_get(self, key, full=False, bundles=False):
         """ Get inherit view's informations of the template ``key``. By default, only
             :returns ``customize_show`` templates (which can be active or not), if
                 ``full=True`` returns inherit view's informations of the template ``key``.
