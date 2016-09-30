@@ -67,7 +67,7 @@ options.registry.gallery = options.Class.extend({
     },
     bind_change: function () {
         var self = this;
-        return this.$target.find("img").off('saved').on('saved', function (event, img) {
+        return this.$target.find("img").off('save').on('save', function (event, img) {
                 var $parent = $(img).parent();
                 $parent.addClass("saved_active");
                 var index = self.$target.find(".item.saved_active").index();
@@ -228,7 +228,7 @@ options.registry.gallery = options.Class.extend({
         var $container = this.$target.find(".container:first");
         var editor = new widget.MediaDialog(null, {select_images: true}, this.$target.closest('.o_editable'), null).open();
         var index = Math.max(0, _.max(_.map(this.$target.find("img").get(), function (img) { return img.dataset.index | 0; })) + 1);
-        editor.on('saved', this, function (attachments) {
+        editor.on('save', this, function (attachments) {
             for (var i = 0 ; i < attachments.length; i++) {
                 $('<img class="img img-responsive mb8 mt8"/>')
                     .attr("src", attachments[i].src)

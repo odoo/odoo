@@ -586,11 +586,8 @@ class WebsiteSale(http.Controller):
                     order.onchange_partner_id()
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
-                    order.onchange_partner_shipping_id()
 
-                order.order_line._compute_tax_id()
                 order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
-
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/checkout')
 
@@ -638,6 +635,9 @@ class WebsiteSale(http.Controller):
         if redirection:
             return redirection
 
+
+        order.onchange_partner_shipping_id()
+        order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.env.ref('website_sale.extra_info_option')

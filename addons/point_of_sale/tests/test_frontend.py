@@ -42,8 +42,10 @@ class TestUi(odoo.tests.HttpCase):
 
         env['product.pricelist'].search([]).write(dict(currency_id=main_company.currency_id.id))
 
-        main_pos_config.journal_id = test_sale_journal
-        main_pos_config.write({'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
+        main_pos_config.write({
+            'journal_id': test_sale_journal.id,
+            'invoice_journal_id': test_sale_journal.id,
+            'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
                                                        'code': 'TSC',
                                                        'type': 'cash',
                                                        'company_id': main_company.id,

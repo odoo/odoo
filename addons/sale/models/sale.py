@@ -180,9 +180,7 @@ class SaleOrder(models.Model):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
-        if fiscal_position:
-            self.fiscal_position_id = fiscal_position
+        self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         return {}
 
     @api.multi
@@ -478,20 +476,6 @@ class SaleOrder(models.Model):
                 'partner_id': order.partner_id.id
             })
             order.project_id = analytic
-
-    @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if not recipient.user_ids:
-                group_data['partner'] |= recipient
-            elif all(recipient.user_ids.mapped('share')):
-                group_data['partner'] |= recipient
-            else:
-                group_data['user'] |= recipient
-            done_ids.add(recipient.id)
-        return super(SaleOrder, self)._notification_group_recipients(message, recipients, done_ids, group_data)
 
     @api.multi
     def order_lines_layouted(self):

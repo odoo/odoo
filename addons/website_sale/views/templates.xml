@@ -201,9 +201,7 @@
                             <t t-if="not bins">
                                 <div class="text-center text-muted">
                                     <h3 class="css_editable_display">No product defined.</h3>
-                                    <t groups="website.group_website_publisher">
-                                        <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
-                                    </t>
+                                    <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                                 </div>
                             </t>
                         </div>
@@ -471,14 +469,27 @@
                             </div>
                             <hr />
                             <p class="text-muted">
-              30-day money-back guarantee<br />
-              Free Shipping in U.S.<br />
-              Buy now, get in 2 days
-            </p>
+                              30-day money-back guarantee<br />
+                              Free Shipping in U.S.<br />
+                              Buy now, get in 2 days
+                            </p>
                         </div>
                     </div>
                 </section>
                 <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
+                <t t-set="head">
+                    <!-- Facebook and linkedin sharing data -->
+                    <meta property="og:type" content="website" />
+                    <meta property="og:url" t-att-content="request.httprequest.url" />
+                    <meta property="og:image" t-attf-content="#{request.httprequest.url_root}web/image/product.template/#{product.id}/image" />
+                    <meta property="og:description" t-att-content="product.description_sale" />
+                    <!--  Twitter sharing data -->
+                    <meta name="twitter:card" content="summary_large_image" />
+                    <meta name="twitter:site" t-attf-content="@#{res_company.name}" />
+                    <meta name="twitter:title" t-att-content="product.name" />
+                    <meta name="twitter:description" t-att-content="product.description_sale" />
+                    <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}web/image/product.template/#{product.id}/image" />
+                </t>
             </div>
         </t>
     </template>
@@ -868,8 +879,8 @@
                             <t t-if="(compute_currency(line.product_id.lst_price) - line.price_reduce ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
                                 <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="compute_currency(line.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
                             </t>
-                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary'}" groups="sale.group_show_price_subtotal" />
-                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary'}" groups="sale.group_show_price_total" />
+                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
+                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
                         </td>
                     </tr>
                 </t>
@@ -1139,9 +1150,10 @@
                         <div class="col-md-9 oe_cart">
                             <div class="row">
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h3 class="page-header mt16">Your Address 
+                                    <h3 class="page-header mt16">Your Address
                                         <small> or </small>
-                                        <a href='/web/signup?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Sign Up</a>
+                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
+                                        <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
                                     </h3>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
@@ -1349,7 +1361,7 @@
                                     <div class="list-group">
                                         <t t-foreach='tokens' t-as='token'>
                                             <a class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
-                                                <span class="js_radio fa fa-circle-o"></span>&amp;nbsp; 
+                                                <span class="js_radio fa fa-circle-o"></span>&amp;nbsp;
                                                 <t t-esc="token.name" />
                                                 <t t-if="len(set(tokens.mapped('acquirer_id')))>1">
                                                     (<t t-esc='token.acquirer_id.name'/>)

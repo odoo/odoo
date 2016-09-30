@@ -118,7 +118,7 @@ var getMatchedCSSRules = function (a) {
 
 // convert font awsome into image
 var font_to_img = function ($editable) {
-    $(".fa", $editable).each(function () {
+    $editable.find(".fa").each(function () {
         var $font = $(this);
         var icon, content;
         _.find(widget.fontIcons, function (font) {
@@ -132,15 +132,13 @@ var font_to_img = function ($editable) {
         });
         if (content) {
             var color = $font.css("color").replace(/\s/g, '');
-            var src = _.str.sprintf('/web_editor/font_to_img/%s/%s/'+Math.max(1, $font.height()), content.charCodeAt(0), window.encodeURI(color));
-            var $img = $("<img/>").attr("src", src)
-                .attr("data-class", $font.attr("class"))
-                .attr("class", $font.attr("class").replace(new RegExp("(^|\\s+)" + icon + "(-[^\\s]+)?", "gi"), '')) // remove inline font-awsome style
-                .attr("style", $font.attr("style"))
-                .attr("height", $font.height())
-                .css("height", "")
-                .css("font-size", "");
-            $font.replaceWith($img);
+            $font.replaceWith($("<img/>", {
+                "src": _.str.sprintf('/web_editor/font_to_img/%s/%s/%s', content.charCodeAt(0), window.encodeURI(color), Math.max(1, $font.height())),
+                "data-class": $font.attr("class"),
+                "data-style": $font.attr("style"),
+                "class": $font.attr("class").replace(new RegExp("(^|\\s+)" + icon + "(-[^\\s]+)?", "gi"), ''), // remove inline font-awsome style
+                "style": $font.attr("style")
+            }).css({height: "auto", width: "auto"}));
         } else {
             $font.remove();
         }
@@ -148,13 +146,12 @@ var font_to_img = function ($editable) {
 };
 // convert image into font awsome
 var img_to_font = function ($editable) {
-    $("img[src*='/web_editor/font_to_img/']", $editable).each(function () {
+    $editable.find("img[src*='/web_editor/font_to_img/']").each(function () {
         var $img = $(this);
-        var $font = $("<span/>")
-            .attr("class", $img.data("class"))
-            .attr("style", $img.attr("style"))
-            .css("height", "");
-        $img.replaceWith($font);
+        $img.replaceWith($("<span/>", {
+            "class": $img.data("class"),
+            "style": $img.data("style")
+        }));
     });
 };
 

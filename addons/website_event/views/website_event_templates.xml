@@ -47,10 +47,8 @@
             <div class="row mt32 mb32">
                 <div class="col-md-9" id="middle_column">
                     <div class="text-center text-muted" t-if="not event_ids">
-                      <h1>No event found</h1>
-                      <t groups="website.group_website_publisher">
-                          <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
-                      </t>
+                        <h1>No event found</h1>
+                        <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
                     </div>
                     <ul class="media-list">
                         <li t-foreach="event_ids" t-as="event" class="media">
@@ -381,12 +379,27 @@
                             Find out what people see and say about this event,
                             and join the conversation.
                         </p>
-                        <p><strong>Use this tag:
+                        <p>
+                            <strong>Use this tag:</strong>
                             <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
-                        </strong></p>
+                        </p>
                     </div>
                 </div>
             </div>
+
+            <t t-set="head">
+                <t t-raw='head'/>
+                <!-- Facebook and linkedin sharing data -->
+                <meta property="og:type" content="website" />
+                <meta property="og:url" t-att-content="request.httprequest.url" />
+                <meta property="og:description" t-attf-content="#{event.date_begin}" />
+                <meta property="og:image" t-attf-content="#{request.httprequest.url_root}logo.png" />
+                <!--  Twitter sharing data -->
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:site" t-attf-content="@#{res_company.name}" />
+                <meta name="twitter:title" t-att-content="event.name" />
+                <meta name="twitter:description" t-att-content="event.date_begin" />
+            </t>
         </div>
     </t>
 </template>

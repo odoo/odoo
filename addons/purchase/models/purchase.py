@@ -1014,6 +1014,14 @@ class ProcurementOrder(models.Model):
                 self.env['purchase.order.line'].create(vals)
         return res
 
+    @api.multi
+    def open_purchase_order(self):
+        action = self.env.ref('purchase.purchase_order_action_generic')
+        action_dict = action.read()[0]
+        action_dict['res_id'] = self.purchase_id.id
+        action_dict['target'] = 'current'
+        return action_dict
+
 
 class ProductTemplate(models.Model):
     _name = 'product.template'

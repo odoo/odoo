@@ -282,7 +282,7 @@ class account_payment(models.Model):
         return {
             'name': _('Paid Invoices'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
             'type': 'ir.actions.act_window',

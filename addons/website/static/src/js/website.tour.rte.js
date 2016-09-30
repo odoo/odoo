@@ -2,9 +2,12 @@ odoo.define('website.tour.rte', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
-var local_storage = require('web.local_storage');
+var base = require("web_editor.base");
 
-tour.register('rte_translator', { test: true },
+tour.register('rte_translator', {
+    test: true,
+    wait_for: base.ready()
+},
     [
         {
             content: "click on Add a language",

@@ -30,21 +30,21 @@
 
                 <div class="o_menu_brand">Website</div>
 
-                <ul class="o_menu_sections">
+                <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
-                    <li class="dropdown content" groups="website.group_website_publisher" t-if="editable">
+                    <li class="dropdown content" t-if="editable">
                         <a id="content-menu-button" class="dropdown-toggle waves" data-toggle="dropdown" href="#">Content</a>
                         <ul class="dropdown-menu oe_content_menu" role="menu">
-                            <li groups="website.group_website_designer">
+                            <li>
                                 <a data-action="edit_menu" href="#" title="Edit Top Menu">Edit Menu</a>
                             </li>
-                            <li t-if="deletable" groups="website.group_website_designer" role="separator" class="divider"></li>
-                            <li t-if="deletable" groups="website.group_website_designer"><a href="#" data-action="rename_page">Rename Page</a></li>
-                            <li t-if="deletable" groups="website.group_website_designer"><a href="#" data-action="delete_page">Delete Page</a></li>
+                            <li t-if="deletable" role="separator" class="divider"></li>
+                            <li t-if="deletable"><a href="#" data-action="rename_page">Rename Page</a></li>
+                            <li t-if="deletable"><a href="#" data-action="delete_page">Delete Page</a></li>
                         </ul>
                     </li>
                     <!-- Customize -->
-                    <li class="dropdown" groups="website.group_website_designer" id="customize-menu">
+                    <li class="dropdown" id="customize-menu">
                         <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="customize-menu-button">Customize</a>
                         <ul class="dropdown-menu" role="menu">
                             <li id="html_editor"><a data-action="ace" href="#advanced-view-editor">HTML Editor</a></li>
@@ -54,7 +54,7 @@
                         </ul>
                     </li>
                     <!-- Promote -->
-                    <li class="dropdown" groups="website.group_website_designer">
+                    <li class="dropdown">
                         <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="promote-menu-button">Promote</a>
                         <ul class="dropdown-menu oe_promote_menu" role="menu">
                             <li><a data-action="promote-current-page" href="#" title="Promote page on the web">Optimize SEO</a></li>
@@ -62,22 +62,22 @@
                     </li>
                 </ul>
 
-                <ul class="o_menu_systray hidden-xs">
+                <ul class="o_menu_systray hidden-xs" groups="website.group_website_publisher">
                     <!-- Mobile preview -->
                     <li class="o_mobile_preview">
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="fa fa-mobile"/></a>
                     </li>
                     <!-- Page Edition -->
-                    <li groups="website.group_website_publisher,website.group_website_designer">
+                    <li>
                         <a data-action="new_page" href="#" data-toggle="modal" data-target="#o_website_add_page_modal"><span class="fa fa-plus"/>New</a>
                     </li>
-                    <li t-if="not translatable" groups="website.group_website_publisher">
+                    <li t-if="not translatable">
                         <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
                     </li>
-                    <li t-if="translatable" groups="website.group_website_publisher">
+                    <li t-if="translatable">
                         <a data-action="translate" href="#">TRANSLATE</a>
                     </li>
-                    <li t-if="translatable" groups="website.group_website_publisher">
+                    <li t-if="translatable">
                         <a data-action="edit_master" href="#">or Edit Master</a>
                     </li>
                 </ul>
@@ -86,7 +86,7 @@
 
         <!-- Add new page/content modal -->
         <xpath expr="//div[@id='wrapwrap']" position="after">
-            <div groups="base.group_user" class="modal" id="o_website_add_page_modal">
+            <div groups="website.group_website_publisher" class="modal" id="o_website_add_page_modal">
                 <div class="modal-dialog modal-lg">
                     <ul>
                         <li groups="website.group_website_designer"><a href="#" data-action="new_page"><i class="fa fa-file-o"/><p>New Page</p></a></li>

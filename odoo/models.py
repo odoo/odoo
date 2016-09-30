@@ -29,7 +29,6 @@ import logging
 import operator
 import pytz
 import re
-import time
 from collections import defaultdict, MutableMapping, OrderedDict
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
@@ -64,20 +63,6 @@ regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
-
-# base environment for doing a safe_eval
-SAFE_EVAL_BASE = {
-    'datetime': datetime,
-    'dateutil': dateutil,
-    'time': time,
-}
-
-def make_compute(text, deps):
-    """ Return a compute function from its code body and dependencies. """
-    func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
-    deps = [arg.strip() for arg in (deps or "").split(",")]
-    return api.depends(*deps)(func)
-
 
 def check_object_name(name):
     """ Check if the given name is a valid model name.
@@ -304,7 +289,9 @@ class BaseModel(object):
             cr.execute(""" INSERT INTO ir_model (model, name, info, state, transient)
                            VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
-        model_id = cr.fetchone()[0]
+        model = self.env['ir.model'].browse(cr.fetchone()[0])
+        self._context['todo'].append((10, model.modified, [list(params)]))
+
         if 'module' in self._context:
             xmlid = 'model_' + self._name.replace('.', '_')
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
@@ -312,7 +299,7 @@ class BaseModel(object):
             if not cr.rowcount:
                 cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
                                VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
-                           (xmlid, self._context['module'], 'ir.model', model_id))
+                           (xmlid, self._context['module'], 'ir.model', model.id))
 
         # create/update the entries in 'ir.model.fields' and 'ir.model.data'
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
@@ -324,7 +311,7 @@ class BaseModel(object):
         model_fields = sorted(self._fields.itervalues(), key=lambda field: field.type == 'sparse')
         for field in model_fields:
             vals = {
-                'model_id': model_id,
+                'model_id': model.id,
                 'model': self._name,
                 'name': field.name,
                 'field_description': field.string,
@@ -359,6 +346,8 @@ class BaseModel(object):
                 )
                 cr.execute(query, vals)
                 field_id = cr.fetchone()[0]
+                self._context['todo'].append((20, Fields.browse(field_id).modified, [list(vals)]))
+
                 module = field._module or self._context.get('module')
                 if module:
                     xmlid = 'field_%s_%s' % (self._table, field.name)
@@ -368,15 +357,17 @@ class BaseModel(object):
                     cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
                                    VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
                                (xmlid, module, 'ir.model.fields', field_id))
-            else:
-                if not all(cols[field.name][key] == vals[key] for key in vals):
-                    names = set(vals) - {'model', 'name'}
-                    query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
-                        ",".join("%s=%%(%s)s" % (name, name) for name in names),
-                    )
-                    cr.execute(query, vals)
-        self.invalidate_cache()
 
+            elif not all(cols[field.name][key] == vals[key] for key in vals):
+                names = set(vals) - {'model', 'name'}
+                query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s AND name=%%(name)s RETURNING id" % (
+                    ",".join("%s=%%(%s)s" % (name, name) for name in names),
+                )
+                cr.execute(query, vals)
+                field_id = cr.fetchone()[0]
+                self._context['todo'].append((20, Fields.browse(field_id).modified, [names]))
+
+        self.invalidate_cache()
 
     @api.model
     def _add_field(self, name, field):
@@ -646,57 +637,13 @@ class BaseModel(object):
 
     @api.model
     def _add_manual_fields(self, partial):
+        IrModelFields = self.env['ir.model.fields']
         manual_fields = self.pool.get_manual_fields(self._cr, self._name)
-
-        for name, field in manual_fields.iteritems():
-            if name in self._fields:
-                continue
-            attrs = {
-                'manual': True,
-                'string': field['field_description'],
-                'help': field['help'],
-                'index': bool(field['index']),
-                'copy': bool(field['copy']),
-                'related': field['related'],
-                'required': bool(field['required']),
-                'readonly': bool(field['readonly']),
-                'store': bool(field['store']),
-            }
-            # FIXME: ignore field['serialization_field_id']
-            if field['ttype'] in ('char', 'text', 'html'):
-                attrs['translate'] = bool(field['translate'])
-                attrs['size'] = field['size'] or None
-            elif field['ttype'] in ('selection', 'reference'):
-                attrs['selection'] = safe_eval(field['selection'])
-            elif field['ttype'] == 'many2one':
-                if partial and field['relation'] not in self.env:
-                    continue
-                attrs['comodel_name'] = field['relation']
-                attrs['ondelete'] = field['on_delete']
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            elif field['ttype'] == 'one2many':
-                if partial and not (
-                    field['relation'] in self.env and (
-                        field['relation_field'] in self.env[field['relation']]._fields or
-                        field['relation_field'] in self.pool.get_manual_fields(self._cr, field['relation'])
-                )):
-                    continue
-                attrs['comodel_name'] = field['relation']
-                attrs['inverse_name'] = field['relation_field']
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            elif field['ttype'] == 'many2many':
-                if partial and field['relation'] not in self.env:
-                    continue
-                attrs['comodel_name'] = field['relation']
-                rel, col1, col2 = self.env['ir.model.fields']._custom_many2many_names(field['model'], field['relation'])
-                attrs['relation'] = field['relation_table'] or rel
-                attrs['column1'] = field['column1'] or col1
-                attrs['column2'] = field['column2'] or col2
-                attrs['domain'] = safe_eval(field['domain']) if field['domain'] else None
-            # add compute function if given
-            if field['compute']:
-                attrs['compute'] = make_compute(field['compute'], field['depends'])
-            self._add_field(name, Field.by_type[field['ttype']](**attrs))
+        for name, field_data in manual_fields.iteritems():
+            if name not in self._fields:
+                field = IrModelFields._instanciate(field_data, partial)
+                if field:
+                    self._add_field(name, field)
 
     @classmethod
     def _init_constraints_onchanges(cls):
@@ -1279,6 +1226,30 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         return E.pivot(string=self._description)
+
+    @api.model
+    def _get_default_kanban_view(self):
+        """ Generates a single-field kanban view, based on _rec_name.
+
+        :returns: a kanban view as an lxml document
+        :rtype: etree._Element
+        """
+
+        field = E.field(name=self._rec_name_fallback())
+        div = E.div(field, {'class': "oe_kanban_card oe_kanban_global_click"})
+        kanban_box = E.t(div, {'t-name': "kanban-box"})
+        templates = E.templates(kanban_box)
+        return E.kanban(templates, string=self._description)
+
+    @api.model
+    def _get_default_graph_view(self):
+        """ Generates a single-field graph view, based on _rec_name.
+
+        :returns: a graph view as an lxml document
+        :rtype: etree._Element
+        """
+        element = E.field(name=self._rec_name_fallback())
+        return E.graph(element, string=self._description)
 
     @api.model
     def _get_default_calendar_view(self):

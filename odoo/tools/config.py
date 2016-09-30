@@ -45,7 +45,7 @@ def _get_default_datadir():
 def _deduplicate_loggers(loggers):
     """ Avoid saving multiple logging levels for the same loggers to a save
     file, that just takes space and the list can potentially grow unbounded
-    if for some odd reason people use :option`odoo.py --save`` all the time.
+    if for some odd reason people use :option`--save`` all the time.
     """
     # dict(iterable) -> the last item of iterable for any given key wins,
     # which is what we want and expect. Output order should not matter as
@@ -87,7 +87,7 @@ class configmanager(object):
         self.config_file = fname
 
         self._LOGLEVELS = dict([
-            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
         ])
 
@@ -98,7 +98,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Common options")
         group.add_option("-c", "--config", dest="config", help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", default=False,
-                          help="save configuration to ~/.openerp_serverrc")
+                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
         group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update",
                           help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
@@ -350,9 +350,17 @@ class configmanager(object):
         # else he won't be able to save the configurations, or even to start the server...
         # TODO use appdirs
         if os.name == 'nt':
-            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'openerp-server.conf')
+            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
         else:
-            rcfilepath = os.path.expanduser('~/.openerp_serverrc')
+            rcfilepath = os.path.expanduser('~/.odoorc')
+            old_rcfilepath = os.path.expanduser('~/.openerp_serverrc')
+
+            die(os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath),
+                "Found '.odoorc' and '.openerp_serverrc' in your path. Please keep only one of "\
+                "them, preferrably '.odoorc'.")
+
+            if not os.path.isfile(rcfilepath) and os.path.isfile(old_rcfilepath):
+                rcfilepath = old_rcfilepath
 
         self.rcfile = os.path.abspath(
             self.config_file or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)
@@ -419,7 +427,7 @@ class configmanager(object):
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(odoo.__file__))))
+        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.join(os.path.dirname(__file__), '..'))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')

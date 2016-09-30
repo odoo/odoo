@@ -736,7 +736,12 @@ action = model.activate_sample_project()
         <!-- Reporting menus -->
         <menuitem id="menu_project_report" name="Reports"
             groups="project.group_project_manager"
-            action="project.action_project_task_user_tree"
             parent="menu_main_pm" sequence="99"/>
+
+        <menuitem id="menu_project_report_task_analysis"
+            name="Tasks Analysis"
+            action="project.action_project_task_user_tree"
+            parent="menu_project_report"
+            sequence="10"/>
 
 </odoo>

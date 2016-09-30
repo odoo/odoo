@@ -2,18 +2,16 @@ odoo.define('web.planner', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var Model = require('web.Model');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 var planner = require('web.planner.common');
 var webclient = require('web.web_client');
 
-var QWeb = core.qweb;
-var _t = core._t;
 var PlannerDialog = planner.PlannerDialog;
 
 var PlannerLauncher = Widget.extend({
+    sequence: 100, // force it to be the left-most item in the systray to prevent flickering as it is not displayed in all apps
     template: "PlannerLauncher",
     init: function(parent) {
         this._super(parent);

@@ -42,31 +42,36 @@ class MrpWorkcenter(models.Model):
         ('done', 'In Progress')], 'Status', compute="_compute_working_state", store=True)
     blocked_time = fields.Float(
         'Blocked Time', compute='_compute_blocked_time',
-        help='Blocked hours over the last month')
+        help='Blocked hour(s) over the last month', digits=(16, 2))
     productive_time = fields.Float(
         'Productive Time', compute='_compute_productive_time',
-        help='Productive hours over the last month')
+        help='Productive hour(s) over the last month', digits=(16, 2))
     oee = fields.Float(compute='_compute_oee', help='Overall Equipment Effectiveness, based on the last month')
     oee_target = fields.Float(string='OEE Target', help="OEE Target in percentage", default=90)
     performance = fields.Integer('Performance', compute='_compute_performance', help='Performance over the last month')
+    workcenter_load = fields.Float('Work Center Load', compute='_compute_workorder_count')
 
-    @api.depends('order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
+    @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
     def _compute_workorder_count(self):
         MrpWorkorder = self.env['mrp.workorder']
         result = {wid: {} for wid in self.ids}
+        result_duration_expected = {wid: 0 for wid in self.ids}
         #Count Late Workorder
         data = MrpWorkorder.read_group([('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'ready')), ('date_planned_start', '<', datetime.datetime.now().strftime('%Y-%m-%d'))], ['workcenter_id'], ['workcenter_id'])
         count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
         #Count All, Pending, Ready, Progress Workorder
         res = MrpWorkorder.read_group(
             [('workcenter_id', 'in', self.ids)],
-            ['workcenter_id', 'state'], ['workcenter_id', 'state'],
+            ['workcenter_id', 'state', 'duration_expected'], ['workcenter_id', 'state'],
             lazy=False)
         for res_group in res:
             result[res_group['workcenter_id'][0]][res_group['state']] = res_group['__count']
+            if res_group['state'] in ('pending', 'ready', 'progress'):
+                result_duration_expected[res_group['workcenter_id'][0]] += res_group['duration_expected']
         for workcenter in self:
             workcenter.workorder_count = sum(count for state, count in result[workcenter.id].items() if state not in ('done', 'cancel'))
             workcenter.workorder_pending_count = result[workcenter.id].get('pending', 0)
+            workcenter.workcenter_load = result_duration_expected[workcenter.id]
             workcenter.workorder_ready_count = result[workcenter.id].get('ready', 0)
             workcenter.workorder_progress_count = result[workcenter.id].get('progress', 0)
             workcenter.workorder_late_count = count_data.get(workcenter.id, 0)
@@ -94,7 +99,7 @@ class MrpWorkcenter(models.Model):
             ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
         count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
         for workcenter in self:
-            workcenter.blocked_time = count_data.get(workcenter.id, 0.0)
+            workcenter.blocked_time = count_data.get(workcenter.id, 0.0) / 60.0
 
     @api.multi
     def _compute_productive_time(self):
@@ -107,15 +112,15 @@ class MrpWorkcenter(models.Model):
             ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
         count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
         for workcenter in self:
-            workcenter.productive_time = count_data.get(workcenter.id, 0.0)
+            workcenter.productive_time = count_data.get(workcenter.id, 0.0) / 60.0
 
     @api.depends('blocked_time', 'productive_time')
-    @api.one
     def _compute_oee(self):
-        if self.productive_time:
-            self.oee = round(self.productive_time * 100.0 / (self.productive_time + self.blocked_time), 2)
-        else:
-            self.oee = 0.0
+        for order in self:
+            if order.productive_time:
+                order.oee = round(order.productive_time * 100.0 / (order.productive_time + order.blocked_time), 2)
+            else:
+                order.oee = 0.0
 
     @api.multi
     def _compute_performance(self):
@@ -180,7 +185,7 @@ class MrpWorkcenterProductivity(models.Model):
     loss_type = fields.Selection(
         "Effectiveness", related='loss_id.loss_type', store=True)
     description = fields.Text('Description')
-    date_start = fields.Datetime('Start Date', default=fields.Datetime.now(), required=True)
+    date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True)
     date_end = fields.Datetime('End Date')
     duration = fields.Float('Duration', compute='_compute_duration', store=True)
 

@@ -443,9 +443,8 @@ class PreforkServer(CommonServer):
 
     def long_polling_spawn(self):
         nargs = stripped_sys_argv()
-        cmd = os.path.join(os.path.dirname(nargs[0]), "odoo.py")
-        nargs = [cmd, 'gevent'] + nargs[1:]
-        popen = subprocess.Popen([sys.executable] + nargs)
+        cmd = [sys.executable, sys.argv[0], 'gevent'] + nargs[1:]
+        popen = subprocess.Popen(cmd)
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
