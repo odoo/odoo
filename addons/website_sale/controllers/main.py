@@ -902,6 +902,11 @@ class WebsiteSale(http.Controller):
 
         return request.redirect('/shop/confirmation')
 
+
+    @http.route(['/shop/terms'], type='http', auth="public", website=True)
+    def terms(self, **kw):
+        return request.render("website_sale.terms")
+
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True)
     def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
