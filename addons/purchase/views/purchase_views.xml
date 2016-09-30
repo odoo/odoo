@@ -182,7 +182,7 @@
                         <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
-                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                            <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
                             <field name='invoice_ids' invisible="1"/>
                         </button> 
                     </div>
@@ -317,8 +317,8 @@
                     <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
-                    <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
-                    <filter name="invoiced" string="Invoiced" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that include lines not invoiced."/>
+                    <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
+                    <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -388,6 +388,14 @@
                     <field name="invoice_status" invisible="not context.get('show_purchase', False)"/>
                 </tree>
             </field>
+        </record>
+
+        <record id="purchase_order_action_generic" model="ir.actions.act_window">
+            <field name="name">Purchase Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="purchase_order_form"/>
         </record>
 
         <record id="purchase_rfq" model="ir.actions.act_window">

@@ -13,26 +13,6 @@
                      data-images-info='{"logo": {"format": "png"}}'>
                     <t t-call="mass_mailing.theme_default_template"/>
                 </div>
-                <div data-name="newsletter"
-                     data-img="/mass_mailing/static/src/img/theme_imgs/newsletter_thumb"
-                     data-images-info='{"logo": {"format": "png"}}'>
-                    <t t-call="mass_mailing.theme_newsletter_template"/>
-                </div>
-                <div data-name="airmail"
-                     data-img="/mass_mailing/static/src/img/theme_imgs/airmail_thumb"
-                     data-images-info='{"logo": {"format": "png"}}'>
-                    <t t-call="mass_mailing.theme_airmail_template"/>
-                </div>
-                <div data-name="tech"
-                     data-img="/mass_mailing/static/src/img/theme_imgs/tech_thumb"
-                     data-images-info='{"logo": {"format": "png"}}'>
-                     <t t-call="mass_mailing.theme_tech_template"/>
-                </div>
-                <div data-name="resto"
-                     data-img="/mass_mailing/static/src/img/theme_imgs/resto_thumb"
-                     data-images-info='{"logo": {"format": "png"}}'>
-                     <t t-call="mass_mailing.theme_resto_template"/>
-                </div>
             </div>
             <div id="email_designer_default_headers" class="o_panel">
                 <div class="o_panel_header">
@@ -97,46 +77,36 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
                 <tr>
-                    <td width="80%"  class="o_mail_logo_container o_mail_h_padding o_mail_v_padding">
+                    <td width="70%"  class="o_mail_logo_container o_mail_h_padding o_mail_v_padding">
                         &amp;nbsp;
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
                              <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;" alt="Your Logo" />
                         </a>
                         &amp;nbsp;
                     </td>
-                    <td width="20%">
-                        <table t-if="website" class="o_mail_header_social" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate;">
-                            <tr>
-                                <t t-if="website.social_facebook">
-                                    <td align="right">
-                                        <a t-att-href="website.social_facebook">
-                                          <span class="fa fa-facebook"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_googleplus">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_googleplus">
-                                            <span class="fa fa-google-plus"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_linkedin">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_linkedin">
-                                            <span class="fa fa-linkedin"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_twitter">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_twitter">
-                                            <span class="fa fa-twitter"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                            </tr>
-                        </table>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div t-if="website" class="o_mail_header_social">
+                            <t t-if="website.social_facebook">
+                                <a t-att-href="website.social_facebook">
+                                  <span class="fa fa-facebook"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_googleplus">
+                                <a t-att-href="website.social_googleplus" style="margin-left:10px">
+                                    <span class="fa fa-google-plus"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_linkedin">
+                                <a t-att-href="website.social_linkedin" style="margin-left:10px">
+                                    <span class="fa fa-linkedin"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_twitter">
+                                <a t-att-href="website.social_twitter" style="margin-left:10px">
+                                    <span class="fa fa-twitter"></span>
+                                </a>
+                            </t>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -149,7 +119,7 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
                 <tr>
-                    <td width="80%" class="o_mail_h_padding o_mail_v_padding">
+                    <td width="70%" class="o_mail_h_padding o_mail_v_padding">
                         &amp;nbsp;
                         <h3>
                             <a t-att-href="(company_id.website) or '#'">
@@ -158,39 +128,29 @@
                         </h3>
                         &amp;nbsp;
                     </td>
-                    <td valign="center" width="20%">
-                        <table t-if="website" class="o_mail_header_social" border="0" cellpadding="0" cellspacing="0" align="right" style="border-collapse:separate;">
-                            <tr>
-                                <t t-if="website.social_facebook">
-                                    <td align="right">
-                                        <a t-att-href="website.social_facebook">
-                                          <span class="fa fa-facebook"></span>
-                                        </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_googleplus">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_googleplus">
-                                          <span class="fa fa-google-plus"></span>
-                                          </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_linkedin">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_linkedin">
-                                          <span class="fa fa-linkedin"></span>
-                                          </a>
-                                    </td>
-                                </t>
-                                <t t-if="website.social_twitter">
-                                    <td align="right" style="padding-left:10px">
-                                        <a t-att-href="website.social_twitter">
-                                          <span class="fa fa-twitter"></span>
-                                          </a>
-                                    </td>
-                                </t>
-                            </tr>
-                        </table>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div t-if="website" class="o_mail_header_social">
+                            <t t-if="website.social_facebook">
+                                <a t-att-href="website.social_facebook">
+                                  <span class="fa fa-facebook"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_googleplus">
+                                <a t-att-href="website.social_googleplus" style="margin-left:10px">
+                                    <span class="fa fa-google-plus"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_linkedin">
+                                <a t-att-href="website.social_linkedin" style="margin-left:10px">
+                                    <span class="fa fa-linkedin"></span>
+                                </a>
+                            </t>
+                            <t t-if="website.social_twitter">
+                                <a t-att-href="website.social_twitter" style="margin-left:10px">
+                                    <span class="fa fa-twitter"></span>
+                                </a>
+                            </t>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -205,7 +165,9 @@
                 <tr>
                     <td width="20%"/>
                     <td valign="center" width="60%" class="text-center o_mail_v_padding">
-                         <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;width:auto" alt="Your Logo" />
+                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
+                            <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;width:auto" alt="Your Logo" />
+                        </a>
                     </td>
                     <td width="20%" style="text-align:right"/>
                 </tr>
@@ -302,7 +264,7 @@
     </div>
 </template>
 
-<template id="s_mail_block_comparison_table" name="Comparison Table">
+<template id="s_mail_block_comparison_table" name="Comparison">
     <div class="o_mail_block_comparison_table">
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
@@ -604,7 +566,7 @@
 </template>
 
 <template id="s_mail_block_footer_tag_line" name="Tag Line">
-    <div class="o_mail_block_footer_tag_line">
+    <div class="o_mail_block_footer_tag_line o_mail_no_colorpicker">
         <div class="o_mail_snippet_general">
             <table class="o_mail_table_styles o_mail_full_width_padding" align="center" cellpadding="0" cellspacing="0">
                 <tbody>
@@ -633,8 +595,8 @@
     </div>
 </template>
 
-<template id="s_mail_block_discount2" name="Discount Coupon">
-    <div class="o_mail_block_discount2 mb16">
+<template id="s_mail_block_discount2" name="Promo Code">
+    <div class="o_mail_block_discount2 mb32">
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_h_padding">
                 <tbody>
@@ -644,7 +606,7 @@
                                 <p class="o_mail_display_coupon o_mail_no_margin text-center text-beta" style="font-weight:800;">
                                     $20
                                 </p>
-                                <h3 class="o_mail_no_margin">FROM YOUR NEXT ORDER!</h3>
+                                <h3 class="o_mail_no_margin">OFF YOUR NEXT ORDER!</h3>
                             </div>
                         </td>
                     </tr>
@@ -657,8 +619,13 @@
                                 <small>CODE</small>:   <strong class="o_code h3">45A9E77DGW8455</strong>
                             </p>
                             <p class="text-center">
-                                to receive $20 from your next purchase!
+                                and save $20 on your next order!
                             </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="mb16 mt16 text-center">
+                            <a class="btn btn-primary">Use now</a>
                         </td>
                     </tr>
                 </tbody>
@@ -705,7 +672,7 @@
 </template>
 
 <template id="s_mail_block_event" name="Event">
-    <div class="o_mail_block_event">
+    <div class="o_mail_block_event o_mail_no_colorpicker">
         <div class="o_mail_snippet_general">
             <table align="center" cellpadding="0" cellspacing="0" class="o_mail_table_styles">
                 <tr>
@@ -736,7 +703,7 @@
 </template>
 
 <template id="s_mail_block_steps" name="Steps">
-    <div class="o_mail_block_steps">
+    <div class="o_mail_block_steps o_mail_no_colorpicker">
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
                 <tbody>
@@ -831,7 +798,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <p class="o_mail_footer_copy">© 2014 All Rights Reserved</p>
+                            <p class="o_mail_footer_copy"><span class="fa fa-copyright"/> 2016 All Rights Reserved</p>
                         </td>
                     </tr>
                 </tbody>
@@ -854,7 +821,7 @@
                                 <a href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a> | <a href="/page/contactus" class="btn btn-link">Contact</a>
                             </div>
                             <div>
-                                <p class="o_mail_footer_copy">© 2016 All Rights Reserved</p>
+                                <p class="o_mail_footer_copy"><span class="fa fa-copyright"/> 2016 All Rights Reserved</p>
                             </div>
                         </td>
                         <td t-if="website" class="o_mail_footer_social">

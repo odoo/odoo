@@ -45,6 +45,7 @@ class AccountJournal(models.Model):
         return rec
 
     @api.one
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         rec = super(AccountJournal, self).copy(default)
         rec._create_check_sequence()

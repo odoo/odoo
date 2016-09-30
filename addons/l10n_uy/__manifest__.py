@@ -4,7 +4,7 @@
 {
     'name': 'Uruguay - Chart of Accounts',
     'version': '0.1',
-    'author': 'Uruguay l10n Team & Guillem Barba',
+    'author': 'Uruguay l10n Team, Guillem Barba',
     'category': 'Localization',
     'website': 'https://launchpad.net/openerp-uruguay',
     'description': """

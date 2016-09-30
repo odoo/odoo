@@ -1,11 +1,9 @@
 odoo.define('mass_mailing.mass_mailing', function (require) {
 
-var core = require('web.core');
 var FieldTextHtml = require('web_editor.backend').FieldTextHtml;
 var KanbanRecord = require('web_kanban.Record');
+var KanbanColumn = require("web_kanban.Column");
 var KanbanView = require('web_kanban.KanbanView');
-
-var _t = core._t;
 
 KanbanRecord.include({
     on_card_clicked: function (event) {
@@ -17,10 +15,23 @@ KanbanRecord.include({
     },
 });
 
+KanbanColumn.include({
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        var parent = this.getParent();
+        if (!parent || parent.model !== "mail.mass_mailing") return def;
+
+        var self = this;
+        return $.when(def).done(function () {
+            self.$el.sortable("destroy");
+        });
+    },
+});
+
 KanbanView.include({
     on_groups_started: function() {
         this._super.apply(this, arguments);
-        if (this.dataset.model === 'mail.mass_mailing') {  
+        if (this.dataset.model === 'mail.mass_mailing') {
             this.$el.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
     },

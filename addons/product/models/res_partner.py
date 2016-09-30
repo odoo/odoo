@@ -31,7 +31,7 @@ class Partner(models.Model):
 
         # update at each change country, and so erase old pricelist
         if self.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
-            self.env['ir.property'].set_multi(
+            self.env['ir.property'].sudo().set_multi(
                 'property_product_pricelist',
                 self._name,
                 {self.id: self.property_product_pricelist or default_for_country.id},

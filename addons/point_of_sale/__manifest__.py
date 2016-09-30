@@ -34,6 +34,7 @@ Main Features
         'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
         'wizard/pos_box.xml',
+        'wizard/pos_details.xml',
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_payment.xml',

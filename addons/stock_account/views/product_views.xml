@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <group name="account_property" position="inside">
-                    <group name="account_stock_property" string="Account Stock Properties" attrs="{'invisible': [('property_valuation', '=', 'manual_periodic')]}">
+                    <group name="account_stock_property" string="Account Stock Properties">
                         <field name="property_stock_account_input_categ_id" domain="[('deprecated', '=', False)]"/>
                         <field name="property_stock_account_output_categ_id" domain="[('deprecated', '=', False)]"/>
                         <field name="property_stock_valuation_account_id" domain="[('deprecated', '=', False)]"/>

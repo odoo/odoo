@@ -16,7 +16,7 @@ var editor = {};
 
 editor.dummy = function () {return true;}; // used for snippets, options...
 
-editor.editable = !!$('html').data('editable');
+editor.editable = !!($('html').data('editable') || $("[data-oe-model]").length); // temporary hack, this should be done in python
 
 ajax.loadXML('/web_editor/static/src/xml/editor.xml', qweb);
 

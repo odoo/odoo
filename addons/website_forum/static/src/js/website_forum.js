@@ -138,6 +138,25 @@ if(!$('.website_forum').length) {
             });
     });
 
+    $('.o_js_validation_queue a').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        var self = $(this);
+        $(this).parents('.post_to_validate').hide();
+        $.get($link.attr('href'))
+            .fail(function() {
+                self.parents('.o_js_validation_queue > div').addClass('panel-danger').css('background-color', '#FAA');
+                self.parents('.post_to_validate').show();
+            })
+            .done(function() {
+                var left = $('.o_js_validation_queue:visible').length;
+                var type = $('h2.page-header li.active a').data('type');
+                $('#count_post').text(left);
+                $('#moderation_tools a[href*="/'+type+'_"]').find('strong').text(left);
+            });
+
+    });
+
     $('.accept_answer').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);

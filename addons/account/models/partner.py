@@ -438,3 +438,12 @@ class ResPartner(models.Model):
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
+
+    def open_partner_history(self):
+        '''
+        This function returns an action that display invoices/refunds made for the given partners.
+        '''
+        action = self.env.ref('account.action_invoice_refund_out_tree')
+        result = action.read()[0]
+        result['domain'] = "[('id','in',[" + ','.join(map(str, self.ids)) + "])]"
+        return result

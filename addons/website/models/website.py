@@ -607,13 +607,13 @@ class Menu(models.Model):
     _order = "sequence"
 
     def _default_sequence(self):
-        menu = self.search(["sequence"], limit=1, order="sequence DESC")
+        menu = self.search([], limit=1, order="sequence DESC")
         return menu.sequence or 0
 
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char('Url', default='')
     new_window = fields.Boolean('New Window')
-    sequence = fields.Integer(defualt=_default_sequence)
+    sequence = fields.Integer(default=_default_sequence)
     website_id = fields.Many2one('website', 'Website')  # TODO: support multiwebsite once done for ir.ui.views
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')

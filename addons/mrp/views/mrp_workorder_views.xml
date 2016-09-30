@@ -100,7 +100,7 @@
                 <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('is_produced', '=', False)]}" class="btn-info"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending')]}"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'ready')]}" class="btn-success"/>
-                <button name="record_production" type="object" string="Done" class="btn-success" attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('state', '!=', 'progress'), ('is_user_working', '=', False)]}"/>
+                <button name="record_production" type="object" string="Done" class="btn-success" attrs="{'invisible': ['|', '|', '|', ('is_produced', '=', True), ('working_state', '=', 'blocked'), ('state', '!=', 'progress'), ('is_user_working', '=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning" attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False)]}"/>
                 <button name="%(act_mrp_block_workcenter_wo)d" type="action" context="{'default_workcenter_id': workcenter_id}" string="Block" class="btn-danger" attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False)]}"/>
                 <button name="button_unblock" type="object" string="Unblock" class="btn-danger" attrs="{'invisible': [('working_state', '!=', 'blocked')]}"/>
@@ -140,7 +140,7 @@
                 </group>
                 <notebook>
                 <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
-                    <field name="worksheet" widget="image"/>
+                    <field name="worksheet" widget="pdf_viewer"/>
                 </page>
                 <page string="Current Production">
                     <group>
@@ -157,6 +157,7 @@
                             <field name="quantity" readonly="1"/>
                             <field name="lot_id" context="{'default_product_id': product_id}"/>
                             <field name="quantity_done"/>
+                            <field name="move_id" invisible="1"/>
                             <field name="done_wo" invisible="1"/>
                         </tree>
                     </field>
@@ -418,5 +419,44 @@
             products are produced.
           </p>
         </field>
+    </record>
+
+    <record id="view_workcenter_load_pivot" model="ir.ui.view">
+        <field name="name">report.workcenter.load.pivot</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <pivot string="Work Center Loads">
+                <field name="duration_expected" type="measure"/>
+                <field name="workcenter_id" type="row"/>
+                <field name="production_date" type="row" interval="day"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_work_center_load_graph" model="ir.ui.view">
+        <field name="name">report.workcenter.load.graph</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <graph string="Work Center load" type="bar">
+                <field name="production_date" interval="day"/>
+                <field name="workcenter_id"/>
+                <field name="duration_expected" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_mrp_workcenter_load_report_graph" model="ir.actions.act_window">
+        <field name="name">Work Center Loads</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="view_id" ref="view_workcenter_load_pivot"/>
+    </record>
+
+    <record id="action_mrp_workcenter_load_report_pivot" model="ir.actions.act_window.view">
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_work_center_load_graph"/>
+        <field name="act_window_id" ref="action_mrp_workcenter_load_report_graph"/>
     </record>
 </odoo>

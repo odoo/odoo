@@ -379,23 +379,26 @@
             <field name="model">ir.model.data</field>
             <field name="arch" type="xml">
                 <form string="External Identifiers">
-                  <group>
-                    <group>
-                        <field name="complete_name"/>
-                        <field name="module"/>
-                        <field name="name"/>
-                    </group>
-                    <group>
-                        <field name="display_name"/>
-                        <field name="model"/>
-                        <field name="res_id"/>
-                    </group>
-                    <group>
-                        <field name="noupdate"/>
-                        <field name="date_update" />
-                        <field name="date_init" />
-                    </group>
-                  </group>
+                    <sheet>
+                        <h1>
+                            <field name="complete_name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="module"/>
+                                <field name="name"/>
+                                <field name="noupdate"/>
+                                <field name="date_update" />
+                                <field name="date_init" />
+                            </group>
+                            <group>
+                                <field name="display_name"/>
+                                <field name="model"/>
+                                <field name="res_id"/>
+                                <field name="reference" widget="reference" string="Record"/>
+                            </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

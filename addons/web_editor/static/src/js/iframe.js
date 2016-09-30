@@ -10,6 +10,7 @@ var snippet_editor = require('web_editor.snippet.editor');
 
 ajax.loadXML('/web/static/src/xml/base_common.xml', core.qweb);
 
+var callback = window ? window["callback"] : undefined;
 window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name) {
     var $editable = $("#editable_area");
     if(value !== $editable.prop("innerHTML")) {

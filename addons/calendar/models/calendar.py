@@ -160,7 +160,7 @@ class Attendee(models.Model):
         mails_to_send = self.env['mail.mail']
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
-                ics_file = ics_files[attendee.event_id.id]
+                ics_file = ics_files.get(attendee.event_id.id)
                 mail_id = invitation_template.send_mail(attendee.id)
 
                 vals = {}
@@ -654,7 +654,7 @@ class Meeting(models.Model):
     is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
     attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     display_time = fields.Char('Event Time', compute='_compute_display_time')
-    display_start = fields.Date('Date', compute='_compute_display_start', store=True)
+    display_start = fields.Char('Date', compute='_compute_display_start', store=True)
     start = fields.Datetime('Start', required=True, help="Start date of an event, without time for full days events")
     stop = fields.Datetime('Stop', required=True, help="Stop date of an event, without time for full days events")
 
@@ -850,6 +850,7 @@ class Meeting(models.Model):
             # FIXME: why isn't this in CalDAV?
             import vobject
         except ImportError:
+            _logger.warning("The `vobject` Python module is not installed, so iCal file generation is unavailable. Use 'pip install vobject' to install it")
             return result
 
         for meeting in self:
@@ -915,10 +916,10 @@ class Meeting(models.Model):
                 meeting_attendees |= attendee
                 meeting_partners |= partner
 
-                if current_user.email != partner.email:
-                    attendee._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
-
             if meeting_attendees:
+                to_notify = meeting_attendees.filtered(lambda a: a.email != current_user.email)
+                to_notify._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
+
                 meeting.write({'attendee_ids': [(4, meeting_attendee.id) for meeting_attendee in meeting_attendees]})
             if meeting_partners:
                 meeting.message_subscribe(partner_ids=meeting_partners.ids)

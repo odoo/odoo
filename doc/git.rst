@@ -9,7 +9,7 @@ Initializing a working copy
 
 Use the easy-setup shell script::
 
-     curl -O https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python2
+     curl -O https://raw.githubusercontent.com/odoo/odoo/10.0/setup/setup_dev.py | python2
 
 it will will ask a few questions and create a local copy.
 

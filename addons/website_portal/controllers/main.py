@@ -11,8 +11,8 @@ from odoo.fields import Date
 
 class website_account(http.Controller):
 
-    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street2", "city", "country_id"]
-    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "street"]
+    MANDATORY_BILLING_FIELDS = ["name", "phone", "email", "street", "city", "country_id"]
+    OPTIONAL_BILLING_FIELDS = ["zipcode", "state_id", "vat", "company_name"]
 
     _items_per_page = 20
 
@@ -57,7 +57,7 @@ class website_account(http.Controller):
 
     @http.route(['/my/account'], type='http', auth='user', website=True)
     def details(self, redirect=None, **post):
-        partner = request.env['res.users'].browse(request.uid).partner_id
+        partner = request.env.user.partner_id
         values = {
             'error': {},
             'error_message': []
@@ -68,7 +68,8 @@ class website_account(http.Controller):
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
-                values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS}
+                values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
+                values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
                 values.update({'zip': values.pop('zipcode', '')})
                 partner.sudo().write(values)
                 if redirect:

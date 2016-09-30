@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="default_website" model="website">
-            <field name="name">Website localhost</field>
+            <field name="name">My Website</field>
             <field name="domain">localhost</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="user_id" ref="base.public_user"/>
@@ -28,23 +28,6 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
             <field name="website_id" ref="default_website"/>
-        </record>
-
-        <record id="group_website_publisher" model="res.groups">
-            <field name="name">Editor</field>
-            <field name="category_id" ref="base.module_category_website"/>
-        </record>
-
-        <!-- Access rules to edit ir.ui.view with qWeb type -->
-        <record id="group_website_designer" model="res.groups">
-            <field name="name">Editor and Designer</field>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
-            <field name="implied_ids" eval="[(4, ref('group_website_publisher'))]"/>
-            <field name="category_id" ref="base.module_category_website"/>
-        </record>
-
-        <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('group_website_designer'))]"/>
         </record>
 
         <record id="action_module_website" model="ir.actions.act_window">

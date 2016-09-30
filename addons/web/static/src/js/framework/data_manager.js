@@ -6,9 +6,19 @@ var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 
+function traverse(tree, f) {
+    if (f(tree)) {
+        _.each(tree.children, function(c) { traverse(c, f); });
+    }
+}
+
 return core.Class.extend({
     init: function () {
         this.Filters = new Model('ir.filters');
+        this._init_cache();
+    },
+
+    _init_cache: function () {
         this._cache = {
             actions: {},
             fields_views: {},
@@ -16,6 +26,14 @@ return core.Class.extend({
             filters: {},
             views: {},
         };
+    },
+
+    /**
+     * Invalidates the whole cache
+     * Suggestion: could be refined to invalidate some part of the cache
+     */
+    invalidate: function () {
+        this._init_cache();
     },
 
     /**
@@ -196,19 +214,46 @@ return core.Class.extend({
      */
     _postprocess_fvg: function (fields_view) {
         var self = this;
+
+        // Parse and process arch
         var doc = $.parseXML(fields_view.arch).documentElement;
+        var fields = fields_view.fields;
         fields_view.arch = utils.xml_to_json(doc, (doc.nodeName.toLowerCase() !== 'kanban'));
+        traverse(fields_view.arch, function(node) {
+            if (typeof node === 'string') {
+                return false;
+            }
+            if (node.tag === 'field') {
+                fields[node.attrs.name].__attrs = node.attrs;
+                if (fields[node.attrs.name].type === 'many2one') { // FIXME: this shouldn't be done here
+                    if (node.attrs.widget === 'statusbar' || node.attrs.widget === 'radio') {
+                        fields[node.attrs.name].__fetch_status = true;
+                    } else if (node.attrs.widget === 'selection') {
+                        fields[node.attrs.name].__fetch_selection = true;
+                    }
+                }
+                if (node.attrs.widget === 'many2many_checkboxes') {
+                    fields[node.attrs.name].__fetch_many2manys = true;
+                }
+                return false;
+            }
+            return node.tag !== 'arch';
+        });
+
+        // Special case for id's
         if ('id' in fields_view.fields) {
-            // Special case for id's
             var id_field = fields_view.fields.id;
             id_field.original_type = id_field.type;
             id_field.type = 'id';
         }
+
+        // Process inner views (one2manys)
         _.each(fields_view.fields, function(field) {
             _.each(field.views || {}, function(view) {
                 self._postprocess_fvg(view);
             });
         });
+
         return fields_view;
     },
 

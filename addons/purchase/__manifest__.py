@@ -34,6 +34,7 @@ Dashboard / Reports for Purchase Management will include:
         'data/purchase_data.yml',
         'report/purchase_reports.xml',
         'views/purchase_views.xml',
+        'views/procurement_views.xml',
         'views/stock_views.xml',
         'views/res_partner_views.xml',
         'report/purchase_report_views.xml',

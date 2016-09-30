@@ -646,6 +646,35 @@ actual arch.
 
         return dict(view_data, arch=etree.tostring(arch, encoding='utf-8'))
 
+    def _apply_group(self, model, node, modifiers, fields):
+        """Apply group restrictions,  may be set at view level or model level::
+           * at view level this means the element should be made invisible to
+             people who are not members
+           * at model level (exclusively for fields, obviously), this means
+             the field should be completely removed from the view, as it is
+             completely unavailable for non-members
+
+           :return: True if field should be included in the result of fields_view_get
+        """
+        Model = self.env[model]
+
+        if node.tag == 'field' and node.get('name') in Model._fields:
+            field = Model._fields[node.get('name')]
+            if field.groups and not self.user_has_groups(groups=field.groups):
+                node.getparent().remove(node)
+                fields.pop(node.get('name'), None)
+                # no point processing view-level ``groups`` anymore, return
+                return False
+        if node.get('groups'):
+            can_see = self.user_has_groups(groups=node.get('groups'))
+            if not can_see:
+                node.set('invisible', '1')
+                modifiers['invisible'] = True
+                if 'attrs' in node.attrib:
+                    del node.attrib['attrs']    # avoid making field visible later
+            del node.attrib['groups']
+        return True
+
     #------------------------------------------------------
     # Postprocessing: translation, groups and modifiers
     #------------------------------------------------------
@@ -672,33 +701,6 @@ actual arch.
         if model not in self.env:
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
-
-        def check_group(node):
-            """Apply group restrictions,  may be set at view level or model level::
-               * at view level this means the element should be made invisible to
-                 people who are not members
-               * at model level (exclusively for fields, obviously), this means
-                 the field should be completely removed from the view, as it is
-                 completely unavailable for non-members
-
-               :return: True if field should be included in the result of fields_view_get
-            """
-            if node.tag == 'field' and node.get('name') in Model._fields:
-                field = Model._fields[node.get('name')]
-                if field.groups and not self.user_has_groups(groups=field.groups):
-                    node.getparent().remove(node)
-                    fields.pop(node.get('name'), None)
-                    # no point processing view-level ``groups`` anymore, return
-                    return False
-            if node.get('groups'):
-                can_see = self.user_has_groups(groups=node.get('groups'))
-                if not can_see:
-                    node.set('invisible', '1')
-                    modifiers['invisible'] = True
-                    if 'attrs' in node.attrib:
-                        del node.attrib['attrs']    # avoid making field visible later
-                del node.attrib['groups']
-            return True
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
@@ -748,7 +750,7 @@ actual arch.
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
-        if not check_group(node):
+        if not self._apply_group(model, node, modifiers, fields):
             # node must be removed, no need to proceed further with its children
             return fields
 
