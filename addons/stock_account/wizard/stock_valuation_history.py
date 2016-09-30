@@ -56,11 +56,11 @@ class stock_history(osv.osv):
             for ids in group_lines.values():
                 for product_id in ids:
                     line_ids.add(product_id)
-            line_ids = list(line_ids)
             lines_rec = {}
             if line_ids:
-                cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE id in %s', (tuple(line_ids),))
-                lines_rec = cr.dictfetchall()
+                move_ids = tuple(abs(line_id) for line_id in line_ids)
+                cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE move_id in %s', (move_ids,))
+                lines_rec = tuple(rec for rec in cr.dictfetchall() if rec['id'] in line_ids)
             lines_dict = dict((line['id'], line) for line in lines_rec)
             product_ids = list(set(line_rec['product_id'] for line_rec in lines_rec))
             products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'id'], context=context)

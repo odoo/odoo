@@ -13,10 +13,11 @@ from openerp.addons.website_mail.controllers.main import _message_post_helper
 
 
 class sale_quote(http.Controller):
-    @http.route([
-        "/quote/<int:order_id>",
-        "/quote/<int:order_id>/<token>"
-    ], type='http', auth="public", website=True)
+    @http.route("/quote/<int:order_id>", type='http', auth="user", website=True)
+    def view_user(self, *args, **kwargs):
+        return self.view(*args, **kwargs)
+
+    @http.route("/quote/<int:order_id>/<token>", type='http', auth="public", website=True)
     def view(self, order_id, pdf=None, token=None, message=False, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         # only if he knows the private token
