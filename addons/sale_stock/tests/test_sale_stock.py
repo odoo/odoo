@@ -161,7 +161,7 @@ class TestSaleStock(TestSale):
         default_data = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
         return_wiz = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).create(default_data)
         return_wiz.product_return_moves.quantity = 2.0 # Return only 2
-        return_wiz.product_return_moves.to_refund_so = True # Refund these 2
+        return_wiz.product_return_moves.to_refund = True # Refund these 2
         res = return_wiz.create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 

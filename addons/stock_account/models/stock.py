@@ -176,6 +176,9 @@ class StockQuant(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
+    to_refund = fields.Boolean(string="To Refund",
+                               help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+
     @api.multi
     def action_done(self):
         self.product_price_update_before_done()
@@ -346,3 +349,24 @@ class StockMove(models.Model):
             }
             res.append((0, 0, price_diff_line))
         return res
+
+
+class StockReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    @api.multi
+    def _create_returns(self):
+        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        new_picking = self.env['stock.picking'].browse([new_picking_id])
+        for move in new_picking.move_lines:
+            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            if return_picking_line and return_picking_line.to_refund:
+                move.to_refund = True
+
+        return new_picking_id, pick_type_id
+
+
+class StockReturnPickingLine(models.TransientModel):
+    _inherit = "stock.return.picking.line"
+
+    to_refund = fields.Boolean(string="To Refund", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')

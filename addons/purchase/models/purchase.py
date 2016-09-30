@@ -542,10 +542,11 @@ class PurchaseOrderLine(models.Model):
             total = 0.0
             for move in line.move_ids:
                 if move.state == 'done':
-                    if move.product_uom != line.product_uom:
-                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                    if move.location_dest_id.usage == "supplier":
+                        if move.to_refund:
+                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                     else:
-                        total += move.product_uom_qty
+                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
             line.qty_received = total
 
     @api.model
@@ -639,7 +640,7 @@ class PurchaseOrderLine(models.Model):
             return res
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()
-        for move in self.move_ids.filtered(lambda x: x.state != 'cancel'):
+        for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
             qty += move.product_qty
         template = {
             'name': self.name or '',
