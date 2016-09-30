@@ -291,7 +291,7 @@ class mail_mail(osv.Model):
                         subject=email.get('subject'),
                         body=email.get('body'),
                         body_alternative=email.get('body_alternative'),
-                        email_cc=tools.email_split(mail.email_cc),
+                        email_cc=tools.email_split_and_format(email.get('email_cc', mail.email_cc)),
                         reply_to=mail.reply_to,
                         attachments=attachments,
                         message_id=mail.message_id,
