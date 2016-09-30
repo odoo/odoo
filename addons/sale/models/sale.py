@@ -180,9 +180,7 @@ class SaleOrder(models.Model):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
-        if fiscal_position:
-            self.fiscal_position_id = fiscal_position
+        self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
         return {}
 
     @api.multi

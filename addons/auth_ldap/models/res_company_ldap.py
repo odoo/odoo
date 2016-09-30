@@ -100,7 +100,7 @@ class CompanyLDAP(models.Model):
             _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
             return False
         try:
-            results = self.query(conf, filter)
+            results = self.query(conf, tools.ustr(filter))
 
             # Get rid of (None, attrs) for searchResultReference replies
             results = [i for i in results if i[0]]
