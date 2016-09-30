@@ -84,30 +84,6 @@
                         </a>
                         &amp;nbsp;
                     </td>
-                    <td width="30%" class="text-right o_mail_no_resize">
-                        <div t-if="website" class="o_mail_header_social">
-                            <t t-if="website.social_facebook">
-                                <a t-att-href="website.social_facebook">
-                                  <span class="fa fa-facebook"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_googleplus">
-                                <a t-att-href="website.social_googleplus" style="margin-left:10px">
-                                    <span class="fa fa-google-plus"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_linkedin">
-                                <a t-att-href="website.social_linkedin" style="margin-left:10px">
-                                    <span class="fa fa-linkedin"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_twitter">
-                                <a t-att-href="website.social_twitter" style="margin-left:10px">
-                                    <span class="fa fa-twitter"></span>
-                                </a>
-                            </t>
-                        </div>
-                    </td>
                 </tr>
             </table>
         </div>
@@ -127,30 +103,6 @@
                             </a>
                         </h3>
                         &amp;nbsp;
-                    </td>
-                    <td width="30%" class="text-right o_mail_no_resize">
-                        <div t-if="website" class="o_mail_header_social">
-                            <t t-if="website.social_facebook">
-                                <a t-att-href="website.social_facebook">
-                                  <span class="fa fa-facebook"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_googleplus">
-                                <a t-att-href="website.social_googleplus" style="margin-left:10px">
-                                    <span class="fa fa-google-plus"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_linkedin">
-                                <a t-att-href="website.social_linkedin" style="margin-left:10px">
-                                    <span class="fa fa-linkedin"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_twitter">
-                                <a t-att-href="website.social_twitter" style="margin-left:10px">
-                                    <span class="fa fa-twitter"></span>
-                                </a>
-                            </t>
-                        </div>
                     </td>
                 </tr>
             </table>
@@ -765,35 +717,9 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
                 <tbody>
-                    <tr t-if="website">
-                        <td class="o_mail_footer_social">
-                            &amp;nbsp;
-                            <t t-if="website.social_facebook">
-                                <a t-att-href="website.social_facebook" class="btn btn-link">
-                                    <span class="fa fa-facebook"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_googleplus">
-                                <a t-att-href="website.social_googleplus" style="padding-left:10px;" class="btn btn-link">
-                                    <span class="fa fa-google-plus"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_linkedin">
-                                <a t-att-href="website.social_linkedin" style="padding-left:10px;" class="btn btn-link">
-                                    <span class="fa fa-linkedin"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_twitter">
-                                <a t-att-href="website.social_twitter" style="padding-left:10px;" class="btn btn-link">
-                                    <span class="fa fa-twitter"></span>
-                                </a>
-                            </t>
-                            &amp;nbsp;
-                        </td>
-                    </tr>
                     <tr>
                         <td class="o_mail_footer_links">
-                            <a href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a> | <a href="/page/contactus" class="btn btn-link">Contact</a>
+                            <a href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                         </td>
                     </tr>
                     <tr>
@@ -818,35 +744,11 @@
                                 <strong><t t-esc="res_company.partner_id.name"/></strong>
                             </p>
                             <div class="o_mail_footer_links">
-                                <a href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a> | <a href="/page/contactus" class="btn btn-link">Contact</a>
+                                <a href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                             </div>
                             <div>
                                 <p class="o_mail_footer_copy"><span class="fa fa-copyright"/> 2016 All Rights Reserved</p>
                             </div>
-                        </td>
-                        <td t-if="website" class="o_mail_footer_social">
-                            &amp;nbsp;
-                            <t t-if="website.social_facebook">
-                                <a t-att-href="website.social_facebook" class="btn btn-link">
-                                    <span class="fa fa-facebook"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_googleplus">
-                                <a t-att-href="website.social_googleplus" style="padding-left:10px;" class="btn btn-link">
-                                    <span class="fa fa-google-plus"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_linkedin">
-                                <a t-att-href="website.social_linkedin" style="padding-left:10px;" class="btn btn-link">
-                                    <span class="fa fa-linkedin"></span>
-                                </a>
-                            </t>
-                            <t t-if="website.social_twitter">
-                                <a t-att-href="website.social_twitter" style="padding-left:10px;" class="btn btn-link">
-                                    <span class="fa fa-twitter"></span>
-                                </a>
-                            </t>
-                            &amp;nbsp;
                         </td>
                     </tr>
                 </tbody>
