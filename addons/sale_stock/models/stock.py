@@ -13,10 +13,6 @@ class StockLocationRoute(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund_so = fields.Boolean(
-        "To Refund in SO", default=False,
-        help='Trigger a decrease of the delivered quantity in the associated Sales Order')
-
     @api.multi
     def action_done(self):
         result = super(StockMove, self).action_done()
@@ -66,24 +62,3 @@ class StockPicking(models.Model):
                     values={'self': backorder, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
         return res
-
-
-class StockReturnPicking(models.TransientModel):
-    _inherit = "stock.return.picking"
-
-    @api.multi
-    def _create_returns(self):
-        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
-        new_picking = self.env['stock.picking'].browse([new_picking_id])
-        for move in new_picking.move_lines:
-            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
-            if return_picking_line and return_picking_line.to_refund_so:
-                move.to_refund_so = True
-
-        return new_picking_id, pick_type_id
-
-
-class StockReturnPickingLine(models.TransientModel):
-    _inherit = "stock.return.picking.line"
-
-    to_refund_so = fields.Boolean(string="To Refund", help='Trigger a decrease of the delivered quantity in the associated Sales Order')

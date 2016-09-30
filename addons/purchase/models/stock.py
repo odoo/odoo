@@ -60,8 +60,10 @@ class StockMove(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         default = default or {}
-        if not default.get('split_from'):
-            #we don't want to propagate the link to the purchase order line except in case of move split
+        # we don't want to propagate the link to the purchase order line on the move copied,
+        # except when it's a split or a returned move
+
+        if not default.get('split_from') and not default.get('origin_returned_move_id'):
             default['purchase_line_id'] = False
         return super(StockMove, self).copy(default)
 

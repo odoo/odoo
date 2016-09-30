@@ -23,16 +23,5 @@
             </field>
         </record>
 
-        <record id="view_stock_return_picking_form_inherit_sale_stock" model="ir.ui.view">
-            <field name="name">stock.return.picking.sale.stock.form</field>
-            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
-            <field name="model">stock.return.picking</field>
-            <field name="arch" type="xml">
-                <field name="quantity" position="after">
-                    <field name="to_refund_so"/>
-                </field>
-            </field>
-        </record>
-
     </data>
 </odoo>
