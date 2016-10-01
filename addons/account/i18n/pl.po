@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 15:36+0000\n"
+"PO-Revision-Date: 2016-09-27 13:54+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgstr "# Transakcji"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Faktura (Odn. ${object.number or 'nd.' })"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -619,7 +619,7 @@ msgstr "<strong>Ujednolicenie świadczeń twoich Świadczeń Bankowych</strong>"
 msgid ""
 "<strong>Record Bank Statement (or import file)</strong><br/>\n"
 "                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day."
-msgstr "<strong>Zarejestruj świadczenie bankowe (Lub importuj plik)</strong><br/>\n                                        W zależności od ilości twoich transakcji, powinieneś rejestrować świadczenia bankowe od każdego tygodnia do kilku razy na dzień."
+msgstr "<strong>Zarejestruj wyciąg bankowy (Lub importuj plik)</strong><br/>\n                                        W zależności od ilości twoich transakcji, powinieneś rejestrować wyciągi bankowe co tydzień lub do kilku razy na dzień."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -686,7 +686,7 @@ msgstr "<strong>Suma częściowa</strong>"
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Target Moves:</strong>"
-msgstr "<strong>Postępowania Docelowe:</strong>"
+msgstr "<strong>Zapisy docelowe:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -726,7 +726,7 @@ msgid ""
 "                payments on a daily basis. You can enter the coins that are in\n"
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
-msgstr "Rejestr kasowy pozwala tobie na zarządzanie wpisów gotówkowych w Twoim rejestrze kasowym. Ta funkcja pozwala na monitorowanie płatności na dziennej zasadzie. Możesz wprowadzić pieniądze, które masz w kasie."
+msgstr "Rejestr kasowy pozwala Ci na zarządzanie wpisami gotówkowymi w Twoim rejestrze kasowym. Ta funkcja pozwala na monitorowanie płatności na dziennej zasadzie. Możesz wprowadzić monety, które masz w kasie, następnie zmienić wpisy gdy pieniądze opuszczą kasetkę."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1206
@@ -3143,7 +3143,7 @@ msgstr "Winien"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
 msgid "Debit Methods"
-msgstr "Metody płatności"
+msgstr "Metody otrzymywania płatności"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
@@ -3511,7 +3511,7 @@ msgstr "Termin płatności"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due Date Computation"
-msgstr "Obliczenie daty zapłaty"
+msgstr "Obliczenie daty wymagalności zapłaty"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5475,7 +5475,7 @@ msgid ""
 "Means of payment for sending money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr "Sposób płatności lub wysyłania środków pieniężnych. Moduły Odoo oferują różne ułatwienia w zakresie zarządzania płatnościami, ale zawsze możesz użyć \"Ręcznej\" metody płatności w celu zarządzania nimi bez względu na oprogramowanie."
+msgstr "Sposób płatności lub wysyłania środków pieniężnych. Moduły Odoo oferują różne ułatwienia w zakresie zarządzania płatnościami, ale zawsze możesz użyć metody \"Ręcznej\" w celu zarządzania nimi poza oprogramowaniem."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_communication
@@ -6287,7 +6287,7 @@ msgstr "Metoda płatności:"
 #: model:ir.model,name:account.model_account_payment_method
 #: model:ir.model.fields,field_description:account.field_account_journal_outbound_payment_method_ids
 msgid "Payment Methods"
-msgstr "Metody płatności"
+msgstr "Metody wysyłania płatności"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
@@ -6512,7 +6512,7 @@ msgstr "Sprawdź, czy pole 'Dziennik' jest ustawione w wyciągu bankowym"
 #: code:addons/account/wizard/pos_box.py:29
 #, python-format
 msgid "Please check that the field 'Transfer Account' is set on the company."
-msgstr "Sprawdź, czy pole \"Konto przelewu\" jest ustawione w ustawieniach firmy."
+msgstr "Sprawdź, czy pole \"Konto transferów\" jest ustawione dla firmy."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:662
@@ -7323,7 +7323,7 @@ msgstr "Wybierz partnera"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
-msgstr "Wybierz kontrahenta lub odpowienik"
+msgstr "Wybierz kontrahenta lub odpowiednie pozycje "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
@@ -7902,7 +7902,7 @@ msgstr "Warunki"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Terms &amp; Conditions"
-msgstr "Terminy &amp; Warunki"
+msgstr "Terminy i warunki"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -8638,7 +8638,7 @@ msgstr "Suma transakcji"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Transfer Account"
-msgstr "Konto Przelewu"
+msgstr "Konto transferów"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_journal_id
@@ -8649,7 +8649,7 @@ msgstr "Przenieś do"
 #: code:addons/account/models/account_payment.py:209
 #, python-format
 msgid "Transfer account not defined on the company."
-msgstr "Konto przelewu nie jest zdefiniowane w ustawieniach."
+msgstr "Konto transferów nie jest zdefiniowane w ustawieniach firmy."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:385
@@ -9412,7 +9412,7 @@ msgstr "Powinieneś skonfigurować 'Konto ujemnych różnic kursowych' w ustawie
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr "Powinieneś zdefiniować konto księgowań wewnętrznych w dzienniku kasy fiskalnej!"
+msgstr "Powinieneś zdefiniować 'Konto transferów wewnętrznych' w dzienniku kasy fiskalnej!"
 
 #. module: account
 #. openerp-web
