@@ -230,7 +230,10 @@ class MrpProduction(models.Model):
             self.bom_id = False
         else:
             bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id)
-            self.bom_id = bom.id
+            if bom.type == 'normal':
+                self.bom_id = bom.id
+            else:
+                self.bom_id = False
             self.product_uom_id = self.product_id.uom_id.id
             return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
 
