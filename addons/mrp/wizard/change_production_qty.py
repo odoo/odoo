@@ -63,6 +63,7 @@ class ChangeProductionQty(models.TransientModel):
                     wo.state = 'progress'
                 # assign moves; last operation receive all unassigned moves
                 operation = wo.operation_id
+                
 
                 # TODO: following could be put in a function as it is similar as code in _workorders_create
                 # TODO: only needed when creating new moves
