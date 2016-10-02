@@ -85,7 +85,7 @@ class MailController(http.Controller):
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
-    def mail_action_view(self, model=None, res_id=None, message_id=None):
+    def mail_action_view(self, model=None, res_id=None, message_id=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
         choose where to redirect the user is the following :
 
@@ -150,7 +150,7 @@ class MailController(http.Controller):
         return werkzeug.utils.redirect(url)
 
     @http.route('/mail/follow', type='http', auth='user')
-    def mail_action_follow(self, model, res_id):
+    def mail_action_follow(self, model, res_id, **kwargs):
         if model not in request.env:
             return self._redirect_to_messaging()
         Model = request.env[model]
@@ -161,7 +161,7 @@ class MailController(http.Controller):
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
 
     @http.route('/mail/unfollow', type='http', auth='user')
-    def mail_action_unfollow(self, model, res_id):
+    def mail_action_unfollow(self, model, res_id, **kwargs):
         if model not in request.env:
             return self._redirect_to_messaging()
         Model = request.env[model]
