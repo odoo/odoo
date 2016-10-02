@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-18 12:33+0000\n"
-"PO-Revision-Date: 2016-09-23 17:11+0000\n"
+"PO-Revision-Date: 2016-09-27 13:47+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -104,7 +104,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'd
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Oferta' or 'Zamówienie'} (Odn. ${object.name or 'nd.' })"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -972,7 +972,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.actions.client,name:website_quote.open_quotation_menu
 msgid "Open Quotations"
-msgstr "otworzone oferty cenowe"
+msgstr "Otwórz oferty"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1202,26 +1202,26 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr "opcje oferty cenowej"
+msgstr "Opcje oferty"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_name
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation Template"
-msgstr "szablon oferty cenowej"
+msgstr "Szablon oferty"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_quote_line
 msgid "Quotation Template Lines"
-msgstr "szablon liniowy oferty cenowej"
+msgstr "Pozycje szablonu oferty"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
-msgstr "referencje szablonu oferty cenowej"
+msgstr "Odnośnik szablonu oferty"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
@@ -1238,7 +1238,7 @@ msgstr "widok oferty cenowej"
 #: code:addons/website_quote/controllers/main.py:32
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr "widok oferty cenowej przez klienta"
+msgstr "Widok oferty dla klienta"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1405,7 +1405,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Terms &amp; Conditions"
-msgstr "Terminy &amp; Warunki"
+msgstr "Terminy i warunki"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_note
@@ -1556,7 +1556,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.actions.report.xml,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr "strona oferty cenowej"
+msgstr "Strona z ofertą"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
