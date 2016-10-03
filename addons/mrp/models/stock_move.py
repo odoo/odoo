@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_compare
 from odoo.addons import decimal_precision as dp
 
@@ -241,6 +242,8 @@ class StockMove(models.Model):
             else:
                 for movelot in move.move_lot_ids:
                     if float_compare(movelot.quantity_done, 0, precision_rounding=rounding) > 0:
+                        if not movelot.lot_id:
+                            raise UserError(_('You need to supply a lot/serial number.'))
                         qty = move.product_uom._compute_quantity(movelot.quantity_done, move.product_id.uom_id)
                         quants = quant_obj.quants_get_preferred_domain(qty, move, lot_id=movelot.lot_id.id, domain=main_domain, preferred_domain_list=preferred_domain_list)
                         self.env['stock.quant'].quants_move(quants, move, move.location_dest_id, lot_id = movelot.lot_id.id)
