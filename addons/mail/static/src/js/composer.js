@@ -346,6 +346,72 @@ var MentionManager = Widget.extend({
 
 });
 
+var TypingNotifier = Widget.extend({
+    init: function(parent) {
+        this.composer = parent;
+        this.typing = false;
+        this.typing_timeout = 1000;
+    },
+    start: function() {
+        var $input = this.composer.$('.o_composer_text_field');
+        this.watch_typing($input);
+    },
+    watch_typing: function($input) {
+        var self = this;
+        var start_typing = function(e) {
+            if (!this.typing) {
+                this.typing = true;
+                this.notify_typing({
+                    'state': 'start'
+                });
+            }
+        };
+        var stop_typing = function(e, delay) {
+            if (this.typing) {
+                clearTimeout(this.delayedCallback);
+                this.delayedCallback = setTimeout(function() {
+                    this.typing = false;
+                    this.notify_typing({
+                        'state': 'stop'
+                    });
+                }.bind(this), delay || this.typing_timeout);
+            }
+        };
+        $input.on('keypress', start_typing.bind(this));
+        $input.on('keyup', stop_typing.bind(this));
+        $input.on('keydown', function(event) {
+            if (event.keyCode === 8 || event.keyCode === 46) {
+                start_typing.call(self, event);
+            }
+        });
+        $input.on('blur', function(event) {
+            stop_typing.call(self, event, 1);
+        });
+    },
+    // send typing notification
+    notify_typing: function(status) {
+        this.composer.trigger("notify_typing", status);
+    },
+    // received typing notification
+    notified_typing: function(channel){
+        var user_name = channel.name;
+        var message = '';
+        this.$el.empty();
+        switch(channel.typing_status) {
+            case 'start':
+                message = _.str.sprintf(_t('<span>%s is typing...</span>'), user_name);
+                this.$el.html(message);
+                break;
+            case 'stop':
+                message = _.str.sprintf(_t('<span>%s stop typing.</span>'), user_name);
+                this.$el.html(message);
+                break;
+            case 'cancel':
+                this.$el.empty();
+                break;
+        }
+    }
+});
 var BasicComposer = Widget.extend({
     template: "mail.ChatComposer",
 
@@ -420,6 +486,8 @@ var BasicComposer = Widget.extend({
 
         this.PartnerModel = new Model('res.partner');
         this.ChannelModel = new Model('mail.channel');
+
+        this.typing_notifier = new TypingNotifier(this);
     },
 
     start: function () {
@@ -457,6 +525,7 @@ var BasicComposer = Widget.extend({
 
         // Mention
         this.mention_manager.prependTo(this.$('.o_composer'));
+        this.typing_notifier.attachTo(this.$('.typing_status'));
 
         return this._super();
     },

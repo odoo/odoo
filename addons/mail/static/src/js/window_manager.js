@@ -357,6 +357,13 @@ core.bus.on('web_client_ready', null, function () {
             reposition_hidden_sessions_dropdown();
         }
     });
+    chat_manager.bus.on('notified_typing', null, function(channel){
+        _.each(chat_sessions, function (session) {
+            if (channel.id === session.id) {
+                session.window.notified_typing(channel);
+            }
+        });
+    });
 
     chat_manager.bus.on('update_dm_presence', null, function (channel) {
         _.each(chat_sessions, function (session) {

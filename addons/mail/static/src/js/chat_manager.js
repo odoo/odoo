@@ -282,6 +282,7 @@ function make_channel (data, options) {
         needaction_counter: data.message_needaction_counter || 0,
         unread_counter: 0,
         last_seen_message_id: data.seen_message_id,
+        typing_status: 'cancel',
         cache: {'[]': {
             all_history_loaded: false,
             loaded: false,
@@ -469,9 +470,17 @@ function on_notification (notifications) {
             // update presence of users
             on_presence_notification(notification[1]);
         } else if (model === 'typing.notification'){
-            console.log('eeee',notification[1]);
+            on_channel_typing_notification(notification[1]);
         }
     });
+}
+
+function on_channel_typing_notification(notification){
+    var channel_id = notification.channel_id;
+    var channel = chat_manager.get_channel(channel_id);
+    if(channel){
+        chat_manager.notified_typing(channel, notification);
+    }
 }
 
 function on_needaction_notification (message) {
@@ -917,8 +926,16 @@ var chat_manager = {
         }
         return ChannelModel.call("channel_fold", [], args, {shadow: true});
     },
+    // send notification
     notify_typing: function(channel_id, status){
         return ChannelModel.call("notify_typing", [channel_id, status]);
+    },
+    // receive notification
+    notified_typing: function(channel, status){
+        if (status){
+            channel.typing_status = status.state;
+        }
+        chat_manager.bus.trigger('notified_typing', channel);
     },
     /**
      * Special redirection handling for given model and id

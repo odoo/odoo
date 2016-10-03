@@ -13,6 +13,7 @@
                  </div>
              </div>
          </t>
+         <div t-if="!widget.extended" class="typing_status"></div>
          <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
              <div class="o_composer_input">
                  <textarea class="o_composer_text_field" tabindex="2" placeholder="Write something..."/>

@@ -28,6 +28,9 @@ return ChatWindow.extend({
             basic_composer.on('post_message', self, function (message) {
                 this.trigger('post_message', message, this.channel_id);
             });
+            basic_composer.on('notify_typing', self, function (status) {
+                this.trigger('notify_typing', this.channel_id, status);
+            });
             basic_composer.once('input_focused', self, function () {
                 var channel = chat_manager.get_channel(this.channel_id);
                 var commands = chat_manager.get_commands(channel);
@@ -35,6 +38,7 @@ return ChatWindow.extend({
                 basic_composer.mention_set_enabled_commands(commands);
                 basic_composer.mention_set_prefetched_partners(partners);
             });
+            this.basic_composer = basic_composer;
             def = basic_composer.replace(self.$('.o_chat_composer'));
         }
         return $.when(this._super(), def);
@@ -44,6 +48,11 @@ return ChatWindow.extend({
     on_keydown: function (event) {
         event.stopPropagation();
     },
+    notified_typing: function(channel) {
+        if(this.basic_composer){
+            this.basic_composer.typing_notifier.notified_typing(channel);
+        }
+    }
 });
 
 });

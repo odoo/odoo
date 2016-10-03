@@ -39,8 +39,6 @@ return Widget.extend({
         this.status = this.options.status;
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
-        this.typing = false;
-        this.typing_timeout = 1000;
     },
     start: function () {
         this.$input = this.$('.o_composer_text_field');
@@ -60,40 +58,8 @@ return Widget.extend({
         } else if (this.options.autofocus) {
             this.focus_input();
         }
-        this.watch_typing();
         var def = this.thread.replace(this.$('.o_chat_content'));
         return $.when(this._super(), def);
-    },
-    watch_typing: function(){
-        var self = this;
-        var start_typing = function(e){
-            if (!this.typing) {
-                this.typing = true;
-                this.notify_typing({'state': 'start'});
-            }
-        };
-        var stop_typing = function(e, delay){
-            if (this.typing) {
-                clearTimeout(this.delayedCallback);
-                this.delayedCallback = setTimeout(function () {
-                    this.typing = false;
-                    this.notify_typing({'state': 'stop'});
-                }.bind(this), delay || this.typing_timeout);
-            }
-        };
-        this.$input.on('keypress', start_typing.bind(this));
-        this.$input.on('keyup', stop_typing.bind(this));
-        this.$input.on('keydown', function (event) {
-           if (event.keyCode === 8 || event.keyCode === 46) {
-               start_typing.call(self, event);
-           }
-        });
-        this.$input.on('blur', function (event) {
-            stop_typing.call(self, event, 1);
-       });
-    },
-    notify_typing: function(status){
-        this.trigger("notify_typing", this.channel_id, status);
     },
     render: function (messages) {
         this.update_unread(this.unread_msgs);
