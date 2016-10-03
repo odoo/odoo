@@ -1,4 +1,4 @@
-odoo.define('hr_attendance.MainMenuConfirm', function (require) {
+odoo.define('hr_attendance.kiosk_confirm', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -9,7 +9,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 
-var MainMenuConfirm = Widget.extend({
+var KioskConfirm = Widget.extend({
     events: {
         "click .o_hr_attendance_back_button": function () { this.do_action(this.next_action, {clear_breadcrumbs: true}); },
         "click .o_hr_attendance_sign_in_out_icon": function () {
@@ -55,7 +55,7 @@ var MainMenuConfirm = Widget.extend({
 
     init: function (parent, action) {
         this._super.apply(this, arguments);
-        this.next_action = { type: "ir.actions.client", name: "Attendances", tag: 'hr_attendance_main_menu', target: "fullscreen", params: {} };
+        this.next_action = { type: "ir.actions.client", name: "Attendances", tag: 'hr_attendance_kiosk_mode', target: "fullscreen", params: {} };
         this.employee_id = action.employee_id;
         this.employee_name = action.employee_name;
         this.employee_state = action.employee_state;
@@ -66,7 +66,7 @@ var MainMenuConfirm = Widget.extend({
         var self = this;
         self.session.user_has_group('hr_attendance.group_hr_attendance_use_pin').then(function(has_group){
             self.use_pin = has_group;
-            self.$el.html(QWeb.render("HrAttendanceMainMenuConfirm", {widget: self}));
+            self.$el.html(QWeb.render("HrAttendanceKioskConfirm", {widget: self}));
             self.start_clock();
         });
         return self._super.apply(this, arguments);
@@ -84,8 +84,8 @@ var MainMenuConfirm = Widget.extend({
     },
 });
 
-core.action_registry.add('hr_attendance_main_menu_confirm', MainMenuConfirm);
+core.action_registry.add('hr_attendance_kiosk_confirm', KioskConfirm);
 
-return MainMenuConfirm;
+return KioskConfirm;
 
 });

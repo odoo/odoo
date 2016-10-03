@@ -11,7 +11,7 @@ KanbanRecord.include({
             var action = {
                 type: 'ir.actions.client',
                 name: 'Confirm',
-                tag: 'hr_attendance_main_menu_confirm',
+                tag: 'hr_attendance_kiosk_confirm',
                 employee_id: this.record.id.raw_value,
                 employee_name: this.record.name.raw_value,
                 employee_state: this.record.attendance_state.raw_value,

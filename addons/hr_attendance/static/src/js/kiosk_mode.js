@@ -1,4 +1,4 @@
-odoo.define('hr_attendance.MainMenu', function (require) {
+odoo.define('hr_attendance.kiosk_mode', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -11,7 +11,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 
-var MainMenu = Widget.extend(BarcodeHandlerMixin, {
+var KioskMode = Widget.extend(BarcodeHandlerMixin, {
     events: {
         "click .o_hr_attendance_button_employees": function(){ this.do_action('hr_attendance.hr_employee_attendance_action_kanban'); },
     },
@@ -33,7 +33,7 @@ var MainMenu = Widget.extend(BarcodeHandlerMixin, {
            .then(function (companies){
                 self.company_name = companies[0].name;
                 self.company_image_url = self.session.url('/web/image', {model: 'res.company', id: self.session.company_id, field: 'logo',})
-                self.$el.html(QWeb.render("HrAttendanceMainMenu", {widget: self}));
+                self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
         return self._super.apply(this, arguments);
@@ -64,8 +64,8 @@ var MainMenu = Widget.extend(BarcodeHandlerMixin, {
     },
 });
 
-core.action_registry.add('hr_attendance_main_menu', MainMenu);
+core.action_registry.add('hr_attendance_kiosk_mode', KioskMode);
 
-return MainMenu;
+return KioskMode;
 
 });
