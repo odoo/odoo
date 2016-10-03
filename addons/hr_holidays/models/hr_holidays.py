@@ -535,8 +535,10 @@ class Holidays(models.Model):
     def _notification_get_recipient_groups(self, message, recipients):
         result = super(Holidays, self)._notification_get_recipient_groups(message, recipients)
 
-        app_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': self.id, 'signal': 'validate'})
-        ref_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': self.id, 'signal': 'refuse'})
+        app_action = self._notification_link_helper('controller', controller='/hr_holidays/validate')
+        ref_action = self._notification_link_helper('controller', controller='/hr_holidays/refuse')
+
+
 
         actions = []
         if self.state == 'confirm':

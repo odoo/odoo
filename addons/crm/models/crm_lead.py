@@ -1062,9 +1062,12 @@ class Lead(FormatAddress, models.Model):
         result = super(Lead, self)._notification_get_recipient_groups(message, recipients)
 
         lead = self[0]
-        won_action = self._notification_link_helper('method', method='action_set_won')
-        lost_action = self._notification_link_helper('method', method='action_set_lost')
-        convert_action = self._notification_link_helper('method', method='convert_opportunity', partner_id=lead.partner_id.id)
+        won_action = self._notification_link_helper('controller', controller='/lead/case_mark_won')
+        lost_action = self._notification_link_helper('controller', controller='/lead/case_mark_lost')
+        convert_action = self._notification_link_helper('controller', controller='/lead/convert')
+
+
+
 
         if lead.type == 'lead':
             result['group_sale_salesman'] = {
