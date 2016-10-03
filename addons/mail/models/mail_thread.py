@@ -1030,7 +1030,7 @@ class MailThread(models.AbstractModel):
             tools.decode_message_header(message, 'Cc'),
             tools.decode_message_header(message, 'Resent-To'),
             tools.decode_message_header(message, 'Resent-Cc')])
-        rcpt_tos_localparts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
+        rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
 
         # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
         if bounce_alias and bounce_alias in email_to_localpart:

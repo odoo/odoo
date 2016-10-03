@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-
+import math
 
 class ChangeProductionQty(models.TransientModel):
     _name = 'change.production.qty'
@@ -43,16 +43,25 @@ class ChangeProductionQty(models.TransientModel):
             if wizard.product_qty < produced:
                 raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
             production.write({'product_qty': wizard.product_qty})
-            bom_point = production.bom_id
-            factor = self.env['product.uom']._compute_qty(production.product_uom_id.id, production.product_qty - production.qty_produced, production.bom_id.product_uom_id.id) / production.bom_id.product_qty
+            factor = production.product_uom_id._compute_quantity(production.product_qty - production.qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for line, line_data in lines:
                 production._update_raw_move(line, line_data)
+            operation_bom_qty = {}
+            for bom, bom_data in boms:
+                for operation in bom.routing_id.operation_ids:
+                    operation_bom_qty[operation.id] = bom_data['qty']
             self._update_product_to_produce(production, production.product_qty - production.qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves.do_unreserve()
             moves.action_assign()
             for wo in production.workorder_ids:
+                operation = wo.operation_id
+                if operation_bom_qty.get(operation.id):
+                    cycle_number = math.ceil(operation_bom_qty[operation.id] / operation.workcenter_id.capacity)  # TODO: float_round UP
+                    wo.duration_expected = (operation.workcenter_id.time_start +
+                                 operation.workcenter_id.time_stop +
+                                 cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
                 if production.product_id.tracking == 'serial':
                     quantity = 1.0
                 else:
@@ -62,8 +71,6 @@ class ChangeProductionQty(models.TransientModel):
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
                 # assign moves; last operation receive all unassigned moves
-                operation = wo.operation_id
-
                 # TODO: following could be put in a function as it is similar as code in _workorders_create
                 # TODO: only needed when creating new moves
                 moves_raw = production.move_raw_ids.filtered(lambda move: move.operation_id == operation and move.state not in ('done', 'cancel'))
