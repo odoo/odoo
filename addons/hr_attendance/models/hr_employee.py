@@ -70,7 +70,7 @@ class HrEmployee(models.Model):
             Returns either an action or a warning.
         """
         employee = self.search([('barcode', '=', barcode)], limit=1)
-        return employee and employee.attendance_action('hr_attendance.hr_attendance_action_main_menu') or \
+        return employee and employee.attendance_action('hr_attendance.hr_attendance_action_kiosk_mode') or \
             {'warning': _('No employee corresponding to barcode %(barcode)s') % {'barcode': barcode}}
 
     @api.multi
@@ -88,7 +88,7 @@ class HrEmployee(models.Model):
             next_action defines which menu the check in/out message should return to.
         """
         self.ensure_one()
-        action_message = self.env.ref('hr_attendance.hr_attendance_action_message').read()[0]
+        action_message = self.env.ref('hr_attendance.hr_attendance_action_greeting_message').read()[0]
         action_message['previous_attendance_change_date'] = self.last_attendance_id and (self.last_attendance_id.check_out or self.last_attendance_id.check_in) or False
         if action_message['previous_attendance_change_date']:
             action_message['previous_attendance_change_date'] = \

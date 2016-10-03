@@ -1,4 +1,4 @@
-odoo.define('hr_attendance.Message', function (require) {
+odoo.define('hr_attendance.greeting_message', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -8,8 +8,8 @@ var Widget = require('web.Widget');
 var _t = core._t;
 
 
-var Message = Widget.extend({
-    template: 'HrAttendanceMessage',
+var GreetingMessage = Widget.extend({
+    template: 'HrAttendanceGreetingMessage',
 
     events: {
         "click .o_hr_attendance_button_dismiss": function () { this.do_action(this.next_action, {clear_breadcrumbs: true}); },
@@ -18,11 +18,11 @@ var Message = Widget.extend({
     init: function(parent, action) {
         this._super.apply(this, arguments);
         var self = this;
-        var default_action = { type: "ir.actions.client", name: 'Attendances', tag: 'hr_attendance_my_main_menu', params: {} };
+        var default_action = { type: "ir.actions.client", name: 'Attendances', tag: 'hr_attendance_my_attendances', params: {} };
         if(!action.attendance){
             self.session.user_has_group('hr_attendance.group_hr_attendance_user').then(function(has_group){
                 if(has_group){
-                    self.next_action = { type: "ir.actions.client", name: 'Attendances', tag: 'hr_attendance_main_menu', target: 'fullscreen', params: {} };
+                    self.next_action = { type: "ir.actions.client", name: 'Attendances', tag: 'hr_attendance_kiosk_mode', target: 'fullscreen', params: {} };
                 }
             });
             return;
@@ -124,8 +124,8 @@ var Message = Widget.extend({
     },
 });
 
-core.action_registry.add('hr_attendance_message', Message);
+core.action_registry.add('hr_attendance_greeting_message', GreetingMessage);
 
-return Message;
+return GreetingMessage;
 
 });
