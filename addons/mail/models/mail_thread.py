@@ -1050,7 +1050,7 @@ class MailThread(models.AbstractModel):
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
                        decode_header(message, 'Resent-Cc')])
-        local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
+        local_parts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
         if local_parts:
             aliases = Alias.search([('alias_name', 'in', local_parts)])
             if aliases:
