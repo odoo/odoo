@@ -257,7 +257,7 @@ class xml_import(object):
                         context.update(ctx_res)
                     else:
                         context = ctx_res
-                except ValueError, NameError:
+                except (ValueError, NameError):
                     # Some contexts contain references that are only valid at runtime at
                     # client-side, so in that case we keep the original context string
                     # as it is. We also log it, just in case.
@@ -446,7 +446,7 @@ form: module.record_id""" % (xml_id,)
 
         try:
             domain = safe_eval(domain, eval_context)
-        except NameError:
+        except (ValueError, NameError):
             # Some domains contain references that are only valid at runtime at
             # client-side, so in that case we keep the original domain string
             # as it is. We also log it, just in case.
