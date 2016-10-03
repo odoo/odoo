@@ -38,7 +38,7 @@ class HrEmployee(models.Model):
 
     @api.multi
     def _inverse_manual_attendance(self):
-        manual_attendance_group = self.env['res.groups'].search([('name', '=', 'Manual Attendance')])
+        manual_attendance_group = self.env.ref('hr.group_hr_attendance')
         for employee in self:
             if employee.user_id:
                 if employee.manual_attendance:
