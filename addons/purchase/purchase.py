@@ -344,7 +344,8 @@ class PurchaseOrder(models.Model):
             'date': self.date_order,
             'origin': self.name,
             'location_dest_id': self._get_destination_location(),
-            'location_id': self.partner_id.property_stock_supplier.id
+            'location_id': self.partner_id.property_stock_supplier.id,
+            'company_id': self.company_id.id,
         }
 
     @api.multi
