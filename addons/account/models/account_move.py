@@ -898,6 +898,8 @@ class AccountMoveLine(models.Model):
             vals['date'] = self._context.get('date_p') or time.strftime('%Y-%m-%d')
         if 'name' not in vals:
             vals['name'] = self._context.get('comment') or _('Write-Off')
+        if 'analytic_account_id' not in vals:
+            vals['analytic_account_id'] = self.env.context.get('analytic_id', False)
         #compute the writeoff amount if not given
         if 'credit' not in vals and 'debit' not in vals:
             amount = sum([r.amount_residual for r in self])
