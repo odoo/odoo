@@ -41,6 +41,10 @@ class view(osv.osv):
 
         for kind in ['data', 'init_xml', 'update_xml']:
             for filename in terp[kind]:
+                ext = os.path.splitext(filename)[1].lower()
+                if ext not in ('.xml', '.csv', '.sql'):
+                    _logger.info("module %s: skip unsupported file %s", module, filename)
+                    continue
                 _logger.info("module %s: loading %s", module, filename)
                 noupdate = False
                 if filename.endswith('.csv') and kind in ('init', 'init_xml'):
