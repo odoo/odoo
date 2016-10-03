@@ -71,7 +71,8 @@ class account_voucher(osv.osv):
         if context.get('invoice_id', False):
             invoice = invoice_pool.browse(cr, uid, context['invoice_id'], context=context)
             journal_id = journal_pool.search(cr, uid, [
-                ('currency', '=', invoice.currency_id.id), ('company_id', '=', invoice.company_id.id)
+                ('currency', '=', invoice.currency_id.id), ('company_id', '=', invoice.company_id.id),
+                ('type', 'in', ['bank', 'cash'])
             ], limit=1, context=context)
             return journal_id and journal_id[0] or False
         if context.get('journal_id', False):
