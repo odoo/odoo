@@ -291,9 +291,9 @@ var EditMenuDialog = widget.Dialog.extend({
         var context = base.get_context();
         // Resequence, re-tree and remove useless data
         new_menu.forEach(function (menu) {
-            if (menu.item_id) {
+            if (menu.id) {
                 levels[menu.depth] = (levels[menu.depth] || 0) + 1;
-                var mobj = self.flat[menu.item_id];
+                var mobj = self.flat[menu.id];
                 mobj.sequence = levels[menu.depth];
                 mobj.parent_id = (menu.parent_id|0) || menu.parent_id || self.root_menu_id;
                 delete(mobj.children);
