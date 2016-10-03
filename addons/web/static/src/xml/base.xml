@@ -101,8 +101,6 @@
 </t>
 
 <t t-name="WebClient.DebugManager.Global">
-    <li><a href="#" data-action="split_assets">Activate Assets Debugging</a></li>
-    <li class="divider"/>
     <li><a href="#" data-action="perform_js_tests">Run JS Tests</a></li>
     <li><a href="#" data-action="select_view">Open View</a></li>
     <t t-if="manager._events">
@@ -111,6 +109,7 @@
         <li><a href="#" data-action="requests_clear">Clear Events</a></li>
     </t>
     <li class="divider o_debug_leave_section"/>
+    <li><a href="#" data-action="split_assets">Activate Assets Debugging</a></li>
     <li><a href="#" data-action="leave_debug_mode">Leave the Developer Tools</a></li>
 </t>
 <t t-name="WebClient.DebugManager.Action">
