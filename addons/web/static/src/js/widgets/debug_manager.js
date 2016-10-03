@@ -187,15 +187,6 @@ var DebugManager = Widget.extend({
             url: '/web/tests?mod=*'
         });
     },
-    toggle_technical_features: function () {
-        if (!this._features_group) { return; }
-        var command = this._has_features ? REMOVE(this._features_group) : ADD(this._features_group);
-        new Model('res.users').call('write', [session.uid, {
-            groups_id: [command]
-        }]).then(function () {
-            window.location.reload();
-        });
-    },
     split_assets: function() {
         window.location = $.param.querystring(window.location.href, 'debug=assets');
     },
