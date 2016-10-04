@@ -499,6 +499,7 @@ class module(osv.osv):
                                                               known_dep_ids, exclude_states, context))
         return list(known_dep_ids)
 
+    @api.returns('self')
     def upstream_dependencies(self, cr, uid, ids, known_dep_ids=None,
                                 exclude_states=['installed', 'uninstallable', 'to remove'],
                                 context=None):
