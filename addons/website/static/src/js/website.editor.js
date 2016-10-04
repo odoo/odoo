@@ -216,7 +216,7 @@ base.ready().then(function () {
         var $wrap = $("#wrapwrap.homepage #wrap");
         if ($wrap.length && $wrap.html().trim() === "") {
             var $welcome_message = $(qweb.render("website.homepage_editor_welcome_message"));
-            $welcome_message.css("height", $wrap.parent("main").height() - ($wrap.outerHeight(true) - $wrap.height()));
+            $welcome_message.css("min-height", $wrap.parent("main").height() - ($wrap.outerHeight(true) - $wrap.height()));
             $wrap.empty().append($welcome_message);
         }
     }
