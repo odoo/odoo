@@ -49,7 +49,7 @@ var TopBarContent = Widget.extend({
                 },
             }).then(function (menu) {
                 var dialog = new EditMenuDialog(this, {}, menu).open();
-                dialog.on("saved", null, function () {
+                dialog.on("save", null, function () {
                     $.when(action_before_reload && action_before_reload()).then(function () {
                         editor.reload();
                     });
