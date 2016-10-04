@@ -216,9 +216,6 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     if (previous) {
         $(previous).css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
     }
-    if (oStyle.image) {
-        $(oStyle.image).css({"-webkit-animation": "none", "animation": "none"});
-    }
     // end
 
     fn_boutton_update.call(this, $container, oStyle);
