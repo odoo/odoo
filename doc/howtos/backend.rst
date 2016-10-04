@@ -211,7 +211,7 @@ overridden by setting :attr:`~openerp.models.Model._rec_name`.
 
     .. only:: solutions
 
-        Edit the file ``openacademy/models.py`` to include a *Course* class.
+        Edit the file ``openacademy/models/models.py`` to include a *Course* class.
 
         .. patch::
 
@@ -255,7 +255,7 @@ be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 
     .. only:: solutions
 
-        Edit the file ``openacademy/demo.xml`` to include some data.
+        Edit the file ``openacademy/demo/demo.xml`` to include some data.
 
         .. patch::
 
@@ -484,7 +484,7 @@ client data; it is also related to its sale order line records.
 
     .. only:: solutions
 
-        #. Create the class *Session* in ``openacademy/models.py``.
+        #. Create the class *Session* in ``openacademy/models/models.py``.
         #. Add access to the session object in ``openacademy/view/openacademy.xml``.
 
         .. patch::
@@ -683,7 +683,7 @@ instead of a single view its ``arch`` field is composed of any number of
            inspect the view, find its external ID and the place to put the
            new field.
 
-       #. Create a file ``openacademy/partner.py`` and import it in
+       #. Create a file ``openacademy/models/partner.py`` and import it in
           ``__init__.py``
        #. Create a file ``openacademy/views/partner.xml`` and add it to
           ``__openerp__.py``
