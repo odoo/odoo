@@ -380,7 +380,7 @@ var TypingNotifier = Widget.extend({
         $input.on('keypress', start_typing.bind(this));
         $input.on('keyup', stop_typing.bind(this));
         $input.on('keydown', function(event) {
-            if (event.keyCode === $.ui.keyCode.BACKSPACE || event.keyCode === $.ui.keyCode.DELETE) {
+            if (_.contains([$.ui.keyCode.BACKSPACE ,$.ui.keyCode.DELETE ,$.ui.keyCode.ENTER], event.keyCode)) {
                 start_typing.call(self, event);
             }
         });
