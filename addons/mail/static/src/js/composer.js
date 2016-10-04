@@ -372,7 +372,7 @@ var TypingNotifier = Widget.extend({
                 this.delayedCallback = setTimeout(function() {
                     this.typing = false;
                     this.notify_typing({
-                        'state': 'stop'
+                        'state': $input.val() ? 'stop': 'cancel'
                     });
                 }.bind(this), delay || this.typing_timeout);
             }
@@ -380,9 +380,13 @@ var TypingNotifier = Widget.extend({
         $input.on('keypress', start_typing.bind(this));
         $input.on('keyup', stop_typing.bind(this));
         $input.on('keydown', function(event) {
-            if (event.keyCode === 8 || event.keyCode === 46) {
+            if (event.keyCode === $.ui.keyCode.BACKSPACE || event.keyCode === $.ui.keyCode.DELETE) {
                 start_typing.call(self, event);
             }
+        });
+        $input.on('paste cut', function (e) {
+            self.typing = true;
+            stop_typing.call(self, event, 50);
         });
         $input.on('blur', function(event) {
             stop_typing.call(self, event, 1);
