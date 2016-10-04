@@ -918,7 +918,7 @@ class BaseModel(object):
                                 # append the other lines at the end
                                 lines += lines2[1:]
                         else:
-                            current[i] = False
+                            current[i] = None
 
         return lines
 
