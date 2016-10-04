@@ -9,6 +9,7 @@
     </record>
 </data>
 
+<data>
     <record id="transfer_account_id" model="account.account.template">
         <field name="name">Tiền đang chuyển</field>
         <field name="code">113</field>
@@ -33,6 +34,7 @@
     <!-- Account Templates -->
 
     <!-- Loại 1 -->
+    
     <record id="chart1211" model="account.account.template">
         <field name="code">1211</field>
         <field name="reconcile" eval="False"/>
@@ -47,7 +49,13 @@
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Trái phiếu, Tín phiếu, Kỳ phiếu</field>
     </record>
-
+    <record id="chart1218" model="account.account.template">
+        <field name="code">1218</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Chứng khoán và công cụ tài chính khác</field>
+    </record>
     <record id="chart1281" model="account.account.template">
         <field name="code">1281</field>
         <field name="reconcile" eval="False"/>
@@ -60,17 +68,24 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Đầu tư ngắn hạn khác</field>
+        <field name="name">Trái phiếu có kỳ hạn</field>
     </record>
-
-    <record id="chart129" model="account.account.template">
-        <field name="code">129</field>
+    <record id="chart1283" model="account.account.template">
+        <field name="code">1283</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng giảm giá đầu tư ngắn hạn</field>
+        <field name="name">Cho vay</field>
     </record>
-
+    
+    <record id="chart1288" model="account.account.template">
+        <field name="code">1288</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Các khoản đầu tư khác nắm giữ đến ngày đáo hạn</field>
+    </record>
+        
     <record id="chart131" model="account.account.template">
         <field name="code">131</field>
         <field name="reconcile" eval="True"/>
@@ -102,6 +117,23 @@
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Vốn kinh doanh ở đơn vị trực thuộc</field>
     </record>
+    
+    <record id="chart1362" model="account.account.template">
+        <field name="code">1362</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Phải thu nội bộ về chênh lệch tỷ giá</field>
+    </record>       
+        
+    <record id="chart1363" model="account.account.template">
+        <field name="code">1363</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Phải thu nội bộ về chi phí đi vay đủ điều kiện được vốn hoá</field>
+    </record>       
+        
     <record id="chart1368" model="account.account.template">
         <field name="code">1368</field>
         <field name="reconcile" eval="False"/>
@@ -131,14 +163,7 @@
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Phải thu khác</field>
     </record>
-
-    <record id="chart139" model="account.account.template">
-        <field name="code">139</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng phải thu khó đòi</field>
-    </record>
+    
 
     <record id="chart141" model="account.account.template">
         <field name="code">141</field>
@@ -147,23 +172,7 @@
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Tạm ứng</field>
     </record>
-
-    <record id="chart142" model="account.account.template">
-        <field name="code">142</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí trả trước ngắn hạn</field>
-    </record>
-
-    <record id="chart144" model="account.account.template">
-        <field name="code">144</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cầm cố, ký cược, ký quỹ ngắn hạn</field>
-    </record>
-
+    
     <record id="chart151" model="account.account.template">
         <field name="code">151</field>
         <field name="reconcile" eval="False"/>
@@ -180,12 +189,36 @@
         <field name="name">Nguyên liệu, vật liệu</field>
     </record>
 
-    <record id="chart153" model="account.account.template">
-        <field name="code">153</field>
+    <record id="chart1531" model="account.account.template">
+        <field name="code">1531</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Công cụ, dụng cụ</field>
+    </record>
+        
+    <record id="chart1532" model="account.account.template">
+        <field name="code">1532</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Bao bì luân chuyển</field>
+    </record>
+        
+    <record id="chart1533" model="account.account.template">
+        <field name="code">1533</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Đồ dùng cho thuê</field>
+    </record>
+            
+    <record id="chart1534" model="account.account.template">
+        <field name="code">1534</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Thiết bị, phụ tùng thay thế</field>
     </record>
 
     <record id="chart154" model="account.account.template">
@@ -196,14 +229,22 @@
         <field name="name">Chi phí sản xuất kinh doanh dở dang</field>
     </record>
 
-    <record id="chart155" model="account.account.template">
-        <field name="code">155</field>
+    <record id="chart1551" model="account.account.template">
+        <field name="code">1551</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thành phẩm</field>
+        <field name="name">Thành phẩm nhập kho</field>
     </record>
 
+    <record id="chart1557" model="account.account.template">
+        <field name="code">1557</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Thành phẩm bất động sản</field>
+    </record>
+        
     <record id="chart1561" model="account.account.template">
         <field name="code">1561</field>
         <field name="reconcile" eval="False"/>
@@ -242,14 +283,6 @@
         <field name="name">Hàng hóa kho bảo thuế</field>
     </record>
 
-    <record id="chart159" model="account.account.template">
-        <field name="code">159</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng giảm giá hàng tồn kho</field>
-    </record>
-
     <record id="chart1611" model="account.account.template">
         <field name="code">1611</field>
         <field name="reconcile" eval="False"/>
@@ -265,6 +298,14 @@
         <field name="name">Chi sự nghiệp năm nay</field>
     </record>
 
+     <record id="chart171" model="account.account.template">
+        <field name="code">171</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Giao dịch mua bán lại trái phiếu chính phủ</field>
+    </record>
+        
     <!-- Loại 2 -->
     <record id="chart2111" model="account.account.template">
         <field name="code">2111</field>
@@ -310,14 +351,22 @@
         <field name="name">Tài sản cố định khác</field>
     </record>
 
-    <record id="chart212" model="account.account.template">
-        <field name="code">212</field>
+    <record id="chart2121" model="account.account.template">
+        <field name="code">2121</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản cố định thuê tài chính</field>
+        <field name="name">Tài sản cố định hữu hình thuê tài chính</field>
     </record>
 
+    <record id="chart2122" model="account.account.template">
+        <field name="code">2122</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Tài sản cố định vô hình thuê tài chính</field>
+    </record>
+        
     <record id="chart2131" model="account.account.template">
         <field name="code">2131</field>
         <field name="reconcile" eval="False"/>
@@ -344,14 +393,14 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nhãn hiệu hàng hóa</field>
+        <field name="name">Nhãn hiệu, tên thương mại</field>
     </record>
     <record id="chart2135" model="account.account.template">
         <field name="code">2135</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phần mềm máy tính</field>
+        <field name="name">Chương trình phần mềm</field>
     </record>
     <record id="chart2136" model="account.account.template">
         <field name="code">2136</field>
@@ -418,31 +467,19 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Vốn góp liên doanh</field>
+        <field name="name">>Đầu tư vào công ty liên doanh</field>
     </record>
 
-    <record id="chart223" model="account.account.template">
-        <field name="code">223</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Đầu tư vào công ty liên kết</field>
-    </record>
+    
 
     <record id="chart2281" model="account.account.template">
         <field name="code">2281</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cổ phiếu</field>
+        <field name="name">>Đầu tư góp vốn vào đơn vị khác</field>
     </record>
-    <record id="chart2282" model="account.account.template">
-        <field name="code">2282</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Trái phiếu</field>
-    </record>
+        
     <record id="chart2288" model="account.account.template">
         <field name="code">2288</field>
         <field name="reconcile" eval="False"/>
@@ -451,14 +488,38 @@
         <field name="name">Đầu tư dài hạn khác</field>
     </record>
 
-    <record id="chart229" model="account.account.template">
-        <field name="code">229</field>
-        <field name="reconcile" eval="False"/>
+    <record id="chart2291" model="account.account.template">
+        <field name="code">2291</field>
+        <field name="reconcile" eval="False"/>  
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng giảm giá đầu tư dài hạn</field>
+        <field name="name">Dự phòng giảm giá chứng khoán kinh doanh</field>
+    </record>
+        
+    <record id="chart2292" model="account.account.template">
+        <field name="code">2292</field>
+        <field name="reconcile" eval="False"/>  
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Dự phòng tổn thất đầu tư vào đơn vị khác</field>
+    </record>
+        
+    <record id="chart2293" model="account.account.template">
+        <field name="code">2293</field>
+        <field name="reconcile" eval="False"/>  
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Dự phòng phải thu khó đòi</field>
     </record>
 
+    <record id="chart2294" model="account.account.template">
+        <field name="code">2294</field>
+        <field name="reconcile" eval="False"/>  
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Dự phòng giảm giá hàng tồn kho</field>
+    </record>
+        
     <record id="chart2411" model="account.account.template">
         <field name="code">2411</field>
         <field name="reconcile" eval="False"/>
@@ -502,27 +563,11 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Ký quỹ, ký cược dài hạn</field>
+        <field name="name">Cầm cố, thế chấp, ký quỹ, ký cược</field>
     </record>
 
     <!-- Loại 3 -->
-
-    <record id="chart311" model="account.account.template">
-        <field name="code">311</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Vay ngắn hạn</field>
-    </record>
-
-    <record id="chart315" model="account.account.template">
-        <field name="code">315</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nợ dài hạn đến hạn trả</field>
-    </record>
-
+    
     <record id="chart331" model="account.account.template">
         <field name="code">331</field>
         <field name="reconcile" eval="True"/>
@@ -530,7 +575,13 @@
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Phải trả người bán</field>
     </record>
-
+    <record id="chart3331" model="account.account.template">
+        <field name="code">3331</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Thuế giá trị gia tăng phải nộp</field>
+    </record>
     <record id="chart33311" model="account.account.template">
         <field name="code">33311</field>
         <field name="reconcile" eval="False"/>
@@ -592,6 +643,20 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Các loại thuế môi trường và các loại thuế khác</field>
+    </record>
+    <record id="chart33381" model="account.account.template">
+        <field name="code">33381</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Các loại thuế môi trường</field>
+    </record>
+    <record id="chart33382" model="account.account.template">
+        <field name="code">33382</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Các loại thuế khác</field>
     </record>
     <record id="chart3339" model="account.account.template">
@@ -602,15 +667,15 @@
         <field name="name">Phí, lệ phí và các khoản phải nộp khác</field>
     </record>
 
-    <record id="chart3341" model="account.account.template">
+        <record id="chart3341" model="account.account.template">
         <field name="code">3341</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Phải trả công nhân viên</field>
     </record>
-    <record id="chart3342" model="account.account.template">
-        <field name="code">3342</field>
+    <record id="chart3348" model="account.account.template">
+        <field name="code">3348</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
@@ -625,14 +690,38 @@
         <field name="name">Chi phí phải trả</field>
     </record>
 
-    <record id="chart336" model="account.account.template">
-        <field name="code">336</field>
+    <record id="chart3361" model="account.account.template">
+        <field name="code">3361</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả nội bộ</field>
+        <field name="name">Phải trả nội bộ về vốn kinh doanh </field>
     </record>
 
+    <record id="chart3362" model="account.account.template">
+        <field name="code">3362</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Phải trả nội bộ về vốn chênh lệch tỷ giá</field>
+    </record>
+        
+    <record id="chart3363" model="account.account.template">
+        <field name="code">3363</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Phải trả nội bộ về chi phí đi vay đủ điều kiện được vốn hoá</field>
+    </record>
+        
+    <record id="chart3368" model="account.account.template">
+        <field name="code">3368</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Phải trả nội bộ khác</field>
+    </record>
+        
     <record id="chart337" model="account.account.template">
         <field name="code">337</field>
         <field name="reconcile" eval="False"/>
@@ -681,7 +770,7 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nhận ký quỹ, ký cược ngắn hạn</field>
+        <field name="name">Bảo hiểm thất nghiệp</field>
     </record>
     <record id="chart3387" model="account.account.template">
         <field name="code">3387</field>
@@ -698,20 +787,20 @@
         <field name="name">Phải trả, phải nộp khác</field>
     </record>
 
-    <record id="chart341" model="account.account.template">
-        <field name="code">341</field>
+    <record id="chart3411" model="account.account.template">
+        <field name="code">3411</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Vay dài hạn</field>
+        <field name="name">Các khoản đi vay</field>
     </record>
-
-    <record id="chart342" model="account.account.template">
-        <field name="code">342</field>
+    
+    <record id="chart3412" model="account.account.template">
+        <field name="code">3412</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nợ dài hạn</field>
+        <field name="name">Nợ thuê tài chính</field>
     </record>
 
     <record id="chart3431" model="account.account.template">
@@ -719,21 +808,35 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Trái phiếu </field>
+    </record>
+    <record id="chart34311" model="account.account.template">
+        <field name="code">34311</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Mệnh giá trái phiếu</field>
+    </record>
+    <record id="chart343112" model="account.account.template">
+        <field name="code">343112</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Chiết khấu trái phiếu</field>
+    </record>
+    <record id="chart343113" model="account.account.template">
+        <field name="code">343113</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Phụ trội trái phiếu</field>
     </record>
     <record id="chart3432" model="account.account.template">
         <field name="code">3432</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chiết khấu trái phiếu</field>
-    </record>
-    <record id="chart3434" model="account.account.template">
-        <field name="code">3434</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phụ trội trái phiếu</field>
+        <field name="name">Trái phiếu chuyển đổi</field>
     </record>
 
     <record id="chart344" model="account.account.template">
@@ -752,22 +855,97 @@
         <field name="name">Thuế thu nhập hoãn lại phải trả</field>
     </record>
 
-    <record id="chart351" model="account.account.template">
-        <field name="code">351</field>
+        
+    <record id="chart3531" model="account.account.template">
+        <field name="code">3531</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ dự phòng trợ cấp mất việc làm</field>
+        <field name="name">Quỹ khen thưởng</field>
     </record>
-
-    <record id="chart352" model="account.account.template">
-        <field name="code">352</field>
+    
+    <record id="chart3532" model="account.account.template">
+        <field name="code">3532</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng phải trả</field>
+        <field name="name">Quỹ phúc lợi</field>
+    </record>
+    
+    <record id="chart3533" model="account.account.template">
+        <field name="code">3533</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Quỹ phúc lợi đã hình thành TSCĐ</field>
+    </record>
+    
+    <record id="chart3534" model="account.account.template">
+        <field name="code">3534</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Quỹ thưởng ban quản lý điều hành công ty</field>
+    </record>
+    
+    <record id="chart3561" model="account.account.template">
+        <field name="code">3561</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Quỹ phát triển khoa học và công nghệ</field>
+    </record>
+    
+    <record id="chart3562" model="account.account.template">
+        <field name="code">3562</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Quỹ phát triển khoa học và công nghệ đã hình thành TSCĐ</field>
+    </record>
+    
+    <record id="chart357" model="account.account.template">
+        <field name="code">357</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Quỹ bình ổn giá</field>
+    </record>
+    
+    
+    
+     <record id="chart3521" model="account.account.template">
+        <field name="code">3521</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Dự phòng bảo hành sản phẩm hàng hóa</field>
+    </record>
+    
+    <record id="chart3522" model="account.account.template">
+        <field name="code">3522</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Dự phòng bảo hành công trình xây dựng</field>
     </record>
 
+    <record id="chart3523" model="account.account.template">
+        <field name="code">3523</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Dự phòng tái cơ cấu doanh nghiệp</field>
+    </record>
+    
+    <record id="chart3524" model="account.account.template">
+        <field name="code">3524</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Dự phòng phải trả khác</field>
+    </record>
+    
     <!-- Loại 4 -->
     <record id="chart4111" model="account.account.template">
         <field name="code">4111</field>
@@ -776,12 +954,33 @@
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Vốn đầu tư chủ sỡ hữu</field>
     </record>
+    <record id="chart41111" model="account.account.template">
+        <field name="code">41111</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Cổ phiếu phổ thông có quyền biểu quyết</field>
+    </record>
+    <record id="chart41112" model="account.account.template">
+        <field name="code">41112</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Cổ phiếu ưu đãi</field>
+    </record>
     <record id="chart4112" model="account.account.template">
         <field name="code">4112</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Thặng dư vốn cổ phần</field>
+    </record>
+    <record id="chart4113" model="account.account.template">
+        <field name="code">4113</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Quyền chọn chuyển đổi trái phiếu</field>
     </record>
     <record id="chart4118" model="account.account.template">
         <field name="code">4118</field>
@@ -804,16 +1003,14 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chênh lệnh tỉ giá hối đoái đánh giá lại cuối năm
-            tài chính</field>
+        <field name="name">Chênh lệch tỷ giá do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ</field>
     </record>
     <record id="chart4132" model="account.account.template">
         <field name="code">4132</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chênh lệnh tỉ giá hối đoái trong giai đoạn đầu tư
-            XDCB</field>
+        <field name="name">Chênh lệch tỷ giá hối đoái trong giai đoạn trước hoạt động</field>
     </record>
 
     <record id="chart414" model="account.account.template">
@@ -824,12 +1021,12 @@
         <field name="name">Quỹ đầu tư phát triển</field>
     </record>
 
-    <record id="chart415" model="account.account.template">
-        <field name="code">415</field>
+    <record id="chart417" model="account.account.template">
+        <field name="code">417</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ dự phòng tài chính</field>
+        <field name="name">Quỹ hỗ trợ sắp xếp doanh nghiệp</field>
     </record>
 
     <record id="chart418" model="account.account.template">
@@ -861,28 +1058,6 @@
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Lợi nhuận chưa phân phối năm nay</field>
-    </record>
-
-    <record id="chart4311" model="account.account.template">
-        <field name="code">4311</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_equity"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ khen thưởng</field>
-    </record>
-    <record id="chart4312" model="account.account.template">
-        <field name="code">4312</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_equity"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ phúc lợi</field>
-    </record>
-    <record id="chart4313" model="account.account.template">
-        <field name="code">4313</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_equity"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ phúc lợi đã hình thành TSCĐ</field>
     </record>
 
     <record id="chart441" model="account.account.template">
@@ -953,60 +1128,46 @@
         <field name="name">Doanh thu kinh doanh bất động sản đầu tư</field>
     </record>
 
-    <record id="chart5121" model="account.account.template">
-        <field name="code">5121</field>
+    <record id="chart5118" model="account.account.template">
+        <field name="code">5118</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu bán hàng hóa</field>
+        <field name="name">Doanh thu khác</field>
     </record>
-    <record id="chart5122" model="account.account.template">
-        <field name="code">5122</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_revenue"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu bán các thành phẩm</field>
-    </record>
-    <record id="chart5123" model="account.account.template">
-        <field name="code">5123</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_revenue"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu cung cấp dịch vụ</field>
-    </record>
-
+        
     <record id="chart515" model="account.account.template">
         <field name="code">515</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu hoạt động tài chính khác</field>
+        <field name="name">Doanh thu hoạt động tài chính</field>
     </record>
 
-    <record id="chart521" model="account.account.template">
-        <field name="code">521</field>
+    <record id="chart5211" model="account.account.template">
+        <field name="code">5211</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Chiết khấu thương mại</field>
     </record>
 
-    <record id="chart531" model="account.account.template">
-        <field name="code">531</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_revenue"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hàng bán bị trả lại</field>
-    </record>
-
-    <record id="chart532" model="account.account.template">
-        <field name="code">532</field>
+    <record id="chart5212" model="account.account.template">
+        <field name="code">5212</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
         <field name="name">Giảm giá hàng bán</field>
     </record>
 
+    <record id="chart5213" model="account.account.template">
+        <field name="code">5213</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_revenue"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Hàng bán bị trả lại</field>
+    </record>
+    
     <!-- Loại 6 -->
     <record id="chart6111" model="account.account.template">
         <field name="code">6111</field>
@@ -1289,55 +1450,7 @@
         <field name="name">Chi phí thuế TNDN hoãn lại</field>
     </record>
 
-    <!-- Loại 10 -->
-    <record id="chart001" model="account.account.template">
-        <field name="code">001</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account_type_other"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản thuê ngoài</field>
-    </record>
-
-    <record id="chart002" model="account.account.template">
-        <field name="code">002</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account_type_other"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Vật tư, hàng hóa nhận giữ hộ, nhận gia công</field>
-    </record>
-
-    <record id="chart003" model="account.account.template">
-        <field name="code">003</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account_type_other"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hàng hóa nhận bán hộ, nhận ký gửi, ký cược</field>
-    </record>
-
-    <record id="chart004" model="account.account.template">
-        <field name="code">004</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account_type_other"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nợ khó đòi đã xử lý</field>
-    </record>
-
-    <record id="chart007" model="account.account.template">
-        <field name="code">007</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account_type_other"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Ngoại tệ các loại</field>
-    </record>
-
-    <record id="chart008" model="account.account.template">
-        <field name="code">008</field>
-        <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account_type_other"/>
-        <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự toán chi sự nghiệp, dự án</field>
-    </record>
-
+ 
 
     <!-- Chart template -->
     <record id="vn_template" model="account.chart.template">
@@ -1348,4 +1461,5 @@
         <field name="income_currency_exchange_account_id" ref="chart515"/>
         <field name="expense_currency_exchange_account_id" ref="chart635"/>
     </record>
+</data>
 </odoo>
