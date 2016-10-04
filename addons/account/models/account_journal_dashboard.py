@@ -313,7 +313,7 @@ class account_journal(models.Model):
         })
         ir_model_obj = self.pool['ir.model.data']
         model, action_id = ir_model_obj.get_object_reference(self._cr, self._uid, 'account', action_name)
-        action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
+        action = self.pool[model].read(self._cr, self._uid, [action_id], context=self._context)[0]
         action['context'] = ctx
         action['domain'] = self._context.get('use_domain', [])
         return action
@@ -356,7 +356,7 @@ class account_journal(models.Model):
         ctx.pop('group_by', None)
         ir_model_obj = self.pool['ir.model.data']
         model, action_id = ir_model_obj.get_object_reference(self._cr, self._uid, 'account', action_name)
-        action = self.pool[model].read(self._cr, self._uid, action_id, context=self._context)
+        action = self.pool[model].read(self._cr, self._uid, [action_id], context=self._context)[0]
         action['context'] = ctx
         if ctx.get('use_domain', False):
             action['domain'] = ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
