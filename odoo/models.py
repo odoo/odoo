@@ -738,7 +738,7 @@ class BaseModel(object):
             return '__export__.' + name
 
     @api.multi
-    def __export_rows(self, fields):
+    def _export_rows(self, fields):
         """ Export fields of the records in ``self``.
 
             :param fields: list of lists of fields to traverse
@@ -785,7 +785,7 @@ class BaseModel(object):
 
                         # recursively export the fields that follow name
                         fields2 = [(p[1:] if p and p[0] == name else []) for p in fields]
-                        lines2 = value.__export_rows(fields2)
+                        lines2 = value._export_rows(fields2)
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
@@ -804,6 +804,9 @@ class BaseModel(object):
 
         return lines
 
+    # backward compatibility
+    __export_rows = _export_rows
+
     @api.multi
     def export_data(self, fields_to_export, raw_data=False):
         """ Export fields for selected objects
@@ -817,7 +820,7 @@ class BaseModel(object):
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         if raw_data:
             self = self.with_context(export_raw_data=True)
-        return {'datas': self.__export_rows(fields_to_export)}
+        return {'datas': self._export_rows(fields_to_export)}
 
     @api.model
     def load(self, fields, data):
