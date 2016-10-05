@@ -443,6 +443,7 @@ class configmanager(object):
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
+            'server_wide_modules',
         ]
 
         posix_keys = [
@@ -529,14 +530,20 @@ class configmanager(object):
             #if self.options['db_host']:
             #    self._generate_pgpassfile()
 
+        server_wide_modules = self.options['server_wide_modules'] = (
+            self.options['server_wide_modules']
+            if self.options['server_wide_modules']
+            else 'web,web_kanban'
+        )
+
         if opt.save:
             self.save()
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
-        if opt.server_wide_modules:
-            openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
-        else:
-            openerp.conf.server_wide_modules = ['web','web_kanban']
+
+        openerp.conf.server_wide_modules = [
+            m.strip() for m in server_wide_modules.split(',')
+        ]
 
     def _generate_pgpassfile(self):
         """
