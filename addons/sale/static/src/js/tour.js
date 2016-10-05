@@ -61,7 +61,7 @@ tour.register('sale_tour', {
 }, {
     trigger: ".o_sale_confirm",
     extra_trigger: ".o_sale_order.o_form_readonly",
-    content: _t("<p><b>Confirm the order</b> if the customer purchases.</p><p><i>The customer can also confirm the order directly from the email he received.</i></p>"),
+    content: _t("<p><b>Confirm the order</b> if the customer purchases.</p>"),
     position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
