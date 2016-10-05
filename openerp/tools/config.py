@@ -118,7 +118,7 @@ class configmanager(object):
         self.has_ssl = _check_ssl()
 
         self._LOGLEVELS = dict([
-            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
         ])
 
@@ -142,7 +142,7 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
-        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules. Default is 'web,web_kanban'")
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
@@ -443,6 +443,7 @@ class configmanager(object):
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
+            'server_wide_modules',
         ]
 
         posix_keys = [
@@ -529,14 +530,21 @@ class configmanager(object):
             #if self.options['db_host']:
             #    self._generate_pgpassfile()
 
+        # server_wide_modules defaults to web,web_kanban if empty or unset
+        server_wide_modules = self.options['server_wide_modules'] = (
+            self.options['server_wide_modules']
+            if self.options['server_wide_modules']
+            else 'web,web_kanban'
+        )
+
         if opt.save:
             self.save()
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
-        if opt.server_wide_modules:
-            openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
-        else:
-            openerp.conf.server_wide_modules = ['web','web_kanban']
+
+        openerp.conf.server_wide_modules = [
+            m.strip() for m in server_wide_modules.split(',')
+        ]
 
     def _generate_pgpassfile(self):
         """
