@@ -272,6 +272,7 @@ def build_exe(o):
 # Stage: testing
 #----------------------------------------------------------
 def _prepare_testing(o):
+    docker_version = version.replace('+', '')
     if not o.no_tarball:
         subprocess.call(["mkdir", "docker_src"], cwd=o.build_dir)
         subprocess.call(["cp", "package.dfsrc", os.path.join(o.build_dir, "docker_src", "Dockerfile")],
@@ -279,7 +280,7 @@ def _prepare_testing(o):
         # Use rsync to copy requirements.txt in order to keep original permissions
         subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_src")],
                         cwd=os.path.join(o.odoo_dir))
-        subprocess.call(["docker", "build", "-t", "odoo-%s-src-nightly-tests" % version, "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-src-nightly-tests" % docker_version, "."],
                         cwd=os.path.join(o.build_dir, "docker_src"))
     if not o.no_debian:
         subprocess.call(["mkdir", "docker_debian"], cwd=o.build_dir)
@@ -288,13 +289,13 @@ def _prepare_testing(o):
         # Use rsync to copy requirements.txt in order to keep original permissions
         subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_debian")],
                         cwd=os.path.join(o.odoo_dir))
-        subprocess.call(["docker", "build", "-t", "odoo-%s-debian-nightly-tests" % version, "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-debian-nightly-tests" % docker_version, "."],
                         cwd=os.path.join(o.build_dir, "docker_debian"))
     if not o.no_rpm:
         subprocess.call(["mkdir", "docker_fedora"], cwd=o.build_dir)
         subprocess.call(["cp", "package.dffedora", os.path.join(o.build_dir, "docker_fedora", "Dockerfile")],
                         cwd=os.path.join(o.odoo_dir, "setup"))
-        subprocess.call(["docker", "build", "-t", "odoo-%s-fedora-nightly-tests" % version, "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-fedora-nightly-tests" % docker_version, "."],
                         cwd=os.path.join(o.build_dir, "docker_fedora"))
 
 def test_tgz(o):
