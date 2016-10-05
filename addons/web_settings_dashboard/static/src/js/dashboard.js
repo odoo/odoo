@@ -245,7 +245,7 @@ var DashboardApps = Widget.extend({
 
     start: function() {
         this._super.apply(this, arguments);
-        if (odoo.db_info && odoo.db_info.server_version_info[5] === 'c') {
+        if (odoo.db_info && _.last(odoo.db_info.server_version_info) !== 'e') {
             $(QWeb.render("DashboardEnterprise")).appendTo(this.$el);
         }
     },
