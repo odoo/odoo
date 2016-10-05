@@ -59,10 +59,7 @@ class sale_quote(http.Controller):
         }
 
         if Order.require_payment or values['need_payment']:
-            if token:
-                values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', Order.company_id.id)]))
-            else:
-                values['acquirers'] = list(request.env['payment.acquirer'].sudo(user=request.uid).search([('website_published', '=', True), ('company_id', '=', Order.company_id.id)]))
+            values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', Order.company_id.id)]))
             extra_context = {
                 'submit_class': 'btn btn-primary',
                 'submit_txt': _('Pay & Confirm')
