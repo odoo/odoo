@@ -6,15 +6,16 @@
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
+# Henri Cornuau <hcornuau@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Frédéric LIETART <stuff@thelinuxfr.org>, 2016
 # Magali <mch@openerp.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-10-03 15:21+0000\n"
+"PO-Revision-Date: 2016-10-03 15:21+0000\n"
 "Last-Translator: Magali <mch@openerp.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -289,15 +290,18 @@ msgstr "Employés"
 #. module: hr_attendance
 #: selection:base.config.settings,group_attendance_use_pin:0
 msgid ""
-"Employees do not need to enter their PIN to check in manually in the "
-"\"Company Screen\"."
+"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
+" Mode\"."
 msgstr ""
 
 #. module: hr_attendance
 #: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees must enter their PIN to check in manually in the \"Company "
-"Screen\"."
+msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
+msgstr ""
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
+msgid "Enable PIN use"
 msgstr ""
 
 #. module: hr_attendance
@@ -379,7 +383,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Group By"
-msgstr "Regrouper par"
+msgstr "Grouper par"
 
 #. module: hr_attendance
 #. openerp-web
@@ -469,6 +473,11 @@ msgid "Manage Attendances"
 msgstr "Gérer les présences"
 
 #. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_manager
+msgid "Manager"
+msgstr "Gestionnaire"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
 msgid "Manual Attendance"
 msgstr ""
@@ -499,6 +508,11 @@ msgstr ""
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
 msgstr ""
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_user
+msgid "Officer"
+msgstr "Fonctionnaire"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
@@ -593,6 +607,13 @@ msgstr ""
 msgid ""
 "The employee will have access to the \"My Attendances\" menu to perform his "
 "check in and out from his session"
+msgstr ""
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
+msgid ""
+"The user will have to enter his PIN to check in and out manually at the "
+"company screen."
 msgstr ""
 
 #. module: hr_attendance

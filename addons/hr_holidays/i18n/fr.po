@@ -3,28 +3,29 @@
 # * hr_holidays
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Clo <clo@odoo.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
+# Henri Cornuau <hcornuau@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
-"Last-Translator: Nancy Bolognesi <nb@microcom.ca>, 2016\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Henri Cornuau <hcornuau@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -547,7 +548,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Group By"
-msgstr "Regrouper par"
+msgstr "Grouper par"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_report_note
@@ -701,6 +702,39 @@ msgstr "Type de congé"
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_status_search
 msgid "Leave Types"
 msgstr "Type de congé"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:445
+#, python-format
+msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:460
+#, python-format
+msgid "Leave request must be confirmed in order to approve it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:519
+#, python-format
+msgid "Leave request must be confirmed or validated in order to refuse it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:432
+#, python-format
+msgid ""
+"Leave request must be in Draft state (\"To Submit\") in order to confirm it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:417
+#, python-format
+msgid ""
+"Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
+"to Draft."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
@@ -864,6 +898,7 @@ msgstr "Magenta"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
 msgstr "Gestionnaire"
 
@@ -945,6 +980,11 @@ msgid "Number of Leaves"
 msgstr "Nombre de congés"
 
 #. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_user
+msgid "Officer"
+msgstr "Fonctionnaire"
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
@@ -965,6 +1005,31 @@ msgstr ""
 "à un responsable pour validation. Merci de vous assurer d'avoir \n"
 "bien saisi le bon type de congés (récupération, maladie, ...) et le nombre exact \n"
 "de jours ouvrés correspondant à votre demande."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:462
+#, python-format
+msgid "Only an HR Manager can apply the second approval on leave requests."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:415
+#, python-format
+msgid "Only an HR Manager or the concerned employee can reset to draft."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:440
+#: code:addons/hr_holidays/models/hr_holidays.py:455
+#, python-format
+msgid "Only an HR Officer or Manager can approve leave requests."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:514
+#, python-format
+msgid "Only an HR Officer or Manager can refuse leave requests."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1344,20 +1409,20 @@ msgstr ""
 "même journée."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:367
+#: code:addons/hr_holidays/models/hr_holidays.py:371
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "Vous ne pouvez pas supprimer des congés qui sont dans l'état %s."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr.py:139
+#: code:addons/hr_holidays/models/hr.py:140
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "Vous ne pouvez pas réduire une demande d'allocation validée."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:350
-#: code:addons/hr_holidays/models/hr_holidays.py:359
+#: code:addons/hr_holidays/models/hr_holidays.py:361
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
