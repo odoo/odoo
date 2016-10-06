@@ -15,6 +15,12 @@
             <field name="kind">dummy</field>
         </record>
 
+        <record id="trans_double_check_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_double_check"/>
+            <field name="act_to" ref="purchase.act_cancel"/>
+            <field name="signal">purchase_cancel</field>
+        </record>
+
          <record id="trans_confirmed_double_check" model="workflow.transition">
             <field name="act_from" ref="purchase.act_confirmed"/>
             <field name="act_to" ref="act_double_check"/>
