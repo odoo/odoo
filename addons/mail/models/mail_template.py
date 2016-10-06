@@ -493,7 +493,7 @@ class MailTemplate(models.Model):
                 )
 
             # Add report in attachments: generate once for all template_res_ids
-            if template.report_template and not 'report_template_in_attachment' in self.env.context:
+            if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = self.render_template(template.report_name, template.model, res_id)
