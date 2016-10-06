@@ -24,6 +24,7 @@ from tempfile import NamedTemporaryFile
 #----------------------------------------------------------
 execfile(join(dirname(__file__), '..', 'odoo', 'release.py'))
 version = version.split('-')[0]
+docker_version = version.replace('+', '')
 timestamp = time.strftime("%Y%m%d", time.gmtime())
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
 GPGID = os.getenv('GPGID')
@@ -272,7 +273,6 @@ def build_exe(o):
 # Stage: testing
 #----------------------------------------------------------
 def _prepare_testing(o):
-    docker_version = version.replace('+', '')
     if not o.no_tarball:
         subprocess.call(["mkdir", "docker_src"], cwd=o.build_dir)
         subprocess.call(["cp", "package.dfsrc", os.path.join(o.build_dir, "docker_src", "Dockerfile")],
@@ -299,7 +299,7 @@ def _prepare_testing(o):
                         cwd=os.path.join(o.build_dir, "docker_fedora"))
 
 def test_tgz(o):
-    with docker('odoo-%s-src-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
+    with docker('odoo-%s-src-nightly-tests' % docker_version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
         wheezy.system('pip install /opt/release/%s' % wheezy.release)
@@ -312,7 +312,7 @@ def test_tgz(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany &"')
 
 def test_deb(o):
-    with docker('odoo-%s-debian-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
+    with docker('odoo-%s-debian-nightly-tests' % docker_version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.deb'
         wheezy.system("service postgresql start")
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
@@ -322,7 +322,7 @@ def test_deb(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany &"')
 
 def test_rpm(o):
-    with docker('odoo-%s-fedora-nightly-tests' % version, o.build_dir, o.pub) as fedora24:
+    with docker('odoo-%s-fedora-nightly-tests' % docker_version, o.build_dir, o.pub) as fedora24:
         fedora24.release = '*.noarch.rpm'
         # Start postgresql
         fedora24.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
