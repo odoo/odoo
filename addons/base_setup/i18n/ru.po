@@ -1,24 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-#
+# 
 # Translators:
-# Max Belyanin <maxbelyanin@gmail.com>, 2015
+# KingOPl Slav <87slava13@gmail.com>, 2016
+# Masha Koc <mariya.kos.ua@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Max Belyanin <maxbelyanin@gmail.com>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
+# dr&mx <dronmax@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-09 13:14+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2016-09-19 12:35+0000\n"
+"PO-Revision-Date: 2016-09-19 12:35+0000\n"
+"Last-Translator: dr&mx <dronmax@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "(reload fonts)"
+msgstr "(перезагрузить шрифты)"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid ""
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
+msgstr ""
+"<span>(*) Эта настройка относится только к компании для которой выполнен "
+"вход в систему.</span>"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
@@ -33,7 +51,7 @@ msgstr "Разрешить совместный доступ к документ
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "Разрешить мульти-валютность"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
@@ -50,13 +68,12 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "Разрешена работа в мультивалютной среде."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
-msgstr "Применить"
+msgstr "Применить "
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_drive
@@ -70,20 +87,20 @@ msgstr "Авторизация"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Клиент"
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_custom_footer
+msgid ""
+"Check this to define the report footer manually. Otherwise it will be filled"
+" in automatically."
+msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Настройки продаж"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
+msgid "Company"
+msgstr "Компания"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -97,45 +114,56 @@ msgstr "Настроить информацию о компании"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Создано"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Создан"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Заказчик"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
+msgid "Custom Report Footer *"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_custom_footer
+msgid "Custom footer *"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Спонсор"
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Edit default access rights for new users"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Email"
-msgstr "Эл. почта"
+msgstr "Email"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_font
+msgid "Font *"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer_readonly
+msgid "Footer text displayed at the bottom of all reports."
+msgstr "Текст подписи отображается в нижней части всех отчетов."
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_config
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "General Settings"
-msgstr "Общие настройки"
+msgstr "Общие Настройки"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
@@ -145,7 +173,7 @@ msgstr "Разрешить заказчикам доступ к своим до�
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Google Calendar"
-msgstr "Календарь Google"
+msgstr "Google Календарь"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -158,19 +186,7 @@ msgid "Google Integration"
 msgstr "Интеграция с Google"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Гость"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "Как вы называете заказчика"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
@@ -186,22 +202,16 @@ msgstr "Межфирменное взаимодействие"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Последний раз изменено"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Последний раз обновлено"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Последний раз обновлено"
 
@@ -216,11 +226,6 @@ msgid "Manage multiple companies"
 msgstr "Управление несколькими компаниями"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Мои"
-
-#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Company"
 msgstr "Несколько компаний"
@@ -228,26 +233,26 @@ msgstr "Несколько компаний"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Currencies"
+msgstr "Мультивалютность"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "New users access rights"
 msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google calendar"
-"\""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
 msgstr ""
 "После установки, вы можете настроить API учетные данные для \"Google "
 "календаря\""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Контрагент"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Пациент"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_paper_format
+msgid "Paper Format *"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -255,9 +260,53 @@ msgid "Portal access"
 msgstr "Доступ к порталу"
 
 #. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Preview RML Report"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header
+msgid "RML Header *"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header2
+msgid "RML Internal Header *"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header3
+msgid "RML Internal Header for Landscape Reports *"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "RML Report Configuration"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+msgid "Report Configuration"
+msgstr "Настройка отчётов"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer_readonly
+msgid "Report Footer *"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_font
+msgid ""
+"Set the font into the report header, it will be used as default font in the "
+"RML reports of the user company"
+msgstr ""
+"Установите шрифт в заголовке отчета, он будет использоваться в качестве "
+"шрифта по умолчанию в RML докладах пользователя компании"
+
+#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
-msgid "Share or embbed any screen of Odoo."
-msgstr "Поделиться или вставить любой экран Odoo."
+msgid "Share or embed any screen of Odoo."
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
@@ -268,33 +317,17 @@ msgstr "Поделиться партнерами со всеми компани
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is "
-"defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company "
-"is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
-"Поделитесь своими партнерами со всеми компаниями, определенными в вашем "
-"экземпляре.\n"
-"* Установлено : Партнеры являются видимыми для каждой компании, даже если "
-"компания определена у партнера.\n"
-"* Снято : Каждая компания может видеть только своего партнера (партнеров "
-"компании, где определена). Партнеры, не относящиеся к компании являются "
-"видимыми для всех компаний."
+"Поделитесь своими партнерами со всеми компаниями, определенными в вашем экземпляре.\n"
+"* Установлено : Партнеры являются видимыми для каждой компании, даже если компания определена у партнера.\n"
+"* Снято : Каждая компания может видеть только своего партнера (партнеров компании, где определена). Партнеры, не относящиеся к компании являются видимыми для всех компаний."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Shared resources"
 msgstr "Общие ресурсы"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Определить терминологию"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Арендатор"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
@@ -310,62 +343,39 @@ msgstr "Устанавливает модуль google_docs."
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your "
-"company sells/buys to another of your company."
+" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
 msgstr ""
 "Эта команда установит модуль inter_company_rules.\n"
-"Сформируйте правила компании, чтобы автоматически создавать SO/PO, когда "
-"одна из Ваших компаний продает/покупает у другой из Ваших компаний"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Использовать другое слово вместо \"Заказчик\""
+"Сформируйте правила компании, чтобы автоматически создавать SO/PO, когда одна из Ваших компаний продает/покупает у другой из Ваших компаний"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
+msgid "Use external authentication providers (OAuth)"
 msgstr ""
-"Использовать внешние сервисы аутентификации, войти через аккаунт Google..."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will "
-"be\n"
-"                                    able to signup to get all his "
-"documents,\n"
-"                                    read your company news, check his "
-"projects,\n"
+"                                    (quotation, invoice), your customer will be\n"
+"                                    able to signup to get all his documents,\n"
+"                                    read your company news, check his projects,\n"
 "                                    etc."
 msgstr ""
 "Когда вы отправляете заказчику документы\n"
-"                                    (прайсы, счета), для их получения он "
-"сможет\n"
-"                                    войти на портал, где так же сможет "
-"прочитать\n"
-"                                    новости вашей компании, узнать "
-"обновления по\n"
+"                                    (прайсы, счета), для их получения он сможет\n"
+"                                    войти на портал, где так же сможет прочитать\n"
+"                                    новости вашей компании, узнать обновления по\n"
 "                                    его проектам и т.д."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies."
+"Work in multi-company environments, with appropriate security access between"
+" companies."
 msgstr ""
 "Работать в режиме Мульти-компании, с соответствующими правами доступа между "
 "компаниями."
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-"Вы можете использовать этот мастер чтобы изменить терминологию для "
-"заказчиков во всем приложении."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -373,20 +383,10 @@ msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
 msgstr ""
-"Больше опций вы можете найти в настройках компании: адреса для верхнего/"
-"нижнего колонтитула, тексты для просроченных платежей и т.д."
+"Больше опций вы можете найти в настройках компании: адреса для "
+"верхнего/нижнего колонтитула, тексты для просроченных платежей и т.д."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"

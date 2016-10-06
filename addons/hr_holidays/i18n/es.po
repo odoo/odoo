@@ -3,27 +3,27 @@
 # * hr_holidays
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Gonzalo Tagliabue <zaphalo@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
 "Last-Translator: Sergio Flores <vitavitae1@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -700,6 +700,39 @@ msgid "Leave Types"
 msgstr "Tipos de ausencias"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:445
+#, python-format
+msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:460
+#, python-format
+msgid "Leave request must be confirmed in order to approve it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:519
+#, python-format
+msgid "Leave request must be confirmed or validated in order to refuse it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:432
+#, python-format
+msgid ""
+"Leave request must be in Draft state (\"To Submit\") in order to confirm it."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:417
+#, python-format
+msgid ""
+"Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
+"to Draft."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
 msgid "Leave to Approve"
 msgstr "Ausencia a aprobar"
@@ -861,6 +894,7 @@ msgstr "Magenta"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
 msgstr "Responsable"
 
@@ -942,6 +976,11 @@ msgid "Number of Leaves"
 msgstr "Número de ausencias"
 
 #. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_user
+msgid "Officer"
+msgstr "Oficial"
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_categ_id
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
@@ -963,6 +1002,31 @@ msgstr ""
 "fijar el tipo de ausencia adecuado (compensación, vacaciones\n"
 "enfermedad) y el número de días libres exacto en relación\n"
 "a su ausencia."
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:462
+#, python-format
+msgid "Only an HR Manager can apply the second approval on leave requests."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:415
+#, python-format
+msgid "Only an HR Manager or the concerned employee can reset to draft."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:440
+#: code:addons/hr_holidays/models/hr_holidays.py:455
+#, python-format
+msgid "Only an HR Officer or Manager can approve leave requests."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:514
+#, python-format
+msgid "Only an HR Officer or Manager can refuse leave requests."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1340,20 +1404,20 @@ msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr "¡No puede tener dos ausencias que se solapan en el mismo día!"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:367
+#: code:addons/hr_holidays/models/hr_holidays.py:371
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "No puede eliminar una ausencia que está en estado %s."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr.py:139
+#: code:addons/hr_holidays/models/hr.py:140
 #, python-format
 msgid "You cannot reduce validated allocation requests"
 msgstr "No puede reducir la asignación de peticiones validadas"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:350
-#: code:addons/hr_holidays/models/hr_holidays.py:359
+#: code:addons/hr_holidays/models/hr_holidays.py:361
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
