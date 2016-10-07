@@ -144,7 +144,7 @@ class MarketingCampaign(models.Model):
                 similar_res_ids = self.env[self.object_id.model].search([(unique_field.name, '=', unique_value)])
                 if similar_res_ids:
                     duplicate_workitem_domain = [
-                        ('res_id', 'in', similar_res_ids),
+                        ('res_id', 'in', similar_res_ids.ids),
                         ('campaign_id', '=', self.id)
                     ]
         return self.env['marketing.campaign.workitem'].search(duplicate_workitem_domain)
