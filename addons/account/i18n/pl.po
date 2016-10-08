@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-27 13:54+0000\n"
+"PO-Revision-Date: 2016-10-07 16:52+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +111,7 @@ msgstr "# cyfr"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "# pozycji"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -369,7 +369,7 @@ msgstr "Nowy"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Not due</span>"
-msgstr "Nie należny"
+msgstr "<span>Niezaległe</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -399,7 +399,7 @@ msgstr "-Zespół Odoo"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>1. Register Outstanding Invoices</strong>"
-msgstr "1. Rejestruj niezapłacone faktury"
+msgstr "<strong>1. Rejestruj nieuregulowane faktury</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -704,7 +704,7 @@ msgstr "<strong>Istnieją trzy różne poziomy dostępu w Odoo:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>There is nothing due with this customer.</strong>"
-msgstr "<strong>Nie masz długów u tego klienta</strong>"
+msgstr "<strong>Ten klient  nie ma zaległości.</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1422,7 +1422,7 @@ msgstr "Zezwól na ujmowanie podatku według metody kasowej"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_l10n_us_check_printing
 msgid "Allow check printing and deposits"
-msgstr "Zezwój drukowanie czeków i depozytów"
+msgstr "Pozwól na drukowanie czeków i depozytów"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_multi_currency
@@ -1711,7 +1711,7 @@ msgstr "Automatyczne formatowanie"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "Automatyczne uzgodnienie"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:469
@@ -1879,7 +1879,7 @@ msgstr "Synchronizacja banku"
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Bank account(s)"
-msgstr "Konto(konta) bankowe"
+msgstr "Konto(a) bankowe"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_company_footer
@@ -1961,7 +1961,7 @@ msgstr "Rachunki"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
-msgstr "Analiza faktur zakupowych"
+msgstr "Analiza faktur zakupu"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:159
@@ -3485,7 +3485,7 @@ msgstr "Projekt korekty"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Draft bills"
-msgstr "Projekty faktur zakupowych"
+msgstr "Projekty faktur zakupu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -4390,7 +4390,7 @@ msgid ""
 "                        from Odoo, you first need to record all outstanding transactions \n"
 "                        in the payable and receivable accounts. These would be invoices \n"
 "                        that have not been paid or payments that have not been reconciled."
-msgstr "Jeśli chcesz wysyłać klientom raporty\n z Odoo, musisz najpierw zarejestrować wszystkie niezapłacone transakcje\n na koncie zobowiązań lub należności. Będą to faktury\nktóre nie zostały zapłacone lub płatność ich nie została uzgodniona."
+msgstr "Jeśli chcesz wysyłać klientom raporty\n z Odoo, musisz najpierw zarejestrować wszystkie nieuregulowane transakcje\n na koncie zobowiązań lub należności. Będą to faktury\nktóre nie zostały zapłacone lub płatność ich nie została uzgodniona."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4687,7 +4687,7 @@ msgstr "Faktura zatwierdzona"
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr "Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
+msgstr "Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'szkic' or ''}"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -7163,7 +7163,7 @@ msgstr "Wprowadzenie zwrotu"
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 #, python-format
 msgid "Reverse Moves"
-msgstr "Przeniesienie zwrotu"
+msgstr "Zapis odwrotny dla zwrotu"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -8289,7 +8289,7 @@ msgstr "Zezwala księgowym na zarządzanie analitycznymi i krzyżowymi budżetam
 msgid ""
 "This allows to automate letters for unpaid invoices, with multi-level recalls.\n"
 "-This installs the module account_reports_followup."
-msgstr "Zezwala na zautomatyzowanie listów za niezapłacone faktury, z wielopoziomowymi upomnieniami.\n-Zainstaluje moduł account_reports_followup."
+msgstr "Zezwala na zautomatyzowanie listów za nieuregulowane faktury, z wielopoziomowymi upomnieniami.\n-Zainstaluje moduł account_reports_followup."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_batch_deposit
@@ -8439,7 +8439,7 @@ msgstr "Płatność jest zapisana, ale nie jest uzgodniona."
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr "Te warunki płatności będą stosowane zamiast domyślnych w zamówieniach zakupu i fakturach od dostawców."
+msgstr "Te warunki płatności będą stosowane zamiast domyślnych w zamówieniach zakupu i fakturach zakupu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_payment_term_id
@@ -8824,7 +8824,7 @@ msgstr "Użyj płatności SEPA"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
 msgid "Use Specific Journal"
-msgstr "Użyj odpowieni dziennik"
+msgstr "Użyj odpowiedniego dziennika"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_anglo_saxon_accounting
@@ -8922,7 +8922,7 @@ msgstr "Zatwierdź zapis"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Validate purchase orders and control vendor bills by departments."
-msgstr "Zatwierdź ofertę zakupu i kontroluj faktury zakupu działami."
+msgstr "Zatwierdź oferty zakupu i kontroluj faktury zakupu wg działów."
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -9574,7 +9574,7 @@ msgstr "pierwszy)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
-msgstr "dla tego odbiorcy. Możesz umieścić je aby oznaczyć fakturę jako zapłaconą."
+msgstr "z tym odbiorcą. Możesz je przypisać aby oznaczyć fakturę jako zapłaconą."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -9602,7 +9602,7 @@ msgstr "nieotrzymane należności"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "outstanding payments"
-msgstr "niezapłacone zobowiązania"
+msgstr "nieuregulowane zobowiązania"
 
 #. module: account
 #. openerp-web
