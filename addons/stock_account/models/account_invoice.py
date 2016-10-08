@@ -27,7 +27,7 @@ class AccountInvoice(models.Model):
         res: The move line entries produced so far by the parent move_line_get.
         """
         inv = i_line.invoice_id
-        company_currency = inv.company_id.currency_id
+        company_currency = inv.company_id.currency_id.id
 
         if i_line.product_id.type == 'product' and i_line.product_id.valuation == 'real_time':
             fpos = i_line.invoice_id.fiscal_position_id
