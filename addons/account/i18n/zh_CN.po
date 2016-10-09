@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-09-05 05:55+0000\n"
+"PO-Revision-Date: 2016-10-04 21:07+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -133,7 +133,7 @@ msgstr "# 分录"
 #: field:account.config.settings,code_digits:0
 #: field:wizard.multi.charts.accounts,code_digits:0
 msgid "# of Digits"
-msgstr "# 数字"
+msgstr "# 数字位数"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
@@ -1068,7 +1068,7 @@ msgstr "会计信息"
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr "会计包"
+msgstr "会计科目表"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -2357,12 +2357,12 @@ msgstr "更改为"
 #: field:account.tax.template,chart_template_id:0
 #: field:wizard.multi.charts.accounts,chart_template_id:0
 msgid "Chart Template"
-msgstr "表模板"
+msgstr "会计科目表模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr "表模板"
+msgstr "会计科目表模板"
 
 #. module: account
 #: field:account.aged.trial.balance,chart_account_id:0
@@ -3357,7 +3357,7 @@ msgstr "汇率"
 #. module: account
 #: help:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency as per company's country."
-msgstr "币按公司所在的国家。"
+msgstr "设公司所在国家的币种。"
 
 #. module: account
 #: help:res.partner.bank,currency_id:0
@@ -6674,7 +6674,7 @@ msgstr "没有匹配的结果"
 #: help:account.chart.template,code_digits:0
 #: help:wizard.multi.charts.accounts,code_digits:0
 msgid "No. of Digits to use for account code"
-msgstr "科目代码使用数字"
+msgstr "科目代码使用数字位数"
 
 #. module: account
 #: help:account.config.settings,code_digits:0
@@ -8643,7 +8643,7 @@ msgstr "选择要关闭的会计年度"
 msgid ""
 "Select a configuration package to setup automatically your\n"
 "                        taxes and chart of accounts."
-msgstr "选择一个适合的科目表"
+msgstr "选择一个适合的科目表\n以便让odoo帮您自动化处理会计科目。"
 
 #. module: account
 #: help:account.change.currency,currency_id:0
