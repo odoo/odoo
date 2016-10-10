@@ -12,7 +12,7 @@ tour.tours.sale_tour.steps.splice(1, 1,
 {
     trigger: ".o_kanban_manage_button_section",
     content: _t("Click here to see more options."),
-    position: "bottom"
+    position: "right"
 }, {
     trigger: '.o_kanban_manage_view div:nth(2)',
     content: _t("Let\'s have a look at the quotations of this sales team."),
