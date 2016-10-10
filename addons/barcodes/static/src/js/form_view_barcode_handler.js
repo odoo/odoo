@@ -81,7 +81,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
                 if (this.last_scanned_barcode) {
                     var new_qty = window.prompt(_t('Set quantity'), character) || "0";
                     new_qty = new_qty.replace(',', '.');
-                    var record = this._get_records(field).find(function(record) {
+                    var record = _.find(this._get_records(field), function (record) {
                         return record.get('product_barcode') === self.last_scanned_barcode;
                     });
                     if (record) {
@@ -159,8 +159,13 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
     },
 
     _get_records: function(field) {
-        return field.viewmanager.active_view.controller.records || // tree view
-            field.viewmanager.active_view.controller.widgets; // kanban view
+        var active_view = field.viewmanager.active_view;
+        if (active_view.type === "kanban") {
+            return active_view.controller.widgets;
+        } else {
+             // tree view case
+            return active_view.controller.records.records;
+        }
     },
 });
 
