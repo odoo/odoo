@@ -1126,6 +1126,8 @@ class BaseModel(object):
         :param dict context:
         :returns: {ids: list(int)|False, messages: [Message]}
         """
+        if context is None:
+            context = {}
         cr.execute('SAVEPOINT model_load')
         messages = []
 
@@ -1180,6 +1182,10 @@ class BaseModel(object):
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
+
+        if ids and context.get('defer_parent_store_computation'):
+            self._parent_store_compute(cr)
+
         return {'ids': ids, 'messages': messages}
 
     def _add_fake_fields(self, cr, uid, fields, context=None):
