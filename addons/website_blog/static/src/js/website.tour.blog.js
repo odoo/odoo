@@ -27,7 +27,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "bottom",
     }, {
         trigger: "a:containsExact(" + _t("Change Cover")+ "):eq(1)",
-        content: _t("Clich here to change your post cover."),
+        content: _t("Click here to change your post cover."),
         position: "right",
     }, {
         trigger: ".o_select_media_dialog .o_existing_attachment_cell:nth(1) img",
@@ -50,7 +50,7 @@ odoo.define("website_blog.tour", function (require) {
     }, {
         trigger: "button[data-action=save]",
         extra_trigger: "#blog_content section:first p:first:not(:containsExact(" + _t("Start writing here...") + "))",
-        content: _t("<b>Click on Save</b> to record yoru changes."),
+        content: _t("<b>Click on Save</b> to record your changes."),
         position: "bottom",
     }, {
         trigger: "a[data-action=show-mobile-preview]",
