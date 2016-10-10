@@ -5,7 +5,7 @@ var BarcodeParser = require('barcodes.BarcodeParser');
 var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var formats = require('web.formats');
 var session = require('web.session');
 var time = require('web.time');
@@ -492,9 +492,9 @@ exports.PosModel = Backbone.Model.extend({
                 var records;
                 if( model.model ){
                     if (model.ids) {
-                        records = new Model(model.model).call('read',[ids,fields],context);
+                        records = new data.Model(model.model).call('read',[ids,fields],context);
                     } else {
-                        records = new Model(model.model)
+                        records = new data.Model(model.model)
                             .query(fields)
                             .filter(domain)
                             .order_by(order)
@@ -542,7 +542,7 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var def  = new $.Deferred();
         var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
-        new Model('res.partner')
+        new data.Model('res.partner')
             .query(fields)
             .filter([['customer','=',true],['write_date','>',this.db.get_partner_write_date()]])
             .all({'timeout':3000, 'shadow': true})
@@ -777,7 +777,7 @@ exports.PosModel = Backbone.Model.extend({
 
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
-        var posOrderModel = new Model('pos.order');
+        var posOrderModel = new data.Model('pos.order');
         return posOrderModel.call('create_from_ui',
             [_.map(orders, function (order) {
                 order.to_invoice = options.to_invoice || false;

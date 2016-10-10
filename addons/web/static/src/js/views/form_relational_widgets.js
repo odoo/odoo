@@ -7,7 +7,6 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var common = require('web.form_common');
 var ListView = require('web.ListView');
-var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
@@ -141,7 +140,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
                 return;
             }
             var context = self.build_context().eval();
-            var model_obj = new Model(self.field.relation);
+            var model_obj = new data.Model(self.field.relation);
             model_obj.call('get_formview_id', [[self.get("value")], context]).then(function(view_id){
                 var pop = new common.FormViewDialog(self, {
                     res_model: self.field.relation,
@@ -362,7 +361,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
     execute_formview_action: function() {
         var self = this;
         var context = self.build_context().eval();
-        (new Model(self.field.relation)).call('get_formview_action', [[self.get("value")], context]).then(function(action) {
+        (new data.Model(self.field.relation)).call('get_formview_action', [[self.get("value")], context]).then(function(action) {
             self.do_action(action);
         });
     },
@@ -1684,7 +1683,7 @@ var FieldMany2ManyCheckBoxes = AbstractManyField.extend(common.ReinitializeField
     },
     query_records: function() {
         var self = this;
-        var model = new Model(this.field.relation);
+        var model = new data.Model(this.field.relation);
         this.records_orderer.add(model.call("search", [this.get("domain")], {"context": this.build_context()}).then(function(record_ids) {
             return model.call("name_get", [record_ids] , {"context": self.build_context()});
         })).then(function(res) {

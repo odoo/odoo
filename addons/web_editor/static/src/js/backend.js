@@ -3,7 +3,7 @@ odoo.define('web_editor.backend', function (require) {
 
 var core = require('web.core');
 var session = require('web.session');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var common = require('web.form_common');
 var base = require('web_editor.base');
 var editor = require('web_editor.editor');
@@ -173,7 +173,7 @@ var FieldTextHtml = widget.extend({
     template: 'web_editor.FieldTextHtml',
     willStart: function () {
         var self = this;
-        return new Model('res.lang').call("search_read", [[['code', '!=', 'en_US']], ["name", "code"]]).then(function (res) {
+        return new data.Model('res.lang').call("search_read", [[['code', '!=', 'en_US']], ["name", "code"]]).then(function (res) {
             self.languages = res;
         });
     },

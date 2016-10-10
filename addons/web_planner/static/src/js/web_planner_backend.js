@@ -2,7 +2,7 @@ odoo.define('web.planner', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
+var data = require('web.data');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 var planner = require('web.planner.common');
@@ -38,7 +38,7 @@ var PlannerLauncher = Widget.extend({
         if (!_.isEmpty(this.planner_by_menu)) {
             def.resolve(self.planner_by_menu);
         }else{
-            (new Model('web.planner')).query().all().then(function(res) {
+            (new data.Model('web.planner')).query().all().then(function(res) {
                 _.each(res, function(planner){
                     self.planner_by_menu[planner.menu_id[0]] = planner;
                     self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(self.planner_by_menu[planner.menu_id[0]].data) || {};

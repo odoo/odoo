@@ -3,7 +3,7 @@ odoo.define('web.GraphWidget', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var formats = require('web.formats');
 var Widget = require('web.Widget');
 
@@ -20,7 +20,7 @@ return Widget.extend({
         this.context = options.context;
         this.fields = options.fields;
         this.fields.__count__ = {string: _t("Count"), type: "integer"};
-        this.model = new Model(model, {group_by_no_leaf: true});
+        this.model = new data.Model(model, {group_by_no_leaf: true});
 
         this.domain = options.domain || [];
         this.groupbys = options.groupbys || [];

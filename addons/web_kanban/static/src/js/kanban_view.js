@@ -4,7 +4,6 @@ odoo.define('web_kanban.KanbanView', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var data_manager = require('web.data_manager');
-var Model = require('web.DataModel');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var Pager = require('web.Pager');
@@ -190,7 +189,7 @@ var KanbanView = View.extend({
             })
         }
 
-        var load_groups_def = new Model(this.model, options.search_context, options.search_domain)
+        var load_groups_def = new data.Model(this.model, options.search_context, options.search_domain)
         .query(fields_keys)
         .group_by([group_by_field])
         .then(function (groups) {
@@ -740,7 +739,7 @@ var KanbanView = View.extend({
 
     add_new_column: function (event) {
         var self = this;
-        var model = new Model(this.relation, this.search_context);
+        var model = new data.Model(this.relation, this.search_context);
         model.call('create', [{name: event.data.value}], {
             context: this.search_context,
         }).then(function (id) {
