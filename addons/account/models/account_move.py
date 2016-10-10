@@ -916,8 +916,8 @@ class AccountMoveLine(models.Model):
         # Writeoff line in the account of self
         first_line_dict = vals.copy()
         first_line_dict['account_id'] = self[0].account_id.id
-        if 'analytic_account_id' in vals:
-            del vals['analytic_account_id']
+        if 'analytic_account_id' in first_line_dict:
+            del first_line_dict['analytic_account_id']
 
         # Writeoff line in specified writeoff account
         second_line_dict = vals.copy()
