@@ -348,7 +348,7 @@ class HrExpenseSheet(models.Model):
     _name = "hr.expense.sheet"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Expense Report"
-    _order = "accounting_date desc"
+    _order = "accounting_date desc, id desc"
 
     name = fields.Char(string='Expense Report Summary', required=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)
