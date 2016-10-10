@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Ladislav Tomm <tomm@helemik.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-19 09:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-10-06 11:46+0000\n"
+"Last-Translator: Ladislav Tomm <tomm@helemik.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,entry_count:0
 msgid "# Asset Entries"
-msgstr ""
+msgstr "# Majetkové záznamy"
 
 #. module: account_asset
 #: field:asset.asset.report,nbr:0
@@ -37,7 +38,7 @@ msgid ""
 "            so, match this analysis to your needs;\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p>\nZ této zprávy máte přehled nad všemi odpisy. Nástroj Vyhledávání můžete  také použít pro personalizaci vašich Správ majetku a podobně. Upravte si tuto rozbor podle svých potřeb;\n</p>"
 
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_search
@@ -52,7 +53,7 @@ msgstr "Aktivní"
 #. module: account_asset
 #: view:account.asset.asset:account_asset.view_account_asset_asset_form
 msgid "Add an internal note here..."
-msgstr ""
+msgstr "Zde můžete přidat interní poznámku..."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
@@ -118,17 +119,17 @@ msgstr "Hierarchie majetku"
 #. module: account_asset
 #: view:account.asset.history:account_asset.view_account_asset_history_form
 msgid "Asset History"
-msgstr ""
+msgstr "Historie majetku"
 
 #. module: account_asset
 #: field:asset.modify,asset_method_time:0
 msgid "Asset Method Time"
-msgstr ""
+msgstr "Způsob odepisování"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Název majetku"
 
 #. module: account_asset
 #: view:account.asset.category:account_asset.view_account_asset_category_form
@@ -324,7 +325,7 @@ msgstr "Aktuální"
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "Běžný odpis"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
@@ -398,7 +399,7 @@ msgstr "Odpisová metoda"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "Měsíční odpis"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
@@ -436,7 +437,7 @@ msgstr "Položky"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní majetky."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
@@ -462,7 +463,7 @@ msgstr "Hrubá částka"
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Hrubá hodnota"
 
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
@@ -568,7 +569,7 @@ msgstr "Název"
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Další doba odpisu"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0 field:account.asset.category,note:0
@@ -598,7 +599,7 @@ msgstr "Počet odpisů"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Počet měsíců za dobu"
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
@@ -661,7 +662,7 @@ msgstr "Datum zakoupení"
 #. module: account_asset
 #: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr ""
+msgstr "Měsíc zakoupení"
 
 #. module: account_asset
 #: field:asset.modify,name:0
@@ -733,7 +734,7 @@ msgstr "Stav"
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "Množství času mezi dvěma odpisy v měsíci"
 
 #. module: account_asset
 #: help:account.asset.history,method_time:0
@@ -748,7 +749,7 @@ msgstr "Metoda k použití pro výpočet datumů a počet odpisových řádek.\n
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "Počet odpisů nutný k odepsání vašeho majetku"
 
 #. module: account_asset
 #: field:account.asset.asset,method_time:0
@@ -778,7 +779,7 @@ msgid ""
 "When an asset is created, the status is 'Draft'.\n"
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
+msgstr "Když se vytvoří nový majetek, jeho status je Návrh.\nPo jeh potvrzení ze status mění na Probíhající a v účetnictví může být započato odepisování.\nPo ukončení odpisování můžete majetek ručně uzavřít.  Pokud je zaevidovaný poslední řádek odpisů, majetek změní status na Uzavřený automaticky."
 
 #. module: account_asset
 #: field:asset.asset.report,name:0
@@ -791,13 +792,13 @@ msgstr "Rok"
 msgid ""
 "You already have assets with the reference %s.\n"
 "Please delete these assets before creating new ones for this invoice."
-msgstr ""
+msgstr "Již máte majetek s stejným %s.\nProsím smažte tento před vytvořením nového pro tuto fakturu."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:81
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
-msgstr ""
+msgstr "Nemůžete smazat majetek který obsahuje zaevidovaný odpisový řádek."
 
 #. module: account_asset
 #: view:asset.modify:account_asset.asset_modify_form
