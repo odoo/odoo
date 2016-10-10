@@ -348,7 +348,7 @@ class base_action_rule(osv.osv):
 
     def _update_registry(self, cr, uid, context=None):
         """ Update the registry after a modification on action rules. """
-        if self.pool.ready:
+        if self.pool.ready and not context.get('import_file', False):
             # for the sake of simplicity, simply force the registry to reload
             cr.commit()
             openerp.api.Environment.reset()
