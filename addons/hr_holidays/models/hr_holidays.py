@@ -560,10 +560,10 @@ class Holidays(models.Model):
 
         self.ensure_one()
         if self.state == 'confirm':
-            app_action = self._notification_link_helper('method', method='action_validate')
+            app_action = self._notification_link_helper('controller', controller='/hr_holidays/validate')
             hr_actions = [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            ref_action = self._notification_link_helper('method', method='action_refuse')
+            ref_action = self._notification_link_helper('controller', controller='/hr_holidays/refuse')
             hr_actions = [{'url': ref_action, 'title': _('Refuse')}]
 
         new_group = (

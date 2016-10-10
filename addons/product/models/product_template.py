@@ -185,47 +185,47 @@ class ProductTemplate(models.Model):
         else:
             self.write({'list_price': self.price})
 
-    @api.depends('product_variant_count', 'product_variant_ids.standard_price')
+    @api.depends('product_variant_ids', 'product_variant_ids.standard_price')
     def _compute_standard_price(self):
-        unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
-            template.standard_price = template.product_variant_id.standard_price
+            template.standard_price = template.product_variant_ids.standard_price
         for template in (self - unique_variants):
             template.standard_price = 0.0
 
     @api.one
     def _set_standard_price(self):
-        if self.product_variant_count == 1:
+        if len(self.product_variant_ids) == 1:
             self.product_variant_ids.standard_price = self.standard_price
 
     def _search_standard_price(self, operator, value):
         products = self.env['product.product'].search([('standard_price', operator, value)], limit=None)
         return [('id', 'in', products.mapped('product_tmpl_id').ids)]
 
-    @api.depends('product_variant_count', 'product_variant_ids.volume')
+    @api.depends('product_variant_ids', 'product_variant_ids.volume')
     def _compute_volume(self):
-        unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
-            template.volume = template.product_variant_id.volume
+            template.volume = template.product_variant_ids.volume
         for template in (self - unique_variants):
             template.volume = 0.0
 
     @api.one
     def _set_volume(self):
-        if self.product_variant_count == 1:
+        if len(self.product_variant_ids) == 1:
             self.product_variant_ids.volume = self.volume
 
-    @api.depends('product_variant_count', 'product_variant_ids.weight')
+    @api.depends('product_variant_ids', 'product_variant_ids.weight')
     def _compute_weight(self):
-        unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
-            template.weight = template.product_variant_id.weight
+            template.weight = template.product_variant_ids.weight
         for template in (self - unique_variants):
             template.weight = 0.0
 
     @api.one
     def _set_weight(self):
-        if self.product_variant_count == 1:
+        if len(self.product_variant_ids) == 1:
             self.product_variant_ids.weight = self.weight
 
     @api.one
@@ -233,17 +233,17 @@ class ProductTemplate(models.Model):
     def _compute_product_variant_count(self):
         self.product_variant_count = len(self.product_variant_ids)
 
-    @api.depends('product_variant_count', 'product_variant_ids.default_code')
+    @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
-        unique_variants = self.filtered(lambda template: template.product_variant_count == 1)
+        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
-            template.default_code = template.product_variant_id.default_code
+            template.default_code = template.product_variant_ids.default_code
         for template in (self - unique_variants):
             template.default_code = ''
 
     @api.one
     def _set_default_code(self):
-        if self.product_variant_count == 1:
+        if len(self.product_variant_ids) == 1:
             self.product_variant_ids.default_code = self.default_code
 
     @api.constrains('uom_id', 'uom_po_id')
