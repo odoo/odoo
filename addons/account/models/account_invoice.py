@@ -1422,7 +1422,7 @@ class AccountPaymentTerm(models.Model):
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
-    _order = "sequence"
+    _order = "sequence, id"
 
     value = fields.Selection([
             ('balance', 'Balance'),
