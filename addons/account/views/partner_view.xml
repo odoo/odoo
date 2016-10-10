@@ -39,11 +39,11 @@
                             <field name="tax_ids" widget="one2many_list" nolabel="1">
                                 <tree string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
                                 </tree>
                                 <form string="Tax Mapping">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
                                 </form>
                             </field>
                         </group>
