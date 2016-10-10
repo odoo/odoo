@@ -595,7 +595,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
     // send notification
     notify_typing: function(status) {
-        if (this.channel.type === 'dm') {
+        if (_.contains(['dm', 'livechat'], this.channel.type)) {
             chat_manager.notify_typing(this.channel.id, status);
         }
     },

@@ -26,10 +26,13 @@ class MailChatController(BusController):
                 channels = list(channels)       # do not alter original list
                 for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
                     channels.append((request.db, 'mail.channel', mail_channel.id))
+                    if mail_channel.channel_type in ('chat', 'livechat'):
+                        channel_partner = '-'.join([mail_channel.uuid, str(partner_id)])
+                        channels.append((request.db, 'typing.notification', channel_partner))
+
                 # personal and needaction channel
                 channels.append((request.db, 'res.partner', partner_id))
                 channels.append((request.db, 'ir.needaction', partner_id))
-                channels.append((request.db, 'typing.notification', partner_id))
         return super(MailChatController, self)._poll(dbname, channels, last, options)
 
     # --------------------------

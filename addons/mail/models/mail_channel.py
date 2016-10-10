@@ -435,9 +435,11 @@ class Channel(models.Model):
         partner = self.env.user.partner_id
         for channel in self:
             channel_partner = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)], limit=1)
-            if channel_partner.partner_id.im_status != 'offline':
+            # TOFIX: why live chat im status is offline
+            if channel_partner.partner_id.im_status != 'offline' or channel.channel_type == 'livechat':
                 notification['channel_id'] = channel.id
-                self.env['bus.bus'].sendone((self._cr.dbname, 'typing.notification', channel_partner.partner_id.id), notification)
+                channel_partner = '-'.join([channel.uuid, str(channel_partner.partner_id.id)])
+                self.env['bus.bus'].sendone((self._cr.dbname, 'typing.notification', channel_partner), notification)
 
     @api.model
     def channel_minimize(self, uuid, minimized=True):
