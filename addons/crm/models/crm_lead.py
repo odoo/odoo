@@ -1034,11 +1034,11 @@ class Lead(FormatAddress, models.Model):
 
         self.ensure_one()
         if self.type == 'lead':
-            convert_action = self._notification_link_helper('method', method='convert_opportunity', partner_id=self.partner_id.id)
+            convert_action = self._notification_link_helper('controller', controller='/lead/convert')
             salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            won_action = self._notification_link_helper('method', method='action_set_won')
-            lost_action = self._notification_link_helper('method', method='action_set_lost')
+            won_action = self._notification_link_helper('controller', controller='/lead/case_mark_won')
+            lost_action = self._notification_link_helper('controller', controller='/lead/case_mark_lost')
             salesman_actions = [
                 {'url': won_action, 'title': _('Won')},
                 {'url': lost_action, 'title': _('Lost')}]
