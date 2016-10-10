@@ -156,6 +156,20 @@ animation.registry.ul = animation.Class.extend({
     },
 });
 
+/**
+ * This is a fix for apple device (<= IPhone 4, IPad 2)
+ * Standard bootstrap requires data-toggle='collapse' element to be <a/> tags. Unfortunatly one snippet uses a
+ * <div/> tag instead. The fix forces an empty click handler on these div, which allows standard bootstrap to work.
+ *
+ * This should be removed in a future odoo snippets refactoring.
+ */
+animation.registry._fix_apple_collapse = animation.Class.extend({
+    selector: ".s_faq_collapse [data-toggle='collapse']",
+    start: function () {
+        this.$target.off("click._fix_apple_collapse").on("click._fix_apple_collapse", function () {});
+    },
+});
+
 /* -------------------------------------------------------------------------
 Gallery Animation  
 
