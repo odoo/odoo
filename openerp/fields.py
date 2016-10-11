@@ -1147,6 +1147,7 @@ class Monetary(Field):
     _related_group_operator = property(attrgetter('group_operator'))
 
     _description_currency_field = property(attrgetter('currency_field'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     _column_currency_field = property(attrgetter('currency_field'))
     _column_group_operator = property(attrgetter('group_operator'))
