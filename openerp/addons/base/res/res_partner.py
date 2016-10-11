@@ -204,7 +204,7 @@ class Partner(models.Model, FormatAddress):
 
     # technical field used for managing commercial fields
     commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
-                                             string='Commercial Entity', store=True)
+                                             string='Commercial Entity', store=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
