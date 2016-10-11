@@ -509,7 +509,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             taxes = line.taxes_id.compute_all(line.price_unit, line.order_id.currency_id, line.product_qty, product=line.product_id, partner=line.order_id.partner_id)
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -567,7 +567,7 @@ class PurchaseOrderLine(models.Model):
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
-    price_tax = fields.Monetary(compute='_compute_amount', string='Tax', store=True)
+    price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
