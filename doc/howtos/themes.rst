@@ -230,7 +230,7 @@ The final result should be something like this:
 .. image:: theme_tutorial_assets/img/folder.jpg
 
 Edit ``__manifest__.py``
------------------------
+------------------------
 
 Open the ``__manifest__.py`` you created and copy/paste the following:
 
