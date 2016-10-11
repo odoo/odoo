@@ -312,9 +312,9 @@ Odoo as a WSGI Application
 ==========================
 
 It is also possible to mount Odoo as a standard WSGI_ application. Odoo
-provides the base for a WSGI launcher script as ``openerp-wsgi.py``. That
+provides the base for a WSGI launcher script as ``odoo-wsgi.py``. That
 script should be customized (possibly after copying it) to correctly set the
-configuration directly in :mod:`openerp.tools.config` rather than through the
+configuration directly in :mod:`odoo.tools.config` rather than through the
 command-line or a configuration file.
 
 However the WSGI server will only expose the main HTTP endpoint for the web
@@ -353,7 +353,7 @@ The solutions to support livechat/motifications in a WSGI application are:
   one) and redirect only requests to URLs starting with ``/longpolling/`` to
   that Odoo, this is the simplest and the longpolling URL can double up as
   the cron instance.
-* deploy an evented Odoo via ``openerp-gevent`` and proxy requests starting
+* deploy an evented Odoo via ``odoo-gevent`` and proxy requests starting
   with ``/longpolling/`` to
   :option:`the longpolling port <odoo.py --longpolling-port>`.
 
