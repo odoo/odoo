@@ -98,10 +98,7 @@
                             <group>
                                 <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_type" nolabel="1" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <div>
-                                    <field name="partner_id" nolabel="1" attrs="{'required': [('partner_type', '=', 'customer')], 'invisible': [('partner_type', '!=', 'customer')], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_customer': True}" domain = "[('customer', '=', True)]"/>
-                                    <field name="partner_id" nolabel="1" attrs="{'required': [('partner_type', '=', 'supplier')], 'invisible': [('partner_type', '!=', 'supplier')], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_supplier': True}" domain = "[('supplier', '=', True)]"/>
-                                </div>
+                                <field name="partner_id" nolabel="1" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
