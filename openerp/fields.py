@@ -1057,6 +1057,7 @@ class Integer(Field):
     }
 
     _related_group_operator = property(attrgetter('group_operator'))
+    _description_group_operator = property(attrgetter('group_operator'))
     _column_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1109,6 +1110,7 @@ class Float(Field):
     _related_group_operator = property(attrgetter('group_operator'))
 
     _description_digits = property(attrgetter('digits'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
@@ -1147,6 +1149,7 @@ class Monetary(Field):
     _related_group_operator = property(attrgetter('group_operator'))
 
     _description_currency_field = property(attrgetter('currency_field'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     _column_currency_field = property(attrgetter('currency_field'))
     _column_group_operator = property(attrgetter('group_operator'))
@@ -1219,7 +1222,7 @@ class _String(Field):
             return self.translate(callback, value)
         else:
             return value
-    
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
