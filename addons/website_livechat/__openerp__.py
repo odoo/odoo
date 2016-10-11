@@ -11,6 +11,7 @@ For website built with Odoo CMS, this module include a chat button on your Websi
     'author': 'OpenERP SA',
     'depends': ['website', 'im_livechat'],
     'installable': True,
+    'auto_install': True,
     'data': [
         'views/website_livechat.xml',
         'views/res_config.xml',
