@@ -14,5 +14,4 @@
     ],
     'images': ['static/description/icon.png'],
     'installable': True,
-    'license': 'OEEL-1',
 }
