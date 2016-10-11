@@ -2,15 +2,15 @@
 odoo.testing = {};
 
 odoo.testing.MockRPC = function (session) {
-    this.responses = {};
+    this.responses = {
+        '/web/webclient/bootstrap_translations': function () {
+            return {lang_parameters: null, modules: {}};
+        }
+    };
 };
 
 odoo.testing.MockRPC.prototype.clear = function () {
     this.responses = {};
-};
-
-odoo.testing.MockRPC.prototype.interceptRPC = function (session) {
-    session.rpc = this.rpc.bind(this);
 };
 
 odoo.testing.MockRPC.prototype.add = function (spec, handler, no_override) {
@@ -38,10 +38,10 @@ odoo.testing.MockRPC.prototype.rpc =  function (url, rparams, options) {
     }
 
     if (!fn) {
-        return $.Deferred().reject({}, 'failed',
-            _.str.sprintf("Url %s not found in mock responses, with arguments %s",
-                          url.url, JSON.stringify(rparams))
-        ).promise();
+        var message = _.str.sprintf("Url %s not found in mock responses, with arguments %s",
+                          url.url, JSON.stringify(rparams));
+        console.error(message);
+        return $.Deferred().reject({}, 'failed', message).promise();
     }
     try {
         return $.when(fn.apply(null, params)).then(function (result) {
@@ -54,7 +54,54 @@ odoo.testing.MockRPC.prototype.rpc =  function (url, rparams, options) {
     }
 };
 
+odoo.testing.MockRPC.prototype.clone = function () {
+    var mock = new odoo.testing.MockRPC();
+    for (var k in this.responses) {
+        mock.responses[k] = this.responses[k];
+    }
+    return mock;
+};
+
 odoo.testing.noop = function () {};
+
+var services_def = {};
+var services_template = {};
+var services_job = {
+    'web.session': {
+        name: 'web.session',
+        deps: ['web.Session', 'web.core'],
+        factory: function (require) {
+            "use strict";
+
+            var Session = require('web.Session');
+            var core = require('web.core');
+            var mockRPC = new odoo.testing.MockRPC();
+
+            var modules = odoo._modules;
+            Session = Session.extend({
+                load_qweb: function (mods) {
+                    if (!services_def[mods]) {
+                        services_def[mods] = $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {services_template[mods] = doc;});
+                    }
+                    return $.when(services_def[mods]).then(function (doc) {
+                        core.qweb.add_template(odoo.testing.templates);
+                        if (!services_template[mods]) { return; }
+                        core.qweb.add_template(services_template[mods]);
+                    });
+                },
+                rpc: function () {
+                    return this.mockRPC.rpc.apply(this.mockRPC, arguments);
+                }
+            });
+
+            var session = new Session(undefined, undefined, {'modules': modules, 'use_cors': false});
+            session.MockRPC = session.mockRPC = mockRPC;
+            session.is_bound = session.session_bind();
+            return session;
+        }
+    }
+};
+
 
 odoo.define_section = function (name, section_deps, section_body) {
     var section_body, options;
@@ -67,38 +114,37 @@ odoo.define_section = function (name, section_deps, section_body) {
         section_body = arguments[3];
     }
 
-    odoo.subset(function filter (_name) {
-            return _name === 'web.core' || _name === 'web.session' || section_deps.indexOf(_name) !== -1;
-        })
+    clearTimeout(time_done);
+
+    odoo.subset(section_deps.concat(['web.core', 'web.session']), null, services_job)
         .then(function (services) {
-            var mock = new odoo.testing.MockRPC();
-            if (odoo.testing.templates) {
-                services['web.core'].qweb.add_template(odoo.testing.templates);
-            }
+            var session = services['web.session'];
 
             function test () {
                 var _name = arguments[0],
                     dep_names = arguments[1] instanceof Array ? arguments[1] : [],
-                    body = arguments[arguments.length - 1],
-                    deps = _.map(section_deps.concat(dep_names), function (name) { return services[name]; });
+                    body = arguments[arguments.length - 1];
 
+                clearTimeout(time_done);
                 QUnit.module(name, options);
 
-                odoo.subset(function filter (_name) { return dep_names.indexOf(_name) !== -1; }, services.subset)
+                odoo.subset(dep_names, services.subset)
                     .then(function (services) {
                         QUnit.test(_name, function (assert) {
-                            mock.clear();
-                            mock.interceptRPC(services['web.session']);
+                            var mock = session.mockRPC = session.MockRPC.clone();
+
                             var info = {
                                 'assert': assert,
                                 'mock': mock,
                                 'deps': _.pick.apply(null, [services].concat(section_deps).concat(dep_names)),
                             };
-                            return body.apply(info, [assert].concat(deps));
+                            var deps = _.map(section_deps.concat(dep_names), function (name) { return services[name]; });
+                            clearTimeout(time_done);
+                            return body.apply(info, [assert].concat(deps).concat([mock]));
                         });
                     });
             }
-            section_body(test, mock);
+            section_body(test, session.MockRPC);
 
         });
 };
@@ -107,6 +153,7 @@ var time_done;
 QUnit.done(function(result) {
     clearTimeout(time_done);
     time_done = setTimeout(function () {
+        console.log("Passed tests:", result.passed);
         if (result.failed === 0) {
             console.log('ok');
         } else {
@@ -130,7 +177,7 @@ QUnit.config.autostart = false;
 
 
 localStorage.clear();
-QUnit.config.testTimeout = 1 * 60 * 1000;
+QUnit.config.testTimeout = 3 * 1000;
 QUnit.moduleDone(function(result) {
     if (!result.failed) {
         console.log(result.name, "passed", result.total, "tests.");

@@ -46,49 +46,68 @@ odoo.define_section('web-formats', ['web.formats', 'web.time'], function (test) 
     });
 
     test("format_float", ['web.core'], function (assert, formats, time, core) {
-        var fl = 12.1234;
-        var str = formats.format_value(fl, {type:"float"});
-        assert.equal(str, "12.12");
-        assert.equal(formats.format_value(12.02, {type: 'float'}),
-              '12.02');
-        assert.equal(formats.format_value(0.0002, {type: 'float', digits: [1, 3]}),
-              '0.000');
-        assert.equal(formats.format_value(0.0002, {type: 'float', digits: [1, 4]}),
-              '0.0002');
-        assert.equal(formats.format_value(0.0002, {type: 'float', digits: [1, 6]}),
-              '0.000200');
-        assert.equal(formats.format_value(1, {type: 'float', digits: [1, 6]}),
-              '1.000000');
-        assert.equal(formats.format_value(1, {type: 'float'}),
-              '1.00');
-        assert.equal(formats.format_value(-11.25, {type: 'float'}),
-              "-11.25");
-        core._t.database.parameters.grouping = [1, 2, -1];
-        assert.equal(formats.format_value(1111111.25, {type: 'float'}),
-              "1111,11,1.25");
+        var l10n = core._t.database.parameters;
+        var grouping = l10n.grouping;
+        var decimal_point = l10n.decimal_point;
+        var thousands_sep = l10n.thousands_sep;
+        try {
+            l10n.grouping = [];
+            l10n.decimal_point = '.';
+            l10n.thousands_sep = ',';
+            var fl = 12.1234;
+            var str = formats.format_value(fl, {type:"float"});
+            assert.equal(str, "12.12");
+            assert.equal(formats.format_value(12.02, {type: 'float'}),
+                  '12.02');
+            assert.equal(formats.format_value(0.0002, {type: 'float', digits: [1, 3]}),
+                  '0.000');
+            assert.equal(formats.format_value(0.0002, {type: 'float', digits: [1, 4]}),
+                  '0.0002');
+            assert.equal(formats.format_value(0.0002, {type: 'float', digits: [1, 6]}),
+                  '0.000200');
+            assert.equal(formats.format_value(1, {type: 'float', digits: [1, 6]}),
+                  '1.000000');
+            assert.equal(formats.format_value(1, {type: 'float'}),
+                  '1.00');
+            assert.equal(formats.format_value(-11.25, {type: 'float'}),
+                  "-11.25");
+            core._t.database.parameters.grouping = [1, 2, -1];
+            assert.equal(formats.format_value(1111111.25, {type: 'float'}),
+                  "1111,11,1.25");
 
-        core._t.database.parameters.grouping = [1, 0];
-        assert.equal(formats.format_value(-11.25, {type: 'float'}),
-              "-1,1.25");
+            core._t.database.parameters.grouping = [1, 0];
+            assert.equal(formats.format_value(-11.25, {type: 'float'}),
+                  "-1,1.25");
+        } finally {
+            l10n.grouping = grouping;
+            l10n.decimal_point = decimal_point;
+            l10n.thousands_sep = thousands_sep;
+        }
     });
 
     test('parse_integer', ['web.core'], function (assert, formats, time, core) {
-        var tmp = core._t.database.parameters.thousands_sep;
+        var grouping = core._t.database.parameters.grouping;
+        var thousands_sep = core._t.database.parameters.thousands_sep;
         try {
+            core._t.database.parameters.grouping = [];
+            core._t.database.parameters.thousands_sep = ',';
             var val = formats.parse_value('123,456', {type: 'integer'});
             assert.equal(val, 123456);
             core._t.database.parameters.thousands_sep = '|';
             var val2 = formats.parse_value('123|456', {type: 'integer'});
             assert.equal(val2, 123456);
         } finally {
-            core._t.database.parameters.thousands_sep = tmp;
+            core._t.database.parameters.grouping = grouping;
+            core._t.database.parameters.thousands_sep = thousands_sep;
         }
     });
 
     test("parse_float", ['web.core'], function (assert, formats, time, core) {
-        var tmp1 = core._t.database.parameters.thousands_sep;
-        var tmp2 = core._t.database.parameters.decimal_point;
+        var thousands_sep = core._t.database.parameters.thousands_sep;
+        var decimal_point = core._t.database.parameters.decimal_point;
         try {
+            core._t.database.parameters.grouping = [];
+            core._t.database.parameters.thousands_sep = ',';
             var str = "134,112.1234";
             var val = formats.parse_value(str, {type:"float"});
             assert.equal(val, 134112.1234);
@@ -102,8 +121,8 @@ odoo.define_section('web-formats', ['web.formats', 'web.time'], function (test) 
             var val3 = formats.parse_value('123.456,789', {type: 'float'});
             assert.equal(val3, 123456.789);
         } finally {
-            core._t.database.parameters.thousands_sep = tmp1;
-            core._t.database.parameters.decimal_point = tmp2;
+            core._t.database.parameters.thousands_sep = thousands_sep;
+            core._t.database.parameters.decimal_point = decimal_point;
         }
     });
 
@@ -142,39 +161,58 @@ odoo.define_section('web-formats', ['web.formats', 'web.time'], function (test) 
     });
 
     test('format_integer', ['web.core'], function (assert, formats, time, core) {
-        core._t.database.parameters.grouping = [3, 3, 3, 3];
-        assert.equal(formats.format_value(1000000, {type: 'integer'}),
-              '1,000,000');
+        var grouping = core._t.database.parameters.grouping;
+        var thousands_sep = core._t.database.parameters.thousands_sep;
+        try {
+            core._t.database.parameters.thousands_sep = ',';
+            core._t.database.parameters.grouping = [3, 3, 3, 3];
+            assert.equal(formats.format_value(1000000, {type: 'integer'}),
+                  '1,000,000');
 
-        core._t.database.parameters.grouping = [3, 2, -1];
-        assert.equal(formats.format_value(106500, {type: 'integer'}),
-              '1,06,500');
+            core._t.database.parameters.grouping = [3, 2, -1];
+            assert.equal(formats.format_value(106500, {type: 'integer'}),
+                  '1,06,500');
 
-        core._t.database.parameters.grouping = [1, 2, -1];
-        assert.equal(formats.format_value(106500, {type: 'integer'}),
-              '106,50,0');
+            core._t.database.parameters.grouping = [1, 2, -1];
+            assert.equal(formats.format_value(106500, {type: 'integer'}),
+                  '106,50,0');
+        } finally {
+            core._t.database.parameters.grouping = grouping;
+            core._t.database.parameters.thousands_sep = thousands_sep;
+        }
     });
 
     test('format_float', ['web.core'], function (assert, formats, time, core) {
-        core._t.database.parameters.grouping = [3, 3, 3, 3];
-        assert.equal(formats.format_value(1000000, {type: 'float'}),
-              '1,000,000.00');
+        var grouping = core._t.database.parameters.grouping;
+        var thousands_sep = core._t.database.parameters.thousands_sep;
+        var decimal_point = core._t.database.parameters.decimal_point;
+        try {
+            core._t.database.parameters.grouping = [3, 3, 3, 3];
+            core._t.database.parameters.thousands_sep = ',';
+            core._t.database.parameters.decimal_point = '.';
+            assert.equal(formats.format_value(1000000, {type: 'float'}),
+                  '1,000,000.00');
 
-        core._t.database.parameters.grouping = [3, 2, -1];
-        assert.equal(formats.format_value(106500, {type: 'float'}),
-              '1,06,500.00');
-        
-        core._t.database.parameters.grouping = [1, 2, -1];
-        assert.equal(formats.format_value(106500, {type: 'float'}),
-              '106,50,0.00');
+            core._t.database.parameters.grouping = [3, 2, -1];
+            assert.equal(formats.format_value(106500, {type: 'float'}),
+                  '1,06,500.00');
 
-        _.extend(core._t.database.parameters, {
-            grouping: [3, 0],
-            decimal_point: ',',
-            thousands_sep: '.'
-        });
-        assert.equal(formats.format_value(6000, {type: 'float'}),
-              '6.000,00');
+            core._t.database.parameters.grouping = [1, 2, -1];
+            assert.equal(formats.format_value(106500, {type: 'float'}),
+                  '106,50,0.00');
+
+            _.extend(core._t.database.parameters, {
+                grouping: [3, 0],
+                decimal_point: ',',
+                thousands_sep: '.'
+            });
+            assert.equal(formats.format_value(6000, {type: 'float'}),
+                  '6.000,00');
+        } finally {
+            core._t.database.parameters.grouping = grouping;
+            core._t.database.parameters.thousands_sep = thousands_sep;
+            core._t.database.parameters.decimal_point = decimal_point;
+        }
     });
 
     test('ES date format', ['web.core'], function (assert, formats, time, core) {

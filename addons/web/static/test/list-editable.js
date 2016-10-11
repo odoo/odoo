@@ -1,13 +1,14 @@
 odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
 
-    function setup() {
-        mock.add('test.model:create', function () {
-            return 42;
-        });
-        mock.add('test.model:onchange', function () {
-            return {};
-        });
-    }
+    mock.add('test.model:create', function () {
+        return 42;
+    });
+    mock.add('test.model:onchange', function () {
+        return {};
+    });
+    mock.add('test.model:search_read', function () {
+        return [{id: 42, a: false, b: false, c: false}];
+    });
 
     function field(name, attrs) {
         attrs = attrs || {};
@@ -67,12 +68,7 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
     });
 
     test('toggle-edition-save', ['web.data'], function (assert, ListEditor, data) {
-        setup();
         assert.expect(4);
-
-        mock.add('test.model:search_read', function () {
-            return [{id: 42, a: false, b: false, c: false}];
-        });
 
         var e = new ListEditor({
             dataset: new data.DataSetSearch(null, 'test.model'),
@@ -171,36 +167,44 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
     });
 });
 
-odoo.define_section('list.edition', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
+odoo.define_section('list.edition', ['web.data', 'web.ListView', 'web.data_manager', 'web.ListEditor'], function (test, mock) {
 
-    function setup () {
-        var records = {};
-        mock.add('demo:create', function (args) {
-            records[42] = _.extend({}, args[0]);
-            return 42;
-        });
-        mock.add('demo:read', function (args) {
-            var id = args[0][0];
-            if (id in records) {
-                return [records[id]];
-            }
-            return [];
-        });
-        mock.add('demo:search_read', function (args) {
-            var id = args[0][0][2];
-            if (id in records) {
-                return [records[id]];
-            }
-            return [];
-        });
-        mock.add('demo:onchange', function () {
-            return {};
-        });
-    }
+    var records = {};
+    mock.add('demo:create', function (args) {
+        records[42] = _.extend({}, args[0]);
+        return 42;
+    });
+    mock.add('demo:read', function (args) {
+        var id = args[0][0];
+        if (id in records) {
+            return [records[id]];
+        }
+        return [];
+    });
+    mock.add('demo:search_read', function (args) {
+        var id = args[0][0][2];
+        if (id in records) {
+            return [records[id]];
+        }
+        return [];
+    });
+    mock.add('demo:onchange', function () {
+        return {};
+    });
+
+    var fields = {
+        a: {type: 'char', string: "A"},
+        b: {type: 'char', string: "B"},
+        c: {type: 'char', string: "C"}
+    };
+    mock.add('demo:fields_get', function (args, kwargs) {
+        return fields;
+    });
 
     test('newrecord', function (assert, data, ListView, data_manager) {
-        setup();
         assert.expect(6);
+        var mock = _.last(arguments);
+
         var got_defaults = false;
 
         mock.add('demo:default_get', function (args) {
@@ -215,11 +219,7 @@ odoo.define_section('list.edition', ['web.data', 'web.ListView', 'web.data_manag
         var ds = new data.DataSetStatic(null, 'demo', null, [1]);
         var fields_view = data_manager._postprocess_fvg({
             type: 'tree',
-            fields: {
-                a: {type: 'char', string: "A"},
-                b: {type: 'char', string: "B"},
-                c: {type: 'char', string: "C"}
-            },
+            fields: fields,
             arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
         });
         var l = new ListView({}, ds, fields_view, {editable: 'top'});
@@ -247,33 +247,33 @@ odoo.define_section('list.edition', ['web.data', 'web.ListView', 'web.data_manag
     });
 });
 
-odoo.define_section('list.edition.events', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
-    function fields_view_get () {
-        return {
-            type: 'tree',
-            fields: {
-                a: {type: 'char', string: "A"},
-                b: {type: 'char', string: "B"},
-                c: {type: 'char', string: "C"}
-            },
-            arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
-        };
-    }
-    function setup () {
-        mock.add('demo:read', function () {
-            return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
-        });
-    }
+odoo.define_section('list.edition.events', ['web.data', 'web.ListView', 'web.data_manager', 'web.ListEditor'], function (test, mock) {
+
+    mock.add('demo:read', function () {
+        return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
+    });
+
+    var fields = {
+        a: {type: 'char', string: "A"},
+        b: {type: 'char', string: "B"},
+        c: {type: 'char', string: "C"}
+    };
+    mock.add('demo:fields_get', function (args, kwargs) {
+        return fields;
+    });
 
     test('edition events',function (assert, data, ListView, data_manager) {
-        setup();
         assert.expect(4);
         var ds = new data.DataSetStatic(null, 'demo', null, [1]);
         var o = {
             counter: 0,
             onEvent: function (e) { this.counter++; }
         };
-        var fields_view = data_manager._postprocess_fvg(fields_view_get());
+        var fields_view = data_manager._postprocess_fvg({
+            type: 'tree',
+            fields: fields,
+            arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+        });
         var l = new ListView({}, ds, fields_view, {editable: 'top'});
         l.on('edit:before edit:after', o, o.onEvent);
 
@@ -292,10 +292,13 @@ odoo.define_section('list.edition.events', ['web.data', 'web.ListView', 'web.dat
     });
 
     test('edition events: cancelling', function (assert, data, ListView, data_manager) {
-        setup();
         var edit_after = false;
         var ds = new data.DataSetStatic(null, 'demo', null, [1]);
-        var fields_view = data_manager._postprocess_fvg(fields_view_get());
+        var fields_view = data_manager._postprocess_fvg({
+            type: 'tree',
+            fields: fields,
+            arch: '<tree><field name="a"/><field name="b"/><field name="c"/></tree>',
+        });
         var l = new ListView({}, ds, fields_view, {editable: 'top'});
         l.on('edit:before', {}, function (e) {
             e.cancel = true;
@@ -320,39 +323,44 @@ odoo.define_section('list.edition.events', ['web.data', 'web.ListView', 'web.dat
     });
 });
 
-odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView', 'web.data_manager'], function (test, mock) {
+odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView', 'web.data_manager', 'web.ListEditor'], function (test, mock) {
 
-    test('record-to-read', function (assert, data, ListView, data_manager) {
-        assert.expect(4);
+    mock.add('demo:onchange', function () {
+        return {};
+    });
+    mock.add('demo:read', function (args, kwargs) {
+        if (_.isEmpty(args[0])) {
+            return [];
+        }
+        throw new Error(JSON.stringify(_.toArray(arguments)));
+    });
+    mock.add('demo:search_read', function (args, kwargs) {
+        if (_.isEqual(args[0], [['id', 'in', [1]]])) {
+            return [{id: 1, a: 'some value'}];
+        } else if (_.isEqual(args[0], [['id', 'in', [42]]])) {
+            return [ {id: 42, a: 'foo'} ];
+        }
+        throw new Error(JSON.stringify(_.toArray(arguments)));
+    });
+    mock.add('demo:default_get', function () { return {}; });
+    mock.add('demo:create', function () { return 1; });
+    mock.add('demo:on_write', function () { return [42]; });
 
-        mock.add('demo:onchange', function () {
-            return {};
-        });
-        mock.add('demo:read', function (args, kwargs) {
-            if (_.isEmpty(args[0])) {
-                return [];
-            }
-            throw new Error(JSON.stringify(_.toArray(arguments)));
-        });
-        mock.add('demo:search_read', function (args, kwargs) {
-            if (_.isEqual(args[0], [['id', 'in', [1]]])) {
-                return [{id: 1, a: 'some value'}];
-            } else if (_.isEqual(args[0], [['id', 'in', [42]]])) {
-                return [ {id: 42, a: 'foo'} ];
-            }
-            throw new Error(JSON.stringify(_.toArray(arguments)));
-        });
-        mock.add('demo:default_get', function () { return {}; });
-        mock.add('demo:create', function () { return 1; });
-        mock.add('demo:on_write', function () { return [42]; });
+    var fields = {
+        a: {type: 'char', string: "A"}
+    };
+    mock.add('demo:fields_get', function (args, kwargs) {
+        return fields;
+    });
+
+    test('record-to-read', function (assert, data, ListView, data_manager, Editor) {
+        assert.expect(2);
 
         var ds = new data.DataSetStatic(null, 'demo', null, []);
         var fields_view = data_manager._postprocess_fvg({
             type: 'tree',
-            fields: {
-                a: {type: 'char', string: "A"}
-            },
-            arch: '<tree on_write="on_write" colors="red:a == \'foo\'"><field name="a"/></tree>',
+            fields: fields,
+            arch: '<tree on_write="on_write"><field name="a"/></tree>',
         });
         var l = new ListView({}, ds, fields_view, {editable: 'top'});
 
@@ -373,12 +381,6 @@ odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView', 'web.da
                 'should have id of created + on_write');
             assert.strictEqual(l.records.length, 2,
                 'should have record of created + on_write');
-            assert.strictEqual(
-                $fix.find('tbody tr:eq(1)').css('color'), 'rgb(255, 0, 0)',
-                'shoud have color applied');
-            assert.notStrictEqual(
-                $fix.find('tbody tr:eq(2)').css('color'), 'rgb(255, 0, 0)',
-                'should have default color applied');
         });
     });
 });

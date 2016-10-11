@@ -344,7 +344,7 @@ odoo.define_section('eval.types', ['web.pyeval'], function (test, mock) {
 
 odoo.define_section('eval.edc', ['web.pyeval', 'web.session'], function (test, mock) {
 
-    function setup (session) {
+    function setup (session, mock) {
         var user = { login: 'admin', id: 1, lang: 'en_US', tz: false };
 
         mock.add('res.lang:load_lang', function () { return true; });
@@ -371,7 +371,7 @@ odoo.define_section('eval.edc', ['web.pyeval', 'web.session'], function (test, m
     test('empty, basic', function (assert, pyeval, session) {
         assert.expect(3);
 
-        return setup(session)
+        return setup(session, mock)
             .then(function () {
                 return pyeval.eval_domains_and_contexts({
                     contexts: [],
@@ -390,12 +390,12 @@ odoo.define_section('eval.edc', ['web.pyeval', 'web.session'], function (test, m
             });
     });
 
-    test('empty, context altered', ['web.data'], function (assert, pyeval, session, data) {
+    test('empty, context altered', ['web.data'], function (assert, pyeval, session, data, mock) {
         assert.expect(3);
         var lang = new data.Model('res.lang');
         var users = new data.Model('res.users');
 
-        return setup(session)
+        return setup(session, mock)
             .then(function () {
                 return lang.call('load_lang', ['ru_RU']);
             })

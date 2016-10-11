@@ -488,14 +488,11 @@ odoo.define_section('Widget.async', ['web.Widget', 'web.utils'], function (test)
         .then(function () {
             // destroy widget
             widget.destroy();
-            console.log('destroyed');
-            return widget.alive(utils.async_when().done(function () { console.log('when'); }), true);
+            return widget.alive(utils.async_when(), true);
         }).then(function () {
-            console.log('unfailed')
             assert.ok(false, "alive(p, true) should fail its promise");
             done();
         }, function () {
-            console.log('failed')
             assert.ok(true, "alive(p, true) should fail its promise");
             done();
         });

@@ -2,6 +2,8 @@ odoo.define_section('web.dataset', ['web.data'], function (test, mock) {
 
     test('read_ids', function (assert, data) {
         assert.expect(2);
+        var mock = _.last(arguments);
+
         mock.add('foo:read', function (args) {
             var ids = args[0];
             assert.deepEqual(ids, [3, 1, 2]);
@@ -13,7 +15,6 @@ odoo.define_section('web.dataset', ['web.data'], function (test, mock) {
         });
 
         var d = new data.DataSet(null, 'foo');
-
         return d.read_ids([3,1,2]).then(function (records) {
             assert.deepEqual(
                 records,
@@ -29,32 +30,37 @@ odoo.define_section('web.dataset', ['web.data'], function (test, mock) {
 
 odoo.define_section('data.model.group_by', ['web.data'], function (test, mock) {
 
-    var group_result = [
-        { bar: 3, bar_count: 5, __context: {}, __domain: [['bar', '=', 3]], },
-        { bar: 5, bar_count: 3, __context: {}, __domain: [['bar', '=', 5]], }, 
-        { bar: 8, bar_count: 0, __context: {}, __domain: [['bar', '=', 8]], }
-    ];
+    function group_result () {
+        return [
+            { bar: 3, bar_count: 5, __context: {}, __domain: [['bar', '=', 3]], },
+            { bar: 5, bar_count: 3, __context: {}, __domain: [['bar', '=', 5]], },
+            { bar: 8, bar_count: 0, __context: {}, __domain: [['bar', '=', 8]], }
+        ];
+    }
+
+    function rec  () {
+        return {records: [
+            {bar: 3, id: 1},
+            {bar: 3, id: 2},
+            {bar: 3, id: 4},
+            {bar: 3, id: 8},
+            {bar: 3, id: 16}
+        ], length: 5};
+    }
 
     test('basic', function (assert, data) {
         assert.expect(7);
+        var mock = _.last(arguments);
+
         mock.add('foo:read_group', function (args, kwargs) {
-            assert.deepEqual(kwargs.fields, ['bar'],
-                      "should read grouping field");
-            assert.deepEqual(kwargs.groupby, ['bar'],
-                      "should have single grouping field");
-            return group_result;
+            assert.deepEqual(kwargs.fields, ['bar'], "should read grouping field");
+            assert.deepEqual(kwargs.groupby, ['bar'], "should have single grouping field");
+            return group_result();
         });
 
         mock.add('/web/dataset/search_read', function (args) {
-            deepEqual(args.params.domain, [['bar', '=', 3]],
-                      "should have domain matching that of group_by result");
-            return {records: [
-                {bar: 3, id: 1},
-                {bar: 3, id: 2},
-                {bar: 3, id: 4},
-                {bar: 3, id: 8},
-                {bar: 3, id: 16}
-            ], length: 5};
+            assert.deepEqual(args.params.domain, [['bar', '=', 3]], "should have domain matching that of group_by result");
+            return rec();
         });
 
         var m = new data.Model('foo');
@@ -74,15 +80,20 @@ odoo.define_section('data.model.group_by', ['web.data'], function (test, mock) {
 
     test('noleaf', function (assert, data) {
         assert.expect(5);
-        var m = new data.Model('foo', {group_by_no_leaf: true});
-        mock.add('foo:read_group', function (args, kwargs) {
-            assert.deepEqual(kwargs.fields, ['bar'],
-                      "should read grouping field");
-            assert.deepEqual(kwargs.groupby, ['bar'],
-                      "should have single grouping field");
+        var mock = _.last(arguments);
 
-            return  group_result;
+        mock.add('foo:read_group', function (args, kwargs) {
+            assert.deepEqual(kwargs.fields, ['bar'], "should read grouping field");
+            assert.deepEqual(kwargs.groupby, ['bar'], "should have single grouping field");
+            return group_result();
         });
+
+        mock.add('/web/dataset/search_read', function (args) {
+            assert.deepEqual(args.params.domain, [['bar', '=', 3]], "should have domain matching that of group_by result");
+            return rec();
+        });
+
+        var m = new data.Model('foo', {group_by_no_leaf: true});
 
         return m.query().group_by('bar')
         .then(function (groups) {
@@ -95,11 +106,12 @@ odoo.define_section('data.model.group_by', ['web.data'], function (test, mock) {
 
     test('nogroup', function (assert, data) {
         var m = new data.Model('foo');
-        strictEqual(m.query().group_by(), null, "should not group");
+        assert.strictEqual(m.query().group_by(), null, "should not group");
     });
 
     test('empty.noleaf', function (assert, data) {
         assert.expect(1);
+        var mock = _.last(arguments);
 
         var m = new data.Model('foo',  {group_by_no_leaf: true});
         
@@ -108,8 +120,7 @@ odoo.define_section('data.model.group_by', ['web.data'], function (test, mock) {
         });
 
         return m.query().group_by().done(function (groups) {
-            assert.strictEqual(groups.length, 1,
-                        "should generate a single fake-ish group");
+            assert.strictEqual(groups.length, 1, "should generate a single fake-ish group");
         });
     });
 

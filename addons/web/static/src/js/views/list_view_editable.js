@@ -15,6 +15,7 @@ var common = require('web.list_common');
 var ListView = require('web.ListView');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+require('web.form_widgets'); // load all form widgets (to use subset's registry)
 
 var _t = core._t;
 

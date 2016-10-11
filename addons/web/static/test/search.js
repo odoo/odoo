@@ -162,6 +162,7 @@ function makeSearchView (test, dummy_widget_attributes, defaults, options, raw_f
     var data = test.deps['web.data'];
     var data_manager = test.deps['web.data_manager'];
     var SearchView = test.deps['web.SearchView'];
+    var mixins = test.deps['web.mixins'];
 
     var mock = test.mock;
     var assert = test.assert;
@@ -171,18 +172,19 @@ function makeSearchView (test, dummy_widget_attributes, defaults, options, raw_f
 
     mock.add('ir.filters:get_filters', function () {
         return [];
-    });
+    }, true);
 
     mock.add('dummy.model:fields_get', function () {
         return {
             dummy: {type: 'char', string: 'Dummy', searchable: true}
         };
-    });
+    }, true);
 
     var dataset = new data.DataSet(null, 'dummy.model');
     
     var mock_parent = {
         getParent: function () { return null; },
+        _trigger_up: function(event) {},
     };
     
     options = _.defaults(options || {}, {$buttons: $('<div>')});
@@ -200,7 +202,7 @@ function makeSearchView (test, dummy_widget_attributes, defaults, options, raw_f
         assert.ok(false, JSON.stringify([].slice(arguments)));
     });
     return view;
-};
+}
 
 odoo.define_section('search.defaults', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
     test('calling', function (assert) {
@@ -332,6 +334,7 @@ odoo.define_section('search.defaults', ['web.search_inputs', 'web.SearchView', '
 
     test("M2O default: value", function (assert, search_inputs, SearchView, core) {
         assert.expect(5);
+        var mock = _.last(arguments);
 
         var ManyToOneField =  core.search_widgets_registry.get('many2one');
         var Facet = SearchView.Facet;
@@ -368,6 +371,7 @@ odoo.define_section('search.defaults', ['web.search_inputs', 'web.SearchView', '
 
     test("M2O default: value array", function (assert, search_inputs, SearchView, core) {
         assert.expect(2);
+        var mock = _.last(arguments);
 
         var ManyToOneField =  core.search_widgets_registry.get('many2one');
         var Facet = SearchView.Facet;
@@ -396,6 +400,7 @@ odoo.define_section('search.defaults', ['web.search_inputs', 'web.SearchView', '
 
     test("M2O default: value", function (assert, search_inputs, SearchView, core) {
         assert.expect(1);
+        var mock = _.last(arguments);
 
         var ManyToOneField =  core.search_widgets_registry.get('many2one');
 
@@ -674,6 +679,8 @@ odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView'
 
     test("M2O expand", {asserts: 11}, function (assert, search_inputs, SearchView, core) {
         assert.expect(11);
+        var mock = _.last(arguments);
+
         var ManyToOneField = core.search_widgets_registry.get('many2one');
         var Facet = SearchView.Facet;
 
@@ -706,6 +713,8 @@ odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView'
 
     test("M2O no match", function (assert, search_inputs, SearchView, core) {
         assert.expect(3);
+        var mock = _.last(arguments);
+
         var ManyToOneField = core.search_widgets_registry.get('many2one');
 
         mock.add('dummy.model:name_search', function (args, kwargs) {
@@ -725,6 +734,8 @@ odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView'
 
     test("M2O filtered", function (assert, search_inputs, SearchView, core) {
         assert.expect(2);
+        var mock = _.last(arguments);
+
         var ManyToOneField = core.search_widgets_registry.get('many2one');
 
         mock.add('dummy.model:name_search', function (args, kwargs) {
@@ -749,6 +760,8 @@ odoo.define_section('search.completions', ['web.search_inputs', 'web.SearchView'
 
     test("M2O custom operator", function (assert, search_inputs, SearchView, core) {
         assert.expect(8);
+        var mock = _.last(arguments);
+
         var ManyToOneField = core.search_widgets_registry.get('many2one');
         var Facet = SearchView.Facet;
 
@@ -1401,15 +1414,19 @@ odoo.define_section('search.groupby', ['web.search_inputs', 'web.SearchView', 'w
 
 odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
+    mock.add('ir.filters:get_filters', function () {
+        return [{name: 'filter name', user_id: 42, id: 1}];
+    });
+
     test('checkboxing', function (assert) {
         assert.expect(6);
         var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
-        mock.add('ir.filters:get_filters', function () {
-            return [{ name: "filter name", user_id: 42 }];
-        });
 
         var $fix = $('#qunit-fixture');
         return view.appendTo($fix)
+            .fail(function () {
+                throw new Error("Can't append and start the view search");
+            })
             .done(function () {
                 var $li = view.favorite_menu.$el.find('li:first').click();
 
@@ -1430,9 +1447,6 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
     test('removal', function (assert) {
         assert.expect(1);
         var view = makeSearchView(this);
-        mock.add('ir.filters:get_filters', function () {
-            return [{ name: "filter name", user_id: 42 }];
-        });
 
         var $fix = $('#qunit-fixture');
         return view.appendTo($fix)
@@ -1448,9 +1462,6 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
     test('toggling', function (assert) {
         assert.expect(2);
         var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
-        mock.add('ir.filters:get_filters', function () {
-            return [{name: 'filter name', user_id: 42, id: 1}];
-        });
 
         var $fix = $('#qunit-fixture');
         return view.appendTo($fix)
@@ -1461,22 +1472,30 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
                 assert.equal(view.query.length, 0, "should have removed facet");
             });
     });
+});
+
+odoo.define_section('search.filters.replacement', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
+
+    mock.add('ir.filters:get_filters', function () {
+        return [
+            {name: 'f', user_id: 42, id: 1, context: {'private': 1}},
+            {name: 'f', user_id: false, id: 2, context: {'private': 0}}
+        ];
+    });
 
     test('replacement', function (assert) {
-        assert.expect(4);
-
+        assert.expect(5);
         var view = makeSearchView(this, undefined, undefined, {action: {id: 1}});
-        mock.add('ir.filters:get_filters', function () {
-            return [
-                {name: 'f', user_id: 42, id: 1, context: {'private': 1}},
-                {name: 'f', user_id: false, id: 2, context: {'private': 0}}
-            ];
-        });
+
         var $fix = $('#qunit-fixture');
         return view.appendTo($fix)
             .done(function () {
                 view.favorite_menu.$el.find('li:first').click();
                 assert.equal(view.query.length, 1, "should have one facet");
+                assert.deepEqual(
+                    view.query.at(0).attributes._id,
+                    1,
+                    "should have selected first filter");
                 assert.deepEqual(
                     view.query.at(0).get('field').get_context(),
                     {'private': 1},
@@ -1489,22 +1508,26 @@ odoo.define_section('search.filters.saved', ['web.search_inputs', 'web.SearchVie
                     "should have selected second filter");
             });
     });
+});
+
+odoo.define_section('search.filters.creation', ['web.search_inputs', 'web.SearchView', 'web.core', 'web.data', 'web.data_manager'], function (test, mock) {
 
     test('creation', ['web.session'], function (assert, search_inputs, SearchView, core, data, session) {
         assert.expect(2);
         // force a user context
         session.user_context = {foo: 'bar'};
 
-        var view = makeSearchView(this);
-        var done = $.Deferred();
-
-        mock.add('ir.filters:get_filters', function () { return []; });
+        var mock = _.last(arguments);
         mock.add('ir.filters:create_or_replace', function (args) {
             var filter = args[0];
             assert.deepEqual(filter.context, {}, "should have empty context");
             assert.deepEqual(filter.domain, [], "should have empty domain");
             done.resolve();
         });
+
+        var view = makeSearchView(this);
+        var done = $.Deferred();
+
         var $fix = $('#qunit-fixture');
         return view.appendTo($fix)
         .then(function () {

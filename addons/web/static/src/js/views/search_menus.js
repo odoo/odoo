@@ -159,8 +159,9 @@ return Widget.extend({
         var user_id = filter.user_id,
             action_id = filter.action_id,
             uid = (user_id instanceof Array) ? user_id[0] : user_id,
-            act_id = (action_id instanceof Array) ? action_id[0] : action_id;
-        return _.str.sprintf('(%s)(%s)%s', uid, act_id, filter.name);
+            act_id = (action_id instanceof Array) ? action_id[0] : action_id,
+            name = filter.name + '';
+        return _.str.sprintf('(%s)(%s)%s', uid, act_id, name);
     },
     /**
      * Generates a :js:class:`~instance.web.search.Facet` descriptor from a
