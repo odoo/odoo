@@ -14,7 +14,7 @@ var quotation_button_step_index = _.findIndex(tour.tours.sale_tour.steps, functi
 tour.tours.sale_tour.steps.splice(quotation_button_step_index, 1, {
     trigger: ".o_kanban_manage_button_section > a",
     content: _t("Click here to see more options."),
-    position: "bottom"
+    position: "right"
 }, {
     trigger: ".o_quotation_view_button",
     content: _t("Let's have a look at the quotations of this sales team."),

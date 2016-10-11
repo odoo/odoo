@@ -45,7 +45,7 @@ def format_tz(env, dt, tz=False, format=False):
         format_time = langs.time_format or '%I-%M %p'
 
         fdate = ts.strftime(format_date).decode('utf-8')
-        ftime = ts.strftime(format_time)
+        ftime = ts.strftime(format_time).decode('utf-8')
         return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 
 try:

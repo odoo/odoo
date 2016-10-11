@@ -124,7 +124,7 @@ class BaseActionRule(models.Model):
 
     def _update_registry(self):
         """ Update the registry after a modification on action rules. """
-        if self.env.registry.ready:
+        if self.env.registry.ready and not self.env.context.get('import_file'):
             # for the sake of simplicity, simply force the registry to reload
             self._cr.commit()
             self.env.reset()

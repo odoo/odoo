@@ -1099,6 +1099,8 @@ class Integer(Field):
         'group_operator': 'sum',
     }
 
+    _description_group_operator = property(attrgetter('group_operator'))
+
     def convert_to_column(self, value, record):
         return int(value or 0)
 
@@ -1160,6 +1162,7 @@ class Float(Field):
 
     _related__digits = property(attrgetter('_digits'))
     _description_digits = property(attrgetter('digits'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_column(self, value, record):
         result = float(value or 0.0)
@@ -1201,6 +1204,7 @@ class Monetary(Field):
 
     _related_currency_field = property(attrgetter('currency_field'))
     _description_currency_field = property(attrgetter('currency_field'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     def _setup_regular_base(self, model):
         super(Monetary, self)._setup_regular_base(model)
@@ -1283,7 +1287,7 @@ class _String(Field):
             return self.translate(callback, value)
         else:
             return value
-    
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
