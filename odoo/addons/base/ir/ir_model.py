@@ -1208,6 +1208,7 @@ class IrModelData(models.Model):
         datas = self.search([('module', 'in', modules_to_remove)])
         wkf_todo = []
         to_unlink = tools.OrderedSet()
+        undeletable = self.browse([])
 
         for data in datas.sorted(key='id', reverse=True):
             model = data.model
@@ -1255,6 +1256,7 @@ class IrModelData(models.Model):
                     self.env[model].browse(res_id).unlink()
                 except Exception:
                     _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
+                    undeletable += external_ids
                     self._cr.execute('ROLLBACK TO SAVEPOINT record_unlink_save')
                 else:
                     self._cr.execute('RELEASE SAVEPOINT record_unlink_save')
@@ -1276,7 +1278,7 @@ class IrModelData(models.Model):
 
         self._cr.commit()
 
-        datas.unlink()
+        (datas - undeletable).unlink()
 
     @api.model
     def _process_end(self, modules):
