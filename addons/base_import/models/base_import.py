@@ -649,7 +649,7 @@ class Import(models.TransientModel):
             }]
 
         _logger.info('importing %d rows...', len(data))
-        import_result = self.env[self.res_model].load(import_fields, data)
+        import_result = self.env[self.res_model].with_context(import_file=True).load(import_fields, data)
         _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
