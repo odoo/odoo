@@ -76,7 +76,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if self.amount <= 0.00:
             raise UserError(_('The value of the down payment amount must be positive.'))
         if self.advance_payment_method == 'percentage':
-            amount = order.amount_untaxed * self.amount / 100
+            amount = order.amount_total * self.amount / 100
             name = _("Down payment of %s%%") % (self.amount,)
         else:
             amount = self.amount
