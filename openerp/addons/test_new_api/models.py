@@ -145,9 +145,16 @@ class Discussion(models.Model):
     message_changes = fields.Integer(string='Message changes')
     important_messages = fields.One2many('test_new_api.message', 'discussion',
                                          domain=[('important', '=', True)])
+    very_important_messages = fields.One2many(
+        'test_new_api.message', 'discussion',
+        domain=lambda self: self._domain_very_important())
     emails = fields.One2many('test_new_api.emailmessage', 'discussion')
     important_emails = fields.One2many('test_new_api.emailmessage', 'discussion',
                                        domain=[('important', '=', True)])
+
+    def _domain_very_important(self):
+        """Ensure computed O2M domains work as expected."""
+        return [("important", "=", True)]
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
