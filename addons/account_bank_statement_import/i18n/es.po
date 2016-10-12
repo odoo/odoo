@@ -9,6 +9,7 @@
 # Esteban Echeverry <tebanep@nubark.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
+# Luis Miguel Limache leon <luislimache@gmail.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
@@ -36,7 +37,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d transacciones han sido ya importadas y serán ignoradas."
+msgstr "%d de transacciones han sido ya importadas y serán ignoradas."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
@@ -48,7 +49,7 @@ msgstr "1 transacción ha sido ya importada y será ignorada."
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
 msgstr ""
-"Las transacciones de una cuenta bancaria puede importarse sólo una vez"
+"Las transacciones de una cuenta bancaria puede importarse sólo una vez!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
@@ -443,6 +444,9 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Seleccione 'Ventas' para diarios de facturas de cliente.\n"
+"Seleccione 'Compras' para diarios de facturas de proveedor.\n"
+"Seleccione 'Caja' o 'Banco' para diarios que se usan para pagos de clientes y proveedores. Seleccione 'General' para diarios que contienen operaciones varias."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

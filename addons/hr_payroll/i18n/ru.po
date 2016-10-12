@@ -11,7 +11,6 @@
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Denis Trepalin <zekarious@gmail.com>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 # Alex Puchkov <ap@alteco.co>, 2016
 # Ivan Ivan <kolobok2048@gmail.com>, 2016
 # Andrey Skabelin <inactive+a.skabelin@transifex.com>, 2016
@@ -46,6 +45,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Созданная расчётная ведомость имеет статус «Черновик»\n"
+"                \n"
+"* Если ведомость в процессе сверки — «Ожидание».\n"
+"                \n"
+"* Если ведомость подтверждена — «Готово».\n"
+"                \n"
+"* Когда пользователь отменяет ведомость — «Отклонено»."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -63,7 +69,7 @@ msgstr "<strong>Авторизированная подпись</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
-msgstr "<strong>Банковский счет</strong>"
+msgstr "<strong>Банковский счёт</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -120,7 +126,7 @@ msgstr "<strong>Описание</strong>"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
-msgstr "<strong>Регистрационное Имя:</strong>"
+msgstr "<strong>Регистрационное имя:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -134,18 +140,21 @@ msgid ""
 "                payment of the employees. It can be the social security, the\n"
 "                estate or anyone that collect or inject money on payslips."
 msgstr ""
-"Реестр отчислений - это третья сторона, вовлеченная в систему выплаты\n"
-"заработной платы сотрудников. Это может быть фонд социального страхования, страховка имущества, или любая другая организация, получающая или отдающая денежные средства в платежную ведомость."
+"Реестр отчислений — это третья сторона, вовлеченная в \n"
+"систему выплаты заработной платы сотрудников. Это может \n"
+"быть фонд социального страхования, страхование имущества, \n"
+"или любая другая организация, получающая или отдающая \n"
+"денежные средства в платёжную ведомость."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Accounting"
-msgstr "Бухгалтерский учет"
+msgstr "Бухгалтерский учёт"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Accounting Information"
-msgstr "Учетная информация"
+msgstr "Учётная информация"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_active
@@ -161,7 +170,7 @@ msgstr "Добавить внутреннюю заметку..."
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr "Все детские правила"
+msgstr "Все дочерние правила"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -224,7 +233,7 @@ msgstr "Раз в две недели"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
 msgid "Calculations"
-msgstr "Расчеты"
+msgstr "Расчёты"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
@@ -241,7 +250,7 @@ msgstr "Отклонить платежную ведомость"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "Невозможно отклонить проведённую ведомость."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -259,7 +268,7 @@ msgstr "Подчиненные правила"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_child_ids
 msgid "Child Salary Rule"
-msgstr "Правило заработной платы для подчиненных"
+msgstr "Подчинённые правила заработной платы"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
@@ -407,7 +416,7 @@ msgstr "Создание записи в журнале из платежных 
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_date
@@ -424,7 +433,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
@@ -613,7 +622,7 @@ msgstr "Генерировать"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Generate Payslips"
-msgstr "С генерированная проводка"
+msgstr "Сгенерировать ведомости"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -700,6 +709,9 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Используется для расчёта процентов и фиксированного количества. Для т. н. "
+"«Правила мучного ваучера» указано 1 € за рабочий день и может быть "
+"определено общее количество в выражении worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -992,7 +1004,7 @@ msgstr "Название платежной ведомости"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "Записи расчётного листка"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1359,7 +1371,7 @@ msgstr "Итого"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Total Working Days"
-msgstr "Общие рабочие дни"
+msgstr "Итого рабочих дней"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
@@ -1455,7 +1467,7 @@ msgstr "Вы должны выбрать сотрудника(ов) чтобы �
 #: code:addons/hr_payroll/models/hr_payroll.py:838
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
+msgstr "Нужно указать договор для создания расчётного листа."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
