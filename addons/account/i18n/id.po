@@ -20,14 +20,15 @@
 # Dhaman <dhaman@indonesian-odoo.com>, 2016
 # Yani Dama Putera <yanidp@gmail.com>, 2016
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
-# Hendro Anto <hyulianto@gmail.com>, 2016
+# Hendro Yulianto <hyulianto@gmail.com>, 2016
+# alfieqashwa <alfieqashwa@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-03 15:21+0000\n"
-"PO-Revision-Date: 2016-10-03 15:21+0000\n"
-"Last-Translator: Hendro Anto <hyulianto@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-10-10 08:43+0000\n"
+"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"Last-Translator: alfieqashwa <alfieqashwa@gmail.com>, 2016\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr ""
 #: model:mail.template,body_html:account.email_template_edi_invoice
 msgid ""
 "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% set access_action = object.get_access_action()\n"
 "% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
@@ -212,7 +213,7 @@ msgid ""
 "                      <!-- HEADER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\">\n"
 "                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
@@ -243,7 +244,7 @@ msgid ""
 "                      <!-- FOOTER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
 "                                ${user.company_id.name}<br/>\n"
@@ -5986,6 +5987,7 @@ msgstr "Pembayaran kurang"
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
 msgstr ""
+"Mengijinkan Odoo untuk mencoba merekonsiliasi masukan data untuk pengguna"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6138,7 +6140,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
 msgid "Manual Reconciliation"
-msgstr ""
+msgstr "Manual rekonsiliasi"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6308,7 +6310,7 @@ msgstr "Lebih<i class=\"fa fa-caret-down\"></i>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Info lebih lanjut"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8673,7 +8675,7 @@ msgstr "Kelompok pajak"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "Tax ID"
+msgid "Tax ID (VAT)"
 msgstr ""
 
 #. module: account
@@ -9086,8 +9088,8 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"The first step is to set up your company's information. This is mostly used "
-"in printed business documents like orders and invoices."
+"The first step is to set up your company information. This is mostly used "
+"for invoicing."
 msgstr ""
 
 #. module: account

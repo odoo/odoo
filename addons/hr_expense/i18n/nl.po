@@ -65,6 +65,9 @@ msgid ""
 "approval.</p><p><i>Tip: from the list view, select all expenses to submit "
 "them all at once, in a single report.</i></p>"
 msgstr ""
+"<p>Wanneer compleet kunt u<b>de declaratie versturen</b> ter "
+"goedkeuring.</p><p><i>Tip: Selecteer alle declaraties uit de lijstweergave "
+"om deze tegelijk te versturen in één declaratieformulier.</i></p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -84,6 +87,8 @@ msgid ""
 "<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong"
 " class=\"text-primary\">PRICE</strong>"
 msgstr ""
+"<strong class=\"text-info\">[PRODUCT CODE]</strong> Gratis Beschrijving "
+"<strong class=\"text-primary\">PRIJS</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -103,7 +108,7 @@ msgstr "<strong>Werknemer:</strong>"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr ""
+msgstr "<strong>Betaling door:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -121,6 +126,8 @@ msgid ""
 "<strong>Your email gateway is not configured.</strong> Please configure your email\n"
 "                            gateway from the Settings app, menu <i>General Settings</i>."
 msgstr ""
+"<strong>Uw e-mail servers zijn niet ingesteld</strong> Stel uw e-mail servers\n"
+"in via de Instellingen app. menu <i>Algemene instellingen</i>."
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
@@ -528,7 +535,7 @@ msgstr "Declaratie afgekeurd"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense report submitted, waiting approval"
-msgstr ""
+msgstr "Declaratieformulieren verstuurd, wachtend op goedkeuring"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -541,7 +548,7 @@ msgstr ""
 #: model:product.product,name:hr_expense.product_product_fixed_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
-msgstr "Kosten"
+msgstr "Declaraties"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_action
@@ -567,7 +574,7 @@ msgstr "Declaratie rapport"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr ""
+msgstr "Goed te keuren declaratieformulieren"
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_department_expense_confirmed
@@ -601,6 +608,8 @@ msgstr ""
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
+"Declaraties moeten betaald worden door dezelfde entiteit (bedrijf of "
+"medewerker)"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -662,7 +671,7 @@ msgstr "Groepeer op"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Have a wonderful day,<br/>- The Odoo Team"
-msgstr ""
+msgstr "Heb een prachtige dag, <br/>- The Odoo Team"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
@@ -683,7 +692,7 @@ msgstr "HR afdeling"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_register_payment_wizard
 msgid "Hr Expense Register Payment wizard"
-msgstr ""
+msgstr "HR declaratie registreer betaling wizard"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -746,7 +755,7 @@ msgstr "Beheerder"
 #: code:addons/hr_expense/static/src/js/tour.js:41
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
-msgstr ""
+msgstr "Managers kunnen alle goed te keuren rapporten krijgen via dit menu."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_communication
@@ -762,7 +771,7 @@ msgstr "Mijn declaraties"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "My Expenses to Submit"
-msgstr ""
+msgstr "Mijn in te dienen declaraties"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -873,6 +882,8 @@ msgid ""
 "Once your email gateway is configured, come back to this screen\n"
 "                            to setup the next steps."
 msgstr ""
+"Wanneer uw e-mail server ingesteld zijn. kom dan terug naar dit scherm\n"
+"om de volgende stappen in te stellen."
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -916,7 +927,7 @@ msgstr "Betaalwijze"
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Periodically, you submit expenses report to your manager,"
-msgstr ""
+msgstr "Periodiek, verstuurt u declaratieformulieren naar uw manager."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_web_planner
@@ -1065,6 +1076,8 @@ msgid ""
 "Save the report, your manager will receive a notification by email to "
 "approve it."
 msgstr ""
+"Sla het rapport op, uw manager krijg een bericht per e-mail om het goed te "
+"keuren."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:88
@@ -1079,7 +1092,7 @@ msgstr ""
 #. module: hr_expense
 #: model:web.planner,tooltip_planner:hr_expense.planner_hr_expense
 msgid "Send receipts by email to create expenses efficiently."
-msgstr ""
+msgstr "Stuur bonnetjes per e-mail om efficiënt declaraties aan te maken."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
@@ -1167,6 +1180,9 @@ msgid ""
 "                            will set the right product automatically on your\n"
 "                            expense Odoo."
 msgstr ""
+"De <strong class=\"text-info\">PRODUCT CODE</strong> is optioneel en moet de \n"
+"interne referentie van één de declaratieproducten zijn. Hiermee\n"
+"wordt automatisch het juiste product ingesteld op Odoo declaratie."
 
 #. module: hr_expense
 #. openerp-web
@@ -1207,6 +1223,9 @@ msgid ""
 "                            be attached to the expense. That way, you get everything attached\n"
 "                            to fill the remaining fields later on."
 msgstr ""
+"De foto van de declaratie en de beschrijving van de e-mail wordt\n"
+"bijgevoegd aan de declaratie. Dit zorgt ervoor dat alles bijgevoegd wordt\n"
+"zodat u de overgebleven velden later kan invullen."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
@@ -1243,6 +1262,9 @@ msgid ""
 "                            receipts and send them by email with the following\n"
 "                            information:"
 msgstr ""
+"Om een declaratie per e-mail aan te maken, neem een foto van uw\n"
+"bonnetje en verstuur deze per-email met de volgende\n"
+"informatie:"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1308,12 +1330,14 @@ msgstr "Bekijk rapport"
 #: code:addons/hr_expense/static/src/js/tour.js:11
 #, python-format
 msgid "Want to manage your employee expenses and receipts? <i>Start here</i>."
-msgstr ""
+msgstr "U medewerker declaraties en bonnetjes beheren.<i>Start hier</i>."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "We hope this feature helped you manage your expenses efficiently."
 msgstr ""
+"We hopen dat deze mogelijkheid u helpt om eenvoudig uw declaraties te "
+"beheren."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:483
@@ -1328,6 +1352,8 @@ msgid ""
 "You can set an optionnal <strong class=\"text-primary\">PRICE</strong>\n"
 "                            at the end of the subject of your email."
 msgstr ""
+"U kunt een optionele <strong class=\"text-primary\">PRIJS</strong>\n"
+"instellein aan het einde van het onderwerp van uw e-mail."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
@@ -1339,29 +1365,37 @@ msgid ""
 "                                    the product will be set automatically. Type the expense amount\n"
 "                                    in the mail subject to set it on the expense too."
 msgstr ""
+"U kunt een generiek e-mail alias instellen om \n"
+"automatisch inkomende declaratie aan te maken. Verstuur een e-mail met het bonnetje\n"
+"in bijlage om een declaratie aan te maken met één klik. Wanneer het onderwerp\n"
+"van de e-mail de referentie van het product bevat tussen haakjes,\n"
+"dan zal het product automatisch worden ingesteld. Type de hoeveelheid\n"
+"in het onderwerp van het e-mail om deze ook toe te voegen aan de declaratie."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
 msgstr ""
+"Declaraties voor verschillende medewerkers kunnen niet gerapporteerd worden "
+"via hetzelfde declaratieformulier."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:104
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr ""
+msgstr "U kunt dezelfde lijn niet twee keer rapporteren."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "You record expenses"
-msgstr ""
+msgstr "U registreert declaraties"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "You record expenses,"
-msgstr ""
+msgstr "U registreert declaraties."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner

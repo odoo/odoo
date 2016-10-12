@@ -35,6 +35,7 @@
 # Denis Ledoux <dle@odoo.com>, 2016
 # Roberto Lizana <robertolizana@trey.es>, 2016
 # Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2016
+# Dario Bermudez <DBsublimaciones@gmail.com>, 2016
 # Manuel Gómez <nuelgoz@gmail.com>, 2016
 # Miguel Mendez <migmen@virtuellhandel.no>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
@@ -42,13 +43,14 @@
 # Bere Campbell <berenice_c7@hotmail.com>, 2016
 # Juan Fernando Cano González <jfcano@nanobytes.es>, 2016
 # Alexander Freiman <ajfreiman@gmail.com>, 2016
+# Luis Miguel Limache leon <luislimache@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-03 15:21+0000\n"
-"PO-Revision-Date: 2016-10-03 15:21+0000\n"
-"Last-Translator: Alexander Freiman <ajfreiman@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-10-10 08:43+0000\n"
+"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"Last-Translator: Luis Miguel Limache leon <luislimache@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +62,7 @@ msgstr ""
 #: model:mail.template,body_html:account.email_template_edi_invoice
 msgid ""
 "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% set access_action = object.get_access_action()\n"
 "% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
@@ -143,12 +145,14 @@ msgstr "# de transacción"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Factura (Ref ${object.number or 'n/a'})"
+msgstr ""
+"${Asunto.compañía _N° de Identificación. Nombre} Factura (Ref "
+"${asunto.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
 msgid "${object.subject}"
-msgstr "${object.subject}"
+msgstr "${objetivo.Asunto}"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:466
@@ -238,7 +242,7 @@ msgid ""
 "                      <!-- HEADER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\">\n"
 "                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
@@ -269,7 +273,7 @@ msgid ""
 "                      <!-- FOOTER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
 "                                ${user.company_id.name}<br/>\n"
@@ -6167,7 +6171,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
 msgid "Manual Reconciliation"
-msgstr ""
+msgstr "Conciliación manual"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8260,6 +8264,9 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Seleccione 'Ventas' para diarios de facturas de cliente.\n"
+"Seleccione 'Compras' para diarios de facturas de proveedor.\n"
+"Seleccione 'Caja' o 'Banco' para diarios que se usan para pagos de clientes y proveedores. Seleccione 'General' para diarios que contienen operaciones varias."
 
 #. module: account
 #. openerp-web
@@ -8697,7 +8704,7 @@ msgstr "Grupo de impuestos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "Tax ID"
+msgid "Tax ID (VAT)"
 msgstr ""
 
 #. module: account
@@ -8894,6 +8901,11 @@ msgid ""
 "items are directly exigible, but with the module account_tax_cash_basis, "
 "some will become exigible only when the payment is recorded."
 msgstr ""
+"Campo técnico usado para marcar una línea de impuestos como exigible o no en"
+" el informe de impuestos (sólo los apuntes contables exigibles son "
+"mostrados). Por defecto, todos los apuntes contables nuevos son directamente"
+" exigibles, pero con el módulo account_tax_cash_basis, algunos se "
+"convertirán en exigibles sólo cuando el pago se registre."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
@@ -9113,8 +9125,8 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"The first step is to set up your company's information. This is mostly used "
-"in printed business documents like orders and invoices."
+"The first step is to set up your company information. This is mostly used "
+"for invoicing."
 msgstr ""
 
 #. module: account

@@ -41,7 +41,7 @@ msgstr "# правил аналитики"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
 msgid "# Bill of Material"
-msgstr "№ спецификации на материалы"
+msgstr "Ведомость материалов"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
@@ -170,7 +170,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "Помещено в архив "
+msgstr "Архивировано"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -198,9 +198,9 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
-"Средняя задержка в днях, при производстве этого продукта. В случае "
-"многоуровневой спецификации, длительность производственного цикла "
-"компонентов будет добавлена."
+"Средняя задержка в днях при производстве этого продукта. В случае "
+"многоуровневой ВМ, будет добавлена длительность производственного цикла "
+"компонентов."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
@@ -244,7 +244,7 @@ msgstr "Изображение большого размера"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
 msgid "Bill of Materials"
-msgstr "Спецификация на материалы"
+msgstr "Ведомость материалов"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
@@ -298,7 +298,7 @@ msgstr "Перевозчик"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
 msgid "Category Routes"
-msgstr "Маршруты категории"
+msgstr "Категории технологических карт"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
@@ -388,13 +388,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_currency_id
@@ -683,7 +683,7 @@ msgstr "Бесплатно стоимость доставки"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
-msgstr "Бесплатно, если общая сумма заказа больше, чем"
+msgstr "Бесплатно, если итоговая сумма заказа превышает"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -943,6 +943,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
+"Вручную установить количество по заказу: счета, с ручным вводом кол-ва, без создания счёта аналитики.\n"
+"Расписание по договору: счета, основанные на отслеживании часов соответствующих привязанным расписаниям.\n"
+"Установить задачи и отслеживание времени: создание задачи в заказе на продажу и отслеживание рабочих часов."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -1061,7 +1064,7 @@ msgstr "Нормальная стоимость"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr "Нормальная цена — Общая цена"
+msgstr "Нормальная цена - итоговая цена"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -1727,22 +1730,22 @@ msgstr "Для взвешивания на весах"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
 msgid "Total Cost"
-msgstr "Общая Стоимость"
+msgstr "Итоговая стоимость"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin
 msgid "Total Margin"
-msgstr "Общая маржа"
+msgstr "Итоговая маржа"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr "Общий размер маржи(%)"
+msgstr "Итоговый коэффициент маржи (%)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr "Общая маржа * 100 / Оборот"
+msgstr "Итоговая маржа × 100 ÷ оборот"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
