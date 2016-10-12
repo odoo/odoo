@@ -620,9 +620,8 @@ class node_context(object):
     def __init__(self, cr, uid, context=None):
         self.dbname = cr.dbname
         self.uid = uid
+        context = dict(context or {})
         self.context = context
-        if context is None:
-            context = {}
         context['uid'] = uid
         self._dirobj = openerp.registry(cr.dbname).get('document.directory')
         self.node_file_class = node_file
