@@ -625,8 +625,7 @@ class pos_session(osv.osv):
         return True
 
     def open_frontend_cb(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
+        context = dict(context or {})
         if not ids:
             return {}
         for session in self.browse(cr, uid, ids, context=context):

@@ -1782,7 +1782,7 @@ exports.Order = Backbone.Model.extend({
     },
 
     initialize_validation_date: function () {
-        this.validation_date = this.validation_date || new Date();
+        this.validation_date = new Date();
     },
 
     set_tip: function(tip) {
