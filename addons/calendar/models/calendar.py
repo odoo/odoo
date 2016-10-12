@@ -376,7 +376,7 @@ class AlarmManager(models.AbstractModel):
             if meeting.recurrency:
                 b_found = False
                 last_found = False
-                for one_date in meeting.get_recurrent_date_by_event():
+                for one_date in meeting._get_recurrent_date_by_event():
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
                     if last_found:

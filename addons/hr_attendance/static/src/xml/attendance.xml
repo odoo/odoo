@@ -5,9 +5,9 @@
         </div>
     </t>
 
-    <t t-name="HrAttendanceMainMenu">
-        <div class="o_hr_attendance_main_menu_container">
-            <div class="o_hr_attendance_main_menu">
+    <t t-name="HrAttendanceKioskMode">
+        <div class="o_hr_attendance_kiosk_mode_container">
+            <div class="o_hr_attendance_kiosk_mode">
                 <h1>Welcome to <t t-esc="widget.company_name"/></h1>
                 <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo"/>
                 <h2>Scan your badge</h2>
@@ -19,8 +19,8 @@
     </t>
 
     <t t-name="HrAttendanceMyMainMenu">
-        <div class="o_hr_attendance_main_menu_container">
-            <div class="o_hr_attendance_main_menu">
+        <div class="o_hr_attendance_kiosk_mode_container">
+            <div class="o_hr_attendance_kiosk_mode">
                 <t t-if="widget.employee">
                     <h1>Welcome <t t-esc="widget.employee.name"/></h1>
                     <t t-if="widget.employee.attendance_state=='checked_out'">
@@ -39,9 +39,9 @@
         </div>
     </t>
 
-    <t t-name="HrAttendanceMainMenuConfirm">
-        <div class="o_hr_attendance_main_menu_container">
-            <div class="o_hr_attendance_main_menu">
+    <t t-name="HrAttendanceKioskConfirm">
+        <div class="o_hr_attendance_kiosk_mode_container">
+            <div class="o_hr_attendance_kiosk_mode">
                 <t t-if="widget.employee_id">
                     <h1>Welcome <t t-esc="widget.employee_name"/></h1>
                     <t t-if="!widget.use_pin">
@@ -89,7 +89,7 @@
         </div>
     </t>
 
-    <t t-name="HrAttendanceMessage">
+    <t t-name="HrAttendanceGreetingMessage">
         <div class="o_hr_attendance_message_container">
             <div class="o_hr_attendance_message">
                 <t t-if="widget.attendance">

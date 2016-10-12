@@ -51,17 +51,17 @@ options.registry.newsletter_popup = mass_mailing_common.extend({
         var self = this;
         if (type !== "click") return;
         return this._super(type, value).then(function (mailing_list_id) {
-                ajax.jsonRpc('/web/dataset/call', 'call', {
-                    model: 'mail.mass_mailing.list',
-                    method: 'read',
-                    args: [[parseInt(mailing_list_id)], ['popup_content'], base.get_context()],
-                }).then(function (data) {
-                    self.$target.find(".o_popup_content_dev").empty();
-                    if (data && data[0].popup_content) {
-                        $(data[0].popup_content).appendTo(self.$target.find(".o_popup_content_dev"));
-                    }
-                });
+            ajax.jsonRpc('/web/dataset/call', 'call', {
+                model: 'mail.mass_mailing.list',
+                method: 'read',
+                args: [[parseInt(mailing_list_id)], ['popup_content'], base.get_context()],
+            }).then(function (data) {
+                self.$target.find(".o_popup_content_dev").empty();
+                if (data && data[0].popup_content) {
+                    $(data[0].popup_content).appendTo(self.$target.find(".o_popup_content_dev"));
+                }
             });
+        });
     },
 });
 
@@ -84,9 +84,11 @@ web_editor.Class.include({
             ajax.jsonRpc('/web/dataset/call', 'call', {
                 model: 'mail.mass_mailing.list',
                 method: 'write',
-                args: [parseInt(newsletter_id),
-                   {'popup_content':content},
-                   base.get_context()],
+                args: [
+                    parseInt(newsletter_id),
+                    {'popup_content':content},
+                    base.get_context()
+                ],
             });
         }
         return this._super();
@@ -97,7 +99,4 @@ web_editor.Class.include({
         $('.modal-backdrop').css("z-index", "0");
     },
 });
-
 });
-
-

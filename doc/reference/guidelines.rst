@@ -902,7 +902,7 @@ Javascript and CSS
 
 .. code-block:: javascript
 
-    openerp.website.if_dom_contains('.jquery_class_selector', function () {
+    odoo.website.if_dom_contains('.jquery_class_selector', function () {
         /*your code here*/
     });
 

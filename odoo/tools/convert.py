@@ -26,11 +26,8 @@ from odoo import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
-# Import of XML records requires the unsafe eval as well,
-# almost everywhere, which is ok because it supposedly comes
-# from trusted data, but at least we make it obvious now.
-unsafe_eval = eval
-from .safe_eval import safe_eval
+from .safe_eval import safe_eval as s_eval
+safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
 
 class ParseError(Exception):
     def __init__(self, msg, text, filename, lineno):
@@ -98,7 +95,7 @@ def _eval_xml(self, node, env):
             idref2 = {}
             if f_search:
                 idref2 = _get_idref(self, env, f_model, self.idref)
-            q = unsafe_eval(f_search, idref2)
+            q = safe_eval(f_search, idref2)
             ids = env[f_model].search(q).ids
             if f_use != 'id':
                 ids = map(lambda x: x[f_use], env[f_model].browse(ids).read([f_use]))
@@ -115,7 +112,7 @@ def _eval_xml(self, node, env):
         if a_eval:
             idref2 = _get_idref(self, env, f_model, self.idref)
             try:
-                return unsafe_eval(a_eval, idref2)
+                return safe_eval(a_eval, idref2)
             except Exception:
                 logging.getLogger('odoo.tools.convert.init').error(
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), env.context)
@@ -183,7 +180,7 @@ def _eval_xml(self, node, env):
         # FIXME: should probably be exclusive
         if a_eval:
             self.idref['ref'] = self.id_get
-            args = unsafe_eval(a_eval, self.idref)
+            args = safe_eval(a_eval, self.idref)
         for n in node:
             return_val = _eval_xml(self, n, env)
             if return_val is not None:
@@ -221,12 +218,12 @@ class xml_import(object):
         for ctx in (data_node_context, node_context):
             if ctx:
                 try:
-                    ctx_res = unsafe_eval(ctx, eval_dict)
+                    ctx_res = safe_eval(ctx, eval_dict)
                     if isinstance(context, dict):
                         context.update(ctx_res)
                     else:
                         context = ctx_res
-                except NameError:
+                except (ValueError, NameError):
                     # Some contexts contain references that are only valid at runtime at
                     # client-side, so in that case we keep the original context string
                     # as it is. We also log it, just in case.
@@ -265,7 +262,7 @@ form: module.record_id""" % (xml_id,)
         if d_search:
             idref = _get_idref(self, self.env, d_model, {})
             try:
-                records = records.search(unsafe_eval(d_search, idref))
+                records = records.search(safe_eval(d_search, idref))
             except ValueError:
                 _logger.warning('Skipping deletion for failed search `%r`', d_search, exc_info=True)
                 pass
@@ -402,8 +399,8 @@ form: module.record_id""" % (xml_id,)
         context = self.get_context(data_node, rec, eval_context)
 
         try:
-            domain = unsafe_eval(domain, eval_context)
-        except NameError:
+            domain = safe_eval(domain, eval_context)
+        except (ValueError, NameError):
             # Some domains contain references that are only valid at runtime at
             # client-side, so in that case we keep the original domain string
             # as it is. We also log it, just in case.
@@ -587,7 +584,7 @@ form: module.record_id""" % (xml_id,)
         if rec_id:
             records = env[rec_model].browse(self.id_get(rec_id))
         elif rec_src:
-            q = unsafe_eval(rec_src, eval_dict)
+            q = safe_eval(rec_src, eval_dict)
             records = env[rec_model].search(q)
             if rec_src_count:
                 count = int(rec_src_count)
@@ -613,7 +610,7 @@ form: module.record_id""" % (xml_id,)
                 f_expr = test.get("expr",'').encode('utf-8')
                 env = self.env(user=uid, context=context)
                 expected_value = _eval_xml(self, test, env) or True
-                expression_value = unsafe_eval(f_expr, globals_dict)
+                expression_value = safe_eval(f_expr, globals_dict)
                 if expression_value != expected_value: # assertion failed
                     self.assertion_report.record_failure()
                     msg = 'assertion "%s" failed!\n'    \
@@ -632,7 +629,7 @@ form: module.record_id""" % (xml_id,)
         rec_id = rec.get("id",'').encode('ascii')
         rec_context = rec.get("context", {})
         if rec_context:
-            rec_context = unsafe_eval(rec_context)
+            rec_context = safe_eval(rec_context)
 
         if self.xml_filename and rec_id:
             rec_context['install_mode_data'] = dict(
@@ -680,7 +677,7 @@ form: module.record_id""" % (xml_id,)
             f_val = False
 
             if f_search:
-                q = unsafe_eval(f_search, self.idref)
+                q = safe_eval(f_search, self.idref)
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
                 # browse the objects searched
                 s = self.env[f_model].search(q)

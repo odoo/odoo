@@ -424,6 +424,12 @@ class MassMailing(models.Model):
     # Technical stuff
     #------------------------------------------------------
 
+    @api.model
+    def name_create(self, name):
+        """ _rec_name is source_id, creates a utm.source instead """
+        mass_mailing = self.create({'name': name})
+        return mass_mailing.name_get()[0]
+
     @api.multi
     def copy(self, default=None):
         self.ensure_one()

@@ -155,7 +155,7 @@ renderer.tplPopovers = function (lang, options) {
     // show dialog box and delete
     var $imageprop = $('<div class="btn-group"/>');
     $imageprop.appendTo($imagePopover.find('.popover-content'));
-    $(tplIconButton('fa fa-picture-o', {
+    $(tplIconButton('fa fa-file-image-o', {
             title: _t('Edit'),
             event: 'showImageDialog'
         })).appendTo($imageprop);
@@ -215,9 +215,6 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     var previous = $(".note-control-selection").data('target');
     if (previous) {
         $(previous).css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
-    }
-    if (oStyle.image) {
-        $(oStyle.image).css({"-webkit-animation": "none", "animation": "none"});
     }
     // end
 
@@ -864,7 +861,7 @@ $.summernote.lang.odoo = {
       size: _t('Font Size')
     },
     image: {
-      image: _t('Picture'),
+      image: _t('File / Image'),
       insert: _t('Insert Image'),
       resizeFull: _t('Resize Full'),
       resizeHalf: _t('Resize Half'),
