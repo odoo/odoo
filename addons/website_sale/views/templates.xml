@@ -788,7 +788,9 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                <span class="btn btn-primary btn-lg o_website_form_send o_default_snippet_text">Send</span>
+                                <span class="btn btn-primary pull-right btn-lg o_website_form_send o_default_snippet_text">
+                                    <span>Next </span><span class="fa fa-long-arrow-right" />
+                                </span>
                                 <span id="o_website_form_result" class="text-danger ml8" />
                             </div>
                         </div>
@@ -886,8 +888,10 @@
                 </t>
             </tbody>
         </table>
-        <div class="js_cart_lines pull-right">
-            <t t-call="website_sale.total" />
+        <div class="js_cart_lines row">
+            <t t-call="website_sale.total">
+                <t t-set='extra_class' t-value='"col-sm-4 col-sm-offset-8 col-xs-12"'/>
+            </t>
         </div>
     </template>
 
@@ -1268,7 +1272,7 @@
             </div>
         </t>
     </template>
-    <template id="payment">
+    <template id="payment" name="Payment">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Select Payment Method</t>
             <div id="wrap">
@@ -1325,78 +1329,81 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="pull-right">
-                                <t t-call="website_sale.total" />
+                            <div>
+                                <t t-call="website_sale.total">
+                                    <t t-set='extra_class' t-value='"col-sm-4 col-sm-offset-8 col-xs-12"'/>
+                                </t>
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
+
+                            <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
+                                <div class="col-lg-5 col-sm-6">
+                                    <h4>Payment Method:</h4>
+                                    <ul class="list-unstyled">
+                                        <t t-foreach="acquirers or []" t-as="acquirer">
+                                          <li>
+                                            <label t-if="acquirer.button">
+                                                <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
+                                                <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-field-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
+                                                <span t-field="acquirer.name" />
+                                                <span t-if="acquirer.fees_active">(processing fees apply)</span>
+                                            </label>
+                                          </li>
+                                        </t>
+                                        <li t-if="tokens">
+                                            <label>
+                                                <input type="radio" name="acquirer" />
+                                                <span class='fa fa-2x fa-credit-card'/>
+                                                Saved Cards
+                                            </label>
+
+                                            <div class="list-group">
+                                                <t t-foreach='tokens' t-as='token'>
+                                                    <a class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
+                                                        <span class="js_radio fa fa-circle-o"></span>&amp;nbsp;
+                                                        <t t-esc="token.name" />
+                                                        <t t-if="len(set(tokens.mapped('acquirer_id')))>1">
+                                                            (<t t-esc='token.acquirer_id.name'/>)
+                                                        </t>
+                                                        <span t-if="token.acquirer_id.fees_active">(processing fees apply)</span>
+                                                    </a>
+                                                </t>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-5 col-lg-offset-2 col-sm-6 text-right">
+                                    <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
+                                        <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
+                                            <div t-raw="acquirer.button" />
+                                            <div class="token_hide">
+                                                <div t-if="acquirer.save_token == 'ask'">
+                                                    <input type="checkbox" name="odoo_save_token"/>
+                                                    <label for="odoo_save_token">Save my payment data</label>
+                                                </div>
+                                                <div class="pre_msg" t-field="acquirer.pre_msg" />
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+                                <div class="col-sm-12">
+                                    <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                        <a style="width:127px;" class="btn btn-primary a-submit">
+                                            <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
+                                            <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
                             <t t-call='website_sale.bill_to'>
                                 <t t-set="order" t-value= "order"/>
                             </t>
-                        </div>
-                    </div>
-                    <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
-                        <div class="col-lg-5 col-sm-6">
-                            <h4>Payment Method:</h4>
-                            <ul class="list-unstyled">
-                                <t t-foreach="acquirers or []" t-as="acquirer">
-                                  <li>
-                                    <label t-if="acquirer.button">
-                                        <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
-                                        <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-field-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
-                                        <span t-field="acquirer.name" />
-                                        <span t-if="acquirer.fees_active">(processing fees apply)</span>
-                                    </label>
-                                  </li>
-                                </t>
-                                <li t-if="tokens">
-                                    <label>
-                                        <input type="radio" name="acquirer" />
-                                        <span class='fa fa-2x fa-credit-card'/>
-                                        Saved Cards
-                                    </label>
-
-                                    <div class="list-group">
-                                        <t t-foreach='tokens' t-as='token'>
-                                            <a class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
-                                                <span class="js_radio fa fa-circle-o"></span>&amp;nbsp;
-                                                <t t-esc="token.name" />
-                                                <t t-if="len(set(tokens.mapped('acquirer_id')))>1">
-                                                    (<t t-esc='token.acquirer_id.name'/>)
-                                                </t>
-                                                <span t-if="token.acquirer_id.fees_active">(processing fees apply)</span>
-                                            </a>
-                                        </t>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-3 col-sm-3">
-                            <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
-                                <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
-                                    <div t-raw="acquirer.button" />
-                                    <div class="token_hide">
-                                        <div t-if="acquirer.save_token == 'ask'">
-                                            <input type="checkbox" name="odoo_save_token"/>
-                                            <label for="odoo_save_token">Save my payment data</label>
-                                        </div>
-                                        <div class="pre_msg" t-field="acquirer.pre_msg" />
-                                    </div>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                    <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
-                        <div class="col-lg-8 col-sm-8">
-                            <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                <a style="width:127px;" class="btn btn-primary a-submit">
-                                    <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
-                                    <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>
-                                </a>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -1405,17 +1412,15 @@
         </t>
     </template>
 
-    <template id="payment_sale_note" inherit_id="payment" name="Display Sale Note" customize_show="True" active="False">
+    <template id="payment_sale_note" inherit_id="payment" name="Accept Terms &amp; Conditions" customize_show="True" active="False">
         <xpath expr="//t[@id='acquirers_list']" position="before">
-            <t t-set="sale_note" t-value="website_sale_order.note" />
-            <t t-if="sale_note and sale_note != ''">
-                <div class="oe_accept_cgv_button">
-                    <label>
-                        <input type="checkbox" checked="checked" id="checkbox_cgv" />
-                        <t t-esc="sale_note" />
-                    </label>
-                </div>
-            </t>
+            <div class="oe_accept_cgv_button">
+                <label>
+                    <input type="checkbox" checked="checked" id="checkbox_cgv" />
+                    I agree to the <a target='_BLANK' href='/shop/terms'>terms &amp; conditions</a>
+
+                </label>
+            </div>
         </xpath>
     </template>
 
@@ -1578,7 +1583,7 @@
     </template>
 
     <template id="total">
-        <div id="cart_total" t-if="website_sale_order">
+        <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order">
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
                 <span class="col-xs-6 text-left text-muted">
@@ -1749,5 +1754,44 @@
                 <span t-esc="ol.name" />
             </t>
         </xpath>
+    </template>
+
+    <template id="terms" name="Terms &amp; Conditions">
+        <t t-call="website.layout">
+          <div id="wrap">
+              <div class="oe_structure">
+                <section class="s_title">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h1 class="text-center">Terms &amp;amp; Conditions</h1>
+                        <div class="well s_well clearfix">
+                            <ul>
+                                <li>The <b>Intellectual Property</b> disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws.</li>
+                                <li>A <b>Termination</b> clause will inform that users’ accounts on your website and mobile app or users’ access to your website and mobile (if users can’t have an account with you) can be terminated in case of abuses or at your sole discretion.</li>
+                                <li>A <b>Governing Law</b> will inform users which laws govern the agreement. This should the country in which your company is headquartered or the country from which you operate your web site and mobile app.</li>
+                                <li>A <b>Links To Other Web Sites</b> clause will inform users that you are not responsible for any third party web sites that you link to. This kind of clause will generally inform users that they are responsible for reading and agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies of these third parties.</li>
+                                <li>If your website or mobile apps allows users to create content and make that content public to other users, a <b>Content</b> section will inform users that they own the rights to the content they have created.<br/>The “Content” clause usually mentions that users must give you (the website or mobile app developer) a license so that you can share this content on your website/mobile app and to make it available to other users.<br/>Because the content created by users is public to other users, a DMCA notice clause (or Copyright Infringement ) section is helpful to inform users and copyright authors that, if any content is found to be a copyright infringement, you will respond to any DMCA take down notices received and you will take down the content.</li>
+                                <li>A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to use your service, they’re also agreeing to not do certain things. This can be part of a very long and thorough list in your Terms and Conditions agreements so as to encompass the most amount of negative uses.</li>
+                           </ul>
+                           <small class="text-muted pull-right">Source: https://termsfeed.com/blog/sample-terms-and-conditions-template</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section class="s_text_block">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-12 mb16 mt16">
+                        <p style='white-space:pre' t-esc="website.company_id.sale_note"/>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div class="oe_structure"/>
+          </div>
+        </t>
     </template>
 </odoo>

@@ -26,7 +26,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.linkcode',
     'github_link',
-    'odoo',
+    'odoo_ext',
     'html_domain',
     'exercise_admonition',
     'patchqueue'
@@ -91,7 +91,7 @@ pygments_style = 'odoo'
 # -- Options for HTML output ---------------------------------------------------
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'odoo'
+html_theme = 'odoo_ext'
 
 odoo_cover_default = 'banners/installing_odoo.jpg'
 odoo_cover_external = {

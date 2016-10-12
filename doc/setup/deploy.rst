@@ -25,7 +25,7 @@ operations or to get the data. If multi-tenancy is not used that is not an
 issue, there's only one database to use, but if there are multiple databases
 accessible Odoo needs a rule to know which one it should use.
 
-That is one of the purposes of :option:`--db-filter <odoo.py --db-filter>`:
+That is one of the purposes of :option:`--db-filter <odoo-bin --db-filter>`:
 it specifies the default database for the Odoo system. The value is a
 `regular expression`_, possibly including the dynamically injected hostname
 or subdomain through which the Odoo system is accessed.
@@ -156,7 +156,7 @@ increases stability, makes somewhat better use of computing resources and can
 be better monitored and resource-restricted.
 
 * Multiprocessing is enabled by configuring :option:`a non-zero number of
-  worker processes <odoo.py --workers>`, the number of workers should be based
+  worker processes <odoo-bin --workers>`, the number of workers should be based
   on the number of cores in the machine (possibly with some room for cron
   workers depending on how much cron work is predicted)
 * Worker limits can be configured based on the hardware configuration to avoid
@@ -185,12 +185,12 @@ LiveChat
 --------
 
 In multiprocessing, a dedicated LiveChat worker is automatically started and
-listening on :option:`the longpolling port <odoo.py --longpolling-port>` but
+listening on :option:`the longpolling port <odoo-bin --longpolling-port>` but
 the client will not connect to it.
 
 Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
-the :option:`normal HTTP port <odoo.py --xmlrpc-port>`
+the :option:`normal HTTP port <odoo-bin --xmlrpc-port>`
 
 Configuration sample
 --------------------
@@ -225,7 +225,7 @@ authentication information in cleatext. This means a secure deployment of
 Odoo must use HTTPS\ [#switching]_. SSL termination can be implemented via
 just about any SSL termination proxy, but requires the following setup:
 
-* enable Odoo's :option:`proxy mode <odoo.py --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
+* enable Odoo's :option:`proxy mode <odoo-bin --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
 * set up the SSL termination proxy (`Nginx termination example`_)
 * set up the proxying itself (`Nginx proxying example`_)
 * your SSL termination proxy should also automatically redirect non-secure
@@ -312,9 +312,9 @@ Odoo as a WSGI Application
 ==========================
 
 It is also possible to mount Odoo as a standard WSGI_ application. Odoo
-provides the base for a WSGI launcher script as ``openerp-wsgi.py``. That
+provides the base for a WSGI launcher script as ``odoo-wsgi.py``. That
 script should be customized (possibly after copying it) to correctly set the
-configuration directly in :mod:`openerp.tools.config` rather than through the
+configuration directly in :mod:`odoo.tools.config` rather than through the
 command-line or a configuration file.
 
 However the WSGI server will only expose the main HTTP endpoint for the web
@@ -326,12 +326,12 @@ Cron Workers
 
 To run cron jobs for an Odoo deployment as a WSGI application requires
 
-* a classical Odoo (run via ``odoo.py``)
+* a classical Odoo (run via ``odoo-bin``)
 * connected to the database in which cron jobs have to be run (via
-  :option:`odoo.py -d`)
+  :option:`odoo-bin -d`)
 * which should not be exposed to the network. To ensure cron runners are not
   network-accessible, it is possible to disable the built-in HTTP server
-  entirely with :option:`odoo.py --no-xmlrpc` or setting ``xmlrpc = False``
+  entirely with :option:`odoo-bin --no-xmlrpc` or setting ``xmlrpc = False``
   in the configuration file
 
 LiveChat
@@ -353,9 +353,9 @@ The solutions to support livechat/motifications in a WSGI application are:
   one) and redirect only requests to URLs starting with ``/longpolling/`` to
   that Odoo, this is the simplest and the longpolling URL can double up as
   the cron instance.
-* deploy an evented Odoo via ``openerp-gevent`` and proxy requests starting
+* deploy an evented Odoo via ``odoo-gevent`` and proxy requests starting
   with ``/longpolling/`` to
-  :option:`the longpolling port <odoo.py --longpolling-port>`.
+  :option:`the longpolling port <odoo-bin --longpolling-port>`.
 
 Serving Static Files
 ====================

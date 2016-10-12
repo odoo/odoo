@@ -55,7 +55,7 @@
                     <h2 style="font-weight:300;">
                         Hi ${object.name}, here is your order confirmation for
                         % if 'website_url' in object.event_id and object.event_id.website_url:
-                            <a href="${object.event_id.website_url}" style="color:#a24689;text-decoration:none;">${object.event_id.name}</a>
+                            <a href="${object.event_id.website_url}" style="color:#875A7B;text-decoration:none;">${object.event_id.name}</a>
                         % else:
                             <strong>${object.event_id.name}</strong>
                         % endif
@@ -110,7 +110,7 @@
                             <tr>
                                 <td style="padding:10px 0px 25px 0px;">
                                     <h2 style="font-weight:300;margin:10px 0px">Questions about this event?</h2>
-                                    <div>Please contact the organizer at <a href="mailto:${object.event_id.organizer_id.email}" style="text-decoration:none;color:#a24689;">${object.event_id.organizer_id.email}</a></div>
+                                    <div>Please contact the organizer at <a href="mailto:${object.event_id.organizer_id.email}" style="text-decoration:none;color:#875A7B;">${object.event_id.organizer_id.email}</a></div>
                                 </td>
                             </tr>
                         </table>
@@ -119,9 +119,9 @@
                         <tr>
                             <td style="padding:25px 0px;">
                                 <strong>Add this event to your calendar</strong>
-                                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #a24689;color:#a24689;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(162,70,137)/16" style="vertical-align:middle;" height="16"> Google</a>
-                                <a href="https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #a24689;color:#a24689;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(162,70,137)/16" style="vertical-align:middle;" height="16"> Outlook</a>
-                                <a href="https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #a24689;color:#a24689;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(162,70,137)/16" style="vertical-align:middle;" height="16"> Yahoo</a>
+                                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Google</a>
+                                <a href="https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Outlook</a>
+                                <a href="https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Yahoo</a>
                             </td>
                         </tr>
                     </table>
@@ -138,7 +138,7 @@
         <tbody>
             <tr>
                 <td style="padding-top:10px;font-size: 12px;">
-                    <div>This email was sent to <a href="mailto:${object.email}" style="text-decoration:none;color:#a24689;">${object.email}</a></div>
+                    <div>This email was sent to <a href="mailto:${object.email}" style="text-decoration:none;color:#875A7B;">${object.email}</a></div>
                     <p style="margin:0px 0px 9px 0px;padding-top:10px;">Copyright © ${object.company_id.name}</p>
                 </td>
             </tr>
@@ -186,7 +186,7 @@
                     <p style="font-size:16px;">
                         Please keep in mind that the event
                         % if 'website_url' in object.event_id and object.event_id.website_url:
-                            <a href="${object.event_id.website_url}" style="color:#a24689;text-decoration:none;">${object.event_id.name}</a>
+                            <a href="${object.event_id.website_url}" style="color:#875A7B;text-decoration:none;">${object.event_id.name}</a>
                         % else:
                             <strong>${object.event_id.name}</strong>
                         % endif
@@ -243,7 +243,7 @@
                             <tr>
                                 <td style="padding:10px 0px 25px 0px;">
                                     <h2 style="font-weight:300;margin:10px 0px">Questions about this event?</h2>
-                                    <div>Please contact the organizer at <a href="mailto:${object.event_id.organizer_id.email}" style="text-decoration:none;color:#a24689;">${object.event_id.organizer_id.email}</a></div>
+                                    <div>Please contact the organizer at <a href="mailto:${object.event_id.organizer_id.email}" style="text-decoration:none;color:#875A7B;">${object.event_id.organizer_id.email}</a></div>
                                 </td>
                             </tr>
                         </table>
@@ -252,9 +252,9 @@
                         <tr>
                             <td style="padding:25px 0px;">
                                 <strong>Add this event to your calendar</strong>
-                                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #a24689;color:#a24689;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(162,70,137)/16" style="vertical-align:middle;" height="16"> Google</a>
-                                <a href="https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #a24689;color:#a24689;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(162,70,137)/16" style="vertical-align:middle;" height="16"> Outlook</a>
-                                <a href="https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #a24689;color:#a24689;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(162,70,137)/16" style="vertical-align:middle;" height="16"> Yahoo</a>
+                                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Google</a>
+                                <a href="https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Outlook</a>
+                                <a href="https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16"> Yahoo</a>
                             </td>
                         </tr>
                     </table>
@@ -271,7 +271,7 @@
         <tbody>
             <tr>
                 <td style="padding-top:10px;font-size: 12px;">
-                    <div>This email was sent to <a href="mailto:${object.email}" style="text-decoration:none;color:#a24689;">${object.email}</a></div>
+                    <div>This email was sent to <a href="mailto:${object.email}" style="text-decoration:none;color:#875A7B;">${object.email}</a></div>
                     <p style="margin:0px 0px 9px 0px;padding-top:10px;">Copyright © ${object.company_id.name}</p>
                 </td>
             </tr>

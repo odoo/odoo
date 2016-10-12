@@ -28,7 +28,7 @@ Index: addons/openacademy/partner.py
 +++ addons/openacademy/partner.py	2014-08-26 17:26:01.223783354 +0200
 @@ -0,0 +1,12 @@
 +# -*- coding: utf-8 -*-
-+from openerp import fields, models
++from odoo import fields, models
 +
 +class Partner(models.Model):
 +    _inherit = 'res.partner'
@@ -45,7 +45,7 @@ Index: addons/openacademy/views/partner.xml
 +++ addons/openacademy/views/partner.xml	2014-08-26 17:26:01.223783354 +0200
 @@ -0,0 +1,32 @@
 +<?xml version="1.0" encoding="UTF-8"?>
-+ <openerp>
++ <odoo>
 +    <data>
 +        <!-- Add instructor field to existing view -->
 +        <record model="ir.ui.view" id="partner_instructor_form_view">
@@ -75,4 +75,4 @@ Index: addons/openacademy/views/partner.xml
 +                  parent="configuration_menu"
 +                  action="contact_list_action"/>
 +    </data>
-+</openerp>
++</odoo>

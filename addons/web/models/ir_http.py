@@ -32,6 +32,7 @@ class Http(models.AbstractModel):
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),
             "name": user.name,
+            "username": user.login,
             "company_id": request.env.user.company_id.id if request.session.uid else None,
             "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
             "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,

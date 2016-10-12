@@ -44,14 +44,24 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Your Company</t>
                     <p class="text-muted">
-                        The first step is to set up your company information. This is mostly used for invoicing.
+                        The first step is to set up your company's information. This is mostly used in printed business documents like orders and invoices.
                     </p>
                     <table class="table">
+                    <tr>
+                        <th>Logo</th>
+                        <td>
+                            <img width="150" height="90" alt="set company logo" t-attf-src="data:image/gif;base64, #{company_id.logo}"/>
+                        </td><td>
+                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}" target="_blank">
+                                Change
+                            </a>
+                        </td>
+                    </tr>
                     <tr>
                         <th>Legal Name</th>
                         <td t-att-class="(company_id.name == 'YourCompany') and 'danger'"><div t-esc="company_id.name"/></td>
                         <td>
-                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
+                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}" target="_blank">
                                 Change
                             </a>
                         </td>
@@ -62,17 +72,17 @@
                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
                         </td>
                         <td>
-                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
+                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}" target="_blank">
                                 Change
                             </a>
                         </td>
                     </tr><tr>
-                        <th>Tax ID (VAT)</th>
+                        <th>Tax ID</th>
                         <td  t-att-class="(not company_id.vat) and 'danger'">
                             <span t-field="company_id.vat"/>
                         </td>
                         <td>
-                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
+                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}" target="_blank">
                                 Change
                             </a>
                         </td>
@@ -80,7 +90,7 @@
                         <th>Main Currency</th>
                         <td><span t-field="company_id.currency_id.display_name"/></td>
                         <td>
-                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
+                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}" target="_blank">
                                 Change
                             </a>
                         </td>
@@ -88,7 +98,7 @@
                         <th>Terms &amp; Conditions</th>
                         <td></td>
                         <td>
-                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
+                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('sales_team.action_sale_config', 'form')}&amp;id=#{company_id.id}" target="_blank">
                                 Change
                             </a>
                         </td>
@@ -100,15 +110,6 @@
                             </t>
                         </td><td>
                             <a id="review_payment_terms" class="fa fa-arrow-right" t-att-href="prepare_backend_url('account.action_payment_term_form')">Review Terms</a>
-                        </td>
-                    </tr><tr>
-                        <th>Logo</th>
-                        <td>
-                            <img width="150" height="90" alt="set company logo" t-attf-src="data:image/gif;base64, #{company_id.logo}"/>
-                        </td><td>
-                            <a class="fa fa-arrow-right" t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
-                                Change
-                            </a>
                         </td>
                     </tr>
                     </table>

@@ -49,7 +49,7 @@ var TopBarContent = Widget.extend({
                 },
             }).then(function (menu) {
                 var dialog = new EditMenuDialog(this, {}, menu).open();
-                dialog.on("saved", null, function () {
+                dialog.on("save", null, function () {
                     $.when(action_before_reload && action_before_reload()).then(function () {
                         editor.reload();
                     });
@@ -291,9 +291,9 @@ var EditMenuDialog = widget.Dialog.extend({
         var context = base.get_context();
         // Resequence, re-tree and remove useless data
         new_menu.forEach(function (menu) {
-            if (menu.item_id) {
+            if (menu.id) {
                 levels[menu.depth] = (levels[menu.depth] || 0) + 1;
-                var mobj = self.flat[menu.item_id];
+                var mobj = self.flat[menu.id];
                 mobj.sequence = levels[menu.depth];
                 mobj.parent_id = (menu.parent_id|0) || menu.parent_id || self.root_menu_id;
                 delete(mobj.children);

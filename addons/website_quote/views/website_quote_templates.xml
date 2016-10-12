@@ -571,8 +571,7 @@
             <table class="table table-hover wq-table">
                 <thead>
                     <tr>
-                        <th>Products</th>
-                        <th>Description</th>
+                        <th>Product</th>
                         <th></th>
                         <th class="text-right">Price</th>
                         <th></th>
@@ -581,9 +580,6 @@
                 <tbody>
                     <tr t-foreach="quotation.options" t-as="option">
                         <t t-if="not option.line_id">
-                            <td>
-                                <div t-field="option.product_id.product_tmpl_id.name"/>
-                            </td>
                             <td>
                                 <div t-field="option.name"/>
                             </td>

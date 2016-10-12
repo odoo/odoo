@@ -18,7 +18,7 @@ diff --git a/academy/controllers.py b/academy/controllers.py
 --- a/academy/controllers.py
 +++ b/academy/controllers.py
 @@ -2,7 +2,7 @@
- from openerp import http
+ from odoo import http
  
  class Academy(http.Controller):
 -    @http.route('/academy/academy/', auth='public')
@@ -30,7 +30,7 @@ diff --git a/academy/templates.xml b/academy/templates.xml
 --- a/academy/templates.xml
 +++ b/academy/templates.xml
 @@ -1,9 +1,15 @@
- <openerp>
+ <odoo>
      <data>
          <template id="index">
 -            <title>Academy</title>

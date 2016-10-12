@@ -339,7 +339,8 @@ class HrExpense(models.Model):
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
             'quantity': 1,
-            'unit_amount': price
+            'unit_amount': price,
+            'company_id': employee.company_id.id,
         })
         return super(HrExpense, self).message_new(msg_dict, custom_values)
 
@@ -348,7 +349,7 @@ class HrExpenseSheet(models.Model):
     _name = "hr.expense.sheet"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Expense Report"
-    _order = "accounting_date desc"
+    _order = "accounting_date desc, id desc"
 
     name = fields.Char(string='Expense Report Summary', required=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)

@@ -3,7 +3,7 @@
 .. _reference/cmdline:
 
 ===============================
-Command-line interface: odoo.py
+Command-line interface: odoo-bin
 ===============================
 
 .. _reference/cmdline/server:
@@ -11,7 +11,7 @@ Command-line interface: odoo.py
 Running the server
 ==================
 
-.. program:: odoo.py
+.. program:: odoo-bin
 
 .. option:: -d <database>, --database <database>
 
@@ -228,7 +228,7 @@ customize the amount of logging output
 .. option:: --log-handler <handler-spec>
 
     :samp:`{LOGGER}:{LEVEL}`, enables ``LOGGER`` at the provided ``LEVEL``
-    e.g. ``openerp.models:DEBUG`` will enable all logging messages at or above
+    e.g. ``odoo.models:DEBUG`` will enable all logging messages at or above
     ``DEBUG`` level in the models.
 
     * The colon ``:`` is mandatory
@@ -239,34 +239,34 @@ customize the amount of logging output
 
     .. code-block:: console
 
-        $ odoo.py --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler openerp.fields:WARNING
+        $ odoo-bin --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler odoo.fields:WARNING
 
 .. option:: --log-request
 
     enable DEBUG logging for RPC requests, equivalent to
-    ``--log-handler=openerp.http.rpc.request:DEBUG``
+    ``--log-handler=odoo.http.rpc.request:DEBUG``
 
 .. option:: --log-response
 
     enable DEBUG logging for RPC responses, equivalent to
-    ``--log-handler=openerp.http.rpc.response:DEBUG``
+    ``--log-handler=odoo.http.rpc.response:DEBUG``
 
 .. option:: --log-web
 
     enables DEBUG logging of HTTP requests and responses, equivalent to
-    ``--log-handler=openerp.http:DEBUG``
+    ``--log-handler=odoo.http:DEBUG``
 
 .. option:: --log-sql
 
     enables DEBUG logging of SQL querying, equivalent to
-    ``--log-handler=openerp.sql_db:DEBUG``
+    ``--log-handler=odoo.sql_db:DEBUG``
 
 .. option:: --log-level <level>
 
     Shortcut to more easily set predefined levels on specific loggers. "real"
     levels (``critical``, ``error``, ``warn``, ``debug``) are set on the
-    ``openerp`` and ``werkzeug`` loggers (except for ``debug`` which is only
-    set on ``openerp``).
+    ``odoo`` and ``werkzeug`` loggers (except for ``debug`` which is only
+    set on ``odoo``).
 
     Odoo also provides debugging pseudo-levels which apply to different sets
     of loggers:
@@ -276,11 +276,11 @@ customize the amount of logging output
 
         equivalent to ``--log-sql``
     ``debug_rpc``
-        sets the ``openerp`` and HTTP request loggers to ``debug``
+        sets the ``odoo`` and HTTP request loggers to ``debug``
 
         equivalent to ``--log-level debug --log-request``
     ``debug_rpc_answer``
-        sets the ``openerp`` and HTTP request and response loggers to
+        sets the ``odoo`` and HTTP request and response loggers to
         ``debug``
 
         equivalent to ``--log-level debug --log-request --log-response``
@@ -296,14 +296,14 @@ customize the amount of logging output
 Scaffolding
 ===========
 
-.. program:: odoo.py scaffold
+.. program:: odoo-bin scaffold
 
 Scaffolding is the automated creation of a skeleton structure to simplify
 bootstrapping (of new modules, in the case of Odoo). While not necessary it
 avoids the tedium of setting up basic structures and looking up what all
 starting requirements are.
 
-Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
+Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 
 .. option:: -t <template>
 
@@ -344,8 +344,8 @@ Some conversions don't match the pattern:
   from configuration files
 
 The default configuration file is :file:`{$HOME}/.odoorc` which
-can be overridden using :option:`--config <odoo.py -c>`. Specifying
-:option:`--save <odoo.py -s>` will save the current configuration state back
+can be overridden using :option:`--config <odoo-bin -c>`. Specifying
+:option:`--save <odoo-bin -s>` will save the current configuration state back
 to that file.
 
 .. _jinja2: http://jinja.pocoo.org

@@ -218,7 +218,7 @@ class Module(models.Model):
                 path_parts = module.icon.split('/')
                 path = modules.get_module_resource(path_parts[1], *path_parts[2:])
             else:
-                path = modules.get_module_icon(module.name)
+                path = modules.module.get_module_icon(module.name)
             if path:
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = image_file.read().encode('base64')

@@ -94,7 +94,7 @@
                     <t t-if="message.origin_id &amp;&amp; (message.origin_id !== options.channel_id)">
                         (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
                     </t>
-                    <span t-if="options.display_email_icon &amp;&amp; message.customer_email_data.length" class="o_thread_tooltip_container">
+                    <span t-if="options.display_email_icon &amp;&amp; message.customer_email_data &amp;&amp; message.customer_email_data.length" class="o_thread_tooltip_container">
                         <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.customer_email_status + ' fa fa-envelope-o'"/>
                         <span class="o_thread_tooltip_content">
                             <t t-foreach="message.customer_email_data" t-as="customer">

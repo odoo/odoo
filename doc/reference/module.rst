@@ -87,4 +87,4 @@ Available manifest fields are:
 
 .. _semantic versioning: http://semver.org
 .. _existing categories:
-     https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
+     https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml

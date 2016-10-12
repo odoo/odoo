@@ -213,7 +213,7 @@ class Partner(models.Model, FormatAddress):
 
     # technical field used for managing commercial fields
     commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
-                                             string='Commercial Entity', store=True)
+                                             string='Commercial Entity', store=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
@@ -349,11 +349,6 @@ class Partner(models.Model, FormatAddress):
                     return value.id if isinstance(value, models.BaseModel) else value
                 result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
-
-    @api.onchange('state_id')
-    def onchange_state(self):
-        if self.state_id:
-            self.country_id = self.state_id.country_id
 
     @api.onchange('email')
     def onchange_email(self):

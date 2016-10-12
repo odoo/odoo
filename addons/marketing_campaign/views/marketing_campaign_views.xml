@@ -109,7 +109,7 @@
         <field name="model">marketing.campaign</field>
         <field name="arch" type="xml">
             <diagram string="Campaign Editor">
-                <node object="marketing.campaign.activity" shape="rectangle:type=='subcampaign'" bgcolor="gray:start==True">
+                <node object="marketing.campaign.activity" shape="rectangle:action_type=='subcampaign'" bgcolor="gray:start==True">
                     <field name="name"/>
                     <field name="action_type"/>
                     <field name="start" invisible="1"/>

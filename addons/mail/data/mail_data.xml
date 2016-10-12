@@ -82,25 +82,25 @@
 <tbody><tr>
     <td valign="center">
         % if ctx.get('has_button_access'):
-        <a href="${ctx['button_access']['url']}" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #a24689; border: 0px solid #a24689; border-radius:3px">${ctx['button_access']['title']}</a>
+        <a href="${ctx['button_access']['url']}" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">${ctx['button_access']['title']}</a>
         % endif
 
         % if ctx.get('has_button_follow'):
         % if ctx.get('has_button_access'):
            |
         % endif
-        <a href="${ctx['button_follow']['url']}" style="color: #a24689; text-decoration: none !important;">${ctx['button_follow']['title']}</a>
+        <a href="${ctx['button_follow']['url']}" style="color: #875A7B; text-decoration: none !important;">${ctx['button_follow']['title']}</a>
         % elif ctx.get('has_button_unfollow'):
         % if ctx.get('has_button_access'):
            |
         % endif
-        <a href="${ctx['button_unfollow']['url']}" style="color: #a24689; text-decoration: none !important;">${ctx['button_unfollow']['title']}</a>
+        <a href="${ctx['button_unfollow']['url']}" style="color: #875A7B; text-decoration: none !important;">${ctx['button_unfollow']['title']}</a>
         % endif
 
         % if ctx.get('actions'):
         % for action in ctx['actions']:
         |
-        <a href="${action['url']}" style="color: #a24689; text-decoration:none !important;">${action['title']}</a>
+        <a href="${action['url']}" style="color: #875A7B; text-decoration:none !important;">${action['title']}</a>
         % endfor
         % endif
     </td>
@@ -138,14 +138,14 @@ ${object.body | safe}
 <p style="color: #555555;">
     Sent by
     % if ctx.get('website_url'):
-    <a href="${ctx['website_url']}" style="text-decoration:none; color: #a24689;">
+    <a href="${ctx['website_url']}" style="text-decoration:none; color: #875A7B;">
     % endif
     ${ctx.get('company_name')}
     % if ctx.get('website_url'):
     </a>
     % endif
     using
-    <a href="https://www.odoo.com" style="text-decoration:none; color: #a24689;">Odoo</a>.
+    <a href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>
 </div>]]></field>
         </record>

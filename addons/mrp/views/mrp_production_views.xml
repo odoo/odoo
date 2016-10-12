@@ -93,7 +93,7 @@
                                     string="Update" states="confirmed,planned,progress" class="oe_link" attrs="{'invisible': [('state','=','done')]}"/>
                             </div>
                             <field name="bom_id"
-                                domain="['|',
+                                domain="['&amp;', '|',
                                             ('product_id','=',product_id),
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),

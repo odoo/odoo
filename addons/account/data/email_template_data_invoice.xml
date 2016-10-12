@@ -16,7 +16,7 @@
             <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_id.name} 
+<p>Dear ${object.partner_id.name}
 % set access_action = object.get_access_action()
 % set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
@@ -69,7 +69,7 @@ from ${object.company_id.name}.
                       <!-- HEADER -->
                       <tr>
                         <td align="center" style="min-width: 590px;">
-                          <table width="590" border="0" cellpadding="0" bgcolor="#a24689" style="min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle">
                                   <span style="font-size:20px; color:white; font-weight: bold;">
@@ -100,7 +100,7 @@ from ${object.company_id.name}.
                       <!-- FOOTER -->
                       <tr>
                         <td align="center" style="min-width: 590px;">
-                          <table width="590" border="0" cellpadding="0" bgcolor="#a24689" style="min-width: 590px; background-color: rgb(162, 70, 137); padding: 20px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
                                 ${user.company_id.name}<br/>

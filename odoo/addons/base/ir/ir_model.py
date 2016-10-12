@@ -1276,7 +1276,7 @@ class IrModelData(models.Model):
 
         self._cr.commit()
 
-        self.unlink()
+        datas.unlink()
 
     @api.model
     def _process_end(self, modules):

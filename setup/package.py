@@ -24,6 +24,7 @@ from tempfile import NamedTemporaryFile
 #----------------------------------------------------------
 execfile(join(dirname(__file__), '..', 'odoo', 'release.py'))
 version = version.split('-')[0]
+docker_version = version.replace('+', '')
 timestamp = time.strftime("%Y%m%d", time.gmtime())
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
 GPGID = os.getenv('GPGID')
@@ -279,7 +280,7 @@ def _prepare_testing(o):
         # Use rsync to copy requirements.txt in order to keep original permissions
         subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_src")],
                         cwd=os.path.join(o.odoo_dir))
-        subprocess.call(["docker", "build", "-t", "odoo-%s-src-nightly-tests" % version, "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-src-nightly-tests" % docker_version, "."],
                         cwd=os.path.join(o.build_dir, "docker_src"))
     if not o.no_debian:
         subprocess.call(["mkdir", "docker_debian"], cwd=o.build_dir)
@@ -288,17 +289,17 @@ def _prepare_testing(o):
         # Use rsync to copy requirements.txt in order to keep original permissions
         subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_debian")],
                         cwd=os.path.join(o.odoo_dir))
-        subprocess.call(["docker", "build", "-t", "odoo-%s-debian-nightly-tests" % version, "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-debian-nightly-tests" % docker_version, "."],
                         cwd=os.path.join(o.build_dir, "docker_debian"))
     if not o.no_rpm:
         subprocess.call(["mkdir", "docker_fedora"], cwd=o.build_dir)
         subprocess.call(["cp", "package.dffedora", os.path.join(o.build_dir, "docker_fedora", "Dockerfile")],
                         cwd=os.path.join(o.odoo_dir, "setup"))
-        subprocess.call(["docker", "build", "-t", "odoo-%s-fedora-nightly-tests" % version, "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-fedora-nightly-tests" % docker_version, "."],
                         cwd=os.path.join(o.build_dir, "docker_fedora"))
 
 def test_tgz(o):
-    with docker('odoo-%s-src-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
+    with docker('odoo-%s-src-nightly-tests' % docker_version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
         wheezy.system('pip install /opt/release/%s' % wheezy.release)
@@ -311,7 +312,7 @@ def test_tgz(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany &"')
 
 def test_deb(o):
-    with docker('odoo-%s-debian-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
+    with docker('odoo-%s-debian-nightly-tests' % docker_version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.deb'
         wheezy.system("service postgresql start")
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
@@ -321,7 +322,7 @@ def test_deb(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany &"')
 
 def test_rpm(o):
-    with docker('odoo-%s-fedora-nightly-tests' % version, o.build_dir, o.pub) as fedora24:
+    with docker('odoo-%s-fedora-nightly-tests' % docker_version, o.build_dir, o.pub) as fedora24:
         fedora24.release = '*.noarch.rpm'
         # Start postgresql
         fedora24.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
