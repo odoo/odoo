@@ -453,6 +453,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
+        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
+            order.message_subscribe([order.partner_id.id])
         for order in self:
             order.state = 'sale'
             order.confirmation_date = fields.Datetime.now()
