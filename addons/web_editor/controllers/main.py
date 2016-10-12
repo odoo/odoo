@@ -226,7 +226,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/customize_template_get', type='json', auth='user', website=True)
     def customize_template_get(self, key, full=False, bundles=False):
         """ Get inherit view's informations of the template ``key``.
-            returns templates (which can be active or not)
+            returns templates info (which can be active or not)
             ``bundles=True`` returns also the asset bundles
         """
         return request.env["ir.ui.view"].customize_template_get(key, full=full, bundles=bundles)
