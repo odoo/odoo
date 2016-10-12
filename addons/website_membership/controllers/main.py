@@ -111,7 +111,7 @@ class WebsiteMembership(http.Controller):
 
         google_map_partner_ids = []
         if request.env.ref('website_membership.opt_index_google_map').customize_show:
-            membership_lines_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
+            membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
             google_map_partner_ids = membership_line_obj.get_published_companies(cr, uid, membership_line_ids, limit=2000, context=context)
 
         search_domain = [('membership_state', '=', 'free'), ('website_published', '=', True)]
