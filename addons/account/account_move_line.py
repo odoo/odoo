@@ -709,8 +709,7 @@ class account_move_line(osv.osv):
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
     def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         account_obj = self.pool.get('account.account')
         journal_obj = self.pool.get('account.journal')
         currency_obj = self.pool.get('res.currency')
@@ -1131,8 +1130,7 @@ class account_move_line(osv.osv):
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         context = self.convert_to_period(cr, user, context=context)
         if context.get('account_id', False):
             cr.execute('SELECT code FROM account_account WHERE id = %s', (context['account_id'], ))
