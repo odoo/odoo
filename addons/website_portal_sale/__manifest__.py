@@ -10,13 +10,15 @@
 Add your sales document in the frontend portal. Your customers will be able to connect to their portal to see the list (and the state) of their invoices (pdf report), sales orders and quotations (web pages).
         """,
     'depends': [
-        'portal_sale',
+        'sale',
         'website_portal',
         'website_payment',
     ],
     'data': [
         'views/website_portal_sale_templates.xml',
+        'views/sale_order_views.xml',
         'security/ir.model.access.csv',
+        'security/sale_order_security.xml',
     ],
     'demo': [
         'data/sale_demo.xml'
