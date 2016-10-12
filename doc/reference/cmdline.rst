@@ -3,7 +3,7 @@
 .. _reference/cmdline:
 
 ===============================
-Command-line interface: odoo.py
+Command-line interface: odoo-bin
 ===============================
 
 .. _reference/cmdline/server:
@@ -11,7 +11,7 @@ Command-line interface: odoo.py
 Running the server
 ==================
 
-.. program:: odoo.py
+.. program:: odoo-bin
 
 .. option:: -d <database>, --database <database>
 
@@ -239,7 +239,7 @@ customize the amount of logging output
 
     .. code-block:: console
 
-        $ odoo.py --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler odoo.fields:WARNING
+        $ odoo-bin --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler odoo.fields:WARNING
 
 .. option:: --log-request
 
@@ -296,14 +296,14 @@ customize the amount of logging output
 Scaffolding
 ===========
 
-.. program:: odoo.py scaffold
+.. program:: odoo-bin scaffold
 
 Scaffolding is the automated creation of a skeleton structure to simplify
 bootstrapping (of new modules, in the case of Odoo). While not necessary it
 avoids the tedium of setting up basic structures and looking up what all
 starting requirements are.
 
-Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
+Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 
 .. option:: -t <template>
 
@@ -344,8 +344,8 @@ Some conversions don't match the pattern:
   from configuration files
 
 The default configuration file is :file:`{$HOME}/.odoorc` which
-can be overridden using :option:`--config <odoo.py -c>`. Specifying
-:option:`--save <odoo.py -s>` will save the current configuration state back
+can be overridden using :option:`--config <odoo-bin -c>`. Specifying
+:option:`--save <odoo-bin -s>` will save the current configuration state back
 to that file.
 
 .. _jinja2: http://jinja.pocoo.org

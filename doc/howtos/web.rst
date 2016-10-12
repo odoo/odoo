@@ -39,7 +39,7 @@ following command:
 
 This will create a ``petstore`` folder wherever you executed the command.
 You then need to add that folder to Odoo's
-:option:`addons path <odoo.py --addons-path>`, create a new database and
+:option:`addons path <odoo-bin --addons-path>`, create a new database and
 install the ``oepetstore`` module.
 
 If you browse the ``petstore`` folder, you should see the following content:

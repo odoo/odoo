@@ -26,7 +26,7 @@ module. To quickly get started simply invoke:
 
 .. code-block:: console
 
-    $ ./odoo.py scaffold Academy my-modules
+    $ ./odoo-bin scaffold Academy my-modules
 
 This will automatically create a ``my-modules`` *module directory* with an
 ``academy`` module inside. The directory can be an existing module directory
@@ -46,7 +46,7 @@ Although it does absolutely nothing we can install it:
 
   .. code-block:: console
 
-      $ ./odoo.py --addons-path addons,my-modules
+      $ ./odoo-bin --addons-path addons,my-modules
 
 * go to http://localhost:8069
 * create a new database including demonstration data
@@ -70,7 +70,7 @@ Shut down your server (:kbd:`^C`) then restart it:
 
 .. code-block:: console
 
-    $ ./odoo.py --addons-path addons,my-modules
+    $ ./odoo-bin --addons-path addons,my-modules
 
 and open a page to http://localhost:8069/academy/academy/, you should see your
 "page" appear:
@@ -102,11 +102,11 @@ Academy` and clicking :guilabel:`Upgrade`.
 .. tip::
 
     Alternatively, Odoo can be restarted :option:`and update modules at
-    the same time<odoo.py -u>`:
+    the same time<odoo-bin -u>`:
 
     .. code-block:: console
 
-        $ odoo.py --addons-path addons,my-modules -d academy -u academy
+        $ odoo-bin --addons-path addons,my-modules -d academy -u academy
 
 Going to http://localhost:8069/academy/academy/ should now result in:
 
