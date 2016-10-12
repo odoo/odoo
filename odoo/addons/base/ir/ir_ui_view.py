@@ -1168,4 +1168,4 @@ actual arch.
             try:
                 self.browse(vid)._check_xml()
             except Exception as e:
-                self.raise_view_error("Can't validate view: %s" % e.message, vid)
+                self.raise_view_error("Can't validate view:\n%s" % (e.message or repr(e)), vid)
