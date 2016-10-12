@@ -339,7 +339,8 @@ class HrExpense(models.Model):
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
             'quantity': 1,
-            'unit_amount': price
+            'unit_amount': price,
+            'company_id': employee.company_id.id,
         })
         return super(HrExpense, self).message_new(msg_dict, custom_values)
 
