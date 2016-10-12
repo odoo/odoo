@@ -620,8 +620,7 @@ class PosOrder(models.Model):
                                 qty = 1.0
                             qty_done += qty
                             pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
-                else:
-                    qty_done = pack_operation.product_qty
+
                 pack_operation.write({'pack_lot_ids': map(lambda x: (0, 0, x), pack_lots), 'qty_done': qty_done})
 
     def add_payment(self, data):
