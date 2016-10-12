@@ -425,6 +425,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     anonymized_value = '2011-11-11 11:11:11'
                 elif field_type == 'float':
                     anonymized_value = 0.0
+                elif field_type == 'monetary':
+                    anonymized_value = 0.0
                 elif field_type == 'integer':
                     anonymized_value = 0
                 elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
