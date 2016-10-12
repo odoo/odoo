@@ -86,7 +86,10 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{"search_default_today":1}</field>
         <field name="search_view_id" ref="hr_attendance_view_filter" />
-        <field name="help">The Time Tracking functionality aims to manage employee attendances from Check in/Check out actions. You can also link this feature to an attendance device using Odoo's web service features.</field>
+        <field name="help" type="html">
+            <p>The attendance records of your employees will be displayed here.</p>
+            <p>Please make sure you're using the correct filter if you expected to see any.</p>
+        </field>
     </record>
 
     <record id="hr_attendance_action_graph" model="ir.actions.act_window">
