@@ -189,7 +189,7 @@ body .modal {
                 ul.pager {
                     margin: 0;
                     > li > a {
-                        border-radius: 3px;
+                        border-radius: 0px;
                         margin-left: 2px;
                         padding: 6px 14px;
                     }
@@ -206,20 +206,34 @@ body .modal {
                     }
                 }
             }
-            .dropdown-toggle {
-                line-height: 0;
-                height: 34px;
+
+            .well {
+                border-top-width: 0;
+
+                label {
+                    margin: auto 10px;
+                }
+
+                .btn-group {
+                    margin-right: 10px;
+                }
             }
+
             .o_existing_attachment_cell {
                 @odoo-border-image: 1px;
                 .o_existing_attachment_remove {
                     .o-position-absolute(@odoo-border-image, 15px + @odoo-border-image);
-                    padding: 3px 3px 12px 12px;
-                    background-color: white;
-                    border-bottom: 1px solid black;
-                    border-left: 1px solid black;
-                    border-radius: 0 0 0 100%;
-                    opacity: 0.8;
+                    padding: 3px 5px 5px 5px;
+                    background-color: fade(white, 80%);
+                    text-shadow: 0 0 1px white;
+                    border-radius: 0 0 0 2px;
+                    opacity: 0;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: white;
+                        color: @o-we-color-danger;
+                    }
                 }
                 .o_image {
                     border: @odoo-border-image solid transparent;
@@ -235,15 +249,29 @@ body .modal {
                     border-color: @odoo-brand-primary;
                     box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
                 }
+                &:hover {
+                    .o_existing_attachment_remove {
+                        opacity: 1;
+                    }
+                }
             }
-            .font-icons-icons > span {
-                font-size: 30px;
-                margin: 5px;
-                padding: 3px;
-                cursor: pointer;
+            .font-icons-icons {
+                padding: 20px 0;
 
-                &.o_selected {
-                    box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
+                > span {
+                    text-align: center;
+                    font-size: 22px;
+                    margin: 5px;
+                    width: 50px;
+                    height: 50px;
+                    padding: 15px;
+                    cursor: pointer;
+
+                    &.o_selected {
+                        cursor: auto;
+                        background-color: @o-we-color-paper;
+                        box-shadow: 0px 0px 0px 1px @o-we-color-success;
+                    }
                 }
             }
         }
