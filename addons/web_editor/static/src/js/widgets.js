@@ -1145,7 +1145,7 @@ var LinkDialog = Dialog.extend({
             $preview.attr("target", new_window ? '_blank' : "")
                 .attr("href", url && url.length ? url : "#")
                 .html((label && label.length ? label : url))
-                .attr("class", classes.replace(/pull-\w+/, ''));
+                .attr("class", classes.replace(/pull-\w+/, '') + " o_btn_preview");
         });
     }
 });
