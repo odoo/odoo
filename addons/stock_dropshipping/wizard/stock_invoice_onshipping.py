@@ -32,6 +32,8 @@ class stock_invoice_onshipping(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         pickings = pick_obj.browse(cr, uid, res_ids, context=context)
         pick = pickings and pickings[0]
+        if not pick or not pick.move_lines:
+            return 'sale'
         src_usage = pick.move_lines[0].location_id.usage
         dest_usage = pick.move_lines[0].location_dest_id.usage
         if src_usage == 'supplier' and dest_usage == 'customer':
