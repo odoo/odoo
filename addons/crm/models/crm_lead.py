@@ -47,6 +47,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'date_action_next',
     'email_from',
     'email_cc',
+    'website',
     'partner_name']
 
 
@@ -75,6 +76,7 @@ class Lead(FormatAddress, models.Model):
     date_action_last = fields.Datetime('Last Action', readonly=True)
     date_action_next = fields.Datetime('Next Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
+    website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
@@ -238,6 +240,7 @@ class Lead(FormatAddress, models.Model):
                 'fax': partner.fax,
                 'zip': partner.zip,
                 'function': partner.function,
+                'website': partner.website,
             }
         return {}
 
@@ -727,6 +730,7 @@ class Lead(FormatAddress, models.Model):
             'city': self.city,
             'country_id': self.country_id.id,
             'state_id': self.state_id.id,
+            'website': self.website,
             'is_company': is_company,
             'type': 'contact'
         }
