@@ -3,6 +3,8 @@
 # Author: Gustavo Valverde. iterativo | Consultor de Odoo
 # Contributors: Edser Solis - iterativo
 
+# Odoo 8.0 author: Eneldo Serrata <eneldo@marcos.do> (Marcos Organizador de Negocios SRL..)
+# Odoo 7.0 author: Jose Ernesto Mendez <tecnologia@obsdr.com> (Open Business Solutions SRL.)
 # Copyright (c) 2016 - Present | Novum Ingenieria, SRL. - www.iterativo.do
 # All rights reserved.
 
