@@ -6,6 +6,7 @@ import re
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.osv.expression import get_unaccent_wrapper
 
 import odoo.addons.decimal_precision as dp
 
@@ -163,6 +164,7 @@ class ProductProduct(models.Model):
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
 
+    display_name = fields.Char(compute='_compute_display_name', index=True, store=True)
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
     ]
@@ -292,6 +294,12 @@ class ProductProduct(models.Model):
             '|',
             ('product_id', '=', self.id),
             ('product_tmpl_id', '=', self.product_tmpl_id.id)]).ids
+
+    @api.depends('product_tmpl_id.default_code', 'attribute_line_ids.value_ids')
+    def _compute_display_name(self):
+        names = dict(self.name_get())
+        for product in self:
+            product.display_name = names.get(product.id)
 
     @api.constrains('attribute_value_ids')
     def _check_attribute_value_ids(self):
@@ -428,6 +436,35 @@ class ProductProduct(models.Model):
                 products = self.search([('default_code', '=', name)] + args, limit=limit)
                 if not products:
                     products = self.search([('barcode', '=', name)] + args, limit=limit)
+                if not products:
+                    if operator in ('=ilike', '=like'):
+                        operator = operator[1:]
+                    self.check_access_rights('read')
+                    where_query = self._where_calc(args)
+                    self._apply_ir_rules(where_query, 'read')
+                    from_clause, where_clause, where_clause_params = where_query.get_sql()
+                    where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '
+                    search_name = name.split(' ')
+                    where_clause_params += ['%%%s%%' % search_name[0]]
+                    unaccent = get_unaccent_wrapper(self.env.cr)
+                    query = """SELECT product_product.id FROM {from_str}
+                             {where} {display_name} {operator} {name}
+                             """.format(
+                                    from_str=from_clause,
+                                    where=where_str,
+                                    display_name=unaccent('display_name'),
+                                    operator=operator,
+                                    name=unaccent("%s"))
+                    if len(search_name) > 1:
+                        for qname in search_name[1:]:
+                            where_clause_params += ['%%%s%%' % qname]
+                            query += " AND {display_name} {operator} {name}".format(
+                                display_name=unaccent('display_name'),
+                                operator=operator,
+                                name=unaccent("%s"))
+                    self.env.cr.execute(query, where_clause_params)
+                    product_ids = map(lambda x: x[0], self.env.cr.fetchall())
+                    products = self.browse(product_ids)
             if not products and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
