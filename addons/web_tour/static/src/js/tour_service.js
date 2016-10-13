@@ -58,7 +58,7 @@ return session.is_bound.then(function () {
                      * Once the DOM is ready, we still have to wait all the modules are loaded before completing the tours
                      * registration and starting listening for DOM mutations.
                      */
-                     $.when(load_def).then(function () {
+                    $.when(load_def, odoo.deferred).then(function () {
                          _.defer(function () {
                             tour._register_all(observe);
                             if (observe) {

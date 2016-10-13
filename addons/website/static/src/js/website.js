@@ -169,7 +169,7 @@ odoo.define('website.website', function (require) {
         ajax.loadXML('/website/static/src/xml/website.xml', qweb);
     });
 
-    base.ready().then(function () {
+    odoo.deferred.then(function () {
         data.topBar = new TopBar();
         return data.topBar.attachTo($("#oe_main_menu_navbar"));
     });

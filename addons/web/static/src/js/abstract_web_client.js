@@ -59,7 +59,7 @@ var WebClient = Widget.extend({
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 
-        return session.is_bound
+        return $.when(session.is_bound, odoo.deferred)
             .then(function () {
                 self.bind_events();
                 return $.when(

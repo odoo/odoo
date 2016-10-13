@@ -307,7 +307,7 @@ var Translate = Widget.extend({
 
 
 if (edit_translations) {
-    base.ready().then(function () {
+    odoo.deferred.then(function () {
         data.instance = new Translate(this, $('#wrapwrap'));
         data.instance.prependTo(document.body);
 

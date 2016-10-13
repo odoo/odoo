@@ -52,7 +52,7 @@ editor.reload = function () {
 
 /* ----- TOP EDITOR BAR FOR ADMIN ---- */
 
-base.ready().then(function () {
+odoo.deferred.then(function () {
     if (editor.editable && location.search.indexOf("enable_editor") >= 0) {
         editor.editor_bar = new editor.Class();
         editor.editor_bar.prependTo(document.body);

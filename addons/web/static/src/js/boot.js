@@ -36,7 +36,9 @@
     var require = function (name) { return services[name]; };
     var timeDeferred;
     var masterDef = new $.Deferred();
-    masterDef.__deferred__ = [];
+    var dom_ready = $.Deferred();
+    masterDef.__deferred__ = [dom_ready];
+    $(document).ready(dom_ready.resolve);
 
     var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg;
     var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
@@ -348,3 +350,4 @@
     });
 
 })();
+ 

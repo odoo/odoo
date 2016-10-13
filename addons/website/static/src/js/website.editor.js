@@ -211,7 +211,7 @@ widget.LinkDialog.include({
 /**
  * Display a welcome message on the homepage when it is empty and that the user is connected.
  */
-base.ready().then(function () {
+odoo.deferred.then(function () {
     if (location.search.indexOf("enable_editor") < 0 && $(".editor_enable").length === 0) {
         var $wrap = $("#wrapwrap.homepage #wrap");
         if ($wrap.length && $wrap.html().trim() === "") {
