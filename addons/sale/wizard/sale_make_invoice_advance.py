@@ -81,6 +81,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
         else:
             amount = self.amount
             name = _('Down Payment')
+        if order.fiscal_position_id and self.product_id.taxes_id:
+            tax_ids = order.fiscal_position_id.map_tax(self.product_id.taxes_id).ids
+        else:
+            tax_ids = self.product_id.taxes_id.ids
 
         invoice = inv_obj.create({
             'name': order.client_order_ref or order.name,
@@ -99,7 +103,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'uom_id': self.product_id.uom_id.id,
                 'product_id': self.product_id.id,
                 'sale_line_ids': [(6, 0, [so_line.id])],
-                'invoice_line_tax_ids': [(6, 0, [x.id for x in self.product_id.taxes_id])],
+                'invoice_line_tax_ids': [(6, 0, tax_ids)],
                 'account_analytic_id': order.project_id.id or False,
             })],
             'currency_id': order.pricelist_id.currency_id.id,
@@ -135,6 +139,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
                 if self.product_id.type != 'service':
                     raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
+                if order.fiscal_position_id and self.product_id.taxes_id:
+                    tax_ids = order.fiscal_position_id.map_tax(self.product_id.taxes_id).ids
+                else:
+                    tax_ids = self.product_id.taxes_id.ids
                 so_line = sale_line_obj.create({
                     'name': _('Advance: %s') % (time.strftime('%m %Y'),),
                     'price_unit': amount,
@@ -143,7 +151,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'discount': 0.0,
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
-                    'tax_id': [(6, 0, self.product_id.taxes_id.ids)],
+                    'tax_id': [(6, 0, tax_ids)],
                 })
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):
