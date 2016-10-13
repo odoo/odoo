@@ -1551,7 +1551,14 @@ class account_invoice_tax(models.Model):
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount, company.currency_id, round=False)
-        tax_sign = (self.tax_amount / self.amount) if self.amount else 1
+        if float_compare(self.amount, 0, precision_rounding=2) != 0:
+            if float_compare(amount, (self.tax_amount / self.amount),
+                             precision_rounding=2) == 1:
+                tax_sign = 1
+            else:
+                tax_sign = -1
+        else:
+            tax_sign = 1
         return {'value': {'tax_amount': amount * tax_sign}}
 
     @api.v8
@@ -1625,9 +1632,16 @@ class account_invoice_tax(models.Model):
             'SELECT * FROM account_invoice_tax WHERE invoice_id = %s',
             (invoice_id,)
         )
+        invoice = self.env['account.invoice'].browse([invoice_id])
         for row in self._cr.dictfetchall():
             if not (row['amount'] or row['tax_code_id'] or row['tax_amount']):
                 continue
+            line = self.browse([row['id']])
+            curr_id = invoice.currency_id and invoice.currency_id.id or False
+            company_id = invoice.company_id and invoice.company_id.id or False
+            tax_amount = line.amount_change(
+                row['amount'], currency_id=curr_id, company_id=company_id,
+                date_invoice=invoice.date_invoice)['value']['tax_amount']
             res.append({
                 'type': 'tax',
                 'name': row['name'],
@@ -1636,7 +1650,7 @@ class account_invoice_tax(models.Model):
                 'price': row['amount'] or 0.0,
                 'account_id': row['account_id'],
                 'tax_code_id': row['tax_code_id'],
-                'tax_amount': row['tax_amount'],
+                'tax_amount': tax_amount,
                 'account_analytic_id': row['account_analytic_id'],
             })
         return res
