@@ -47,10 +47,36 @@ de la Dirección General de Impuestos Internos (**DGII**).
 
 **Nota:**
 Este módulo no soporta NCF con Valor Fiscal para compras, ya que los
-mismos poseen un comportamiento diferente a los demás debido a que deben
+mismos poseen un comportamiento diferente debido a que deben
 ser introducidos de forma manual, por lo que no han sido configurados a través
 de los diarios.
 
+Estructura de Codificación del Catálogo de Cuentas:
+===================================================
+
+**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.
+**1** - Activo        **4** - Costos, Gastos y Pérdidas
+**2** - Pasivo        **5** - Cuentas de Ingresos y Ganancias
+**3** - Capital       **6** - Cuentas Liquidadoras de Resultados
+
+**Dos dígitos** representan los rubros de agrupación:
+11- Activo Corriente
+21- Pasivo Corriente
+31- Capital Contable
+
+**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden
+1101- Efectivo y Equivalentes de Efectivo
+2101- Cuentas y Documentos por pagar
+3101- Capital Social
+
+**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden
+110101 - Caja
+210101 - Proveedores locales
+
+**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas en Odoo):
+1101- Efectivo y Equivalentes
+110101- Caja
+11010101 Caja General
     """,
     'author': 'Gustavo Valverde - iterativo | Consultores de Odoo',
     'website': 'http://iterativo.do',
