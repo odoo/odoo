@@ -3,7 +3,7 @@
 [![Help](http://img.shields.io/badge/master-help-8f8f8f.svg?style=flat)](https://www.odoo.com/forum/help-1)
 [![Nightly Builds](http://img.shields.io/badge/master-nightly-8f8f8f.svg?style=flat)](http://nightly.odoo.com/)
 
-Odoo
+Odoo-Denis
 ----
 
 Odoo is a suite of web based open source business apps.
