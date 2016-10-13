@@ -84,7 +84,6 @@
                         <tree editable="bottom" decoration-success="qty_todo==qty" decoration-danger="(qty_todo &gt; 0) and (qty&gt;qty_todo)">
                             <field name="lot_name" invisible="not context.get('only_create', False)"/>
                             <field name="lot_id" invisible="context.get('only_create', False)"
-                                   domain="[('product_id','=', parent.product_id)]"
                                    context="{'product_id': parent.product_id}"/>
                             <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
                             <field name="qty" invisible="context.get('serial')"/>
