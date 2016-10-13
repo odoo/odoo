@@ -399,7 +399,9 @@ class AccountChartTemplate(models.Model):
             :rtype: dict
         """
         self.ensure_one()
-        account_reconcile_models = self.env['account.reconcile.model.template'].search([])
+        account_reconcile_models = self.env['account.reconcile.model.template'].search([
+            ('account_id.chart_template_id', '=', self.id)
+        ])
         for account_reconcile_model in account_reconcile_models:
             vals = {
                 'name': account_reconcile_model.name,
