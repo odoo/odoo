@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account.data_account_type_receivable" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">receivable</field>
+        <field name="name">A cobrar</field>
+    </record>
+    <record id="account.data_account_type_payable" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">payable</field>
+        <field name="name">A pagar</field>
+    </record>
+    <record id="account.data_account_type_liquidity" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">liquidity</field>
+        <field name="name">Banco y Efectivo</field>
+    </record>
+    <record id="account.data_account_type_current_assets" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Activos Corrientes</field>
+    </record>
+    <record id="account.data_account_type_non_current_assets" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Activos No Corrientes</field>
+    </record>
+    <record id="account.data_account_type_prepayments" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Pagos por Adelantado</field>
+    </record>
+    <record id="account.data_account_type_fixed_assets" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Activos Fijos</field>
+    </record>
+    <record id="account.data_account_type_current_liabilities" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Pasivos Corrientes</field>
+    </record>
+    <record id="account.data_account_type_non_current_liabilities" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Pasivos a Largo Plazo</field>
+    </record>
+    <record id="account.data_account_type_equity" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Capital</field>
+    </record>
+    <record id="account.data_unaffected_earnings" model="account.account.type">
+        <field eval="True" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Ganancias</field>
+    </record>
+    <record id="account.data_account_type_other_income" model="account.account.type">
+        <field eval="False" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Otros Ingresos</field>
+    </record>
+    <record id="account.data_account_type_revenue" model="account.account.type">
+        <field eval="False" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Ingreso</field>
+    </record>
+    <record id="account.data_account_type_depreciation" model="account.account.type">
+        <field eval="False" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Depreciación</field>
+    </record>
+    <record id="account.data_account_type_expenses" model="account.account.type">
+        <field eval="False" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Gastos</field>
+    </record>
+    <record id="account.data_account_type_direct_costs" model="account.account.type">
+        <field eval="False" name="include_initial_balance"/>
+        <field name="type">other</field>
+        <field name="name">Costos de Venta</field>
+    </record>
+</odoo>

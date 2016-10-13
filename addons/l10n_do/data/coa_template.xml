@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <menuitem groups="account.group_account_user" id="account_reports_do_statements_menu" name="Dominican Statements" parent="account.menu_finance_reports" sequence="3"/>
+    <record id="action_client_l10n_do_menu" model="ir.actions.client">
+        <field name="name">Open Account Dashboard Menu</field>
+        <field name="tag">reload</field>
+        <field eval="{'menu_id': ref('account.menu_board_journal_1')}" name="params"/>
+    </record>
+    <record id="base.open_menu" model="ir.actions.todo">
+        <field name="action_id" ref="action_client_l10n_do_menu"/>
+        <field name="state">open</field>
+    </record> -->
+    <!-- Chart of Accounts Template -->
+    <record id="transfer_acount_id" model="account.account.template">
+        <field name="name">Transferencias de Efectivo</field>
+        <field name="code">11010100</field>
+        <field eval="True" name="reconcile"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    </record>
+    <record id="do_chart_template" model="account.chart.template">
+        <field name="name">Catálogo de Cuentas NIIF (Dominicano)</field>
+        <field name="currency_id" ref="base.DOP"/>
+        <field name="code_digits">8</field>
+        <field name="bank_account_code_prefix">110101</field>
+        <field name="cash_account_code_prefix">110102</field>
+        <field name="transfer_account_id" ref="transfer_acount_id"/>
+    </record>
+    <record id="transfer_acount_id" model="account.account.template">
+        <field name="chart_template_id" ref="do_chart_template"/>
+    </record>
+</odoo>
