@@ -39,7 +39,8 @@
                                     <th>Unit Price</th>
                                     <th>Taxes</th>
                                     <th class="text-center">Qty</th>
-                                    <th class="text-right">Price</th>
+                                    <th class="text-right" groups="base.group_multi_currency">Price</th>
+                                    <th class="text-right">Amount in Company Currency</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,7 +72,10 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-field="line.total_amount"
-                                            t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                            t-options='{"widget": "monetary", "display_currency": line.currency_id}' groups="base.group_multi_currency"/>
+                                    </td>
+                                     <td class="text-right">
+                                        <span t-field="line.total_amount_company_currency"/>
                                     </td>
                                 </tr>
                             </tbody>
