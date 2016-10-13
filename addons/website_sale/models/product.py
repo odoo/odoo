@@ -166,10 +166,6 @@ class product_product(osv.Model):
         template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
         return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
 
-    def website_publish_button(self, cr, uid, ids, context=None):
-        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
-        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
-
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
     _columns = {
