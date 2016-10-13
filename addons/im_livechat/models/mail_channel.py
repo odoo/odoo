@@ -64,9 +64,12 @@ class MailChannel(models.Model):
         channel_infos = super(MailChannel, self).channel_info(extra_info)
         # add the operator id
         if self.env.context.get('im_livechat_operator_partner_id'):
-            partner_name = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id')).name_get()[0]
+            partner = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id'))
             for channel_info in channel_infos:
-                channel_info['operator_pid'] = partner_name
+                channel_info.update(
+                    operator_pid=partner.name_get()[0],
+                    direct_partner_name=partner.name
+                )
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             # add the anonymous name

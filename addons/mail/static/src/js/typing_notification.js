@@ -57,7 +57,7 @@ var TypingNotifier = Widget.extend({
     },
     // received typing notification
     notified_typing: function(channel){
-        var user_name = channel.name;
+        var user_name = channel.direct_partner_name || channel.name;
         var message = '';
         this.$el.empty();
         switch(channel.typing_status) {
