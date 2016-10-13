@@ -14,6 +14,7 @@ import re
 from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.misc import ustr
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 try:
@@ -346,29 +347,36 @@ class Import(models.TransientModel):
         if not date_patterns:
             date_patterns = [pattern.replace('r', sep) for sep in separator for pattern in date_format]
             date_patterns.extend([p.replace('Y', 'y') for p in date_patterns])
+        datetime_patterns = [options['datetime_format']] if options.get('datetime_format') else []
+        if not datetime_patterns:
+            datetime_patterns = [pattern + ' %H:%M:%S' for pattern in date_patterns]
+
         current_date_pattern = False
-        for date_pattern in date_patterns:
-            date_ok = True
-            datetime_ok = False
-            for val in preview_values:
-                if val == '':
-                    continue
-                try:
-                    dt.strptime(val, date_pattern)
-                except ValueError:
-                    date_ok = False
+        current_datetime_pattern = False
+
+        def check_patterns(patterns, preview_values):
+            for pattern in patterns:
+                ok = True
+                for val in preview_values:
+                    if val == '':
+                        continue
                     try:
-                        dt.strptime(val, date_pattern+' %H:%M:%S')
-                        datetime_ok = True
+                        dt.strptime(val, pattern)
                     except ValueError:
-                        datetime_ok = False
-                        break
-            if date_ok or datetime_ok:
-                current_date_pattern = date_pattern
-                break
+                        ok = False
+                if ok:
+                    return pattern
+            return False
+
+        current_date_pattern = check_patterns(date_patterns, preview_values)
+        current_datetime_pattern = check_patterns(datetime_patterns, preview_values)
+
         if current_date_pattern:
             options['date_format'] = current_date_pattern
-            return ['date'] if date_ok else ['datetime']
+            return ['date']
+        if current_datetime_pattern:
+            options['datetime_format'] = current_datetime_pattern
+            return ['datetime']
 
         return ['text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
 
@@ -598,14 +606,19 @@ class Import(models.TransientModel):
                 # Parse date
                 index = import_fields.index(name)
                 dt = datetime.datetime
-                field_date_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
-                if options.get('date_format', field_date_format) != field_date_format:
+                server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
+
+                if options.get('%s_format' % field['type'], server_format) != server_format:
+                    user_format = options.get('%s_format' % field['type']).encode('utf-8')
                     for line in data:
                         if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(line[index], options['date_format']), field_date_format)
-                            except ValueError:
-                                raise ValueError(_("Column %s contains incorrect values (value: %s does not match date format" % (name, line[index])))
+                                line[index] = dt.strftime(dt.strptime(line[index].encode('utf-8'), user_format), server_format)
+                            except ValueError, e:
+                                raise ValueError(_("Column %s contains incorrect values. Error: %s" % (name, ustr(e.message))))
+                            except Exception, e:
+                                raise ValueError(_("Error Parsing Date [%s]: %s" % (name, ustr(e.message))))
+
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
                 # We should be able to manage both case
