@@ -360,6 +360,9 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
+    def _save_in_attachment(self, cr, uid, attachment_vals, context=None):
+        return self.pool['ir.attachment'].create(cr, uid, attachment_vals, context)
+
     def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False, context=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
@@ -463,7 +466,7 @@ class Report(osv.Model):
                             'res_id': reporthtml[0],
                         }
                         try:
-                            self.pool['ir.attachment'].create(cr, uid, attachment, context)
+                            self._save_in_attachment(cr, uid, attachment, context=context)
                         except AccessError:
                             _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
                         else:
