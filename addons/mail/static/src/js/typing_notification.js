@@ -66,9 +66,6 @@ var TypingNotifier = Widget.extend({
                 this.$el.html(message);
                 break;
             case 'stop':
-                message = _.str.sprintf(_t('<span>%s stop typing.</span>'), user_name);
-                this.$el.html(message);
-                break;
             case 'cancel':
                 this.$el.empty();
                 break;
