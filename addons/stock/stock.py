@@ -2132,7 +2132,7 @@ class stock_move(osv.osv):
                 if rules:
                     rule = push_obj.browse(cr, uid, rules[0], context=context)
                     # Make sure it is not returning the return
-                    if (not move.origin_returned_move_id or move.origin_returned_move_id.location_id.id != rule.location_dest_id.id):
+                    if (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                         push_obj._apply(cr, uid, rule, move, context=context)
         return True
 

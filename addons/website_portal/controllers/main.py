@@ -6,7 +6,7 @@ from openerp.tools.translate import _
 
 
 class website_account(http.Controller):
-    @http.route(['/my', '/my/home'], type='http', auth="public", website=True)
+    @http.route(['/my', '/my/home'], type='http', auth="user", website=True)
     def account(self, **kw):
         partner = request.env.user.partner_id
 
