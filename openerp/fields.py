@@ -863,15 +863,9 @@ class Field(object):
         else:
             # Write to database
             record.write({self.name: self.convert_to_write(value)})
-            try:
-                # If there were any NewId records, invalidate cache
-                if len(value.ids) < len(value._ids):
-                    record.modified([self.name])
-                    return
-            except AttributeError:
-                pass
-            # Update cache with new value
-            record._cache[self] = value
+            # Update the cache unless value contains a new record
+            if all(getattr(value, '_ids', ())):
+                record._cache[self] = value
 
     ############################################################################
     #
