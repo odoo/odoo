@@ -398,9 +398,10 @@ class AccountAssetDepreciationLine(models.Model):
     move_check = fields.Boolean(compute='_get_move_check', string='Posted', track_visibility='always', store=True)
 
     @api.one
-    @api.depends('move_id')
+    @api.depends('move_id.state', 'move_id')
     def _get_move_check(self):
-        self.move_check = bool(self.move_id)
+        self.move_check = True if self.move_id and self.move_id.state == 'posted' else False
+        print self.move_check
 
     @api.multi
     def create_move(self, post_move=True):
@@ -505,6 +506,14 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     asset_id = fields.Many2one('account.asset.asset', string='Asset', ondelete="restrict")
+
+    @api.multi
+    def button_cancel(self):
+        for move in self:
+            if move.asset_id:
+                for line in move.asset_id.depreciation_line_ids:
+                    line.move_check = False
+        return super(AccountMove, self).button_cancel()
 
     @api.multi
     def post(self):

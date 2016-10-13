@@ -45,8 +45,9 @@ class TestAccountAsset(common.TransactionCase):
         self.assertEqual(len(asset.depreciation_line_ids), len(asset.account_move_ids),
             'Move lines not created correctly')
 
-        # I Check that After creating all the moves of depreciation lines the state "Close".
-        self.assertEqual(self.browse_ref("account_asset.account_asset_asset_vehicles_test0").state, 'close',
+        # I Check that After creating all the moves of depreciation lines the state is "open".
+        # To be closed, all the moves have to be posted
+        self.assertEqual(self.browse_ref("account_asset.account_asset_asset_vehicles_test0").state, 'open',
             'State of asset should be close')
 
         # WIZARD
