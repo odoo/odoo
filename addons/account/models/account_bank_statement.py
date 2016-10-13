@@ -250,13 +250,13 @@ class AccountBankStatement(models.Model):
         context = dict(self._context or {})
         context['journal_id'] = self.journal_id.id
         return {
-            'name': _('Journal Items'),
+            'name': _('Journal Entries'),
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'account.move.line',
+            'res_model': 'account.move',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'domain': [('statement_id', 'in', self.ids)],
+            'domain': [('id', 'in', self.mapped('move_line_ids').mapped('move_id').ids)],
             'context': context,
         }
 
