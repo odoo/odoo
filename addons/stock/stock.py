@@ -1696,7 +1696,6 @@ class stock_move(osv.osv):
         return res
 
     def _get_string_qty_information(self, cr, uid, ids, field_name, args, context=None):
-        settings_obj = self.pool.get('stock.config.settings')
         uom_obj = self.pool.get('product.uom')
         res = dict.fromkeys(ids, '')
         precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')
@@ -1709,11 +1708,8 @@ class stock_move(osv.osv):
             total_available = float_round(total_available, precision_digits=precision)
             info = str(total_available)
             #look in the settings if we need to display the UoM name or not
-            config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
-            if config_ids:
-                stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
-                if stock_settings.group_uom:
-                    info += ' ' + move.product_uom.name
+            if self.pool.get('res.users').has_group(cr, uid, 'product.group_uom'):
+                info += ' ' + move.product_uom.name
             if move.reserved_availability:
                 if move.reserved_availability != total_available:
                     #some of the available quantity is assigned and some are available but not reserved
@@ -2688,19 +2684,12 @@ class stock_inventory(osv.osv):
         """
         #default available choices
         res_filter = [('none', _('All products')), ('partial', _('Manual Selection of Products')), ('product', _('One product only'))]
-        settings_obj = self.pool.get('stock.config.settings')
-        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
-        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
-        if not config_ids:
-            return res_filter
-
-        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
-        if stock_settings.group_stock_tracking_owner:
+        if self.pool.get('res.users').has_group(cr, uid, 'stock.group_tracking_owner'):
             res_filter.append(('owner', _('One owner only')))
             res_filter.append(('product_owner', _('One product for a specific owner')))
-        if stock_settings.group_stock_production_lot:
+        if self.pool.get('res.users').has_group(cr, uid, 'stock.group_production_lot'):
             res_filter.append(('lot', _('One Lot/Serial Number')))
-        if stock_settings.group_stock_tracking_lot:
+        if self.pool.get('res.users').has_group(cr, uid, 'stock.group_tracking_lot'):
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 
