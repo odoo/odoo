@@ -184,6 +184,9 @@ class HrExpense(models.Model):
                 'journal_id': journal.id,
                 'company_id': self.env.user.company_id.id,
                 'date': acc_date,
+                # force the name to the default value, to avoid an eventual 'default_name' in the context
+                # to set it to '' which cause no number to be given to the account.move when posted.
+                'name': '/',
             })
             for expense in expense_list:
                 company_currency = expense.company_id.currency_id
