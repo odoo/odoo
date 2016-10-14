@@ -863,7 +863,11 @@ class one2many(_column):
                     ids2 = act[2] or [0]
                     cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
                     ids3 = map(lambda x:x[0], cr.fetchall())
-                    obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
+                    inverse_field = obj._fields.get(self._fields_id)
+                    if getattr(inverse_field, "ondelete", None) == "cascade":
+                        obj.unlink(cr, user, ids3, context=context)
+                    else:
+                        obj.write(cr, user, ids3, {self._fields_id: False}, context=context or {})
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):

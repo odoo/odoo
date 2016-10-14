@@ -861,9 +861,11 @@ class Field(object):
             env.invalidate(spec)
 
         else:
-            # simply write to the database, and update cache
+            # Write to database
             record.write({self.name: self.convert_to_write(value)})
-            record._cache[self] = value
+            # Update the cache unless value contains a new record
+            if all(getattr(value, '_ids', ())):
+                record._cache[self] = value
 
     ############################################################################
     #
@@ -1795,7 +1797,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_write(self, value):
         # make result with new and existing records
-        result = [(5,)]
+        result = [(6, 0, [])]
         for record in value:
             if not record.id:
                 values = dict(record._cache)
@@ -1806,7 +1808,7 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
             else:
-                result.append((4, record.id))
+                result[0][2].append(record.id)
         return result
 
     def convert_to_onchange(self, value, fnames=None):

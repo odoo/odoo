@@ -3807,8 +3807,7 @@ class BaseModel(object):
           ``(6, _, ids)``
               replaces all existing records in the set by the ``ids`` list,
               equivalent to using the command ``5`` followed by a command
-              ``4`` for each ``id`` in ``ids``. Can not be used on
-              :class:`~openerp.fields.One2many`.
+              ``4`` for each ``id`` in ``ids``.
 
           .. note:: Values marked as ``_`` in the list above are ignored and
                     can be anything, generally ``0`` or ``False``.
