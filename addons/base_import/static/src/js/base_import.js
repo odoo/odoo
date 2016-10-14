@@ -119,11 +119,11 @@ var DataImport = Widget.extend(ControlPanelMixin, {
     opts: [
         {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
         {name: 'separator', label: _lt("Separator:"), value: ','},
-        {name: 'quoting', label: _lt("Quoting:"), value: '"'}
+        {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'}
     ],
     parse_opts: [
         {name: 'date_format', label: _lt("Date Format:"), value: ''},
-        {name: 'float_thousand_separator', label: _lt("Thousand Separator:"), value: ','},
+        {name: 'float_thousand_separator', label: _lt("Thousands Separator:"), value: ','},
         {name: 'float_decimal_separator', label: _lt("Decimal Separator:"), value: '.'}
     ],
     events: {
