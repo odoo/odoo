@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	    <menuitem 
+	    	id="link_tracker_menu_config_website_links" 
+	    	name="Link Tracker" 
+	    	parent="website.menu_website_global_configuration" 
+	    	groups="base.group_no_one" sequence="50"/>
+
+	    <menuitem 
+	    	id="link_tracker_menu_website_links" 
+	    	name="Link Tracker" 
+	    	parent="link_tracker_menu_config_website_links" 
+	    	action="link_tracker.action_link_tracker"
+	    	sequence="1"
+	    	groups="base.group_no_one"/>
+
+	    <menuitem 
+	    	id="utm_menu_website_links" 
+	    	name="UTMs" 
+	    	parent="link_tracker_menu_config_website_links" 
+	    	sequence="2" 
+	    	groups="base.group_no_one"/>
+
+	    <menuitem 
+	    	id="utm_campaign_menu_website_links" 
+	    	parent="utm_menu_website_links" 
+	    	action="utm.utm_campaign_act" 
+	    	sequence="2" 
+	    	groups="base.group_no_one"/>
+	    
+	    <menuitem id="utm_medium_menu_website_links" 
+	    	parent="utm_menu_website_links" 
+	    	action="utm.utm_medium_action" 
+	    	sequence="3" 
+	    	groups="base.group_no_one"/>
+
+	    <menuitem 
+	    	id="utm_source_menu_website_links" 
+	    	parent="utm_menu_website_links" 
+	    	action="utm.utm_source_action" sequence="4" groups="base.group_no_one"/>
+
+</odoo>

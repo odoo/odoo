@@ -27,6 +27,34 @@
             sequence="1"
             groups="sales_team.group_sale_manager"/>
 
+        <menuitem
+            id="utm_menu_crm"
+            name="UTMs"
+            parent="sales_team.menu_sale_config"
+            sequence="13"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="utm_campaign_menu_crm"
+            parent="utm_menu_crm"
+            action="utm.utm_campaign_act"
+            sequence="2"
+            groups="base.group_no_one"/>
+        
+        <menuitem
+            id="utm_medium_menu_crm"
+            parent="utm_menu_crm"
+            action="utm.utm_medium_action"
+            sequence="3"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="utm_source_menu_crm"
+            parent="utm_menu_crm"
+            action="utm.utm_source_action"
+            sequence="4"
+            groups="base.group_no_one"/>
+
         <!-- Make the xmlid of menus required by the CRM tour available in webclient -->
         <record id="sales_team.menu_base_partner" model="ir.ui.menu">
             <field name="load_xmlid" eval="True"/>
