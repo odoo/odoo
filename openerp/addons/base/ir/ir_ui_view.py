@@ -158,6 +158,7 @@ class View(models.Model):
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
     model_data_id = fields.Many2one('ir.model.data', compute='_compute_model_data_id', string="Model Data", store=True)
+    dummy_model_data_id = fields.Many2one('ir.model.data', search='_search_dummy_model_data_id', store=False)
     xml_id = fields.Char(string="External ID", compute='_compute_xml_id',
                          help="ID of the view defined in xml file")
     groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -229,12 +230,20 @@ actual arch.
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
+    @api.depends('dummy_model_data_id.model', 'dummy_model_data_id.res_id')
     def _compute_model_data_id(self):
         # get the first ir_model_data record corresponding to self
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
         for data in self.env['ir.model.data'].search_read(domain, ['res_id'], order='id desc'):
             view = self.browse(data['res_id'])
             view.model_data_id = data['id']
+
+    def _search_dummy_model_data_id(self, operator, value):
+        # dummy_model_data_id is only used for the dependency above
+        assert operator == 'in'
+        datas = self.env['ir.model.data'].browse(value)
+        datas = datas.filtered(lambda data: data.model == 'ir.ui.view')
+        return [('id', 'in', datas.mapped('res_id'))]
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
