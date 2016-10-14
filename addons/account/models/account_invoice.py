@@ -12,6 +12,9 @@ from openerp.tools.misc import formatLang
 from openerp.exceptions import UserError, RedirectWarning, ValidationError
 
 import openerp.addons.decimal_precision as dp
+import logging
+
+_logger = logging.getLogger(__name__)
 
 # mapping invoice type to journal type
 TYPE2JOURNAL = {
@@ -551,6 +554,7 @@ class AccountInvoice(models.Model):
             'name': tax['name'],
             'tax_id': tax['id'],
             'amount': tax['amount'],
+            'base': tax['base'],
             'manual': False,
             'sequence': tax['sequence'],
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
@@ -580,6 +584,7 @@ class AccountInvoice(models.Model):
                     tax_grouped[key] = val
                 else:
                     tax_grouped[key]['amount'] += val['amount']
+                    tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
     @api.multi
@@ -1293,15 +1298,19 @@ class AccountInvoiceTax(models.Model):
     _order = 'sequence'
 
     def _compute_base_amount(self):
+        tax_grouped = {}
+        for invoice in self.mapped('invoice_id'):
+            tax_grouped[invoice.id] = invoice.get_taxes_values()
         for tax in self:
-            base = 0.0
-            for line in tax.invoice_id.invoice_line_ids:
-                if tax.tax_id in line.invoice_line_tax_ids:
-                    price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                    base += (line.invoice_line_tax_ids - tax.tax_id).compute_all(
-                        price_unit, line.invoice_id.currency_id, line.quantity, line.product_id, line.invoice_id.partner_id
-                    )['base']
-            tax.base = base
+            key = self.env['account.tax'].browse(tax.tax_id.id).get_grouping_key({
+                'tax_id': tax.tax_id.id,
+                'account_id': tax.account_id.id,
+                'account_analytic_id': tax.account_analytic_id.id,
+            })
+            if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
+                tax.base = tax_grouped[tax.invoice_id.id][key]['base']
+            else:
+                _logger.warning('Tax Base Amount not computable probably due to a change in an underlying tax (%s).', tax.tax_id.name)
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
