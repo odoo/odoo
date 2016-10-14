@@ -383,7 +383,7 @@ class test_convert_import_data(TransactionCase):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
             'file': 'name,date,create_date\n'
-                    u'"foo","2013年07月18日","2016-10-12 06:06"\n'.encode('utf-8'),
+                    '"foo","2013年07月18日","2016-10-12 06:06"\n',
             'file_type': 'text/csv'
 
         })
@@ -391,7 +391,7 @@ class test_convert_import_data(TransactionCase):
         results = import_wizard.do(
             ['name', 'date', 'create_date'],
             {
-                'date_format': u'%Y年%m月%d日',
+                'date_format': '%Y年%m月%d日',
                 'datetime_format': '%Y-%m-%d %H:%M',
                 'quoting': '"',
                 'separator': ',',

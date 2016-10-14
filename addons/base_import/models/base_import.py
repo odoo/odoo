@@ -356,24 +356,25 @@ class Import(models.TransientModel):
 
         def check_patterns(patterns, preview_values):
             for pattern in patterns:
-                ok = True
+                match = True
                 for val in preview_values:
-                    if val == '':
+                    if not val:
                         continue
                     try:
                         dt.strptime(val, pattern)
                     except ValueError:
-                        ok = False
-                if ok:
+                        match = False
+                        break
+                if match:
                     return pattern
             return False
 
         current_date_pattern = check_patterns(date_patterns, preview_values)
-        current_datetime_pattern = check_patterns(datetime_patterns, preview_values)
-
         if current_date_pattern:
             options['date_format'] = current_date_pattern
             return ['date']
+
+        current_datetime_pattern = check_patterns(datetime_patterns, preview_values)
         if current_datetime_pattern:
             options['datetime_format'] = current_datetime_pattern
             return ['datetime']
@@ -609,15 +610,15 @@ class Import(models.TransientModel):
                 server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
                 if options.get('%s_format' % field['type'], server_format) != server_format:
-                    user_format = options.get('%s_format' % field['type']).encode('utf-8')
+                    user_format = ustr(options.get('%s_format' % field['type'])).encode('utf-8')
                     for line in data:
                         if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(line[index].encode('utf-8'), user_format), server_format)
+                                line[index] = dt.strftime(dt.strptime(ustr(line[index]).encode('utf-8'), user_format), server_format)
                             except ValueError, e:
-                                raise ValueError(_("Column %s contains incorrect values. Error: %s" % (name, ustr(e.message))))
+                                raise ValueError(_("Column %s contains incorrect values. Error: %s") % (name, ustr(e.message)))
                             except Exception, e:
-                                raise ValueError(_("Error Parsing Date [%s]: %s" % (name, ustr(e.message))))
+                                raise ValueError(_("Error Parsing Date [%s]: %s") % (name, ustr(e.message)))
 
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
