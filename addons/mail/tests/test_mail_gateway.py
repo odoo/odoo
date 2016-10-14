@@ -580,25 +580,29 @@ class TestMailgateway(TestMail):
                           msg_id='<1198923581.41972151344608186802.JavaMail.diff1@agrolait.com>')
 
         # when 6.1 messages are present, compat mode is available
+        # Odoo 10 update: compat mode has been removed and should not work anymore
         self.fake_email.write({'message_id': False})
         # Do: compat mode accepts partial-matching emails
-        frog_groups = self.format_and_process(
+        self.assertRaises(
+            ValueError,
+            self.format_and_process,
             MAIL_TEMPLATE, email_from='other5@gmail.com',
             msg_id='<1.2.JavaMail.new@agrolait.com>',
             to='noone@example.com>', subject='spam',
             extra='In-Reply-To: <12321321-openerp-%d-mail.channel@%s>' % (self.group_public.id, socket.gethostname()))
 
         # 3''. 6.1 compat mode should not work if hostname does not match!
+        # Odoo 10 update: compat mode has been removed and should not work anymore and does not depend from hostname
         self.assertRaises(ValueError,
                           self.format_and_process,
                           MAIL_TEMPLATE, email_from='other5@gmail.com',
                           msg_id='<1.3.JavaMail.new@agrolait.com>',
                           to='noone@example.com>', subject='spam',
-                          extra='In-Reply-To: <12321321-openerp-%d-mail.channel@neighbor.com>' % frog_groups.id)
+                          extra='In-Reply-To: <12321321-openerp-%d-mail.channel@neighbor.com>' % self.group_public.id)
 
         # Test created messages
-        self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain 6 messages')
-        self.assertEqual(len(self.group_public.message_ids[0].child_ids), 0, 'message_process: msg1 should not have children')
+        self.assertEqual(len(self.group_public.message_ids), 1)
+        self.assertEqual(len(self.group_public.message_ids[0].child_ids), 0)
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_duplicate(self):
