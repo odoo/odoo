@@ -865,8 +865,7 @@ class one2many(_column):
                     if getattr(inverse_field, "ondelete", None) == "cascade":
                         obj.unlink(cr, user, ids3, context=context)
                     else:
-                        obj.write(cr, user, ids3, {self._fields_id:False},
-                                  context=context or {})
+                        obj.write(cr, user, ids3, {self._fields_id: False}, context=context or {})
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
