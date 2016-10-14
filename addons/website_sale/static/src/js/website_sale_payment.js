@@ -55,7 +55,7 @@ $(document).ready(function () {
       }
       $form.off('submit');
       ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', params).then(function (data) {
-          $(data).submit();
+          $(data).appendTo('body').submit();
       });
       return false;
     });
