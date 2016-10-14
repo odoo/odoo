@@ -445,10 +445,12 @@
                         </div>
                         <div class="text-center col-md-4">
                             <span class="fa fa-copy fa-4x"></span>
+                            <t t-value="prepare_backend_url('base.open_module_tree', 'form', 'sale_contract')" t-set="enterprise"/>
                             <h3><strong>Contracts &amp; Subscriptions</strong></h3>
+                            <t t-if="not enterprise"><span class="label label-primary oe_inline">Enterprise</span></t>
                             <p>Manage time &amp; material contracts or fixed-price recurring subscriptions.</p>
-                            <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_analytic_analysis')"
-                                class="btn odoo_purple">
+                            <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'sale_contract')"
+                                t-att-class="'btn odoo_purple' if enterprise else 'btn odoo_purple disabled'">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Now
                             </a>
                         </div>
