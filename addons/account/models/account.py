@@ -705,7 +705,8 @@ class AccountTax(models.Model):
                 taxes += ret['taxes']
                 continue
 
-            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
+            tax_excluded = tax_included = tax_base = base
+            tax_amount = tax._compute_amount(tax_base, price_unit, quantity, product, partner)
             if not round_tax:
                 tax_amount = round(tax_amount, prec)
             else:
@@ -714,16 +715,25 @@ class AccountTax(models.Model):
             if tax.price_include:
                 total_excluded -= tax_amount
                 base -= tax_amount
+                tax_base -= tax_amount
+                tax_excluded -= tax_amount
             else:
                 total_included += tax_amount
+                tax_included += tax_amount
 
             if tax.include_base_amount:
                 base += tax_amount
+
+            if tax.amount_type in ['division']:
+                tax_base += tax_amount
 
             taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
+                'base': tax_base,
+                'tax_excluded': currency.round(tax_excluded) if round_total else tax_excluded,
+                'tax_included': currency.round(tax_included) if round_total else tax_included,
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,

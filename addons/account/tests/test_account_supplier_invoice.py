@@ -4,10 +4,26 @@ from openerp.exceptions import Warning
 class TestAccountSupplierInvoice(AccountingTestCase):
 
     def test_supplier_invoice(self):
-        tax = self.env['account.tax'].create({
-            'name': 'Tax 10.0',
+        tax_fixed = self.env['account.tax'].create({
+            'sequence': 10,
+            'name': 'Tax 10.0 (Fixed)',
             'amount': 10.0,
             'amount_type': 'fixed',
+            'include_base_amount': True,
+        })
+        tax_percent_included_base_incl = self.env['account.tax'].create({
+            'sequence': 20,
+            'name': 'Tax 50.0% (Percentage of Price Tax Included)',
+            'amount': 50.0,
+            'amount_type': 'division',
+            'include_base_amount': True,
+        })
+        tax_percentage = self.env['account.tax'].create({
+            'sequence': 30,
+            'name': 'Tax 20.0% (Percentage of Price)',
+            'amount': 20.0,
+            'amount_type': 'percent',
+            'include_base_amount': False,
         })
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test account',
@@ -22,21 +38,28 @@ class TestAccountSupplierInvoice(AccountingTestCase):
             'type': 'in_invoice',
         })
 
-        self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,
-            'quantity': 1.0,
+        invoice_line = self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,
+            'quantity': 5.0,
             'price_unit': 100.0,
             'invoice_id': invoice.id,
             'name': 'product that cost 100',
             'account_id': invoice_line_account,
-            'invoice_line_tax_ids': [(6, 0, [tax.id])],
+            'invoice_line_tax_ids': [(6, 0, [tax_fixed.id, tax_percent_included_base_incl.id, tax_percentage.id])],
             'account_analytic_id': analytic_account.id,
         })
+        invoice.compute_taxes()
 
         # check that Initially supplier bill state is "Draft"
         self.assertTrue((invoice.state == 'draft'), "Initially vendor bill state is Draft")
 
         #change the state of invoice to open by clicking Validate button
         invoice.signal_workflow('invoice_open')
+
+        # Check if amount and corresponded base is correct for all tax scenarios given on a computational base
+        # Keep in mind that tax amount can be changed by the user at any time before validating (based on the invoice and tax laws applicable)
+        invoice_tax = invoice.tax_line_ids.sorted(key=lambda r: r.sequence)
+        self.assertEquals(invoice_tax.mapped('amount'), [50.0, 550.0, 220.0])
+        self.assertEquals(invoice_tax.mapped('base'), [500.0, 1100.0, 1100.0])
 
         #I cancel the account move which is in posted state and verifies that it gives warning message
         with self.assertRaises(Warning):
