@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-10-07 16:52+0000\n"
+"PO-Revision-Date: 2016-10-15 13:46+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -82,7 +82,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Witamy ${object.partner_id.name},</p>\n    <p>Nowa faktura jest dostępna: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCJE</strong><br />\n       &nbsp;&nbsp;Numer faktury: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Wszystkie faktury: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Możliwa jest płatnośc bezpośrednia przez PAYPAL:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Jeśli masz jakieś pytanie, nie czekaj, skontaktuj się z nami.</p>\n    <p>Dziekujemy za wybór ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Witamy ${object.partner_id.name},</p>\n    <p>Nowa faktura jest dostępna: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCJE</strong><br />\n       &nbsp;&nbsp;Numer faktury: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Kwota faktury: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data faktury: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Zamówienie: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Faktura%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Możliwa jest płatność bezpośrednia poprzez PAYPAL:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Jeśli masz jakieś pytanie, nie czekaj, skontaktuj się z nami.</p>\n    <p>Dziękujemy za wybór ${object.company_id.name or 'nas'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                WWW :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -329,7 +329,7 @@ msgstr "<span class=\"panel-title\">\n                                        <s
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Saldo w KG</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -447,7 +447,7 @@ msgstr "Sprawdź konfigurację podatków:"
 msgid ""
 "<strong>Check unpaid invoices</strong><br/>\n"
 "                                         Run an <i>Aged Receivable report</i> and check which customers still owe you money."
-msgstr "<strong>Sprawdź nieopłacone faktury</strong><br/>\nUruchom <i>Raportowanie zaległych należności</i> i sprawdzanie, którzy klienci nadal są winni tobie pieniądze."
+msgstr "<strong>Sprawdź nieopłacone faktury</strong><br/>\nUruchom <i>Raportowanie zaległych należności</i> i sprawdzanie, którzy klienci nadal są ci winni pieniądze."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -607,7 +607,7 @@ msgstr "Uzgodnij wyciąg bankowy"
 msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
-msgstr "<strong>Ujednolicenie z instniejącymi transakcjami</strong><br/>\n                                        W ym przypadku, Odoo powinien automatycznie zaznaczyć świadczenia bankowe z poprzednimi zarejestrowanymi rtansakcjami."
+msgstr "<strong>Ujednolicenie z istniejącymi transakcjami</strong><br/>\n                                        W tym przypadku, Odoo powinien automatycznie powiązać wyciągi bankowe z poprzednimi zarejestrowanymi transakcjami."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -619,7 +619,7 @@ msgstr "<strong>Ujednolicenie świadczeń twoich Świadczeń Bankowych</strong>"
 msgid ""
 "<strong>Record Bank Statement (or import file)</strong><br/>\n"
 "                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day."
-msgstr "<strong>Zarejestruj wyciąg bankowy (Lub importuj plik)</strong><br/>\n                                        W zależności od ilości twoich transakcji, powinieneś rejestrować wyciągi bankowe co tydzień lub do kilku razy na dzień."
+msgstr "<strong>Zarejestruj wyciąg bankowy (lub importuj plik)</strong><br/>\n                                        W zależności od ilości twoich transakcji, powinieneś rejestrować wyciągi bankowe co tydzień lub do kilku razy na dzień."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -716,7 +716,7 @@ msgstr "Suma"
 msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
-msgstr "<strong>Zweryfikuj rechunek</strong><br/> po zakodowaniu produktów i podatków."
+msgstr "<strong>Zweryfikuj rachunek</strong><br/> po zakodowaniu produktów i podatków."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -789,7 +789,7 @@ msgid ""
 "A product in Odoo is something you sell or buy \n"
 "                        whether or not it is goods, consumables, or services.\n"
 "                        Choose how you want to create your products:"
-msgstr "Produkt w Odoo jest czymś co służy do kupna lub sprzedaży\nlub jest towarem, materiałem czy usługą.\nWybierz jak chcesz tworzyć swoje produkty:"
+msgstr "Produkt w Odoo jest czymś, co służy do kupna lub sprzedaży\nlub jest towarem, materiałem czy usługą.\nWybierz jak chcesz tworzyć swoje produkty:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:685
@@ -1795,7 +1795,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
 "bank account number."
-msgstr "Numer konta bankowego na które zapłacona ma zostać faktura. Konto bankowe twojej firmy jeśli płatność dotyczy faktury sprzedaży lub korekty zakupu, w innym przypadku konto bankowe kontrahenta."
+msgstr "Numer konta bankowego na które zapłacona ma zostać faktura. Konto bankowe twojej firmy jeśli płatność dotyczy faktury sprzedaży lub korekty zakupu, w innym przypadku konto bankowe partnera."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
@@ -2719,7 +2719,7 @@ msgstr "Kontrola-dostępu"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "Koszt przychodu"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:388
@@ -3125,7 +3125,7 @@ msgstr "Daty"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "Dni po końcu miesiąca faktury (EOM)"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3495,7 +3495,7 @@ msgstr "Projekty wyciągów"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Due"
-msgstr "Termin"
+msgstr "Do zapłaty"
 
 #. module: account
 #. openerp-web
@@ -3949,7 +3949,7 @@ msgstr "Aby otrzymać procent wpisz stopę o wartości pomiędzy 0-100."
 msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
-msgstr "Dla zespołu Odoo,<br/>\n                            Fabien Pinckaers, Założyciel"
+msgstr "W imieniu zespołu Odoo,<br/>\n                            Fabien Pinckaers, Założyciel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_currency_id
@@ -4571,7 +4571,7 @@ msgstr "Uwagi wewnętrzne"
 #: selection:account.payment,payment_type:0
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
-msgstr "Transfer wewnętrzny"
+msgstr "Przesunięcie wewnętrzne"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_form
@@ -4763,7 +4763,7 @@ msgstr "Jest obserwatorem"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr ""
+msgstr "Jest zero"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5253,12 +5253,12 @@ msgstr "Nazwa formalna"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr ""
+msgstr "Notka prawna..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Formułki prawne do wydrukowania na fakturach."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5296,7 +5296,7 @@ msgstr "Minus płatności"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Pozwól, aby odoo uzgodniło zapisy dla użytkownika"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -6182,7 +6182,7 @@ msgstr "Uzgodnienie częściowe"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Partner"
-msgstr "Kontrahent"
+msgstr "Partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_commercial_partner_id
@@ -6192,19 +6192,19 @@ msgstr "Firma partnerska"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_ref
 msgid "Partner Reference"
-msgstr "Odnośnik kontrahenta"
+msgstr "Odnośnik partnera"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
 msgid "Partner name"
-msgstr "Nazwa kontrahenta"
+msgstr "Nazwa partnera"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_partner_type
 msgid "Partner type"
-msgstr "Typ kontrahenta"
+msgstr "Typ partnera"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
@@ -7323,7 +7323,7 @@ msgstr "Wybierz partnera"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:234
 #, python-format
 msgid "Select a partner or choose a counterpart"
-msgstr "Wybierz kontrahenta lub odpowiednie pozycje "
+msgstr "Wybierz partnera lub odpowiednie pozycje "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
@@ -8115,14 +8115,14 @@ msgstr "Nieobowiązkowa ilość dotycząca tego zapisu. Np. ilość sprzedanych 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_account_id
 msgid "The partner account used for this invoice."
-msgstr "Konto kontrahenta stosowane dla tej faktury."
+msgstr "Konto partnera stosowane dla tej faktury."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "Kontrahent posiada co najmniej jedną nieuzgodnioną pozycję Winien i Ma od ostatniego przeprowadzenia kojarzenia faktur i płatności."
+msgstr "Partner posiada co najmniej jedną nieuzgodnioną pozycję Winien i Ma od ostatniego przeprowadzenia kojarzenia faktur i płatności."
 
 #. module: account
 #: code:addons/account/models/account_move.py:782
@@ -8130,7 +8130,7 @@ msgstr "Kontrahent posiada co najmniej jedną nieuzgodnioną pozycję Winien i M
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
 "accounts!"
-msgstr "Kontrahent musi być ten sam dla wszystkich pozycji kont należności i zobowiązań."
+msgstr "Partner musi być ten sam dla wszystkich pozycji kont należności i zobowiązań."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
@@ -8268,7 +8268,7 @@ msgstr "To konto będzie wykorzystywane dla faktur do szacowania sprzedaży."
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "To konto będzie stosowane, zamiast domyślnego, jako konto zobowiązań dla tego  kontrahenta"
+msgstr "To konto będzie stosowane, zamiast domyślnego, jako konto zobowiązań dla tego partnera"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_receivable_id
@@ -8361,7 +8361,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr "To pole służy do wpisywania nazwy firmy podczas importu wyciągu bankowego w formacie elektronicznym, gdy kontrahent jeszcze nie istnieje w twojej kartotece (lub nie został znaleziony)."
+msgstr "To pole służy do wpisywania nazwy firmy podczas importu wyciągu bankowego w formacie elektronicznym, gdy partner jeszcze nie istnieje w twojej kartotece (lub nie został znaleziony)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8638,7 +8638,7 @@ msgstr "Suma transakcji"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Transfer Account"
-msgstr "Konto transferów"
+msgstr "Konto transferów wewnętrznych"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_journal_id
@@ -8649,7 +8649,7 @@ msgstr "Przenieś do"
 #: code:addons/account/models/account_payment.py:209
 #, python-format
 msgid "Transfer account not defined on the company."
-msgstr "Konto transferów nie jest zdefiniowane w ustawieniach firmy."
+msgstr "Konto transferów wewnętrznych nie jest zdefiniowane w ustawieniach firmy."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:385
@@ -9159,7 +9159,7 @@ msgstr "Próbujesz uzgodnić zapisy, które zostały już uzgodnione!"
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
-msgstr "Zaznacz tą opcję jeśli pozycja jest sporna z kontrahentem"
+msgstr "Zaznacz tą opcję jeśli pozycja jest sporna z partnerem"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -9503,7 +9503,7 @@ msgstr "ustawienia księgowości"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "activate this feature"
-msgstr "aktywuj tą funkcjonalność"
+msgstr "aktywować tę funkcjonalność"
 
 #. module: account
 #. openerp-web
@@ -9569,17 +9569,17 @@ msgstr "interfejs szybkiego zapisywania"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "first)"
-msgstr "pierwszy)"
+msgstr "najpierw)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
-msgstr "z tym odbiorcą. Możesz je przypisać aby oznaczyć fakturę jako zapłaconą."
+msgstr "z tym klientem. Możesz je przypisać aby oznaczyć fakturę jako zapłaconą."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "for this supplier. You can allocate them to mark this bill as paid."
-msgstr "dla tego dostawcy. Możesz umieścić je aby oznaczyć fakturę jako zapłaconą."
+msgstr "z tym dostawcą. Możesz je przypisać aby oznaczyć fakturę jako zapłaconą."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -9597,12 +9597,12 @@ msgstr "inne"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "outstanding debits"
-msgstr "nieotrzymane należności"
+msgstr "nieuregulowane rozliczenia"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "outstanding payments"
-msgstr "nieuregulowane zobowiązania"
+msgstr "nieuregulowane rozliczenia"
 
 #. module: account
 #. openerp-web
@@ -9669,7 +9669,7 @@ msgstr "ustaw logo fimy"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "setup your bank accounts."
-msgstr "ustaw konta bankowe."
+msgstr "ustawić konta bankowe."
 
 #. module: account
 #. openerp-web
