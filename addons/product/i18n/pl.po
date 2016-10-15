@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-10-07 19:12+0000\n"
+"PO-Revision-Date: 2016-10-14 15:35+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "%s %% upust"
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr "%s %% discount and %s surcharge"
+msgstr "%s %% upust i %s dopłata"
 
 #. module: product
 #: code:addons/product/product.py:710 code:addons/product/product.py:1134
@@ -145,7 +145,7 @@ msgstr "8-port Switch"
 msgid ""
 "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
-msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">publiczna cena  -  </span>\n                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">inna lista cen  -  </span>"
+msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Cena podstawowa  -  </span>\n                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">inny cennik  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -568,7 +568,7 @@ msgstr "Kategoria: %s"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
-msgstr ""
+msgstr "Charakterystyka"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -592,7 +592,7 @@ msgstr "Kategorie podrzędne"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr "Kliknij, aby dodać nową jednostkę miary kategorii."
+msgstr "Kliknij, aby dodać nową kategorię jednostki miary."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -660,7 +660,7 @@ msgstr "Komponenty"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr "kreator cen"
+msgstr "Oblicz cenę"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
@@ -957,7 +957,7 @@ msgstr "Data końcowa"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Data końcowa dla cennika dostawcy"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1106,7 +1106,7 @@ msgstr "Fast connections.The world over."
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "Ustal cenę"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -2063,7 +2063,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Elementy cennika"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -2085,7 +2085,7 @@ msgstr "Cenniki"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Cennik dla produktu"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -2527,7 +2527,7 @@ msgstr "Ustawia cenę, aby była wielokrotnością tej wartości.\nZaokrąglenie
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "Stosuj produkt we wszystkich firmach"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2634,7 +2634,7 @@ msgstr "Data Początkowa"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Data początkowa dla tej ceny dostawcy"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
@@ -3111,7 +3111,7 @@ msgstr "Zdjęcie wariantu"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Informacje o wariancie"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3144,27 +3144,27 @@ msgstr "Dostawca"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Informacje o dostawcy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Kod produktu u dostawcy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "Nazwa produktu u dostawcy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Jednostka miary u dostawcy"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Dostawca tego produktu"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
