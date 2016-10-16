@@ -134,6 +134,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Автовход</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Ура!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Теперь CRM для Odoo установлено и работает.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">Что дальше??</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Попробуте создать инициативу отправив электронное пиьмо для </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Отмечайте этапы возможностей в воронке продаж перетаскиванием из колонки в колонку</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Откройте </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">планировщик CRM</span></a></span>\n"
+"                                <span> с дополнительными средствами</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Автоматически связывайте инициативы с продавцами, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Будьте ближе к потенциальным клиентам через эффективные кампании,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Добейтесь озарений с помощью опросов,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Пользуйтесь смарт-отчётами и панелями управления,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>И не только...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Нужна помощь?</span>\n"
+"                                <span style=\"font-style:italic;\">Вы не одни</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Мы будем рады помочь вам в пути. Свяжитесь с нами по адресу\n"
+"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
+"                                help@odoo.com</span></a> если у вас появятся вопросы. Вы также можете узнать\n"
+"                                как лучше пользоваться Odoo CRM с помощью </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">документации пользователя</span></a>\n"
+"                                </span><span> или </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">документации по API</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Насладитесь опытом Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Команда Odoo<br/>PS: Люди любят Odoo, узнайте </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">что они говорят об этом.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -159,12 +258,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_res_partner_meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_users_meeting_count
 msgid "# Meetings"
-msgstr "# встреч"
+msgstr "Кол-во встреч"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_nbr_activities
 msgid "# of Activities"
-msgstr "# действий"
+msgstr "Кол-во мероприятий"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -255,10 +354,10 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
-"<p>Вам захочется настроить обычные действия. "
+"<p>Вам захочется настроить обычные мероприятия. "
 "Примеры:</p><ol><li>ознакомительный email</li><li>позвонить через 10 "
 "дней</li><li>второй звонок через 3 дня…</li></ol><p class='mb0'><i>Выбери "
-"стандартное действие для этого случая.</i></p>"
+"стандартное мероприятие для этого случая.</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -599,7 +698,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Events</strong>"
-msgstr "<strong>Мероприятия</strong>"
+msgstr "<strong>События</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -731,7 +830,7 @@ msgstr "<strong>Рекомендуемые действия:</strong>"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "<strong>Recommended activities:</strong>"
-msgstr "<strong>Рекомендованные виды деятельности:</strong>"
+msgstr "<strong>Рекомендованные мероприятия:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -791,11 +890,13 @@ msgid ""
 "<strong>The customer</strong> understood his pain points and proposed the "
 "next step in the buying process"
 msgstr ""
+"<strong>Заказчик</strong> понимает свои болевые точки и предлагает перейти к"
+" следующему этапу продажи"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>The prospect</strong> started to discuss your offer"
-msgstr ""
+msgstr "<strong>Перспектива</strong> начала обсуждения вашего предложения"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -803,6 +904,8 @@ msgid ""
 "<strong>To boost your leads acquisition,</strong> you should have a look at "
 "our marketing apps:"
 msgstr ""
+"<strong>Для увеличения количества инициатив</strong> вам следует изучить "
+"наши приложения для маркетинга:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -811,6 +914,9 @@ msgid ""
 "                                To build a strong sales training program, you can use the following\n"
 "                                apps of Odoo:"
 msgstr ""
+"<strong>Тренинги</strong><br/>\n"
+"Для создания мощной программы тренинга продаж можно\n"
+"использовать следующие приложения для Odoo:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -821,6 +927,7 @@ msgstr "<strong>Website Живой чат</strong>"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>You</strong> called the prospect for a follow up on your offer"
 msgstr ""
+"<strong>Вы</strong> считаете перспективным отслеживание вашего предложения"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -828,6 +935,8 @@ msgid ""
 "<strong>You</strong> understand the customer's needs and pain points, and "
 "you have a fairly good idea of his budget to spend"
 msgstr ""
+"<strong>Вы</strong> поняли потребности заказчика, его болевые точки, и "
+"теперь у вас есть мысли как уложиться в его бюджет"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -860,6 +969,9 @@ msgid ""
 "                    be a goods, consumable or services. Choose how you want to\n"
 "                    create your products:"
 msgstr ""
+"Продуктом в Odoo называют всё, что можно купить и продать.\n"
+"Это могут быть товары, расходные материалы, услуги. Выберите\n"
+"как вы хотите создавать свои продукты:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -902,7 +1014,7 @@ msgstr "Активируется по умолчанию при подписке
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason_active
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_active
 msgid "Active"
-msgstr "Актив"
+msgstr "Активно"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_action
@@ -915,7 +1027,7 @@ msgstr "Актив"
 #: model:ir.ui.view,arch_db:crm.crm_activity_view_tree
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Activities"
-msgstr "Действия"
+msgstr "Мероприятия"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -925,29 +1037,29 @@ msgstr "Действия"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Activities Analysis"
-msgstr "Анализ Деятельности"
+msgstr "Анализ мероприятий"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
 msgid "Activities Done Target"
-msgstr ""
+msgstr "Нужно провести мероприятий"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_next_activity_id
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_subtype_id
 msgid "Activity"
-msgstr "Действие"
+msgstr "Мероприятие"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:80
 #, python-format
 msgid "Activity Done"
-msgstr ""
+msgstr "Мероприятие проведено"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
 msgid "Activity State"
-msgstr ""
+msgstr "Этап мероприятия"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -963,7 +1075,7 @@ msgstr "Адрес"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_id
 msgid "Alias"
-msgstr "Альяс"
+msgstr "Алиас"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_contact
@@ -997,6 +1109,8 @@ msgid ""
 "                        process will allow you to continuously improve your\n"
 "                        sales performance."
 msgstr ""
+"Упорядочивание процесса продаж поможет вам\n"
+"постоянно улучшать эффективность продаж."
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:310
@@ -1005,8 +1119,8 @@ msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
 "contacts with different emails."
 msgstr ""
-"Все контакты должны иметь одинаковую электронную почту. Только администратор"
-" может объединить контакты с различными электронными адресами."
+"Все договоры должны иметь одинаковую электронную почту. Только администратор"
+" может объединить договоры с разными адресами."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:864
@@ -1016,6 +1130,9 @@ msgid ""
 "                    create new opportunity. Update your business card, phone book, social media,...\n"
 "                    Send an email right now and see it here."
 msgstr ""
+"Все входящие письма для %s  будут автоматически\n"
+"становиться инициативами. Обновите данные, контакты, социальные сети, …\n"
+"Отправьте сейчас письмо и увидите его тут."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1029,6 +1146,9 @@ msgid ""
 "efficiently forecast its future revenues. The pipeline review will allow you"
 " to identify sales inefficiencies or pick up on the best practices."
 msgstr ""
+"Анализ воронки по предполагаемой дате закрытия поможет вашей команде "
+"эффективнее прогнозировать будущие доходы. ￼Обзор воронки позволит выявить "
+"неэффективные продажи или взять на вооружение лучшие примеры."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
@@ -1038,7 +1158,7 @@ msgstr "Применить дедупликацию"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Apply multi-currencies"
-msgstr ""
+msgstr "Разрешить мульти-валютность"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1062,6 +1182,7 @@ msgstr ""
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr ""
+"Вы уверенны, что хотите выполнить автоматическое объединение контактов?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -1071,12 +1192,12 @@ msgstr "Распределить предложения"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Assign these opportunities to"
-msgstr ""
+msgstr "Прикрепить возможности к"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Assign this opportunity to"
-msgstr ""
+msgstr "Прикрепить возможность к"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1104,7 +1225,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Automatic Merge Wizard"
-msgstr "Автоматический Мастер слияний"
+msgstr "Мастер автоматических слияний"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_generate_sales_team_alias
@@ -1129,7 +1250,7 @@ msgstr "B2C"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Basic, Premium"
-msgstr ""
+msgstr "Базовый, премиум"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1139,7 +1260,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better visibility on team activities"
-msgstr ""
+msgstr "Лучшая видимость в мероприятиях команды"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1159,12 +1280,12 @@ msgstr "CRM"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_activity
 msgid "CRM Activity"
-msgstr "CRM Активность"
+msgstr "Мероприятие CRM"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_activity_report
 msgid "CRM Activity Analysis"
-msgstr "CRM Анализ активности"
+msgstr "Анализ мероприятия CRM"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_opportunity_report
@@ -1181,7 +1302,7 @@ msgstr "Звонок"
 #: model:crm.activity,name:crm.crm_activity_demo_call_demo
 #: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
 msgid "Call for Demo"
-msgstr "Звонок для демонстрации"
+msgstr "Позвонить для демо"
 
 #. module: crm
 #: model:crm.activity,description:crm.crm_activity_demo_call_demo
@@ -1214,7 +1335,7 @@ msgstr "Вопросы по отделам продаж"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
 msgid "Category of lead"
-msgstr "Категория кандидата"
+msgstr "Категория инициативы"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
@@ -1257,8 +1378,8 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Классифицируйте и анализируйте ваших кандидатов/возможностей категории как:"
-"  Тренинги, Услуги"
+"Классифицируйте и анализируйте ваших инициативы или возможности категориями "
+"как:  Тренинги, Услуги"
 
 #. module: crm
 #. openerp-web
@@ -1268,24 +1389,26 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
+"Нажмите здесь, чтобы <b>создать первую возможность</b> и добавить её в "
+"воронку продаж."
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:54
 #, python-format
 msgid "Click on an opportunity to zoom to it."
-msgstr ""
+msgstr "Нажмите на возможность для масштабирования."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:867
 #, python-format
 msgid "Click to add a new opportunity"
-msgstr "Нажмите, чтобы создать новую возможность."
+msgstr "Нажмите, чтобы добавить новую возможность."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_activity_action
 msgid "Click to create a new activity."
-msgstr "Нажмите, чтобы создать новое действие."
+msgstr "Нажмите, чтобы создать новое мероприятие."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -1305,7 +1428,7 @@ msgstr "Нажмите для создания новых меток прода�
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "Нажмите, чтобы создать новый этап у возможностей в воронке продаж."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1320,13 +1443,15 @@ msgstr "Дата закрытия"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
 msgid "Closed Date"
-msgstr ""
+msgstr "Дата закрытия"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:87
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
-msgstr "Закрытые кандидаты не могут быть конвертированы в возможности."
+msgstr ""
+"Закрытые или отменённые инициативы не могут быть конвертированы в "
+"возможности."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_color
@@ -1337,7 +1462,7 @@ msgstr "Цветовая палитра"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Community &amp; Enterprise users:"
-msgstr ""
+msgstr "Коммерческие пользователи и участники сообщества:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_company_id
@@ -1374,7 +1499,7 @@ msgstr "Конфигурация этапов вашей воронки прод
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Configure your pricelists"
-msgstr ""
+msgstr "Настроить прайслисты"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1384,7 +1509,7 @@ msgstr "Поздравляем, вы сделали!"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Consumers, Retailers"
-msgstr ""
+msgstr "Потребители, продавцы"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -1417,12 +1542,12 @@ msgstr "Действие преобразования"
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_conversion
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date"
-msgstr ""
+msgstr "Дата преобразования"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr ""
+msgstr "Дата преобразования инициативы в возможность"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1458,7 +1583,7 @@ msgstr "Преобразовать в предложение"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Счетчик количества отклоненных писем для этого контакта"
+msgstr "Счетчик количества отклонённых писем для этого контакта"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_country_id
@@ -1480,7 +1605,7 @@ msgstr "Создать"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Customers"
-msgstr "Создать Клиентов"
+msgstr "Создание клиентов"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_create_date
@@ -1495,7 +1620,7 @@ msgstr "Создать предложение"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Vendors"
-msgstr "Создать Поставщиков"
+msgstr "Создание поставщиков"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1508,12 +1633,12 @@ msgstr "Создать нового заказчика"
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create an Opportunity"
-msgstr ""
+msgstr "Создание возможностей"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create and combine rules:<br/>"
-msgstr ""
+msgstr "Создать и скомбинировать правила:<br/>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1529,11 +1654,16 @@ msgid ""
 "                Such categories could for instance reflect your product\n"
 "                structure or the different types of sales you do."
 msgstr ""
+"Создайте специальные теги, описывающие мероприятия\n"
+"вашей компании, для классификации и анализа ваших\n"
+"инициатив и возможностей. Такие категории могут, например, \n"
+"отражать структуру вашего продукта или различные виды \n"
+"осуществляемых продаж."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create the three firsts opportunities"
-msgstr ""
+msgstr "Создайте первые три возможности"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1648,7 +1778,7 @@ msgstr "Клиенты"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Customizations"
-msgstr ""
+msgstr "Индивидуальная настройка"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1773,7 +1903,7 @@ msgstr "Отображаемое имя"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Display your brochures, product sheets, showcases etc."
-msgstr ""
+msgstr "Покажите свои проспекты, каталоги и т. п."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1813,7 +1943,7 @@ msgstr "Черновые кандидаты"
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
-msgstr ""
+msgstr "Письма, отправленные на алиас, создают новые возможности"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1821,6 +1951,8 @@ msgid ""
 "Each product has only one price.\n"
 "                                        <br/>"
 msgstr ""
+"У продукта только один прайс.\n"
+"<br/>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
@@ -2005,13 +2137,13 @@ msgstr "Свернуто в воронке продаж"
 #: model:crm.activity,name:crm.crm_activity_demo_followup_quote
 #: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
 msgid "Follow-up Quote"
-msgstr ""
+msgstr "Подписка на запрос"
 
 #. module: crm
 #: model:crm.activity,description:crm.crm_activity_demo_followup_quote
 #: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
 msgid "Follow-up quote"
-msgstr ""
+msgstr "Подписаться на запрос"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2117,7 +2249,7 @@ msgstr "Создайте партнера или воспользуйтесь п
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Happy Selling!<br/>- The Odoo Team"
-msgstr ""
+msgstr "Удачных продаж!<br/>— Команда Odoo"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2147,6 +2279,8 @@ msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
 msgstr ""
+"Это список предстоящих мероприятий. Они связаны с вашими возможностями.\n"
+"Добавить мероприятие можно внутри возможности. Оно будет также добавлено в этот список."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
@@ -2402,7 +2536,7 @@ msgstr "Кандидат создан"
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr ""
+msgstr "Теги инициативы"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2576,24 +2710,24 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Log Activity"
-msgstr ""
+msgstr "Журналирование мероприятия"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log Only"
-msgstr ""
+msgstr "Только записи"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log a note..."
-msgstr ""
+msgstr "Добавить заметку…"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log an Activity"
-msgstr ""
+msgstr "Журнал мероприятия"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1044
@@ -2613,13 +2747,13 @@ msgstr "Проиграно"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
-msgstr ""
+msgstr "Причина отказа"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr ""
+msgstr "Причины отказа"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -2630,7 +2764,7 @@ msgstr "Низкий"
 #: model:crm.activity,name:crm.crm_activity_demo_make_quote
 #: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
 msgid "Make Quote"
-msgstr ""
+msgstr "Сделать запрос"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2645,7 +2779,7 @@ msgstr "Отметить \"Выиграна\""
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark as lost"
-msgstr ""
+msgstr "Отметить «отказом»"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2779,7 +2913,7 @@ msgstr "Объединять со следующими партнерами:"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_subtype_id
 msgid "Message Subtype"
-msgstr ""
+msgstr "Подтип сообщения"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_name
@@ -2896,40 +3030,40 @@ msgstr "Следующее действие"
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
 #: model:ir.ui.menu,name:crm.crm_lead_menu_activities
 msgid "Next Activities"
-msgstr "Следующие действия"
+msgstr "Следующие мероприятия"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_next_activity_id
 #: model:ir.ui.view,arch_db:crm.crm_lead_view_tree_activity
 msgid "Next Activity"
-msgstr "Следующее действие"
+msgstr "Следующее мероприятие"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_date_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_action
 msgid "Next Activity Date"
-msgstr "Дата Следующего Действия"
+msgstr "Дата следующего мероприятия"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_title_action
 msgid "Next Activity Summary"
-msgstr "Сводка Следующих Действий"
+msgstr "Резюме следующего мероприятия"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:61
 #, python-format
 msgid "Next activity"
-msgstr ""
+msgstr "Следующее мероприятие"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity is planned"
-msgstr ""
+msgstr "Следующее мероприятие запланировано "
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity late"
-msgstr ""
+msgstr "Следующее мероприятие в конце"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1095
@@ -2940,12 +3074,12 @@ msgstr "Без темы"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "No activity"
-msgstr ""
+msgstr "Нет мероприятий"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "No next activity planned"
-msgstr ""
+msgstr "Не запланировано мероприятий "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3068,7 +3202,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Online users: we do it for you!"
-msgstr ""
+msgstr "Пользователи он-лайн — это сделано для вас!"
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:323
@@ -3134,7 +3268,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Opportunities pipeline"
-msgstr ""
+msgstr "Воронка возможностей"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3171,7 +3305,7 @@ msgstr "Этап предложения изменен"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Opportunity Title"
-msgstr ""
+msgstr "Название возможности"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_won
@@ -3218,7 +3352,7 @@ msgstr "Параметры"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Activities"
-msgstr ""
+msgstr "Просроченные мероприятия"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
@@ -3304,7 +3438,7 @@ msgstr "Телефон"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Phone scripts"
-msgstr ""
+msgstr "Телефонный скрипт"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu
@@ -3377,17 +3511,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
 msgid "Preceding Activities"
-msgstr ""
+msgstr "Предыдущие мероприятия"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
 msgid "Previous Activity"
-msgstr "Предыдущее действие"
+msgstr "Предыдущее мероприятие"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Pricing &amp; Discounts"
-msgstr ""
+msgstr "Цены и скидки"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_priority
@@ -3468,12 +3602,12 @@ msgstr "Причина потери лидов"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
 msgid "Recommended Activities"
-msgstr ""
+msgstr "Рекомендованные мероприятия"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
 msgid "Recommended Next Activities"
-msgstr ""
+msgstr "Рекомендованные следующие мероприятия"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3530,7 +3664,7 @@ msgstr "Выручка по Продавцу"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sale Flow"
-msgstr ""
+msgstr "Поток продажи"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3595,17 +3729,17 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Запланировать мероприятие"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Next Activity"
-msgstr ""
+msgstr "Запланировать следущее мероприятие"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
 msgid "Schedule an Activity"
-msgstr ""
+msgstr "Запланировать мероприятие"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3663,7 +3797,7 @@ msgstr "Выбор"
 #: model:crm.activity,description:crm.crm_activity_demo_make_quote
 #: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
 msgid "Send a quotation"
-msgstr ""
+msgstr "Отправить предложение"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3707,12 +3841,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Setup your domain alias"
-msgstr ""
+msgstr "Установить псевдоним домена"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr ""
+msgstr "Показать меню инициатив"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3909,7 +4043,7 @@ msgstr "Группа"
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
 msgid "Team Activities"
-msgstr "Группа действий"
+msgstr "Мероприятия группы"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4044,7 +4178,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "This Week Activities"
-msgstr "Действия на этой неделе"
+msgstr "Мероприятия этой недели"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4066,6 +4200,7 @@ msgid ""
 "This opportunity has <b>no next activity scheduled</b>. <i>Click to set "
 "one.</i>"
 msgstr ""
+"У возможности нет <b>запланированных мероприятий</b>.<i>Создайте одно.</i>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -4101,7 +4236,7 @@ msgstr "Эта цель не существует."
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Time to Close a Deal"
-msgstr ""
+msgstr "Время закрывать сделку"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4126,7 +4261,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
-msgstr "Сегодняшние действия"
+msgstr "Сегодняшние мероприятия"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_1
@@ -4160,7 +4295,7 @@ msgstr "Тип используется для разделения кандид
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "USD, EUR, GBP"
-msgstr ""
+msgstr "Доллары, евро, фунты"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -4324,7 +4459,7 @@ msgstr "Интеграция с IP-телефонией"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_sale_config_settings
 msgid "Voip integration"
-msgstr ""
+msgstr "Интеграция Voip"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4403,6 +4538,8 @@ msgstr ""
 msgid ""
 "What are the main KPIs you need to track for your the sales activities?"
 msgstr ""
+"Какие основные ключевые показатели необходимо отслеживать для вас в "
+"мероприятиях по продажам?"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4423,7 +4560,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Win / Loss Ratio"
-msgstr ""
+msgstr "Рейтинг побед и неудач"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_wizard_id
@@ -4445,7 +4582,7 @@ msgstr "Выиграна"
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_country
 msgid "Won By Country"
-msgstr ""
+msgstr "Побед по стране"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_won
@@ -4461,7 +4598,7 @@ msgstr "Рабочее время"
 #: code:addons/crm/wizard/base_partner_merge.py:306
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
+msgstr "Нельзя объединить контакт со своим родителем."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4485,6 +4622,10 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"Вы сможете планировать встречи и журналировать\n"
+"мероприятия в возможности, преобразовывать их в\n"
+"предложения, прикреплять документы, сохранять\n"
+"обсуждения и многое другое."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -4493,6 +4634,10 @@ msgid ""
 "                opportunities, convert them into quotations, attach related\n"
 "                documents, track all discussions, and much more."
 msgstr ""
+"Вы сможете планировать встречи и журналировать\n"
+"мероприятия в возможности, преобразовывать их в\n"
+"предложения, прикреплять документы, сохранять\n"
+"обсуждения и многое другое."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_opportunities
@@ -4557,7 +4702,7 @@ msgstr "Индекс"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "additional 10% during summer sales"
-msgstr ""
+msgstr "дополнительные 10 % во время летних продаж"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4641,7 +4786,7 @@ msgstr "опрос"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "the list of customers"
-msgstr ""
+msgstr "список заказчиков"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

@@ -13,13 +13,14 @@
 # selim kartal <kartalselim37@gmail.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Azar Huseynli <azerbay1984@gmail.com>, 2016
+# cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Azar Huseynli <azerbay1984@gmail.com>, 2016\n"
+"Last-Translator: cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,9 @@ msgid ""
 "* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
 "* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
 msgstr ""
+"* 'Açık' durumu kullanıcı yeni ve onaylanmamış Zaman Çizelgesi oluştururken kullanılır.\n"
+"* 'Onay Bekliyor' durumu yeni Zaman Çizelgesi kullanıcıdan onay beklerken kullanılır.\n"
+"* 'Onaylandı' durumu kullanıcının üstü Zaman Çizelgesini onayladığında kullanılır."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -67,7 +71,7 @@ msgstr "Onaylandı"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
-msgstr ""
+msgstr "Gönderilmemiş Zaman Çizelgesi Onaylanamaz."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -150,7 +154,7 @@ msgstr "Personeler"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Extra features"
-msgstr ""
+msgstr "İlave Özellikler"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -165,7 +169,7 @@ msgstr "Saatler"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "IK Departmanı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -254,7 +258,7 @@ msgstr "Not"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
-msgstr ""
+msgstr "Sadece IK Yetkilisi veya Yöneticisi Zaman Çizelgesini Onaylayabilir"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
@@ -262,6 +266,8 @@ msgstr ""
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
 msgstr ""
+"Sadece IK Yetkilisi veya Yöneticisi Zaman Çizelgesini reddedebilir veya "
+"taslak haline döndürebilir."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -351,7 +357,7 @@ msgstr "Zaman Çizelgesi Dönemi"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
 msgid "Timesheet app for Chrome/Android/iOS"
-msgstr ""
+msgstr "Chrome/Android/iOS için Zaman Çizelgesi Uygulaması"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
@@ -377,7 +383,7 @@ msgstr "Zaman Çizelgesi aralığı"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 msgid "Timesheet range *"
-msgstr ""
+msgstr "Zaman Çizelgesi aralığı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
