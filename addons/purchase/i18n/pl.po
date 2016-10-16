@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-10-07 16:17+0000\n"
+"PO-Revision-Date: 2016-10-14 15:35+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -275,12 +275,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
-msgstr ""
+msgstr "Zezwól, aby dostawcy dostarczali do twoich klientów"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_manage_vendor_price:0
 msgid "Allow using and importing vendor pricelists"
-msgstr ""
+msgstr "Zezwól na używanie i importowanie cenników dostawców"
 
 #. module: purchase
 #: selection:purchase.config.settings,module_purchase_requisition:0
@@ -303,7 +303,7 @@ msgstr "Pozwala wybrać różne jednostki miary dla produktów."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
 msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr ""
+msgstr "Pozwala ustawić konto analityczne dla pozycji zamówienia zakupu."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -368,7 +368,7 @@ msgstr "Cena przeciętna"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
 msgid "Billed Qty"
-msgstr ""
+msgstr "Ilość zafakturowana"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:605 code:addons/purchase/stock.py:56
@@ -413,7 +413,7 @@ msgstr "Może być kupowane"
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
 "purchase order first."
-msgstr ""
+msgstr "Nie można anulować zapotrzebowania powiązanego z zamówieniem zakupu. W pierwszej kolejności anuluj zamówienie zakupu"
 
 #. module: purchase
 #: code:addons/purchase/stock.py:59
@@ -441,7 +441,7 @@ msgstr "Nie można usunąć pozycji zamówienia, jeśli jest w stanie '%s'."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr ""
+msgstr "Klinknij tutaj aby utworzyć nową fakturę zakupu."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -472,7 +472,7 @@ msgstr "Kliknij aby zazaczyć odebrane produkty."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
-msgstr ""
+msgstr "Kliknij, aby zarejestrować fakturę zakupu powiązaną z tym zakupem."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -606,7 +606,7 @@ msgstr "Opis"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr ""
+msgstr "Typ strefy docelowej"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
@@ -644,7 +644,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Dropshipping"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -860,7 +860,7 @@ msgstr "Ostatnia zmiana"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
 msgid "Levels of Approvals"
-msgstr ""
+msgstr "Poziomy akceptacji"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -937,7 +937,7 @@ msgstr "Bez wariantów produktów"
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
-msgstr ""
+msgstr "Żaden dostawca nie jest powiązany z tym produktem: %s. Wybierz dostawcę, aby naprawić to zapotrzebowanie."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -972,12 +972,12 @@ msgstr "Liczba nieprzeczytanych wiadomości"
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On ordered quantities"
-msgstr ""
+msgstr "Dla zmówionych ilości"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On received quantities"
-msgstr ""
+msgstr "Dla otrzymanych ilości"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
@@ -1048,7 +1048,7 @@ msgstr "Kraj partnera"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Partner's Country"
-msgstr "Kraj kontrahenta"
+msgstr "Kraj partnera"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_payment_term_id
@@ -1152,12 +1152,12 @@ msgstr "Wartość produktów"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "Produkty mogą mieć różne atrybuty, definiowanie wariantów (przykład: wielkość, kolor...)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr ""
+msgstr "Produkty mają wyłącznie jedną jednostkę miary (łatwiejsze)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
@@ -1252,7 +1252,7 @@ msgstr "Statystyka zamówień zakupu"
 #: code:addons/purchase/purchase.py:530
 #, python-format
 msgid "Purchase order line deleted."
-msgstr ""
+msgstr "Usunięto pozycję zamówienia zakupu."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1292,7 +1292,7 @@ msgstr "Zamówienia zakupu"
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr ""
+msgstr "Dodaj adres, jeśli chcesz, aby dostarczono bezpośrednio od dostawcy do klienta. W przeciwnym wypadku, pozostaw pole puste, aby dostarczono do twojej firmy."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1378,7 +1378,7 @@ msgstr "Referencyjna jednostka miary"
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sale order or an internal procurement request)"
-msgstr ""
+msgstr "Odnośnik do dokumentu, który utworzył to zamówienie zakupu (np. zamówienie sprzedaży lub wewnętrzne zapotrzebowanie)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1443,7 +1443,7 @@ msgstr "Wyślij zapytanie mailem"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Set a fixed cost price on each product"
-msgstr ""
+msgstr "Ustaw stały koszt przy każdym z produktów"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1507,7 +1507,7 @@ msgstr "Suma częściowa"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
 msgid "Supplier Currency"
-msgstr ""
+msgstr "Waluta dostawcy"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -1517,7 +1517,7 @@ msgstr "Cennik dostawcy"
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Suppliers always deliver to your warehouse(s)"
-msgstr ""
+msgstr "Dostawca zawsze dostarcza do twojego magazynu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
@@ -1547,7 +1547,7 @@ msgid ""
 "The product form contains detailed information to improve the\n"
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
-msgstr ""
+msgstr "Formularz produktu zawiera szczegółowe informacje w celu usprawnienia\nprocesu zakupu: ceny, logistyka zapotrzebowania, dane księgowe,\ndostępni dostawcy itp."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1585,7 +1585,7 @@ msgstr "To konto będzie stosowane do rejestrowania różnic cenowych między ce
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr ""
+msgstr "Ta waluta będzie stosowana, zamiast domyślnej, dla zakupów od aktualnego partnera"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1746,7 +1746,7 @@ msgstr "Faktury zakupu."
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price
 msgid "Vendor Price"
-msgstr ""
+msgstr "Cena u dostawcy"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
@@ -1819,7 +1819,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:335
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Musisz ustalić lokalizację dostawcy dla tego partnera: %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

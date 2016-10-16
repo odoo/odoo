@@ -9,14 +9,14 @@
 # Martin Trigaux, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2015
 # oihane <oihanecruce@gmail.com>, 2015
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 08:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-10-11 13:28+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -171,7 +171,7 @@ msgstr "Línea de depreciación del activo"
 #: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
-msgstr "Producto vendido o reservado. Apunte contable esperando para contabilización"
+msgstr "Activo vendido o deshechado. El asiento contable está esperando la validación."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -429,7 +429,7 @@ msgstr "Cuenta de amortización"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Asset Account"
-msgstr "Cuenta de Depreciación de Activos"
+msgstr "Cuenta de amortización del activo"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -450,7 +450,7 @@ msgstr "Asiento de amortización"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Expense Account"
-msgstr "Cuenta de Depreciación de Gastos"
+msgstr "Cuenta de gastos de amortización"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -482,13 +482,13 @@ msgstr "Nombre depreciación"
 #: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
-msgstr "Cuadro de amortización modificada"
+msgstr "Cuadro de amortización modificado"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:489
 #, python-format
 msgid "Depreciation line posted."
-msgstr "Entrada de amortización asentada"
+msgstr "Línea de amortización asentada."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_display_name
@@ -931,7 +931,7 @@ msgstr "Ventas"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "Valor residual"
+msgstr "Valor de rescate"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -941,7 +941,7 @@ msgstr "Buscar categoría de activo"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Sell or Dispose"
-msgstr "Vendido o Disponible"
+msgstr "Vender o deshechar"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_sequence
@@ -1036,12 +1036,12 @@ msgstr "Vendedor"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensajes del sitio web"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historial de comunicaciones del sitio web"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state
