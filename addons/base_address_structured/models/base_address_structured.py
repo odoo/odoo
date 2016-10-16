@@ -12,7 +12,7 @@ class ResCountryStateCity(models.Model):
     _order = 'name'
 
     name = fields.Char('City Name', required=True)
-    state_id = fields.Many2one('res.country.state', 'State', required=True)
+    state_id = fields.Many2one('res.country.state', 'State')
     country_id = fields.Many2one('res.country', 'Country', related='state_id.country_id', store=True, readonly=True)
     code = fields.Char('Code')
 
