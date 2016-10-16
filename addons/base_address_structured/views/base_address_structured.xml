@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_partner_structured_form" model="ir.ui.view">
+        <field name="name">view_partner_structured_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='city']" position="replace">
+                <field name="city_id" placeholder="City" class="o_address_city"
+                    context="{'default_country_id': country_id, 'default_state_id': state_id}"/>
+            </xpath>
+            <xpath expr="//field[@name='street']" position="replace">
+                <field name="street" invisible="1"/>
+                <field name="street_raw" placeholder="Street..."/>
+                <div class="o_row">
+                    <field name="city" invisible="1"/>
+                    <label for="street_number1" string="Number: " class="oe_edit_only"/>
+                    <span> </span>
+                    <field name="street_number1"/>
+                    <label for="street_number2" string="Door: " class="oe_edit_only"/>
+                    <field name="street_number2"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_address_structured_form" model="ir.ui.view">
+        <field name="name">view_partner_address_structured_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_address_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='city']" position="replace">
+                <field name="city_id" placeholder="City" class="o_address_city"
+                    context="{'default_country_id': country_id, 'default_state_id': state_id}"/>
+                <field name="city" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='street']" position="replace">
+                <field name="street" invisible="1"/>
+                <field name="street_raw" placeholder="Street..."/>
+                <div class="o_row">
+                    <label for="street_number1" string="Number: " class="oe_edit_only"/>
+                    <span> </span>
+                    <field name="street_number1"/>
+                    <label for="street_number2" string="Door: " class="oe_edit_only"/>
+                    <field name="street_number2"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
