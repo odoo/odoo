@@ -144,16 +144,24 @@ class MaintenanceEquipment(models.Model):
     maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
     maintenance_duration = fields.Float(help="Maintenance Duration in minutes and seconds.")
 
-    @api.depends('period', 'maintenance_open_count', 'maintenance_ids.request_date')
+    @api.depends('period', 'maintenance_ids.close_date')
     def _compute_next_maintenance(self):
-        for equipment in self:
-            create_date = equipment.create_date and datetime.strptime(equipment.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            if equipment.period:
-                next_date = create_date
-                if equipment.maintenance_ids:
-                    maintenance = equipment.maintenance_ids.sorted(lambda x: x.request_date)[0]
-                    next_date = maintenance.request_date and datetime.strptime(maintenance.request_date, DEFAULT_SERVER_DATE_FORMAT) or create_date
-                equipment.next_action_date = next_date and (next_date + timedelta(days=equipment.period)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        maintenances = self.env['maintenance.request'].search([('equipment_id', 'in', self.ids), 
+                                                               ('stage_id.done', '=', True), 
+                                                               ('close_date', '!=', False),
+                                                               ('equipment_id.period', '>', 0)], order="close_date desc")
+        equip_main = {}
+        for maintenance in maintenances:
+            if not equip_main.get(maintenance.equipment_id.id):
+                equip_main[maintenance.equipment_id.id] = maintenance
+        for equipment in self.filtered(lambda x: x.period > 0):
+            if equip_main.get(equipment.id):
+                initial_date = equip_main[equipment.id].close_date
+            elif equipment.id:
+                initial_date = equipment.create_date
+            else:
+                initial_date = fields.Date.context_today(self)
+            equipment.next_action_date = fields.Date.to_string(fields.Date.from_string(initial_date) + timedelta(days=equipment.period))
 
     @api.one
     @api.depends('maintenance_ids.stage_id.done')
@@ -190,17 +198,40 @@ class MaintenanceEquipment(models.Model):
         category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
+    def _create_new_request(self, date):
+        self.ensure_one()
+        self.env['maintenance.request'].create({
+                    'name': _('Preventive Maintenance - %s') % self.name,
+                    'request_date': date,
+                    'schedule_date': date,
+                    'category_id': self.category_id.id,
+                    'equipment_id': self.id,
+                    'maintenance_type': 'preventive',
+                    'owner_user_id': self.owner_user_id.id,
+                    'technician_user_id': self.technician_user_id.id,
+                    })
+
     @api.model
     def _cron_generate_requests(self):
-        for equipment in self.search([]):
-            if equipment.period and equipment.next_action_date == date.today().strftime(DEFAULT_SERVER_DATE_FORMAT):
-                self.env['maintenance.request'].create({
-                    'name': _('Preventive Maintenance - %s' % equipment.next_action_date),
-                    'request_date': equipment.next_action_date,
-                    'category_id': equipment.category_id.id,
-                    'equipment_id': equipment.id,
-                    'maintenance_type': 'preventive',
-                })
+        """
+            Generates maintenance request on the next_action_date or today if none exists
+        """
+        date_now = fields.Date.context_today(self)
+        for equipment in self.search([('period', '>', 0)]):
+            # If next_action_date is in the past and there are no preventive maintenance requests, create one
+            if equipment.next_action_date < date_now:
+                request = self.env['maintenance.request'].search([('stage_id.done', '=', False), 
+                                                        ('equipment_id', '=', equipment.id),
+                                                        ('maintenance_type', '=', 'preventive'),], limit=1)
+                if not request:
+                    equipment._create_new_request(date_now)
+            else: # Otherwise, check the maintenance requests
+                request = self.env['maintenance.request'].search([('stage_id.done', '=', False), 
+                                                        ('equipment_id', '=', equipment.id),
+                                                        ('maintenance_type', '=', 'preventive'),
+                                                        ('request_date', '=', equipment.next_action_date)], limit=1)
+                if not request:
+                    equipment._create_new_request(equipment.next_action_date)
 
 
 class MaintenanceRequest(models.Model):
@@ -227,8 +258,8 @@ class MaintenanceRequest(models.Model):
 
     name = fields.Char('Subjects', required=True)
     description = fields.Text('Description')
-    request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today)
-
+    request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today, 
+                               help="Date requested for the maintenance to happen")
     owner_user_id = fields.Many2one('res.users', string='Created by', default=lambda s: s.env.uid)
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment', index=True)
@@ -237,13 +268,13 @@ class MaintenanceRequest(models.Model):
                                group_expand='_read_group_stage_ids', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
     color = fields.Integer('Color Index')
-    close_date = fields.Date('Close Date')
+    close_date = fields.Date('Close Date', help="Date the maintenance was finished. ")
     kanban_state = fields.Selection([('normal', 'In Progress'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
                                     string='Kanban State', required=True, default='normal', track_visibility='onchange')
     # active = fields.Boolean(default=True, help="Set active to false to hide the maintenance request without deleting it.")
     archive = fields.Boolean(default=False, help="Set archive to true to hide the maintenance request without deleting it.")
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
-    schedule_date = fields.Datetime('Scheduled Date')
+    schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
     duration = fields.Float(help="Duration in minutes and seconds.")
 
