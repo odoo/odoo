@@ -23,8 +23,8 @@ class StockProductionLot(models.Model):
         for lot in self.filtered(lambda l: l.alert_date):
             lot.product_expiry_alert = lot.alert_date <= current_date
 
-    def _get_dates(self, product_id=None):
-        """Returns dates based on number of days configured in current lot's product."""
+    def _get_dates(self, product_id=None, operation_date=None):
+        """Returns dates based on operation date and number of days configured in current lot's product."""
         mapped_fields = {
             'life_date': 'life_time',
             'use_date': 'use_time',
@@ -34,17 +34,22 @@ class StockProductionLot(models.Model):
         res = dict.fromkeys(mapped_fields.keys(), False)
         product = self.env['product.product'].browse(product_id) or self.product_id
         if product:
+            op_date = operation_date or datetime.datetime.now()
             for field in mapped_fields.keys():
                 duration = getattr(product, mapped_fields[field])
                 if duration:
-                    date = datetime.datetime.now() + datetime.timedelta(days=duration)
+                    date = op_date + datetime.timedelta(days=duration)
                     res[field] = fields.Datetime.to_string(date)
         return res
 
     # Assign dates according to products data
     @api.model
     def create(self, vals):
-        dates = self._get_dates(vals.get('product_id'))
+        operation_date = None
+        if vals.get('product_id') and vals.get('life_date'):
+            product = self.env['product.product'].browse(vals['product_id'])
+            operation_date = fields.Datetime.from_string(vals['life_date']) - datetime.timedelta(days=product.life_time)
+        dates = self._get_dates(vals.get('product_id'), operation_date)
         for d in dates.keys():
             if not vals.get(d):
                 vals[d] = dates[d]
@@ -55,3 +60,15 @@ class StockProductionLot(models.Model):
         dates_dict = self._get_dates()
         for field, value in dates_dict.items():
             setattr(self, field, value)
+
+
+class PackOperationLot(models.Model):
+    _inherit = "stock.pack.operation.lot"
+
+    def _default_life_date(self):
+        if self.env.context.get('product_id'):
+            life_time = self.env['product.product'].browse(self.env.context['product_id']).life_time
+            if life_time:
+                return datetime.datetime.now() + datetime.timedelta(days=life_time)
+
+    life_date = fields.Datetime("End of Life Date", default=_default_life_date)

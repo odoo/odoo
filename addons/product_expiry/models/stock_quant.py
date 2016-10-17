@@ -14,3 +14,12 @@ class StockQuant(models.Model):
         if removal_strategy == 'fefo':
             return 'removal_date, in_date, id'
         return super(StockQuant, self)._quants_removal_get_order(removal_strategy=removal_strategy)
+
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    def _prepare_lot_vals(self, pack_op_lot):
+        vals = super(StockPicking, self)._prepare_lot_vals(pack_op_lot)
+        vals['life_date'] = pack_op_lot.life_date
+        return vals

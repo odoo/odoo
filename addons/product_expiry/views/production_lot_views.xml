@@ -35,4 +35,14 @@
         </field>
      </record>
 
+    <record id="stock_pack_operation_view_form_inherit_product_expiry" model="ir.ui.view">
+        <field name="name">stock.pack.operation.form.inherit.product.expiry</field>
+        <field name="model">stock.pack.operation</field>
+        <field name="inherit_id" ref="stock.view_pack_operation_lot_form" />
+        <field name="arch" type="xml">
+            <field name="lot_name" position="after">
+                <field name="life_date" invisible="not context.get('only_create', False)"/>
+            </field>
+        </field>
+    </record>
 </odoo>

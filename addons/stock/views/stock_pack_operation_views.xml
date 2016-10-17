@@ -80,7 +80,7 @@
                     </span>
                 </group>
                 <group>
-                    <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}">
+                    <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}" context="{'product_id': product_id}">
                         <tree editable="bottom" decoration-success="qty_todo==qty" decoration-danger="(qty_todo &gt; 0) and (qty&gt;qty_todo)">
                             <field name="lot_name" invisible="not context.get('only_create', False)"/>
                             <field name="lot_id" invisible="context.get('only_create', False)"
