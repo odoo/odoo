@@ -141,6 +141,15 @@ class TestViewSaving(common.TransactionCase):
         Company = self.registry('res.company')
         View = self.registry('ir.ui.view')
 
+        # create an xml_id for the view
+        imd = self.env['ir.model.data'].create({
+            'module': 'website',
+            'name': 'test_view',
+            'model': 'ir.ui.view',
+            'res_id': self.view_id,
+        })
+        self.assertFalse(imd.noupdate)
+
         replacement = ET.tostring(h.DIV(
             h.H3("Column 2"),
             h.UL(
@@ -151,6 +160,10 @@ class TestViewSaving(common.TransactionCase):
         ), encoding='utf-8')
         View.save(self.cr, self.uid, res_id=self.view_id, value=replacement,
                   xpath='/div/div[2]')
+
+        # the xml_id of the view should be flagged as 'noupdate'
+        self.assertEqual(View.browse(self.cr, self.uid, self.view_id).model_data_id, imd)
+        self.assertTrue(imd.noupdate)
 
         company = Company.browse(self.cr, self.uid, 1)
         self.assertEqual(company.name, "Acme Corporation")
