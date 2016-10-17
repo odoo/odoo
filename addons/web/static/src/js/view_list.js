@@ -2218,7 +2218,7 @@ instance.web.list.Column = instance.web.Class.extend({
         }
 
         var aggregation_func = (this.sum && 'sum') || (this.avg && 'avg') ||
-                               (this.max && 'max') || (this.min && 'min') || this.group_operator;
+                               (this.max && 'max') || (this.min && 'min');
 
         if (!aggregation_func) {
             return {};
