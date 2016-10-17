@@ -316,7 +316,7 @@ class HttpCase(TransactionCase):
                 _logger.info("phantomjs: %s", line)
 
                 if line == "ok":
-                    break
+                    return True
                 if line.startswith("error"):
                     line_ = line[6:]
                     # when error occurs the execution stack may be sent as as JSON
@@ -337,8 +337,9 @@ class HttpCase(TransactionCase):
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None)
         except OSError:
             raise unittest2.SkipTest("PhantomJS not found")
+        result = False
         try:
-            self.phantom_poll(phantom, timeout)
+            result = self.phantom_poll(phantom, timeout)
         finally:
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
@@ -347,6 +348,10 @@ class HttpCase(TransactionCase):
             self._wait_remaining_requests()
             # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
+            self.assertTrue(
+                result,
+                "PhantomJS test completed without reporting success; "
+                "the log may contain errors or hints.")
 
     def _wait_remaining_requests(self):
         t0 = int(time.time())
