@@ -91,14 +91,12 @@ class Inventory(models.Model):
             ('category', _('One product category')),
             ('product', _('One product only')),
             ('partial', _('Select products manually'))]
-        stock_settings = self.env['stock.config.settings'].search([], limit=1, order='id DESC')
-        if not stock_settings:
-            return res_filter
-        if stock_settings.group_stock_tracking_owner:
+
+        if self.user_has_groups('stock.group_tracking_owner'):
             res_filter += [('owner', _('One owner only')), ('product_owner', _('One product for a specific owner'))]
-        if stock_settings.group_stock_production_lot:
+        if self.user_has_groups('stock.group_production_lot'):
             res_filter.append(('lot', _('One Lot/Serial Number')))
-        if stock_settings.group_stock_tracking_lot:
+        if self.user_has_groups('stock.group_tracking_lot'):
             res_filter.append(('pack', _('A Pack')))
         return res_filter
 

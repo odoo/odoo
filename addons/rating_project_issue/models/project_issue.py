@@ -28,6 +28,16 @@ class ProjectIssue(models.Model):
         return super(ProjectIssue, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project_issue.mt_issue_rating")
 
 
+
+class Stage(models.Model):
+
+    _inherit = ['project.task.type']
+
+    def _default_domain_rating_template_id(self):
+        domain = super(Stage, self)._default_domain_rating_template_id()
+        return ['|'] + domain + [('model', '=', 'project.issue')]
+
+
 class Project(models.Model):
 
     _inherit = "project.project"

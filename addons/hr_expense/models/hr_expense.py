@@ -136,6 +136,7 @@ class HrExpense(models.Model):
             'product_id': line.get('product_id'),
             'product_uom_id': line.get('uom_id'),
             'analytic_account_id': line.get('analytic_account_id'),
+            'payment_id': line.get('payment_id'),
         }
 
     @api.multi
@@ -185,7 +186,10 @@ class HrExpense(models.Model):
                 'journal_id': journal.id,
                 'company_id': self.env.user.company_id.id,
                 'date': acc_date,
-                'ref': ref
+                'ref': ref,
+                # force the name to the default value, to avoid an eventual 'default_name' in the context
+                # to set it to '' which cause no number to be given to the account.move when posted.
+                'name': '/',
             })
             for expense in expense_list:
                 company_currency = expense.company_id.currency_id
@@ -194,11 +198,29 @@ class HrExpense(models.Model):
                 move_lines = expense._move_line_get()
 
                 #create one more move line, a counterline for the total on payable account
+                payment_id = False
                 total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines, acc_date)
                 if expense.payment_mode == 'company_account':
                     if not expense.sheet_id.bank_journal_id.default_credit_account_id:
                         raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
                     emp_account = expense.sheet_id.bank_journal_id.default_credit_account_id.id
+                    journal = expense.bank_journal_id
+                    #create payment
+                    payment_methods = (total < 0) and journal.outbound_payment_method_ids or journal.inbound_payment_method_ids
+                    journal_currency = journal.currency_id or journal.company_id.currency_id
+                    payment = self.env['account.payment'].create({
+                        'payment_method_id': payment_methods and payment_methods[0].id or False,
+                        'payment_type': total < 0 and 'outbound' or 'inbound',
+                        'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
+                        'partner_type': 'supplier',
+                        'journal_id': journal.id,
+                        'payment_date': expense.date,
+                        'state': 'reconciled',
+                        'currency_id': diff_currency_p and expense.currency_id.id or journal_currency.id,
+                        'amount': diff_currency_p and abs(total_currency) or abs(total),
+                        'name': expense.name,
+                    })
+                    payment_id = payment.id
                 else:
                     if not expense.employee_id.address_home_id:
                         raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
@@ -212,6 +234,7 @@ class HrExpense(models.Model):
                         'date_maturity': acc_date,
                         'amount_currency': diff_currency_p and total_currency or False,
                         'currency_id': diff_currency_p and expense.currency_id.id or False,
+                        'payment_id': payment_id,
                         })
 
                 #convert eml into an osv-valid format

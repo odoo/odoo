@@ -378,7 +378,7 @@ class AccountAssetAsset(models.Model):
 
     @api.multi
     def _compute_entries(self, date, group_entries=False):
-        depreciation_ids = self.env['account.asset.depreciation.line'].with_context(depreciation_date=date).search([
+        depreciation_ids = self.env['account.asset.depreciation.line'].search([
             ('asset_id', 'in', self.ids), ('depreciation_date', '<=', date),
             ('move_check', '=', False)])
         if group_entries:

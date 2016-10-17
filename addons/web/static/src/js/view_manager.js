@@ -459,6 +459,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         }
     },
     do_load_state: function(state, warm) {
+        if (state.view_type && state.view_type !== this.active_view.type) {
+            this.switch_mode(state.view_type, true);
+        }
         this.active_view.controller.do_load_state(state, warm);
     },
 });
