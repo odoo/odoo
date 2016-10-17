@@ -230,9 +230,9 @@ actual arch.
             view_wo_lang.arch = view.arch_base
 
     def _compute_model_data_id(self):
-        # get the last ir_model_data record corresponding to self
+        # get the first ir_model_data record corresponding to self
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].search_read(domain, ['res_id']):
+        for data in self.env['ir.model.data'].search_read(domain, ['res_id'], order='id desc'):
             view = self.browse(data['res_id'])
             view.model_data_id = data['id']
 
