@@ -25,6 +25,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
+from openerp.tools import float_is_zero
 import openerp.addons.decimal_precision as dp
 from tools.translate import _
 
@@ -114,35 +115,33 @@ class account_asset_asset(osv.osv):
                 amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
                 if asset.prorata:
                     amount = amount_to_depr / asset.method_number
-                    days = total_days - float(depreciation_date.strftime('%j'))
+                    purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
                     if i == 1:
-                        days = (depreciation_date - datetime.strptime(asset.purchase_date, '%Y-%m-%d')).days + 1
+                        days = (depreciation_date - purchase_date).days
                         if asset.method_period % 12 != 0:
                             # Calculate depreciation for remaining days in the month
                             # Example: asset value of 120, monthly depreciation, 12 depreciations
                             #    (120 (Asset value)/ (12 (Number of Depreciations) * 1 (Period Length))) /  31 (days of month) * 12 (days to depreciate in purchase month)
-                            month_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
+                            month_days = calendar.monthrange(purchase_date.year, purchase_date.month)[1]
                             amount = (amount_to_depr / (asset.method_number * asset.method_period)) / month_days * days
                         else:
                             # Calculate depreciation for remaining days in the year
                             # Example: asset value of 120, yearly depreciation, 12 depreciations
                             #    (120 (Asset value)/ (12 (Number of Depreciations) * 1 (Period Length, in years))) /  365 (days of year) * 75 (days to depreciate in purchase year)
-                            amount = (amount_to_depr / (asset.method_number * (asset.method_period / 12))) / total_days * days
-                    elif i == undone_dotation_number:
-                        amount = (amount_to_depr / asset.method_number) / total_days * (total_days - days)
+                            year_days = 366 if purchase_date.year % 4 == 0 else 365
+                            amount = (amount_to_depr / (asset.method_number * (asset.method_period / 12))) / year_days * days
             elif asset.method == 'degressive':
                 amount = residual_amount * asset.method_progress_factor
                 if asset.prorata:
-                    days = total_days - float(depreciation_date.strftime('%j'))
+                    purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
                     if i == 1:
-                        days = (depreciation_date - datetime.strptime(asset.purchase_date, '%Y-%m-%d')).days + 1
+                        days = (depreciation_date - purchase_date).days
                         if asset.method_period % 12 != 0:
-                            month_days = calendar.monthrange(depreciation_date.year, depreciation_date.month)[1]
+                            month_days = calendar.monthrange(purchase_date.year, purchase_date.month)[1]
                             amount = (residual_amount * asset.method_progress_factor) / month_days * days
                         else:
-                            amount = (residual_amount * asset.method_progress_factor * (asset.method_period / 12)) / total_days * days
-                    elif i == undone_dotation_number:
-                        amount = (residual_amount * asset.method_progress_factor) / total_days * (total_days - days)
+                            year_days = 366 if purchase_date.year % 4 == 0 else 365
+                            amount = (residual_amount * asset.method_progress_factor * (asset.method_period / 12)) / year_days * days
         return amount
 
     def _compute_board_undone_dotation_nb(self, cr, uid, asset, depreciation_date, total_days, context=None):
@@ -172,9 +171,9 @@ class account_asset_asset(osv.osv):
             if asset.prorata:
                 # When prorata then calculate depreciation at end of month or end of year
                 if asset.method_period % 12 != 0:
-                    depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d') + relativedelta(day=31)
+                    depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d') + relativedelta(months=+1, day=1)
                 else:
-                    depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d') + relativedelta(month=12, day=31)
+                    depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d') + relativedelta(years=+1, month=1, day=1)
             else:
                 # depreciation_date = 1st January of purchase year
                 purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
@@ -189,11 +188,12 @@ class account_asset_asset(osv.osv):
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
 
+            precision_digits = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
             undone_dotation_number = self._compute_board_undone_dotation_nb(cr, uid, asset, depreciation_date, total_days, context=context)
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
-                if amount <= 0:
+                if float_is_zero(amount, precision_digits=precision_digits):
                     continue
                 residual_amount -= amount
                 vals = {
@@ -207,11 +207,7 @@ class account_asset_asset(osv.osv):
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
                 # Considering Depr. Period as months
-                if asset.prorata:
-                    # Always depreciate on last date of a month
-                    depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period, day=31))
-                else:
-                    depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
+                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
                 day = depreciation_date.day
                 month = depreciation_date.month
                 year = depreciation_date.year
