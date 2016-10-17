@@ -161,7 +161,6 @@ class Product(models.Model):
         taxes = partner.property_account_position_id.map_tax(self.taxes_id)
         return taxes.compute_all(public and self.lst_price or self.with_context(context).price, pricelist.currency_id, qty, product=self, partner=partner)[ret]
 
-
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
