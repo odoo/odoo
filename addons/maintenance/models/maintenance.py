@@ -5,6 +5,8 @@ from datetime import date, datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from dateutil.relativedelta import relativedelta
+from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 
 
 class MaintenanceStage(models.Model):
@@ -143,7 +145,7 @@ class MaintenanceEquipment(models.Model):
     maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
     maintenance_duration = fields.Float(help="Maintenance Duration in minutes and seconds.")
 
-    @api.depends('period', 'maintenance_open_count', 'maintenance_ids.request_date')
+    @api.depends('period', 'maintenance_ids', 'maintenance_ids.request_date')
     def _compute_next_maintenance(self):
         for equipment in self:
             create_date = equipment.create_date and datetime.strptime(equipment.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -202,17 +204,53 @@ class MaintenanceEquipment(models.Model):
             fold[category.id] = category.fold
         return result, fold
 
+    def _create_new_request(self, date):
+        self.ensure_one()
+        self.env['maintenance.request'].create({
+                    'name': _('Preventive Maintenance - %s') % self.name,
+                    'request_date': date.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                    'schedule_date': date.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                    'category_id': self.category_id.id,
+                    'equipment_id': self.id,
+                    'maintenance_type': 'preventive',
+                    })
+
+    def _fill_up(self, from_date, to_date, to_end=False):
+        """
+            to_end takes into account that the distance to to_end is period also
+        """
+        self.ensure_one()
+        period = self.period
+        current_date = from_date + relativedelta(days=period)
+        while (current_date < to_date):
+            if to_end or current_date + relativedelta(days=period) < to_date:
+                self._create_new_request(current_date)
+            current_date = current_date + relativedelta(days=period)
+
     @api.model
     def _cron_generate_requests(self):
-        for equipment in self.search([]):
-            if equipment.period and equipment.next_action_date == date.today().strftime(DEFAULT_SERVER_DATE_FORMAT):
-                self.env['maintenance.request'].create({
-                    'name': _('Preventive Maintenance - %s' % equipment.next_action_date),
-                    'request_date': equipment.next_action_date,
-                    'category_id': equipment.category_id.id,
-                    'equipment_id': equipment.id,
-                    'maintenance_type': 'preventive',
-                })
+        show_until = (fields.Datetime.from_string(fields.Datetime.now()) + relativedelta(months=1)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        date_now = fields.Datetime.now()
+        for equipment in self.search([('period', '>', 0), ('next_action_date', '<', show_until)]):
+            requests = self.env['maintenance.request'].search([('request_date', '<', show_until), 
+                                                               ('stage_id.done', '=', False), 
+                                                               ('equipment_id', '=', equipment.id),
+                                                               ('maintenance_type', '=', 'preventive')],
+                                                              order='request_date') #('request_date', '>', date_now),
+            request_dates = [x.request_date for x in requests]
+            last_date = False
+            first_date = (equipment.next_action_date > date_now) and (fields.Datetime.from_string(equipment.next_action_date) - relativedelta(days=equipment.period)) or (fields.Datetime.from_string(fields.Datetime.now()) - relativedelta(days=equipment.period))
+            for date in request_dates:
+                if date >= date_now:
+                    if last_date:
+                        equipment._fill_up(fields.Datetime.from_string(last_date), fields.Datetime.from_string(date))
+                    elif fields.Datetime.from_string(date) >= fields.Datetime.from_string(equipment.next_action_date) + relativedelta(days=equipment.period):
+                        equipment._fill_up(first_date, fields.Datetime.from_string(date))
+                last_date=date
+            if not last_date:
+                last_date = fields.Datetime.now()
+            if last_date < show_until:
+                equipment._fill_up(fields.Datetime.from_string(last_date), fields.Datetime.from_string(show_until), to_end=True)
 
     _group_by_full = {
         'category_id': _read_group_category_ids
