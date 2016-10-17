@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Author: Gustavo Valverde. iterativo | Consultor de Odoo
+# Author: Gustavo Valverde <gvalverde@iterativo.do> iterativo | Consultores
 # Contributors: Edser Solis - iterativo
 
-# Odoo 8.0 author: Eneldo Serrata <eneldo@marcos.do> (Marcos Organizador de Negocios SRL..)
-# Odoo 7.0 author: Jose Ernesto Mendez <tecnologia@obsdr.com> (Open Business Solutions SRL.)
+# Odoo 8.0 author: Eneldo Serrata <eneldo@marcos.do>
+# (Marcos Organizador de Negocios SRL..)
+# Odoo 7.0 author: Jose Ernesto Mendez <tecnologia@obsdr.com>
+# (Open Business Solutions SRL.)
 # Copyright (c) 2016 - Present | Novum Ingenieria, SRL. - www.iterativo.do
 # All rights reserved.
 
@@ -73,7 +75,8 @@ Estructura de Codificación del Catálogo de Cuentas:
 110101 - Caja
 210101 - Proveedores locales
 
-**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas en Odoo):
+**Ocho dígitos** son para las cuentas de tercer orden \
+(las visualizadas en Odoo):
 1101- Efectivo y Equivalentes
 110101- Caja
 11010101 Caja General

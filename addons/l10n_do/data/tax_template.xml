@@ -179,6 +179,17 @@
         <field eval="0" name="price_include"/>
         <field eval="[(6,0,[ref('tag_18_of_10')])]" name="tag_ids"/>
     </record>
+    <record id="tax_0015_bank" model="account.tax.template">
+        <field name="chart_template_id" ref="do_chart_template"/>
+        <field name="name">Impuesto 0.0015% Transferencia Bancaria</field>
+        <field name="description">0.0015%</field>
+        <field name="amount">2</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="do_niif_52070200"/>
+        <field name="refund_account_id" ref="do_niif_11080303"/>
+        <field eval="0" name="price_include"/>
+    </record>
     <record id="tax_10_telco" model="account.tax.template">
         <field name="chart_template_id" ref="do_chart_template"/>
         <field name="name">Impuesto 10% Telecomunicaciones (ISC)</field>
