@@ -30,7 +30,6 @@ class AccountInvoice(models.Model):
             ]}
         return result
 
-
     def _prepare_invoice_line_from_po_line(self, line):
         if line.product_id.purchase_method == 'purchase':
             qty = line.product_qty - line.qty_invoiced
@@ -43,7 +42,7 @@ class AccountInvoice(models.Model):
         invoice_line = self.env['account.invoice.line']
         data = {
             'purchase_line_id': line.id,
-            'name': line.name,
+            'name': self.purchase_id.name+': '+line.name,
             'origin': self.purchase_id.origin,
             'uom_id': line.product_uom.id,
             'product_id': line.product_id.id,
@@ -52,6 +51,7 @@ class AccountInvoice(models.Model):
             'quantity': qty,
             'discount': 0.0,
             'account_analytic_id': line.account_analytic_id.id,
+            'analytic_tag_ids': line.analytic_tag_ids.ids,
             'invoice_line_tax_ids': invoice_line_tax_ids.ids
         }
         account = invoice_line.get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
@@ -73,9 +73,6 @@ class AccountInvoice(models.Model):
             if line in self.invoice_line_ids.mapped('purchase_line_id'):
                 continue
             data = self._prepare_invoice_line_from_po_line(line)
-            account = new_lines.get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
-            if account:
-                data['account_id'] = account.id
             new_line = new_lines.new(data)
             new_line._set_additional_fields(self)
             new_lines += new_line
