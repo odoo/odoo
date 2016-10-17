@@ -872,7 +872,7 @@ class Field(object):
             write_value = self.convert_to_write(self.convert_to_record(value, record), record)
             record.write({self.name: write_value})
             # Update the cache unless value contains a new record
-            if all(getattr(value, '_ids', ())):
+            if not (self.relational and not all(value)):
                 record._cache[self] = value
 
     ############################################################################
