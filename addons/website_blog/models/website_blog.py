@@ -101,11 +101,13 @@ class BlogPost(models.Model):
             blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
     @api.multi
+    @api.depends('post_date', 'visits')
     def _compute_ranking(self):
         res = {}
         for blog_post in self:
-            age = datetime.now() - fields.Datetime.from_string(blog_post.post_date)
-            res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
+            if blog_post.id:  # avoid to rank one post not yet saved and so withtout post_date in case of an onchange.
+                age = datetime.now() - fields.Datetime.from_string(blog_post.post_date)
+                res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
         return res
 
     def _default_content(self):
@@ -181,6 +183,8 @@ class BlogPost(models.Model):
     def _set_post_date(self):
         for blog_post in self:
             blog_post.published_date = blog_post.post_date
+            if not blog_post.published_date:
+                blog_post._write(dict(post_date=blog_post.create_date)) # dont trigger inverse function
 
     def _check_for_publication(self, vals):
         if vals.get('website_published'):
