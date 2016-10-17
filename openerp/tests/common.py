@@ -348,7 +348,10 @@ class HttpCase(TransactionCase):
             self._wait_remaining_requests()
             # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
-            self.assertIs(result, True, 'PhantomJS test failed.')
+            self.assertTrue(
+                result,
+                "PhantomJS test completed without reporting success; "
+                "the log may contain errors or hints.")
 
     def _wait_remaining_requests(self):
         t0 = int(time.time())
