@@ -230,7 +230,8 @@ actual arch.
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
-    @api.depends('dummy_model_data_id.model', 'dummy_model_data_id.res_id')
+    # the dependency 'write_date' forces fixing wrong values...
+    @api.depends('dummy_model_data_id.model', 'dummy_model_data_id.res_id', 'write_date')
     def _compute_model_data_id(self):
         # get the first ir_model_data record corresponding to self
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
