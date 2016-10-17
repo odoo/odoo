@@ -6,7 +6,7 @@ from openerp.http import request
 
 
 class WebsiteAccount(website_account):
-    @http.route(['/my', '/my/home'], type='http', auth="user", website=True)
+    @http.route()
     def account(self):
         response = super(WebsiteAccount, self).account()
         user = request.env.user

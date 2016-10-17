@@ -64,7 +64,7 @@ var KanbanView = View.extend({
         this.qweb.debug = session.debug;
         this.qweb.default_dict = _.clone(QWeb.default_dict);
 
-        this.limit = this.options.limit || 40;
+        this.limit = this.options.limit || parseInt(this.fields_view.arch.attrs.limit, 10) || 40;
         this.fields = {};
         this.fields_keys = _.keys(this.fields_view.fields);
         this.grouped = undefined;
