@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2016-10-07 00:15+0000\n"
+"PO-Revision-Date: 2016-10-14 03:16+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "必要なアクション"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr ""
+msgstr "追加仕入諸掛"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -82,7 +82,7 @@ msgstr "キャンセル済"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "クリックして仕入諸掛を新規作成してください。"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
@@ -102,7 +102,7 @@ msgstr "経費"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_line_id
 msgid "Cost Line"
-msgstr ""
+msgstr "諸掛明細"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_cost_lines
@@ -186,22 +186,22 @@ msgstr "フォロワー"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_channel_ids
 msgid "Followers (Channels)"
-msgstr "フォロワー(チャンネル)"
+msgstr "フォロワー (チャネル)"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "フォロワー(取引先)"
+msgstr "フォロワー (取引先)"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
 msgid "Former Cost"
-msgstr ""
+msgstr "更新前原価"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost_per_unit
 msgid "Former Cost(Per Unit)"
-msgstr ""
+msgstr "更新前原価 (単位毎)"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -238,7 +238,7 @@ msgstr "フォロー中"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
 msgid "Item Description"
-msgstr ""
+msgstr "項目説明"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_move_id
@@ -432,7 +432,7 @@ msgid ""
 "landed costs. Landed costs are only possible for products configured in real"
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
-msgstr ""
+msgstr "選択されたピッキングは仕入諸掛によって調整されるべき移動を含みません。仕入諸掛は在庫評価がリアルタイムかつ原価計算法が実際原価の製品にのみ適用可能です。製品の在庫評価設定を確認の上、正しいピッキングを選択してください。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
@@ -460,13 +460,13 @@ msgstr "検証"
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
-msgstr ""
+msgstr "一旦検証された仕入諸掛は取り消せません。必要に応じてマイナスの仕入諸掛を作成してください。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "評価調整"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_volume
@@ -500,7 +500,7 @@ msgstr "重量"
 msgid ""
 "You cannot validate a landed cost which has no valid valuation adjustments "
 "lines. Did you click on Compute?"
-msgstr ""
+msgstr "適当な評価調整明細のない仕入諸掛は検証できません。はじめに計算ボタンを押してください。"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -510,4 +510,4 @@ msgstr "製品の特徴を記述..."
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
-msgstr ""
+msgstr "purchase.config.settings"

@@ -247,7 +247,7 @@
                             <div class="modal-body" id="sign-dialog">
                               <p>
                                   <span>I agree that by signing this proposal, I
-                                  accept it on the behalf of </span><b t-field="quotation.company_id"/><span>, for an amount of </span>
+                                  accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
                                   <b data-id="total_amount" t-field="quotation.amount_total"
                                     t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                                   <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
@@ -274,7 +274,7 @@
                           <div class="modal-body" id="sign-dialog">
                             <p>
                                 <span>I agree that by paying this proposal, I
-                                accept it on the behalf of </span><b t-field="quotation.company_id"/><span>, for an amount of </span>
+                                accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
                                 <b data-id="total_amount" t-field="quotation.amount_total"
                                   t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                                 <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
