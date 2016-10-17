@@ -4,13 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
+# Ladislav Tomm <tomm@helemik.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-08-28 14:31+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-10-13 10:45+0000\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +31,12 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
 msgid "# Nbr Timesheet"
-msgstr ""
+msgstr "# číslo časového rozvrhu"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
 msgid "# Total Attendance"
-msgstr ""
+msgstr "# Celková návštěvnost"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_diff:0
@@ -44,7 +46,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
 msgid "# Total Timesheet"
-msgstr ""
+msgstr "# Celkový časový rozvrh"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -79,13 +81,13 @@ msgstr "Přidat"
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:39
 #, python-format
 msgid "Add a Line"
-msgstr ""
+msgstr "Přidat řádek"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_max_difference:0
 msgid ""
 "Allow a difference of time between timesheets and attendances of (in hours)"
-msgstr ""
+msgstr "Povol rozdíl mezi časovými rozvrhy a docházkou počet (hodin)"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_max_difference:0
@@ -108,7 +110,7 @@ msgstr "Analytický řádek"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
 msgid "Analytic accounts"
-msgstr ""
+msgstr "Analytické účty"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -144,7 +146,7 @@ msgstr "Zrušit"
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
 #, python-format
 msgid "Click to add projects, contracts or analytic accounts."
-msgstr ""
+msgstr "Klikněte pro přidání projektu, kontraktu nebo analytických účtů."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
@@ -172,7 +174,7 @@ msgstr "Potvrzeno"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
-msgstr ""
+msgstr "Potvrzené časové rozvrhy"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,create_uid:0
@@ -200,7 +202,7 @@ msgstr "Datum"
 #: field:hr.timesheet.report,date_from:0
 #: field:hr_timesheet_sheet.sheet,date_from:0
 msgid "Date from"
-msgstr ""
+msgstr "Datum od"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_last_post:0
@@ -241,7 +243,7 @@ msgstr "Rozdíl"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Differences"
-msgstr ""
+msgstr "Rozdíly"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
@@ -290,7 +292,7 @@ msgstr "Chyba!"
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
 msgid "External Timesheet"
-msgstr ""
+msgstr "Externí časové rozvrhy"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
@@ -329,7 +331,7 @@ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "In Draft"
-msgstr ""
+msgstr "V konceptu"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
@@ -368,7 +370,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
-msgstr ""
+msgstr "Vnitřní časové rozvrhy"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
@@ -380,7 +382,7 @@ msgstr "Neplatná akce!"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
 msgid "Invoice rate"
-msgstr ""
+msgstr "Fakturační tarif"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_is_follower:0
@@ -390,7 +392,7 @@ msgstr "Sleduje"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "Otevře současný časový rozvrh"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_last_post:0
@@ -428,14 +430,14 @@ msgstr "Měsíc"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr ""
+msgstr "Můj současný časový rozvrh"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
-msgstr ""
+msgstr "Mé časové rozvrhy"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -469,7 +471,7 @@ msgstr "Otevřeno"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
 #, python-format
 msgid "Open Timesheet"
-msgstr ""
+msgstr "Otevři časový rozvrh"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -482,13 +484,13 @@ msgstr "Období"
 #: help:hr.config.settings,timesheet_range:0
 #: help:res.company,timesheet_range:0
 msgid "Periodicity on which you validate your timesheets."
-msgstr ""
+msgstr "Četnost kontrol platnosti časových rozvrhů."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Please create an employee and associate it with this user."
-msgstr ""
+msgstr "Prosím vytvořte zaměstnance a přiřaďte jej k tomuto uživateli."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
@@ -515,12 +517,12 @@ msgstr "Odmítnout"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_filter
 msgid "Search Account"
-msgstr ""
+msgstr "Hledat účet"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
-msgstr ""
+msgstr "Prohledej časové rozvrhy"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -692,7 +694,7 @@ msgstr ""
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
 #: field:hr.timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
-msgstr ""
+msgstr "Typ fakturace"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0
@@ -758,7 +760,7 @@ msgstr "Týden"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
 #, python-format
 msgid "Week "
-msgstr ""
+msgstr "Týden"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
