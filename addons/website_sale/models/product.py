@@ -137,7 +137,6 @@ class Product(models.Model):
         self.ensure_one()
         return self.product_tmpl_id.website_publish_button()
 
-
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 

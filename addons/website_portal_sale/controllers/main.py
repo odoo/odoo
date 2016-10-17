@@ -9,7 +9,7 @@ from openerp.addons.website_portal.controllers.main import website_account
 
 
 class website_account(website_account):
-    @http.route(['/my/home'], type='http', auth="user", website=True)
+    @http.route()
     def account(self, **kw):
         """ Add sales documents to main account page """
         response = super(website_account, self).account()
