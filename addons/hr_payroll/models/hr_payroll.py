@@ -234,8 +234,9 @@ class HrPayslip(models.Model):
 
     @api.multi
     def action_payslip_cancel(self):
-        if self.filtered(lambda slip: slip.state == 'done'):
-            raise UserError(_("Cannot cancel a payslip that is done."))
+        for record in self:
+            record.move_id.button_cancel()
+            record.move_id.unlink()
         return self.write({'state': 'cancel'})
 
     @api.multi
