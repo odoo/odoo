@@ -10,6 +10,10 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class Warehouse(models.Model):
     _name = "stock.warehouse"
@@ -452,7 +456,11 @@ class Warehouse(models.Model):
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
             'supplier_wh_id': supplier_warehouse.id}
-    _get_inter_wh_route = _get_inter_warehouse_route_values  # compatibility
+
+    def _get_inter_wh_route(self, supplier_warehouse):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'_get_inter_wh_route' has been renamed into '_get_inter_warehouse_route_values'... Overrides are ignored")
+        return self._get_inter_warehouse_route_values(supplier_warehouse)
 
     def _get_crossdock_route_values(self):
         return {
@@ -463,8 +471,10 @@ class Warehouse(models.Model):
             'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
             'sequence': 20}
 
-    def _get_crossdock_route(self, route_name):  # compatibility
-        return self._get_crossdock_route_values()
+    def _get_crossdock_route(self, route_name):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'_get_crossdock_route' has been renamed into '_get_crossdock_route_values'... Overrides are ignored")
+        return self._get_crossdock_route_values(route_name)
 
     # Pull / Push tools
     # ------------------------------------------------------------
@@ -503,9 +513,15 @@ class Warehouse(models.Model):
             'procure_method': 'make_to_order',
             'active': True}, name_suffix=_('MTO'))
         return pull_rules_list
-    _get_mto_pull_rule = _get_mto_pull_rules_values  # compatibility
 
-    def _get_push_pull_rules(self, active, values, new_route_id):  # compatibility
+    def _get_mto_pull_rule(self, route_values):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'_get_mto_pull_rule' has been renamed into '_get_mto_pull_rules_values'... Overrides are ignored")
+        return self._get_mto_pull_rules_values(route_values)
+
+    def _get_push_pull_rules(self, active, values, new_route_id):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'_get_push_pull_rules' has been renamed into '_get_push_pull_rules_values'... Overrides are ignored")
         return self._get_push_pull_rules_values(values, values={'active': active, 'route_id': new_route_id})
 
     def _get_supply_pull_rules_values(self, route_values, values=None):
@@ -523,7 +539,11 @@ class Warehouse(models.Model):
             if delivery_new and warehouse.delivery_steps != delivery_new and (warehouse.delivery_steps == 'ship_only' or delivery_new == 'ship_only'):
                 change_to_multiple = warehouse.delivery_steps == 'ship_only'
                 warehouse._check_delivery_resupply(output_loc, change_to_multiple)
-    _check_resupply = _update_reception_delivery_resupply
+
+    def _check_resupply(self, reception_new, delivery_new):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'_check_resupply' has been renamed into '_update_reception_delivery_resupply'... Overrides are ignored")
+        return self._update_reception_delivery_resupply(reception_new, delivery_new)
 
     def _check_delivery_resupply(self, new_location, change_to_multiple):
         """ Check if the resupply routes from this warehouse follow the changes of number of delivery steps
@@ -567,7 +587,12 @@ class Warehouse(models.Model):
         self._create_or_update_crossdock_route(routes_data)
         self._create_or_update_mto_pull(routes_data)
         return True
-    change_route = _update_routes
+
+    @api.multi
+    def change_route(self):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'change_route' has been renamed into '_update_routes'... Overrides are ignored")
+        return self._update_routes()
 
     @api.one
     def _update_picking_type(self):
@@ -597,7 +622,12 @@ class Warehouse(models.Model):
             warehouse.pack_type_id.sequence_id.write(sequence_data['pack_type_id'])
             warehouse.pick_type_id.sequence_id.write(sequence_data['pick_type_id'])
             warehouse.int_type_id.sequence_id.write(sequence_data['int_type_id'])
-    _handle_renaming = _update_name_and_code
+
+    @api.multi
+    def _handle_renaming(self, new_name=False, new_code=False):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'_handle_renaming' has been renamed into '_update_name_and_code'... Overrides are ignored")
+        return self._update_name_and_code(new_name=new_name, new_code=new_code)
 
     def _update_location_reception(self, new_reception_step):
         switch_warehouses = self.filtered(lambda wh: wh.reception_steps != new_reception_step and not wh._location_used(wh.wh_input_stock_loc_id))

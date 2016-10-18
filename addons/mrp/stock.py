@@ -290,8 +290,8 @@ class stock_warehouse(osv.osv):
         routes |= self.filtered(lambda self: self.manufacture_to_resupply and self.manufacture_pull_id and self.manufacture_pull_id.route_id).mapped('manufacture_pull_id').mapped('route_id')
         return routes
 
-    def _handle_renaming(self, cr, uid, ids, name, code, context=None):
-        res = super(stock_warehouse, self)._handle_renaming(cr, uid, ids, name, code, context=context)
+    def _update_name_and_code(self, cr, uid, ids, name, code, context=None):
+        res = super(stock_warehouse, self)._update_name_and_code(cr, uid, ids, name, code, context=context)
         warehouse = self.browse(cr, uid, ids[0], context=context)
         pull_obj = self.pool.get('procurement.rule')
         #change the manufacture procurement rule name

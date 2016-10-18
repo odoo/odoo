@@ -451,7 +451,7 @@ class MailTemplate(models.Model):
         if fields is None:
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date']
 
-        res_ids_to_templates = self.get_email_template_batch(res_ids)
+        res_ids_to_templates = self.get_email_template(res_ids)
 
         # templates: res_id -> template; template -> res_ids
         templates_to_res_ids = {}
@@ -562,17 +562,17 @@ class MailTemplate(models.Model):
             mail.send(raise_exception=raise_exception)
         return mail.id  # TDE CLEANME: return mail + api.returns ?
 
-    # compatibility
-    render_template_batch = render_template
-    get_email_template_batch = get_email_template
-    generate_email_batch = generate_email
+    def render_template_batch(self, template_txt, model, res_ids, post_process=False):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'render_template_batch' has been renamed into 'render_template'... Overrides are ignored")
+        return self.render_template(template_txt, model, res_ids, post_process=post_process)
 
-    # Compatibility method
-    # def render_template(self, cr, uid, template, model, res_id, context=None):
-    #     return self.render_template_batch(cr, uid, template, model, [res_id], context)[res_id]
+    def get_email_template_batch(self, res_ids):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'get_email_template_batch' has been renamed into 'get_email_template'... Overrides are ignored")
+        return self.get_email_template(res_ids)
 
-    # def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
-    #     return self.get_email_template_batch(cr, uid, template_id, [record_id], context)[record_id]
-
-    # def generate_email(self, cr, uid, template_id, res_id, context=None):
-    #     return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]
+    def generate_email_batch(self, res_ids, fields=None):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'generate_email_batch' has been renamed into 'generate_email'... Overrides are ignored")
+        return self.generate_email(res_ids, fields=fields)

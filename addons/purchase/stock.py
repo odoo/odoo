@@ -123,8 +123,8 @@ class stock_warehouse(osv.osv):
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
-    def _handle_renaming(self, cr, uid, ids, name, code, context=None):
-        res = super(stock_warehouse, self)._handle_renaming(cr, uid, ids, name, code, context=context)
+    def _update_name_and_code(self, cr, uid, ids, name, code, context=None):
+        res = super(stock_warehouse, self)._update_name_and_code(cr, uid, ids, name, code, context=context)
         warehouse = self.browse(cr, uid, ids[0], context=context)
         pull_obj = self.pool.get('procurement.rule')
         #change the buy procurement rule name
@@ -132,8 +132,8 @@ class stock_warehouse(osv.osv):
             pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
         return res
 
-    def change_route(self, cr, uid, ids, context=None):
-        res = super(stock_warehouse, self).change_route(cr, uid, ids, context=context)
+    def _update_routes(self, cr, uid, ids, context=None):
+        res = super(stock_warehouse, self)._update_routes(cr, uid, ids, context=context)
         for warehouse in self.browse(cr, uid, ids[0], context=context):
             if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
                 self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.in_type_id.default_location_dest_id.id}, context=context)

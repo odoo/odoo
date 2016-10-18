@@ -265,8 +265,8 @@ class AccountInvoice(models.Model):
 class ProcurementOrder(models.Model):
     _inherit = "procurement.order"
 
-    def _run_move_create(self):
-        vals = super(ProcurementOrder, self)._run_move_create()
+    def _get_stock_move_values(self):
+        vals = super(ProcurementOrder, self)._get_stock_move_values()
         if self.sale_line_id:
             vals.update({'sequence': self.sale_line_id.sequence})
         return vals
