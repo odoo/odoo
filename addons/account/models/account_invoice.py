@@ -1334,6 +1334,7 @@ class AccountInvoiceTax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
+    @api.depends('invoice_id.invoice_line_ids')
     def _compute_base_amount(self):
         for tax in self:
             base = 0.0
@@ -1355,7 +1356,7 @@ class AccountInvoiceTax(models.Model):
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
-    base = fields.Monetary(string='Base', compute='_compute_base_amount')
+    base = fields.Monetary(string='Base', compute='_compute_base_amount', store=True)
 
 
 
