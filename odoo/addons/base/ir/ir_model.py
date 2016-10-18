@@ -1233,7 +1233,7 @@ class IrModelData(models.Model):
                 _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
         def unlink_if_refcount(to_unlink):
-            global undeletable
+            undeletable = self.browse()
             for model, res_id in to_unlink:
                 external_ids = self.search([('model', '=', model), ('res_id', '=', res_id)])
                 if external_ids - datas:
@@ -1261,21 +1261,22 @@ class IrModelData(models.Model):
                     self._cr.execute('ROLLBACK TO SAVEPOINT record_unlink_save')
                 else:
                     self._cr.execute('RELEASE SAVEPOINT record_unlink_save')
+            return undeletable
 
         # Remove non-model records first, then model fields, and finish with models
-        unlink_if_refcount(item for item in to_unlink if item[0] not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
-        unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.constraint')
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.constraint')
 
         modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
-        unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.fields')
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.fields')
 
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
 
-        unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model')
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model')
 
         self._cr.commit()
 
