@@ -38,6 +38,7 @@ from openerp import addons
 from openerp.osv import fields, osv
 from openerp import tools, api
 from openerp.tools.translate import _
+from openerp.tools import config
 
 _logger = logging.getLogger(__name__)
 MAX_POP_MESSAGES = 50
@@ -188,6 +189,9 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
 
     def fetch_mail(self, cr, uid, ids, context=None):
         """WARNING: meant for cron usage only - will commit() after each email!"""
+        if config['maintenance']:
+            _logger.info('In maintenance mode, not fetching mail')
+            return True
         context = dict(context or {})
         context['fetchmail_cron_running'] = True
         mail_thread = self.pool.get('mail.thread')
