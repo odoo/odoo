@@ -1624,7 +1624,7 @@ class calendar_event(osv.Model):
                 event = self.browse(cr, uid, event_id, context=context)
                 if len(event.alarm_ids) > 0 or values.get('alarm_ids'):
                     partners_to_notify = set([p.id for p in event.partner_ids])
-                    event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
+                    event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
                         partners_to_notify.update(event_attendees_changes['removed_partner_ids'])
                     self.pool['calendar.alarm_manager'].notify_next_alarm(cr, uid, partners_to_notify)
