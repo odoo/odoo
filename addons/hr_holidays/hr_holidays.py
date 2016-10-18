@@ -372,7 +372,7 @@ class hr_holidays(osv.osv):
         }
         # Add the partner_id (if exist) as an attendee
         if leave.user_id and leave.user_id.partner_id:
-                meeting_vals['partner_ids'] = [(4, leave.user_id.partner_id.id)]
+            meeting_vals['partner_ids'] = [(4, leave.user_id.partner_id.id)]
         return meeting_vals
 
     def holidays_validate(self, cr, uid, ids, context=None):
