@@ -49,8 +49,6 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
-    demonym = fields.Char(translate=True,
-                          help="Adjective for relationship between a person and a state")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
