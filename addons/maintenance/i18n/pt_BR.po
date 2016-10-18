@@ -3,19 +3,19 @@
 # * maintenance
 # 
 # Translators:
-# Mateus Lopes <mateus1@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# grazziano <g.negocios@outlook.com.br>, 2016
 # Adriel Kotviski <kotviski@gmail.com>, 2016
 # Cezar <cezar.santanna@gmail.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# Grazziano Duarte <gra.negocia@gmail.com>, 2016
 # francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
 # Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:38+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
+"POT-Creation-Date: 2016-09-07 08:58+0000\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
 "Last-Translator: Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -67,6 +67,12 @@ msgid ""
 msgstr ""
 "Um dicionário python que será avaliado para gerar valores padrão quando "
 "forem criados novos registros para este apelido."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
+msgid "Acer Laptop"
+msgstr "Notebook Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
@@ -375,9 +381,14 @@ msgid "Equipment Categories"
 msgstr "Categorias de Equipamento"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3386
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3424
 msgid "Equipment Category"
 msgstr ""
+
+#. module: maintenance
+#: model:res.groups,name:maintenance.group_equipment_manager
+msgid "Equipment Manager"
+msgstr "Gerente de Equipamento"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_name
@@ -419,6 +430,17 @@ msgstr "Siga o processo de solicitação e comunique-se com o colaborador."
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "Agrupar por..."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "Impressora HP Inkjet"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
+msgid "HP Laptop"
+msgstr "Notebook HP"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -615,6 +637,11 @@ msgid "Model"
 msgstr "Modelo"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
+msgid "Monitors"
+msgstr "Monitores"
+
+#. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Mais <i class=\"fa fa-caret-down\"/>"
@@ -703,6 +730,11 @@ msgstr ""
 "Modelo de pai segurando o alias. O modelo segurando a referência de alias\n"
 "não é necessariamente o modelo dado por alias_model_id\n"
 "(example: project (parent_model) and task (model))"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
+msgid "Phones"
+msgstr "Telefones"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_contact
@@ -809,6 +841,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Responsible"
 msgstr "Responsável"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Monitor Samsung 15\""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -951,6 +990,11 @@ msgstr ""
 "proprietário correto baseado no endereço do remetente (De), ou utilizará a "
 "conta do Administrador se não for encontrado um usuário do sistema para este"
 " endereço."
+
+#. module: maintenance
+#: model:res.groups,comment:maintenance.group_equipment_manager
+msgid "The user will be able to manage equipments."
+msgstr "O usuário será capaz de gerenciar equipamentos."
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action

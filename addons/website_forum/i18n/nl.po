@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Volluta <volluta@tutanota.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "                <p>You have been invited to validate your email in order to get access to\n"
 "                \"${object.company_id.name}\" Q/A Forums.</p>\n"
 "                <p>To validate your email, please click on the following link:</p>\n"
-"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
 "                    Validate my account for \"${object.company_id.name}\" Q/A Forums\n"
 "                </a>\n"
 "                <p>Thanks for your participation!</p>\n"
@@ -1135,7 +1135,7 @@ msgstr "Discussies"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
@@ -1209,16 +1209,6 @@ msgstr "Editor opties: afbeeldingen en links"
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Email"
 msgstr "E-mail"
-
-#. module: website_forum
-#: model:ir.model,name:website_forum.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "E-mail samenstellen wizard"
-
-#. module: website_forum
-#: model:ir.model,name:website_forum.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "E-mail opmaak wizard voor enquête"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
@@ -1702,11 +1692,6 @@ msgid "Links"
 msgstr "Links"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_mail_message
-msgid "Message"
-msgstr "Bericht"
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
 msgid "Moderate posts"
 msgstr "Modereer berichten"
@@ -1820,14 +1805,14 @@ msgid "Nofollow links"
 msgstr "Nofollow links"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:848
-#: code:addons/website_forum/models/forum.py:868
+#: code:addons/website_forum/models/forum.py:871
+#: code:addons/website_forum/models/forum.py:891
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr "Niet toegestaan om te stemmen op zijn eigen bericht"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:912
+#: code:addons/website_forum/models/forum.py:935
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr "Niet genoeg karma om een nieuw label aan te maken"
@@ -2361,7 +2346,7 @@ msgstr "Sorry u moet ingelogd zijn om te stemmen"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:149
+#: code:addons/website_forum/static/src/js/website_forum.js:168
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr "Sorry, anonieme gebruikers kunnen geen correct antwoord kiezen."
@@ -2734,9 +2719,7 @@ msgid "Validate question"
 msgstr "Valideer vraag"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:801
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
-#, python-format
 msgid "View"
 msgstr "Weergave"
 
@@ -2770,7 +2753,7 @@ msgstr "Wacht op validatie"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
 msgid "Waiting post"
-msgstr ""
+msgstr "Wachtend bericht"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2850,7 +2833,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
-msgstr ""
+msgstr "Je kunt geen leeg antwoord ingeven"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help

@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-#
+# 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-10 13:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2016\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: procurement
@@ -33,10 +34,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
@@ -48,7 +47,7 @@ msgstr "Ενέργεια"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
 msgid "Active"
-msgstr "Ενεργό"
+msgstr "Ενεργή"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -56,9 +55,14 @@ msgid "All at once"
 msgstr "Όλα αμέσως"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Αρχειοθετημένα"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
-msgstr "Ακύρωση"
+msgstr "Άκυρο"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -68,15 +72,7 @@ msgstr "Ακύρωση Προμήθειας"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr "Ακυρωμένο"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
-"Δεν μπορεί να διαγραφεί η Εντολή(ες) Προμήθειας η οποία είναι σε κατάσταση "
-"%s."
+msgstr "Ακυρώθηκε"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -86,8 +82,9 @@ msgstr "Έλεγχος Προμηθειών"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
 msgstr ""
 "Κανόνας ο οποίος επελέγη για τη διευθέτηση των προμηθειών. Συνήθως "
 "επιλέγεται από το σύστημα, αλλά μπορεί να ρυθμιστεί χειροκίνητα από τον "
@@ -104,7 +101,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_company_id
 msgid "Company"
-msgstr "Εταιρεία"
+msgstr "Εταιρία"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -127,7 +124,7 @@ msgstr "Επιβεβαιωμένο"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
 msgid "Created by"
-msgstr "Δημιουργήθηκε από"
+msgstr "Δημιουργήθηκε στις"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
@@ -135,13 +132,12 @@ msgstr "Δημιουργήθηκε από"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
-msgstr "Δημιουργήθηκε στις"
+msgstr "Δημιουργήθηκε από"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Μέθοδος Παράδοσης"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -159,7 +155,7 @@ msgstr "Εμφάνιση Ονόματος"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "Ολοκληρωμένο"
+msgstr "Εκπληρωμένη"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -199,7 +195,7 @@ msgstr "Παγκόσμια"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Ομαδοποίηση Ανά"
+msgstr "Ομαδοποίηση Κατά"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
@@ -213,7 +209,7 @@ msgstr "Προμήθειες Ομάδας"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_id
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
@@ -233,7 +229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
 msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
@@ -262,11 +258,6 @@ msgid "Leave Empty"
 msgstr "Αφήστε Κενό"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Εφοδιαστική"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -277,10 +268,10 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
 msgid "Name"
-msgstr "Όνομα"
+msgstr "Περιγραφή"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Κανένας κανόνας δεν ταιριάζει με αυτή την προμήθεια"
@@ -288,7 +279,7 @@ msgstr "Κανένας κανόνας δεν ταιριάζει με αυτή τ
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Normal"
-msgstr "Κανονικό"
+msgstr "Κανονική"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -327,7 +318,7 @@ msgstr "Εξαιρέσεις Προμήθειας"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
-msgstr "Προμήθειες Συνόλου"
+msgstr "Ομάδα Προμηθειών"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -379,12 +370,12 @@ msgstr "Προμήθειες"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Product"
-msgstr "Προϊόν"
+msgstr "Είδος"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
 msgid "Product Unit of Measure"
-msgstr "Μονάδα Μέτρησης του Προϊόντος"
+msgstr "Μονάδα Μέτρησης Προϊόντος"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
@@ -414,16 +405,14 @@ msgstr "Επαναβεβαιώση Προμηθειών"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_name
 msgid "Reference"
-msgstr "Αναφορά"
+msgstr "Σχετικό"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
-"Αναφορά του εγγράφου που δημιούργησε αυτή την Προμήθεια.\n"
-"Αυτό ολοκληρώνεται αυτοματοποιημένα από το Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -480,12 +469,12 @@ msgstr "Αναζήτηση Προμήθειας"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
 msgid "Sequence"
-msgstr "Ιεράρχηση"
+msgstr "Ακολουθία"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
 msgid "Source Document"
-msgstr "Έγγραφο Προέλευσης"
+msgstr "Έγγραφο Πηγή"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_state
@@ -521,9 +510,14 @@ msgstr "Πολύ Επείγον"
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fulfill the need: "
-"purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
 msgstr ""
 
 #. module: procurement
@@ -535,57 +529,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "π.χ. SO005"
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Αδιάβαστα Μηνύματα"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Website Messages"
-#~ msgstr "Μηνύματα Ιστότοπου"
-
-#~ msgid "Website communication history"
-#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"

@@ -3,17 +3,17 @@
 # * purchase
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
-# Kovács Tibor <kovika@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2016-09-29 13:59+0000\n"
+"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,6 +117,15 @@ msgstr "# Beszerzési megrendelésből"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} Megrendelés (Ref ${object.name or 'n/a' })"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid ""
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
+msgstr ""
+"<span>(*) Ez a beállított érték összefügg a vállalattal ahová "
+"bejelentkezett.</span>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -267,7 +276,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_account_analytic_id
 msgid "Analytic Account"
-msgstr "Analitikus/elemző könyvelés"
+msgstr "Gyűjtő/elemző könyvelés"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -344,6 +353,7 @@ msgid "Bills"
 msgstr "Számlák"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Bills Received"
 msgstr ""
@@ -355,7 +365,7 @@ msgid "Blocking Message"
 msgstr "Blokkoló üzenet"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:789
+#: code:addons/purchase/models/purchase.py:796
 #: code:addons/purchase/models/stock.py:81
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
@@ -385,14 +395,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
-#: model:ir.model.fields,field_description:purchase.field_product_template_purchase_ok
-#: model:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
-msgid "Can be Purchased"
-msgstr "Beszerezhető"
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:805
+#: code:addons/purchase/models/purchase.py:812
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -411,15 +414,15 @@ msgstr "Nem talál általános beszerzési útvonalat."
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Érvénytelenít"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Cancelled"
-msgstr "Visszavont"
+msgstr "Törölt"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:655
+#: code:addons/purchase/models/purchase.py:662
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -472,6 +475,7 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_company_id
@@ -480,7 +484,7 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:291
+#: code:addons/purchase/models/purchase.py:294
 #, python-format
 msgid "Compose Email"
 msgstr "Email írás"
@@ -541,6 +545,7 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_company_currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_currency_id
@@ -593,6 +598,11 @@ msgid "Description"
 msgstr "Leírás"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Description for Vendors"
+msgstr "Leírás a beszállítóknak"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Destination Location Type"
 msgstr "Célállomás hely típus"
@@ -614,6 +624,11 @@ msgstr "Elvégezve"
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
 msgstr "Kétszeresen jóváhagyott mennyiség"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation_amount
+msgid "Double validation amount *"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -698,7 +713,7 @@ msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:194
+#: code:addons/purchase/models/purchase.py:197
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "A megrendelés törléséhez először vissza kell vonnia azt."
@@ -738,16 +753,6 @@ msgid "Invoice Line"
 msgstr "Számla tételsor"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Invoiced"
-msgstr "Számlázott"
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Invoices"
-msgstr "Számlák"
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Invoices and Incoming Shipments"
 msgstr "Számlák és beérkező szállítmányok"
@@ -785,6 +790,11 @@ msgid "Levels of Approvals"
 msgstr "Jóváhagyások szintjei"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation
+msgid "Levels of Approvals *"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Location & Warehouse"
 msgstr "Termék hely & Raktárépület"
@@ -798,6 +808,11 @@ msgstr ""
 #: selection:purchase.order,state:0
 msgid "Locked"
 msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
+msgid "Logistics"
+msgstr "Logisztika"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -820,6 +835,7 @@ msgid "Manual Invoices"
 msgstr "Kézi számlák"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_lead
 #: model:ir.model.fields,help:purchase.field_res_company_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
@@ -842,6 +858,7 @@ msgid "Message for Purchase Order Line"
 msgstr "Üzenet a szállítói megrendelés sorról"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
 msgstr "Minimum mennyiség melyre dupla jóváhagyás szükséges"
@@ -877,18 +894,13 @@ msgid "No variants on products"
 msgstr "Nincsenek variációk a termékre"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:938
+#: code:addons/purchase/models/purchase.py:945
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
 msgstr ""
 "Nincs beszállító beállítva a következő termékhez: %s. Kérem állítson be "
 "egyet a beszerzés javításához."
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "Not Invoiced"
-msgstr "Nem számlázott"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -912,6 +924,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Megrendelt mennyiségeken: számlák ellenőrzése a megrendelt mennyiségek alapján.\n"
+"Beérkezett menyiségek: számlák ellenőrzése a beérkezett mennyiségek alapján."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -954,7 +968,7 @@ msgid "Order of Day"
 msgstr "A nap megrendelése"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:762
+#: code:addons/purchase/models/purchase.py:769
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Megrendelt mennyiség csökkent!"
@@ -975,6 +989,11 @@ msgid "PO_${(object.name or '').replace('/','_')}"
 msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "Packaging"
+msgstr "Csomagolás"
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
 msgid "Partner"
@@ -992,8 +1011,8 @@ msgstr "Partner országa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_payment_term_id
-msgid "Payment Term"
-msgstr "Fizetési feltétel"
+msgid "Payment Terms"
+msgstr "Fizetési feltételek"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1099,6 +1118,7 @@ msgid "Products have only one unit of measure (easier)"
 msgstr "A termékek egy mértékegységgel rendelkeznek (egyszerűbb)"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
 msgstr "Kétszeres jóváhagyás szerkezetet ad a beszerzésekre"
@@ -1136,6 +1156,11 @@ msgid "Purchase Lead Time"
 msgstr "Beszerzési átfutási idő"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_lead
+msgid "Purchase Lead Time *"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.report.xml,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
@@ -1171,7 +1196,7 @@ msgstr "Beszerzési megrendelés költségvetési pozíciója"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
-msgstr "Szállítói megrendelés sor"
+msgstr "Beszállítói megrendelés sor"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1185,6 +1210,12 @@ msgid "Purchase Order Modification"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_lock
+msgid "Purchase Order Modification *"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_lock
 #: model:ir.model.fields,help:purchase.field_res_company_po_lock
 msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
@@ -1193,6 +1224,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.actions.act_window,name:purchase.purchase_order_action_generic
 #: model:ir.model.fields,field_description:purchase.field_stock_picking_purchase_id
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1207,10 +1239,15 @@ msgid "Purchase Orders Statistics"
 msgstr "Beszerzési megrendelés statisztikák"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:657
+#: code:addons/purchase/models/purchase.py:664
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Beszerzési megrendelés tételsora törölve."
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Purchase orders that have been invoiced."
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1237,6 +1274,8 @@ msgstr "Beszerzés-Standard ár"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+#: model:ir.ui.view,arch_db:purchase.procurement_order_view_form_inherit_purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchases"
@@ -1356,6 +1395,11 @@ msgstr ""
 "hivatkozás. Ez főként összeegyeztetésre használja, mikor beérkeznek az áruk,"
 " mivel ezek a referencia hivatkozások általában rá vannak írva a beszállító "
 "által kitöltött és az áruhoz kapcsolt szállító levelekre."
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.purchase_report
+msgid "Reports"
+msgstr "Kimutatások"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1596,7 +1640,12 @@ msgstr ""
 "partnertől való beszerzéseknél"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:966
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+msgid "This note will be displayed on requests for quotation."
+msgstr "Ez a megjegyzés lesz látható az árajánlatkéréseken."
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:973
 #, python-format
 msgid ""
 "This purchase order has been created from: <a href=# data-oe-"
@@ -1604,7 +1653,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:979
+#: code:addons/purchase/models/purchase.py:986
 #, python-format
 msgid ""
 "This purchase order has been modified from: <a href=# data-oe-"
@@ -1612,13 +1661,13 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:183
+#: code:addons/purchase/models/account_invoice.py:184
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:197
+#: code:addons/purchase/models/account_invoice.py:198
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1668,7 +1717,7 @@ msgid "Transfer"
 msgstr "Átvitel"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:342
+#: code:addons/purchase/models/purchase.py:345
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1678,7 +1727,7 @@ msgstr ""
 " tétel."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:345
+#: code:addons/purchase/models/purchase.py:348
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -1749,6 +1798,11 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_config_settings_company_currency_id
+msgid "Utility field to express amount currency"
+msgstr "Kisegítő mező az összeg pénznemének kifejezéséhez"
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "VAT:"
@@ -1769,6 +1823,7 @@ msgstr "Beszállító"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.actions.act_window,name:purchase.purchase_open_invoice
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills"
 msgstr "Beszállítói számlák"
@@ -1795,6 +1850,7 @@ msgstr "Beszállítói hivatkozás"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
+#: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Vendors"
 msgstr "Beszállítók"
 
@@ -1817,6 +1873,7 @@ msgid "Volume"
 msgstr "Térfogat"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
 msgstr ""
@@ -1835,8 +1892,8 @@ msgid "Warning"
 msgstr "Figyelmeztetés"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:248
-#: code:addons/purchase/models/purchase.py:723
+#: code:addons/purchase/models/purchase.py:251
+#: code:addons/purchase/models/purchase.py:730
 #, python-format
 msgid "Warning for %s"
 msgstr "Figyelmeztetés erre %s"
@@ -1866,7 +1923,7 @@ msgstr ""
 " meghatározását, egy termék kezelés bővítését az e-értékesítéshez például"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:763
+#: code:addons/purchase/models/purchase.py:770
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity!\n"
@@ -1899,13 +1956,13 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:382
+#: code:addons/purchase/models/purchase.py:385
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Hozzá kell rendelnie egy Beszálítót ehhez a partnerhez %s"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:312
+#: code:addons/purchase/models/purchase.py:315
 #, python-format
 msgid ""
 "You need purchase manager access rights to validate an order above %.2f %s."

@@ -3,18 +3,18 @@
 # * mail
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
-"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-10-10 08:43+0000\n"
+"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,8 @@ msgstr ""
 #: model:mail.template,body_html:mail.mail_template_data_notification_email_default
 msgid ""
 "\n"
-"% if ctx.get('button_access'):\n"
+"<div>\n"
+"% if ctx.get('has_button_access'):\n"
 "<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
 "    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
 "        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
@@ -35,31 +36,31 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "% endif\n"
-"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access') or ctx.get('is_accessible'):\n"
-"<div summary=\"o_mail_notification\">\n"
-"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 100%; margin-top: 5px;\">\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):\n"
+"<div summary=\"o_mail_notification\" style=\"padding: 0px; width:600px;\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
 "<tbody><tr>\n"
 "    <td valign=\"center\">\n"
-"        % if ctx.get('button_access') or ctx.get('button_follow') or ctx.get('button_unfollow'):\n"
-"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; text-decoration: none; color: #FFFFFF; text-decoration:none !important; font-weight: 400; background-color: #a24689; border: 0px solid #a24689; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
+"        % if ctx.get('has_button_access'):\n"
+"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
 "        % endif\n"
 "\n"
-"        % if ctx.get('button_follow'):\n"
-"        % if ctx.get('actions'):\n"
+"        % if ctx.get('has_button_follow'):\n"
+"        % if ctx.get('has_button_access'):\n"
 "           |\n"
 "        % endif\n"
-"        <a href=\"${ctx['button_follow']['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${ctx['button_follow']['title']}</a>\n"
-"        % elif ctx.get('button_unfollow'):\n"
-"        % if ctx.get('actions'):\n"
+"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
+"        % elif ctx.get('has_button_unfollow'):\n"
+"        % if ctx.get('has_button_access'):\n"
 "           |\n"
 "        % endif\n"
-"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${ctx['button_unfollow']['title']}</a>\n"
+"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
 "        % endif\n"
 "\n"
 "        % if ctx.get('actions'):\n"
 "        % for action in ctx['actions']:\n"
 "        |\n"
-"        <a href=\"${action['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${action['title']}</a>\n"
+"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:none !important;\">${action['title']}</a>\n"
 "        % endfor\n"
 "        % endif\n"
 "    </td>\n"
@@ -97,100 +98,20 @@ msgid ""
 "<p style=\"color: #555555;\">\n"
 "    Sent by\n"
 "    % if ctx.get('website_url'):\n"
-"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #a24689;\">\n"
+"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\">\n"
 "    % endif\n"
 "    ${ctx.get('company_name')}\n"
 "    % if ctx.get('website_url'):\n"
 "    </a>\n"
 "    % endif\n"
 "    using\n"
-"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #a24689;\">Odoo</a>.\n"
+"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>.\n"
 "</p>\n"
+"</div>"
 msgstr ""
-"\n"
-"% if ctx.get('button_access'):\n"
-"<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
-"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
-"        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
-"        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
-"        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
-"    </div>\n"
-"</div>\n"
-"% endif\n"
-"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('button_access') or ctx.get('is_accessible'):\n"
-"<div summary=\"o_mail_notification\">\n"
-"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 100%; margin-top: 5px;\">\n"
-"<tbody><tr>\n"
-"    <td valign=\"center\">\n"
-"        % if ctx.get('button_access') or ctx.get('button_follow') or ctx.get('button_unfollow'):\n"
-"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; text-decoration: none; color: #FFFFFF; text-decoration:none !important; font-weight: 400; background-color: #a24689; border: 0px solid #a24689; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
-"        % endif\n"
-"\n"
-"        % if ctx.get('button_follow'):\n"
-"        % if ctx.get('actions'):\n"
-"           |\n"
-"        % endif\n"
-"        <a href=\"${ctx['button_follow']['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${ctx['button_follow']['title']}</a>\n"
-"        % elif ctx.get('button_unfollow'):\n"
-"        % if ctx.get('actions'):\n"
-"           |\n"
-"        % endif\n"
-"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${ctx['button_unfollow']['title']}</a>\n"
-"        % endif\n"
-"\n"
-"        % if ctx.get('actions'):\n"
-"        % for action in ctx['actions']:\n"
-"        |\n"
-"        <a href=\"${action['url']}\" style=\"text-decoration:none; color: #a24689; text-decoration:none !important;\">${action['title']}</a>\n"
-"        % endfor\n"
-"        % endif\n"
-"    </td>\n"
-"    <td valign=\"center\" align=\"right\">\n"
-"        <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"    </td>\n"
-"</tr>\n"
-"<tr>\n"
-"    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"        <hr width=\"100%\"\n"
-"            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
-"        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
-"        <span style=\"background-color: #f2dede; padding: 5px;\">\n"
-"            <strong>Belső megjegyzés</strong>: válasz nem lessz a követőknek kiküldve.\n"
-"        </span>\n"
-"        % endif\n"
-"    </td>\n"
-"</tr>\n"
-"</tbody></table>\n"
-"</div>\n"
-"% endif\n"
-"${object.body | safe}\n"
-"% if ctx.get('tracking'):\n"
-"    <ul>\n"
-"    % for tracking in ctx['tracking']\n"
-"        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
-"    % endfor\n"
-"    </ul>\n"
-"% endif\n"
-"\n"
-"% if ctx.get('signature'):\n"
-"    ${ctx['signature'] | safe}\n"
-"% endif\n"
-"<br/>\n"
-"<p style=\"color: #555555;\">\n"
-"    Sent by\n"
-"    % if ctx.get('website_url'):\n"
-"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #a24689;\">\n"
-"    % endif\n"
-"    ${ctx.get('company_name')}\n"
-"    % if ctx.get('website_url'):\n"
-"    </a>\n"
-"    % endif\n"
-"    felhasználva\n"
-"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #a24689;\">Odoo rendszer</a>.\n"
-"</p>\n"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:627
+#: code:addons/mail/models/mail_channel.py:640
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr "Ez egy privát csatorna. Meghívottként csatlakozhat hozzá."
@@ -222,13 +143,13 @@ msgid "%s (copy)"
 msgstr "%s (másolat)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:240
+#: code:addons/mail/models/mail_thread.py:232
 #, python-format
 msgid "%s created"
 msgstr "%s létrehozva"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:80
+#: code:addons/mail/models/res_users.py:69
 #, python-format
 msgid "%s has joined the %s network."
 msgstr "%s csatlakozott a %s hálózathoz."
@@ -251,13 +172,13 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:178
+#: code:addons/mail/static/src/xml/thread.xml:195
 #, python-format
 msgid "-------- Show older messages --------"
 msgstr "-------- Régebbi üzenetek mutatása --------"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:631
+#: code:addons/mail/models/mail_channel.py:644
 #, python-format
 msgid ""
 "<br><br>\n"
@@ -273,7 +194,7 @@ msgstr ""
 "            Beilleszthet régebbi válaszokat az üzenetébe ide írva <b>:hivatkozas</b>.<br>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:538
+#: code:addons/mail/models/mail_channel.py:551
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -283,8 +204,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:461
-#: code:addons/mail/models/mail_channel.py:514
+#: code:addons/mail/models/mail_channel.py:474
+#: code:addons/mail/models/mail_channel.py:527
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -294,7 +215,7 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:164
+#: code:addons/mail/models/mail_channel.py:169
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
@@ -426,7 +347,6 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_defaults
-#: model:ir.model.fields,help:mail.field_res_users_alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
@@ -480,6 +400,7 @@ msgstr "Csoportok hozzáférése"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_needaction
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_needaction
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_needaction
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_needaction
@@ -592,16 +513,12 @@ msgstr "Speciális beállítások"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_id
+#: model:ir.model.fields,field_description:mail.field_mail_test_alias_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_id
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Alias"
 msgstr "Álnév"
-
-#. module: mail
-#: model:ir.ui.view,arch_db:mail.view_users_form_mail
-msgid "Alias Accepts Emails From"
-msgstr "Álnevek fogadják az Emaileket innen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_contact
@@ -620,7 +537,6 @@ msgstr "Domain álnév"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_name
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_name
 msgid "Alias Name"
 msgstr "Álnév elnevezése"
 
@@ -628,7 +544,6 @@ msgstr "Álnév elnevezése"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_domain
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_domain
 msgid "Alias domain"
 msgstr "Álénév domain"
 
@@ -636,7 +551,6 @@ msgstr "Álénév domain"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_model_id
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_model_id
 msgid "Aliased Model"
 msgstr "Minta álnév"
 
@@ -660,7 +574,7 @@ msgstr "Összes üzenet"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:192
+#: code:addons/mail/static/src/js/chat_manager.js:195
 #, python-format
 msgid "Anonymous"
 msgstr "Névtelenül"
@@ -715,6 +629,11 @@ msgid ""
 msgstr ""
 "A mellékletek a modell / res_id és ennek a mezőnek az üzenetével lesznek a "
 "dokumentumhoz hozzáfűzve."
+
+#. module: mail
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr "Hitelesített alkalmazottak"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -805,6 +724,11 @@ msgid "Bounce"
 msgstr "Ugrálás"
 
 #. module: mail
+#: selection:mail.notification,email_status:0
+msgid "Bounced"
+msgstr "Visszadobták"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/followers.js:125
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -812,7 +736,7 @@ msgstr "Ugrálás"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Érvénytelenít"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
@@ -822,7 +746,7 @@ msgstr "Email elvetése"
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr "Visszavont"
+msgstr "Törölt"
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -940,7 +864,7 @@ msgid "Choose an example"
 msgstr "Válasszon egy példát"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:346
+#: code:addons/mail/models/mail_thread.py:338
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
@@ -948,7 +872,7 @@ msgstr ""
 "%(email_link)s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:362
+#: code:addons/mail/models/mail_thread.py:354
 #, python-format
 msgid "Click here to add new %s"
 msgstr "Kattintson ide egy új %s hozzáadáshoz"
@@ -1084,6 +1008,7 @@ msgstr "Dátum létrehozás"
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template_create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_test_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_create_uid
 msgid "Created by"
@@ -1100,6 +1025,7 @@ msgstr "Készítette"
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_create_date
+#: model:ir.model.fields,field_description:mail.field_mail_test_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_create_date
 msgid "Created on"
@@ -1166,6 +1092,7 @@ msgstr "Dátum"
 #: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_last_post
 #: model:ir.model.fields,help:mail.field_mail_channel_message_last_post
 #: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_last_post
+#: model:ir.model.fields,help:mail.field_mail_test_message_last_post
 #: model:ir.model.fields,help:mail.field_mail_thread_message_last_post
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_category_message_last_post
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_message_last_post
@@ -1198,6 +1125,11 @@ msgid "Date of the last message posted on the record."
 msgstr "A feljegyzésen történt utolsó levelezés dátuma."
 
 #. module: mail
+#: model:ir.ui.view,arch_db:mail.message_user_assigned
+msgid "Dear"
+msgstr "Tisztelt"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_default
 msgid "Default"
 msgstr "Alapértelmezett"
@@ -1212,7 +1144,6 @@ msgstr "Alapértelmezett érték"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_defaults
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_defaults
 msgid "Default Values"
 msgstr "Alapértelmezett értékek"
 
@@ -1254,7 +1185,7 @@ msgstr "Elküldött e-mailek törlése (kizárólag tömeges levélküldés)"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:167
+#: code:addons/mail/static/src/xml/thread.xml:184
 #, python-format
 msgid "Delete this attachment"
 msgstr "Törli ezt a mellékletet"
@@ -1313,9 +1244,11 @@ msgstr "Hozzászólások"
 #: model:ir.model.fields,field_description:mail.field_mail_followers_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_mail_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_message_display_name
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_display_name
+#: model:ir.model.fields,field_description:mail.field_mail_test_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_thread_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_display_name
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_display_name
@@ -1407,6 +1340,11 @@ msgid "Email Search"
 msgstr "E-mail keresésée"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_email_status
+msgid "Email Status"
+msgstr "Email állapot"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
 msgid "Email Template"
 msgstr "E-mail sablon"
@@ -1477,7 +1415,7 @@ msgid "Error during communication with the publisher warranty server."
 msgstr "Hiba a kiadó garancia szerverével történő kommunikációval."
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:239
+#: code:addons/mail/models/mail_mail.py:252
 #, python-format
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
@@ -1507,6 +1445,11 @@ msgstr ""
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
 msgid "Everyone"
 msgstr "Mindenki"
+
+#. module: mail
+#: selection:mail.notification,email_status:0
+msgid "Exception"
+msgstr "Kifogás"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1595,7 +1538,7 @@ msgstr "Behajtott"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:666
+#: code:addons/mail/models/mail_thread.py:686
 #: code:addons/mail/static/src/xml/followers.xml:21
 #, python-format
 msgid "Follow"
@@ -1634,6 +1577,7 @@ msgstr "Követ"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_follower_ids
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_follower_ids
@@ -1699,6 +1643,7 @@ msgstr "Követők"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_channel_ids
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_channel_ids
@@ -1762,6 +1707,7 @@ msgstr "Követők (Csatornák)"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_partner_ids
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_partner_ids
@@ -1827,7 +1773,7 @@ msgid "Gateway"
 msgstr "Átjáró"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:50
+#: code:addons/mail/models/res_users.py:46
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Menjen a beállítások panelhez"
@@ -1879,9 +1825,11 @@ msgstr "Rejtse el a követők lehetőségeinek az altípusait"
 #: model:ir.model.fields,field_description:mail.field_mail_followers_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_id
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_id
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_id
+#: model:ir.model.fields,field_description:mail.field_mail_test_id
 #: model:ir.model.fields,field_description:mail.field_mail_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_id
@@ -1893,7 +1841,6 @@ msgstr "Azonosító ID"
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_thread_id
-#: model:ir.model.fields,help:mail.field_res_users_alias_parent_thread_id
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
@@ -1946,6 +1893,7 @@ msgstr "Üresjárat"
 #: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_unread
 #: model:ir.model.fields,help:mail.field_mail_channel_message_unread
 #: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_unread
+#: model:ir.model.fields,help:mail.field_mail_test_message_unread
 #: model:ir.model.fields,help:mail.field_mail_thread_message_unread
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_category_message_unread
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_message_unread
@@ -2009,6 +1957,7 @@ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 #: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_channel_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_needaction
+#: model:ir.model.fields,help:mail.field_mail_test_message_needaction
 #: model:ir.model.fields,help:mail.field_mail_thread_message_needaction
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_category_message_needaction
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_message_needaction
@@ -2109,7 +2058,7 @@ msgstr "Nem aktív álnevek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1008
+#: code:addons/mail/static/src/js/chat_manager.js:1027
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2140,7 +2089,7 @@ msgstr ""
 "\"{'field': 'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1703
+#: code:addons/mail/models/mail_thread.py:1776
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on "
@@ -2151,7 +2100,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:620
 #, python-format
 msgid "Invitation"
 msgstr "Meghívó"
@@ -2187,7 +2136,7 @@ msgstr "Személy meghívása"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:648
+#: code:addons/mail/static/src/js/client_action.js:649
 #, python-format
 msgid "Invite people to #%s"
 msgstr "Személy meghívása ide #%s"
@@ -2234,6 +2183,7 @@ msgstr "Csak személy meghívása"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_is_follower
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_is_follower
@@ -2269,6 +2219,11 @@ msgstr "Ő egy követő"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_notification
 msgid "Is Notification"
 msgstr "Ez egy üzenet"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_read
+msgid "Is Read"
+msgstr "Elolvassa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
@@ -2333,6 +2288,7 @@ msgstr "Nyelv"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_last_post
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_last_post
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_last_post
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_last_post
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_last_post
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_last_post
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_last_post
@@ -2374,9 +2330,11 @@ msgstr "Utolsó üzenet dátuma"
 #: model:ir.model.fields,field_description:mail.field_mail_followers___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_mail___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_message___last_update
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_template___last_update
+#: model:ir.model.fields,field_description:mail.field_mail_test___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_thread___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value___last_update
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite___last_update
@@ -2407,6 +2365,7 @@ msgstr "Utoljára látott Many2many"
 #: model:ir.model.fields,field_description:mail.field_mail_message_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template_write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_test_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_write_uid
 msgid "Last Updated by"
@@ -2424,6 +2383,7 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:mail.field_mail_message_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_write_date
+#: model:ir.model.fields,field_description:mail.field_mail_test_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_write_date
 msgid "Last Updated on"
@@ -2436,7 +2396,7 @@ msgstr "Távollét"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:640
+#: code:addons/mail/models/mail_channel.py:653
 #: code:addons/mail/static/src/xml/client_action.xml:101
 #, python-format
 msgid "Leave this channel"
@@ -2459,7 +2419,7 @@ msgstr ""
 "követéséhez."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:651
+#: code:addons/mail/models/mail_channel.py:664
 #, python-format
 msgid "List users in the current channel"
 msgstr "A jelenlegi csatornát használók listázása"
@@ -2523,7 +2483,7 @@ msgid "Mail Channel Form"
 msgstr "Levelezési csatorna úrlap"
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:305
+#: code:addons/mail/models/mail_mail.py:318
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "Levél elküldés sikertelen"
@@ -2561,7 +2521,7 @@ msgstr "Összeset elolvasottnak jelöl"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:106
+#: code:addons/mail/static/src/xml/thread.xml:121
 #, python-format
 msgid "Mark as Read"
 msgstr "Elolvasottnak jelöl"
@@ -2569,7 +2529,7 @@ msgstr "Elolvasottnak jelöl"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:68
-#: code:addons/mail/static/src/xml/thread.xml:100
+#: code:addons/mail/static/src/xml/thread.xml:115
 #, python-format
 msgid "Mark as Todo"
 msgstr "Feladatnak jelöl"
@@ -2608,6 +2568,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
 #: model:ir.model.fields,field_description:mail.field_mail_mail_mail_message_id
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_mail_message_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_message
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Message"
@@ -2617,6 +2578,11 @@ msgstr "Üzenet"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_mail_message_id
 msgid "Message ID"
 msgstr "Üzenetazonosító ID"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_notification
+msgid "Message Notifications"
+msgstr "Üzenet értesításek"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_record_name
@@ -2738,6 +2704,7 @@ msgstr "Üzenet-ID azonosító"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_ids
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_ids
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_ids
@@ -2795,11 +2762,6 @@ msgstr ""
 "altípusokkal, ha a base_user group csoport részvevői is"
 
 #. module: mail
-#: model:ir.ui.view,arch_db:mail.view_users_form_mail
-msgid "Messaging Alias"
-msgstr "Üzenet álnév"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_res_model
 #: model:ir.ui.view,arch_db:mail.view_email_template_search
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -2829,6 +2791,7 @@ msgstr "Hónap"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_name
+#: model:ir.model.fields,field_description:mail.field_mail_test_name
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Name"
 msgstr "Név"
@@ -2863,6 +2826,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
 msgstr "Beavatkozás szükséges"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_res_partner_id
+msgid "Needaction Recipient"
+msgstr "Címzett szükséges művelet "
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -2911,7 +2879,7 @@ msgstr "Új üzenet"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:131
+#: code:addons/mail/static/src/xml/thread.xml:146
 #, python-format
 msgid "New messages"
 msgstr "Új üzenetek"
@@ -2986,6 +2954,14 @@ msgid "Notification"
 msgstr "Értesítés"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_compose_message_notification_ids
+#: model:ir.model.fields,field_description:mail.field_mail_mail_notification_ids
+#: model:ir.model.fields,field_description:mail.field_mail_message_notification_ids
+#: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_notification_ids
+msgid "Notifications"
+msgstr "Értesítések"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notify
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_notify
 msgid "Notify followers"
@@ -3029,6 +3005,7 @@ msgstr "A dokumentum kiértesített követői (csak tömeges üzenetküldés)"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_needaction_counter
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_needaction_counter
@@ -3092,6 +3069,7 @@ msgstr "Műveletek száma"
 #: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_channel_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_needaction_counter
+#: model:ir.model.fields,help:mail.field_mail_test_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_category_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_message_needaction_counter
@@ -3155,6 +3133,7 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #: model:ir.model.fields,help:mail.field_hr_timesheet_sheet_sheet_message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_channel_message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_mass_mailing_contact_message_unread_counter
+#: model:ir.model.fields,help:mail.field_mail_test_message_unread_counter
 #: model:ir.model.fields,help:mail.field_mail_thread_message_unread_counter
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_category_message_unread_counter
 #: model:ir.model.fields,help:mail.field_maintenance_equipment_message_unread_counter
@@ -3185,6 +3164,11 @@ msgstr "Üzenetek száma, melyek akciót igényelnek"
 #: model:ir.model.fields,help:mail.field_survey_survey_message_unread_counter
 msgid "Number of unread messages"
 msgstr "Olvasatlan üzenetek száma"
+
+#. module: mail
+#: model:ir.ui.view,arch_db:mail.message_user_assigned
+msgid "Odoo"
+msgstr "Odoo"
 
 #. module: mail
 #. openerp-web
@@ -3294,7 +3278,6 @@ msgstr "Kilép"
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_force_thread_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_force_thread_id
-#: model:ir.model.fields,help:mail.field_res_users_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
@@ -3373,7 +3356,6 @@ msgstr "Felülírja a szerző emailjét"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_user_id
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_user_id
 msgid "Owner"
 msgstr "Tulajdonos"
 
@@ -3394,7 +3376,6 @@ msgstr "Szülő üzenet"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_parent_model_id
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_parent_model_id
 msgid "Parent Model"
 msgstr "Forrásmodell"
 
@@ -3402,7 +3383,6 @@ msgstr "Forrásmodell"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_parent_thread_id
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_parent_thread_id
 msgid "Parent Record Thread ID"
 msgstr "Szülő feljegyzés folyamat azonosító ID"
 
@@ -3410,7 +3390,6 @@ msgstr "Szülő feljegyzés folyamat azonosító ID"
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_model_id
-#: model:ir.model.fields,help:mail.field_res_users_alias_parent_model_id
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
@@ -3435,6 +3414,11 @@ msgstr ""
 #: model:ir.model,name:mail.model_res_partner
 msgid "Partner"
 msgstr "Partner"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_partner_mass_mail
+msgid "Partner Mass Mailing"
+msgstr "Ügyfél tömeges levelezése"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:39
@@ -3532,6 +3516,11 @@ msgstr ""
 "- Össze üzenet: az össze beérkező üzenet mappába érkező levélről szóló értesítés"
 
 #. module: mail
+#: model:ir.ui.view,arch_db:mail.message_user_assigned
+msgid "Powered by"
+msgstr "Támogatja"
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preferred reply address"
 msgstr "Előnyben részesített válasz címek"
@@ -3580,6 +3569,11 @@ msgid "Re:"
 msgstr "Vissza:"
 
 #. module: mail
+#: selection:mail.notification,email_status:0
+msgid "Ready to Send"
+msgstr "Küldésre kész"
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
 msgid "Received"
 msgstr "Fogadott"
@@ -3603,7 +3597,6 @@ msgstr "Címzettek"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_force_thread_id
-#: model:ir.model.fields,field_description:mail.field_res_users_alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "Feljegyzés összefűzési azonosító ID"
 
@@ -3665,7 +3658,7 @@ msgstr "Követő eltávolítása"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:103
+#: code:addons/mail/static/src/xml/thread.xml:118
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Reply"
@@ -3716,6 +3709,12 @@ msgid "Rich-text/HTML message"
 msgstr "Rich-text/HTML üzenet"
 
 #. module: mail
+#: code:addons/mail/models/mail_thread.py:820
+#, python-format
+msgid "Routing mail with Message-Id %s: route %s: %s"
+msgstr "Útvonal email Üzenet-id azonosítóval %s: útvonal %s: %s"
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "SMTP Server"
 msgstr "SMTP Szerver"
@@ -3737,7 +3736,7 @@ msgstr "Mentse mint új sablon"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_window.js:35
+#: code:addons/mail/static/src/js/chat_window.js:36
 #, python-format
 msgid "Say something"
 msgstr "Mondj valamit"
@@ -3837,8 +3836,14 @@ msgstr "Üzeneteket küld emailben"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
+#: selection:mail.notification,email_status:0
 msgid "Sent"
 msgstr "Elküldött"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_email
+msgid "Sent by Email"
+msgstr "Email-ben küldés"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_sequence
@@ -3869,7 +3874,7 @@ msgid "Shortcut"
 msgstr "Gyorsbillentyű"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:620
+#: code:addons/mail/models/mail_channel.py:633
 #, python-format
 msgid "Show an helper message"
 msgstr "Mutass egy súgó üzenetet"
@@ -3939,7 +3944,7 @@ msgstr "Szmájlik"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1014
+#: code:addons/mail/static/src/js/chat_manager.js:1033
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -3997,7 +4002,7 @@ msgstr "Tárgy..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:115
+#: code:addons/mail/static/src/xml/thread.xml:130
 #, python-format
 msgid "Subject:"
 msgstr "Tárgy:"
@@ -4011,7 +4016,7 @@ msgstr "Helyettesít"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_subtype_id
 #: model:ir.model.fields,field_description:mail.field_mail_followers_subtype_ids
 #: model:ir.model.fields,field_description:mail.field_mail_mail_subtype_id
-#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_2118
+#: model:ir.model.fields,field_description:mail.field_mail_message_subtype_id_2106
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_subtype_id
 #: model:ir.ui.view,arch_db:mail.view_message_subtype_tree
 msgid "Subtype"
@@ -4045,6 +4050,11 @@ msgid "Templates"
 msgstr "Sablonok"
 
 #. module: mail
+#: model:ir.model,name:mail.model_mail_test
+msgid "Test Mail Model"
+msgstr "Teszt levelezés modell"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_id
 msgid ""
 "The email address associated with this group. New emails received will "
@@ -4062,7 +4072,6 @@ msgstr "A kivett html kód helyettesíti a gyorsbillentyűt"
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_model_id
-#: model:ir.model.fields,help:mail.field_res_users_alias_model_id
 msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
@@ -4076,7 +4085,6 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_name
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_name
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_name
-#: model:ir.model.fields,help:mail.field_res_users_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
@@ -4088,7 +4096,6 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_user_id
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_user_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_user_id
-#: model:ir.model.fields,help:mail.field_res_users_alias_user_id
 msgid ""
 "The owner of records created upon receiving emails on this alias. If this "
 "field is not set the system will attempt to find the right owner based on "
@@ -4102,8 +4109,8 @@ msgstr ""
 "felhasználót azzal a címmel."
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:555
-#: code:addons/mail/models/mail_message.py:650
+#: code:addons/mail/models/mail_message.py:574
+#: code:addons/mail/models/mail_message.py:669
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -4197,7 +4204,7 @@ msgstr "Címzett: Követők ehhez"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:230
+#: code:addons/mail/static/src/js/thread.js:231
 #, python-format
 msgid "Today"
 msgstr "Ma"
@@ -4265,12 +4272,10 @@ msgid "UUID"
 msgstr "UUID"
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:44
+#: code:addons/mail/models/mail_message.py:31
 #, python-format
-msgid ""
-"Unable to send email, please configure the sender's email address or alias."
-msgstr ""
-"Nem tud e-mailt küldeni, kérem állítsa be a küldő e-mail címét vagy álnevet"
+msgid "Unable to send email, please configure the sender's email address."
+msgstr "Nem tud e-mailt küldeni, kérem állítsa be a küldő e-mail címét."
 
 #. module: mail
 #. openerp-web
@@ -4281,7 +4286,7 @@ msgstr "Visszavonás"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:667
+#: code:addons/mail/models/mail_thread.py:690
 #: code:addons/mail/static/src/xml/followers.xml:23
 #, python-format
 msgid "Unfollow"
@@ -4326,6 +4331,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_unread
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_unread
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_unread
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_unread
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_unread
@@ -4389,6 +4395,7 @@ msgstr "Olvasatlan üzenetek"
 #: model:ir.model.fields,field_description:mail.field_hr_timesheet_sheet_sheet_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_mass_mailing_contact_message_unread_counter
+#: model:ir.model.fields,field_description:mail.field_mail_test_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mail_thread_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_category_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_maintenance_equipment_message_unread_counter
@@ -4455,7 +4462,7 @@ msgstr "Leiratkozás a csatornáról"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:169
+#: code:addons/mail/static/src/xml/thread.xml:186
 #, python-format
 msgid "Uploading"
 msgstr "Feltöltés"
@@ -4497,14 +4504,15 @@ msgid "Users"
 msgstr "Felhasználók"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:664
+#: code:addons/mail/models/mail_channel.py:677
 #, python-format
 msgid "Users in this channel: %s %s and you."
 msgstr "Felhasználók ebben a csatornában: %s %s és Ön."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:654
-#: code:addons/mail/models/mail_thread.py:656
+#: code:addons/mail/models/mail_thread.py:658
+#: code:addons/mail/models/mail_thread.py:660
+#: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
 msgstr "Nézet"
@@ -4562,7 +4570,7 @@ msgstr "Írj valamit..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/thread.js:232
+#: code:addons/mail/static/src/js/thread.js:233
 #, python-format
 msgid "Yesterday"
 msgstr "Tegnap"
@@ -4575,19 +4583,19 @@ msgid "You added <b>%s</b> to the conversation."
 msgstr "Hozzáadta a <b>%s</b> ehhez a beszélgetéshez."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:661
+#: code:addons/mail/models/mail_channel.py:674
 #, python-format
 msgid "You are alone in this channel."
 msgstr "Egyedül van ebben a csatornában."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:630
+#: code:addons/mail/models/mail_channel.py:643
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
 msgstr "Privát megbeszélése van vele: <b>@%s</b>."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:625
+#: code:addons/mail/models/mail_channel.py:638
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Ebben a csatornában van: <b>#%s</b>."
@@ -4603,7 +4611,7 @@ msgstr ""
 "csatornában."
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:49
+#: code:addons/mail/models/res_users.py:45
 #, python-format
 msgid ""
 "You cannot create a new user from here.\n"
@@ -4613,7 +4621,7 @@ msgstr ""
 " Új felhasználó létrehozásához kérem menjen a beállítások panelre."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:132
+#: code:addons/mail/models/mail_channel.py:134
 #, python-format
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -4623,7 +4631,7 @@ msgstr ""
 " másik moduloknak."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:353
+#: code:addons/mail/models/mail_thread.py:345
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: "
@@ -4633,8 +4641,13 @@ msgstr ""
 "%(email_link)s."
 
 #. module: mail
+#: model:ir.ui.view,arch_db:mail.message_user_assigned
+msgid "You have been assigned to the"
+msgstr "Ön hozzárendelt ehhez"
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:601
+#: code:addons/mail/static/src/js/chat_manager.js:620
 #, python-format
 msgid "You have been invited to: "
 msgstr "Ön meghívót kapott:"
@@ -4651,14 +4664,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:497
+#: code:addons/mail/static/src/js/chat_manager.js:516
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr "Rögzítetlenné tette a megbeszélését vele <b>%s</b>."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:495
+#: code:addons/mail/static/src/js/chat_manager.js:514
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Leiratkozott erről <b>%s</b>."
@@ -4679,9 +4692,26 @@ msgid "Your template should define email_from"
 msgstr "Sablonjának meg kell határoznia az email_from formát"
 
 #. module: mail
+#: code:addons/mail/models/mail_thread.py:954
+#, python-format
+msgid "alias %s does not accept unknown author"
+msgstr "%s álnév nem fogadja el az ismeretlen szerzőt"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:950
+#, python-format
+msgid "alias %s restricted to internal followers"
+msgstr "%s álnév korlátozott a belső követőknek"
+
+#. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "igazgatósági-ülés"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4694,7 +4724,7 @@ msgid "created"
 msgstr "létrehozta"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:319
+#: code:addons/mail/models/mail_thread.py:311
 #, python-format
 msgid "document"
 msgstr "dokumentum"
@@ -4756,6 +4786,27 @@ msgid "mention(s) marked as read."
 msgstr "megemlítés(ek) elolvasottként jelölve."
 
 #. module: mail
+#: code:addons/mail/models/mail_thread.py:929
+#, python-format
+msgid "model %s does not accept document creation"
+msgstr "%s modell nem fogadja el a dokumentum létrehozást"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:924
+#, python-format
+msgid "model %s does not accept document update"
+msgstr "%s modell nem fogadja el a dokumentum frissítést"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:917
+#, python-format
+msgid ""
+"model %s does not accept document update, fall back on document creation"
+msgstr ""
+"%s modell nem fogadja el a dokumentum frissítést, dokumentum létrehozáson "
+"visszalép"
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
 msgstr "módosítva"
@@ -4781,9 +4832,33 @@ msgid "on"
 msgstr "ezen"
 
 #. module: mail
+#: code:addons/mail/models/mail_thread.py:899
+#, python-format
+msgid ""
+"posting a message without model should be with a null res_id (private "
+"message), received %s"
+msgstr ""
+"modell nélküli üzenet bejegyzésnél használni kell a nulla res_id (privát "
+"üzenet), beérkezett %s"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:903
+#, python-format
+msgid ""
+"posting a message without model should be with a parent_id (private message)"
+msgstr ""
+"modell nélküli üzenet bejegyzésnél használni kell a parent_id (privát "
+"üzenet)"
+
+#. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "olvasott"
 
 #. module: mail
 #. openerp-web
@@ -4805,8 +4880,49 @@ msgid "record:"
 msgstr "feljegyzés:"
 
 #. module: mail
+#: code:addons/mail/models/mail_thread.py:921
+#, python-format
+msgid "reply to missing document (%s,%s)"
+msgstr "válasz hiányzó dokumentumra (%s,%s)"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:914
+#, python-format
+msgid "reply to missing document (%s,%s), fall back on new document creation"
+msgstr ""
+"válasz hiányzó dokumentumra (%s,%s), új dokumentum létrehozáson visszalép"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:899
+#, python-format
+msgid "resetting thread_id"
+msgstr "Visszaállítja a thread_id"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "értékesítés"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:903
+#: code:addons/mail/models/mail_thread.py:921
+#: code:addons/mail/models/mail_thread.py:924
+#: code:addons/mail/models/mail_thread.py:929
+#: code:addons/mail/models/mail_thread.py:950
+#: code:addons/mail/models/mail_thread.py:954
+#, python-format
+msgid "skipping"
+msgstr "átugorja"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:25
 #, python-format
 msgid "this document"
 msgstr "ez a dokumentum"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:892
+#, python-format
+msgid "unknown target model %s"
+msgstr "ismeretlen cél modell %s"

@@ -11,13 +11,15 @@
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 # Luis Triana <luis.triana@jarsa.com.mx>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Glen Sojo <glen.sojo@clearcorp.co.cr>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Ana Juaristi <ajuaristio@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Glen Sojo <glen.sojo@clearcorp.co.cr>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +39,11 @@ msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr ""
+
+#. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
 msgstr "Permitir añadir gastos de envío"
@@ -47,6 +54,13 @@ msgid "Allow setting manufacturing order properties per order line (advanced)"
 msgstr ""
 "Permitir establecer prioridades de orden de fabricación por línea de orden "
 "(avanzado)"
+
+#. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid ""
+"Allow to modify the sales order dates to postpone deliveries and "
+"procurements"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -62,6 +76,11 @@ msgstr "Elegir rutas específicas por línea de pedidos de venta (avanzado)"
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
 msgstr "Compañías"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
+msgid "Date"
+msgstr "Fecha"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
@@ -140,7 +159,13 @@ msgid "Invoice Line"
 msgstr "Linea de Factura"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr "Facturación"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -196,6 +221,11 @@ msgid "Procurement"
 msgstr "Abastecimiento"
 
 #. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid "Procurements and deliveries dates are based on the sales order dates"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
 msgstr "Producto"
@@ -249,6 +279,11 @@ msgstr "Estadísticas pedidos de venta"
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
 msgstr "Días de seguridad para ventas"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
+msgid "Sales Safety Days *"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -353,4 +388,4 @@ msgstr "sale.config.settings"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking_line
 msgid "stock.return.picking.line"
-msgstr ""
+msgstr "stock.return.picking.line"

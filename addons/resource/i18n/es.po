@@ -3,7 +3,7 @@
 # * resource
 # 
 # Translators:
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
@@ -18,10 +18,10 @@
 # Luis Triana <luis.triana@jarsa.com.mx>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: Luis Triana <luis.triana@jarsa.com.mx>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -120,7 +120,8 @@ msgid "End Date"
 msgstr "Fecha finalización"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 "¡Error! La fecha inicial de ausencia debe ser anterior a la fecha final de "

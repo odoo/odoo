@@ -7,10 +7,10 @@
 # krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-19 12:36+0000\n"
+"PO-Revision-Date: 2016-09-19 12:36+0000\n"
 "Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_account_id
+msgid "Account"
+msgstr "Főkönyvi számla"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -116,11 +121,13 @@ msgid "Task"
 msgstr "Fladat"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/procurement.py:72
-#: code:addons/sale_timesheet/models/procurement.py:74
+#: code:addons/sale_timesheet/models/procurement.py:80
 #, python-format
-msgid "Task created"
-msgstr "Feladat létrehozva"
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+"Feladat létrehozva (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -134,18 +141,28 @@ msgid "Tasks associated to this sale"
 msgstr "Ezzel az értékesítéssel összefüggő munka"
 
 #. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:84
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
+"Ezt a feladatot ebből hozta létre: <a href=# data-oe-model=sale.order data-"
+"oe-id=%d>%s</a> (%s)"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
-"Ez állítja be a projektekben és a feladatokban használt mértékegységet. \n"
-"Ha használja a projektekhez kapcsolt munkaidő-kimutatást (project_timesheet modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti űrlapon."
+"Ez állítja be a projekt témákban és a feladatokban használt mértékegységet. \n"
+"Ha használja a projektekhez kapcsolt munkaidő-kiosztás /project_timesheet modul/, ne felejtse el beállítani a helyes mértékegységet az alkalmazotti űrlapon."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Költség Munkaidő-kimutatás"
+msgstr "Költség Munkaidő-kiosztás"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -160,7 +177,7 @@ msgstr "Időkimutatás tevékenységek"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Ezzel az oldallal összefüggő munkaidő-kimutatás tevékenységek"
+msgstr "Ezzel az oldallal összefüggő munkaidő-kiosztás tevékenységek"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
@@ -213,8 +230,8 @@ msgid ""
 "material."
 msgstr ""
 "Csak egy terméket használhat ugyanazon vásárlói megrendelésen lévő munkaidő-"
-"kimutatásán. Szét kell bontania a megrendelést, hogy beilleszthessen csak "
-"egy időn és anyagon alapuló szerződést."
+"kiosztásán. Szét kell bontania a megrendelést, hogy beilleszthessen csak egy"
+" időn és anyagon alapuló szerződést."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17

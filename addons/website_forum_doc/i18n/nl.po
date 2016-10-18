@@ -3,16 +3,16 @@
 # * website_forum_doc
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~10c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -116,7 +116,7 @@ msgstr "Omschrijf de zakelijke oplossing"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -165,7 +165,8 @@ msgid "Employee Contract"
 msgstr "Arbeidsovereenkomst"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fout! het is niet mogelijk recursieve categorieën te maken!"
 

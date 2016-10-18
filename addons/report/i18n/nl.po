@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -213,7 +213,7 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
@@ -228,17 +228,17 @@ msgid "Edit"
 msgstr "Bewerken"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external footer"
 msgstr "Wijzig externe voettekst"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external header"
 msgstr "Wijzig externe koptekst"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit internal header"
 msgstr "Wijzig interne koptekst"
 
@@ -383,6 +383,11 @@ msgid "Paper format"
 msgstr "Papier formaat"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+msgid "Paper format *"
+msgstr "Papierformaat *"
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
@@ -405,13 +410,13 @@ msgstr "Staand"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
 msgstr "Voorbeeldweergave extern rapport"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
 msgstr "Voorbeeldweergave intern rapport"
 
@@ -425,12 +430,12 @@ msgstr "Afdrukken"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Rapportnaam bij afdrukken"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "Qweb weergaven"
 
 #. module: report
 #. openerp-web
@@ -552,6 +557,11 @@ msgstr ""
 "Wkhtmltopdf updaten naar ten minste versie 0.12.0 om een correcte weergave van hoofdingen en voeteindes te krijgen\n"
 "en om tabel-breking tussen pagina's te ondersteunen.<br><br><a href=\"http://wkhtmltopdf.org/\"\n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
+
+#. module: report
+#: model:ir.model,name:report.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml

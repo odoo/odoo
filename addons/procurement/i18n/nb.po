@@ -1,21 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Aleksander <aleksander@provendo.no>, 2016
+# Henrik Norlin <henrik@appstogrow.net>, 2016
+# Mari Løken <mari@tinderbox.no>, 2016
+# Roy Edvard Ellingsen <roy@royedvard.com>, 2016
+# Joachim Flottorp <joachimflottorp@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-04-30 18:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
-"language/nb/)\n"
-"Language: nb\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Joachim Flottorp <joachimflottorp@gmail.com>, 2016\n"
+"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: procurement
@@ -33,10 +38,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
@@ -56,6 +59,11 @@ msgid "All at once"
 msgstr "Alt på en gang"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Avbryt"
@@ -68,13 +76,7 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr "AVLYST"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "Kansellert"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -84,8 +86,9 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
 msgstr ""
 
 #. module: procurement
@@ -134,9 +137,8 @@ msgstr "Opprettet den"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Leveringsmåte"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -255,11 +257,6 @@ msgid "Leave Empty"
 msgstr ""
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr ""
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -273,7 +270,7 @@ msgid "Name"
 msgstr "Navn"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
 msgstr ""
@@ -412,8 +409,8 @@ msgstr "Referanse"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
 
 #. module: procurement
@@ -510,9 +507,14 @@ msgstr "Haster Veldig"
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fulfill the need: "
-"purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
 msgstr ""
 
 #. module: procurement
@@ -524,42 +526,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Handling"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dato for siste melding på denne posten."
-
-#~ msgid "Followers"
-#~ msgstr "Følgere."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Siste meldingsdato"
-
-#~ msgid "Messages"
-#~ msgstr "Meldinger."
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meldinger og kommunikasjon historie."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antall handlinger"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antall meldinger som krever handling"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antall uleste meldinger"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Uleste meldinger."
-
-#~ msgid "Website Messages"
-#~ msgstr "Meldinger fra Nettsted"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historikk for kommuniksjon på nettsted"

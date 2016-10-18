@@ -1,49 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-#
+# 
 # Translators:
-# zbik2607 <darek@krokus.com.pl>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-27 12:01+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
-"Language: pl\n"
+"POT-Creation-Date: 2016-09-07 08:58+0000\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: Zdzisław Krajewski <zdzichucb@gmail.com>, 2016\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair "
-"order.             \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
-"* The 'Done' status is set when repairing is completed.            \n"
-"* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "(<i>Remove</i>)"
-msgstr "(<i>usunąć</i>)"
+msgstr "(<i>Usuń</i>)"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "(update)"
 msgstr "(aktualizuj)"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+msgid ""
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
+"* The 'Done' status is set when repairing is completed.\n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -53,17 +53,17 @@ msgstr "<i>(Dodaj)</i>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Fees Line(s)</strong>"
-msgstr "<strong>opłaty Linia(e)</strong>"
+msgstr "<strong>Pozycje opłat</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Guarantee Limit:</strong>"
-msgstr "<strong>Limit gwarantowany:</strong>"
+msgstr "<strong>Limit gwarancji:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot Number</strong>"
-msgstr "<strong>dużo numerów</strong>"
+msgstr "<strong>Numer partii</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -82,9 +82,8 @@ msgstr "<strong>Produkty do naprawy:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#, fuzzy
 msgid "<strong>Shipping address :</strong>"
-msgstr "<strong>Data wydruku:</strong>"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -94,13 +93,7 @@ msgstr "<strong>Suma bez podatków</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
-msgstr "Suma"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:24
-#, python-format
-msgid "Active ID not Found"
-msgstr "Aktywne ID nie znalezione"
+msgstr "<strong>Suma</strong>"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -128,6 +121,12 @@ msgid "Before Repair"
 msgstr "Przed naprawą"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:206
+#, python-format
+msgid "Can only confirm draft repairs."
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Cancel"
@@ -149,6 +148,12 @@ msgstr "Anuluj zamówienie naprawy"
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
 msgstr "Anulowano"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:221
+#, python-format
+msgid "Cannot cancel completed repairs."
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -180,7 +185,8 @@ msgid "Confirmed"
 msgstr "Potwierdzone"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:524
+#: code:addons/mrp_repair/models/mrp_repair.py:512
+#: code:addons/mrp_repair/models/mrp_repair.py:574
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -217,12 +223,17 @@ msgstr "Utworzone przez"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_date
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
 msgid "Current Location"
 msgstr "Obecna strefa"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "Default address id"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -253,7 +264,7 @@ msgstr "Strefa docelowa"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_display_name
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_display_name
 msgid "Display Name"
-msgstr "Wyświetlana nazwa "
+msgstr "Nazwa wyświetlana"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
@@ -289,7 +300,7 @@ msgstr "Opłaty"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Group By"
-msgstr "Pogrupuj wg"
+msgstr "Grupuj wg"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_group
@@ -324,8 +335,7 @@ msgstr "ID"
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the "
-"different\n"
+"                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
 
@@ -345,11 +355,6 @@ msgid "Invoice"
 msgstr "Faktura"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Invoice Corrected"
-msgstr "Faktura poprawiona"
-
-#. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
 msgstr "Wyjątek faktury"
@@ -358,7 +363,7 @@ msgstr "Wyjątek faktury"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoice_line_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoice_line_id
 msgid "Invoice Line"
-msgstr "Pozycja faktury"
+msgstr "linia faktury"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_method
@@ -400,7 +405,7 @@ msgstr "Adres do faktury"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line___last_update
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice___last_update
 msgid "Last Modified on"
-msgstr "Ostatnio modyfikowano"
+msgstr "Data ostatniej modyfikacji"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_uid
@@ -409,7 +414,7 @@ msgstr "Ostatnio modyfikowano"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_uid
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio modyfikowane przez"
+msgstr "Ostatnio aktualizowane przez"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_date
@@ -418,7 +423,7 @@ msgstr "Ostatnio modyfikowane przez"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_date
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_date
 msgid "Last Updated on"
-msgstr "Ostatnia zmiana"
+msgstr "Data ostatniej aktualizacji"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_lot_id
@@ -433,7 +438,7 @@ msgstr "Utwórz fakturę"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
 msgid "Move"
-msgstr "Przesunięcie"
+msgstr "Zapis"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
@@ -446,32 +451,34 @@ msgid "No Invoice"
 msgstr "Brak faktur"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:511
+#: code:addons/mrp_repair/models/mrp_repair.py:503
+#: code:addons/mrp_repair/models/mrp_repair.py:565
 #, python-format
 msgid "No Pricelist!"
 msgstr "Brak cennika!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:322
+#: code:addons/mrp_repair/models/mrp_repair.py:260
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Nie zdefiniowano konta dla partnera \"%s\"."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:379
+#: code:addons/mrp_repair/models/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:313
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Produkt \"%s\" nie ma zdefinowanego konta."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:372
+#: code:addons/mrp_repair/models/mrp_repair.py:306
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Nie zdefiniowano produktu dla opłaty!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:522
+#: code:addons/mrp_repair/models/mrp_repair.py:510
+#: code:addons/mrp_repair/models/mrp_repair.py:572
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "Nie znaleziono poprawnej pozycji cennika !"
@@ -479,7 +486,7 @@ msgstr "Nie znaleziono poprawnej pozycji cennika !"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Notes"
-msgstr "Uwagi"
+msgstr "Notatki"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
@@ -500,7 +507,7 @@ msgstr "Partner"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Price"
-msgstr "Cena"
+msgstr "Kwota"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
@@ -585,11 +592,6 @@ msgid "Ready to Repair"
 msgstr "Gotowe do naprawy"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Recreate Invoice"
-msgstr "Utwórz fakturę od nowa"
-
-#. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
 msgstr "Usuń"
@@ -639,13 +641,43 @@ msgid "Repair Reference"
 msgstr "Odnośnik naprawy"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:194
+#, python-format
+msgid "Repair must be canceled in order to reset it to draft."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:343
+#, python-format
+msgid "Repair must be confirmed before starting reparation."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:373
+#, python-format
+msgid "Repair must be invoiced in order to finalize it."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:371
+#, python-format
+msgid "Repair must be repaired in order to finalize it."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:354
+#, python-format
+msgid "Repair must be under repair in order to end reparation."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:223
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "Zamówienia naprawy jest już zafakturowane."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:32
+#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
 #, python-format
 msgid "Repair order is not invoiced."
 msgstr "Zamówienie naprawy nie jest zafakturowane"
@@ -664,7 +696,7 @@ msgstr "Naprawiona partia"
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repairs"
-msgstr ""
+msgstr "Naprawy"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -674,9 +706,8 @@ msgstr "Zamówienie napraw"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
-#, fuzzy
 msgid "Search Repair Orders"
-msgstr "Szukaj zamówienia naprawy"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -687,7 +718,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:272
+#: code:addons/mrp_repair/models/mrp_repair.py:213
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Dla operacji z produktem '%s' jest wymagany numer seryjny."
@@ -712,13 +743,13 @@ msgstr "Rozpocznij naprawę"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_state
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Status"
-msgstr "Stan"
+msgstr "Status"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_subtotal
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_subtotal
 msgid "Subtotal"
-msgstr "Suma częściowa"
+msgstr "Suma"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -734,7 +765,7 @@ msgid "Taxes"
 msgstr "Podatki"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -750,8 +781,7 @@ msgstr "Nazwa Zamówienia naprawy musi być unikalna!"
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to "
-"the\n"
+"                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
 
@@ -827,10 +857,10 @@ msgstr "Kwota bez podatku"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "VAT:"
-msgstr "VAT:"
+msgstr "NIP:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid "Warning"
 msgstr "Ostrzeżenie"
@@ -846,80 +876,16 @@ msgid "Yes"
 msgstr "Tak"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:308
+#: code:addons/mrp_repair/models/mrp_repair.py:248
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr "Musisz wybrać adres fakturowy partnera w zamówieniu naprawy!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:513
+#: code:addons/mrp_repair/models/mrp_repair.py:505
+#: code:addons/mrp_repair/models/mrp_repair.py:567
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
-"Please set one before choosing a product."
+" Please set one before choosing a product."
 msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "unknown"
-msgstr "nieznane"
-
-#~ msgid "Action Needed"
-#~ msgstr "Wymagana akcja"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ostatniej wiadomości w rekordzie."
-
-#~ msgid "Followers"
-#~ msgstr "Obserwatorzy"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Obserwatorzy (kanały)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Obserwatorzy (partnerzy)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#~ msgid "Is Follower"
-#~ msgstr "Jest obserwatorem"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ostatniej wiadomości"
-
-#~ msgid "Messages"
-#~ msgstr "Wiadomosći"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Wiadomości i historia komunikacji"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Liczba akcji"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Liczba wiadomości wymagających akcji"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Liczba nieprzeczytanych wiadomości"
-
-#~ msgid "Reair Orders"
-#~ msgstr "Zamówienia naprawy"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Adres do wysyłki :"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nieprzeczytane wiadomości"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Licznik nieprzeczytanych wiadomości"
-
-#~ msgid "Website Messages"
-#~ msgstr "Wiadomości"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia rozmowy"

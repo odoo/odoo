@@ -3,29 +3,30 @@
 # * sales_team
 # 
 # Translators:
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# David Perez <david@closemarketing.es>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# David Perez <david@closemarketing.es>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,9 +100,15 @@ msgid "Archived"
 msgstr "Archivado"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
 #: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
 msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
+msgid "Banks"
+msgstr "Bancos"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
@@ -141,7 +148,6 @@ msgstr "Compañía"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
-#: model:ir.ui.menu,name:sales_team.menu_sale_config_sales
 msgid "Configuration"
 msgstr "Configuración"
 
@@ -194,6 +200,11 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Creado el"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
+msgid "Currencies"
+msgstr "Monedas"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_partner_form
@@ -277,6 +288,11 @@ msgstr ""
 "de ventas sin eliminarlo."
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Indirect Sales"
+msgstr "Ventas indirectas"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
 #, python-format
@@ -307,11 +323,6 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_crm_config_lead
-msgid "Leads & Opportunities"
-msgstr "Iniciativas y Oportunidades"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_localisation
@@ -347,7 +358,7 @@ msgstr "Más información"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
 #, python-format
 msgid "My Pipeline"
-msgstr ""
+msgstr "Flujo de ventas"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -376,11 +387,6 @@ msgid "Only Integer Value should be valid."
 msgstr "El único valor válido es un entero."
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_crm_config_opportunity
-msgid "Opportunities"
-msgstr "Oportunidades"
-
-#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Partner"
 msgstr "Empresa"
@@ -398,6 +404,11 @@ msgid "Reply-To"
 msgstr "Responder a"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_report
+msgid "Reports"
+msgstr "Informes"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Tarifa de venta"
@@ -405,7 +416,6 @@ msgstr "Tarifa de venta"
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_base_partner
 #: model:ir.ui.menu,name:sales_team.menu_sales
-#: model:ir.ui.menu,name:sales_team.menu_sales_config
 msgid "Sales"
 msgstr "Ventas"
 
@@ -430,6 +440,7 @@ msgstr ""
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "Equipos de ventas"
 
@@ -592,6 +603,11 @@ msgstr ""
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Usuarios"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.salesteam_website_sales
+msgid "Website Sales"
+msgstr "Ventas del sitio web"
 
 #. module: sales_team
 #. openerp-web

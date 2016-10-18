@@ -1,28 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_landed_costs
-#
+# 
 # Translators:
+# Ali zuaby <ali@zuaby.net>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
+# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# Akram Alfusayal <akram_ma@hotmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Mustafa Rawi <mustafa@cubexco.com>, 2016
+# amrnegm <amrnegm.01@gmail.com>, 2016
+# hoxhe aits <hoxhe0@gmail.com>, 2016
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-05-16 13:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
-"Language: ar\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Mohammed Albasha <m.albasha.ma@gmail.com>, 2016\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:127
-#: code:addons/stock_landed_costs/stock_landed_costs.py:131
-#: code:addons/stock_landed_costs/stock_landed_costs.py:147
-#: code:addons/stock_landed_costs/stock_landed_costs.py:151
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:355
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:359
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:376
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:380
 #, python-format
 msgid " already out"
 msgstr "بالفعل خارج"
@@ -30,7 +39,7 @@ msgstr "بالفعل خارج"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
 msgid "Account"
-msgstr "الحساب"
+msgstr "حساب"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
@@ -74,7 +83,7 @@ msgstr "إلغاء"
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
 msgid "Cancelled"
-msgstr "ملغي"
+msgstr "ملغى "
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -108,6 +117,14 @@ msgid "Cost Lines"
 msgstr "خطوط التكلفه "
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
@@ -133,7 +150,7 @@ msgid "Description"
 msgstr "الوصف"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:18
+#: code:addons/stock_landed_costs/models/purchase_config_settings.py:18
 #, python-format
 msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
@@ -278,7 +295,7 @@ msgstr "آخر تحديث في"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Month"
-msgstr "الشهر"
+msgstr "شهر"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_name
@@ -287,7 +304,14 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:203
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
+#, python-format
+msgid ""
+"No valuation adjustments lines. You should maybe recompute the landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -298,7 +322,7 @@ msgid "Pickings"
 msgstr "الالتقاط"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:90
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:322
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "يرجى تكوين حساب النفقات المالية للمنتج : S%"
@@ -312,7 +336,7 @@ msgstr "مرحلة"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_product_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_product_id
 msgid "Product"
-msgstr "المنتج"
+msgstr "منتج"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -333,7 +357,7 @@ msgstr "المنتجات"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_quantity
 msgid "Quantity"
-msgstr "الكمية"
+msgstr "كمية"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_split_method
@@ -349,7 +373,7 @@ msgstr "المحافظة"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Status"
-msgstr "الحالة"
+msgstr "الحاله "
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
@@ -372,23 +396,23 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "خطوط جرد تقييم المخزون"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:52
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
-"landed costs. Landed costs are only possible for products configured in real "
-"time valuation with real price costing method. Please make sure it is the "
+"landed costs. Landed costs are only possible for products configured in real"
+" time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
 "الالتقاطات المحدده لا تحتوي على أي خطوة من شأنها أن تأثر على التكاليف "
 "الاضافيه. التكاليف الاضافيه ممكنة فقط بالنسبة للمنتجات التي تم تكوينها في "
-"التقييم في الوقت الحقيقي مع السعر الحقيقي طريقه التكلفه. يرجى التأكد من أنها "
-"في الحالة، أو الالتقاط الذي حددته "
+"التقييم في الوقت الحقيقي مع السعر الحقيقي طريقه التكلفه. يرجى التأكد من أنها"
+" في الحالة، أو الالتقاط الذي حددته "
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
 msgid "Total"
-msgstr "الإجمالي"
+msgstr "الإجمالي "
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -396,7 +420,7 @@ msgid "Validate"
 msgstr "تحقق"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:261
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -415,7 +439,7 @@ msgid "Volume"
 msgstr "الحجم"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:17
+#: code:addons/stock_landed_costs/models/purchase_config_settings.py:17
 #, python-format
 msgid "Warning!"
 msgstr "تحذير!"
@@ -426,14 +450,6 @@ msgid "Weight"
 msgstr "وزن"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:205
-#, python-format
-msgid ""
-"You cannot validate a landed cost which has no valid valuation adjustments "
-"lines. Did you click on Compute?"
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "وصف خصائص المنتج ..."
@@ -442,57 +458,3 @@ msgstr "وصف خصائص المنتج ..."
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Messages"
-#~ msgstr "الرسائل"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "الرسائل و سجل التواصل"
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Unread Messages"
-#~ msgstr "رسائل غير مقروءة"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"
