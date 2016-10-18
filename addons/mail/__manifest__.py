@@ -66,5 +66,6 @@ Main Features
         'static/src/xml/chat_window.xml',
         'static/src/xml/extended_chat_window.xml',
         'static/src/xml/announcement.xml',
+        'static/src/xml/mail_selector.xml',
     ],
 }
