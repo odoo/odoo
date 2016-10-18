@@ -373,6 +373,7 @@ class AccountBankStatementLine(models.Model):
     journal_entry_ids = fields.One2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True)
     amount_currency = fields.Monetary(help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
+    state = fields.Selection(related='statement_id.state' , string='Status', readonly=True)
 
     @api.one
     @api.constrains('amount')
