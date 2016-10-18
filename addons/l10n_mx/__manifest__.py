@@ -36,6 +36,6 @@ With this module you will have:
         "data/l10n_mx_chart_data.xml",
         "data/account_tax_data.xml",
         "data/account_chart_template_data.yml",
-        "data/country.xml",
+        "data/country_data.xml",
     ],
 }
