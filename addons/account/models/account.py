@@ -757,7 +757,7 @@ class AccountTax(models.Model):
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
                 baseval = total_included, total_excluded, base
-                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner, base)
+                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner, basevals)
                 total_excluded = ret['total_excluded']
                 base = ret['base']
                 total_included = ret['total_included']
