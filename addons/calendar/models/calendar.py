@@ -452,7 +452,7 @@ class Alarm(models.Model):
 
     name = fields.Char('Name', required=True)
     type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
-    duration = fields.Integer('Amount', required=True, default=1)
+    duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.iteritems()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
