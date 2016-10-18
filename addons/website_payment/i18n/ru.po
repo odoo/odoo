@@ -1,29 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_payment
-#
+# 
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# dr&mx <dronmax@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-10 20:51+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Вернуться в Мой Аккаунт"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Вернуться к моей учётной записи"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
@@ -86,12 +87,7 @@ msgid "Manage your payment methods"
 msgstr "Управление вашими способами оплаты"
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "Моя учетная запись"
-
-#. module: website_payment
-#: code:addons/website_payment/controllers/main.py:43
+#: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
 msgstr "Оплатить сейчас"
@@ -105,17 +101,17 @@ msgstr "Платеж"
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Получатель платежа"
+msgstr "Платежи клиентов"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.header_footer_custom_payment
 msgid "Payment Method"
-msgstr "Метод платежа"
+msgstr "Метод Оплаты"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Payment Methods"
-msgstr "Способы оплаты"
+msgstr "Методы Оплаты"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -148,9 +144,3 @@ msgstr "account.config.settings"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
 msgstr "payment_provider_logo"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "Полный URL, чтобы получить доступ к документу через веб-сайт."
-
-#~ msgid "Website URL"
-#~ msgstr "URL веб-сайта"

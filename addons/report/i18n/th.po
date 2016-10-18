@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-#
+# 
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # mrzephyr9 <prawit.boonthue@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-13 02:00+0000\n"
-"Last-Translator: mrzephyr9 <prawit.boonthue@gmail.com>\n"
-"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
-"Language: th\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: mrzephyr9 <prawit.boonthue@gmail.com>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: report
@@ -145,7 +146,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 มม."
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: code:addons/report/models/report.py:273
 #, python-format
 msgid "Bad Report Reference"
 msgstr "การอ้างอิงรายงานไม่ถูกต้อง"
@@ -198,6 +199,13 @@ msgid "Default paper format ?"
 msgstr "รูปแบบกระดาษเริ่มต้น"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:12
+#, python-format
+msgid "Discard"
+msgstr "ยกเลิก"
+
+#. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
@@ -211,17 +219,24 @@ msgid "Display a header line"
 msgstr "แสดงหัวรายงานแบบบรรทัด"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:8
+#, python-format
+msgid "Edit"
+msgstr "แก้ไข"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external footer"
 msgstr "แก้ไขท้ายรายงานภายนอก"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external header"
 msgstr "แก้ไขหัวรายงานภายนอก"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit internal header"
 msgstr "แก้ไขหัวรายงานภายใน"
 
@@ -231,10 +246,10 @@ msgid "Email:"
 msgstr "อีเมล:"
 
 #. module: report
-#: constraint:report.paperformat:0
-#, fuzzy
+#: code:addons/report/models/report_paperformat.py:68
+#, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
-msgstr "ผิดพลาด ! คุณไม่สามารถเลือกรูปแบบและเจาะจงขนาดความกว้าง/สูงได้"
+msgstr ""
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -257,6 +272,11 @@ msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 มม."
 
 #. module: report
+#: model:ir.model,name:report.model_ir_http
+msgid "HTTP routing"
+msgstr "การกำหนดเส้นทาง HTTP"
+
+#. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
 msgid "Header spacing"
 msgstr "ระยะหัวรายงาน"
@@ -267,7 +287,7 @@ msgstr "ระยะหัวรายงาน"
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
 msgid "ID"
-msgstr "รหัส"
+msgstr "ID"
 
 #. module: report
 #: selection:report.paperformat,orientation:0
@@ -361,6 +381,11 @@ msgid "Paper format"
 msgstr "รูปแบบกระดาษ"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+msgid "Paper format *"
+msgstr ""
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
@@ -383,21 +408,36 @@ msgstr "แนวตั้ง"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
 msgstr "แสดงตัวอย่างรายงานภายใน"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
 msgstr "แสดงตัวอย่างรายงานภายนอก"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/xml/report.xml:5
+#, python-format
+msgid "Print"
+msgstr "พิมพ์"
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
+msgid "Printed Report Name"
+msgstr ""
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
+msgid "QWeb views"
+msgstr ""
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:95
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -416,9 +456,11 @@ msgid "Right Margin (mm)"
 msgstr "ขอบขวา (มม.)"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
-msgid "Search associated QWeb views"
-msgstr "ค้นหามุมมอง QWeb ที่เกี่ยวข้อง"
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:11
+#, python-format
+msgid "Save"
+msgstr "บันทึก"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
@@ -446,7 +488,15 @@ msgid "This is a sample of an internal report."
 msgstr "นี่คือตัวอย่างของรายงานภายใน"
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: model:ir.model.fields,help:report.field_ir_act_report_xml_print_report_name
+msgid ""
+"This is the filename of the report going to download. Keep empty to not "
+"change the report filename. You can use a python expression with the object "
+"and time variables."
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:273
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "รายงานนี้ไม่ถูกเก็บลงฐานข้อมูล: %s."
@@ -458,16 +508,14 @@ msgstr "ขอบบน (มม.)"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
+#: code:addons/report/static/src/js/qwebactionmanager.js:18
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 msgstr ""
-"ไม่สามารถค้นหา Wkhtmltopdf ในระบบ รายงานจะถูกแสดงในรูปแบบ html <br><br><a href="
-"\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"ไม่สามารถค้นหา Wkhtmltopdf ในระบบ รายงานจะถูกแสดงในรูปแบบ html <br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 
 #. module: report
@@ -476,14 +524,14 @@ msgid "Website:"
 msgstr "เว็บไซต์:"
 
 #. module: report
-#: code:addons/report/models/report.py:459
+#: code:addons/report/models/report.py:435
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf ล้มเหลว (error code: %s). Message: %s"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
+#: code:addons/report/static/src/js/qwebactionmanager.js:19
 #, python-format
 msgid ""
 "You need to start OpenERP with at least two \n"
@@ -492,21 +540,22 @@ msgstr "คุณต้องเริ่ม Odoo ด้วย worker มาก�
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:20
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
-"and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
 "คุณควรอัพเกรดเวอร์ชั่นของ\n"
-"Wkhtmltopdf ให้เป็นเวอร์ชั่น 0.12.0 "
-"ขึ้นไปเพื่อการแสดงผลหัวและท้ายรายงานที่ถูกต้องรวมไปถึงตารางระหว่างหน้า<br><br><a href="
-"\"http://wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf ให้เป็นเวอร์ชั่น 0.12.0 ขึ้นไปเพื่อการแสดงผลหัวและท้ายรายงานที่ถูกต้องรวมไปถึงตารางระหว่างหน้า<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
+
+#. module: report
+#: model:ir.model,name:report.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml

@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:25+0000\n"
-"PO-Revision-Date: 2016-08-26 10:25+0000\n"
-"Last-Translator: Csaba Tóth <i3rendszerhaz@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,10 +53,10 @@ msgstr "Átlagár"
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Érvénytelenít"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:243
+#: code:addons/stock_account/models/stock.py:244
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -64,7 +64,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:245
+#: code:addons/stock_account/models/stock.py:246
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -117,7 +117,7 @@ msgid "Compute from average price"
 msgstr "Az átlagár alapján számolva"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:316
+#: code:addons/stock_account/models/stock.py:319
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -133,7 +133,7 @@ msgstr "Költség"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Költségszámítás mód"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -455,6 +455,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Alapár: Az alapárat kézzel frissíti egy megadott időtartam végén (általában évenként).\n"
+"                    Átlagár: A bekerülési értéket újraszámolja minden egyes bejövő szállítmányhoz és ezt használja a termék értékelésnél.\n"
+"                    Tényleges ár: A kijelzett bekerülési érték  az utoljára kiküldött áru értéke (ezt használja, ha készlethiány van például)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -531,7 +534,7 @@ msgid "Templates for Account Chart"
 msgstr "Számlatükör sablonok"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:271
+#: code:addons/stock_account/models/stock.py:273
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -578,7 +581,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Becslés"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -669,7 +672,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Varázsló, mely megnyitja a készletkönyvelés története táblázatot"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:241
+#: code:addons/stock_account/models/stock.py:242
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -680,7 +683,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:111
-#: code:addons/stock_account/models/stock.py:247
+#: code:addons/stock_account/models/stock.py:248
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
