@@ -1233,6 +1233,7 @@ class IrModelData(models.Model):
                 _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
         def unlink_if_refcount(to_unlink):
+            global undeletable
             for model, res_id in to_unlink:
                 external_ids = self.search([('model', '=', model), ('res_id', '=', res_id)])
                 if external_ids - datas:
