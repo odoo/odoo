@@ -39,7 +39,7 @@ def migrate_tags_on_taxes(cr, registry):
             ('description', '=', tax_template.description)
         ])
         if len(tax_id.ids) == 1:
-            tax_id.sudo().write({'tag_ids': [(6, 0, [tax_template.tag_ids.ids])]})
+            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
