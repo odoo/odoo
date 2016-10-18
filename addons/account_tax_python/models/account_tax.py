@@ -36,7 +36,7 @@ class AccountTaxPython(models.Model):
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
 
     @api.multi
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, basevals=None):
         taxes = self.env['account.tax']
         company = self.env.user.company_id
         for tax in self:
@@ -44,7 +44,7 @@ class AccountTaxPython(models.Model):
             safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
                 taxes += tax
-        return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner)
+        return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner, basevals)
 
 
 class AccountTaxTemplatePython(models.Model):
