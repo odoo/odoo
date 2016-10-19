@@ -366,6 +366,7 @@ class AccountBankStatementLine(models.Model):
     journal_entry_ids = fields.One2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True)
     amount_currency = fields.Monetary(help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
+    state = fields.Selection(related='statement_id.state' , string='Status', readonly=True)
     move_name = fields.Char(string='Journal Entry Name', readonly=True,
         default=False, copy=False,
         help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")

@@ -12,6 +12,14 @@ from odoo.tests import common
 from odoo.tools import mute_logger
 
 
+class ViewXMLID(common.TransactionCase):
+    def test_model_data_id(self):
+        """ Check whether views know their xmlid record. """
+        view = self.env.ref('base.view_company_form')
+        self.assertTrue(view)
+        self.assertTrue(view.model_data_id)
+        self.assertEqual(view.model_data_id.complete_name, 'base.view_company_form')
+
 class ViewCase(common.TransactionCase):
     def setUp(self):
         super(ViewCase, self).setUp()
