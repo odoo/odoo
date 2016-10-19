@@ -430,6 +430,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
         this.process_modifiers();
         this._super();
         this.$el.addClass(this.node.attrs["class"] || "");
+        this.$el.attr('style', this.node.attrs.style);
     },
     destroy: function() {
         $.fn.tooltip('destroy');

@@ -229,10 +229,11 @@ actual arch.
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
+    @api.depends('write_date')
     def _compute_model_data_id(self):
-        # get the last ir_model_data record corresponding to self
+        # get the first ir_model_data record corresponding to self
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].search_read(domain, ['res_id']):
+        for data in self.env['ir.model.data'].search_read(domain, ['res_id'], order='id desc'):
             view = self.browse(data['res_id'])
             view.model_data_id = data['id']
 
@@ -343,7 +344,15 @@ actual arch.
             values['name'] = "%s %s" % (values.get('model'), values['type'])
 
         self.clear_caches()
-        return super(View, self).create(self._compute_defaults(values))
+
+        if 'install_mode_data' in self._context:
+            # the view is created from a data file by installing a module; delay
+            # the recomputation of field 'model_data_id' until its xmlid record
+            # is created
+            with self.env.norecompute():
+                return super(View, self).create(self._compute_defaults(values))
+        else:
+            return super(View, self).create(self._compute_defaults(values))
 
     @api.multi
     def write(self, vals):
