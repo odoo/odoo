@@ -143,6 +143,9 @@ class AccountConfigSettings(models.TransientModel):
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format",
         help='Get your bank statements from your bank and import them in Odoo in the .CSV format.\n'
             '-This installs the module account_bank_statement_import_csv.')
+    module_account_bank_statement_import_camt = fields.Boolean("Import in CAMT.053 format",
+        help='Get your bank statements from your bank and import them in Odoo in the CAMT format.\n'
+            '-This installs the module account_bank_statement_import_camt.')
     overdue_msg = fields.Text(related='company_id.overdue_msg', string='Overdue Payments Message *')
 
 
