@@ -229,10 +229,7 @@ class purchase_order(osv.osv):
                 taxes_ids = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == requisition.company_id).ids
 
             # Compute quantity and price_unit
-            if requisition.type_id.quantity_copy != 'copy':
-                product_qty = 0
-                price_unit = line.price_unit
-            elif line.product_uom_id != line.product_id.uom_po_id:
+            if line.product_uom_id != line.product_id.uom_po_id:
                 product_uom_obj = self.pool.get('product.uom')
                 product_qty = product_uom_obj._compute_qty_obj(
                     cr, uid, line.product_uom_id, line.product_qty, line.product_id.uom_po_id, context=context)
@@ -241,6 +238,8 @@ class purchase_order(osv.osv):
             else:
                 product_qty = line.product_qty
                 price_unit = line.price_unit
+            if requisition.type_id.quantity_copy != 'copy':
+                product_qty = 0
 
             # Compute price_unit in appropriate currency
             if requisition.company_id.currency_id != currency:
