@@ -370,6 +370,7 @@ class Website(Home):
         ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         ServerActions = request.env['ir.actions.server']
+        action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
         if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
