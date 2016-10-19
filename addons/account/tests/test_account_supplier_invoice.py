@@ -92,7 +92,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         self.assertTrue((invoice.state == 'draft'), "Initially vendor bill state is Draft")
 
         #change the state of invoice to open by clicking Validate button
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
 
         # Check if amount and corresponded base is correct for all tax scenarios given on a computational base
         # Keep in mind that tax amount can be changed by the user at any time before validating (based on the invoice and tax laws applicable)
