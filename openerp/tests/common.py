@@ -236,6 +236,13 @@ class RedirectHandler(urllib2.HTTPRedirectHandler):
 
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
+
+    .. WARNING:
+
+        Unlike in any other test case class, in this one you need to commit
+        the chanes in the database before calling :meth:`~.phantom_js` to make
+        them available for the test session. A test cursor is used, so do not
+        worry, changes will not hit your database.
     """
 
     def __init__(self, methodName='runTest'):
@@ -249,6 +256,8 @@ class HttpCase(TransactionCase):
     def setUp(self):
         super(HttpCase, self).setUp()
         self.registry.enter_test_mode()
+        # Reinstantiate environment with a test cursor
+        self.env = self.env(self.registry.cursor())
         # setup a magic session_id that will be rollbacked
         self.session = openerp.http.root.session_store.new()
         self.session_id = self.session.sid
