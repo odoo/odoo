@@ -119,11 +119,12 @@ var DataImport = Widget.extend(ControlPanelMixin, {
     opts: [
         {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
         {name: 'separator', label: _lt("Separator:"), value: ','},
-        {name: 'quoting', label: _lt("Quoting:"), value: '"'}
+        {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'}
     ],
     parse_opts: [
         {name: 'date_format', label: _lt("Date Format:"), value: ''},
-        {name: 'float_thousand_separator', label: _lt("Thousand Separator:"), value: ','},
+        {name: 'datetime_format', label: _lt("Datetime Format:"), value: ''},
+        {name: 'float_thousand_separator', label: _lt("Thousands Separator:"), value: ','},
         {name: 'float_decimal_separator', label: _lt("Decimal Separator:"), value: '.'}
     ],
     events: {
@@ -295,8 +296,8 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 self.$('input.oe_import_' + opt.name).val();
         });
         _(this.parse_opts).each(function (opt) {
-            if (opt.name === 'date_format') {
-                options[opt.name] = time.moment_to_strftime_format(self.$('input.oe_import_date_format').val());
+            if (opt.name === 'date_format' || opt.name === 'datetime_format') {
+                options[opt.name] = time.moment_to_strftime_format(self.$('input.oe_import_' + opt.name).val());
             }
             else {
                 options[opt.name] = self.$('input.oe_import_' + opt.name).val();
@@ -320,6 +321,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 .prop('disabled', true);
         if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
         this.$('.oe_import_date_format').val('');
+        this.$('.oe_import_datetime_format').val('');
 
         this.$el.removeClass('oe_import_preview oe_import_error');
         var import_toggle = false;
@@ -375,6 +377,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         }
 
         this.$('.oe_import_date_format').val(time.strftime_to_moment_format(result.options.date_format));
+        this.$('.oe_import_datetime_format').val(time.strftime_to_moment_format(result.options.datetime_format));
         this.$('.oe_import_float_thousand_separator').val(result.options.float_thousand_separator).change();
         this.$('.oe_import_float_decimal_separator').val(result.options.float_decimal_separator).change();
         if (result.debug === false){

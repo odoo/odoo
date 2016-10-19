@@ -379,6 +379,31 @@ class test_convert_import_data(TransactionCase):
             ['qux', '5', '6'],
         ])
 
+    def test_date_fields(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': 'name,date,create_date\n'
+                    '"foo","2013年07月18日","2016-10-12 06:06"\n',
+            'file_type': 'text/csv'
+
+        })
+
+        results = import_wizard.do(
+            ['name', 'date', 'create_date'],
+            {
+                'date_format': '%Y年%m月%d日',
+                'datetime_format': '%Y-%m-%d %H:%M',
+                'quoting': '"',
+                'separator': ',',
+                'headers': True
+            }
+        )
+
+        # if results empty, no errors
+        self.assertItemsEqual(results, [])
+
+
+
     def test_filtered(self):
         """ If ``False`` is provided as field mapping for a column,
         that column should be removed from importable data

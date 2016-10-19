@@ -175,42 +175,21 @@ class IrUiView(models.Model):
         return views_to_return
 
     @api.model
-    def customize_template_get(self, key, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``key``.
-            returns templates (which can be active or not)
+    def _customize_template_get_views(self, key, full=False, bundles=False):
+        """ Get inherit views of the template ``key``.
+            returns views (which can be active or not)
             ``bundles=True`` returns also the asset bundles
         """
-        user = self.env.user
-        user_groups = set(user.groups_id)
+        user_groups = set(self.env.user.groups_id)
         views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
+        views = views.filtered(lambda v: user_groups.issuperset(v.groups_id))
+        return views
 
-        view_theme_id = self.env['ir.model.data'].xmlid_to_res_id('website.theme')
-        done = set()
-        result = []
-        for view in views:
-            if full or (view.customize_show and view.inherit_id.id != view_theme_id):
-                if not user_groups.issuperset(view.groups_id):
-                    continue
-                if view.inherit_id not in done:
-                    result.append({
-                        'name': view.inherit_id.name,
-                        'id': view.id,
-                        'key': view.key,
-                        'xml_id': view.xml_id,
-                        'arch': view.arch,
-                        'inherit_id': view.inherit_id.id,
-                        'header': True,
-                        'active': False
-                    })
-                    done.add(view.inherit_id)
-                result.append({
-                    'name': view.name,
-                    'id': view.id,
-                    'key': view.key,
-                    'xml_id': view.xml_id,
-                    'arch': view.arch,
-                    'inherit_id': view.inherit_id.id,
-                    'header': False,
-                    'active': view.active,
-                })
-        return result
+    @api.model
+    def customize_template_get(self, key, full=False, bundles=False):
+        """ Get inherit view's informations of the template ``key``.
+            returns templates info (which can be active or not)
+            ``bundles=True`` returns also the asset bundles
+        """
+        views = self._customize_template_get_views(key, full=full, bundles=bundles)
+        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
