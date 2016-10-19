@@ -1,83 +1,67 @@
 odoo.define('website.ace', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var Widget = require('web.Widget');
 var website = require('website.website');
 
-var AceCommon = require('web_editor.ace');
+var ViewEditor = require('web_editor.ace');
 
 var hash = "#advanced-view-editor";
 
 var Ace = Widget.extend({
     events: {
-        'click a[data-action=ace]': 'launchAce',
-    },
-    launchAce: function (e) {
-        var self = this;
-        if (!window.ace && !this.loadJS_def) {
-            this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
-                return $.when(ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
-                    ajax.loadJS('/web/static/lib/ace/theme-monokai.js'));
-            });
-        }
-
-        if (e) {
+        "click a[data-action=ace]": function (e) {
             e.preventDefault();
+            this.launchAce();
+        },
+    },
+    start: function () {
+        if (window.location.hash.substr(0, hash.length) === hash) {
+            this.launchAce();
         }
-
-        return $.when(this.loadJS_def).then(function () {
-            if (self.globalEditor) {
-                self.globalEditor.open();
-            } else {
-                self.globalEditor = new ViewEditor(self);
-                self.globalEditor.appendTo($(document.body));
+        return this._super.apply(this, arguments);
+    },
+    launchAce: function () {
+        if (this.globalEditor) {
+            this.globalEditor.do_show();
+        } else {
+            var currentHash = window.location.hash;
+            var indexOfView = currentHash.indexOf("?view=");
+            var initialViewID = undefined;
+            if (indexOfView >= 0) {
+                initialViewID = parseInt(currentHash.substr(indexOfView + 6), 10);
             }
-        });
+
+            this.globalEditor = new ViewEditor(this, $(document.documentElement).data('view-xmlid'), {
+                initialViewID: initialViewID
+            });
+            this.globalEditor.appendTo(document.body);
+
+            $("a[data-action=edit]").on("click", this.globalEditor.do_hide.bind(this.globalEditor));
+        }
     },
 });
 
-var ViewEditor = AceCommon.ViewEditor.extend({
-    loadTemplates: function () {
-        var self = this;
-        var args = {
-            key: $(document.documentElement).data('view-xmlid'),
-            full: true,
-            bundles: this.$('.js_include_bundles')[0].checked
-        };
-        return ajax
-            .jsonRpc('/website/customize_template_get', 'call', args)
-            .then(function (views) {
-                self.loadViews.call(self, views);
-                self.open.call(self);
-                var curentHash = window.location.hash;
-                var indexOfView = curentHash.indexOf("?view=");
-                if (indexOfView >= 0) {
-                    var viewId = parseInt(curentHash.substring(indexOfView + 6, curentHash.length), 10);
-                    self.$('#ace-view-list').val(viewId).change();
-                } else {
-                    if (views.length >= 2) {
-                        var mainTemplate = views[1];
-                        self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
-                    }
-                    window.location.hash = hash;
-                }
-            });
+/**
+ * Extend the default view editor so that the URL hash is updated with view id.
+ */
+ViewEditor = ViewEditor.extend({
+    displayView: function () {
+        this._super.apply(this, arguments);
+        this._updateHash();
     },
-    displayError: function () {
-        var error = this._super.apply(this, arguments);
-        website.error(error.title, error.message);
+    saveResources: function () {
+        return this._super.apply(this, arguments).then((function () {
+            this._updateHash();
+            window.location.reload();
+        }).bind(this));
     },
-    updateHash: function () {
-        window.location.hash = hash + "?view=" + this.selectedViewId();
-    },
-    reloadPage: function () {
-        this.updateHash();
-        window.location.reload();
-    },
-    close: function () {
+    do_hide: function () {
+        this._super.apply(this, arguments);
         window.location.hash = "";
-        this.$el.removeClass('oe_ace_open').addClass('oe_ace_closed');
+    },
+    _updateHash: function () {
+        window.location.hash = hash + "?view=" + this.selectedViewId();
     },
 });
 
@@ -86,7 +70,7 @@ website.TopBar.include({
         this.ace = new Ace();
         return $.when(
             this._super.apply(this, arguments),
-            this.ace.attachTo($('#html_editor'))
+            this.ace.attachTo(this.$('#html_editor'))
         );
     },
 });
