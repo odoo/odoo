@@ -338,7 +338,15 @@ actual arch.
             values['name'] = "%s %s" % (values.get('model'), values['type'])
 
         self.clear_caches()
-        return super(View, self).create(self._compute_defaults(values))
+
+        if 'install_mode_data' in self._context:
+            # the view is created from a data file by installing a module; delay
+            # the recomputation of field 'model_data_id' until its xmlid record
+            # is created
+            with self.env.norecompute():
+                return super(View, self).create(self._compute_defaults(values))
+        else:
+            return super(View, self).create(self._compute_defaults(values))
 
     @api.multi
     def write(self, vals):
