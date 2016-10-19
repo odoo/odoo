@@ -132,7 +132,8 @@ class purchase_requisition_line(osv.osv):
             for po in line.requisition_id.purchase_ids.filtered(lambda r: r.state in ['purchase', 'done']):
                 for po_line in po.order_line.filtered(lambda r: r.product_id == line.product_id):
                     if po_line.product_uom != line.product_uom_id:
-                        total += self.pool.get('product.uom')._compute_qty_obj(po_line.product_uom, po_line.product_qty, line.product_uom_id)
+                        total += self.pool.get('product.uom')._compute_qty_obj(
+                            cr, uid, po_line.product_uom, po_line.product_qty, line.product_uom_id, context=context)
                     else:
                         total += po_line.product_qty
             result[line.id] = total
