@@ -136,25 +136,13 @@ class View(models.Model):
         return qcontext
 
     @api.model
-    def customize_template_get(self, key, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``key``. By default, only
-            :returns ``customize_show`` templates (which can be active or not), if
-                ``full=True`` returns inherit view's informations of the template ``key``.
-                ``bundles=True`` returns also the asset bundles
+    def _customize_template_get_views(self, key, full=False, bundles=False):
+        """ Get inherit view's informations of the template ``key``.
+            returns views (which can be active or not)
+            ``full=False`` returns only the customize_show template
+            ``bundles=True`` returns also the asset bundles
         """
-        result = super(View, self).customize_template_get(key, full=full, bundles=bundles)
-
-        imd = self.env['ir.model.data']
-        view_theme_id = imd.xmlid_to_res_id('website.theme')
-
-        result_filtered = []
-        for x in result:
-            if not full:
-                view = self.browse(x['id'])
-                if not view.customize_show:
-                    continue
-            if view_theme_id and x['inherit_id'] == view_theme_id:
-                continue
-            result_filtered.append(x)
-
-        return result_filtered
+        views = super(View, self)._customize_template_get_views(key, full=full, bundles=bundles)
+        if full:
+            return views
+        return views.filtered(lambda v: v.customize_show)

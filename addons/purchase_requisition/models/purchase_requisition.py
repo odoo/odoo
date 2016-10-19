@@ -194,15 +194,15 @@ class PurchaseOrder(models.Model):
                 taxes_ids = line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id).ids
 
             # Compute quantity and price_unit
-            if requisition.type_id.quantity_copy != 'copy':
-                product_qty = 0
-                price_unit = line.price_unit
-            elif line.product_uom_id != line.product_id.uom_po_id:
+            if line.product_uom_id != line.product_id.uom_po_id:
                 product_qty = line.product_uom_id._compute_quantity(line.product_qty, line.product_id.uom_po_id)
                 price_unit = line.product_uom_id._compute_price(line.price_unit, line.product_id.uom_po_id)
             else:
                 product_qty = line.product_qty
                 price_unit = line.price_unit
+
+            if requisition.type_id.quantity_copy != 'copy':
+                product_qty = 0
 
             # Compute price_unit in appropriate currency
             if requisition.company_id.currency_id != currency:
@@ -256,6 +256,24 @@ class PurchaseOrder(models.Model):
                     values={'self': self, 'origin': self.requisition_id, 'edit': True},
                     subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
         return result
+
+
+class PurchaseOrderLine(models.Model):
+    _inherit = "purchase.order.line"
+
+    @api.onchange('product_qty', 'product_uom')
+    def _onchange_quantity(self):
+        res = super(PurchaseOrderLine, self)._onchange_quantity()
+        if self.order_id.requisition_id:
+            for line in self.order_id.requisition_id.line_ids:
+                if line.product_id == self.product_id:
+                    if line.product_uom_id != self.product_uom:
+                        self.price_unit = self.env['product.uom']._compute_price(
+                            line.product_uom_id.id, line.price_unit, to_uom_id=self.product_uom.id)
+                    else:
+                        self.price_unit = line.price_unit
+                    break
+        return res
 
 
 class ProductTemplate(models.Model):

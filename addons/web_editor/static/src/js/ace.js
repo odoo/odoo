@@ -149,7 +149,7 @@ var ViewEditor = Widget.extend({
             view.children = [];
         });
         _.each(index, function (view) {
-            var parentId = view.inherit_id;
+            var parentId = view.inherit_id[0];
             if (parentId && index[parentId]) {
                 index[parentId].children.push(view);
             } else {

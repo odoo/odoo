@@ -10,10 +10,13 @@ class ProjectTaskType(models.Model):
 
     _inherit = 'project.task.type'
 
+    def _default_domain_rating_template_id(self):
+        return [('model', '=', 'project.task')]
+
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
-        domain=[('model', '=', 'project.task')],
+        domain=lambda self: self._default_domain_rating_template_id(),
         help="Select an email template. An email will be sent to the customer when the task reach this step.")
     auto_validation_kanban_state = fields.Boolean('Automatic kanban status', default=False,
         help="Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"

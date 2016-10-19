@@ -139,6 +139,24 @@ class TestViewSaving(common.TransactionCase):
         Company = self.env['res.company']
         View = self.env['ir.ui.view']
 
+        # create a view with an xmlid, like the file import would
+        with self.env.norecompute():
+            self.view_id = View.create(self.cr, self.uid, {
+                'name': "Test View",
+                'type': 'qweb',
+                'arch': ET.tostring(self.arch, encoding='utf-8').decode('utf-8')
+            })
+        imd = self.env['ir.model.data'].create({
+            'module': 'website',
+            'name': 'test_view',
+            'model': 'ir.ui.view',
+            'res_id': self.view_id,
+        })
+
+        # the xml_id of the view should not be flagged as 'noupdate'
+        self.assertEqual(View.browse(self.cr, self.uid, self.view_id).model_data_id, imd)
+        self.assertFalse(imd.noupdate)
+
         replacement = ET.tostring(h.DIV(
             h.H3("Column 2"),
             h.UL(
@@ -148,6 +166,9 @@ class TestViewSaving(common.TransactionCase):
             )
         ), encoding='utf-8')
         self.view_id.save(value=replacement, xpath='/div/div[2]')
+
+        # the xml_id of the view should be flagged as 'noupdate'
+        self.assertTrue(imd.noupdate)
 
         company = Company.browse(1)
         self.assertEqual(company.name, "Acme Corporation")

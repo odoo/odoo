@@ -556,7 +556,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="button_journal_entries"
-                                string="Journal Items" type="object"
+                                string="Journal Entries" type="object"
                                 attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                         <field name="move_line_ids" invisible="1"/>
                     </div>
@@ -884,6 +884,7 @@
                             <field name="type"/>
                         </group>
                         <group>
+                            <field name="include_initial_balance"/>
                         </group>
                     </group>
                     <separator string="Description"/>

@@ -894,10 +894,12 @@ class Field(object):
             env.invalidate(spec)
 
         else:
-            # simply write to the database, and update cache
+            # Write to database
             write_value = self.convert_to_write(self.convert_to_record(value, record), record)
             record.write({self.name: write_value})
-            record._cache[self] = value
+            # Update the cache unless value contains a new record
+            if not (self.relational and not all(value)):
+                record._cache[self] = value
 
     ############################################################################
     #
@@ -1987,7 +1989,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_write(self, value, record):
         # make result with new and existing records
-        result = [(5,)]
+        result = [(6, 0, [])]
         for record in value:
             if not record.id:
                 values = {name: record[name] for name in record._cache}
@@ -1998,7 +2000,7 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
             else:
-                result.append((4, record.id))
+                result[0][2].append(record.id)
         return result
 
     def convert_to_onchange(self, value, record, fnames=()):
@@ -2171,7 +2173,11 @@ class One2many(_RelationalMulti):
                     query = "SELECT id FROM %s WHERE %s=%%s AND id <> ALL(%%s)" % (comodel._table, inverse)
                     comodel._cr.execute(query, (record.id, act[2] or [0]))
                     lines = comodel.browse([row[0] for row in comodel._cr.fetchall()])
-                    lines.write({inverse: False})
+                    inverse_field = comodel._fields[inverse]
+                    if inverse_field.ondelete == 'cascade':
+                        lines.unlink()
+                    else:
+                        lines.write({inverse: False})
 
 
 class Many2many(_RelationalMulti):

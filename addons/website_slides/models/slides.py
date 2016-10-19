@@ -164,6 +164,20 @@ class Channel(models.Model):
             self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
         return res
 
+    @api.multi
+    def message_post(self, parent_id=False, subtype=None, **kwargs):
+        """ Temporary workaround to avoid spam. If someone replies on a channel
+        through the 'Presentation Published' email, it should be considered as a
+        note as we don't want all channel followers to be notified of this answer. """
+        self.ensure_one()
+        if parent_id:
+            parent_message = self.env['mail.message'].sudo().browse(parent_id)
+            if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
+                if kwargs.get('subtype_id'):
+                    kwargs['subtype_id'] = False
+                subtype = 'mail.mt_note'
+        return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
+
 
 class Category(models.Model):
     """ Channel contain various categories to manage its slides """

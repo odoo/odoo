@@ -1275,6 +1275,9 @@ var FieldOne2Many = FieldX2Many.extend({
             return self.mutex.def;
         });
     },
+    is_false: function() {
+        return false;
+    },
 });
 
 var Many2ManyListView = X2ManyListView.extend({

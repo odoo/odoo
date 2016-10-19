@@ -393,16 +393,16 @@ class ProductTemplate(models.Model):
         ('none', 'No Tracking')], string="Tracking", default='none', required=True)
     description_picking = fields.Text('Description on Picking', translate=True)
     qty_available = fields.Float(
-        'Quantity On Hand', compute='_compute_quantities', search='_search_quantities',
+        'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
         digits=dp.get_precision('Product Unit of Measure'))
     virtual_available = fields.Float(
-        'Forecasted Quantity', compute='_compute_quantities', search='_search_quantities',
+        'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
         digits=dp.get_precision('Product Unit of Measure'))
     incoming_qty = fields.Float(
-        'Incoming', compute='_compute_quantities', search='_search_quantities',
+        'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
         digits=dp.get_precision('Product Unit of Measure'))
     outgoing_qty = fields.Float(
-        'Outgoing', compute='_compute_quantities', search='_search_quantities',
+        'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
         digits=dp.get_precision('Product Unit of Measure'))
     location_id = fields.Many2one('stock.location', 'Location')
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
@@ -452,9 +452,23 @@ class ProductTemplate(models.Model):
             }
         return prod_available
 
-    def _search_quantities(self, operator, value):
-        # TDE FIXME: does this work anyway ?
-        domain = []  # TDE ADDED
+    def _search_qty_available(self, operator, value):
+        domain = [('qty_available', operator, value)]
+        product_variant_ids = self.env['product.product'].search(domain)
+        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+
+    def _search_virtual_available(self, operator, value):
+        domain = [('virtual_available', operator, value)]
+        product_variant_ids = self.env['product.product'].search(domain)
+        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+
+    def _search_incoming_qty(self, operator, value):
+        domain = [('incoming_qty', operator, value)]
+        product_variant_ids = self.env['product.product'].search(domain)
+        return [('product_variant_ids', 'in', product_variant_ids.ids)]
+
+    def _search_outgoing_qty(self, operator, value):
+        domain = [('outgoing_qty', operator, value)]
         product_variant_ids = self.env['product.product'].search(domain)
         return [('product_variant_ids', 'in', product_variant_ids.ids)]
 
