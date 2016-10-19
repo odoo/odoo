@@ -95,7 +95,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 noupdate = False
                 if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
                     noupdate = True
-                tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+                env = openerp.api.Environment(cr, SUPERUSER_ID, {})
+                with env.norecompute():
+                    tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+                env['base'].recompute()
         finally:
             if kind in ('demo', 'test'):
                 threading.currentThread().testing = False
