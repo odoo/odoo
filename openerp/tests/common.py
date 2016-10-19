@@ -273,6 +273,8 @@ class HttpCase(TransactionCase):
         self.opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
 
     def tearDown(self):
+        self.env.cr.close()
+        self.env.clear()
         self.registry.leave_test_mode()
         super(HttpCase, self).tearDown()
 
