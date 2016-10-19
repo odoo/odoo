@@ -126,6 +126,7 @@
     color: white;
     .o-flex-display();
     .o-flex-flow(column, nowrap);
+    opacity: 0.97;
 
     .o_ace_view_editor_title {
         .o-flex(0, 0, auto);
@@ -164,15 +165,29 @@
         .o-flex(1, 1, auto);
         .ace_gutter {
             cursor: ew-resize;
-        }
-    }
 
-    &.oe_ace_open {
-        opacity: 0.97;
-    }
-    &.oe_ace_closed {
-        z-index: -1000;
-        opacity: 0;
+            .ace_gutter-cell.o_error {
+                position: relative;
+                &::after {
+                    .o-position-absolute(-100%, 0, -100%, 0);
+                    .ace-line-error-mixin();
+                }
+            }
+        }
+        .ace_scroller.o_error::after {
+            .o-position-absolute(0, auto, 0, 0);
+            width: 3px;
+            .ace-line-error-mixin();
+        }
+
+        .ace-line-error-mixin() {
+            content: "";
+            z-index: 1000;
+            display: block;
+            background-color: @brand-danger;
+            opacity: 0.5;
+            pointer-events: none;
+        }
     }
 }
 
