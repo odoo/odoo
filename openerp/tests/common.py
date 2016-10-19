@@ -387,6 +387,7 @@ class HttpCase(TransactionCase):
         except OSError:
             raise unittest.SkipTest("PhantomJS not found")
         try:
+            self.env.cr.release()
             self.phantom_poll(phantom, timeout)
         finally:
             # kill phantomjs if phantom.exit() wasn't called in the test
@@ -396,6 +397,7 @@ class HttpCase(TransactionCase):
             self._wait_remaining_requests()
             # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
+            self.env.cr.acquire()
 
     def _wait_remaining_requests(self):
         t0 = int(time.time())
