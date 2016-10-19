@@ -1861,7 +1861,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         // if the change is too large, it's probably an input error, make the user confirm.
-        if (!force_validation && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
+        if (!force_validation && order.get_total_with_tax() > 0 && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
             this.gui.show_popup('confirm',{
                 title: _t('Please Confirm Large Amount'),
                 body:  _t('Are you sure that the customer wants to  pay') + 
