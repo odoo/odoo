@@ -388,9 +388,10 @@ class HrPayslip(models.Model):
             return localdict
 
         class BrowsableObject(object):
-            def __init__(self, employee_id, dict):
+            def __init__(self, employee_id, dict, env):
                 self.employee_id = employee_id
                 self.dict = dict
+                self.env = env
 
             def __getattr__(self, attr):
                 return attr in self.dict and self.dict.__getitem__(attr) or 0.0
@@ -455,11 +456,11 @@ class HrPayslip(models.Model):
         for input_line in payslip.input_line_ids:
             inputs_dict[input_line.code] = input_line
 
-        categories = BrowsableObject(payslip.employee_id.id, {})
-        inputs = InputLine(payslip.employee_id.id, inputs_dict)
-        worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict)
-        payslips = Payslips(payslip.employee_id.id, payslip)
-        rules = BrowsableObject(payslip.employee_id.id, rules_dict)
+        categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
+        inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
+        worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
+        payslips = Payslips(payslip.employee_id.id, payslip, self.env)
+        rules = BrowsableObject(payslip.employee_id.id, rules_dict, self.env)
 
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
