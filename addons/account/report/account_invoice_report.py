@@ -115,11 +115,17 @@ class AccountInvoiceReport(models.Model):
                             THEN (- ail.quantity) / u.factor * u2.factor
                             ELSE ail.quantity / u.factor * u2.factor
                         END) AS product_qty,
-                    SUM(ABS(ail.price_subtotal_signed) * CASE
-                        WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN -1
-                            ELSE 1
-                        END
+                    SUM(ABS(ail.price_subtotal_signed)
+                        * CASE
+                            WHEN ail.price_subtotal < 0
+                                THEN -1
+                                ELSE 1
+                            END
+                        * CASE
+                            WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                                THEN -1
+                                ELSE 1
+                            END
                     ) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                         WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
