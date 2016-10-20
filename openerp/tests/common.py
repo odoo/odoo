@@ -230,6 +230,18 @@ class RedirectHandler(urllib2.HTTPRedirectHandler):
 
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
+
+    .. WARNING::
+
+        If you need to create data that should be available to HTTP tests
+        (either by :meth:`~.phantom_js`, XML-RPC or :meth:`~.url_open`), you
+        need to create it in a temporary environment like this::
+
+            def test_something(self):
+                with self.cursor() as cr:
+                    env = self.env(cr)
+                    # Do stuff with ``env`` here
+                # Do HTTP connections here
     """
 
     def __init__(self, methodName='runTest'):
