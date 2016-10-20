@@ -1201,6 +1201,10 @@
                                         <label class="control-label" for="street">Street <span class="hidden-xs"> and Number</span></label>
                                         <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']" />
                                     </div>
+                                    <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-md-12 div_street2">
+                                        <label class="control-label" for="street2">Street 2</label>
+                                        <input type="text" name="street2" class="form-control" t-att-value="'street2' in checkout and checkout['street2']" />
+                                    </div>
                                     <div class="clearfix" />
                                     <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
                                     <t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">
