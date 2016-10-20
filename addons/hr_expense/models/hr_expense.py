@@ -202,7 +202,7 @@ class HrExpense(models.Model):
                     if not expense.sheet_id.bank_journal_id.default_credit_account_id:
                         raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
                     emp_account = expense.sheet_id.bank_journal_id.default_credit_account_id.id
-                    journal = expense.bank_journal_id
+                    journal = expense.sheet_id.bank_journal_id
                     #create payment
                     payment_methods = (total < 0) and journal.outbound_payment_method_ids or journal.inbound_payment_method_ids
                     journal_currency = journal.currency_id or journal.company_id.currency_id
