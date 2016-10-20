@@ -209,7 +209,7 @@ class Repair(models.Model):
         to_confirm = self - before_repair
         to_confirm_operations = to_confirm.mapped('operations')
         for operation in to_confirm_operations:
-            if operation.product_id.tracking != 'none' and not operation.lot_id :
+            if operation.product_id.tracking != 'none' and not operation.lot_id:
                 raise UserError(_("Serial number is required for operation line with product '%s'") % (operation.product_id.name))
         to_confirm_operations.write({'state': 'confirmed'})
         to_confirm.write({'state': 'confirmed'})
@@ -230,7 +230,7 @@ class Repair(models.Model):
         if self.invoice_method == 'b4repair':
             self.action_repair_ready()
         elif self.invoice_method == 'after_repair':
-            self.action_repair_done()
+            self.write({'state': 'done'})
         return True
 
     @api.multi
@@ -352,13 +352,13 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
             raise UserError(_("Repair must be under repair in order to end reparation."))
-        for order in self:
-            vals = {'repaired': True, 'state': 'done'}
-            if not order.invoiced and order.invoice_method == 'after_repair':
+        for repair in self:
+            repair.write({'repaired': True})
+            vals = {'state': 'done'}
+            vals['move_id'] = repair.action_repair_done().get(repair.id)
+            if not repair.invoiced and repair.invoice_method == 'after_repair':
                 vals['state'] = '2binvoiced'
-            elif not order.invoiced and order.invoice_method == 'b4repair':
-                vals['state'] = 'ready'
-            order.write(vals)
+            repair.write(vals)
         return True
 
     @api.multi
@@ -368,9 +368,7 @@ class Repair(models.Model):
 
         """
         if self.filtered(lambda repair: not repair.repaired):
-            raise UserError(_("Repair must be repaired in order to finalize it."))
-        if self.filtered(lambda repair: not repair.invoiced and repair.invoice_method != 'none'):
-            raise UserError(_("Repair must be invoiced in order to finalize it."))
+            raise UserError(_("Repair must be repaired in order to make the product moves."))
         res = {}
         Move = self.env['stock.move']
         for repair in self:
@@ -400,7 +398,6 @@ class Repair(models.Model):
             })
             moves |= move
             moves.action_done()
-            repair.write({'state': 'done', 'move_id': move.id})
             res[repair.id] = move.id
         return res
 
@@ -408,7 +405,6 @@ class Repair(models.Model):
 class RepairLine(models.Model):
     _name = 'mrp.repair.line'
     _description = 'Repair Line'
-
 
     name = fields.Char('Description', required=True)
     repair_id = fields.Many2one(
