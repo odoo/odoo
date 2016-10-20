@@ -14,7 +14,7 @@ except ImportError:
                     "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
@@ -59,6 +59,14 @@ _ref_vat = {
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    vat_validation_type = fields.Selection(selection_add=[('european_vat', 'European Vat')])
+
+    def get_validation_type(self):
+        self.ensure_one()
+        if self.country_id.code.lower() in _ref_vat.keys():
+            return 'european_vat'
+        return super(ResPartner, self).get_validation_type()
+
     def _split_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         return vat_country, vat_number
@@ -96,22 +104,23 @@ class ResPartner(models.Model):
             # country code or empty VAT number), so we fall back to the simple check.
             return self.simple_vat_check(country_code, vat_number)
 
-    @api.constrains("vat")
-    def check_vat(self):
+    def _check_vat(self):
+        self.ensure_one()
+        if self.vat_validation_type != 'european_vat':
+            return super(ResPartner, self)._check_vat()
         if self.env.user.company_id.vat_check_vies:
             # force full VIES online check
             check_func = self.vies_vat_check
         else:
             # quick and partial off-line checksum validation
             check_func = self.simple_vat_check
-        for partner in self:
-            if not partner.vat:
-                continue
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if not check_func(vat_country, vat_number):
-                _logger.info("Importing VAT Number [%s] is not valid !" % vat_number)
-                msg = partner._construct_constraint_msg()
-                raise ValidationError(msg)
+        if not self.vat:
+            return
+        vat_country, vat_number = self._split_vat(self.vat)
+        if not check_func(vat_country, vat_number):
+            _logger.info("Importing VAT Number [%s] is not valid !" % vat_number)
+            msg = self._construct_constraint_msg()
+            raise ValidationError(msg)
 
     def _construct_constraint_msg(self):
         self.ensure_one()
