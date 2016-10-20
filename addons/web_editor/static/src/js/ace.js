@@ -106,13 +106,18 @@ var ViewEditor = Widget.extend({
                 storeEditorWidth();
             }
         }
-        document.body.addEventListener('mouseup', stopResizing, true);
         self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
-        $(document).mousemove(updateWidth);
+        $(document).on("mousemove.ViewEditor", updateWidth).on("mouseup.ViewEditor", stopResizing);
         $('button[data-action=edit]').click(function () {
             self.close();
         });
         resizeEditor(readEditorWidth());
+
+        return this._super.apply(this, arguments);
+    },
+    destroy: function () {
+        this._super.apply(this, arguments);
+        $(document).off(".ViewEditor");
     },
 
     // The 4 following methods are meant to be extended depending on the context
