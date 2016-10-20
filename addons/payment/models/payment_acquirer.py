@@ -652,8 +652,8 @@ class PaymentToken(models.Model):
                 values.update(getattr(self, custom_method_name)(values))
                 # remove all non-model fields used by (provider)_create method to avoid warning
                 fields_wl = set(self._fields.keys()) & set(values.keys())
-                clean_vals = {field: values[field] for field in fields_wl}
-        return super(PaymentToken, self).create(clean_vals)
+                values = {field: values[field] for field in fields_wl}
+        return super(PaymentToken, self).create(values)
 
     @api.multi
     @api.depends('name')
