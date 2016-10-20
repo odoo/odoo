@@ -94,7 +94,7 @@ class AssetsBundle(object):
             if f['atype'] == 'text/sass':
                 self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/less':
-                self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
+                self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], include_path=f['include_path']))
             elif f['atype'] == 'text/css':
                 self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/javascript':
@@ -314,7 +314,7 @@ class AssetsBundle(object):
         for atype in (SassStylesheetAsset, LessStylesheetAsset):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
-                cmd = assets[0].get_command()
+                cmd = assets[0].get_command(assets)
                 source = '\n'.join([asset.get_source() for asset in assets])
                 compiled = self.compile_css(cmd, source)
 
@@ -517,6 +517,9 @@ class StylesheetAsset(WebAsset):
 
     def __init__(self, *args, **kw):
         self.media = kw.pop('media', None)
+        include_path = kw.pop('include_path', None)
+        if include_path:
+            self.include_path = get_resource_path(*include_path.split('/'))
         super(StylesheetAsset, self).__init__(*args, **kw)
 
     @property
@@ -614,7 +617,7 @@ class SassStylesheetAsset(PreprocessedCSS):
             pass
         return "/*! %s */\n%s" % (self.id, content)
 
-    def get_command(self):
+    def get_command(self, bundle=None):
         try:
             sass = misc.find_in_path('sass')
         except IOError:
@@ -624,13 +627,20 @@ class SassStylesheetAsset(PreprocessedCSS):
 
 
 class LessStylesheetAsset(PreprocessedCSS):
-    def get_command(self):
+    include_path = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
+
+    def get_command(self, bundle=None):
+        separator = ':'
         try:
             if os.name == 'nt':
+                separator = ';'
                 lessc = misc.find_in_path('lessc.cmd')
             else:
                 lessc = misc.find_in_path('lessc')
         except IOError:
             lessc = 'lessc'
-        lesspath = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
+
+        lesspath = separator.join(
+            reduce(lambda l, a: l + [a.include_path] if a.include_path not in l else l, bundle, [])
+        )
         return [lessc, '-', '--no-js', '--no-color', '--include-path=%s' % lesspath]
