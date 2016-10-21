@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="journal_effectively_paid" model="account.journal">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="name">Effectively Paid</field>
+            <field name="code">EP</field>
+            <field name="type">general</field>
+            <field name="show_on_dashboard" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
