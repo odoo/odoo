@@ -28,7 +28,7 @@
             <field name="refund_sequence_id" ref="base.ir_sequence_20"/>
       </record>
       <record id="base.journal_purchase_local" model="account.journal">
-            <field name="code">COMPL</field>
+            <field name="code">CLOCL</field>
             <field name="sequence_id" ref="base.ir_sequence_27"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
             <field name="sequence">0</field>
@@ -271,7 +271,7 @@
             <field eval="False" name="refund_sequence_id"/>
       </record>
       <record id="base.journal_purchase_gob" model="account.journal">
-            <field name="code">CLOCL</field>
+            <field name="code">CGOB</field>
             <field name="sequence_id" ref="base.ir_sequence_32"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
             <field name="sequence">0</field>
