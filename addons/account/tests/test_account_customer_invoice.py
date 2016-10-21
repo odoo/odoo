@@ -61,6 +61,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
             'amount': 9050,
             'account_id': self.ova.id,
             'invoice_id': self.account_invoice_customer0.id,
+            'tax_id': self.env['account.tax'].search([('type_tax_use', '=', 'sale')], limit=1).id
         }
         tax = self.env['account.invoice.tax'].create(invoice_tax_line)
         assert tax, "Tax has not been assigned correctly"
