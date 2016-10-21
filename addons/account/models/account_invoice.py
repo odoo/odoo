@@ -12,6 +12,9 @@ from openerp.tools.misc import formatLang
 from openerp.exceptions import UserError, RedirectWarning, ValidationError
 
 import openerp.addons.decimal_precision as dp
+import logging
+
+_logger = logging.getLogger(__name__)
 
 # mapping invoice type to journal type
 TYPE2JOURNAL = {
@@ -470,8 +473,8 @@ class AccountInvoice(models.Model):
                     rec_dom = [('name', '=', 'property_account_receivable_id'), ('company_id', '=', company_id)]
                     pay_dom = [('name', '=', 'property_account_payable_id'), ('company_id', '=', company_id)]
                     res_dom = [('res_id', '=', 'res.partner,%s' % partner_id)]
-                    rec_prop = prop.search(rec_dom + res_dom) or prop.search(rec_dom)
-                    pay_prop = prop.search(pay_dom + res_dom) or prop.search(pay_dom)
+                    rec_prop = prop.search(rec_dom + res_dom) or prop.search(rec_dom, limit=1)
+                    pay_prop = prop.search(pay_dom + res_dom) or prop.search(pay_dom, limit=1)
                     rec_account = rec_prop.get_by_record(rec_prop)
                     pay_account = pay_prop.get_by_record(pay_prop)
                     if not rec_account and not pay_account:
@@ -540,6 +543,25 @@ class AccountInvoice(models.Model):
         else:
             return self.env.ref('account.invoice_form').id
 
+    def _prepare_tax_line_vals(self, line, tax):
+        """ Prepare values to create an account.invoice.tax line
+
+        The line parameter is an account.invoice.line, and the
+        tax parameter is the output of account.tax.compute_all().
+        """
+        vals = {
+            'invoice_id': self.id,
+            'name': tax['name'],
+            'tax_id': tax['id'],
+            'amount': tax['amount'],
+            'base': tax['base'],
+            'manual': False,
+            'sequence': tax['sequence'],
+            'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
+            'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
+        }
+        return vals
+
     @api.multi
     def get_taxes_values(self):
         tax_grouped = {}
@@ -547,16 +569,7 @@ class AccountInvoice(models.Model):
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
             for tax in taxes:
-                val = {
-                    'invoice_id': self.id,
-                    'name': tax['name'],
-                    'tax_id': tax['id'],
-                    'amount': tax['amount'],
-                    'manual': False,
-                    'sequence': tax['sequence'],
-                    'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
-                    'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
-                }
+                val = self._prepare_tax_line_vals(line, tax)
 
                 # If the taxes generate moves on the same financial account as the invoice line,
                 # propagate the analytic account from the invoice line to the tax line.
@@ -571,6 +584,7 @@ class AccountInvoice(models.Model):
                     tax_grouped[key] = val
                 else:
                     tax_grouped[key]['amount'] += val['amount']
+                    tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
     @api.multi
@@ -1284,15 +1298,19 @@ class AccountInvoiceTax(models.Model):
     _order = 'sequence'
 
     def _compute_base_amount(self):
+        tax_grouped = {}
+        for invoice in self.mapped('invoice_id'):
+            tax_grouped[invoice.id] = invoice.get_taxes_values()
         for tax in self:
-            base = 0.0
-            for line in tax.invoice_id.invoice_line_ids:
-                if tax.tax_id in line.invoice_line_tax_ids:
-                    price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                    base += (line.invoice_line_tax_ids - tax.tax_id).compute_all(
-                        price_unit, line.invoice_id.currency_id, line.quantity, line.product_id, line.invoice_id.partner_id
-                    )['base']
-            tax.base = base
+            key = self.env['account.tax'].browse(tax.tax_id.id).get_grouping_key({
+                'tax_id': tax.tax_id.id,
+                'account_id': tax.account_id.id,
+                'account_analytic_id': tax.account_analytic_id.id,
+            })
+            if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
+                tax.base = tax_grouped[tax.invoice_id.id][key]['base']
+            else:
+                _logger.warning('Tax Base Amount not computable probably due to a change in an underlying tax (%s).', tax.tax_id.name)
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)

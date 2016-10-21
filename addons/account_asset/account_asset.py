@@ -126,7 +126,7 @@ class AccountAssetAsset(models.Model):
         else:
             if self.method == 'linear':
                 amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
-                if self.prorata and self.category_id.type == 'purchase':
+                if self.prorata:
                     amount = amount_to_depr / self.method_number
                     if sequence == 1:
                         days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
@@ -147,7 +147,7 @@ class AccountAssetAsset(models.Model):
             while depreciation_date <= end_date:
                 depreciation_date = date(depreciation_date.year, depreciation_date.month, depreciation_date.day) + relativedelta(months=+self.method_period)
                 undone_dotation_number += 1
-        if self.prorata and self.category_id.type == 'purchase':
+        if self.prorata:
             undone_dotation_number += 1
         return undone_dotation_number
 
@@ -398,7 +398,7 @@ class AccountAssetDepreciationLine(models.Model):
     move_check = fields.Boolean(compute='_get_move_check', string='Posted', track_visibility='always', store=True)
 
     @api.one
-    @api.depends('move_id')
+    @api.depends('move_id', 'asset_id.account_move_ids')
     def _get_move_check(self):
         self.move_check = bool(self.move_id)
 

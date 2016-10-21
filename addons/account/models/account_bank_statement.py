@@ -256,6 +256,8 @@ class AccountBankStatement(models.Model):
     def button_journal_entries(self):
         context = dict(self._context or {})
         context['journal_id'] = self.journal_id.id
+        aml = self.env['account.move.line'].search([('statement_id', 'in', self.ids)])
+        aml |= aml.mapped('move_id').mapped('line_ids')
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
@@ -263,7 +265,7 @@ class AccountBankStatement(models.Model):
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'domain': [('statement_id', 'in', self.ids)],
+            'domain': [('id', 'in', aml.ids)],
             'context': context,
         }
 
@@ -373,6 +375,7 @@ class AccountBankStatementLine(models.Model):
     journal_entry_ids = fields.One2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True)
     amount_currency = fields.Monetary(help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
+    state = fields.Selection(related='statement_id.state' , string='Status', readonly=True)
 
     @api.one
     @api.constrains('amount')
