@@ -1302,15 +1302,16 @@ class AccountInvoiceTax(models.Model):
         for invoice in self.mapped('invoice_id'):
             tax_grouped[invoice.id] = invoice.get_taxes_values()
         for tax in self:
-            key = self.env['account.tax'].browse(tax.tax_id.id).get_grouping_key({
-                'tax_id': tax.tax_id.id,
-                'account_id': tax.account_id.id,
-                'account_analytic_id': tax.account_analytic_id.id,
-            })
-            if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
-                tax.base = tax_grouped[tax.invoice_id.id][key]['base']
-            else:
-                _logger.warning('Tax Base Amount not computable probably due to a change in an underlying tax (%s).', tax.tax_id.name)
+            if tax.tax_id:
+                key = tax.tax_id.get_grouping_key({
+                    'tax_id': tax.tax_id.id,
+                    'account_id': tax.account_id.id,
+                    'account_analytic_id': tax.account_analytic_id.id,
+                })
+                if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
+                    tax.base = tax_grouped[tax.invoice_id.id][key]['base']
+                else:
+                    _logger.warning('Tax Base Amount not computable probably due to a change in an underlying tax (%s).', tax.tax_id.name)
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
