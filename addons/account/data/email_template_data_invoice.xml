@@ -25,7 +25,12 @@
     (<i>${object.partner_id.parent_id.name}</i>)
 % endif
 ,</p>
-<p>Here is your invoice <strong>${object.number}</strong>
+<p>Here is your 
+% if object.number:
+invoice <strong>${object.number}</strong>
+% else:
+pro-forma invoice
+% endif
 % if object.origin:
 (with reference: ${object.origin} )
 % endif
