@@ -1362,7 +1362,7 @@ class AccountInvoiceTax(models.Model):
             if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                 tax.base = tax_grouped[tax.invoice_id.id][key]['base']
             else:
-                tax.base = 0.0
+                _logger.warning('Tax Base Amount not computable probably due to a change in an underlying tax (%s).', tax.tax_id.name)
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
