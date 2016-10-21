@@ -8,6 +8,14 @@ class CalendarEvent(models.Model):
 
     _inherit = 'calendar.event'
 
+    def _compute_is_highlighted(self):
+        super(CalendarEvent, self)._compute_is_highlighted()
+        if self.env.context.get('active_model') == 'crm.lead':
+            opportunity_id = self.env.context.get('active_id')
+            for event in self:
+                if event.opportunity_id.id == opportunity_id:
+                    event.is_highlighted = True
+
     opportunity_id = fields.Many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]")
 
     @api.model

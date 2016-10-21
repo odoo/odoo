@@ -377,7 +377,6 @@ class Lead(FormatAddress, models.Model):
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         action['context'] = {
-            'search_default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
