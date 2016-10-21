@@ -661,6 +661,9 @@ var CalendarView = View.extend({
         } else { // if form all, get color -1
             r.className = 'o_calendar_color_'+ (self.all_filters[-1] ? self.all_filters[-1].color : 1);
         }
+        if (evt.is_highlighted) {
+            r.className += ' o_event_hightlight';
+        }
         return r;
     },
     
