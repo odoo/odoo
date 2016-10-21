@@ -324,7 +324,11 @@ class MrpWorkorder(models.Model):
                                      'workorder_id': self.id,
                                      })
             else:
-                production_move.quantity_done += self.qty_producing  # TODO: UoM conversion?
+                production_move.quantity_done += self.qty_producing
+            #by_products in the end (could be improved by using operation_id on by_products)
+            for move in self.production_id.move_finished_ids.filtered(lambda x: x.product_id.id != production_move.product_id.id and x.state not in ('done', 'cancel')):
+                if move.product_id.tracking == 'none':
+                    move.quantity_done += self.qty_producing * move.unit_factor
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 
