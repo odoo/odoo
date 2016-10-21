@@ -96,6 +96,9 @@ var DateWidget = Widget.extend({
         this.picker.options.pickTime = saved_picktime;
     },
     change_datetime: function(e) {
+        if(this.options.close_on_date_select && this.type_of_date == "datetime" && e.type == "dp" && e.date.format("hh:mm:ss") == e.oldDate.format("hh:mm:ss")) {
+            this.picker.hide();
+        }
         if(this.is_valid()) {
             this.set_value_from_ui();
             this.trigger("datetime_changed");
