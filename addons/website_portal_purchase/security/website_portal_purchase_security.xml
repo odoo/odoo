@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="portal_purchase_order_user_rule" model="ir.rule">
+            <field name="name">Portal Purchase Orders</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="domain_force">[('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+
+        <record id="portal_purchase_order_line_rule" model="ir.rule">
+            <field name="name">Portal Purhcase Orders Line</field>
+            <field name="model_id" ref="purchase.model_purchase_order_line"/>
+            <field name="domain_force">[('order_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+    </data>
+</odoo>

@@ -12,8 +12,13 @@
                 <a href="/my/quotes">Quotes</a>
             </li>
             <li t-att-class="page_name == 'order' and 'active'">
-                <a href="/my/orders">Orders</a>
+                <a href="/my/orders">Sales Orders</a>
             </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="website_portal.portal_layout" priority="30">
+        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="invoice_count" t-att-class="page_name == 'invoice' and 'active'">
                 <a href="/my/invoices">Invoices</a>
             </li>
@@ -30,7 +35,7 @@
               </a>
             </h3>
             <h3 class="page-header">
-                <a href="/my/orders">Your Orders
+                <a href="/my/orders">Your Sales Orders
                     <small class="ml8">
                         <t t-if="order_count">
                             <span class='badge'><t t-esc="order_count"/></span>
@@ -41,6 +46,11 @@
                     </small>
                 </a>
             </h3>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="website_portal.portal_my_home" priority="30">
+        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 t-if="invoice_count" class="page-header">
               <a href="/my/invoices">Your Invoices and Payments
                 <small class="ml8">
@@ -101,7 +111,7 @@
     <template id="portal_my_orders" name="My Sales Orders">
       <t t-call="website_portal.portal_layout">
         <div class="page-header">
-            <span class="h3">Your Orders</span>
+            <span class="h3">Your Sales Orders</span>
             <t t-call="website_portal.portal_searchbar"/>
         </div>
         <t t-if="not orders">
@@ -219,7 +229,7 @@
                                     My Quotations
                                 </t>
                                 <t t-if="order.state != 'sent'">
-                                    My Orders
+                                    My Sales Orders
                                 </t>
                               </a>
                             </li>
