@@ -1,49 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="view_sale_config_settings" model="ir.ui.view">
-            <field name="name">crm settings</field>
-            <field name="model">sale.config.settings</field>
-            <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
-            <field name="arch" type="xml">
-                <div id="main" position="inside">
-                    <group string="CRM" name="config_alias">
-                        <label for="id" string="Leads Email Alias"/>
-                        <div>
-                            <div attrs="{'invisible': [('alias_domain', 'in', ['localhost', '', False])]}">
-                                <p class="text-muted">
-                                    Each sales team has an email alias that
-                                    could be setup on the sales team form. You
-                                    can setup a generic email alias to create
-                                    incoming leads.
-                                </p>
-                                <field name="alias_prefix" class="oe_inline"/>
-                                <span>@</span>
-                                <field name="alias_domain"  class="oe_inline" readonly="1"/>
-                            </div>
-                            <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
-                                <button type="action"
-                                    name="base_setup.action_general_configuration"
-                                    string="Setup your domain alias" class="oe_link"/>
+
+    <record id="sale_config_settings_view_form_inherit_crm" model="ir.ui.view">
+        <field name="name">sale.config.settings.inherit.crm</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sales_team.sale_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h2[@id='integration_h2']"  position="before">
+                <h2>CRM</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead">
+                        <div class="o_setting_left_pane">
+                            <field name="group_use_lead"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="group_use_lead"/>
+                            <div class="text-muted">
+                                Add a qualification step before creating an opportunity
                             </div>
                         </div>
-                        <field name="group_use_lead" widget="radio"/>
-                        <label for="module_crm_voip" string="Voip integration"/>
-                        <div>
-                            <field name="module_crm_voip" widget="upgrade_boolean" class="oe_inline"/>
-                            <label for="module_crm_voip" invisible="1"/>
-                            <a href="https://www.odoo.com/slides/slide/voip-one-click-button-to-automate-calls-272" target="_blank"> More Info </a>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead" attrs="{'invisible': [('group_use_lead','=',False)]}" title="Emails received to that address generate new leads not assigned to any sales channel yet. This can be made when converting them into opportunities. Incoming emails can be automatically assigned to specific sales channels. To do so, set an email alias on the sales channel.">
+                        <div class="o_setting_left_pane">
+                            <field name="default_generate_lead_from_alias"/>
                         </div>
-                    </group>
-                    <group string="Odoo Sign" name="config_sign">
-                        <label for="module_website_sign" string="Odoo Sign"/>
-                        <div>
-                            <field name="module_website_sign" widget="upgrade_boolean" class="oe_inline"/>
-                            <label for="module_website_sign" invisible="1"/>
-                            <a href="https://www.odoo.com/page/sign" target="_blank"> More Info </a>
+                        <div class="o_setting_right_pane">
+                            <label string="Emails"/>
+                            <div class="text-muted">
+                                Generate leads from incoming emails
+                            </div>
+                            <div class="content-group" attrs="{'invisible': [('default_generate_lead_from_alias','=',False)]}">
+                                <div class="mt16">
+                                    <label string="Alias" class="o_light_label"/>
+                                    <field name="alias_prefix" class="oe_inline"/>
+                                    <span>@</span>
+                                    <field name="alias_domain" readonly="1" class="oe_inline"/>
+                                </div>
+                                <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
+                                    <button type="action"
+                                        name="base_setup.action_general_configuration"
+                                        string="Setup your domain alias" class="oe_link"/>
+                                </div>
+                            </div>
                         </div>
-                    </group>
+                    </div>
                 </div>
-            </field>
-        </record>
+            </xpath>
+            <xpath expr="//h2[@id='integration_h2']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='integration']"  position="inside">
+                <div class="col-xs-12 col-md-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="module_crm_voip" widget="upgrade_boolean"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="module_crm_voip"/>
+                        <div class="text-muted">
+                            Schedule &amp; make calls from CRM app
+                        </div>
+                        <div class="content-group">
+                            <div class="text-warning mt16" id="crm_voip" attrs="{'invisible': [('module_crm_voip','=',False)]}">
+                                Save this page and come back here to set up the feature.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='module_crm']"  position="replace"/>
+        </field>
+    </record>
 
 </odoo>

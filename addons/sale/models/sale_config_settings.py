@@ -1,25 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import api, fields, models
-
-_logger = logging.getLogger(__name__)
 
 
 class SaleConfiguration(models.TransientModel):
     _inherit = 'sale.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
-    sale_note = fields.Text(related='company_id.sale_note', string="Default Terms and Conditions *")
-    group_product_variant = fields.Selection([
-        (0, "No variants on products"),
-        (1, 'Products can have several attributes, defining variants (Example: size, color,...)')
-        ], "Product Variants",
-        help="""Work with product variant allows you to define some variant of the same products
-                , an ease the product management in the ecommerce for example""",
+    sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
+    default_use_sale_note = fields.Boolean(default_model='sale.config.settings')
+    group_product_variant = fields.Boolean("Attributes & Variants",
         implied_group='product.group_product_variant')
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
         implied_group='product.group_sale_pricelist',
@@ -29,52 +19,27 @@ class SaleConfiguration(models.TransientModel):
         implied_group='product.group_pricelist_item')
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
-    group_uom = fields.Selection([
-        (0, 'Products have only one unit of measure (easier)'),
-        (1, 'Some products may be sold/purchased in different units of measure (advanced)')
-        ], "Units of Measure",
-        implied_group='product.group_uom',
-        help="""Allows you to select and maintain different units of measure for products.""")
-    group_discount_per_so_line = fields.Selection([
-        (0, 'No discount on sales order lines, global discount only'),
-        (1, 'Allow discounts on sales order lines')
-        ], "Discount",
-        implied_group='sale.group_discount_per_so_line')
-    group_display_incoterm = fields.Selection([
-        (0, 'No incoterm on reports'),
-        (1, 'Show incoterms on sales orders and invoices')
-        ], "Incoterms",
-        implied_group='sale.group_display_incoterm',
-        help="The printed reports will display the incoterms for the sales orders and the related invoices")
-    module_sale_margin = fields.Selection([
-        (0, 'Salespeople do not need to view margins when quoting'),
-        (1, 'Display margins on quotations and sales orders')
-        ], "Margins")
-    group_sale_layout = fields.Selection([
-        (0, 'Do not personalize sales orders and invoice reports'),
-        (1, 'Personalize the sales orders and invoice report with categories, subtotals and page-breaks')
-        ], "Sales Reports Layout", implied_group='sale.group_sale_layout')
-    group_warning_sale = fields.Selection([
-        (0, 'All the products and the customers can be used in sales orders'),
-        (1, 'An informative or blocking warning can be set on a product or a customer')
-        ], "Warning", implied_group='sale.group_warning_sale')
-    module_website_quote = fields.Selection([
-        (0, 'Print quotes or send by email'),
-        (1, 'Send quotations your customer can approve & pay online (advanced)')
-        ], "Online Quotations")
-    group_sale_delivery_address = fields.Selection([
-        (0, "Invoicing and shipping addresses are always the same (Example: services companies)"),
-        (1, 'Display 3 fields on sales orders: customer, invoice address, delivery address')
-        ], "Addresses", implied_group='sale.group_delivery_invoice_address')
+    group_uom = fields.Boolean("Units of Measure",
+        implied_group='product.group_uom')
+    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
+    group_stock_packaging = fields.Boolean("Packaging", implied_group='product.group_stock_packaging',
+        help="""Ability to select a package type in sales orders and 
+                to force a quantity that is a multiple of the number of units per package.""")
+    module_sale_margin = fields.Boolean("Margins")
+    group_sale_layout = fields.Boolean("Sales Reports Layout", implied_group='sale.group_sale_layout')
+    group_warning_sale = fields.Boolean("Warnings", implied_group='sale.group_warning_sale')
+    module_website_quote = fields.Boolean("Online Quotations & Templates")
+    group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
+    multi_sales_price = fields.Boolean("Multiple sales price per product", default_model='sale.config.settings')
+    multi_sales_price_method = fields.Selection([
+        ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
+        ('formula', 'Price computed from formulas (discounts, margins, roundings)')
+        ], string="Pricelists")
     sale_pricelist_setting = fields.Selection([
-        ('fixed', 'A single sale price per product'),
-        ('percentage', 'Specific prices per customer segment, currency, etc.'),
-        ('formula', 'Advanced pricing based on formulas (discounts, margins, rounding)')
-        ], required=True,
-        default='fixed',
-        help='Fix Price: all price manage from products sale price.\n'
-             'Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n'
-             'Advanced pricing based on formula: You can have all the rights on pricelist')
+        ('fixed', 'A single sales price per product'),
+        ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
+        ('formula', 'Price computed from formulas (discounts, margins, roundings)')
+        ], string="Pricelists")
     group_show_price_subtotal = fields.Boolean(
         "Show subtotal",
         implied_group='sale.group_show_price_subtotal',
@@ -89,9 +54,9 @@ class SaleConfiguration(models.TransientModel):
         default='subtotal',
         required=True)
     default_invoice_policy = fields.Selection([
-        ('order', 'Invoice ordered quantities'),
-        ('delivery', 'Invoice delivered quantities')
-        ], 'Default Invoicing',
+        ('order', 'Ordered quantities'),
+        ('delivery', 'Delivered quantities or service hours')
+        ], 'Invoicing Policy',
         default='order',
         default_model='product.template')
     deposit_product_id_setting = fields.Many2one(
@@ -99,30 +64,38 @@ class SaleConfiguration(models.TransientModel):
         'Deposit Product',
         domain="[('type', '=', 'service')]",
         help='Default product used for payment advances')
-    auto_done_setting = fields.Selection([
-        (0, "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"),
-        (1, "Never allow to modify a confirmed sales order")
-        ], "Sales Order Modification")
+    auto_done_setting = fields.Boolean("Lock Confirmed Orders")
     module_sale_contract = fields.Boolean("Manage subscriptions and recurring invoicing")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
-    @api.multi
-    def set_sale_defaults(self):
-        return self.env['ir.values'].sudo().set_default(
-            'sale.config.settings', 'sale_pricelist_setting', self.sale_pricelist_setting)
+    group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
+    module_sale_stock = fields.Boolean("Inventory")
+    module_delivery = fields.Boolean("Shipping Costs")
+    module_delivery_dhl = fields.Boolean("DHL")
+    module_delivery_fedex = fields.Boolean("FedEx")
+    module_delivery_ups = fields.Boolean("UPS")
+    module_delivery_usps = fields.Boolean("USPS")
 
-    @api.multi
-    def set_deposit_product_id_defaults(self):
-        return self.env['ir.values'].sudo().set_default(
-            'sale.config.settings', 'deposit_product_id_setting', self.deposit_product_id_setting.id)
+    module_timesheet_grid_sale = fields.Boolean("Timesheets")
+    module_sale_ebay = fields.Boolean("eBay")
+    module_print_docsaway = fields.Boolean("Docsaway")
+    module_web_clearbit = fields.Boolean("Clearbit")
+    module_product_email_template = fields.Boolean("Specific Email")
+    module_sale_coupon = fields.Boolean("Manage coupons and promotional offers")
 
-    @api.multi
-    def set_auto_done_defaults(self):
-        return self.env['ir.values'].sudo().set_default(
-            'sale.config.settings', 'auto_done_setting', self.auto_done_setting)
+    @api.model
+    def get_default_sale_pricelist_setting(self, fields):
+        sale_pricelist_setting = self.env['ir.values'].get_default('sales.config.settings', 'sale_pricelist_setting')
+        multi_sales_price = sale_pricelist_setting in ['percentage', 'formula']
+        return {
+            'sale_pricelist_setting': sale_pricelist_setting,
+            'multi_sales_price': multi_sales_price,
+            'multi_sales_price_method': multi_sales_price and sale_pricelist_setting or False
+        }
 
-    @api.onchange('sale_pricelist_setting')
+    @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
+        self.sale_pricelist_setting = self.multi_sales_price and self.multi_sales_price_method or 'fixed'
         if self.sale_pricelist_setting == 'percentage':
             self.update({
                 'group_product_pricelist': True,
@@ -142,10 +115,17 @@ class SaleConfiguration(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
-    @api.multi
+    def set_default_sale_pricelist_setting(self):
+        return self.env['ir.values'].sudo().set_default('sales.config.settings', 'sale_pricelist_setting', self.sale_pricelist_setting)
+
+    def set_deposit_product_id_defaults(self):
+        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'deposit_product_id_setting', self.deposit_product_id_setting.id)
+
+    def set_auto_done_defaults(self):
+        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'auto_done_setting', self.auto_done_setting)
+
     def set_sale_tax_defaults(self):
-        return self.env['ir.values'].sudo().set_default(
-            'sale.config.settings', 'sale_show_tax', self.sale_show_tax)
+        return self.env['ir.values'].sudo().set_default('sale.config.settings', 'sale_show_tax', self.sale_show_tax)
 
     @api.onchange('sale_show_tax')
     def _onchange_sale_tax(self):
