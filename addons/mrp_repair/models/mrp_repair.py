@@ -469,8 +469,8 @@ class RepairLine(models.Model):
             self.Location_dest_id = False
         elif self.type == 'add':
             args = self.repair_id.company_id and [('company_id', '=', self.repair_id.company_id.id)] or []
-            warehouses = self.env['stock.warehouse'].search(args)
-            self.location_id = warehouses.lot_stock_id
+            warehouse = self.env['stock.warehouse'].search(args, limit=1)
+            self.location_id = warehouse.lot_stock_id
             self.location_dest_id = self.env['stock.location'].search([('usage', '=', 'production')], limit=1).id
             self.to_invoice = self.repair_id.guarantee_limit and datetime.strptime(self.repair_id.guarantee_limit, '%Y-%m-%d') < datetime.now()
         else:
