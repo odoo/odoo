@@ -540,7 +540,10 @@ class PosOrder(models.Model):
         for order in self:
             address = order.partner_id.address_get(['delivery']) or {}
             picking_type = order.picking_type_id
-            picking_id = False
+            return_pick_type = order.picking_type_id.return_picking_type_id or order.picking_type_id
+            order_picking = Picking
+            return_picking = Picking
+            moves = Move
             location_id = order.location_id.id
             if order.partner_id:
                 destination_id = order.partner_id.property_stock_customer.id
@@ -550,9 +553,9 @@ class PosOrder(models.Model):
                     destination_id = customerloc.id
                 else:
                     destination_id = picking_type.default_location_dest_id.id
+
             if picking_type:
-                pos_qty = all([x.qty >= 0 for x in order.lines])
-                picking_id = Picking.create({
+                picking_vals = {
                     'origin': order.name,
                     'partner_id': address.get('delivery', False),
                     'date_done': order.date_order,
@@ -560,48 +563,78 @@ class PosOrder(models.Model):
                     'company_id': order.company_id.id,
                     'move_type': 'direct',
                     'note': order.note or "",
-                    'location_id': location_id if pos_qty else destination_id,
-                    'location_dest_id': destination_id if pos_qty else location_id,
-                })
+                    'location_id': location_id,
+                    'location_dest_id': destination_id,
+                }
                 message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-                picking_id.message_post(body=message)
-                order.write({'picking_id': picking_id.id})
+                pos_qty = any([x.qty >= 0 for x in order.lines])
+                if pos_qty:
+                    order_picking = Picking.create(picking_vals.copy())
+                    order_picking.message_post(body=message)
+                neg_qty = any([x.qty < 0 for x in order.lines])
+                if neg_qty:
+                    return_vals = picking_vals.copy()
+                    return_vals.update({
+                        'location_id': destination_id,
+                        'location_dest_id': return_pick_type != picking_type and return_pick_type.default_location_dest_id.id or location_id,
+                        'picking_type_id': return_pick_type.id
+                    })
+                    return_picking = Picking.create(return_vals)
+                    return_picking.message_post(body=message)
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
-                Move += Move.create({
+                moves |= Move.create({
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
-                    'picking_id': picking_id and picking_id.id or False,
-                    'picking_type_id': picking_type.id,
+                    'picking_id': order_picking.id if line.qty >= 0 else return_picking.id,
+                    'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
                     'product_id': line.product_id.id,
                     'product_uom_qty': abs(line.qty),
                     'state': 'draft',
                     'location_id': location_id if line.qty >= 0 else destination_id,
-                    'location_dest_id': destination_id if line.qty >= 0 else location_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else return_pick_type != picking_type and return_pick_type.default_location_dest_id.id or location_id,
                 })
-            if picking_id:
-                picking_id.action_confirm()
-                picking_id.force_assign()
-                order.set_pack_operation_lot()
-                picking_id.action_done()
-            elif Move:
-                Move.action_confirm()
-                Move.force_assign()
-                Move.action_done()
+
+            # prefer associating the regular order picking, not the return
+            order.write({'picking_id': order_picking.id or return_picking.id})
+
+            if return_picking:
+                order._force_picking_done(return_picking)
+            if order_picking:
+                order._force_picking_done(order_picking)
+
+            # when the pos.config has no picking_type_id set only the moves will be created
+            if moves and not return_picking and not order_picking:
+                moves.action_confirm()
+                moves.force_assign()
+                moves.action_done()
+
         return True
 
-    def set_pack_operation_lot(self):
+    def _force_picking_done(self, picking):
+        """Force picking in order to be set as done."""
+        for order in self:
+            picking.action_confirm()
+            picking.force_assign()
+            order.set_pack_operation_lot(picking)
+            picking.action_done()
+
+    def set_pack_operation_lot(self, picking=False):
         """Set Serial/Lot number in pack operations to mark the pack operation done."""
 
         StockProductionLot = self.env['stock.production.lot']
         PosPackOperationLot = self.env['pos.pack.operation.lot']
 
+        # Fallback in stable in case someone is using this already due to signature extension (remove in master)
+        if not picking:
+            picking = self.picking_id
+
         for order in self:
-            for pack_operation in order.picking_id.pack_operation_ids:
+            for pack_operation in picking.pack_operation_ids:
                 qty = 0
                 qty_done = 0
                 pack_lots = []
-                pos_pack_lots = PosPackOperationLot.search([('order_id', '=',  order.id), ('product_id', '=', pack_operation.product_id.id)])
+                pos_pack_lots = PosPackOperationLot.search([('order_id', '=', order.id), ('product_id', '=', pack_operation.product_id.id)])
                 pack_lot_names = [pos_pack.lot_name for pos_pack in pos_pack_lots]
 
                 if pack_lot_names:
