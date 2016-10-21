@@ -1,4 +1,4 @@
-Belgium, 21/10/2016
+Belgium, 2016-10-21
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
