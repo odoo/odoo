@@ -25,7 +25,6 @@
 # Ulaş Sarıkaya <hasanulassarikaya@gmail.com>, 2016
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2016
 # eren b <erenbingol@outlook.com>, 2016
-# Mehmet Öztürk <mozturk357@gmail.com>, 2016
 # Alexander B. <road2monstercat@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -108,7 +107,7 @@ msgstr "Basamak sayısı"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 msgid "# of Digits *"
-msgstr ""
+msgstr "# Basamak Sayısı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -498,7 +497,8 @@ msgstr "<span> Kime </span>"
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
-msgstr "Bu yapılandırma giriş yaptığınız şirket ile ilgilidir."
+msgstr ""
+"<span>(*) Bu yapılandırma giriş yaptığınız şirket ile ilgilidir.</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -703,12 +703,12 @@ msgstr "<strong>Hesabı Görüntüle</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
-msgstr "Bitiş Tarihi"
+msgstr "<strong>Bitiş Tarihi:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "Girişleri sıralama kriteri:"
+msgstr "<strong>Girişleri Sırala:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -728,7 +728,7 @@ msgstr "<strong>Fatura Tarihi:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Journal:</strong>"
-msgstr "yevmiye defteri"
+msgstr "<strong>yevmiye:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -772,7 +772,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr "Ortaklar"
+msgstr "<strong>İş Ortaklar:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -825,7 +825,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Record Bank Statement</strong>"
-msgstr "Kayıtlı banka ekstresi"
+msgstr "<strong>Kayıtlı Banka Ekstresi</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -853,7 +853,7 @@ msgstr "<strong>Kaynak:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Revenue Recognition</strong>"
-msgstr "gelir doğrulama."
+msgstr "<strong>Gelir Kaydedilmesi</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -878,7 +878,7 @@ msgstr "<strong>Başlangıç Tarihi:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Subtotal :</strong>"
-msgstr "Ara toplam:"
+msgstr "<strong>Aratoplam :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -893,7 +893,7 @@ msgstr "<strong>Aratoplam</strong>"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Target Moves:</strong>"
-msgstr "hedef hamle"
+msgstr "<strong>Hedef Hareket:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1105,12 +1105,12 @@ msgstr "Ortak Yevmiye Hesap Raporu"
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr "Genel İş Ortağı Hesap Raporu"
+msgstr "Genel İş Ortağı Ortak Hesap Raporu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr "Hesap Ortak Raporu"
+msgstr "Ortak Hesap Raporu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_currency_id
@@ -1141,7 +1141,7 @@ msgstr "Hesap Yevmiyesi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_account_line_id
 msgid "Account Line"
-msgstr "Hesap Kalemi"
+msgstr "Hesap Satırı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_ids
@@ -1448,7 +1448,7 @@ msgstr "Hesap Eşleştirmesi"
 #: model:ir.actions.act_window,name:account.account_tag_action
 #: model:ir.ui.menu,name:account.account_tag_menu
 msgid "Accounts Tags"
-msgstr ""
+msgstr "Hesap Etiketleri"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1857,7 +1857,7 @@ msgstr "Analitik Hesaplar"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Accounts Tags"
-msgstr ""
+msgstr "Analitik Hesap Etiketleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_analytic
@@ -2243,7 +2243,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Bill"
-msgstr "Fiş"
+msgstr "Fatura"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form

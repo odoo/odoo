@@ -7,6 +7,7 @@
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# SaFi J. <safi2266@gmail.com>, 2016
 # hoxhe aits <hoxhe0@gmail.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
 # amrnegm <amrnegm.01@gmail.com>, 2016
@@ -66,7 +67,7 @@ msgstr "حقول التجاهل"
 #: code:addons/anonymization/wizard/anonymize_wizard.py:194
 #, python-format
 msgid "Anonymized value can not be empty."
-msgstr ""
+msgstr "قيمة مجهولية المصدر لا يمكن أن يكون فارغا."
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:69
@@ -168,7 +169,7 @@ msgstr "حقل"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_name
 msgid "Field name"
-msgstr ""
+msgstr "اسم الحقل"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_field_ids
@@ -253,7 +254,7 @@ msgstr "جديد"
 #: code:addons/anonymization/wizard/anonymize_wizard.py:153
 #, python-format
 msgid "No fields are going to be anonymized."
-msgstr ""
+msgstr "لا حقول ستكون حقول مجهولية المصدر."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -359,6 +360,8 @@ msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
 "fields."
 msgstr ""
+"قاعدة البيانات حاليا بوضع مجهولية المصدر. لا يمكنك انشاء او تعديل او حذف "
+"الحقول."
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:257
@@ -367,6 +370,8 @@ msgid ""
 "The database is not currently anonymized, you cannot reverse the "
 "anonymization."
 msgstr ""
+"قاعدة البيانات حاليا ليست بوضع مجهولية المصدر، لا تستطيع عكس جعلها بوضع "
+"مجهولية المصدر."
 
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
@@ -392,12 +397,12 @@ msgstr "لا يمكن أن يكون هناك أكثر من حقل بنفس ال�
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "anonymized -> clear"
-msgstr "تجاهل-> واضح"
+msgstr "تجاهل-> مسح"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "clear -> anonymized"
-msgstr "واضح -> تجاهل"
+msgstr "مسح -> تجاهل"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
@@ -412,7 +417,7 @@ msgstr "الوحدة.الملفات.التجاهل.السجل"
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
 msgid "ir.model.fields.anonymization.migration.fix"
-msgstr ""
+msgstr "ir.model.fields.anonymization.migration.fix"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard

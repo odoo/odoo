@@ -3,30 +3,15 @@
 # * sale
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Murat Kaplan <muratk@projetgrup.com>, 2016
-# gezgin biri <gezginbiri@hotmail.com>, 2016
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 # Ediz Duman <neps1192@gmail.com>, 2016
-# Esin Kandemir <esaykandemir@gmail.com>, 2016
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2016
-# tanerhasret <tanerhasret@gmail.com>, 2016
-# Mesut TAVUKÇU <mesut@data-net.com.tr>, 2016
-# selim kartal <kartalselim37@gmail.com>, 2016
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
-# Azar Huseynli <azerbay1984@gmail.com>, 2016
-# Hüseyin Cem Aras <hcemaras@gmail.com>, 2016
-# Mehmet Öztürk <mozturk357@gmail.com>, 2016
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
+# cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:42+0000\n"
 "PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016\n"
+"Last-Translator: cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +62,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Dear ${object.partner_id.name}\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = 'Fiyat Teklifi' if object.state in ('Taslak', 'Gönderilmiş') else 'Sipariş Onayı'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and 'Onayla ve online %s öde ' % doc_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object.get_signup_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Here is your ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>Sorularınız varsa, bu E-Postayı cevaplayabilirsiniz</p>\n"
+"<p>Teşekkür ederiz,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -87,7 +111,7 @@ msgstr "# Satış"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr "Fatura sayısı"
+msgstr "Fatura Sayısı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
@@ -124,6 +148,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('Taslak', 'Gönderilmiş') and "
+"'Fiyat Teklifi' or 'Satış Siparişi'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -149,6 +175,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
+"<b>Satış Personelini veya Yöneticisini</b> E-Posta ile davet et.<br/><i>Her "
+"satıra bir E-Posta adresi giriniz.</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -224,6 +252,76 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${user.company_id.name}<br/>\n"
+"                                ${user.company_id.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if user.company_id.email:\n"
+"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if user.company_id.website:\n"
+"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${user.company_id.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -232,20 +330,23 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Örnek: Ön ödemeli hizmet teklifleri, bütün destek saatlerini kullanmış\n"
+"olan müşteriler için kullanılabilir.</i>"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:64
 #, python-format
 msgid "<p><b>Confirm the order</b> if the customer purchases.</p>"
-msgstr ""
+msgstr "<p><b>Siparişi onayla</b> eğer müşteri satınalıyorsaı.</p>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
-msgstr "Bu yapılandırma giriş yaptığınız şirket ile ilgilidir."
+msgstr ""
+"<span>(*) Bu yapılandırma giriş yaptığınız şirket ile ilgilidir.</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -255,7 +356,7 @@ msgstr "<strong>Mali Pozisyon Açıklama:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr ""
+msgstr "<strong>Ödeme Şartları:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -287,7 +388,7 @@ msgstr "<strong>Toplam</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "Referans Numaranız:"
+msgstr "<strong>Referans Numaranız:</strong>"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -297,12 +398,12 @@ msgstr "Her ürün için tek bir satış fiyatı"
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "Ürün veya Müşterilere uyarılar koyulabilir (Satış)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr ""
+msgstr "Para yatırma işlemleri için kullanılan hesap"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -328,22 +429,23 @@ msgstr "Satış Siparişinde  Adresler"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:146
 #, python-format
 msgid "Advance: %s"
-msgstr ""
+msgstr "Avans: %s"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
 msgstr ""
+"Gelişmiş fiyatlandırma formüllere dayalı (indirim, kar marjı, yuvarlama)"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
 msgid "All the products and the customers can be used in sales orders"
-msgstr ""
+msgstr "Bütün ürün ve müşteri kayıtları satış emirlerinde kullanılabilir"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow discounts on sales order lines"
-msgstr ""
+msgstr "Satış siparişi satırlarında indirimlere izin ver"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
@@ -351,6 +453,8 @@ msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
 msgstr ""
+"Satış Siparişlerinin 'Satış Siparişi' menüsünden düzenlenmesine izin ver "
+"(Tekliflerden değil)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -358,6 +462,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Müşteri kategorilerine göre değişik fiyat kuralları uygulanmasını sağlar.\n"
+"Örnek: Perakendeciler için %10, bu ürün için 5 TL indirim gibi."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -374,13 +480,13 @@ msgstr "Satış siparişlerine analitik hesap tanımlamanıza olanak verir."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
 msgid "Amount of sales to invoice"
-msgstr ""
+msgstr "Satış tutarını faturala"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
-msgstr ""
+msgstr "Ürün ve Müşterilere, bilgi veya engelleyici uyarılar koyulabilir"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -412,12 +518,12 @@ msgstr "Satışlar için analitik muhasebe"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Maliyet den"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At sale price"
-msgstr ""
+msgstr "Satış fiyatı dan"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -438,7 +544,7 @@ msgstr "Engelleme"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr ""
+msgstr "Sayfa Sonlandır"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -458,7 +564,7 @@ msgstr "Satış Ekibine Göre"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr ""
+msgstr "Teslim Edildi durumunda düzenleyebilir"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -486,12 +592,12 @@ msgstr "Bu satış ekibi tekliflerini yönetmek için bu kutuyu işaretleyin."
 #: code:addons/sale/static/src/js/tour.js:39
 #, python-format
 msgid "Click here to add some lines to your quotations."
-msgstr ""
+msgstr "Teklife ürün eklemek için buraya tıklayın."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a team target"
-msgstr ""
+msgstr "Bir takım hedefi tanımlamak için tıklayın"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -546,17 +652,17 @@ msgstr "Faturaları Oluştur"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr ""
+msgstr "Bir Teklif, yeni bir satışın ilk adımını oluşturur."
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Create a task and track hours"
-msgstr ""
+msgstr "Bir görev oluşturma ve saatlerinin takibi"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr ""
+msgstr "Faturaları Oluştur ve Göster"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
@@ -626,7 +732,7 @@ msgstr "Satış siparişinin oluşturulduğu tarih"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
 msgid "Date on which the sale order is confirmed."
-msgstr ""
+msgstr "Satış sipariş doğrulandığı tarih."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
@@ -641,27 +747,27 @@ msgstr "Varsayılan Şartlar ve Koşullar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_note
 msgid "Default Terms and Conditions *"
-msgstr ""
+msgstr "Varsayılan Şartlar ve Koşullar *"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Default product used for payment advances"
-msgstr ""
+msgstr "Standart ürünü ödeme avans için kullanılan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
 msgid "Delivered"
-msgstr "TeslimEdilen"
+msgstr "Teslim Edilen"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "Teslim Edilen Miktar"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "Teslim edilen miktar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_partner_shipping_id
@@ -677,7 +783,7 @@ msgstr "Teslim Süresi"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "Geçerli faturanın teslimat adresi."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -688,12 +794,12 @@ msgstr "Mevcut satış siparişi için teslimat adresi."
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "Depozito"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr ""
+msgstr "Depozito Ürün"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -705,7 +811,7 @@ msgstr "Açıklama"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Digital Products"
-msgstr ""
+msgstr "Dijital Ürünler"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -736,7 +842,7 @@ msgstr "Satış Satırında İndirim"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_discount_policy
 msgid "Discount policy"
-msgstr ""
+msgstr "İndirim politikası"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
@@ -744,6 +850,7 @@ msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
 msgstr ""
+"Siparişlerde şu 3 alanı da göster: Müşteri, Fatura Adres, Teslimat Adresi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -752,22 +859,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
 msgid "Display Name"
-msgstr "Adı Göstermek"
+msgstr "Adı Göster"
 
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
+msgstr "Sipariş ve ilgili Faturalarda Incoterms göster"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr ""
+msgstr "Marjları teklifler ve satış siparişlerinde göster"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sales orders and invoice reports"
-msgstr ""
+msgstr "Satış Siparişi ve Fatura raporlarının özelleştirilmesini engelle"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:85
@@ -778,28 +885,28 @@ msgstr "Peşinat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "Peşinat Miktarı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "Peşinat verilecek ürün"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "Peşinat (sabit miktar)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "Peşinat (yüzde)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:82
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "%s%% Peşinatı"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -838,6 +945,9 @@ msgid ""
 "Different prices per Customer: you can assign price on buying of minimum quantity in products sale tab.\n"
 "Advanced pricing based on formula: You can have all the rights on pricelist"
 msgstr ""
+"Fiyat Sabitleme: Bütün fiyatlar ürün satış fiyatı üründen yönetilir\n"
+"Müşteriye Özel Fiyatlama: Satın alınacak en az miktara göre fiyatlandırma yapılabilir.\n"
+"Formül Bazlı Gelişmiş Fiyatlandırma: Kullanıcı Fiyat Listesi üzerinde her değişikliği yapabilir."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -846,12 +956,16 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Bu rapordan, müşterilerinize kestiğiniz faturaların tutarlarını gözden "
+"geçirebilirsiniz. Arama aracı ile Fatura raporlarını da ihtiyaçlarınıza göre"
+" kişiselleştirebilirsiniz, ve böylece gereksinimize göre analiz "
+"seçebilirsiniz."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr ""
+msgstr "Tamamen Faturalandırılmış"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
@@ -885,6 +999,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Satış kesinleştikten sonra, üzerinde değişiklik yapamazsınız. Buna karşın "
+"faturalandırma ve teslim yapabilirsiniz."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -905,7 +1021,7 @@ msgstr "Fatura"
 #: code:addons/sale/models/account_invoice.py:52
 #, python-format
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "Fatura %s ödendi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -915,7 +1031,7 @@ msgstr "Fatura Adresi"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr ""
+msgstr "Fatura Onaylandı"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -961,12 +1077,12 @@ msgstr "Geçerli sipariş için fatura adresi."
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice delivered quantities"
-msgstr ""
+msgstr "Teslim edilmiş miktarı faturalandır"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice ordered quantities"
-msgstr ""
+msgstr "Sipariş edilen miktarı faturalandır"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
@@ -975,16 +1091,19 @@ msgid ""
 " invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Bu ayın faturalandırılmış gelir miktarı. Bu, ay içinde satış ekibi "
+"tarafından faturalandırılmış miktardır. Bu bilgi Kanban görününmünde güncel "
+"ve hedef gelir miktarını hesaplamak için kullanılır."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr ""
+msgstr "Faturalandırılabilir satırlar"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr ""
+msgstr "Faturalandırılabilir satırlar (peşinat hariç)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -994,12 +1113,12 @@ msgstr "Faturalandı"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "Faturalanan Miktar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "Bu Ay Faturalanan"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -1026,6 +1145,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Faturalar, daha sonra kontrol edip onaylabilmeniz için \n"
+"taslak halinde oluşturulacaktır."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1045,7 +1166,7 @@ msgstr "Faturalama Kuralı"
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
-msgstr ""
+msgstr "Fatura adresi:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
@@ -1059,11 +1180,13 @@ msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
 msgstr ""
+"Fatura ve teslimat adresleri her zaman aynıdır (Örnek: Hizmet veren "
+"Firmalar)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "Invoicing/Progression Ratio"
-msgstr ""
+msgstr "Faturalandırma/İlerleme Oranı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1104,6 +1227,8 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually "
 "points to the next logical actions in any screen.</i>"
 msgstr ""
+"Yeni bir Teklif yaratalım.<br/><i>Ekranda çıkan renkli butonlar genellikle "
+"akışın varsayılan bir sonraki adımına işaret ederler.</i>"
 
 #. module: sale
 #. openerp-web
@@ -1115,22 +1240,22 @@ msgstr "Satış ekibinin tekliflerine bir göz atalım."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Kilitle"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Kilitli"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr ""
+msgstr "Üyelikleri ve düzenli aralıklarla kesilecek faturaları yönet"
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "Siparişte miktarı elle belirle"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_track_service
@@ -1140,6 +1265,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
+"Siparişte Miktarları Elle Belirle: Faturayı oluştururken, analitik hesap yerine, elle belirlenmiş miktarları kullan\n"
+"Sözleşmelerde Zaman Çizelgesi: Zaman çizelgesine girilmiş olan saatlere göre faturalandırma yap.\n"
+"Görev oluştur ve süreyi izle: Sipariş esnasında görev oluşturup, çalışılan süreyi izle."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1148,11 +1276,14 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Teklifte (fiyatlandırma) son geçerlilik tarihini elle belirleyin. Aksi "
+"takdirde son geçerlilik tarihi, Online Tekliflendirme yüklüyse, şablondan "
+"otomatik olarak hesaplanacaktır."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
 msgid "Margins"
-msgstr "Kar marjı"
+msgstr "Kar Marjı"
 
 #. module: sale
 #: model:sale.layout_category,name:sale.sale_layout_cat_2
@@ -1194,7 +1325,7 @@ msgstr "Adı"
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sales order"
-msgstr ""
+msgstr "Asla bir doğrulamış satış siparişi değiştirmesine izin verme"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:102
@@ -1222,16 +1353,17 @@ msgstr "Uyarı Yok"
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
 msgstr ""
+"Satış sipariş satırlarında indirim uygulama, genel toplam üzerinden uygula"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr ""
+msgstr "Raporlarda Incoterm gösterme"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Ürünlerde varyant özeliği olmadan (varyansız)"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -1239,6 +1371,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
+"Teklif, Siparişe dönüştükten sonra, Teklifler listesinden, Siparişler "
+"listesine geçecektir."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1246,6 +1380,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "            from the Quotations list to the Sales Order list."
 msgstr ""
+"Teklif, Siparişe dönüştükten sonra, Teklifler listesinden, Siparişler "
+"listesine geçecektir."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1254,12 +1390,14 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
+"Teklif, Siparişe dönüştükten sonra, Teklifler listesinden, Siparişler "
+"listesine geçecektir."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "Faturalandıracak bir şey yok"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1276,6 +1414,9 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"Teklif onaylandığında, sipariş haline gelir. Siparişi, faturalandırabilir\n"
+"ve ödemesini alabilirsiniz. <i>Siparişler</i> menüsünden teslimatları ve \n"
+"hizmetleri takip edebilirsiniz."
 
 #. module: sale
 #. openerp-web
@@ -1283,11 +1424,13 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"Teklifi hazırladıktan sonra, kaydedebilir, çıktısını alabilir veya E-Posta "
+"ile gönderebilirsiniz."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr ""
+msgstr "Çevrimiçi Teklifler"
 
 #. module: sale
 #. openerp-web
@@ -1304,7 +1447,7 @@ msgstr "Sipariş"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr ""
+msgstr "Sipariş #"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
@@ -1343,12 +1486,12 @@ msgstr "Sipariş Durumu"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr ""
+msgstr "Miktarı"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "Siparişin Miktarı"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1357,6 +1500,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Sipariş Edilmiş Miktar: Müşteri tarafından sipariş edilene göre faturalandır.\n"
+"Teslim Edilmiş Miktar: Teslim edilen miktara göre faturalandır (teslim tarihi veya teslim miktarı)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1366,13 +1511,13 @@ msgstr "Satış siparişinin veriliş tarihi"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "Siparişin miktarı"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "Arttırılacak Satışlar"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1381,13 +1526,15 @@ msgid ""
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
 msgstr ""
+"Arttırılacak Siparişler, faturalandırma tipi <i>Sipariş miktarına göre</i> "
+"olan, siparş edilen miktardan daha fazla teslimat yapılan kayıtlardır."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:13
 #, python-format
 msgid "Organize your sales activities with the <b>Sales app</b>."
-msgstr ""
+msgstr "Satış Etkinliklerinizi, <b>Satış Uygulaması</b> ile yönetin"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1403,12 +1550,12 @@ msgstr "İş Ortağı"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "İş Ortağı Ülke"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "İş Ortakları Ülke"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1418,7 +1565,7 @@ msgstr "Ödeme Koşulları"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sale order and invoice report"
-msgstr ""
+msgstr "Satış Siparişi ve Fatura raporlarını özelleştirin."
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
@@ -1426,12 +1573,14 @@ msgid ""
 "Personalize the sales orders and invoice report with categories, subtotals "
 "and page-breaks"
 msgstr ""
+"Satış Sipariş ve Fatura raporlarını, kategoriler, alt toplamlar ve sayfa "
+"sonları ekleyerek özelleştirin"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:276
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr ""
+msgstr "Bu şirket için bir muhasebe satış günlüğü tanımlayın"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:770
@@ -1440,6 +1589,8 @@ msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
+"Lütfen bu ürün\"%s\" (id:%d) - veya kategori: \"%s\" için bir gelir hesabı "
+"tanımlayın."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1455,12 +1606,12 @@ msgstr "Fiyat Düşür"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Fiyatı vergiler hariç düşür"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Fiyatı vergiler dahil düşür"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -1493,7 +1644,7 @@ msgstr "Yazdır"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Print quotes or send by email"
-msgstr ""
+msgstr "Teklifleri yazdırma veya e-posta ile gönderme"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1555,12 +1706,12 @@ msgstr "Ürünler"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr ""
+msgstr "Ürünlerde varyant özelliği tanımlama (Örnek: boyut, renk, ...)"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr ""
+msgstr "Ürünlerde ölçü birimi olarak sadece bir birim (kolay)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1575,17 +1726,17 @@ msgstr "Miktar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_delivered
 msgid "Qty Delivered"
-msgstr ""
+msgstr "Tesiim Edilmiş Miktar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr ""
+msgstr "Faturalandırılmış Miktar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr ""
+msgstr "Faturalandırılacak Miktar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
@@ -1604,7 +1755,7 @@ msgstr "Teklif"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr ""
+msgstr "Teklif #"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -1662,7 +1813,7 @@ msgstr "Teklif Analizileri"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr ""
+msgstr "Gönderilen Teklif"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1673,7 +1824,7 @@ msgstr "Teklifler ve Satışlar"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Tekrar Faturalandırma Giderleri"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -1701,7 +1852,7 @@ msgstr "Raporlama"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line_so_line
 #: model:ir.model.fields,field_description:sale.field_procurement_order_sale_line_id
 msgid "Sale Order Line"
-msgstr "Satış Sipariş Kalemi"
+msgstr "Satış Sipariş Satırı"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
@@ -1712,7 +1863,7 @@ msgstr "Satış Sipariş Satırları"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr ""
+msgstr "Satış Siparişinde Değişiklik"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1722,7 +1873,7 @@ msgstr "Satış Fiyatı"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "Sale pricelist setting"
-msgstr ""
+msgstr "Satış fiyat listesi ayarı"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -1852,7 +2003,7 @@ msgstr "Satıştan Faturaya"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr ""
+msgstr "Satış ekibi teklif oluştururken kar marjını görmesin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -1890,6 +2041,9 @@ msgid ""
 "the default sale price (that you can change), taxes and description "
 "automatically."
 msgstr ""
+"Bir ürün seçin veya bu ekrandan hemen bir tane yaratın. Ürün için varsayılan"
+" satış fiyatı (sonradan değiştirilebilir), vergiler ve açıklaması otomatik "
+"oluşuturulacaktır."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
@@ -1909,6 +2063,8 @@ msgstr ""
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
+"Dijital ürün satışlarında - müşteri portalından indirilebilir içerek "
+"özeliğini sağlama"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1919,6 +2075,8 @@ msgstr "E-posta olarak gönder"
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
 msgstr ""
+"Teklifi çevrimiçi gönderme müşteri onaylama & ödeme yapabilmesi için "
+"(gelişmiş)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -1936,65 +2094,65 @@ msgstr "Hizmetler"
 #: code:addons/sale/static/src/js/sale.js:19
 #, python-format
 msgid "Set an invoicing target: "
-msgstr ""
+msgstr "Faturalandırılacak satırları seçin"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "Fiyat Teklifine çevir"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr ""
+msgstr "Firmanız için varsayılan sözleşme koşullarını belirleyiniz"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sales orders and invoices"
-msgstr ""
+msgstr "Satış siparişleri ve faturalarda incoterms göster"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr ""
+msgstr "Satır alt toplamlarını vergili olarak göster (B2C)"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_subtotal
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals without taxes (B2B)"
-msgstr ""
+msgstr "Satır alt toplamlarını vergiz olarak göster (B2B)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "Ürünlerin üzerinde Fiyat Listelerini göster"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "Fiyat Listelerini Müşteriye göster"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "Herkese açık olan Fiyat ve İndirimleri Müşteriye göster"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
 msgid "Show subtotal"
-msgstr ""
+msgstr "Aratoplamı göster "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_total
 msgid "Show total"
-msgstr ""
+msgstr "Toplamı göster "
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
-msgstr ""
+msgstr "Bazı ürünlerde farklı ölçü birimleri satış / satınalma (gelişmiş)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -2004,7 +2162,7 @@ msgstr "Kaynak Belge"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Specific prices per customer segment, currency, etc."
-msgstr ""
+msgstr "Özel fiyatlar müşteri segmenti, para birimi, gibi."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
@@ -2016,7 +2174,7 @@ msgstr "Durumu"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr "Yarışmacılar"
+msgstr "Abonelikler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -2026,12 +2184,7 @@ msgstr "Ara Toplam"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 msgid "TIN:"
-msgstr ""
-"Sayın Yetkili,\n"
-"\n"
-"Kayıtlarımıza göre halen yapılmamış olan ödemeleriniz bulunmaktadır. Lütfen detayları için aşağıya bakınız. Eğer ödeme yapıldı ise, lütfen bu bildirimi dikkate almayınız. Aksi durumda aşağıda belirtilen miktarı gönderiniz. Hesabınız ile ilgili sorularınız var ise, lütfen bizimle iletişime geçiniz, İşbirliğiniz için şimdiden teşekkür ederiz.\n"
-"\n"
-"İyi dileklerimizle"
+msgstr "VKN:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced_target
@@ -2039,21 +2192,23 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales team estimates to be able to invoice this month."
 msgstr ""
+"Bu ay için belirlenmiş Faturalandırılmış gelir hedefi. Bu miktar, satış "
+"ekibi tarafından bu ay içinde kesilmesi tahmin edilen faturaların toplamıdır"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "Vergi Görünümü"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
 msgid "Tax display B2B"
-msgstr ""
+msgstr "Vergi görünümü B2B"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_total
 msgid "Tax display B2C"
-msgstr ""
+msgstr "Vergi görünümü B2C"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2067,12 +2222,12 @@ msgstr "Vergiler"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "Ödemeler için kullanılmış vergi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
 msgid "Terms and conditions"
-msgstr "Şartlar ve koşullar"
+msgstr "Şartlar ve Koşullar"
 
 #. module: sale
 #: code:addons/sale/models/sale_analytic.py:84
@@ -2081,11 +2236,13 @@ msgid ""
 "The Sale Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
 msgstr ""
+"Analitik Hesapla ilişkilendirilmiş Satış Siparişi %s harcamalar "
+"kaydedilmeden önce onaylanmalıdır."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "Peşin olarak faturalandırılacak miktar, vergiler hariç"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_project_id
@@ -2099,6 +2256,8 @@ msgid ""
 "The printed reports will display the incoterms for the sales orders and the "
 "related invoices"
 msgstr ""
+"Çıktısı alınacak satış ve ona bağlı fatura raporlarında incoterms "
+"eklenecektir"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:144
@@ -2107,6 +2266,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
+"Peşinatı faturalandıracak ürün satırı 'Hizmet' tipinde olmalıdır. Lütfen bu "
+"ürünün yerine başkasını kullanınız."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:142
@@ -2116,12 +2277,15 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"Peşinat şeklinde ödemesi olan ürünün faturalandırılabilmesi için, "
+"faturalandırma şekli 'Sipariş edilen miktar' olmalıdır. Lütfen ürününüzü "
+"buna göre güncelleyiniz"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:79
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "Peşinat miktarı pozitif olmalıdır."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:75
@@ -2130,12 +2294,14 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
+"Bu ürün: \"%s\" için bir gelir hesabı belirtilmemiş Lütfen Muhasebe "
+"uygulamasının, ayarlar bölümünden bir hesap planı oluşturun."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:366 code:addons/sale/models/sale.py:370
 #, python-format
 msgid "There is no invoicable line."
-msgstr ""
+msgstr "Faturalandırılabilir satır yok."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2193,7 +2359,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Zaman çizelgeleri proje üzerinde"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2265,23 +2431,23 @@ msgstr "Okunmamış Mesajlar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Vergi alınmamış miktar"
+msgstr "Vergisiz Tutar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total"
-msgstr ""
+msgstr "Vergisiz Toplam"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "Upselling"
-msgstr ""
+msgstr "Arttırılmış Satış"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "Arttırılmış Satış Fırsatı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
@@ -2293,7 +2459,7 @@ msgstr "Her müşteriye farklı fiyat ayarlaması için fiyat listeleri kullanma
 #: code:addons/sale/static/src/js/tour.js:69
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
-msgstr ""
+msgstr "<b>Önceki ekranlara</b> dönmek için geri tuşunu kullanın"
 
 #. module: sale
 #. openerp-web
@@ -2301,11 +2467,13 @@ msgstr ""
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr ""
+"Satış Teklifleri, Satış Siparişleri ve Müşterilere ulaşmak için bu menüyü "
+"kullanın."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "VAT:"
-msgstr "KDV :"
+msgstr "KDV:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
@@ -2346,6 +2514,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same products\n"
 "                , an ease the product management in the ecommerce for example"
 msgstr ""
+"Ürün Varyantlarını kullanarak, aynı ürün için birden fazla çeşit tanımlayabilir,\n"
+"elektronik ticaret yaparken ürünlerin yönetimini kolaylaştırabilirsiniz."
 
 #. module: sale
 #. openerp-web
@@ -2354,7 +2524,7 @@ msgstr ""
 msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
-msgstr ""
+msgstr "Bu ekrandan müşterinin ismini yazın veya yenisini oluşturun."
 
 #. module: sale
 #. openerp-web
@@ -2370,6 +2540,8 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
+"Gönderildi konumundaki bir Satış Siparişi veya Satış Teklifini silmek için "
+"önce ilgili kayıdı iptal etmelisiniz."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:882
@@ -2378,6 +2550,8 @@ msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
 msgstr ""
+"Satış Siparişinden bir satır silemezsiniz.\n"
+"Değişiklikleri geri alın ve miktarı 0 yapmayı deneyin."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -2385,11 +2559,14 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
+"Bütün Satış Siparişlerini seçip hepsini birden faturalandırabilir veya\n"
+"her siparişi ayrı ayrı faturalandırabilirsiniz."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
 msgstr ""
+"Bu ekranda faturalandırlabilir Satış Siparişlerini görüntüleyebilirsiniz."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -2397,6 +2574,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Bunda sonra yapılacaklar akıcı bir şekilde gerçekleşmeli: Fiyat Teklifini\n"
+"onaylayıp, Satış Siparişine döndür, daha sonra faturalandır ve ödemeyi al."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2404,6 +2583,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Bunda sonra yapılacaklar akıcı bir şekilde gerçekleşmeli: Fiyat Teklifini\n"
+"onaylayıp, Satış Siparişine döndür, daha sonra faturalandır ve ödemeyi al."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2412,6 +2593,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sale "
 "Order, then create the Invoice and collect the Payment."
 msgstr ""
+"Bunda sonra yapılacaklar akıcı bir şekilde gerçekleşmeli: Fiyat Teklifini\n"
+"onaylayıp, Satış Siparişine döndür, daha sonra faturalandır ve ödemeyi al."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -2431,4 +2614,4 @@ msgstr "sale.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"

@@ -6,8 +6,8 @@
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
@@ -51,6 +51,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_name or 'applicant'},</p>\n"
+"<p>Bedankt voor je sollicitatie.<br />\n"
+"Uw profiel heeft onze interesse gewekt. Ik zal zo snel mogelijk contact opnemen om de volgende stappen in uw sollicitatie te plannen.</p>\n"
+"<p>Indien u vragen heeft, laat het ons weten.</p>\n"
+"<p>Met vriendelijke groet,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -65,6 +71,14 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Beste allen,</p>\n"
+"<p>Ik ben erg blij aan te kondigen dat<strong> ${object.name} </strong> ons zal versterken als ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Geef hem/haar een warm welkom, en help hem/haar op weg in ons bedrijf.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -79,7 +93,7 @@ msgstr "<b>Graad:</b>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr "<b>Departement:</b>"
+msgstr "<b>Afdeling:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -129,6 +143,8 @@ msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
+"Voeg kolommen toe om <b>interview fases</b>.<br/> te definieren<i> bijv. "
+"Nieuw &gt; Gekwalificeerd &gt; Eerste Interview &gt; Aangenomen</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -1118,6 +1134,8 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
+"Wanneer een vacature is aangemaakt, kunt u sollicitanten traceren\n"
+"en het sollicitatietraject beheren gerelateerd aan de functie."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -1515,6 +1533,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Deze aliassen kunnen e-mails of links zij voor elke bron. Wanneer de "
+"sollicitant hier terecht komt via een van deze zult u weten waar de "
+"sollicitant vandaan gekomen is."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1561,6 +1582,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Dit menu helpt met het zoeken door CV's en motivatiebrieven.\n"
+"Odoo indexeert automatisch .PDF, .DOC, .DOCX, .TXT\n"
+"bestanden zodat u kan zoeken met trefwoorden uit de naam\n"
+"van deze bestanden."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1579,6 +1604,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Probeer om een e-mail te sturen naar dit adres, hiermee zal automatisch een "
+"sollicitatie worden gemaakt."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1637,6 +1664,7 @@ msgstr "Zeer goed"
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
 msgstr ""
+"Wilt u <b>starten met werven</b>als een professional <i>Start hier.</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc

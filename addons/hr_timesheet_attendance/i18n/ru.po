@@ -5,10 +5,9 @@
 # Translators:
 # KingOPl Slav <87slava13@gmail.com>, 2016
 # Masha Koc <mariya.kos.ua@gmail.com>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
+# dr&mx <dronmax@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# dr&mx <dronmax@gmail.com>, 2016
 # Gennady Marchenko <gennadym@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -27,7 +26,7 @@ msgstr ""
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
-msgstr "<span class=\"o_stat_text\">Табель учета рабочего времени</span>"
+msgstr "<span class=\"o_stat_text\">Табель</span>"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,help:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
@@ -36,8 +35,8 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
-"Разрешенная разница в часах между входом/выходом и вычисление для расписания"
-" на одном листе. Установите его на 0, если вы не хотите никакого контроля."
+"Разрешённая разница в часах между приходом/уходом и вычисленным по табелю на"
+" одном листе. Установите 0, если контроль не требуется."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_attendance
@@ -145,7 +144,7 @@ msgstr "Табель"
 #. module: hr_timesheet_attendance
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheet / Attendance"
-msgstr ""
+msgstr "Табель / посещаемость"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
@@ -155,12 +154,12 @@ msgstr "Действия в табеле"
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_res_company_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours)"
-msgstr "Разрешенная разница в табеле (часы)"
+msgstr "Разрешённая разница в табеле (часы)"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours) *"
-msgstr ""
+msgstr "Разрешённая разница в табеле (часы)*"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_by_account
@@ -180,7 +179,7 @@ msgstr "Табели"
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr "Расписания за период"
+msgstr "Табель за период"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_attendance
@@ -230,7 +229,7 @@ msgstr ""
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
 msgstr ""
-"Вы не можете ввести дату посещаемости за пределами текущих дат табелей."
+"Вы не можете ввести дату посещаемости за пределами текущего периода табеля."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:96
@@ -246,25 +245,26 @@ msgstr ""
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
 #, python-format
 msgid "You cannot delete a timesheet that has attendance entries."
-msgstr ""
+msgstr "Нельзя удалить табель с внесёнными записями."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:113
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr "Вы не можете ввести дату посещения за пределами дат текущих табелей."
+msgstr ""
+"Вы не можете ввести дату посещения за пределами текущего периода табеля."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:119
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr "Вы не можете изменить запись в утвержденном табеле"
+msgstr "Вы не можете изменить запись в утверждённом табеле"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
 msgid "hr.timesheet.attendance.report"
-msgstr ""
+msgstr "hr.timesheet.attendance.report"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_project_config_settings

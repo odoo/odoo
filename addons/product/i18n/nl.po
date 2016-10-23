@@ -147,6 +147,9 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Verkoopprijs - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Kostprijs - </span>\n"
+"<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Andere prijslijst - </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -185,6 +188,8 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong> Waarschuwing</strong>: attributen toevoegen of verwijderen \n"
+"verwijdert bestaande varianten en maakt deze opnieuw aan met als gevolg dat u mogelijk wijzigingen verliest."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -265,6 +270,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Een voorraad product is een product waarvan uw voorraad houdt. De \"voorraad\" app moet geïnstalleerd worden.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt gehouden..\n"
+"Een dienst is een immateriëel product dat uw verkoopt.\n"
+"Digitale inhoud is een immateriëeel product dat u online verkoopt. De bestanden die toegevoegd zijn aan producten worden verkoop via het e-commerce platform, zoals bijv. digitale boeken, muziek, afbeeldingen. De 'digitale product' module moet geïnstalleerd worden."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -374,7 +383,7 @@ msgstr "Kenmerk"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Kenmerk naam"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
@@ -431,6 +440,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Basisprijs voor berekening. \n"
+"Verkoopprijs: De basisprijs zal de verkoop prijs zijn. \n"
+"Kostprijs: De basisprijs zal de kostprijs zijn. \n"
+"Andere prijslijst: Berekening van de basisprijs gebaseerd op een andere prijslijst."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -614,7 +627,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
-msgstr ""
+msgstr "Vink dit aan als uw meerdere varianten wil aanmaken voor dit kenmerk."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -776,7 +789,7 @@ msgstr "Kost van het product, in de standaard maateenheid van het product."
 #: model:product.product,name:product.service_delivery
 #: model:product.template,name:product.service_delivery_product_template
 msgid "Cost-plus Contract"
-msgstr ""
+msgstr "Kost-plus contract"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1028,6 +1041,8 @@ msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
 msgstr ""
+"Fout! Het is niet toegestaan om meer dan één waarde te kiezen voor een "
+"bepaald kenmerk."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -1335,6 +1350,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Hoeveel keer deze maateenheid groter is dan de referentie maateenheid in "
+"deze categorie: 1 * (deze eenheid) = ratio * (referentie eenheid)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
@@ -1342,6 +1359,9 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Hoe veel groter of kleiner deze maateenheid is vergeleken met de referentie "
+"maateenheid voor deze categorie: 1 * (referentie eenheid) = ratio * (deze "
+"eenheid)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2740,6 +2760,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"De verkoopprijs wordt beheert in het product sjabloon. Klik op de 'kenmerk "
+"prijzen\" knop om de kenmerk prijzen in te stellen."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2926,6 +2948,8 @@ msgstr "Ultradun design"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"Schakel het actief veld uit om de maateenheid verborgen zonder deze te "
+"verwijderen."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -2969,6 +2993,10 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Maateenheden die behoren tot dezelfde categorie kunnen\n"
+"geconverteerd worden naar maateenheden binnen dezelfde categorie. Bijvoorbeeld,\n"
+"in de categorie <i>'Tijd'</i> heeft u de maateenheden:\n"
+"Uren, dagen."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3213,6 +3241,8 @@ msgid ""
 "You cannot define a rounding factor for the company's main currency that is "
 "smaller than the decimal precision of 'Account'."
 msgstr ""
+"Het is niet toegestaan om een afrondingsfactor voor de bedrijfsvaluta te "
+"definiëren welke kleiner is dan de decimale nauwkeurigheid van 'rekening'."
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -3221,6 +3251,8 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Fout! Het is niet mogelijk om een decimale nauwkeurigheid van een 'rekening'"
+" groter in te stellen dan de afronding van de bedrijfsvaluta."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3228,6 +3260,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"U moet een conversie ratio definiëren tussen verschillende maateenheden \n"
+"van dezelfde categorie."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3248,6 +3282,9 @@ msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
+"U moet een product definiëren voor alles dat u verkoopt, of het nu een "
+"fysiek product, verbruiksartikel of een dienst is die u aanbied aan uw "
+"klanten."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
