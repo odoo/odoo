@@ -8,6 +8,7 @@
 # amrnegm <amrnegm.01@gmail.com>, 2016
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 # AMAAL RU <Fabu1410@yahoo.com>, 2016
+# SaFi J. <safi2266@gmail.com>, 2016
 # Mustafa Rawi <mustafa@cubexco.com>, 2016
 # hoxhe aits <hoxhe0@gmail.com>, 2016
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
@@ -46,6 +47,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* عندما يتم انشاء قسيمة دفع فان الحالة تكون 'مسودة'\n"
+"                \n"
+"* إذا كانت قسيمة الدفع قيد التحقق فإن الحالة تكون 'إنتظار'.\n"
+"                \n"
+"* اذا تم تأكيد قسيمة الدفع فان الحالة تكون 'مكتملة'.\n"
+"                \n"
+"* عنمما يلغي المستخدم قسيمة الدفع فان الحالة تكون 'مرفوضة'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -134,6 +142,9 @@ msgid ""
 "                payment of the employees. It can be the social security, the\n"
 "                estate or anyone that collect or inject money on payslips."
 msgstr ""
+"سجل المساهمات هو طرف ثالث يشترك بمدفوعات رواتب الموظفين.\n"
+"                 يمكن أن يكون الضمان الاجتماعي, السلف العقارية\n"
+"               او اي شخص يجمع او يضيف الاموال على قسائم الدفع."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -238,7 +249,7 @@ msgstr "إلغاء قسيمة الدفع"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "لا يمكن إلغاء قسيمة الدفع المكتملة."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -510,7 +521,7 @@ msgstr "منتهي"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Done Payslip Batches"
-msgstr "دفعات قسيمة الدفع التى تمت "
+msgstr "دفعات قسيمة الدفع المكتملة "
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -694,6 +705,9 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"تستخدم في احتساب الكمية الثابتة وذات النسبة المئوية. فمثلاً. قاعدة وصل وجبة "
+"الطعام ذو مبلغ ثابت بواحد يورو لكل عامل في اليوم يمكن ان تاخذ كميتها بصيغة "
+"مشابهة الى worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -984,7 +998,7 @@ msgstr "اسم قسيمه الدفع "
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "تنفيذ قسائم الدفع"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1435,7 +1449,7 @@ msgstr "يجب تحديد الموظفين (s) لتوليد كشوف (s) "
 #: code:addons/hr_payroll/models/hr_payroll.py:838
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
+msgstr "يجب عليك وضع تعاقد لانشاء سطر قسيمة دفع."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings

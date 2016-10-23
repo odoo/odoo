@@ -1,45 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-#
+# 
 # Translators:
-#, fuzzy
+# Dorin Hongu <dhongu@gmail.com>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2015-09-30 09:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
-"Language: ro\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
-"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
 msgid "# Emails"
-msgstr "# Email-uri"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
 msgid "# Issues"
-msgstr "# Probleme"
+msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
 msgid "# of Issues"
-msgstr "# de probleme"
+msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:215
+#: code:addons/project_issue/models/project_issue.py:156
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -60,19 +56,9 @@ msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-msgid ""
-"A Issue's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Activate timesheets on issues"
 msgstr ""
-"O stare kanban a problemei indica situatii speciale care o afecteaza:\n"
-" * Normala este situatia implicita\n"
-" * Blocata indica faptul ca ceva impiedica progresul acestei probleme\n"
-" * Pregatita pentru etapa urmatoare indica faptul ca problema este gata sa "
-"treaca la etapa urmatoare"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -85,6 +71,18 @@ msgid "Add an internal note..."
 msgstr "Adaugați o notă internă..."
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
+msgid ""
+"An Issue's kanban state indicates special situations affecting it:\n"
+"\n"
+"                                           * Normal is the default situation\n"
+"\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
+"\n"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Cont analitic"
@@ -92,12 +90,12 @@ msgstr "Cont analitic"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr ""
+msgstr "Arhivat"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
 msgid "Assigned"
-msgstr "Alocat"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_user_id
@@ -105,43 +103,54 @@ msgstr "Alocat"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Assigned to"
-msgstr "Atribuit lui"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
 msgid "Avg. Delay to Close"
-msgstr "Intarzierea medie la inchidere"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_open
 msgid "Avg. Delay to Open"
-msgstr "Intarzierea medie la deschidere"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_close
 msgid "Avg. Working Hours to Close"
-msgstr "Media orelor de lucru pana la inchidere"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
 msgid "Avg. Working Hours to Open"
-msgstr "Media orelor de lucru pentru a deschide"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr "Blocat(a)"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Buzz or set as done"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr "După responsabil"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_channel
 msgid "Channel"
-msgstr "Canal"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
@@ -150,14 +159,9 @@ msgid "Check this box to manage customer activities through this project"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid "Click to create an issue."
-msgstr ""
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
 msgid "Closed"
-msgstr "Inchis"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
@@ -165,14 +169,9 @@ msgid "Color Index"
 msgstr "Index Culori"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
-msgid "Communication Channel."
-msgstr ""
-
-#. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_channel
 msgid "Communication channel."
-msgstr "Canal de comunicare"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_company_id
@@ -208,20 +207,25 @@ msgstr "Creat de"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Creation Date"
 msgstr "Data creării"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:384
+#: code:addons/project_issue/models/project_issue.py:296
 #, python-format
 msgid "Customer"
 msgstr "Client"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:386
+#: code:addons/project_issue/models/project_issue.py:298
 #, python-format
 msgid "Customer Email"
-msgstr "E-mail Client"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
@@ -236,47 +240,47 @@ msgstr "Data"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_closed
 msgid "Date of Closing"
-msgstr "Data Inchiderii"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
-msgstr "Data deschiderii"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
 msgid "Days since creation date"
-msgstr "Zile de la data crearii"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_inactivity_days
 msgid "Days since last action"
-msgstr "Zile de la ultima actiune"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
 msgid "Days to Assign"
-msgstr "Zilele de atribuire"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
 msgid "Days to Close"
-msgstr "Zile pana la inchidere"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_deadline
 msgid "Deadline"
-msgstr "Termen limita"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_delay
 msgid "Delay"
-msgstr "Intarziere"
+msgstr "Întârziere"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Delete"
-msgstr "Șterge"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -286,12 +290,12 @@ msgstr "Descriere"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
 msgid "Difference in days between creation date and current date"
-msgstr "Direfenta in zile dintre data crearii si data curenta"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_inactivity_days
 msgid "Difference in days between last action and current date"
-msgstr "Diferenta in zile dintre ultima actiune si data curenta"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
@@ -300,9 +304,14 @@ msgid "Display Name"
 msgstr "Afiseaza nume"
 
 #. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Do not track working hours on issues"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
 msgid "Duration"
-msgstr "Durata"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
@@ -312,22 +321,22 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
 msgid "Email"
-msgstr "E-mail"
+msgstr "Email"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Extra Info"
-msgstr "Informatii suplimentare"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature Tracker Tree"
-msgstr "Caracteristica Arbore Program de urmarire probleme"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature description"
-msgstr "Descrierea caracteristicii"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -336,12 +345,18 @@ msgid "Group By"
 msgstr "Grupează după"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
-msgid "High"
-msgstr "Ridicat(ă)"
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Helpdesk & Support"
+msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:362
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "High"
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -357,13 +372,13 @@ msgstr "ID"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue"
-msgstr "Problema"
+msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr "Problema Blocata"
+msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
@@ -380,7 +395,7 @@ msgstr ""
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr "Etapa Problemei s-a Modificat"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -390,17 +405,17 @@ msgstr ""
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue Tracker Search"
-msgstr "Cautati Programul care tine evidenta problemelor"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Issue Tracker Tree"
-msgstr "Arbore Program de urmarire probleme"
+msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr "Problema blocata"
+msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -409,35 +424,30 @@ msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-#, fuzzy
 msgid "Issue ready for next stage"
-msgstr "Pregatit(a) pentru etapa urmatoare"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
-#: model:ir.actions.act_window,name:project_issue.open_view_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
-#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
-#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: model:ir.ui.menu,name:project_issue.portal_services_issues
 #: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
 #: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 #: model:ir.ui.view,arch_db:project_issue.view_project_kanban_inherited
 msgid "Issues"
-msgstr "Probleme"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report_filtered
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 msgid "Issues Analysis"
-msgstr "Analiza Probleme"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
@@ -452,7 +462,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
 msgid "Kanban State"
-msgstr "Starea Kanban"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
@@ -462,12 +472,12 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
 msgid "Last Action"
-msgstr "Ultima actiune"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Last Message"
-msgstr "Ultimul mesaj"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
@@ -479,7 +489,7 @@ msgstr "Ultima modificare la"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Ultima etapă actualizată"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
@@ -487,23 +497,40 @@ msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare în"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "Low"
-msgstr "Scazut(a)"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Issues"
-msgstr "Problemele mele"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Need functional or technical help"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "New"
-msgstr "Nou(a)"
+msgstr "Nou"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:364
+#: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "New Issue"
 msgstr ""
@@ -511,13 +538,18 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
 msgid "Next Action"
-msgstr "Urmatoarea actiune"
+msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:413
+#: code:addons/project_issue/models/project_issue.py:322
 #, python-format
 msgid "No Subject"
-msgstr "Fara Subiect"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "No customer rating"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -526,14 +558,43 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
+msgid "Not validated"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
 msgid "Number of Days to close the project issue"
-msgstr "Numarul de Zile pana la inchiderea problemei proiectului"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
-msgstr "Numarul de Zile pentru a deschide problema proiectului."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -541,11 +602,11 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:530
+#: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want "
-"to delete."
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
 msgstr ""
 
 #. module: project_issue
@@ -561,7 +622,7 @@ msgstr "Prioritate"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_description
 msgid "Private Note"
-msgstr "Nota Personala"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -573,10 +634,11 @@ msgid "Project"
 msgstr "Proiect"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
-msgstr "Problema Proiect"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
@@ -585,33 +647,31 @@ msgid "Project Issues"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "Rating on issue"
+msgstr ""
+
+#. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr "Pregatit(a) pentru etapa urmatoare"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
-msgid "Sale Team"
-msgstr "Echipa de vanzari"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_team_id
-msgid "Sales Team"
-msgstr "Echipa de vanzări"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_team_id
-msgid ""
-"Sales team to which Case belongs to.                             Define "
-"Responsible user and Email account for mail gateway."
 msgstr ""
-"Echipa de vanzari careia ii apartine cazul. Definiti Utilizatorul "
-"responsabil si Contul de e-mail pentru mail gateway."
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
+msgid "Ready to reopen"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
-msgstr "Căutați"
+msgstr "Caută"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
@@ -619,18 +679,18 @@ msgstr "Căutați"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Stage"
-msgstr "Etapa"
+msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr "Etapa Schimbata"
+msgstr ""
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr "Etapa schimbata"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_tag_ids
@@ -638,51 +698,42 @@ msgid "Tags"
 msgstr "Etichete"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_task_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Task"
-msgstr "Sarcina"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
-#, fuzzy
 msgid "Task Stage"
-msgstr "Etapa"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
-msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
-"                    complaints, project troubles, material breakdowns, etc."
-msgstr ""
-
-#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
-"                like internal requests, software development bugs, customer\n"
-"                complaints, project troubles, material breakdowns, etc."
+"The Odoo issues tracker allows you to efficiently manage things\n"
+"                    like internal requests, software development bugs, customer\n"
+"                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
+"These email addresses will be added to the CC field of all inbound\n"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
-"Aceste adrese de email vor fi adaugate in campul CC al tuturor email-urilor "
-"primite si trimise pentru aceasta inregistrare inainte de a fi trimise. "
-"Despartiti adresele de mail multiple cu o virgula"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
 msgid "These people will receive email."
-msgstr "Aceste persoane vor primi e-mail."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "This allows customers to give rating on issue"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -693,17 +744,27 @@ msgid ""
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
 msgstr ""
-"Acest raport referitor la problemele proiectului va permite sa analizati "
-"calitatea asistentei tehnice sau a serviciilor de dupa vanzare. Puteti tine "
-"evidenta problemelor dupa vechime. Puteti analiza timpul necesar deschiderii "
-"sau inchiderii unei probleme, numarul de email-uri schimbate si timpul "
-"petrecut in medie cu problemele."
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Timesheets"
+msgstr "Fise de pontaj"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "Track customer satisfaction on issues"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
-msgstr "Neatribuit"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
@@ -712,12 +773,8 @@ msgid "Unread Messages"
 msgstr "Mesaje necitite"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-msgid "Update Date"
-msgstr "Data actualizării"
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
 msgstr ""
 
@@ -729,12 +786,12 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
 msgid "User Email"
-msgstr "E-mail utilizator"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_cc
 msgid "Watchers Emails"
-msgstr "Email-uri supraveghetori"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
@@ -754,49 +811,17 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid ""
-"You can track your issues from this menu and the action we     \n"
-"                will take."
-msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:263
+#: code:addons/project_issue/models/project_issue.py:191
 #, python-format
 msgid "issues"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
-#, fuzzy
-msgid "project issue"
-msgstr "Problema Proiect"
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
-msgstr "raport.problema.proiect"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ultimului mesaj postat pe înregistrare."
-
-#~ msgid "Followers"
-#~ msgstr "Urmări"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ultimului mesaj"
-
-#~ msgid "Messages"
-#~ msgstr "Mesaje"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Istoric mesaje și conversații"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mesaje Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istoric comunicare website"
+msgstr ""

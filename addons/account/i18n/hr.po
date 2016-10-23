@@ -98,7 +98,7 @@ msgstr "Broj znamenaka"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 msgid "# of Digits *"
-msgstr ""
+msgstr "Broj znamenki"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -118,7 +118,7 @@ msgstr "${object.company_id.name} Račun (Ref ${object.number or 'n/a'})"
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
 msgid "${object.subject}"
-msgstr ""
+msgstr "${object.subject}"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:466
@@ -850,7 +850,7 @@ msgstr "<strong>Početni datum:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>Subtotal :</strong>"
-msgstr ""
+msgstr "<strong>Podzbroj</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -930,7 +930,7 @@ msgstr "Uvijet plaćanja bi trebao imati samo jedan redak vrste Saldo."
 #: code:addons/account/models/account.py:528
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr ""
+msgstr "Bankovni račun može pripadati samo jednom dnevniku."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -972,7 +972,7 @@ msgstr "Popis uobičajenih poreza i iznosa poreza"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and supplier payment terms."
-msgstr ""
+msgstr "Popis uvjeta plaćanja za kupce i dobavljače"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1437,7 +1437,7 @@ msgstr "Mapiranje konta"
 #: model:ir.actions.act_window,name:account.account_tag_action
 #: model:ir.ui.menu,name:account.account_tag_menu
 msgid "Accounts Tags"
-msgstr ""
+msgstr "Oznaka konta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1908,7 +1908,7 @@ msgstr "Retci analitike"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_analytic_tag_ids
 msgid "Analytic tags"
-msgstr ""
+msgstr "Oznake analitike"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
@@ -2126,7 +2126,7 @@ msgstr "Prefix bankovnog računa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_bank_account_code_prefix
 msgid "Bank Accounts Prefix *"
-msgstr ""
+msgstr "Prefix bankovnog računa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
@@ -2248,7 +2248,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Pripada trenutnoj trvtki korisnika"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8183,6 +8183,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Odaberite 'Prodaju' za dnevnike izlaznih računa. Odaberite 'Nabavu' za "
+"dnevnike ulaznih računa. Odaberite 'Gotovina' ili 'Banka' za dnevnike koji "
+"se koriste za plaćanja kupaca ili plaćanja dobavljačima. Odaberite "
+"'Općenito' za ostale dnevnike."
 
 #. module: account
 #. openerp-web
