@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
+
 from openerp import api, fields, models
+from odoo.tools.safe_eval import safe_eval
 
 
 class ProjectIssue(models.Model):
@@ -23,7 +25,6 @@ class ProjectIssue(models.Model):
     @api.multi
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(ProjectIssue, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project_issue.mt_issue_rating")
-
 
 
 class Stage(models.Model):
@@ -74,7 +75,9 @@ class Project(models.Model):
         """ return the action to see all the rating about the issues of the project """
         action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
         issues = self.env['project.issue'].search([('project_id', 'in', self.ids)])
-        return dict(action, domain=[('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')])
+        action_domain = safe_eval(action['domain']) if action['domain'] else []
+        domain = action_domain + [('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
+        return dict(action, domain=domain)
 
     @api.multi
     def action_view_all_rating(self):
