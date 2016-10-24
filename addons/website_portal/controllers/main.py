@@ -17,7 +17,9 @@ class website_account(http.Controller):
     _items_per_page = 20
 
     def _prepare_portal_layout_values(self):
-        """ prepare the values to render portal layout """
+        """ prepare the values to render portal layout template. This returns the
+            data displayed on every portal pages.
+        """
         partner = request.env.user.partner_id
         # get customer sales rep
         if partner.user_id:

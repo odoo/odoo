@@ -2,28 +2,38 @@
 <odoo>
     <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="website_portal.portal_layout" priority="28">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-if="project_count"  t-att-class="page_name == 'project' and 'active' or ''">
-                 <a href="/my/projects">Projects</a>
+            <li t-att-class="page_name == 'project' and 'active' or ''">
+                <a href="/my/projects">Projects</a>
             </li>
-            <li t-if="task_count"  t-att-class="page_name == 'task' and 'active' or ''">
-                 <a href="/my/tasks">Tasks</a>
+            <li t-att-class="page_name == 'task' and 'active' or ''">
+                <a href="/my/tasks">Tasks</a>
             </li>
         </xpath>
     </template>
 
     <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="website_portal.portal_my_home" priority="28">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 t-if="project_count" class="page-header">
+            <h3 class="page-header">
                 <a href="/my/projects">Your Projects
                     <small class="ml8">
-                        <span class='badge'><t t-esc="project_count"/></span>
+                        <t t-if="project_count">
+                            <span class='badge'><t t-esc="project_count"/></span>
+                        </t>
+                        <t t-if="not project_count">
+                            There are currently no projects for your account.
+                        </t>
                     </small>
                 </a>
             </h3>
-            <h3 t-if="task_count" class="page-header">
+            <h3 class="page-header">
                 <a href="/my/tasks">Your Tasks
                     <small class="ml8">
-                        <span class='badge'><t t-esc="task_count"/></span>
+                        <t t-if="task_count">
+                            <span class='badge'><t t-esc="task_count"/></span>
+                        </t>
+                        <t t-if="not task_count">
+                            There are currently no quotes for your account.
+                        </t>
                     </small>
                 </a>
             </h3>
@@ -38,13 +48,13 @@
                     <t t-call="website_portal.portal_searchbar"/>
                 </h3>
             </div>
-            <div class="panel panel-default">
-                <t t-if="not projects">
-                    <div class="alert alert-warning mt8" role="alert">
-                        There are no projects.
-                    </div>
-                </t>
-                <table t-if="projects" class="table table-hover status_table">
+            <t t-if="not projects">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no projects.
+                </div>
+            </t>
+            <div t-if="projects" class="panel panel-default">
+                <table class="table table-hover status_table">
                     <thead>
                         <tr class="active">
                             <th class="col-md-6">Name</th>
@@ -149,13 +159,13 @@
                 Your Tasks
                 <t t-call="website_portal.portal_searchbar"/>
             </h3>
-            <div class="panel panel-default">
-                <t t-if="not tasks">
-                    <div class="alert alert-warning mt8" role="alert">
-                        There are no tasks.
-                    </div>
-                </t>
-                <table t-if="tasks" class="table table-hover status_table">
+            <t t-if="not tasks">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no tasks.
+                </div>
+            </t>
+            <div t-if="tasks" class="panel panel-default">
+                <table class="table table-hover status_table">
                     <thead>
                         <tr class="active">
                             <th class="col-md-10">Task</th>

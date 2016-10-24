@@ -83,6 +83,7 @@ class website_account(website_account):
         values.update({
             'date': date_begin,
             'quotations': quotations,
+            'page_name': 'quote',
             'pager': pager,
             'archive_groups': archive_groups,
             'default_url': '/my/quotes',
