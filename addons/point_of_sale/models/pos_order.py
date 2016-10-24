@@ -870,7 +870,7 @@ class ReportSaleDetails(models.AbstractModel):
             'payments': payments,
             'company_name': self.env.user.company_id.name,
             'taxes': taxes.values(),
-            'products': [{
+            'products': sorted([{
                 'product_id': product.id,
                 'product_name': product.name[:20],
                 'code': product.default_code,
@@ -878,7 +878,7 @@ class ReportSaleDetails(models.AbstractModel):
                 'price_unit': price_unit,
                 'discount': discount,
                 'uom': product.uom_id.name
-            } for (product, price_unit, discount), qty in products_sold.items()]
+            } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 
     @api.multi

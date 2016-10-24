@@ -1081,8 +1081,7 @@ class product_product(osv.osv):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                if variant:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
                 if not sellers:
                     sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
             if sellers:
