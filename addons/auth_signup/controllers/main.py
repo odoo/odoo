@@ -84,8 +84,10 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
             except Exception, e:
-                qcontext['error'] = _(e.message)
-
+                if e.message is '' and e.name:
+                    qcontext['error'] = _(e.name)
+                else:
+                    qcontext['error'] = _(e.message)
 
         return request.render('auth_signup.reset_password', qcontext)
 
