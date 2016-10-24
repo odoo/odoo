@@ -2,6 +2,7 @@ odoo.define('website.website', function (require) {
     "use strict";
 
     var ajax = require('web.ajax');
+    var Dialog = require("web.Dialog");
     var core = require('web.core');
     var Widget = require('web.Widget');
     var session = require('web.session');
@@ -135,9 +136,9 @@ odoo.define('website.website', function (require) {
 
     var error = function (title, message, url) {
         return new Dialog(null, {
-            title: data.data ? data.data.arguments[0] : "",
+            title: title || "",
             $content: $(qweb.render('website.error_dialog', {
-                message: data.data ? data.data.arguments[1] : data.statusText,
+                message: message || "",
                 backend_url: url,
             })),
         }).open();
