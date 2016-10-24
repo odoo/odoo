@@ -70,7 +70,7 @@ class PosSession(models.Model):
         related='cash_register_id.total_entry_encoding',
         string='Total Cash Transaction',
         readonly=True,
-        help="Total of all paid sale orders")
+        help="Total of all paid sales orders")
     cash_register_balance_end = fields.Monetary(
         related='cash_register_id.balance_end',
         digits=0,
@@ -149,7 +149,7 @@ class PosSession(models.Model):
             default_journals = pos_config.with_context(ctx).default_get(['journal_id', 'invoice_journal_id'])
             if (not default_journals.get('journal_id') or
                     not default_journals.get('invoice_journal_id')):
-                raise UserError(_("Unable to open the session. You have to assign a sale journal to your point of sale."))
+                raise UserError(_("Unable to open the session. You have to assign a sales journal to your point of sale."))
             pos_config.with_context(ctx).sudo().write({
                 'journal_id': default_journals['journal_id'],
                 'invoice_journal_id': default_journals['invoice_journal_id']})

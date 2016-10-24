@@ -7,9 +7,9 @@
     'version': '1.0',
     'category': 'Warehouse',
     'description': """
-This module will automatically reserve the picking from stock when a sale order is confirmed
+This module will automatically reserve the picking from stock when a sales order is confirmed
 ============================================================================================
-Upon confirmation of a sale order or when quantities are added,
+Upon confirmation of a sales order or when quantities are added,
 the picking that reserves from stock will be reserved if the
 necessary quantities are available.
 

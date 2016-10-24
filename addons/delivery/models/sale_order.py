@@ -44,7 +44,7 @@ class SaleOrder(models.Model):
     @api.multi
     def delivery_set(self):
 
-        # Remove delivery products from the sale order
+        # Remove delivery products from the sales order
         self._delivery_unset()
 
         for order in self:
@@ -82,7 +82,7 @@ class SaleOrder(models.Model):
         if self.partner_id and self.fiscal_position_id:
             taxes_ids = self.fiscal_position_id.map_tax(taxes, carrier.product_id, self.partner_id).ids
 
-        # Create the sale order line
+        # Create the sales order line
         values = {
             'order_id': self.id,
             'name': carrier.name,

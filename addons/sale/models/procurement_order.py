@@ -6,4 +6,4 @@ from odoo import fields, models
 
 class ProcurementOrder(models.Model):
     _inherit = 'procurement.order'
-    sale_line_id = fields.Many2one('sale.order.line', string='Sale Order Line')
+    sale_line_id = fields.Many2one('sale.order.line', string='Sales Order Line')

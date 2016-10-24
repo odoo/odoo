@@ -36,7 +36,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _update_registrations(self, confirm=True, registration_data=None):
-        """ Create or update registrations linked to a sale order line. A sale
+        """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """

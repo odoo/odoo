@@ -401,7 +401,7 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def checkout_redirection(self, order):
-        # must have a draft sale order with lines at this point, otherwise reset
+        # must have a draft sales order with lines at this point, otherwise reset
         if not order or order.state != 'draft':
             request.session['sale_order_id'] = None
             request.session['sale_transaction_id'] = None
@@ -692,7 +692,7 @@ class WebsiteSale(http.Controller):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
 
-         - a draft sale order with lines; otherwise, clean context / session and
+         - a draft sales order with lines; otherwise, clean context / session and
            back to the shop
          - no transaction in context / session, or only a draft one, if the customer
            did go to a payment.acquirer website but closed the tab without
