@@ -65,9 +65,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if self.product_id.id:
             account_id = self.product_id.property_account_income_id.id
         if not account_id:
-            prop = ir_property_obj.get('property_account_income_categ_id', 'product.category')
-            prop_id = prop and prop.id or False
-            account_id = order.fiscal_position_id.map_account(prop_id)
+            inc_acc = ir_property_obj.get('property_account_income_categ_id', 'product.category')
+            account_id = order.fiscal_position_id.map_account(inc_acc).id if inc_acc else False
         if not account_id:
             raise UserError(
                 _('There is no income account defined for this product: "%s". You may have to install a chart of account from Accounting app, settings menu.') % \
