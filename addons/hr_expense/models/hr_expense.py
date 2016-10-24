@@ -124,7 +124,6 @@ class HrExpense(models.Model):
             'date_maturity': line.get('date_maturity'),
             'partner_id': partner_id,
             'name': line['name'][:64],
-            'date': self.sheet_id.accounting_date,
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and - line['price'],
             'account_id': line['account_id'],
@@ -180,11 +179,12 @@ class HrExpense(models.Model):
         for journal, expense_list in journal_dict.items():
             for expense in expense_list:
                 #create the move that will contain the accounting entries
+                acc_date = expense.sheet_id.accounting_date or expense.date
                 move = self.env['account.move'].create({
                     'journal_id': journal.id,
                     'company_id': self.env.user.company_id.id,
-                    'date': expense.accounting_date or expense.date,
-                    'ref': expense.name,
+                    'date': acc_date,
+                    'ref': expense.sheet_id.name,
                     # force the name to the default value, to avoid an eventual 'default_name' in the context
                     # to set it to '' which cause no number to be given to the account.move when posted.
                     'name': '/',
