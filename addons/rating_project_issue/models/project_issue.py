@@ -42,7 +42,7 @@ class Project(models.Model):
     def _send_rating_mail(self):
         super(Project, self)._send_rating_mail()
         for project in self:
-            project.issue_ids._send_issue_rating_mail()
+            self.env['project.issue'].search([('project_id', '=', project.id)])._send_issue_rating_mail()
 
     @api.depends('percentage_satisfaction_task', 'percentage_satisfaction_issue')
     def _compute_percentage_satisfaction_project(self):
@@ -55,7 +55,7 @@ class Project(models.Model):
                 activity_great = activity_task['great']
                 activity_sum = sum(activity_task.values())
             if project.use_issues:
-                activity_issue = project.issue_ids.rating_get_grades(domain)
+                activity_issue = self.env['project.issue'].search([('project_id', '=', project.id)]).rating_get_grades(domain)
                 activity_great += activity_issue['great']
                 activity_sum += sum(activity_issue.values())
             project.percentage_satisfaction_project = activity_great * 100 / activity_sum if activity_sum else -1
