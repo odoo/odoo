@@ -139,21 +139,13 @@ class TestViewSaving(common.TransactionCase):
         Company = self.env['res.company']
         View = self.env['ir.ui.view']
 
-        # create a view with an xmlid, like the file import would
-        with self.env.norecompute():
-            self.view_id = View.create({
-                'name': "Test View",
-                'type': 'qweb',
-                'arch': ET.tostring(self.arch, encoding='utf-8').decode('utf-8')
-            })
+        # create an xmlid for the view
         imd = self.env['ir.model.data'].create({
             'module': 'website',
             'name': 'test_view',
-            'model': 'ir.ui.view',
-            'res_id': self.view_id,
+            'model': self.view_id._name,
+            'res_id': self.view_id.id,
         })
-
-        # the xml_id of the view should not be flagged as 'noupdate'
         self.assertEqual(self.view_id.model_data_id, imd)
         self.assertFalse(imd.noupdate)
 
