@@ -32,13 +32,13 @@
                 Your Issues
                 <t t-call="website_portal.portal_searchbar"/>
             </h3>
-            <div class="panel panel-default">
-                <t t-if="not issues">
-                    <div class="alert alert-warning mt8" role="alert">
-                        There are no issues.
-                    </div>
-                </t>
-                <table t-if="issues" class="table table-hover status_table">
+            <t t-if="not issues">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no issues.
+                </div>
+            </t>
+            <div t-if="issues" class="panel panel-default">
+                <table class="table table-hover status_table">
                     <thead>
                         <tr class="active">
                             <th>Issue</th>
