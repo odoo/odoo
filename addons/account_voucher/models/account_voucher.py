@@ -30,10 +30,10 @@ class AccountVoucher(models.Model):
     name = fields.Char('Payment Reference',
         readonly=True, states={'draft': [('readonly', False)]}, default='')
     date = fields.Date("Bill Date", readonly=True,
-        select=True, states={'draft': [('readonly', False)]},
+        index=True, states={'draft': [('readonly', False)]},
         copy=False, default=fields.Date.context_today)
     account_date = fields.Date("Accounting Date",
-        readonly=True, select=True, states={'draft': [('readonly', False)]},
+        readonly=True, index=True, states={'draft': [('readonly', False)]},
         help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal',
         required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
