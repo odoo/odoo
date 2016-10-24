@@ -45,7 +45,7 @@ class AccountInvoiceReport(models.Model):
     user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
-    currency_rate = fields.Float(string='Currency Rate', readonly=True)
+    currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg")
     nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
