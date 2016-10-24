@@ -65,8 +65,8 @@ var ViewEditor = AceCommon.ViewEditor.extend({
             });
     },
     displayError: function () {
-        var error_message = this._super.apply(this, arguments);
-        website.error(error_message);
+        var error = this._super.apply(this, arguments);
+        website.error(error.title, error.message);
     },
     updateHash: function () {
         window.location.hash = hash + "?view=" + this.selectedViewId();

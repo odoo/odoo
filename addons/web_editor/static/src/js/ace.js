@@ -325,7 +325,10 @@ var ViewEditor = Widget.extend({
             if (line) self.aceEditor.on('changeSession', onchangeSession);
             this.$("#ace-view-list").val(session.id).change();
         }
-        return session.text.match(/\s+name=['"]([^'"]+)['"]/i)[1], "<b>Malformed XML document</b>:<br/>" + message;
+        return {
+            title: session.text.match(/\s+name=['"]([^'"]+)['"]/i)[1],
+            message: "<b>Malformed XML document</b>:<br/>" + message
+        };
     },
 });
 
