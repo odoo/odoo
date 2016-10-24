@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     def get_access_action(self):
         """ Instead of the classic form view, redirect to the online quote for
         portal users that have access to a confirmed order. """
-        # TDE note: read access on sale order to portal users granted to followed sale orders
+        # TDE note: read access on sales order to portal users granted to followed sales orders
         self.ensure_one()
         if self.state == 'cancel' or (self.state == 'draft' and not self.env.context.get('mark_so_as_sent')):
             return super(SaleOrder, self).get_access_action()

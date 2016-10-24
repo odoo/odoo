@@ -195,7 +195,7 @@ class SaleOrderOption(models.Model):
     _description = "Sale Options"
     _order = 'sequence, id'
 
-    order_id = fields.Many2one('sale.order', 'Sale Order Reference', ondelete='cascade', index=True)
+    order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
     line_id = fields.Many2one('sale.order.line', on_delete="set null")
     name = fields.Text('Description', required=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])

@@ -9,4 +9,4 @@ class ResPartner(models.Model):
 
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
-        help='If set, sale team used notably for sales and assignations related to this partner')
+        help='If set, sales team used notably for sales and assignations related to this partner')

@@ -281,7 +281,7 @@ class EventRegistration(models.Model):
 
     origin = fields.Char(
         string='Source Document', readonly=True,
-        help="Reference of the document that created the registration, for example a sale order")
+        help="Reference of the document that created the registration, for example a sales order")
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
@@ -329,7 +329,7 @@ class EventRegistration(models.Model):
     @api.model
     def _prepare_attendee_values(self, registration):
         """ Method preparing the values to create new attendees based on a
-        sale order line. It takes some registration data (dict-based) that are
+        sales order line. It takes some registration data (dict-based) that are
         optional values coming from an external input like a web page. This method
         is meant to be inherited in various addons that sell events. """
         partner_id = registration.pop('partner_id', self.env.user.partner_id)

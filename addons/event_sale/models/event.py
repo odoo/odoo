@@ -116,10 +116,10 @@ class EventRegistration(models.Model):
 
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     # in addition to origin generic fields, add real relational fields to correctly
-    # handle attendees linked to sale orders and their lines
+    # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
-    sale_order_id = fields.Many2one('sale.order', string='Source Sale Order', ondelete='cascade')
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale Order Line', ondelete='cascade')
+    sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
 
     @api.multi
     @api.constrains('event_ticket_id', 'state')

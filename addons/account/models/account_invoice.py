@@ -241,9 +241,9 @@ class AccountInvoice(models.Model):
     date_due = fields.Date(string='Due Date',
         readonly=True, states={'draft': [('readonly', False)]}, index=True, copy=False,
         help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. The payment term may compute several due dates, for example 50% "
+             "of accounting entries. The Payment terms may compute several due dates, for example 50% "
              "now and 50% in one month, but if you want to force a due date, make sure that the payment "
-             "term is not set on the invoice. If you keep the payment term and the due date empty, it "
+             "term is not set on the invoice. If you keep the Payment terms and the due date empty, it "
              "means direct payment.")
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -251,8 +251,8 @@ class AccountInvoice(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
         readonly=True, states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
-             "The payment term may compute several due dates, for example 50% now, 50% in one month.")
+             "of accounting entries. If you keep the payment terms and the due date empty, it means direct payment. "
+             "The payment terms may compute several due dates, for example 50% now, 50% in one month.")
     date = fields.Date(string='Accounting Date',
         copy=False,
         help="Keep empty to use the invoice date.",
@@ -522,7 +522,7 @@ class AccountInvoice(models.Model):
         if not date_invoice:
             date_invoice = fields.Date.context_today(self)
         if not self.payment_term_id:
-            # When no payment term defined
+            # When no payment terms defined
             self.date_due = self.date_due or self.date_invoice
         else:
             pterm = self.payment_term_id
@@ -1386,14 +1386,14 @@ class AccountInvoiceTax(models.Model):
 
 class AccountPaymentTerm(models.Model):
     _name = "account.payment.term"
-    _description = "Payment Term"
+    _description = "Payment Terms"
     _order = "name"
 
     def _default_line_ids(self):
         return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 9, 'days': 0, 'option': 'day_after_invoice_date'})]
 
     name = fields.Char(string='Payment Terms', translate=True, required=True)
-    active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
+    active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
     note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
@@ -1403,10 +1403,10 @@ class AccountPaymentTerm(models.Model):
     def _check_lines(self):
         payment_term_lines = self.line_ids.sorted()
         if payment_term_lines and payment_term_lines[-1].value != 'balance':
-            raise ValidationError(_('A Payment Term should have its last line of type Balance.'))
+            raise ValidationError(_('A Payment Terms should have its last line of type Balance.'))
         lines = self.line_ids.filtered(lambda r: r.value == 'balance')
         if len(lines) > 1:
-            raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
+            raise ValidationError(_('A Payment Terms should have only one line of type Balance.'))
 
     @api.one
     def compute(self, value, date_ref=False):
@@ -1448,7 +1448,7 @@ class AccountPaymentTerm(models.Model):
 
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
-    _description = "Payment Term Line"
+    _description = "Payment Terms Line"
     _order = "sequence, id"
 
     value = fields.Selection([
@@ -1456,7 +1456,7 @@ class AccountPaymentTermLine(models.Model):
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
         ], string='Type', required=True, default='balance',
-        help="Select here the kind of valuation related to this payment term line.")
+        help="Select here the kind of valuation related to this payment terms line.")
     value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Terms'), help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=0)
     option = fields.Selection([
@@ -1468,7 +1468,7 @@ class AccountPaymentTermLine(models.Model):
         default='day_after_invoice_date', required=True, string='Options'
         )
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
-    sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment term lines.")
+    sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment terms lines.")
 
     @api.one
     @api.constrains('value', 'value_amount')

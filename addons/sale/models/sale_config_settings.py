@@ -102,7 +102,7 @@ class SaleConfiguration(models.TransientModel):
     auto_done_setting = fields.Selection([
         (0, "Allow to edit sales order from the 'Sales Order' menu (not from the Quotation menu)"),
         (1, "Never allow to modify a confirmed sales order")
-        ], "Sale Order Modification")
+        ], "Sales Order Modification")
     module_sale_contract = fields.Boolean("Manage subscriptions and recurring invoicing")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 

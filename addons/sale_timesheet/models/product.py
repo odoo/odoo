@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         ('task', 'Create a task and track hours')])
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True,
-        help='Create a task under this project on sale order validation. This setting must be set for each company.')
+        help='Create a task under this project on sales order validation. This setting must be set for each company.')
 
     @api.onchange('type')
     def _onchange_type(self):

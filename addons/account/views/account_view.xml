@@ -234,8 +234,8 @@
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
-                    <filter domain="[('type', '=', 'sale')]" string="Sale"/>
-                    <filter domain="[('type', '=', 'purchase')]" string="Purchase"/>
+                    <filter domain="[('type', '=', 'sale')]" string="Sales"/>
+                    <filter domain="[('type', '=', 'purchase')]" string="Purchases"/>
                     <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
                     <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
@@ -378,7 +378,7 @@
                 related to the day-to-day business.
               </p><p>
                 A typical company may use one journal per payment method (cash,
-                bank accounts, checks), one purchase journal, one sale journal
+                bank accounts, checks), one purchase journal, one sales journal
                 and one for miscellaneous information.
               </p>
             </field>
@@ -1434,7 +1434,7 @@
         </record>
 
 
-        <!-- Payment Terms -->
+        <!--Payment Terms -->
         <record id="view_payment_term_line_tree" model="ir.ui.view">
             <field name="name">account.payment.term.line.tree</field>
             <field name="model">account.payment.term.line</field>
@@ -1498,7 +1498,7 @@
                         <field name="company_id" invisible="1"/>
                     </group>
                     <label for="note"/>
-                    <field name="note" placeholder="Payment term explanation for the customer..."/>
+                    <field name="note" placeholder="Payment terms explanation for the customer..."/>
                     <separator string="Terms"/>
                     <p class="text-muted">
                         The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.

@@ -16,9 +16,9 @@ class ProcurementGroup(models.Model):
     The procurement group class is used to group products together
     when computing procurements. (tasks, physical products, ...)
 
-    The goal is that when you have one sale order of several products
+    The goal is that when you have one sales order of several products
     and the products are pulled from the same or several location(s), to keep
-    having the moves grouped into pickings that represent the sale order.
+    having the moves grouped into pickings that represent the sales order.
 
     Used in: sales order (to group delivery order lines like the so), pull/push
     rules (to pack like the delivery order), on orderpoints (e.g. for wave picking
@@ -31,7 +31,7 @@ class ProcurementGroup(models.Model):
     move from input will have a stock.picking with 2 grouped lines and the move
     from stock will have 2 grouped lines also.
 
-    The name is usually the name of the original document (sale order) or a
+    The name is usually the name of the original document (sales order) or a
     sequence computed if created manually.
     '''
     _name = 'procurement.group'

@@ -40,7 +40,7 @@ class website_account(website_account):
         return response
 
     #
-    # Quotations and Sale Orders
+    # Quotations and Sales Orders
     #
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)

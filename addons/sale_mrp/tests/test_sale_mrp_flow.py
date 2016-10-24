@@ -111,7 +111,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id, 'make_to_stock')
 
         # ----------------------------------------
-        # Create sale order of 10 Dozen product A.
+        # Create sales order of 10 Dozen product A.
         # ----------------------------------------
 
         order = self.SaleOrder.create({
@@ -128,11 +128,11 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_uom_qty': 10,
             'product_uom': self.uom_dozen.id
         })
-        self.assertTrue(order, "Sale order not created.")
+        self.assertTrue(order, "Sales order not created.")
         order.action_confirm()
 
         # ===============================================================================
-        #  Sale order of 10 Dozen product A should create production order
+        #  Sales order of 10 Dozen product A should create production order
         #  like ..
         # ===============================================================================
         #    Product A  10 Dozen.

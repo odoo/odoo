@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
         order_line = False
         if self.state != 'draft':
             request.session['sale_order_id'] = None
-            raise UserError(_('It is forbidden to modify a sale order which is not in draft status'))
+            raise UserError(_('It is forbidden to modify a sales order which is not in draft status'))
         if line_id is not False:
             order_lines = self._cart_find_product_line(product_id, line_id, **kwargs)
             order_line = order_lines and order_lines[0]
@@ -304,13 +304,13 @@ class Website(models.Model):
 
     @api.multi
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
-        """ Return the current sale order after mofications specified by params.
-        :param bool force_create: Create sale order if not already existing
+        """ Return the current sales order after mofications specified by params.
+        :param bool force_create: Create sales order if not already existing
         :param str code: Code to force a pricelist (promo code)
                          If empty, it's a special case to reset the pricelist with the first available else the default.
-        :param bool update_pricelist: Force to recompute all the lines from sale order to adapt the price with the current pricelist.
+        :param bool update_pricelist: Force to recompute all the lines from sales order to adapt the price with the current pricelist.
         :param int force_pricelist: pricelist_id - if set,  we change the pricelist with this one
-        :returns: browse record for the current sale order
+        :returns: browse record for the current sales order
         """
         self.ensure_one()
         partner = self.env.user.partner_id
@@ -465,4 +465,4 @@ class ResCountry(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sale Order')
+    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sales Order')

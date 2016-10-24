@@ -103,7 +103,7 @@ class PurchaseOrder(models.Model):
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
     origin = fields.Char('Source Document', copy=False,\
         help="Reference of the document that generated this purchase order "
-             "request (e.g. a sale order or an internal procurement request)")
+             "request (e.g. a sales order or an internal procurement request)")
     partner_ref = fields.Char('Vendor Reference', copy=False,\
         help="Reference of the sales order or bid sent by the vendor. "
              "It's used to do the matching when you receive the "

@@ -63,7 +63,7 @@ class PosConfig(models.Model):
         'stock.location', string='Stock Location',
         domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
     journal_id = fields.Many2one(
-        'account.journal', string='Sale Journal',
+        'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
         default=_default_sale_journal)
@@ -169,7 +169,7 @@ class PosConfig(models.Model):
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
-            raise UserError(_("The company of the sale journal is different than the one of point of sale"))
+            raise UserError(_("The company of the sales journal is different than the one of point of sale"))
 
     @api.constrains('company_id', 'invoice_journal_id')
     def _check_company_journal(self):

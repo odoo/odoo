@@ -114,7 +114,7 @@ class SaleOrder(models.Model):
     validity_date = fields.Date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sale order is confirmed.", oldname="date_confirm")
+    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
@@ -189,7 +189,7 @@ class SaleOrder(models.Model):
         """
         Update the following fields when the partner is changed:
         - Pricelist
-        - Payment term
+        - Payment terms
         - Invoice address
         - Delivery address
         """
@@ -281,7 +281,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         journal_id = self.env['account.invoice'].default_get(['journal_id'])['journal_id']
         if not journal_id:
-            raise UserError(_('Please define an accounting sale journal for this company.'))
+            raise UserError(_('Please define an accounting sales journal for this company.'))
         invoice_vals = {
             'name': self.client_order_ref or '',
             'origin': self.name,
@@ -740,13 +740,13 @@ class SaleOrderLine(models.Model):
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     is_downpayment = fields.Boolean(
-        string="Is a down payment", help="Down payments are made when creating invoices from a sale order."
-        " They are not copied when duplicating a sale order.")
+        string="Is a down payment", help="Down payments are made when creating invoices from a sales order."
+        " They are not copied when duplicating a sales order.")
 
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('sent', 'Quotation Sent'),
-        ('sale', 'Sale Order'),
+        ('sale', 'Sales Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], related='order_id.state', string='Order Status', readonly=True, copy=False, store=True, default='draft')
@@ -884,7 +884,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def unlink(self):
         if self.filtered(lambda x: x.state in ('sale', 'done')):
-            raise UserError(_('You can not remove a sale order line.\nDiscard changes and try setting the quantity to 0.'))
+            raise UserError(_('You can not remove a sales order line.\nDiscard changes and try setting the quantity to 0.'))
         return super(SaleOrderLine, self).unlink()
 
     @api.multi
@@ -902,7 +902,7 @@ class SaleOrderLine(models.Model):
             :parem float qty: total quentity of product
             :param tuple price_and_rule: tuple(price, suitable_rule) coming from pricelist computation
             :param obj uom: unit of measure of current order line
-            :param integer pricelist_id: pricelist id of sale order"""
+            :param integer pricelist_id: pricelist id of sales order"""
         PricelistItem = self.env['product.pricelist.item']
         field_name = 'lst_price'
         currency_id = None

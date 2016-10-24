@@ -176,7 +176,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_delivered_qty(self):
-        """Computes the delivered quantity on sale order lines, based on done stock moves related to its procurements
+        """Computes the delivered quantity on sales order lines, based on done stock moves related to its procurements
         """
         self.ensure_one()
         super(SaleOrderLine, self)._get_delivered_qty()
