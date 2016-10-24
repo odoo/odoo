@@ -173,7 +173,7 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self)._track_subtype(init_values)
 
     @api.multi
-    @api.onchange('partner_shipping_id')
+    @api.onchange('partner_shipping_id', 'partner_id')
     def onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
