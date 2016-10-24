@@ -8,13 +8,13 @@
 
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="25">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li>
+            <li t-att-class="page_name == 'quote' and 'active'">
                 <a href="/my/quotes">Quotes</a>
             </li>
-            <li>
+            <li t-att-class="page_name == 'order' and 'active'">
                 <a href="/my/orders">Orders</a>
             </li>
-            <li>
+            <li t-att-class="page_name == 'invoice' and 'active'">
                 <a href="/my/invoices">Invoices</a>
             </li>
         </xpath>

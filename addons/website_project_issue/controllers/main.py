@@ -10,16 +10,16 @@ from odoo.http import request
 
 class WebsiteAccount(website_account):
 
-    def _prepare_portal_layout_values(self):
-        values = super(WebsiteAccount, self)._prepare_portal_layout_values()
+    @http.route()
+    def account(self, **kw):
+        response = super(WebsiteAccount, self).account(**kw)
         # domain is needed to hide non portal project for employee
         # portal users can't see the privacy_visibility, fetch the domain for them in sudo
         portal_projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
-        issue_count = request.env['project.issue'].search_count([('project_id', 'in', portal_projects.ids)])
-        values.update({
-            'issue_count': issue_count,
+        response.qcontext.update({
+            'issue_count': request.env['project.issue'].search_count([('project_id', 'in', portal_projects.ids)])
         })
-        return values
+        return response
 
     @http.route(['/my/issues', '/my/issues/page/<int:page>'], type='http', auth="user", website=True)
     def my_issues(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
