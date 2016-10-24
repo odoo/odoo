@@ -257,6 +257,8 @@ class AccountBankStatement(models.Model):
     def button_journal_entries(self):
         context = dict(self._context or {})
         context['journal_id'] = self.journal_id.id
+        aml = self.env['account.move.line'].search([('statement_id', 'in', self.ids)])
+        aml |= aml.mapped('move_id').mapped('line_ids')
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
@@ -264,7 +266,7 @@ class AccountBankStatement(models.Model):
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'domain': [('statement_id', 'in', self.ids)],
+            'domain': [('id', 'in', aml.ids)],
             'context': context,
         }
 

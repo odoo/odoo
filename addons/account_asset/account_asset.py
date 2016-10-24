@@ -427,7 +427,7 @@ class AccountAssetDepreciationLine(models.Model):
     move_check = fields.Boolean(compute='_get_move_check', string='Posted', track_visibility='always', store=True)
 
     @api.one
-    @api.depends('move_id')
+    @api.depends('move_id', 'asset_id.account_move_ids')
     def _get_move_check(self):
         self.move_check = bool(self.move_id)
 
