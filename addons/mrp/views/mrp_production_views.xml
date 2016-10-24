@@ -80,6 +80,7 @@
                         <group>
                             <field name="has_moves" invisible="1"/>
                             <field name="check_to_done" invisible="1"/>
+                            <field name="id" invisible="1"/>
                             <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False)]"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
@@ -88,7 +89,7 @@
                                 <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
-                                    string="Update" states="confirmed,planned,progress" class="oe_link" attrs="{'invisible': [('state','=','done')]}"/>
+                                    string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('id', '=', False)]}"/>
                             </div>
                             <field name="bom_id"
                                 domain="['&amp;', '|',
