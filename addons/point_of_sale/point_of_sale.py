@@ -956,7 +956,8 @@ class pos_order(osv.osv):
         # Mark pack operations as done
         pick = picking_obj.browse(cr, uid, picking_id, context=context)
         for pack in pick.pack_operation_ids:
-            self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
+            if pack.product_id.tracking == 'none':
+                self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
         picking_obj.action_done(cr, uid, [picking_id], context=context)
 
     def create_picking(self, cr, uid, ids, context=None):
