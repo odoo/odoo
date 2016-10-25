@@ -37,7 +37,6 @@ class WebsiteConfigSettings(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Digital Content")
 
     module_sale_stock = fields.Boolean("Delivery Orders")
-    module_account_taxcloud = fields.Boolean("TaxCloud")
     module_portal = fields.Boolean("Activate the customer portal", help="""Give your customers access to their documents.""")
 
     # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability

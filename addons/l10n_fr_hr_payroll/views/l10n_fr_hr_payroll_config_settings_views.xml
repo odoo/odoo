@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_account_config_settings_form_inherit_l10n_fr_hr_payroll" model="ir.ui.view">
-        <field name="name">view.account.config.form.inherit.l10n.fr.hr.payroll</field>
+    <record id="account_config_settings_view_form" model="ir.ui.view">
+        <field name="name">account.config.settings.form</field>
         <field name="model">account.config.settings</field>
-        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="inherit_id" ref="account.account_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='followup']" position="before">
-                <group string="Paie">
-                    <label for="plafond_secu"/>
-                    <div>
-                        <field name="plafond_secu" class="oe_inline"/>
+            <sheet position="inside">
+                <h2>French Payroll</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="plafond_secu" class="col-md-3 o_light_label"/>
+                                    <field name="plafond_secu"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="nombre_employes" class="col-md-3 o_light_label"/>
+                                    <field name="nombre_employes"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="cotisation_prevoyance" class="col-md-3 o_light_label"/>
+                                    <field name="cotisation_prevoyance"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="org_ss" class="col-md-3 o_light_label"/>
+                                    <field name="org_ss"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="conv_coll" class="col-md-3 o_light_label"/>
+                                    <field name="conv_coll"/>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                    <label for="nombre_employes"/>
-                    <div>
-                        <field name="nombre_employes" class="oe_inline"/>
-                    </div>
-                    <label for="cotisation_prevoyance"/>
-                    <div>
-                        <field name="cotisation_prevoyance" class="oe_inline"/>
-                    </div>
-                    <label for="org_ss"/>
-                    <div>
-                        <field name="org_ss" class="oe_inline"/>
-                    </div>
-                    <label for="conv_coll"/>
-                    <div>
-                        <field name="conv_coll" class="oe_inline"/>
-                    </div>
-                </group>
-            </xpath>
+                </div>
+            </sheet>
         </field>
     </record>
 </odoo>

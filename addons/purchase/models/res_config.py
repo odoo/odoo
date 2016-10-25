@@ -61,5 +61,4 @@ class PurchaseConfigSettings(models.TransientModel):
 class AccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
     group_analytic_account_for_purchases = fields.Boolean('Analytic accounting for purchases',
-        implied_group='purchase.group_analytic_accounting',
-        help="Allows you to specify an analytic account on purchase order lines.")
+        implied_group='purchase.group_analytic_accounting')

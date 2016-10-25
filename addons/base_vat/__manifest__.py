@@ -39,5 +39,6 @@ only the country code will be validated.
     'data': [
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
+        'views/res_config_view.xml',
     ],
 }
