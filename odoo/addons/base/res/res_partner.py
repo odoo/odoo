@@ -138,6 +138,12 @@ class Partner(models.Model, FormatAddress):
     def _default_company(self):
         return self.env['res.company']._company_default_get('res.partner')
 
+    @api.depends('country_id')
+    def _set_vat_validation_type(self):
+        """ Set the vat_validation_type based on the country"""
+        for partner in self:
+            partner.vat_validation_type = partner.get_validation_type()
+
     name = fields.Char(index=True)
     display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     date = fields.Date(index=True)
@@ -160,6 +166,7 @@ class Partner(models.Model, FormatAddress):
     vat = fields.Char(string='TIN', help="Tax Identification Number. "
                                          "Fill it if the company is subjected to taxes. "
                                          "Used by the some of the legal statements.")
+    vat_validation_type = fields.Selection([('no_validation', 'No validation')], compute=_set_vat_validation_type, string="Validation of the TIN number", store=True)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char(help="Website of Partner or Company")
     comment = fields.Text(string='Notes')
@@ -236,6 +243,13 @@ class Partner(models.Model, FormatAddress):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
+    def get_validation_type(self):
+        """ This function is intended to be extended by modules that add a vat_validation_type, to set
+            the right vat_validation_type on partners.
+        """
+        self.ensure_one()
+        return 'no_validation'
+
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None)
@@ -275,6 +289,21 @@ class Partner(models.Model, FormatAddress):
         for partner in self:
             p = partner.commercial_partner_id
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
+
+    def _check_vat(self):
+        """ This function is intended to be extended by modules that add a vat_validation_type, to add
+            the verification algorithm for the new vat_validation_type.
+        """
+        self.ensure_one()
+        if not self.vat_validation_type or self.vat_validation_type == 'no_validation':
+            return True
+        raise ValidationError(_('Impossible to validate TIN number.'))
+
+    @api.constrains("vat", "vat_validation_type")
+    def check_vat(self):
+        """ Check that the vat field is correct accordingly to the algorithm defined by the vat_validation_type."""
+        for partner in self:
+            partner._check_vat()
 
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):
