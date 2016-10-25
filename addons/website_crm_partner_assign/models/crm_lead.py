@@ -243,3 +243,30 @@ class CrmLead(models.Model):
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] if values['date_deadline'] else False,
             })
+
+    @api.model
+    def create_opp_portal(self, values):
+        if self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id:
+            user = self.env.user
+            self = self.sudo()
+        if not (values['contact_name'] and values['description'] and values['title']):
+            return {
+                'errors': _('All fields are required !')
+            }
+        tag_own = self.env.ref('website_crm_partner_assign.tag_portal_lead_own_opp', False)
+        values = {
+            'contact_name': values['contact_name'],
+            'name': values['title'],
+            'description': values['description'],
+            'priority': '2',
+            'partner_assigned_id': user.partner_id.id,
+        }
+        if tag_own:
+            values['tag_ids'] = [(4, tag_own.id, False)]
+
+        lead = self.create(values)
+        lead.assign_salesman_of_assigned_partner()
+        lead.convert_opportunity(lead.partner_id.id)
+        return {
+            'id': lead.id
+        }
