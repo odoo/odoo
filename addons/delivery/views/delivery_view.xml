@@ -65,22 +65,23 @@
                             <h1>
                                 <field name="name" placeholder="e.g. UPS Express"/>
                             </h1>
+                        </div>
+                        <group>
                             <group>
-                                <group>
+                                <label for="delivery_type"/>
+                                <div>
                                     <field name="delivery_type" widget="radio"/>
-                                    <label for="margin"/>
-                                    <div>
-                                        <field name="margin" class="oe_inline"/>%
-                                    </div>
-                                </group>
-                                <group>
                                     <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
-                                </group>
+                                </div>
                             </group>
                             <group>
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
+                                <label for="margin" string="Margin on Rate"/>
+                                <div>
+                                    <field name="margin" class="oe_inline"/>%
+                                </div>
                             </group>
-                        </div>
+                        </group>
                         <notebook>
                             <page string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
                                 <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
@@ -99,7 +100,7 @@
                                     <field name="price_rule_ids" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="Destination" name="destination">
+                            <page string="Destination Availability" name="destination">
                                 <group>
                                     <p>
                                         Filling this form allows you to filter delivery carriers according to the delivery address of your customer.
