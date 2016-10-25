@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Sergio Valdés sergiovaldes2409@gmail.com https://github.com/Sergio2409
+Sergio Valdés sergiov@merchise.org https://github.com/Sergio2409
