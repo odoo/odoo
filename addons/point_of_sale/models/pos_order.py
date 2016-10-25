@@ -819,7 +819,7 @@ class ReportSaleDetails(models.AbstractModel):
             'taxes': taxes.values(),
             'products': sorted([{
                 'product_id': product.id,
-                'product_name': product.name[:20],
+                'product_name': product.name,
                 'code': product.default_code,
                 'quantity': qty,
                 'price_unit': price_unit,
