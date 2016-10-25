@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_config_settings_view_form_inherit_base_vat" model="ir.ui.view">
+        <field name="name">account.config.settings.form.inherit.base.vat</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.account_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="eu_service" position="after">
+                <div class="col-xs-12 col-md-6 o_setting_box" title="Use VIES service to check VAT # of your customers rather than a simple format validation.">
+                    <div class="o_setting_left_pane">
+                        <field name="vat_check_vies"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="vat_check_vies"/>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                        <div class="text-muted">
+                            VAT # check with European VIES service
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

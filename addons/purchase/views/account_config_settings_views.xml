@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_config_settings_view_form_inherit_purchase" model="ir.ui.view">
+        <field name="name">account.config.settings.form.inherit.purchase</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.account_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="account_budget" position="before">
+                <div class="col-xs-12 col-md-6 o_setting_box" title="Allows you to specify an analytic account on purchase order lines.">
+                    <div class="o_setting_left_pane">
+                        <field name="group_analytic_account_for_purchases" class="oe_inline"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label string="Purchase Analytics" for="group_analytic_account_for_purchases"/>
+                        <div class="text-muted">
+                            Set analytic accounts in purchase orders
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

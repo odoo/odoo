@@ -9,270 +9,374 @@
             <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 
-        <record id="view_account_config_settings" model="ir.ui.view">
-            <field name="name">account settings</field>
+        <record id="account_config_settings_view_form" model="ir.ui.view">
+            <field name="name">account.config.settings.form</field>
             <field name="model">account.config.settings</field>
             <field name="arch" type="xml">
                 <form string="Configure Accounting" class="oe_form_configuration">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <field name="has_default_company" invisible="1" />
-                    <field name="has_chart_of_accounts" invisible="1"/>
-                    <field name="complete_tax_set" invisible="1"/>
-                    <group string="Company" groups="base.group_multi_company">
-                        <label for="id" string="Company"/>
-                        <div>
-                            <div attrs="{'invisible': [('has_default_company', '=', True)]}">
-                                <field name="company_id"
-                                    options="{'no_create': True}"
-                                    class="oe_inline"/>
+                    <sheet>
+                        <field name="company_id" invisible="1"/>
+                        <field name="has_chart_of_accounts" invisible="1"/>
+                        <span attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}">
+                            <h2>Fiscal Localization</h2>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-xs-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_left_pane"/>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Fiscal Localization"/>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                        <div class="text-muted">
+                                            Taxes, fiscal positions, chart of accounts &amp; legal statements for your country
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="row mt16">
+                                                <label string="Package" class="col-md-3 o_light_label"/>
+                                                <field name="chart_template_id" widget="selection"/>
+                                            </div>
+                                            <div>
+                                                <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
+                                            </div>
+                                            <div class="row mt16" groups="base.group_no_one">
+                                                <label string="# of digits" class="col-md-3 o_light_label"/>
+                                                <field name="code_digits"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}">
-                                <field name="expects_chart_of_accounts" class="oe_inline"/>
-                                <label for="expects_chart_of_accounts"/>
+                        </span>
+                        <h2>Taxes</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="These taxes are set in any new product created.">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label string='Default Taxes'/>
+                                    <div class="text-muted">
+                                        Default taxes applied to local transactions
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label string="Sales Tax" for="default_sale_tax_id" class="col-md-3 o_light_label"/>
+                                            <field name="default_sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                        </div>
+                                        <div class="row">
+                                            <label string="Purchase Tax" for="default_purchase_tax_id" class="col-md-3 o_light_label"/>
+                                            <field name="default_purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"/>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </group>
-                    <group string="Chart of Accounts" attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}">
-                        <label for="id" string="Chart of Account"/>
-                        <div>
-                            <div>
-                                <button type="object" name="open_company" string="Configure your company data" class="oe_link btn-link"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="rounding_method" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label string="Rounding Method"/>
+                                    <div class="text-muted">
+                                        How total tax amount is computed in orders and invoices
+                                    </div>
+                                     <div class="content-group">
+                                        <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label for="chart_template_id" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
-                                <field name="chart_template_id"
-                                    widget="selection"
-                                    domain="[('visible','=', True)]"
-                                    class="oe_inline" attrs="{'readonly': [('has_chart_of_accounts','!=',False)]}"/>
-                                <button string="Install more chart templates"
-                                    icon="fa-arrow-right text-success"
-                                    name="%(open_account_charts_modules)d"
-                                    type="action"
-                                    class="oe_link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
-                            </div>
-                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
-                                <label for="sale_tax_id"/>
-                                <field name="sale_tax_id"
-                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('sale','all'))]"
-                                    class="oe_inline"/>
-                            </div>
-                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
-                                <label for="purchase_tax_id"/>
-                                <field name="purchase_tax_id"
-                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
-                                    class="oe_inline"/>
-                            </div>
-                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',True), ('has_chart_of_accounts','!=',False)]}">
-                                <label for="sale_tax_rate"/>
-                                <field name="sale_tax_rate"/>
-                            </div>
-                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',True), ('has_chart_of_accounts','!=',False)]}">
-                                <label for="purchase_tax_rate"/>
-                                <field name="purchase_tax_rate" />
-                            </div>
-                            <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('has_chart_of_accounts','!=',False)]}">
-                                <label for="template_transfer_account_id"/>
-                                <field name="template_transfer_account_id" class="oe_inline"/>
-                            </div>
-                        </div>
-                    </group>
-                    <group string="Fiscal Year" groups="account.group_account_user">
-                        <label for="id" string="Fiscal Year Last Day"/>
-                        <div>
-                            <field name="fiscalyear_last_month" class="oe_inline"/>
-                            <span style="margin-right:5px;"></span>
-                            <field name="fiscalyear_last_day" class="oe_inline oe_text_right"/>
-                        </div>
-                        <label for="id" string="Lock Entries"/>
-                        <div>
-                            <div>
-                                <label for="period_lock_date"/>
-                                <field name="period_lock_date" class="oe_inline"/>
-                            </div>
-                            <div>
-                                <label for="fiscalyear_lock_date"/>
-                                <field name="fiscalyear_lock_date" class="oe_inline"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_l10n_eu_service"/>
+                                </div>
+                                <div class="o_setting_right_pane" >
+                                    <label for="module_l10n_eu_service"/>
+                                    <div class="text-muted">
+                                        Apply right VAT rates for digital products sold in EU
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </group>
-                    <group string="Accounting &amp; Finance" name="accounting">
-                        <label for="id" string="Options"/>
-                        <div name="account_config">
-                            <div>
-                                <label for="currency_id"/>
-                                <field name="currency_id" options="{'no_create': True}" class="oe_inline"/>
+                        <h2>Currencies</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label string="Currency"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Main currency of your company
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label for="currency_id" class="col-md-3 o_light_label"/>
+                                            <field name="currency_id"/>
+                                        </div>
+                                        <div>
+                                            <button name="%(base.action_currency_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_multi_currency"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Multi-Currencies" for="group_multi_currency"/>
+                                    <div class="text-muted">
+                                        Record transactions in foreign currencies
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
+                                        <div class="mt16">
+                                            <button name="%(base.action_currency_form_company)d" icon="fa-arrow-right" type="action" string="Currencies" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_currency_rate_live" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Automatic Rates"/>
+                                    <div class="text-muted" id="update_currency_live">
+                                        Update exchange rates automatically
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <label for="id" string="Features" groups="account.group_account_user"/>
-                        <div groups="account.group_account_user">
-                            <div>
-                                <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_reports"/>
-                                <a href="https://www.odoo.com/page/accounting" target="_blank"> More Info </a>
+                        <h2>Invoicing</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_proforma_invoices"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Pro Forma"/>
+                                    <div class="text-muted">
+                                        Get a pro forma status for invoices
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <field name="group_analytic_accounting" class="oe_inline"/>
-                                <label for="group_analytic_accounting"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_warning_account"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_warning_account"/>
+                                    <div class="text-muted">
+                                        Get warnings when invoicing specific customers
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <field name="module_account_asset" class="oe_inline"/>
-                                <label for="module_account_asset"/>
-                            </div>
-                            <div>
-                                <field name="module_account_deferred_revenue" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_deferred_revenue"/>
-                            </div>
-                            <div>
-                                <field name="module_account_budget" class="oe_inline"/>
-                                <label for="module_account_budget"/>
-                            </div>
-                            <div>
-                                <label for="tax_cash_basis_journal_id"/>
-                                <field name="tax_cash_basis_journal_id" class="oe_inline"/>
-                            </div>
-                        </div>
-                    </group>
-                    <separator string="Bank &amp; Cash" groups="account.group_account_user"/>
-                    <group name="bank_cash" groups="account.group_account_user">
-                        <label for="id" string="Bank Statements"/>
-                        <div name="bank_statement_import_options">
-                            <div>
-                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_yodlee"/>
-                                <a href="https://www.odoo.com/page/accounting-features"> View supported banks</a>
-                            </div>
-                            <div>
-                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_plaid"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
-                            </div>
-                            <div>
-                                <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_bank_statement_import_qif"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
-                            </div>
-                            <div>
-                                <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_bank_statement_import_ofx"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
-                            </div>
-                            <div>
-                                <field name="module_account_bank_statement_import_csv" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_bank_statement_import_csv"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
-                            </div>
-                            <div>
-                                <field name="module_account_bank_statement_import_camt" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_bank_statement_import_camt"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_print_docsaway" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_print_docsaway"/>
+                                    <div class="text-muted">
+                                        Mail your invoices in one-click using <a href="https://www.docsaway.com/">Docsaway</a>
+                                    </div>
+                                    <div id="print_docsway_message" class="content-group" attrs="{'invisible': [('module_print_docsaway', '=', False)]}">
+                                        <div class="text-warning mt16 mb4">
+                                            Save this page and come back here to set up the feature.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <label for="id" string="Automate Payments"/>
-                        <div name="bank_payments">
-                            <div>
-                                <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_sepa"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                        <h2>Customer Payments</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="account_followup" title="This feature is useful if you issue a high amounts of invoices.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Follow-up Levels"/>
+                                    <div class="text-muted">
+                                        Use follow-up levels and schedule actions
+                                    </div>
+                                    <div id="account_reports_followup" class="content-group" attrs="{'invisible': [('module_account_reports_followup', '=', False)]}">
+                                        <div class="text-warning mt16 mb4">
+                                            Save this page and come back here to set up the feature.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_l10n_us_check_printing"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
-                            </div>
-                        </div>
-                        <label for="id" string="Configuration"/>
-                        <div name="bank_options">
-                            <div name='company_footer'>
-                                <label for="company_footer"/>
-                                <field name="company_footer"/>
-                            </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                                <label for="transfer_account_id"/>
-                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
-                            </div>
-                        </div>
-                    </group>
-                    <separator string="Multi Currencies" groups="account.group_account_user"/>
-                    <group name="multi_currency" groups="account.group_account_user">
-                        <label for="id" string="Configuration"/>
-                        <div name="group_multi_currency">
-                            <field name="group_multi_currency" class="oe_inline"/>
-                            <label for="group_multi_currency"/>
-                            <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
-                                <group>
-                                    <field name="currency_exchange_journal_id"/>
-                                </group>
-                            </group>
-                        </div>
-                    </group>
-                    <separator string="Invoicing &amp; Payments" groups="account.group_account_user"/>
-                    <group groups="account.group_account_user">
-                        <label for="id" string="Customer"/>
-                        <div name="customer_payments">
-                            <div>
-                                <field name="group_proforma_invoices" class="oe_inline"/>
-                                <label for="group_proforma_invoices"/>
-                            </div>
-                            <div>
-                                <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
-                                <label for="module_account_reports_followup"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
-                            </div>
-                            <div>
-                                <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
-                                <label for="module_account_batch_deposit"/>
-                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                             <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_batch_deposit" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Batch Deposits"/>
+                                    <div class="text-muted">
+                                        Group received checks before depositing them to the bank
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <field name="group_warning_account" widget="radio"/>
-                    </group>
-                    <group attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
-                        <label for="id" string="Taxes"/>
-                        <div name="invoice_taxes">
-                            <div>
-                                <label for="default_sale_tax_id"/>
-                                <field name="default_sale_tax_id"
-                                    domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"
-                                    class="oe_inline"/>
+
+                        <h2>Bills Payment</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Checks" for="module_l10n_us_check_printing"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted" id="print_bills_payment">
+                                        Print checks to pay your vendors
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <label for="default_purchase_tax_id"/>
-                                <field name="default_purchase_tax_id"
-                                    domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"
-                                    class="oe_inline"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="If you check this box, you will be able to register your payment using SEPA.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="SEPA Payments" for="module_account_sepa"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Pay your bills in one-click, using Euro SEPA service
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </group>
-                    <group>
-                        <label for="id" string="Payments"/>
-                        <div name="customer_payments">
-                            <div name='payment_acquirer'/>
+
+                        <h2>Bank &amp; Cash</h2>
+                        <div class="row mt16 o_settings_container" id="bank_cash">
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="account_yodlee" title="Get your bank statements automatically imported every 4 hours, or in one-click, using Yodlee and Plaid services. Once installed, set “Bank Feeds” to “Bank Synchronization” in bank account settings. Then, click “Configure” on the online account to enter your bank credentials.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Automatic Import"/>
+                                    <div class="text-muted">
+                                        Import your bank statements automatically
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_bank_statement_import_csv" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="CSV Import"/>
+                                    <div class="text-muted">
+                                        Import your bank statements in CSV
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="QIF Import"/>
+                                    <div class="text-muted">
+                                        Import your bank statements in QIF
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="OFX Import"/>
+                                    <div class="text-muted">
+                                        Import your bank statements in OFX
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Once installed, set 'Bank Feeds' to 'File Import' in bank account settings.This adds a button to import from the Accounting dashboard.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_bank_statement_import_camt" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="CAMT Import"/>
+                                    <div class="text-muted">
+                                        Import your bank statements in CAMT.053
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </group>
-                    <!-- Invisible section which is inherited in other modules -->
-                    <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
-                    <group name="analytic_account_sale" invisible="1">
-                        <label for="id" string="Sale"/>
-                    </group>
-                    <group name="analytic_account_purchase" invisible="1">
-                        <label for="id" string="Purchase"/>
-                    </group>
-                    <group name="followup" position="before">
-                        <field name="use_anglo_saxon"/>
-                        <field name="bank_account_code_prefix" groups="base.group_no_one"/>
-                        <field name="cash_account_code_prefix" groups="base.group_no_one"/>
-                        <field name="code_digits" groups="base.group_no_one"/>
-                        <field name="tax_calculation_rounding_method" groups="base.group_no_one"/>
-                    </group>
-                    <group string="Overdue Payments" name="followup">
-                        <field name="overdue_msg"/>
-                    </group>
-                    <div>
-                        <span>(*) This configuration is related to the company you're logged into.</span>
-                    </div>
+                        <h2>Accounting Reports</h2>
+                        <div class="row mt16 o_settings_container" id="accouting_reports">
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="account_accountant" title="If you do not check this box, you will be able to do invoicing &amp; payments, but not accounting (Journal Items, Chart of  Accounts, ...).">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_accountant"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_accountant"/>
+                                    <div class="text-muted">
+                                        Add all accounting features: journal entries, legal statements, etc.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear" invisible="1"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="dynamic_report" invisible="1">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_reports"/>
+                                    <div class="text-muted" id="account_reports">
+                                        Navigate easily through reports and see what is behind the numbers
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Analytics</h2>
+                        <div class="row mt16 o_settings_container" id="analytic">
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Allows you to use the analytic accounting.">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_analytic_accounting"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_analytic_accounting"/>
+                                    <div class="text-muted">
+                                        Track costs &amp; revenues by project, department, etc.
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_analytic_accounting', '=', False)]}">
+                                        <div class="mt16" id="analytic_account_link">
+                                            <button name="%(analytic.action_analytic_account_form)d" icon="fa-arrow-right" type="action" string="Analytic Accounts" class="btn-link"/>
+                                        </div>
+                                        <div>
+                                            <button name="%(analytic.account_analytic_tag_action)d" icon="fa-arrow-right" type="action" string="Tags for Multidimensional Analytics" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_account_budget" class="oe_inline"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_account_budget"/>
+                                    <div class="text-muted">
+                                        Compare actual revenues &amp; costs with budgets
+                                    </div>
+                                    <div id="msg_account_budget" class="content-group" attrs="{'invisible': [('module_account_budget', '=', False)]}">
+                                        <div class="text-warning mt16 mb4">
+                                            Save this page and come back here to set up the feature.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_product_margin"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Margin Analysis"/>
+                                    <div class="text-muted">
+                                        Monitor your product margins from invoices
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
