@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Hoang, Diep Huu mr.diephuuhoang@gmail.com https://github.com/anothingguy
+Hoang Diep Huu mr.diephuuhoang@gmail.com https://github.com/anothingguy
