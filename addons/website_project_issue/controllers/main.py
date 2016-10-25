@@ -18,7 +18,7 @@ class WebsiteAccount(website_account):
             '|',
             ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
             ('message_partner_ids', 'child_of', [user.partner_id.id])
-        ])
+        ], order='message_last_post')
         response.qcontext.update({'issues': project_issues})
         return response
 
