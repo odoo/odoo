@@ -9,4 +9,3 @@ declaration.
 Signed,
 
 Hoang Diep Huu hoang@trobz.com https://github.com/anothingguy
-<country>, <date>
