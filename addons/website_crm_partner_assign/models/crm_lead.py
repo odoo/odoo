@@ -197,12 +197,12 @@ class CrmLead(models.Model):
             lead.sudo().convert_opportunity(lead.partner_id.id)
 
     @api.multi
-    def partner_desinterested(self, comment=False, contacted=False):
+    def partner_desinterested(self, comment=False, contacted=False, spam=False):
         self.check_access_rights('write')
         if contacted:
-            message = _('<p>I am not interested by this lead. I contacted the lead.</p>')
+            message = '<p>%s</p>' % _('I am not interested by this lead. I contacted the lead.')
         else:
-            message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
+            message = '<p>%s</p>' % _('I am not interested by this lead. I have not contacted the lead.')
         partner_ids = self.env['res.partner'].search(
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
         self.sudo().message_unsubscribe(partner_ids=partner_ids.ids)
@@ -210,8 +210,13 @@ class CrmLead(models.Model):
             message += '<p>%s</p>' % comment
         self.message_post(body=message, subtype="mail.mt_note")
         values = {
-            'partner_assigned_id': False
+            'partner_assigned_id': False,
         }
+
+        if spam:
+            tag_spam = self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam', False)
+            if tag_spam and tag_spam not in self.tag_ids:
+                values['tag_ids'] = [(4, tag_spam.id, False)]
         if partner_ids:
             values['partner_declined_ids'] = map(lambda p: (4, p, 0), partner_ids.ids)
         self.sudo().write(values)
