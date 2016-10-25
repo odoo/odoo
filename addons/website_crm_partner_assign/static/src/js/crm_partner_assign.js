@@ -37,7 +37,9 @@ $('.desinterested_partner_assign_confirm').on('click',function(e){
 		.call("partner_desinterested",
 			[[parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
 			$('.desinterested_partner_assign_form .comment_desinterested').val(),
-			$('.desinterested_partner_assign_form .contacted_desinterested').prop('checked')])
+			$('.desinterested_partner_assign_form .contacted_desinterested').prop('checked'),
+			$('.desinterested_partner_assign_form .customer_mark_spam').prop('checked'),
+			])
 		.then(function(){
 			window.location.href = '/my/leads';
 		});
