@@ -13,8 +13,9 @@ var website = require('website.website');
 var interested_form = $('.interested_partner_assign_form');
 var desinterested_form = $('.desinterested_partner_assign_form');
 var opp_stage_buttons = $('.opp-stage-button');
+var new_opp_form = $('.new_opp_form');
 
-if(!interested_form.length && !desinterested_form.length && !opp_stage_buttons.length) {
+if(!interested_form.length && !desinterested_form.length && !opp_stage_buttons.length && !new_opp_form.length) {
     return $.Deferred().reject("DOM doesn't contain website_crm_partner_assign elements");
 }
 
@@ -80,6 +81,25 @@ $('.edit_contact_confirm').on('click',function(e){
 			window.location.reload();
 		});
 	return false;
+});
+
+$('.new_opp_confirm').on('click',function(e){
+    new Model('crm.lead')
+        .call("create_opp_portal", [{
+            contact_name: $('.new_opp_form .contact_name').val(),
+            title: $('.new_opp_form .title').val(),
+            description: $('.new_opp_form .description').val(),
+        }])
+        .done(function(response){
+    		if (response.errors) {
+    			$('#new-opp-dialog .alert').remove();
+				$('#new-opp-dialog div:first').prepend("<div class='alert alert-danger'>" + response.errors + "</div>");
+    		}
+    		else {
+           		window.location = '/my/opportunity/' + response.id;
+    		}
+        });
+    return false;
 });
 
 $('.edit_opp_confirm').on('click',function(e){
