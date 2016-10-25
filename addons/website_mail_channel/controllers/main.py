@@ -15,7 +15,8 @@ class MailGroup(http.Controller):
     def _get_archives(self, group_id):
         MailMessage = request.env['mail.message']
         groups = MailMessage._read_group_raw(
-            [('model', '=', 'mail.channel'), ('res_id', '=', group_id)], ['subject', 'date'],
+            [('model', '=', 'mail.channel'), ('res_id', '=', group_id), ('message_type', '!=', 'notification')],
+            ['subject', 'date'],
             groupby=["date"], orderby="date desc")
         for group in groups:
             (r, label) = group['date']
@@ -41,7 +42,7 @@ class MailGroup(http.Controller):
         # compute statistics
         month_date = datetime.today() - relativedelta.relativedelta(months=1)
         messages = request.env['mail.message'].read_group(
-            [('model', '=', 'mail.channel'), ('date', '>=', fields.Datetime.to_string(month_date))],
+            [('model', '=', 'mail.channel'), ('date', '>=', fields.Datetime.to_string(month_date)), ('message_type', '!=', 'notification')],
             [], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
