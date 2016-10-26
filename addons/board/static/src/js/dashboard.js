@@ -137,7 +137,11 @@ var DashBoard = form_common.FormWidget.extend({
     },
     on_close_action: function(e) {
         if (confirm(_t("Are you sure you want to remove this item ?"))) {
-            $(e.currentTarget).parents('.oe_action:first').remove();
+            var $container = $(e.currentTarget).parents('.oe_action:first');
+            var am = _.findWhere(this.action_managers, { am_id: $container.data('am_id') });
+            am.destroy();
+            this.action_managers.splice(_.indexOf(this.action_managers, am), 1);
+            $container.remove();
             this.do_save_dashboard();
         }
     },
@@ -221,7 +225,13 @@ var DashBoard = form_common.FormWidget.extend({
         var am = new ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
-        $action.parent().data('action_attrs', action_attrs);
+        var $action_container = $action.closest('.oe_action');
+        var am_id = _.uniqueId('action_manager_');
+        am.am_id = am_id;
+        $action_container.data({
+            action_attrs: action_attrs,
+            am_id: am_id,
+        });
         this.action_managers.push(am);
         am.appendTo($action);
         am.do_action(action);
