@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import os
 
 from odoo.tests import common
-
-_logger = logging.getLogger(__name__)
 
 
 class TestPartnerVat(common.TransactionCase):
@@ -26,11 +23,7 @@ class TestPartnerVat(common.TransactionCase):
         for vat_valid in vat_valids:
             # Faster way of change the vat without database access
             self.partner._cache['vat'] = prefix + vat_valid
-            try:
-                self.partner.check_vat()
-            except UnicodeEncodeError:
-                _logger.info("Unicode error value # %d",
-                             vat_valids.index(vat_valid) + 1)
+            self.partner.check_vat()
 
     def test_partner_vat_mx_valids(self):
         vat_valids = []
