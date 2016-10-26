@@ -89,7 +89,6 @@ Estructura de Codificación del Catálogo de Cuentas:
         'data/ir_model_data.xml',
         # Basic accounting data
         'data/coa_template.xml',
-        'data/account_type.xml',
         'data/account.account.template.csv',
         'data/tax_template.xml',
         'data/account_defaults.xml',
