@@ -7,7 +7,7 @@
 # (Marcos Organizador de Negocios SRL..)
 # Odoo 7.0 author: Jose Ernesto Mendez <tecnologia@obsdr.com>
 # (Open Business Solutions SRL.)
-# Copyright (c) 2016 - Present | Novum Ingenieria, SRL. - www.iterativo.do
+# Copyright (c) 2016 - Present | Novum Ingenieria, SRL. - http://iterativo.do
 # All rights reserved.
 
 {

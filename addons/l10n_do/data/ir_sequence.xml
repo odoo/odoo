@@ -1,458 +1,460 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="account.sequence_reconcile_seq" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">account.reconcile</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">0</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A</field>
-        <field eval="True" name="active"/>
-        <field name="name">Account reconcile sequence</field>
-    </record>
-    <record id="base.ir_sequence_23" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">BNC/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Banco</field>
-    </record>
-    <record id="base.ir_sequence_29" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">CHQ/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Cheque</field>
-    </record>
-    <record id="base.ir_sequence_30" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">CEXT/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Compras al Exterior</field>
-    </record>
-    <record id="base.ir_sequence_31" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100111</field>
-        <field eval="True" name="active"/>
-        <field name="name">Compras Informales</field>
-    </record>
-    <record id="base.ir_sequence_27" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">COMPL/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Compras Locales</field>
-    </record>
-    <record id="base.ir_sequence_34" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100101</field>
-        <field eval="True" name="active"/>
-        <field name="name">Crédito Fiscal</field>
-    </record>
-    <record id="base.ir_sequence_26" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">EXST/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Diario de Existencia</field>
-    </record>
-    <record id="base.ir_sequence_25" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">DCAMB/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Diferencia Cambiara</field>
-    </record>
-    <record id="base.ir_sequence_22" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">EFT/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Efectivo</field>
-    </record>
-    <record id="base.ir_sequence_28" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100113</field>
-        <field eval="True" name="active"/>
-        <field name="name">Gasto Menor</field>
-    </record>
-    <record id="base.ir_sequence_32" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100115</field>
-        <field eval="True" name="active"/>
-        <field name="name">Gubernamental</field>
-    </record>
-    <record id="base.ir_sequence_9" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">ALN/ENT/</field>
-        <field eval="True" name="active"/>
-        <field name="name">My Company Sequence in</field>
-    </record>
-    <record id="base.ir_sequence_13" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">ALM/INT/</field>
-        <field eval="True" name="active"/>
-        <field name="name">My Company Sequence internal</field>
-    </record>
-    <record id="base.ir_sequence_10" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">ALM/SAL/</field>
-        <field eval="True" name="active"/>
-        <field name="name">My Company Sequence out</field>
-    </record>
-    <record id="base.ir_sequence_11" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">ALM/PAQ/</field>
-        <field eval="True" name="active"/>
-        <field name="name">My Company Sequence packing</field>
-    </record>
-    <record id="base.ir_sequence_12" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">ALM/REC/</field>
-        <field eval="True" name="active"/>
-        <field name="name">My Company Sequence picking</field>
-    </record>
-    <record id="base.ir_sequence_20" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100104</field>
-        <field eval="True" name="active"/>
-        <field name="name">Notas de Crédito</field>
-    </record>
-    <record id="base.ir_sequence_35" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100103</field>
-        <field eval="True" name="active"/>
-        <field name="name">Notas de Débito</field>
-    </record>
-    <record id="base.ir_sequence_24" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">no_gap</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">MISC/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Otras Operaciones</field>
-    </record>
-    <record id="stock.seq_quant_package" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">stock.quant.package</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">7</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">PAQ</field>
-        <field eval="True" name="active"/>
-        <field name="name">Packages</field>
-    </record>
-    <record id="stock.sequence_tracking" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">stock.lot.tracking</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">7</field>
-        <field name="number_increment">1</field>
-        <field name="prefix"/>
-        <field eval="True" name="active"/>
-        <field name="name">Packs</field>
-    </record>
-    <record id="account.sequence_payment_customer_invoice" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code">account.payment.customer.invoice</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">PAG.CLNT/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Payments customer invoices sequence</field>
-    </record>
-    <record id="account.sequence_payment_customer_refund" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code">account.payment.customer.refund</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">NC.CLNT/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Payments customer refunds sequence</field>
-    </record>
-    <record id="account.sequence_payment_supplier_invoice" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code">account.payment.supplier.invoice</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">PAG.PROV/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Payments supplier invoices sequence</field>
-    </record>
-    <record id="account.sequence_payment_supplier_refund" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code">account.payment.supplier.refund</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">NC.PROV/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Payments supplier refunds sequence</field>
-    </record>
-    <record id="account.sequence_payment_transfer" model="ir.sequence">
-        <field eval="True" name="use_date_range"/>
-        <field name="code">account.payment.transfer</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">4</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">TRANS/%(range_year)s/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Payments transfer sequence</field>
-    </record>
-    <record id="stock.seq_picking_internal" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">stock.picking</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">INT/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Picking INT</field>
-    </record>
-    <record id="procurement.sequence_proc_group" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">procurement.group</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">6</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">PG/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Procurement Group</field>
-    </record>
-    <record id="purchase.seq_purchase_order" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">purchase.order</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">OC</field>
-        <field eval="True" name="active"/>
-        <field name="name">Purchase Order</field>
-    </record>
-    <record id="base.ir_sequence_33" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100114</field>
-        <field eval="True" name="active"/>
-        <field name="name">Regimenes Especiales</field>
-    </record>
-    <record id="sale.seq_sale_order" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">sale.order</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">3</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">PV</field>
-        <field eval="True" name="active"/>
-        <field name="name">Sales Order</field>
-    </record>
-    <record id="stock.sequence_production_lots" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">stock.lot.serial</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field eval="False" name="company_id"/>
-        <field name="padding">7</field>
-        <field name="number_increment">1</field>
-        <field name="prefix"/>
-        <field eval="True" name="active"/>
-        <field name="name">Serial Numbers</field>
-    </record>
-    <record id="stock.sequence_mrp_op" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code">stock.orderpoint</field>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">5</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">OP/</field>
-        <field eval="True" name="active"/>
-        <field name="name">Stock orderpoint</field>
-    </record>
-    <record id="base.ir_sequence_21" model="ir.sequence">
-        <field eval="False" name="use_date_range"/>
-        <field name="code"/>
-        <field name="suffix"/>
-        <field name="number_next">1</field>
-        <field name="implementation">standard</field>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="padding">8</field>
-        <field name="number_increment">1</field>
-        <field name="prefix">A0100100102</field>
-        <field eval="True" name="active"/>
-        <field name="name">Ventas Consumidor Final</field>
-    </record>
+    <data noupdate="1">
+        <record id="account.sequence_reconcile_seq" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">account.reconcile</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">0</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A</field>
+            <field eval="True" name="active"/>
+            <field name="name">Account reconcile sequence</field>
+        </record>
+        <record id="base.ir_sequence_23" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">BNC/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Banco</field>
+        </record>
+        <record id="base.ir_sequence_29" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">CHQ/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Cheque</field>
+        </record>
+        <record id="base.ir_sequence_30" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">CEXT/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Compras al Exterior</field>
+        </record>
+        <record id="base.ir_sequence_31" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100111</field>
+            <field eval="True" name="active"/>
+            <field name="name">Compras Informales</field>
+        </record>
+        <record id="base.ir_sequence_27" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">COMPL/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Compras Locales</field>
+        </record>
+        <record id="base.ir_sequence_34" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100101</field>
+            <field eval="True" name="active"/>
+            <field name="name">Crédito Fiscal</field>
+        </record>
+        <record id="base.ir_sequence_26" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">EXST/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Diario de Existencia</field>
+        </record>
+        <record id="base.ir_sequence_25" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">DCAMB/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Diferencia Cambiara</field>
+        </record>
+        <record id="base.ir_sequence_22" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">EFT/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Efectivo</field>
+        </record>
+        <record id="base.ir_sequence_28" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100113</field>
+            <field eval="True" name="active"/>
+            <field name="name">Gasto Menor</field>
+        </record>
+        <record id="base.ir_sequence_32" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100115</field>
+            <field eval="True" name="active"/>
+            <field name="name">Gubernamental</field>
+        </record>
+        <record id="base.ir_sequence_9" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">ALN/ENT/</field>
+            <field eval="True" name="active"/>
+            <field name="name">My Company Sequence in</field>
+        </record>
+        <record id="base.ir_sequence_13" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">ALM/INT/</field>
+            <field eval="True" name="active"/>
+            <field name="name">My Company Sequence internal</field>
+        </record>
+        <record id="base.ir_sequence_10" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">ALM/SAL/</field>
+            <field eval="True" name="active"/>
+            <field name="name">My Company Sequence out</field>
+        </record>
+        <record id="base.ir_sequence_11" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">ALM/PAQ/</field>
+            <field eval="True" name="active"/>
+            <field name="name">My Company Sequence packing</field>
+        </record>
+        <record id="base.ir_sequence_12" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">ALM/REC/</field>
+            <field eval="True" name="active"/>
+            <field name="name">My Company Sequence picking</field>
+        </record>
+        <record id="base.ir_sequence_20" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100104</field>
+            <field eval="True" name="active"/>
+            <field name="name">Notas de Crédito</field>
+        </record>
+        <record id="base.ir_sequence_35" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100103</field>
+            <field eval="True" name="active"/>
+            <field name="name">Notas de Débito</field>
+        </record>
+        <record id="base.ir_sequence_24" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">no_gap</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">MISC/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Otras Operaciones</field>
+        </record>
+        <record id="stock.seq_quant_package" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">stock.quant.package</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">7</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">PAQ</field>
+            <field eval="True" name="active"/>
+            <field name="name">Packages</field>
+        </record>
+        <record id="stock.sequence_tracking" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">stock.lot.tracking</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">7</field>
+            <field name="number_increment">1</field>
+            <field name="prefix"/>
+            <field eval="True" name="active"/>
+            <field name="name">Packs</field>
+        </record>
+        <record id="account.sequence_payment_customer_invoice" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code">account.payment.customer.invoice</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">PAG.CLNT/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Payments customer invoices sequence</field>
+        </record>
+        <record id="account.sequence_payment_customer_refund" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code">account.payment.customer.refund</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">NC.CLNT/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Payments customer refunds sequence</field>
+        </record>
+        <record id="account.sequence_payment_supplier_invoice" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code">account.payment.supplier.invoice</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">PAG.PROV/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Payments supplier invoices sequence</field>
+        </record>
+        <record id="account.sequence_payment_supplier_refund" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code">account.payment.supplier.refund</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">NC.PROV/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Payments supplier refunds sequence</field>
+        </record>
+        <record id="account.sequence_payment_transfer" model="ir.sequence">
+            <field eval="True" name="use_date_range"/>
+            <field name="code">account.payment.transfer</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">TRANS/%(range_year)s/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Payments transfer sequence</field>
+        </record>
+        <record id="stock.seq_picking_internal" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">stock.picking</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">INT/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Picking INT</field>
+        </record>
+        <record id="procurement.sequence_proc_group" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">procurement.group</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">PG/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Procurement Group</field>
+        </record>
+        <record id="purchase.seq_purchase_order" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">purchase.order</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">OC</field>
+            <field eval="True" name="active"/>
+            <field name="name">Purchase Order</field>
+        </record>
+        <record id="base.ir_sequence_33" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100114</field>
+            <field eval="True" name="active"/>
+            <field name="name">Regimenes Especiales</field>
+        </record>
+        <record id="sale.seq_sale_order" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">sale.order</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">3</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">PV</field>
+            <field eval="True" name="active"/>
+            <field name="name">Sales Order</field>
+        </record>
+        <record id="stock.sequence_production_lots" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">stock.lot.serial</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field eval="False" name="company_id"/>
+            <field name="padding">7</field>
+            <field name="number_increment">1</field>
+            <field name="prefix"/>
+            <field eval="True" name="active"/>
+            <field name="name">Serial Numbers</field>
+        </record>
+        <record id="stock.sequence_mrp_op" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code">stock.orderpoint</field>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">OP/</field>
+            <field eval="True" name="active"/>
+            <field name="name">Stock orderpoint</field>
+        </record>
+        <record id="base.ir_sequence_21" model="ir.sequence">
+            <field eval="False" name="use_date_range"/>
+            <field name="code"/>
+            <field name="suffix"/>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="prefix">A0100100102</field>
+            <field eval="True" name="active"/>
+            <field name="name">Ventas Consumidor Final</field>
+        </record>
+    </data>
 </odoo>

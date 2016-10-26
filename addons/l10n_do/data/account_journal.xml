@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-      <record id="base.journal_sales_final" model="account.journal">
+    <data noupdate="1">
+        <record id="base.journal_sales_final" model="account.journal">
             <field name="code">VENTA</field>
             <field name="sequence_id" ref="base.ir_sequence_21"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -26,8 +27,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="True" name="refund_sequence"/>
             <field name="refund_sequence_id" ref="base.ir_sequence_20"/>
-      </record>
-      <record id="base.journal_purchase_local" model="account.journal">
+        </record>
+        <record id="base.journal_purchase_local" model="account.journal">
             <field name="code">CLOCL</field>
             <field name="sequence_id" ref="base.ir_sequence_27"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -53,8 +54,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field name="refund_sequence_id" ref="base.ir_sequence_20"/>
-      </record>
-      <record id="base.journal_misc" model="account.journal">
+        </record>
+        <record id="base.journal_misc" model="account.journal">
             <field name="code">MISC</field>
             <field name="sequence_id" ref="base.ir_sequence_24"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -80,8 +81,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_exchange" model="account.journal">
+        </record>
+        <record id="base.journal_exchange" model="account.journal">
             <field name="code">DCAMB</field>
             <field name="sequence_id" ref="base.ir_sequence_25"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -107,8 +108,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_stock" model="account.journal">
+        </record>
+        <record id="base.journal_stock" model="account.journal">
             <field name="code">EXST</field>
             <field name="sequence_id" ref="base.ir_sequence_26"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -134,8 +135,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_cash_1" model="account.journal">
+        </record>
+        <record id="base.journal_cash_1" model="account.journal">
             <field name="code">EFT1</field>
             <field name="sequence_id" ref="base.ir_sequence_22"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -161,8 +162,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_bank_1" model="account.journal">
+        </record>
+        <record id="base.journal_bank_1" model="account.journal">
             <field name="code">BNC1</field>
             <field name="sequence_id" ref="base.ir_sequence_23"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -188,8 +189,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_check_1" model="account.journal">
+        </record>
+        <record id="base.journal_check_1" model="account.journal">
             <field name="code">CHQ1</field>
             <field name="sequence_id" ref="base.ir_sequence_29"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -215,8 +216,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_sales_fiscal" model="account.journal">
+        </record>
+        <record id="base.journal_sales_fiscal" model="account.journal">
             <field name="code">VENTF</field>
             <field name="sequence_id" ref="base.ir_sequence_34"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -242,8 +243,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="True" name="refund_sequence"/>
             <field name="refund_sequence_id" ref="base.ir_sequence_20"/>
-      </record>
-      <record id="base.journal_expenses_minor" model="account.journal">
+        </record>
+        <record id="base.journal_expenses_minor" model="account.journal">
             <field name="code">GASTO</field>
             <field name="sequence_id" ref="base.ir_sequence_28"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -269,8 +270,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_purchase_gob" model="account.journal">
+        </record>
+        <record id="base.journal_purchase_gob" model="account.journal">
             <field name="code">CGOB</field>
             <field name="sequence_id" ref="base.ir_sequence_32"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -296,8 +297,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_purchase_exterior" model="account.journal">
+        </record>
+        <record id="base.journal_purchase_exterior" model="account.journal">
             <field name="code">CINT</field>
             <field name="sequence_id" ref="base.ir_sequence_30"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -323,8 +324,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_purchase_nonformal" model="account.journal">
+        </record>
+        <record id="base.journal_purchase_nonformal" model="account.journal">
             <field name="code">CINF</field>
             <field name="sequence_id" ref="base.ir_sequence_31"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -350,8 +351,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_purchase_especial" model="account.journal">
+        </record>
+        <record id="base.journal_purchase_especial" model="account.journal">
             <field name="code">RGMES</field>
             <field name="sequence_id" ref="base.ir_sequence_33"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -377,8 +378,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
-      <record id="base.journal_debit" model="account.journal">
+        </record>
+        <record id="base.journal_debit" model="account.journal">
             <field name="code">ND</field>
             <field name="sequence_id" ref="base.ir_sequence_35"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -404,8 +405,8 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="True" name="refund_sequence"/>
             <field name="refund_sequence_id" ref="base.ir_sequence_20"/>
-      </record>
-      <record id="base.journal_cash_2" model="account.journal">
+        </record>
+        <record id="base.journal_cash_2" model="account.journal">
             <field name="code">EFT2</field>
             <field name="sequence_id" ref="base.ir_sequence_22"/>
             <field eval="[(6, 0, [ref('account.account_payment_method_manual_in')])]" name="inbound_payment_method_ids"/>
@@ -431,5 +432,6 @@
             <field eval="True" name="at_least_one_outbound"/>
             <field eval="False" name="refund_sequence"/>
             <field eval="False" name="refund_sequence_id"/>
-      </record>
+        </record>
+    </data>
 </odoo>
