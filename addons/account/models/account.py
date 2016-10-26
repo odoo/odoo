@@ -685,7 +685,7 @@ class AccountTax(models.Model):
             return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.multi
-    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None):
+    def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, basevals=None):
         """ Just converts parameters in browse records and calls for compute_all, because js widgets can't serialize browse records """
         if currency_id:
             currency_id = self.env['res.currency'].browse(currency_id)
@@ -693,10 +693,10 @@ class AccountTax(models.Model):
             product_id = self.env['product.product'].browse(product_id)
         if partner_id:
             partner_id = self.env['res.partner'].browse(partner_id)
-        return self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id)
+        return self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, basevals=basevals)
 
     @api.multi
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, basevals=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
             We consider the sequence of the parent for group of taxes.
                 Eg. considering letters as taxes and alphabetic order as sequence :
@@ -745,7 +745,10 @@ class AccountTax(models.Model):
 
         if not round_tax:
             prec += 5
-        total_excluded = total_included = base = round(price_unit * quantity, prec)
+        if not basevals:
+            total_excluded = total_included = base = round(price_unit * quantity, prec)
+        else:
+            total_included, total_excluded, base = basevals
 
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
@@ -753,12 +756,17 @@ class AccountTax(models.Model):
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
+                baseval = total_included, total_excluded, base
+                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner, basevals)
                 total_excluded = ret['total_excluded']
                 base = ret['base']
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
+                # Don't pass base_amount out of group, if not excplicitly checked
+                # Enables intra-group-only base amount variations.
+                if not tax.include_base_amount:
+                    base = basevals[2]
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
