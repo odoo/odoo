@@ -57,7 +57,7 @@
         <field name="code"/>
         <field name="suffix"/>
         <field name="number_next">1</field>
-        <field name="implementation">standard</field>
+        <field name="implementation">no_gap</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">8</field>
         <field name="number_increment">1</field>
@@ -83,7 +83,7 @@
         <field name="code"/>
         <field name="suffix"/>
         <field name="number_next">1</field>
-        <field name="implementation">standard</field>
+        <field name="implementation">no_gap</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">8</field>
         <field name="number_increment">1</field>
@@ -148,7 +148,7 @@
         <field name="code"/>
         <field name="suffix"/>
         <field name="number_next">1</field>
-        <field name="implementation">standard</field>
+        <field name="implementation">no_gap</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">8</field>
         <field name="number_increment">1</field>
@@ -165,9 +165,9 @@
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">5</field>
         <field name="number_increment">1</field>
-        <field name="prefix">ALN/ENT/</field>
+        <field name="prefix">ALM/ENT/</field>
         <field eval="True" name="active"/>
-        <field name="name">My Company Sequence in</field>
+        <field name="name">Secuencia de Entrada</field>
     </record>
     <record id="base.ir_sequence_13" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
@@ -180,7 +180,7 @@
         <field name="number_increment">1</field>
         <field name="prefix">ALM/INT/</field>
         <field eval="True" name="active"/>
-        <field name="name">My Company Sequence internal</field>
+        <field name="name">Secuencia Interna</field>
     </record>
     <record id="base.ir_sequence_10" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
@@ -193,7 +193,7 @@
         <field name="number_increment">1</field>
         <field name="prefix">ALM/SAL/</field>
         <field eval="True" name="active"/>
-        <field name="name">My Company Sequence out</field>
+        <field name="name">Secuencia de Salida</field>
     </record>
     <record id="base.ir_sequence_11" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
@@ -206,7 +206,7 @@
         <field name="number_increment">1</field>
         <field name="prefix">ALM/PAQ/</field>
         <field eval="True" name="active"/>
-        <field name="name">My Company Sequence packing</field>
+        <field name="name">Secuencia de Empaque</field>
     </record>
     <record id="base.ir_sequence_12" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
@@ -219,14 +219,14 @@
         <field name="number_increment">1</field>
         <field name="prefix">ALM/REC/</field>
         <field eval="True" name="active"/>
-        <field name="name">My Company Sequence picking</field>
+        <field name="name">Secuencia de Recogida</field>
     </record>
     <record id="base.ir_sequence_20" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
         <field name="code"/>
         <field name="suffix"/>
         <field name="number_next">1</field>
-        <field name="implementation">standard</field>
+        <field name="implementation">no_gap</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">8</field>
         <field name="number_increment">1</field>
@@ -239,7 +239,7 @@
         <field name="code"/>
         <field name="suffix"/>
         <field name="number_next">1</field>
-        <field name="implementation">standard</field>
+        <field name="implementation">no_gap</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">8</field>
         <field name="number_increment">1</field>
@@ -271,7 +271,7 @@
         <field name="number_increment">1</field>
         <field name="prefix">PAQ</field>
         <field eval="True" name="active"/>
-        <field name="name">Packages</field>
+        <field name="name">Paquetes</field>
     </record>
     <record id="stock.sequence_tracking" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
@@ -284,7 +284,7 @@
         <field name="number_increment">1</field>
         <field name="prefix"/>
         <field eval="True" name="active"/>
-        <field name="name">Packs</field>
+        <field name="name">Lotes</field>
     </record>
     <record id="account.sequence_payment_customer_invoice" model="ir.sequence">
         <field eval="True" name="use_date_range"/>
@@ -388,14 +388,14 @@
         <field name="number_increment">1</field>
         <field name="prefix">OC</field>
         <field eval="True" name="active"/>
-        <field name="name">Purchase Order</field>
+        <field name="name">Orden de Compra</field>
     </record>
     <record id="base.ir_sequence_33" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
         <field name="code"/>
         <field name="suffix"/>
         <field name="number_next">1</field>
-        <field name="implementation">standard</field>
+        <field name="implementation">no_gap</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">8</field>
         <field name="number_increment">1</field>
@@ -414,7 +414,7 @@
         <field name="number_increment">1</field>
         <field name="prefix">PV</field>
         <field eval="True" name="active"/>
-        <field name="name">Sales Order</field>
+        <field name="name">Pedido de Venta</field>
     </record>
     <record id="stock.sequence_production_lots" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
@@ -447,7 +447,7 @@
         <field name="code"/>
         <field name="suffix"/>
         <field name="number_next">1</field>
-        <field name="implementation">standard</field>
+        <field name="implementation">no_gap</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="padding">8</field>
         <field name="number_increment">1</field>
