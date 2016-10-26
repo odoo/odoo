@@ -799,18 +799,19 @@ var BufferedDataSet = DataSetStatic.extend({
         var def = $.Deferred();
         this.mutex.exec(function () {
             var dirty = false;
-            _.each(data, function (v, k) {
-                if (!_.isEqual(v, cached.values[k])) {
+            // _.each is broken if a field "length" is present
+            for (var k in data) {
+                if (!_.isEqual(data[k], cached.values[k])) {
                     dirty = true;
-                    if (_.isEqual(v, cached.from_read[k])) { // clean changes
+                    if (_.isEqual(data[k], cached.from_read[k])) { // clean changes
                         delete cached.changes[k];
                     } else {
-                        cached.changes[k] = v;
+                        cached.changes[k] = data[k];
                     }
                 } else {
                     delete data[k];
                 }
-            });
+            }
             self._update_cache(id, options);
 
             if (dirty) {

@@ -948,6 +948,17 @@ class pos_order(osv.osv):
                 return False
         return True
 
+    def _force_picking_done(self, cr, uid, picking_id, context=None):
+        context = context or {}
+        picking_obj = self.pool.get('stock.picking')
+        picking_obj.action_confirm(cr, uid, [picking_id], context=context)
+        picking_obj.force_assign(cr, uid, [picking_id], context=context)
+        # Mark pack operations as done
+        pick = picking_obj.browse(cr, uid, picking_id, context=context)
+        for pack in pick.pack_operation_ids:
+            self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
+        picking_obj.action_done(cr, uid, [picking_id], context=context)
+
     def create_picking(self, cr, uid, ids, context=None):
         """Create a picking for each order and validate it."""
         picking_obj = self.pool.get('stock.picking')
@@ -959,7 +970,9 @@ class pos_order(osv.osv):
                 continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_type = order.picking_type_id
-            picking_id = False
+            return_pick_type = order.picking_type_id.return_picking_type_id or order.picking_type_id
+            order_picking_id = False
+            return_picking_id = False
             location_id = order.location_id.id
             if order.partner_id:
                 destination_id = order.partner_id.property_stock_customer.id
@@ -970,52 +983,63 @@ class pos_order(osv.osv):
                 else:
                     destination_id = picking_type.default_location_dest_id.id
 
-            #All qties negative => Create negative
+            # Create the normal use case picking (Stock -> Customer)
             if picking_type:
-                pos_qty = all([x.qty >= 0 for x in order.lines])
-                #Check negative quantities
-                picking_id = picking_obj.create(cr, uid, {
+                picking_vals = {
                     'origin': order.name,
-                    'partner_id': addr.get('delivery',False),
-                    'date_done' : order.date_order,
+                    'partner_id': addr.get('delivery', False),
+                    'date_done': order.date_order,
                     'picking_type_id': picking_type.id,
                     'company_id': order.company_id.id,
                     'move_type': 'direct',
                     'note': order.note or "",
-                    'location_id': location_id if pos_qty else destination_id,
-                    'location_dest_id': destination_id if pos_qty else location_id,
-                }, context=context)
-                self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
+                    'location_id': location_id,
+                    'location_dest_id': destination_id,
+                }
+                pos_qty = any([x.qty >= 0 for x in order.lines])
+                if pos_qty:
+                    order_picking_id = picking_obj.create(cr, uid, picking_vals.copy(), context=context)
+                neg_qty = any([x.qty < 0 for x in order.lines])
+                if neg_qty:
+                    return_vals = picking_vals.copy()
+                    return_vals.update({
+                        'location_id': destination_id,
+                        'location_dest_id': location_id,
+                        'picking_type_id': return_pick_type.id
+                    })
+                    return_picking_id = picking_obj.create(cr, uid, return_vals, context=context)
 
             move_list = []
             for line in order.lines:
                 if line.product_id and line.product_id.type not in ['product', 'consu']:
                     continue
-
-                move_list.append(move_obj.create(cr, uid, {
+                move_id = move_obj.create(cr, uid, {
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
-                    'picking_id': picking_id,
-                    'picking_type_id': picking_type.id, 
+                    'picking_id': order_picking_id if line.qty >= 0 else return_picking_id,
+                    'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
                     'product_id': line.product_id.id,
                     'product_uom_qty': abs(line.qty),
                     'state': 'draft',
                     'location_id': location_id if line.qty >= 0 else destination_id,
                     'location_dest_id': destination_id if line.qty >= 0 else location_id,
-                }, context=context))
-                
-            if picking_id:
-                picking_obj.action_confirm(cr, uid, [picking_id], context=context)
-                picking_obj.force_assign(cr, uid, [picking_id], context=context)
-                # Mark pack operations as done
-                pick = picking_obj.browse(cr, uid, picking_id, context=context)
-                for pack in pick.pack_operation_ids:
-                    self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
-                picking_obj.action_done(cr, uid, [picking_id], context=context)
-            elif move_list:
+                }, context=context)
+                move_list.append(move_id)
+
+            # prefer associating the regular order picking, not the return
+            self.write(cr, uid, [order.id], {'picking_id': order_picking_id or return_picking_id}, context=context)
+
+            if return_picking_id:
+                self._force_picking_done(cr, uid, return_picking_id, context=context)
+            if order_picking_id:
+                self._force_picking_done(cr, uid, order_picking_id, context=context)
+
+            # when the pos.config has no picking_type_id set only the moves will be created
+            if move_list and not return_picking_id and not order_picking_id:
                 move_obj.action_confirm(cr, uid, move_list, context=context)
                 move_obj.force_assign(cr, uid, move_list, context=context)
                 move_obj.action_done(cr, uid, move_list, context=context)
+
         return True
 
     def cancel_order(self, cr, uid, ids, context=None):

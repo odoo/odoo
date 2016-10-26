@@ -1302,6 +1302,7 @@ class AccountInvoiceTax(models.Model):
         for invoice in self.mapped('invoice_id'):
             tax_grouped[invoice.id] = invoice.get_taxes_values()
         for tax in self:
+            tax.base = 0.0
             if tax.tax_id:
                 key = tax.tax_id.get_grouping_key({
                     'tax_id': tax.tax_id.id,
