@@ -123,14 +123,16 @@ class ProjectIssue(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
+        default_partner_id = self.env.context.get('default_partner_id')
+        default_partner = self.env['res.partner'].browse(default_partner_id) if default_partner_id else self.env['res.partner']
         if self.project_id:
             if not self.partner_id and not self.email_from:
                 self.partner_id = self.project_id.partner_id.id
                 self.email_from = self.project_id.partner_id.email
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
-            self.partner_id = False
-            self.email_from = False
+            self.partner_id = default_partner
+            self.email_from = default_partner.email
             self.stage_id = False
 
     @api.onchange('task_id')
