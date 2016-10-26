@@ -376,10 +376,5 @@
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('ret_2_income_person'), ref('ret_100_tax_person')])]" name="children_tax_ids"/>
         </record>
-        <!-- Taxes Defaults -->
-        <record id="do_chart_template" model="account.chart.template">
-            <field name="default_sale_tax" ref="tax_18_sale"/>
-            <field name="default_purchase_tax" ref="tax_18_purch"/>
-        </record>
     </data>
 </odoo>
