@@ -207,7 +207,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
         this._super($operator);
         if ($operator.val() === 'between') {
             if (!this.datewidget_2) {
-                this.datewidget_2 = new (this.widget())(this);
+                this.datewidget_2 = new (this.widget())(this, {'close_on_date_select': true});
                 this.datewidget_2.appendTo(this.$el);
             }
             else {
@@ -229,7 +229,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
     },
     start: function() {
         var ready = this._super();
-        this.datewidget_1 = new (this.widget())(this);
+        this.datewidget_1 = new (this.widget())(this, {'close_on_date_select': true});
         this.datewidget_1.appendTo(this.$el);
         return ready;
     }
