@@ -562,6 +562,12 @@ class AccountInvoice(models.Model):
         }
         return vals
 
+    def _cleaned_tax_grouped(self, tax_grouped):
+        """
+        Hook method to manipulate invoice tax lines, based on advanced contitions.
+        """
+        return tax_grouped
+
     @api.multi
     def get_taxes_values(self):
         tax_grouped = {}
@@ -585,7 +591,7 @@ class AccountInvoice(models.Model):
                 else:
                     tax_grouped[key]['amount'] += val['amount']
                     tax_grouped[key]['base'] += val['base']
-        return tax_grouped
+        return self._cleaned_tax_grouped(tax_grouped)
 
     @api.multi
     def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
