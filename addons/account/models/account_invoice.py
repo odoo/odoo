@@ -1086,6 +1086,7 @@ class AccountInvoice(models.Model):
         payment = self.env['account.payment'].create({
             'invoice_ids': [(6, 0, self.ids)],
             'amount': pay_amount or self.residual,
+            'currency_id': self.currency_id.id,
             'payment_date': date or fields.Date.context_today(self),
             'communication': communication,
             'partner_id': self.partner_id.id,
