@@ -2727,7 +2727,7 @@ class stock_move(osv.osv):
                                 qty_on_link -= lot_qty[reserved_quant.lot_id.id]
                     lot_move_qty[move.id] = qty_on_link
 
-                if not move_qty.get(move.id):
+                if move_qty.get(move.id) is None:
                     raise UserError(_("The roundings of your Unit of Measures %s on the move vs. %s on the product don't allow to do these operations or you are not transferring the picking at once. ") % (move.product_uom.name, move.product_id.uom_id.name))
                 move_qty[move.id] -= move_qty_ops[move]
 
