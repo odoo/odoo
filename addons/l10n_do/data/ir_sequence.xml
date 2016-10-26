@@ -169,6 +169,19 @@
         <field eval="True" name="active"/>
         <field name="name">Notas de Débito</field>
     </record>
+    <record id="base.ir_sequence_24" model="ir.sequence">
+        <field eval="True" name="use_date_range"/>
+        <field name="code"/>
+        <field name="suffix"/>
+        <field name="number_next">1</field>
+        <field name="implementation">no_gap</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="prefix">MISC/%(range_year)s/</field>
+        <field eval="True" name="active"/>
+        <field name="name">Otras Operaciones</field>
+    </record>
     <record id="stock.seq_quant_package" model="ir.sequence">
         <field eval="False" name="use_date_range"/>
         <field name="code">stock.quant.package</field>
