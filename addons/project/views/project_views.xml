@@ -574,6 +574,13 @@ action = model.activate_sample_project()
 
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="5"/>
 
+        <record id="project_task_action_from_partner" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_task_search_form"/>
+        </record>
+
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
