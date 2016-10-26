@@ -660,7 +660,7 @@ class AccountTax(models.Model):
             }]
         } """
         # TODO master: put this into method signature, it was hided into context because of api stable policy
-        base_values = self.context.get('base_values')
+        base_values = self.env.context.get('base_values')
 
         if len(self) == 0:
             company_id = self.env.user.company_id
