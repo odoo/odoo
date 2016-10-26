@@ -53,5 +53,12 @@
             <p style="color:#9E588B;">Powered by <a href="https://www.odoo.com">Odoo</a>.</p>
         </template>
 
+        <template id="message_activity_assigned">
+            <p>Activity: <t t-esc="activity.next_activity_id.name"/> - <t t-esc="activity.title_action"/></p>
+            <ul>
+                <li>Assigned to: <t t-esc="activity.user_id.name"/></li>
+            </ul>
+        </template>
+
     </data>
 </odoo>

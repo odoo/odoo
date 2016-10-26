@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="KanbanActivity">
+<t t-name="mail.KanbanActivity">
     <div class="dropdown o_kanban_selection">
         <a class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
             <span t-attf-class="fa o_activity_color_#{widget.activity_state or 'default'} fa-chevron-circle-right fa-lg"/>
@@ -11,13 +11,13 @@
     </div>
 </t>
 
-<t t-name="KanbanActivityLoading">
+<t t-name="mail.KanbanActivityLoading">
     <li class="text-center o_no_activity">
         <span class="fa fa-spinner fa-spin fa-2x" />
     </li>
 </t>
 
-<t t-name="KanbanActivityDropdown">
+<t t-name="mail.KanbanActivityDropdown">
     <li t-if="_.isEmpty(records)" class="text-center o_no_activity">
         <span>No activities planned.</span>
     </li>
@@ -31,7 +31,9 @@
                     </strong>
                 </li>
                 <li t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="o_schedule_activity">
-                    <div class="pull-left"><span t-attf-class="mt8 fa #{log.icon} fa-lg" /></div>
+                    <div class="pull-left">
+                        <span class="o_mark_as_done o_activity_link fa fa-check-circle fa-2x" t-att-data-activity-id="log.id" title="Mark as done" />
+                    </div>
                     <div class="o_activity_title pull-left">
                         <strong><t t-esc="log.title_action or log.next_activity_id[1]" /></strong>
                         <div>
@@ -43,9 +45,7 @@
                             </t>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <span class="o_mark_as_done o_activity_link fa fa-check-circle fa-2x" t-att-data-activity-id="log.id" title="Mark as done" />
-                    </div>
+                    <div><span t-attf-class="mt8 fa #{log.icon} fa-lg" /></div>
                 </li>
             </t>
         </ul>

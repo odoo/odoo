@@ -951,7 +951,6 @@ class Lead(FormatAddress, models.Model):
                 (M.model = 'crm.lead') AND (L.user_id = %s) AND (L.type = 'opportunity')
         """, (self._uid,))
         activites_done = self._cr.dictfetchall()
-
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])

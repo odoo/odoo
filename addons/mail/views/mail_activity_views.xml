@@ -55,11 +55,11 @@
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
                     <div class="oe_button_box" name="button_box" invisible="not context.get('state_btn')">
-                        <button name="open_related_document" type="object" string="Document" class="oe_stat_button" icon="fa-file-text-o" />
+                        <button name="action_open_related_document" type="object" string="Document" class="oe_stat_button" icon="fa-file-text-o" />
                     </div>
                     <div class="oe_title" invisible="not context.get('state_btn')">
-                        <label for="record_name" class="oe_edit_only"/>
-                        <h1><field name="record_name" readonly="1"/></h1>
+                        <label for="res_name" class="oe_edit_only"/>
+                        <h1><field name="res_name" readonly="1"/></h1>
                     </div>
                     <group>
                         <field name="res_id" invisible="1"/>
@@ -76,7 +76,7 @@
                     <field name="note" placeholder="Log a note..."/>
                     <footer invisible="context.get('state_btn')">
                         <button string="Save"
-                            name="close_dialog" type="object" class="btn-primary"/>
+                            name="action_close_dialog" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </sheet>
@@ -122,7 +122,7 @@
                 decoration-danger="date_action &lt; current_date"
                 decoration-success="date_action == current_date"
                 default_order="date_action" create="false">
-                <field name="record_name" string="Name"/>
+                <field name="res_name" string="Name"/>
                 <field name="next_activity_id"/>
                 <field name="title_action"/>
                 <field name="date_action"/>
@@ -137,7 +137,7 @@
         <field name="arch" type="xml">
             <calendar string="Activity"
                 date_start="date_action" color="next_activity_id">
-                <field name="record_name"/>
+                <field name="res_name"/>
                 <field name="create_uid"/>
                 <field name="title_action"/>
             </calendar>

@@ -15,7 +15,7 @@ var QWeb = core.qweb;
  **/
 
 var KanbanActivity = AbstractField.extend({
-    template: 'KanbanActivity',
+    template: 'mail.KanbanActivity',
     events: {
         "click .o_activity_btn": "get_activity_logs",
         "click .o_schedule_activity": "on_open_schedule_activity",
@@ -32,10 +32,10 @@ var KanbanActivity = AbstractField.extend({
     get_activity_logs: function(event) {
         event.preventDefault();
         var self = this;
-        self.$('.o_activity').html(QWeb.render("KanbanActivityLoading"));
+        self.$('.o_activity').html(QWeb.render("mail.KanbanActivityLoading"));
         self.activity.fetch_activities()
             .then(function(records) {
-                self.$('.o_activity').html($(QWeb.render("KanbanActivityDropdown", {
+                self.$('.o_activity').html($(QWeb.render("mail.KanbanActivityDropdown", {
                     selection: self.selection,
                     records: _.groupBy(records, 'state'),
                     uid: self.session.uid,
