@@ -707,12 +707,10 @@ class AccountTax(models.Model):
                 children = tax.children_tax_ids.with_context(basevalues=basevalues)  # TODO master
                 ret = children.compute_all(price_unit, currency, quantity, product, partner)  # TODO master
                 total_excluded = ret['total_excluded']
-                base = ret['base']
+                base = tax.include_base_amount and ret['base'] or base
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
-                if not tax.include_base_amount:
-                    base = basevalues[2]
                 continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
