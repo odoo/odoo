@@ -16,6 +16,7 @@
                 </header>
                 <sheet>
                     <field name='product_variant_count' invisible='1'/>
+                    <field name='sale_ok' invisible='1'/>
                     <field name="id" invisible="True"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object"
@@ -28,16 +29,7 @@
                     <div class="oe_title">
                         <label class="oe_edit_only" for="name" string="Product Name"/>
                         <h1><field name="name" placeholder="Product Name"/></h1>
-                        <div name="options" groups="base.group_user">
-                            <div>
-                                <field name="sale_ok"/>
-                                <label for="sale_ok"/>
-                            </div>
-                            <div>
-                                <field name="purchase_ok"/>
-                                <label for="purchase_ok"/>
-                            </div>
-                        </div>
+                        <div name="options" groups="base.group_user" />
                     </div>
                     <notebook>
                         <page string="General Information" name="general_information">

@@ -218,7 +218,7 @@
         <field name="arch" type="xml">
             <form string="Product Images">
                 <sheet>
-                    <field name="image" widget="image" class="oe_avatar"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
                     <div class="oe_title">
                         <label class="oe_edit_only" for="name" string="Image Name"/>
                         <h1><field name="name" placeholder="Image Name" required="True"/></h1>

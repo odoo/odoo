@@ -583,6 +583,20 @@
             </field>
         </record>
 
+        <record id="product_template_form_view_inherit_purchase" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.purchase</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="arch" type="xml">
+                <div name="options" position="inside">
+                    <div>
+                        <field name="purchase_ok" />
+                        <label for="purchase_ok" />
+                    </div>
+                </div>
+            </field>
+        </record>
+
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.property.form.inherit.stock</field>
             <field name="model">product.category</field>
@@ -597,6 +611,14 @@
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
             <field name="context">{}</field>
             <field name="domain">[('product_id.product_tmpl_id','in',active_ids), ('state', 'in', ['purchase', 'done'])]</field>
+            <field name="name">Purchases</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="view_id" ref="purchase_order_line_tree"/>
+        </record>
+
+        <record id="action_purchase_line_product_product_tree" model="ir.actions.act_window">
+            <field name="context">{}</field>
+            <field name="domain">[('product_id','in',active_ids), ('state', 'in', ['purchase', 'done'])]</field>
             <field name="name">Purchases</field>
             <field name="res_model">purchase.order.line</field>
             <field name="view_id" ref="purchase_order_line_tree"/>
@@ -624,7 +646,22 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                    <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
-                       type="action" icon="fa-shopping-cart">
+                       type="action" icon="fa-shopping-cart" attrs="{'invisible': [('purchase_ok', '=', False)]}">
+                       <field string="Purchases" name="purchase_count" widget="statinfo"/>
+                   </button>
+                </button>
+            </field>
+        </record>
+
+        <record id="product_normal_form_view_inherit_purchase" model="ir.ui.view">
+            <field name="name">product.product.form.inherit.purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+            <field name="arch" type="xml">
+                <button name="toggle_active" position="before">
+                   <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_product_tree)d"
+                       type="action" icon="fa-shopping-cart" attrs="{'invisible': [('purchase_ok', '=', False)]}">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </button>

@@ -610,7 +610,7 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(action_product_sale_list)d"
-                        type="action" icon="fa-usd">
+                        type="action" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
@@ -632,7 +632,7 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd">
+                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
@@ -660,6 +660,19 @@
             </field>
         </record>
 
+        <record id="product_template_form_view_inherit_sale" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.sale</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="arch" type="xml">
+                <div name="options" position="inside">
+                    <div>
+                        <field name="sale_ok" />
+                        <label for="sale_ok" />
+                    </div>
+                </div>
+            </field>
+        </record>
 
         <!-- Update account invoice search view!-->
         <record id="account_invoice_groupby_inherit" model="ir.ui.view">
