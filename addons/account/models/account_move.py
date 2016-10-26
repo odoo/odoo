@@ -972,6 +972,9 @@ class AccountMoveLine(models.Model):
             return True
         rec_move_ids = self.env['account.partial.reconcile']
         for account_move_line in self:
+            for invoice in account_move_line.payment_id.invoice_ids:
+                if account_move_line in invoice.payment_move_line_ids:
+                    account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
             rec_move_ids += account_move_line.matched_debit_ids
             rec_move_ids += account_move_line.matched_credit_ids
         return rec_move_ids.unlink()
