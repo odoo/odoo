@@ -68,14 +68,19 @@ class TestTax(AccountTestUsers):
         self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
 
     def test_tax_group_of_group_tax(self):
-        self.group_tax.include_base_amount = True
         self.fixed_tax.include_base_amount = True
+        self.group_tax.include_base_amount = True
+        self.group_of_group_tax.include_base_amount = True
         res = self.group_of_group_tax.compute_all(200.0)
         self.assertEquals(res['total_excluded'], 200.0)
         # After calculation of first group
         # base = 210
         # total_included = 231
-        self.assertEquals(res['base'], 220.0)
+        # Base of the first grouped is passed
+        # Base after the second group (220) is dropped.
+        # Base of the group of gorups is passed out, 
+        # so we obtain base as after first group
+        self.assertEquals(res['base'], 210.0)
         self.assertEquals(res['total_included'], 263.0)
 
     def test_tax_group(self):
