@@ -173,11 +173,7 @@ var KanbanColumn = Widget.extend({
 
         this.$el.toggleClass('o_column_folded', this.folded);
         var tooltip;
-        if (this.remaining) {
-            tooltip = this.records.length + '/' + this.dataset.size() + _t(' records');
-        } else {
-            tooltip = this.records.length + _t(' records');
-        }
+        tooltip = this.dataset.size() + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltip_info;
         this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
