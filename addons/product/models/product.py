@@ -133,7 +133,7 @@ class ProductProduct(models.Model):
         'Barcode', copy=False, oldname='ean13',
         help="International Article Number used for product identification.")
     attribute_value_ids = fields.Many2many(
-        'product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', ondelete='restrict')
+        'product.attribute.value', string='Attributes', ondelete='restrict')
     # image: all image fields are base64 encoded and PIL-supported
     image_variant = fields.Binary(
         "Variant Image", attachment=True,
