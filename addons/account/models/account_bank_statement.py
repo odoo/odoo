@@ -471,7 +471,7 @@ class AccountBankStatementLine(models.Model):
                 'details': {
                     'name': _("Automatically reconciled items"),
                     'model': 'account.move',
-                    'ids': automatic_reconciliation_entries.ids
+                    'ids': automatic_reconciliation_entries.mapped('journal_entry_ids').ids
                 }
             }]
         return {
