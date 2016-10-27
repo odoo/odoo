@@ -246,16 +246,13 @@ var DiagramView = View.extend({
             self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
         
-        var form_fields = [self.parent_field];
-        var form_controller = pop.view_form;
-
-        form_controller.on("load_record", self, function(){
-            _.each(form_fields, function(fld) {
-                if (!(fld in form_controller.fields)) { return; }
-                var field = form_controller.fields[fld];
+        pop.opened().then(function(){
+            var form_controller = pop.view_form;
+            var field = form_controller.fields[self.parent_field];
+            if (field) {
                 field.$input.prop('disabled', true);
                 field.$dropdown.unbind();
-            });
+            }
         });
     },
 
@@ -274,16 +271,13 @@ var DiagramView = View.extend({
             }
         }).open();
 
-        var form_controller = pop.view_form;
-        var form_fields = [this.parent_field];
-
-        form_controller.on("load_record", self, function(){
-            _.each(form_fields, function(fld) {
-                if (!(fld in form_controller.fields)) { return; }
-                var field = form_controller.fields[fld];
+        pop.opened().then(function(){
+            var form_controller = pop.view_form;
+            var field = form_controller.fields[self.parent_field];
+            if (field) {
                 field.set_value(self.id);
                 field.dirty = true;
-            });
+            }
         });
     },
 
@@ -326,12 +320,14 @@ var DiagramView = View.extend({
             }
         });
 
-        var form_controller = pop.view_form;
-        form_controller.on("load_record", self, function(){
-            form_controller.fields[self.connectors.attrs.source].set_value(node_source_id);
-            form_controller.fields[self.connectors.attrs.source].dirty = true;
-            form_controller.fields[self.connectors.attrs.destination].set_value(node_dest_id);
-            form_controller.fields[self.connectors.attrs.destination].dirty = true;
+        pop.opened().then(function(){
+            var form_controller = pop.view_form;
+            var source_field = form_controller.fields[self.connectors.attrs.source];
+            var destination_field = form_controller.fields[self.connectors.attrs.destination];
+            source_field.set_value(node_source_id);
+            source_field.dirty = true;
+            destination_field.set_value(node_dest_id);
+            destination_field.dirty = true;
         });
     },
 

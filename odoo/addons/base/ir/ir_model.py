@@ -131,6 +131,10 @@ class IrModel(models.Model):
                 if model.state != 'manual':
                     raise UserError(_("Model '%s' contains module data and cannot be removed!") % model.name)
 
+        # prevent screwing up fields that depend on these models' fields
+        for model in self:
+            model.field_id._prepare_update()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -422,6 +426,19 @@ class IrModelFields(models.Model):
         return True
 
     @api.multi
+    def _prepare_update(self):
+        """ Check whether the fields in ``self`` may be modified or removed.
+            This method prevents the modification/deletion of many2one fields
+            that have an inverse one2many, for instance.
+        """
+        for record in self:
+            model = self.env[record.model]
+            field = model._fields[record.name]
+            if field.type == 'many2one' and model._field_inverses.get(field):
+                msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
+                raise UserError(msg % (field, model._field_inverses[field][0]))
+
+    @api.multi
     def unlink(self):
         if not self:
             return True
@@ -430,6 +447,9 @@ class IrModelFields(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG) and \
                 any(field.state != 'manual' for field in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
+
+        # prevent screwing up fields that depend on these fields
+        self._prepare_update()
 
         model_names = self.mapped('model')
         self._drop_column()
@@ -522,6 +542,7 @@ class IrModelFields(models.Model):
 
                 if vals.get('name', item.name) != item.name:
                     # We need to rename the column
+                    item._prepare_update()
                     if column_rename:
                         raise UserError(_('Can only rename one field at a time!'))
                     if vals['name'] in obj._fields:

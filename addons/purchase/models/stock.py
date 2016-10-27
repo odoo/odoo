@@ -124,8 +124,8 @@ class StockWarehouse(models.Model):
         return routes
 
     @api.multi
-    def _handle_renaming(self, name, code):
-        res = super(StockWarehouse, self)._handle_renaming(name, code)
+    def _update_name_and_code(self, name, code):
+        res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]
         #change the buy procurement rule name
         if warehouse.buy_pull_id:
@@ -133,8 +133,8 @@ class StockWarehouse(models.Model):
         return res
 
     @api.multi
-    def change_route(self):
-        res = super(StockWarehouse, self).change_route()
+    def _update_routes(self):
+        res = super(StockWarehouse, self)._update_routes()
         for warehouse in self:
             if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
                 warehouse.buy_pull_id.write({'location_id': warehouse.in_type_id.default_location_dest_id.id})

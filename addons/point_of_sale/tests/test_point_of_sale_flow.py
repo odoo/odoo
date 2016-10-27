@@ -119,9 +119,208 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I test that the generated journal entry is attached to the PoS order
         self.assertTrue(self.pos_order_pos0.account_move, "Journal entry has not been attached to Pos order.")
 
+    def test_order_to_picking(self):
+        """
+            In order to test the Point of Sale in module, I will do three orders from the sale to the payment,
+            invoicing + picking, but will only check the picking consistency in the end.
+
+            TODO: Check the negative picking after changing the picking relation to One2many (also for a mixed use case),
+            check the quantity, the locations and return picking logic
+        """
+        # I click on create a new session button
+        self.pos_config.open_session_cb()
+
+        # I create a PoS order with 2 units of PCSC234 at 450 EUR
+        # and 3 units of PCSC349 at 300 EUR.
+        self.pos_order_pos1 = self.PosOrder.create({
+            'company_id': self.company_id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': 2.0,
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 0.0,
+                'qty': 3.0,
+            })]
+        })
+
+        # I click on the "Make Payment" wizard to pay the PoS order with the total amount (2*450 + 3*300 = 1800)
+        context_make_payment = {
+            "active_ids": [self.pos_order_pos1.id],
+            "active_id": self.pos_order_pos1.id
+        }
+        self.pos_make_payment_2 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 1800
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos1.id}
+        self.pos_make_payment_2.with_context(context_payment).check()
+
+        # I check that the order is marked as paid
+        self.assertEqual(
+            self.pos_order_pos1.state,
+            'paid',
+            'Order should be in paid state.'
+        )
+
+        # I generate the journal entries
+        self.pos_order_pos1._create_account_move_line()
+
+        # I test that the generated journal entry is attached to the PoS order
+        self.assertTrue(
+            self.pos_order_pos1.account_move,
+            "Journal entry has not been attached to Pos order."
+        )
+
+        # I test that the pickings are created as expected
+        # One picking attached and having all the positive move lines in the correct state
+        self.pos_order_pos1.create_picking()
+        self.assertEqual(
+            self.pos_order_pos1.picking_id.state,
+            'done',
+            'Picking should be in done state.'
+        )
+        self.assertEqual(
+            self.pos_order_pos1.picking_id.move_lines.mapped('state'),
+            ['done', 'done'],
+            'Move Lines should be in done state.'
+        )
+
+        self.pos_order_pos2 = self.PosOrder.create({
+            'company_id': self.company_id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0003",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': (-2.0),
+            }), (0, 0, {
+                'name': "OL/0004",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 0.0,
+                'qty': (-3.0),
+            })]
+        })
+
+        # I click on the "Make Payment" wizard to pay the PoS order with the total amount (-2*450 + -3*300 = -1800)
+        context_make_payment = {
+            "active_ids": [self.pos_order_pos2.id],
+            "active_id": self.pos_order_pos2.id
+        }
+        self.pos_make_payment_3 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': (-1800)
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos2.id}
+        self.pos_make_payment_3.with_context(context_payment).check()
+
+        # I check that the order is marked as paid
+        self.assertEqual(
+            self.pos_order_pos2.state,
+            'paid',
+            'Order should be in paid state.'
+        )
+
+        # I generate the journal entries
+        self.pos_order_pos2._create_account_move_line()
+
+        # I test that the generated journal entry is attached to the PoS order
+        self.assertTrue(
+            self.pos_order_pos2.account_move,
+            "Journal entry has not been attached to PoS order."
+        )
+
+        # I test that the pickings are created as expected
+        # One picking attached and having all the positive move lines in the correct state
+        self.pos_order_pos2.create_picking()
+        self.assertEqual(
+            self.pos_order_pos2.picking_id.state,
+            'done',
+            'Picking should be in done state.'
+        )
+        self.assertEqual(
+            self.pos_order_pos2.picking_id.move_lines.mapped('state'),
+            ['done', 'done'],
+            'Move Lines should be in done state.'
+        )
+
+        self.pos_order_pos3 = self.PosOrder.create({
+            'company_id': self.company_id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0005",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': (-2.0),
+            }), (0, 0, {
+                'name': "OL/0006",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 0.0,
+                'qty': 3.0,
+            })]
+        })
+
+        # I click on the "Make Payment" wizard to pay the PoS order with the total amount (-2*450 + 3*300 = 0)
+        context_make_payment = {
+            "active_ids": [self.pos_order_pos3.id],
+            "active_id": self.pos_order_pos3.id
+        }
+        self.pos_make_payment_4 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 0
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos3.id}
+        self.pos_make_payment_4.with_context(context_payment).check()
+
+        # I check that the order is marked as paid
+        self.assertEqual(
+            self.pos_order_pos3.state,
+            'paid',
+            'Order should be in paid state.'
+        )
+
+        # I generate the journal entries
+        self.pos_order_pos3._create_account_move_line()
+
+        # I test that the generated journal entry is attached to the PoS order
+        self.assertTrue(
+            self.pos_order_pos3.account_move,
+            "Journal entry has not been attached to PoS order."
+        )
+
+        # I test that the pickings are created as expected
+        # One picking attached and having all the positive move lines in the correct state
+        self.pos_order_pos3.create_picking()
+        self.assertEqual(
+            self.pos_order_pos3.picking_id.state,
+            'done',
+            'Picking should be in done state.'
+        )
+        self.assertEqual(
+            self.pos_order_pos3.picking_id.move_lines.mapped('state'),
+            ['done'],
+            'Move Lines should be in done state.'
+        )
+
     def test_order_to_invoice(self):
 
-        #I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
         self.pos_order_pos1 = self.PosOrder.create({
             'company_id': self.company_id,
             'partner_id': self.partner1.id,
