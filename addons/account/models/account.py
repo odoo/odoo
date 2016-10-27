@@ -691,20 +691,25 @@ class AccountTax(models.Model):
             prec += 5
         total_excluded = total_included = base = round(price_unit * quantity, prec)
 
+        check_excl = self._context.get('check_excl') or 0
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
         # depending on the context. This domain might filter out some taxes from self, e.g. in the
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
+                ret = tax.children_tax_ids.with_context(check_excl=check_excl).compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
                 base = ret['base']
+                check_excl = ret['check_excl']
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
                 continue
 
+            # Check for a mixture of taxes related to price unit (tax excluded/included)
+            if check_excl == 1 and tax.price_include or check_excl == 2 and not tax.price_include:
+                raise UserError('It is not allowed to mix tax included and excluded on the same price_unit')
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
             if not round_tax:
                 tax_amount = round(tax_amount, prec)
@@ -712,9 +717,11 @@ class AccountTax(models.Model):
                 tax_amount = currency.round(tax_amount)
 
             if tax.price_include:
+                check_excl = 2
                 total_excluded -= tax_amount
                 base -= tax_amount
             else:
+                check_excl = 1
                 total_included += tax_amount
 
             # Keep base amount used for the current tax
@@ -739,6 +746,7 @@ class AccountTax(models.Model):
             'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
             'total_included': currency.round(total_included) if round_total else total_included,
             'base': base,
+            'check_excl': check_excl
         }
 
     @api.v7

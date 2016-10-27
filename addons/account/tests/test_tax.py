@@ -98,6 +98,8 @@ class TestTax(AccountTestUsers):
 
         self.fixed_tax.price_include = True
         self.fixed_tax.include_base_amount = True
+        self.percent_tax.price_include = True
+        self.fixed_tax_bis.price_include = True
         company_id = self.env['res.users'].browse(self.env.uid).company_id.id
         vals = {
             'date': time.strftime('%Y-01-01'),
@@ -112,7 +114,7 @@ class TestTax(AccountTestUsers):
                 }), (0, 0, {
                     'account_id': self.expense_account.id,
                     'debit': 0,
-                    'credit': 200,
+                    'credit': 220,
                     'date': time.strftime('%Y-01-01'),
                     'name': 'Bank Fees',
                     'partner_id': False,
