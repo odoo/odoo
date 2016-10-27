@@ -150,6 +150,19 @@ def wsgi_xmlrpc(environ, start_response):
         params, method = xmlrpclib.loads(data)
         return xmlrpc_return(start_response, service, method, params, string_faultcode)
 
+override_handlers = []
+
+def register_override_handler(handler):
+    """ Register a WSGI override handler.
+
+    Override handlers are tried before regular wsgi handlers.
+
+    Handlers are tried in the order they are added. We might provide a way to
+    register a handler for specific routes later.
+    """
+    override_handlers.append(handler)
+
+
 def application_unproxied(environ, start_response):
     """ WSGI entry point."""
     # cleanup db/uid trackers - they're set at HTTP dispatch in
@@ -164,7 +177,12 @@ def application_unproxied(environ, start_response):
 
     with odoo.api.Environment.manage():
         # Try all handlers until one returns some result (i.e. not None).
-        for handler in [wsgi_xmlrpc, odoo.http.root]:
+        wsgi_handlers = [wsgi_xmlrpc]
+        wsgi_handlers += override_handlers
+        wsgi_handlers += [odoo.http.root]
+
+        # Try all handlers until one returns some result (i.e. not None).
+        for handler in wsgi_handlers:
             result = handler(environ, start_response)
             if result is None:
                 continue
