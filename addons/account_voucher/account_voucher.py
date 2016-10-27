@@ -757,14 +757,15 @@ class account_voucher(osv.osv):
                     move_lines_found.append(line.id)
                     break
                 #otherwise we will split the voucher amount on each line (by most old first)
-                total_credit += line.credit or 0.0
-                total_debit += line.debit or 0.0
+                total_credit += line.credit and line.amount_residual or 0.0
+                total_debit += line.debit and line.amount_residual or 0.0
             elif currency_id == line.currency_id.id:
                 if line.amount_residual_currency == price:
                     move_lines_found.append(line.id)
                     break
-                total_credit += line.credit and line.amount_currency or 0.0
-                total_debit += line.debit and line.amount_currency or 0.0
+                line_residual = currency_pool.compute(cr, uid, company_currency, currency_id, abs(line.amount_residual), context=context_multi_currency)
+                total_credit += line.credit and line_residual or 0.0
+                total_debit += line.debit and line_residual or 0.0
 
         remaining_amount = price
         #voucher line creation
