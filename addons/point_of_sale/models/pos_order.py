@@ -627,11 +627,8 @@ class PosOrder(models.Model):
         StockProductionLot = self.env['stock.production.lot']
         PosPackOperationLot = self.env['pos.pack.operation.lot']
 
-        if not picking:
-            picking = order.picking_id
-
         for order in self:
-            for pack_operation in picking.pack_operation_ids:
+            for pack_operation in (picking or self.picking_id).pack_operation_ids:
                 qty = 0
                 qty_done = 0
                 pack_lots = []
