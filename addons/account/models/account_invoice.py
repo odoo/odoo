@@ -560,6 +560,14 @@ class AccountInvoice(models.Model):
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
             'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
         }
+
+        # If the taxes generate moves on the same financial account as the invoice line,
+        # propagate the analytic account from the invoice line to the tax line.
+        # This is necessary in situations were (part of) the taxes cannot be reclaimed,
+        # to ensure the tax move is allocated to the proper analytic account.
+        if not vals.get('account_analytic_id') and line.account_analytic_id and vals['account_id'] == line.account_id.id:
+            vals['account_analytic_id'] = line.account_analytic_id.id
+
         return vals
 
     @api.multi
@@ -570,14 +578,6 @@ class AccountInvoice(models.Model):
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
             for tax in taxes:
                 val = self._prepare_tax_line_vals(line, tax)
-
-                # If the taxes generate moves on the same financial account as the invoice line,
-                # propagate the analytic account from the invoice line to the tax line.
-                # This is necessary in situations were (part of) the taxes cannot be reclaimed,
-                # to ensure the tax move is allocated to the proper analytic account.
-                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
-                    val['account_analytic_id'] = line.account_analytic_id.id
-
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
 
                 if key not in tax_grouped:
