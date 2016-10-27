@@ -135,9 +135,9 @@ odoo.define('website.website', function (require) {
 
     var error = function (title, message, url) {
         return new Dialog(null, {
-            title: data.data ? data.data.arguments[0] : "",
+            title: title || "",
             $content: $(qweb.render('website.error_dialog', {
-                message: data.data ? data.data.arguments[1] : data.statusText,
+                message: message || "",
                 backend_url: url,
             })),
         }).open();

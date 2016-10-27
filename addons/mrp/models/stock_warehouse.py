@@ -118,8 +118,8 @@ class StockWarehouse(models.Model):
         return routes
 
     @api.multi
-    def _handle_renaming(self, name, code):
-        res = super(StockWarehouse, self)._handle_renaming(name, code)
+    def _update_name_and_code(self, name, code):
+        res = super(StockWarehouse, self)._update_name_and_code(name, code)
         # change the manufacture procurement rule name
         for warehouse in self:
             if warehouse.manufacture_pull_id:

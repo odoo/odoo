@@ -1178,7 +1178,7 @@
                                     <t t-if="mode[1] == 'billing'">
                                         <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-md-6" id="div_email">
                                             <label class="control-label" for="email">Email</label>
-                                            <input type="tel" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']" />
+                                            <input type="email" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']" />
                                         </div>
                                     </t>
                                     <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-md-6" id="div_phone">

@@ -133,7 +133,7 @@ class ProductProduct(models.Model):
         'Barcode', copy=False, oldname='ean13',
         help="International Article Number used for product identification.")
     attribute_value_ids = fields.Many2many(
-        'product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', ondelete='restrict')
+        'product.attribute.value', string='Attributes', ondelete='restrict')
     # image: all image fields are base64 encoded and PIL-supported
     image_variant = fields.Binary(
         "Variant Image", attachment=True,
@@ -392,8 +392,7 @@ class ProductProduct(models.Model):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                if variant:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
                 if not sellers:
                     sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
             if sellers:
