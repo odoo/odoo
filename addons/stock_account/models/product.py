@@ -13,10 +13,10 @@ class ProductTemplate(models.Model):
     property_valuation = fields.Selection([
         ('manual_periodic', 'Periodic (manual)'),
         ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
-        company_dependent=True, copy=True, default='manual_periodic',
+        company_dependent=True, copy=True,
         help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products.")
-    valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type')
+    valuation = fields.Char(compute='_compute_valuation_type')
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
         ('average', 'Average Price'),
@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
         help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
                 Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
                 Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""")
-    cost_method = fields.Char(compute='_compute_cost_method', inverse='_set_cost_method')
+    cost_method = fields.Char(compute='_compute_cost_method')
     property_stock_account_input = fields.Many2one(
         'account.account', 'Stock Input Account',
         company_dependent=True, domain=[('deprecated', '=', False)],
@@ -43,23 +43,14 @@ class ProductTemplate(models.Model):
         self.valuation = self.property_valuation if self.property_valuation else self.categ_id.property_valuation
 
     @api.one
-    def _set_valuation_type(self):
-        return self.write({'property_valuation': self.valuation})
-
-    @api.one
     @api.depends('property_cost_method', 'categ_id.property_cost_method')
     def _compute_cost_method(self):
         self.cost_method = self.property_cost_method if self.property_cost_method else self.categ_id.property_cost_method
 
-    @api.one
-    def _set_cost_method(self):
-        return self.write({'property_cost_method': self.cost_method})
-
     @api.onchange('type')
     def onchange_type_valuation(self):
-        if self.type != 'product':
-            self.valuation = 'manual_periodic'
-        return {}
+        # TO REMOVE IN MASTER
+        pass
 
     @api.multi
     def _get_product_accounts(self):
@@ -90,8 +81,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('type')
     def onchange_type_valuation(self):
-        if self.type != 'product':
-            self.valuation = 'manual_periodic'
+        # TO REMOVE IN MASTER
         return {}
 
     @api.multi
