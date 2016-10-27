@@ -605,7 +605,7 @@
         <field name="account_id" ref="p112341"/>
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_25'), ref('st_tag_in_63')])]"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_25')])]"/>
     </record>
     <record id="sale_edu_cess_service_tax_2" model="account.tax.template">
         <field name="name">(standard)Input Education Cess @ 2% On Service Tax</field>
@@ -665,7 +665,7 @@
         <field name="account_id" ref="p11232"/>
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_33'), ref('st_tag_in_86')])]"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_33'), ref('st_tag_in_74')])]"/>
     </record>
 
     <!--output purchase tax-->
@@ -679,7 +679,7 @@
         <field name="account_id" ref="p10050"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_71'), ref('st_tag_in_22')])]"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_22'), ref('st_tag_in_67')])]"/>
     </record>
     <record id="output_tax_12" model="account.tax.template">
         <field name="name">(standard)Output Purchase Tax @ 12%</field>
@@ -691,7 +691,7 @@
         <field name="account_id" ref="p10050"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_19'), ref('st_tag_in_67')])]"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_19'), ref('st_tag_in_64')])]"/>
     </record>
     <record id="output_tax_4" model="account.tax.template">
         <field name="name">(standard)Output Purchase Tax @ 4%</field>
