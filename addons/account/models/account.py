@@ -659,6 +659,9 @@ class AccountTax(models.Model):
                 'analytic': boolean,
             }]
         } """
+        # TODO master: put this into method signature, it was hided into context because of api stable policy
+        base_values = self.env.context.get('base_values')
+
         if len(self) == 0:
             company_id = self.env.user.company_id
         else:
@@ -689,7 +692,10 @@ class AccountTax(models.Model):
 
         if not round_tax:
             prec += 5
-        total_excluded = total_included = base = round(price_unit * quantity, prec)
+        if not base_values:
+            total_excluded = total_included = base = round(price_unit * quantity, prec)
+        else:
+            total_excluded, total_included, base = base_values
 
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
@@ -697,9 +703,11 @@ class AccountTax(models.Model):
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
+                base_values = total_excluded, total_included, base
+                children = tax.children_tax_ids.with_context(base_values=base_values)  # TODO master
+                ret = children.compute_all(price_unit, currency, quantity, product, partner)  # TODO master
                 total_excluded = ret['total_excluded']
-                base = ret['base']
+                base = tax.include_base_amount and ret['base'] or base
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
