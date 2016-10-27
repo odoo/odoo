@@ -155,7 +155,7 @@ class LandedCost(models.Model):
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'real':
+            if move.product_id.cost_method != 'real':
                 continue
             vals = {
                 'product_id': move.product_id.id,
