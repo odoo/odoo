@@ -233,6 +233,24 @@
                             groups="product.group_stock_packaging">
                             <field name="packaging_ids" nolabel="1" context="{'default_product_id': id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
                         </group>
+                        <div groups="product.group_product_pricelist">
+                            <field name="pricelist_item_ids" widget="one2many" context="{'default_product_id': id, 'default_base':'list_price', 'default_applied_on': '0_product_variant'}">
+                                <tree string="Pricelist Items" editable="top">
+                                    <field name="pricelist_id"/>
+                                    <field name="name" string="Applicable On"/>
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="fixed_price" string="Price" required='1'/>
+                                    <field name="min_quantity"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="base" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="price_discount" invisible="1"/>
+                                    <field name="applied_on" invisible="1"/>
+                                    <field name="compute_price" invisible="1"/>
+                                </tree>
+                            </field>
+                        </div>
                     </sheet>
                 </form>
             </field>
@@ -309,14 +327,15 @@
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
                 <field name="item_ids" position="replace">
-                    <field name="pricelist_item_ids" widget="many2many">
-                        <tree string="Pricelist Items">
+                    <field name="pricelist_item_ids" widget="one2many" context="{'default_product_id': id, 'default_base':'list_price', 'default_applied_on': '0_product_variant'}">
+                        <tree string="Pricelist Items" editable="top">
                             <field name="pricelist_id"/>
                             <field name="name" string="Applicable On"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="fixed_price" string="Price" required='1'/>
                             <field name="min_quantity"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
-                            <field name="price" string="Price"/>
                             <field name="base" invisible="1"/>
                             <field name="sequence" invisible="1"/>
                             <field name="price_discount" invisible="1"/>

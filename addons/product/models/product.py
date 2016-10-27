@@ -161,7 +161,7 @@ class ProductProduct(models.Model):
         help="The weight of the contents in Kg, not including any packaging, etc.")
 
     pricelist_item_ids = fields.Many2many(
-        'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
+        'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items', inverse="_set_pricelist_items")
 
     packaging_ids = fields.One2many(
         'product.packaging', 'product_id', 'Packaging',
@@ -298,6 +298,10 @@ class ProductProduct(models.Model):
             '|',
             ('product_id', '=', self.id),
             ('product_tmpl_id', '=', self.product_tmpl_id.id)]).ids
+
+    def _set_pricelist_items(self):
+        for product in self:
+            product.product_tmpl_id.item_ids = product.pricelist_item_ids
 
     @api.constrains('attribute_value_ids')
     def _check_attribute_value_ids(self):
