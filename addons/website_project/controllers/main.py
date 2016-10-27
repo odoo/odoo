@@ -11,14 +11,13 @@ from odoo.addons.website_portal.controllers.main import website_account, get_rec
 
 class WebsiteAccount(website_account):
 
-    @http.route()
-    def account(self, **kw):
-        response = super(WebsiteAccount, self).account(**kw)
-        response.qcontext.update({
+    def _prepare_portal_layout_values(self):
+        values = super(WebsiteAccount, self)._prepare_portal_layout_values()
+        values.update({
             'project_count': request.env['project.project'].search_count([('privacy_visibility', '=', 'portal')]),
             'task_count': request.env['project.task'].search_count([('project_id.privacy_visibility', '=', 'portal')])
         })
-        return response
+        return values
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
     def my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
