@@ -490,6 +490,7 @@ var BasicComposer = Widget.extend({
             return;
         }
 
+        clearTimeout(this.canned_timeout);
         var self = this;
         this.preprocess_message().then(function (message) {
             self.trigger('post_message', message);
@@ -713,12 +714,18 @@ var BasicComposer = Widget.extend({
         });
     },
     mention_get_canned_responses: function (search) {
-        var canned_responses = chat_manager.get_canned_responses();
-        var matches = fuzzy.filter(utils.unaccent(search), _.pluck(canned_responses, 'source'));
-        var indexes = _.pluck(matches.slice(0, this.options.mention_fetch_limit), 'index');
-        return _.map(indexes, function (i) {
-            return canned_responses[i];
-        });
+        var self = this;
+        var def = $.Deferred();
+        clearTimeout(this.canned_timeout);
+        this.canned_timeout = setTimeout(function() {
+            var canned_responses = chat_manager.get_canned_responses();
+            var matches = fuzzy.filter(utils.unaccent(search), _.pluck(canned_responses, 'source'));
+            var indexes = _.pluck(matches.slice(0, self.options.mention_fetch_limit), 'index');
+            def.resolve(_.map(indexes, function (i) {
+                return canned_responses[i];
+            }));
+        }, 500);
+        return def;
     },
     mention_get_commands: function (search) {
         var search_regexp = new RegExp(_.str.escapeRegExp(utils.unaccent(search)), 'i');
