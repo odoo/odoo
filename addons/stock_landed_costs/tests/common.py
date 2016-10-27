@@ -39,8 +39,8 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         self.product_refrigerator = self.Product.create({
             'name': 'Refrigerator',
             'type': 'product',
-            'cost_method': 'real',
-            'valuation': 'real_time',
+            'property_cost_method': 'real',
+            'property_valuation': 'real_time',
             'standard_price': 1.0,
             'weight': 10,
             'volume': 1,
@@ -48,8 +48,8 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         self.product_oven = self.Product.create({
             'name': 'Microwave Oven',
             'type': 'product',
-            'cost_method': 'real',
-            'valuation': 'real_time',
+            'property_cost_method': 'real',
+            'property_valuation': 'real_time',
             'standard_price': 1.0,
             'weight': 20,
             'volume': 1.5,
