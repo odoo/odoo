@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="portal_layout" name="Portal layout: Issues menu entry" inherit_id="website_portal.portal_layout" priority="30">
+    <template id="portal_layout" name="Portal layout: Issues menu entry" inherit_id="website_portal.portal_layout" priority="45">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-att-class="page_name == 'issue' and 'active' or ''">
-                 <a href="/my/issues">Issues</a>
+            <li t-if="issue_count" t-att-class="page_name == 'issue' and 'active'">
+                <a href="/my/issues">Issues</a>
             </li>
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Portal My Home: Issue entries" inherit_id="website_portal.portal_my_home" priority="30">
+    <template id="portal_my_home" name="Portal My Home: Issue entries" inherit_id="website_portal.portal_my_home" priority="45">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 class="page-header">
+            <h3 t-if="issue_count" class="page-header">
                 <a href="/my/issues">Your Issues
                     <small class="ml8">
-                        <t t-if="issue_count">
-                            <span class='badge'><t t-esc="issue_count"/></span>
-                        </t>
-                        <t t-if="not issue_count">
-                            There are currently no issues.
-                        </t>
+                        <span class='badge'><t t-esc="issue_count"/></span>
                     </small>
                 </a>
             </h3>

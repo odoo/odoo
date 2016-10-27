@@ -11,16 +11,15 @@ from odoo.osv.expression import OR
 
 class WebsiteAccount(website_account):
 
-    @http.route()
-    def account(self, **kw):
-        response = super(WebsiteAccount, self).account(**kw)
+    def _prepare_portal_layout_values(self):
+        values = super(WebsiteAccount, self)._prepare_portal_layout_values()
         # domain is needed to hide non portal project for employee
         # portal users can't see the privacy_visibility, fetch the domain for them in sudo
         portal_projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
-        response.qcontext.update({
+        values.update({
             'issue_count': request.env['project.issue'].search_count([('project_id', 'in', portal_projects.ids)])
         })
-        return response
+        return values
 
     @http.route(['/my/issues', '/my/issues/page/<int:page>'], type='http', auth="user", website=True)
     def my_issues(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):

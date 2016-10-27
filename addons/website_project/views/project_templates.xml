@@ -1,39 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="website_portal.portal_layout" priority="28">
+    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="website_portal.portal_layout" priority="40">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-att-class="page_name == 'project' and 'active' or ''">
+            <li t-if="project_count" t-att-class="page_name == 'project' and 'active'">
                 <a href="/my/projects">Projects</a>
             </li>
-            <li t-att-class="page_name == 'task' and 'active' or ''">
+            <li t-if="task_count" t-att-class="page_name == 'task' and 'active'">
                 <a href="/my/tasks">Tasks</a>
             </li>
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="website_portal.portal_my_home" priority="28">
+    <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="website_portal.portal_my_home" priority="40">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 class="page-header">
+            <h3 t-if="project_count" class="page-header">
                 <a href="/my/projects">Your Projects
                     <small class="ml8">
-                        <t t-if="project_count">
-                            <span class='badge'><t t-esc="project_count"/></span>
-                        </t>
-                        <t t-if="not project_count">
-                            There are currently no projects.
-                        </t>
+                        <span class='badge'><t t-esc="project_count"/></span>
                     </small>
                 </a>
             </h3>
-            <h3 class="page-header">
+            <h3 t-if="task_count" class="page-header">
                 <a href="/my/tasks">Your Tasks
                     <small class="ml8">
-                        <t t-if="task_count">
-                            <span class='badge'><t t-esc="task_count"/></span>
-                        </t>
-                        <t t-if="not task_count">
-                            There are currently no quotes.
-                        </t>
+                        <span class='badge'><t t-esc="task_count"/></span>
                     </small>
                 </a>
             </h3>
