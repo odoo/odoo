@@ -18,7 +18,9 @@ class PosSession(models.Model):
         for session in self:
             company_id = session.config_id.journal_id.company_id.id
             orders = session.order_ids.filtered(lambda order: order.state == 'paid')
-            move = self.env['pos.order'].with_context(force_company=company_id)._create_account_move(session.start_at, session.name, session.config_id.journal_id.id, company_id)
+            journal_id = self.env['ir.config_parameter'].sudo().get_param(
+                'pos.closing.journal_id', default=session.config_id.journal_id.id)
+            move = self.env['pos.order'].with_context(force_company=company_id)._create_account_move(session.start_at, session.name, int(journal_id), company_id)
             orders.with_context(force_company=company_id)._create_account_move_line(session, move)
             for order in session.order_ids.filtered(lambda o: o.state != 'done'):
                 if order.state not in ('paid', 'invoiced'):

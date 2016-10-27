@@ -213,8 +213,10 @@ class PosOrder(models.Model):
             partner_id = ResPartner._find_accounting_partner(order.partner_id).id or False
             if move is None:
                 # Create an entry for the sale
+                journal_id = self.env['ir.config_parameter'].sudo().get_param(
+                    'pos.closing.journal_id', default=order.sale_journal.id)
                 move = self._create_account_move(
-                    order.session_id.start_at, order.name, order.sale_journal.id, order.company_id.id)
+                    order.session_id.start_at, order.name, int(journal_id), order.company_id.id)
 
             def insert_data(data_type, values):
                 # if have_to_group_by:
