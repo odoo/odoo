@@ -871,7 +871,7 @@
             <div class='orderlines' line-ratio='0.6'>
                 <t t-foreach='products' t-as='line'>
                     <line>
-                        <left><t t-esc='line.product_name' /></left>
+                        <left><t t-esc='line.product_name.substr(0,20)' /></left>
                         <right>
                             <value value-decimals='2' value-autoint='on'>
                                 <t t-esc='line.quantity' />

@@ -7,6 +7,7 @@ ODOO_CONFIGURATION_FILE=$ODOO_CONFIGURATION_DIR/odoo.conf
 ODOO_DATA_DIR=/var/lib/odoo
 ODOO_GROUP="odoo"
 ODOO_LOG_DIR=/var/log/odoo
+ODOO_LOG_FILE=$ODOO_LOG_DIR/odoo-server.log
 ODOO_USER="odoo"
 
 if ! getent passwd | grep -q "^odoo:"; then
@@ -43,7 +44,7 @@ chown $ODOO_USER:$ODOO_GROUP $ODOO_DATA_DIR
 INIT_FILE=/lib/systemd/system/odoo.service
 touch $INIT_FILE
 chmod 0700 $INIT_FILE
-cat << 'EOF' > $INIT_FILE
+cat << EOF > $INIT_FILE
 [Unit]
 Description=Odoo Open Source ERP and CRM
 After=network.target
@@ -52,7 +53,7 @@ After=network.target
 Type=simple
 User=odoo
 Group=odoo
-ExecStart=/usr/bin/odoo --config=/etc/odoo/odoo.conf
+ExecStart=/usr/bin/odoo --config $ODOO_CONFIGURATION_FILE --logfile $ODOO_LOG_FILE
 
 [Install]
 WantedBy=multi-user.target

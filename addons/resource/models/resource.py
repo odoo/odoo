@@ -653,7 +653,7 @@ class ResourceCalendarAttendance(models.Model):
     date_to = fields.Date(string='End Date')
     hour_from = fields.Float(string='Work from', required=True, index=True, help="Start and End time of working.")
     hour_to = fields.Float(string='Work to', required=True)
-    calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True)
+    calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
 
 
 def hours_time_string(hours):

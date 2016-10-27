@@ -171,79 +171,71 @@ class HrExpense(models.Model):
         '''
         main function that is called when trying to create the accounting entries related to an expense
         '''
-        journal_dict = {}
         for expense in self:
-            acc_date = expense.sheet_id.accounting_date or fields.Date.context_today(self)
-            jrn = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
-            journal_dict.setdefault(jrn, self.env['hr.expense'])
-            journal_dict[jrn] |= expense
-
-        for journal, expense_list in journal_dict.items():
+            journal = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
             #create the move that will contain the accounting entries
-            # reference if the same for every expense
-            ref = len(expense_list.mapped('employee_id.address_home_id.ref')) == 1 and expense_list[0].employee_id.address_home_id.ref or False
+            acc_date = expense.sheet_id.accounting_date or expense.date
             move = self.env['account.move'].create({
                 'journal_id': journal.id,
                 'company_id': self.env.user.company_id.id,
                 'date': acc_date,
-                'ref': ref,
+                'ref': expense.sheet_id.name,
                 # force the name to the default value, to avoid an eventual 'default_name' in the context
                 # to set it to '' which cause no number to be given to the account.move when posted.
                 'name': '/',
             })
-            for expense in expense_list:
-                company_currency = expense.company_id.currency_id
-                diff_currency_p = expense.currency_id != company_currency
-                #one account.move.line per expense (+taxes..)
-                move_lines = expense._move_line_get()
+            company_currency = expense.company_id.currency_id
+            diff_currency_p = expense.currency_id != company_currency
+            #one account.move.line per expense (+taxes..)
+            move_lines = expense._move_line_get()
 
-                #create one more move line, a counterline for the total on payable account
-                payment_id = False
-                total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines, acc_date)
-                if expense.payment_mode == 'company_account':
-                    if not expense.sheet_id.bank_journal_id.default_credit_account_id:
-                        raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
-                    emp_account = expense.sheet_id.bank_journal_id.default_credit_account_id.id
-                    journal = expense.bank_journal_id
-                    #create payment
-                    payment_methods = (total < 0) and journal.outbound_payment_method_ids or journal.inbound_payment_method_ids
-                    journal_currency = journal.currency_id or journal.company_id.currency_id
-                    payment = self.env['account.payment'].create({
-                        'payment_method_id': payment_methods and payment_methods[0].id or False,
-                        'payment_type': total < 0 and 'outbound' or 'inbound',
-                        'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
-                        'partner_type': 'supplier',
-                        'journal_id': journal.id,
-                        'payment_date': expense.date,
-                        'state': 'reconciled',
-                        'currency_id': diff_currency_p and expense.currency_id.id or journal_currency.id,
-                        'amount': diff_currency_p and abs(total_currency) or abs(total),
-                        'name': expense.name,
+            #create one more move line, a counterline for the total on payable account
+            payment_id = False
+            total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines, acc_date)
+            if expense.payment_mode == 'company_account':
+                if not expense.sheet_id.bank_journal_id.default_credit_account_id:
+                    raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
+                emp_account = expense.sheet_id.bank_journal_id.default_credit_account_id.id
+                journal = expense.sheet_id.bank_journal_id
+                #create payment
+                payment_methods = (total < 0) and journal.outbound_payment_method_ids or journal.inbound_payment_method_ids
+                journal_currency = journal.currency_id or journal.company_id.currency_id
+                payment = self.env['account.payment'].create({
+                    'payment_method_id': payment_methods and payment_methods[0].id or False,
+                    'payment_type': total < 0 and 'outbound' or 'inbound',
+                    'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
+                    'partner_type': 'supplier',
+                    'journal_id': journal.id,
+                    'payment_date': expense.date,
+                    'state': 'reconciled',
+                    'currency_id': diff_currency_p and expense.currency_id.id or journal_currency.id,
+                    'amount': diff_currency_p and abs(total_currency) or abs(total),
+                    'name': expense.name,
+                })
+                payment_id = payment.id
+            else:
+                if not expense.employee_id.address_home_id:
+                    raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
+                emp_account = expense.employee_id.address_home_id.property_account_payable_id.id
+
+            move_lines.append({
+                    'type': 'dest',
+                    'name': expense.employee_id.name,
+                    'price': total,
+                    'account_id': emp_account,
+                    'date_maturity': acc_date,
+                    'amount_currency': diff_currency_p and total_currency or False,
+                    'currency_id': diff_currency_p and expense.currency_id.id or False,
+                    'payment_id': payment_id,
                     })
-                    payment_id = payment.id
-                else:
-                    if not expense.employee_id.address_home_id:
-                        raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
-                    emp_account = expense.employee_id.address_home_id.property_account_payable_id.id
 
-                move_lines.append({
-                        'type': 'dest',
-                        'name': expense.employee_id.name,
-                        'price': total,
-                        'account_id': emp_account,
-                        'date_maturity': acc_date,
-                        'amount_currency': diff_currency_p and total_currency or False,
-                        'currency_id': diff_currency_p and expense.currency_id.id or False,
-                        'payment_id': payment_id,
-                        })
-
-                #convert eml into an osv-valid format
-                lines = map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines)
-                move.write({'line_ids': lines})
-                expense.sheet_id.write({'account_move_id': move.id})
-                if expense.payment_mode == 'company_account':
-                    expense.sheet_id.paid_expense_sheets()
+            #convert eml into an osv-valid format
+            lines = map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines)
+            move.write({'line_ids': lines})
+            expense.sheet_id.write({'account_move_id': move.id})
             move.post()
+            if expense.payment_mode == 'company_account':
+                expense.sheet_id.paid_expense_sheets()
         return True
 
     @api.multi
@@ -525,4 +517,12 @@ class HrExpenseSheet(models.Model):
         res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_line_ids.ids)]
         res['context'] = {'default_res_model': 'hr.expense.sheet', 'default_res_id': self.id}
+        return res
+
+    @api.multi
+    def action_open_journal_entries(self):
+        res = self.env['ir.actions.act_window'].for_xml_id('account', 'action_move_journal_line')
+        refs = [x.name for x in self]
+        res['domain'] = [('ref', 'in', refs)]
+        res['context'] = {}
         return res
