@@ -55,7 +55,6 @@ class mrp_product_produce(osv.osv_memory):
             new_consume_lines.append([0, False, consume])
         return {'value': {'consume_lines': new_consume_lines}}
 
-
     def _get_product_qty(self, cr, uid, context=None):
         """ To obtain product quantity
         @param self: The object pointer.
