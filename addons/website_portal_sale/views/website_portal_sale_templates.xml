@@ -6,33 +6,28 @@
       </xpath>
     </template>
 
-    <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="25">
+    <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="20">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-att-class="page_name == 'quote' and 'active'">
-                <a href="/my/quotes">Quotations</a>
+            <li t-if="quotation_count" t-att-class="page_name == 'quote' and 'active'">
+                <a href="/my/quotes">Quotes</a>
             </li>
             <li t-att-class="page_name == 'order' and 'active'">
                 <a href="/my/orders">Orders</a>
             </li>
-            <li t-att-class="page_name == 'invoice' and 'active'">
+            <li t-if="invoice_count" t-att-class="page_name == 'invoice' and 'active'">
                 <a href="/my/invoices">Invoices</a>
             </li>
         </xpath>
     </template>
 
-    <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="website_portal.portal_my_home" priority="25">
+    <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="website_portal.portal_my_home" priority="20">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 class="page-header">
-                <a href="/my/quotes">Your Quotations
-                    <small class="ml8">
-                        <t t-if="quotation_count">
-                            <span class='badge'><t t-esc="quotation_count"/></span>
-                        </t>
-                        <t t-if="not quotation_count">
-                            There are currently no quotations.
-                        </t>
-                    </small>
-                </a>
+            <h3 t-if="quotation_count" class="page-header">
+              <a href="/my/quotes">Your Quotes
+                <small class="ml8">
+                  <span class='badge'><t t-esc="quotation_count"/></span>
+                </small>
+              </a>
             </h3>
             <h3 class="page-header">
                 <a href="/my/orders">Your Orders
@@ -46,17 +41,12 @@
                     </small>
                 </a>
             </h3>
-            <h3 class="page-header">
-                <a href="/my/invoices">Your Invoices
-                    <small class="ml8">
-                        <t t-if="invoice_count">
-                            <span class='badge'><t t-esc="invoice_count"/></span>
-                        </t>
-                        <t t-if="not invoice_count">
-                            There are currently no invoices and payments.
-                        </t>
-                    </small>
-                </a>
+            <h3 t-if="invoice_count" class="page-header">
+              <a href="/my/invoices">Your Invoices and Payments
+                <small class="ml8">
+                  <span class='badge'><t t-esc="invoice_count"/></span>
+                </small>
+              </a>
             </h3>
         </xpath>
     </template>

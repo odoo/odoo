@@ -10,10 +10,8 @@ from odoo.addons.website_portal.controllers.main import website_account, get_rec
 
 class website_account(website_account):
 
-    @http.route()
-    def account(self, **kw):
-        """ Add sales documents to main account page """
-        response = super(website_account, self).account(**kw)
+    def _prepare_portal_layout_values(self):
+        values = super(website_account, self)._prepare_portal_layout_values()
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
@@ -32,12 +30,12 @@ class website_account(website_account):
             ('state', 'in', ['open', 'paid', 'cancel'])
         ])
 
-        response.qcontext.update({
+        values.update({
             'quotation_count': quotation_count,
             'order_count': order_count,
             'invoice_count': invoice_count,
         })
-        return response
+        return values
 
     #
     # Quotations and Sales Orders
