@@ -16,7 +16,7 @@ class SaleReport(models.Model):
     date = fields.Datetime('Date Order', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', readonly=True)
-    product_uom_qty = fields.Float('# of Qty', readonly=True)
+    product_uom_qty = fields.Float('Qty Ordered', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
     qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
