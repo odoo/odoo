@@ -142,7 +142,7 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
-        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules. Default is 'web,web_kanban'")
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='web,web_kanban')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
@@ -408,6 +408,9 @@ class configmanager(object):
         # the same for the pidfile
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
+        # and the server_wide_modules
+        if self.options['server_wide_modules'] in ('', 'None', 'False'):
+            self.options['server_wide_modules'] = 'web,web_kanban'
 
         # if defined dont take the configfile value even if the defined value is None
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'longpolling_port',
@@ -530,20 +533,13 @@ class configmanager(object):
             #if self.options['db_host']:
             #    self._generate_pgpassfile()
 
-        # server_wide_modules defaults to web,web_kanban if empty or unset
-        server_wide_modules = self.options['server_wide_modules'] = (
-            self.options['server_wide_modules']
-            if self.options['server_wide_modules']
-            else 'web,web_kanban'
-        )
-
         if opt.save:
             self.save()
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
 
         openerp.conf.server_wide_modules = [
-            m.strip() for m in server_wide_modules.split(',')
+            m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
 
     def _generate_pgpassfile(self):
