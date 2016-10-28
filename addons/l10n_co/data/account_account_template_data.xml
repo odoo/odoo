@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Common Account Template Setup - still "chartless" here -->
+  <record id="account_trans" model="account.account.template">
+    <field name="name">cuenta auxiliar para cruzar transferencias internas</field>
+    <field name="code">11XX</field>
+    <field name="reconcile" eval="True" />
+    <field name="user_type_id" ref="account.data_account_type_current_assets"
+    />
+  </record>
+</odoo>
