@@ -11,9 +11,10 @@ class PosInvoiceReport(osv.AbstractModel):
     _name = 'report.point_of_sale.report_invoice'
 
     def render_html(self, cr, uid, ids, data=None, context=None):
+        if not isinstance(data, dict):
+            data = {}
         report_obj = self.pool['report']
         posorder_obj = self.pool['pos.order']
-        report = report_obj._get_report_from_name(cr, uid, 'account.report_invoice')
         selected_orders = posorder_obj.browse(cr, uid, ids, context=context)
         ids_to_print = []
         invoiced_posorders_ids = []
@@ -28,7 +29,10 @@ class PosInvoiceReport(osv.AbstractModel):
             not_invoiced_orders_names = list(map(lambda a: a.name, not_invoiced_posorders))
             raise UserError(_('No link to an invoice for %s.') % ', '.join(not_invoiced_orders_names))
 
-        docargs = {
+        data.update({
             'docs': self.pool['account.invoice'].browse(cr, uid, ids_to_print, context=context)
-        }
-        return report_obj.render(cr, SUPERUSER_ID, ids, 'account.report_invoice', docargs, context=context)
+        })
+        sup = super(PosInvoiceReport, self)
+        if hasattr(sup, 'render_html'):
+            return sup.render_html(cr, SUPERUSER_ID, ids, data, context=context)
+        return report_obj.render(cr, SUPERUSER_ID, ids, 'account.report_invoice', data, context=context)
