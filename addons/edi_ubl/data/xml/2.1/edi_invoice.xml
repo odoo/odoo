@@ -1,0 +1,257 @@
+{% set supplier = item.company_id.partner_id %}
+{% set customer = item.partner_id %}
+{% set supplier_com = supplier.commercial_partner_id %}
+{% set customer_com = customer.commercial_partner_id %}
+{% set supplier_phone = supplier.phone or supplier_com.phone %}
+{% set supplier_fax = supplier.fax or supplier_com.fax %}
+{% set supplier_email = supplier.email or supplier_com.email %}
+{% set customer_phone = customer.phone or customer_com.phone %}
+{% set customer_fax = customer.fax or customer_com.fax %}
+{% set customer_email = customer.email or customer_com.email %}
+{% set account_prec = item.env['decimal.precision'].precision_get('Account') %}
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:ID>{{ item.number }}</cbc:ID>
+    <cbc:IssueDate>{{ item.date_invoice }}</cbc:IssueDate>
+    <cbc:InvoiceTypeCode>{{ item.ubl_type_code }}</cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode>{{ item.currency_id.name }}</cbc:DocumentCurrencyCode>
+    <cac:AccountingSupplierParty>
+        {% if supplier_com.ref %}
+        <cbc:CustomerAssignedAccountID>{{ supplier_com.ref }}</cbc:CustomerAssignedAccountID>
+        {% endif %}
+        <cac:Party>
+            {% if supplier_com.website %}
+            <cbc:WebsiteURI>{{ supplier_com.website }}</cbc:WebsiteURI>
+            {% endif %}
+            <cac:PartyName>
+                <cbc:Name>{{ supplier_com.name }}</cbc:Name>
+            </cac:PartyName>
+            {% if supplier.lang %}
+            <cac:Language>
+                <cbc:Name>{{ supplier.lang.name }}</cbc:Name>
+                <cbc:LocaleCode>{{ supplier.lang.code }}</cbc:LocaleCode>
+            </cac:Language>
+            {% endif %}
+            <cac:PostalAddress>
+                {% if supplier_com.street %}
+                <cbc:StreetName>{{ supplier_com.street }}</cbc:StreetName>
+                {% endif %}
+                {% if supplier_com.street2 %}
+                <cbc:AdditionalStreetName>{{ supplier_com.street2 }}</cbc:AdditionalStreetName>
+                {% endif %}
+                {% if supplier_com.street3 %}
+                <cbc:BlockName>{{ supplier_com.street3 }}</cbc:BlockName>
+                {% endif %}
+                {% if supplier_com.city %}
+                <cbc:CityName>{{ supplier_com.city}}</cbc:CityName>
+                {% endif %}
+                {% if supplier_com.zip %}
+                <cbc:PostalZone>{{ supplier_com.zip}}</cbc:PostalZone>
+                {% endif %}
+                {% if supplier_com.state_id %}
+                <cbc:CountrySubentity>{{ supplier_com.state_id.name }}</cbc:CountrySubentity>
+                <cbc:CountrySubentityCode>{{ supplier_com.state_id.code }}</cbc:CountrySubentityCode>
+                {% endif %}
+                {% if supplier_com.country_id %}
+                <cac:Country>
+                    <cbc:IdentificationCode>{{ supplier_com.country_id.code }}</cbc:IdentificationCode>
+                    <cbc:Name>{{ supplier_com.country_id.name }}</cbc:Name>
+                </cac:Country>
+                {% endif %}
+            </cac:PostalAddress>
+            {% if supplier_com.vat %}
+            <cac:PartyTaxScheme>
+                <cbc:RegistrationName>{{ supplier_com.name }}</cbc:RegistrationName>
+                <cbc:CompanyID>{{ supplier_com.sanitized_vat }}</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID='UN/ECE 5153' schemeAgencyID='6'>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            {% endif %}
+            <cac:Contact>
+                <cbc:Name>{{ supplier.name }}</cbc:Name>
+                {% if supplier_phone %}
+                <cbc:Telephone>{{ supplier_phone }}</cbc:Telephone>
+                {% endif %}
+                {% if supplier_fax %}
+                <cbc:Telefax>{{ supplier_fax }}</cbc:Telefax>
+                {% endif %}
+                {% if supplier_email %}
+                <cbc:ElectronicMail>{{ supplier_email }}</cbc:ElectronicMail>
+                {% endif %}
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        {% if customer_com.ref %}
+        <cbc:SupplierAssignedAccountID>{{ customer_com.ref }}</cbc:SupplierAssignedAccountID>
+        {% endif %}
+        <cac:Party>
+            {% if customer_com.website %}
+            <cbc:WebsiteURI>{{ customer_com.website }}</cbc:WebsiteURI>
+            {% endif %}
+            <cac:PartyName>
+                <cbc:Name>{{ customer_com.name }}</cbc:Name>
+            </cac:PartyName>
+            {% if customer.lang %}
+            <cac:Language>
+                <cbc:Name>{{ customer.lang.name }}</cbc:Name>
+                <cbc:LocaleCode>{{ customer.lang.code }}</cbc:LocaleCode>
+            </cac:Language>
+            {% endif %}
+            <cac:PostalAddress>
+                {% if customer_com.street %}
+                <cbc:StreetName>{{ customer_com.street }}</cbc:StreetName>
+                {% endif %}
+                {% if customer_com.street2 %}
+                <cbc:AdditionalStreetName>{{ customer_com.street2 }}</cbc:AdditionalStreetName>
+                {% endif %}
+                {% if customer_com.street3 %}
+                <cbc:BlockName>{{ customer_com.street3 }}</cbc:BlockName>
+                {% endif %}
+                {% if customer_com.city %}
+                <cbc:CityName>{{ customer_com.city}}</cbc:CityName>
+                {% endif %}
+                {% if customer_com.zip %}
+                <cbc:PostalZone>{{ customer_com.zip}}</cbc:PostalZone>
+                {% endif %}
+                {% if customer_com.state_id %}
+                <cbc:CountrySubentity>{{ customer_com.state_id.name }}</cbc:CountrySubentity>
+                <cbc:CountrySubentityCode>{{ customer_com.state_id.code }}</cbc:CountrySubentityCode>
+                {% endif %}
+                {% if customer_com.country_id %}
+                <cac:Country>
+                    <cbc:IdentificationCode>{{ customer_com.country_id.code }}</cbc:IdentificationCode>
+                    <cbc:Name>{{ customer_com.country_id.name }}</cbc:Name>
+                </cac:Country>
+                {% endif %}
+            </cac:PostalAddress>
+            {% if customer_com.vat %}
+            <cac:PartyTaxScheme>
+                <cbc:RegistrationName>{{ customer_com.name }}</cbc:RegistrationName>
+                <cbc:CompanyID>{{ customer_com.sanitized_vat }}</cbc:CompanyID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID='UN/ECE 5153' schemeAgencyID='6'>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            {% endif %}
+            <cac:Contact>
+                <cbc:Name>{{ customer.name }}</cbc:Name>
+                {% if supplier_phone %}
+                <cbc:Telephone>{{ customer_phone }}</cbc:Telephone>
+                {% endif %}
+                {% if customer_fax %}
+                <cbc:Telefax>{{ customer_fax }}</cbc:Telefax>
+                {% endif %}
+                {% if customer_email %}
+                <cbc:ElectronicMail>{{ customer_email }}</cbc:ElectronicMail>
+                {% endif %}
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:PaymentMeans>
+        <cbc:PaymentMeansCode listID="UN/ECE 4461">((ubl_payment_means_code))</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>((ubl_payment_due_date))</cbc:PaymentDueDate>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID schemeName='IBAN'>((ubl_payment_due_date))</cbc:ID>
+            <cac:FinancialInstitutionBranch>
+                <cac:FinancialInstitution>
+                    <cbc:ID schemeName='IBAN'>((ubl_payment_due_date))</cbc:ID>
+                </cac:FinancialInstitution>
+            </cac:FinancialInstitutionBranch>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ item.amount_tax }}</cbc:TaxAmount>
+        {% for tax_line in item.tax_line_ids %}
+        {% set item_tax = item.get_account_taxes(tax_line) %}
+        <cac:TaxSubtotal>
+            {% if not tools.float_is_zero(tax_line.amount, precision_digits=account_prec) %}
+            <cbc:TaxableAmount currencyID="{{ item.currency_id.name }}">{{ tax_line.base }}</cbc:TaxableAmount>      
+            {% endif %}
+            <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ tax_line.amount }}</cbc:TaxAmount>
+            {% if item_tax.type == 'percent' and not tools.float_is_zero(item_tax.amount, precision_digits=account_prec+3) %}
+            <cbc:Percent>{{ tools.float_round(item_tax.amount * 100, precision_digits=2) }}</cbc:Percent>
+            {% endif %}
+            <cac:TaxCategory>
+                <cbc:ID schemeID='UN/ECE 5305' schemeAgencyID='6'>((tax.unece_categ_code))</cbc:ID>
+                <cbc:Name>{{ item_tax.name }}</cbc:Name>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID='UN/ECE 5305' schemeAgencyID='6'>((tax.unece_type_code))</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+        {% endfor %}
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        {% set item_untaxed_amount = '%0.*f'|format(account_prec, item.amount_untaxed) %}
+        <cbc:LineExtensionAmount currencyID="{{ item.currency_id.name }}">{{ item_untaxed_amount }}</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="{{ item.currency_id.name }}">{{ item_untaxed_amount }}</cbc:TaxExclusiveAmount>
+        {% set item_total_amount = '%0.*f'|format(account_prec, item.amount_total) %}
+        <cbc:TaxInclusiveAmount currencyID="{{ item.currency_id.name }}">{{ item_total_amount }}</cbc:TaxInclusiveAmount>
+        {% set item_residual = item.residual or 0.0 %}
+        {% set item_prepaid_amount = '%0.*f'|format(account_prec, item.amount_total - item_residual) %}
+        <cbc:PrepaidAmount currencyID="{{ item.currency_id.name }}">{{ item_prepaid_amount }}</cbc:PrepaidAmount>
+        {% set item_payable_amount = '%0.*f'|format(account_prec, item_residual) %}
+        <cbc:PayableAmount currencyID="{{ item.currency_id.name }}">{{ item_payable_amount }}</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    {% set line_number = 0 %}
+    {% for line in item.invoice_line_ids %}
+    {% set line_number = line_number + 1 %}
+    <cac:InvoiceLine>
+        <cbc:ID>{{ line_number }}</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="((uom_unece_code))">{{ line.quantity }}</cbc:InvoicedQuantity>
+        {% set line_price_subtotal = '%0.*f'|format(account_prec, line.price_subtotal) %}
+        <cbc:LineExtensionAmount currencyID="{{ item.currency_id.name }}">{{ line_price_subtotal }}</cbc:LineExtensionAmount>
+        <cac:TaxTotal>
+            {% set line_res_taxes = line.ubl_get_res_taxes() %}
+            {% set line_total_tax = tools.float_round(line_res_taxes['total_included'] - line_res_taxes['total_excluded'], precision_digits=account_prec) %}
+            <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ line_total_tax }}</cbc:TaxAmount>
+            {% for res_tax in line_res_taxes['taxes'] %}
+            <cac:TaxSubtotal>
+                {% if not tools.float_is_zero(line_res_taxes['base'], precision_digits=account_prec) %}
+                <cbc:TaxableAmount currencyID="{{ item.currency_id.name }}">{{ line_res_taxes['base'] }}</cbc:TaxableAmount>
+                {% endif %}
+                <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ res_tax.amount }}</cbc:TaxAmount>
+                {% if res_tax.type == "percent" and not tools.float_is_zero(res_tax.amount, precision_digits=account_prec + 3) %}
+                {% set line_res_tax_percent = tools.float_round(res_tax.amount * 100, precision_digits=2) %}
+                <cbc:Percent>{{ line_res_percent }}</cbc:Percent>
+                {% endif %}
+                <cac:TaxCategory>
+                    <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"></cbc:ID>
+                    <cbc:Name>res_tax.name</cbc:Name>
+                    <cac:TaxScheme>
+                        <cbc:ID schemeID="UN/ECE 5305" schemeAgencyID="6"></cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+            {% endfor %}
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Description>{{ line.name }}</cbc:Description>
+            <cbc:Name>{{ line.product_id.name }}</cbc:Name>
+            {% if line.ubl_seller_code %}
+            <cac:SellersItemIdentification>
+                <cbc:ID>{{ line.ubl_seller_code }}</cbc:ID>
+            </cac:SellersItemIdentification>
+            {% endif %}
+            {% if line.product_id.ean13 %}
+            <cac:StandardItemIdentification>
+                <cbc:ID schemeAgencyID="6" schemeID="GTIN">{{ line.product_id.ean13 }}</cbc:ID>
+            </cac:StandardItemIdentification>
+            {% endif %}
+            {% for attribute_value in line.product_id.attribute_value_ids %}
+            <cac:AdditionalItemProperty>
+                <cbc:Name>{{ attribute_value.attribute_id.name }}</cbc:Name>
+                <cbc:Value>{{ attribute_value.name }}</cbc:Value>
+            </cac:AdditionalItemProperty>
+            {% endfor %}
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="{{ item.currency_id.name }}">((line.uom_id.unece_code))</cbc:PriceAmount>
+            <cbc:BaseQuantity unitCode="((uom_unece_code))">{{ line.quantity }}</cbc:BaseQuantity>
+        </cac:Price>
+    </cac:InvoiceLine>
+    {% endfor %}
+</Invoice>

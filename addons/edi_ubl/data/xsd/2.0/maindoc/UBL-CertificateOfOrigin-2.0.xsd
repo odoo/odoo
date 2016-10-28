@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Document Type:     CertificateOfOrigin
+  Generated On:      Tue Oct 03 2:26:38 P3 2006
+
+-->
+<!-- ===== xsd:schema Element With Namespaces Declarations ===== -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CertificateOfOrigin-2"
+    xmlns="urn:oasis:names:specification:ubl:schema:xsd:CertificateOfOrigin-2"
+    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+    xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+    xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+    xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    version="2.0">
+<!-- ===== Imports ===== -->
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" schemaLocation="../common/UBL-CommonAggregateComponents-2.0.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" schemaLocation="../common/UBL-CommonBasicComponents-2.0.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" schemaLocation="../common/UnqualifiedDataTypeSchemaModule-2.0.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" schemaLocation="../common/UBL-CommonExtensionComponents-2.0.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" schemaLocation="../common/UBL-QualifiedDatatypes-2.0.xsd"/>
+<!-- ===== Root Element ===== -->
+  <xsd:element name="CertificateOfOrigin" type="CertificateOfOriginType">
+    <xsd:annotation>
+      <xsd:documentation>This element MUST be conveyed as the root element in any instance document based on this Schema expression</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="CertificateOfOriginType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <ccts:Component>
+          <ccts:ComponentType>ABIE</ccts:ComponentType>
+          <ccts:DictionaryEntryName>Certificate Of Origin. Details</ccts:DictionaryEntryName>
+          <ccts:Definition>A document that describes the Certificate of Origin.</ccts:Definition>
+          <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+        </ccts:Component>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="ext:UBLExtensions" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>A container for all extensions present in the document.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:UBLVersionID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. UBL Version Identifier. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>The earliest version of the UBL 2 schema for this document type that defines all of the elements that might be encountered in the current instance.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>UBL Version Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+              <ccts:Examples>2.0.5</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:CustomizationID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Customization Identifier. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>Identifies a user-defined customization of UBL for a specific use.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Customization Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+              <ccts:Examples>NES</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:ProfileID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Profile Identifier. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>Identifies a user-defined profile of the customization of UBL being used.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Profile Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+              <ccts:Examples>BasicProcurementProcess</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:ID" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>Unique Identifier of the Certificate Of Origin.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:UUID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. UUID. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>A universally unique identifier for an instance of this ABIE.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>UUID</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:IssueDate" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Issue Date. Date</ccts:DictionaryEntryName>
+              <ccts:Definition>Date on which the Certificate Of Origin was issued.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Issue Date</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Date</ccts:RepresentationTerm>
+              <ccts:DataType>Date. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:IssueTime" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Issue Time. Time</ccts:DictionaryEntryName>
+              <ccts:Definition>Time at which the Certificate Of Origin was issued.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Issue Time</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Time</ccts:RepresentationTerm>
+              <ccts:DataType>Time. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:Description" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Description. Text</ccts:DictionaryEntryName>
+              <ccts:Definition>Textual description of a Certificate Of Origin.</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Description</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+              <ccts:DataType>Text. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:Note" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Note. Text</ccts:DictionaryEntryName>
+              <ccts:Definition>Textual note associated with a Certificate Of Origin.</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Note</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+              <ccts:DataType>Text. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:VersionID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Version Identifier. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>Version identifier of a Certificate Of Origin.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Version Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:ExporterParty" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Exporter_ Party. Party</ccts:DictionaryEntryName>
+              <ccts:Definition>The party who makes the export declaration, or on whose behalf the export declaration is made, and who is the owner of the goods or has similar right of disposal over them at the time when the declaration is accepted.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Exporter</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:ImporterParty" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Importer_ Party. Party</ccts:DictionaryEntryName>
+              <ccts:Definition>The party who makes an import declaration, or on whose behalf a Customs clearing agent or other authorized person makes an import declaration. This may include a person who has possession of the goods or to whom the goods are consigned.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Importer</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:EndorserParty" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Endorser Party</ccts:DictionaryEntryName>
+              <ccts:Definition>The party providing the endorsement.</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Endorser Party</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Endorser Party</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:CertificateOfOriginApplication" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Certificate Of Origin Application</ccts:DictionaryEntryName>
+              <ccts:Definition>Details of the application of a Certificate of Origin.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTerm>Certificate Of Origin Application</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Certificate Of Origin Application</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:IssuerEndorsement" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Issuer_ Endorsement. Endorsement</ccts:DictionaryEntryName>
+              <ccts:Definition>Issuer Endorsement details.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Issuer</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Endorsement</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Endorsement</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:EmbassyEndorsement" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Embassy_ Endorsement. Endorsement</ccts:DictionaryEntryName>
+              <ccts:Definition>Embassy Endorsement details.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Embassy</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Endorsement</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Endorsement</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:InsuranceEndorsement" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Certificate Of Origin. Insurance_ Endorsement. Endorsement</ccts:DictionaryEntryName>
+              <ccts:Definition>Insurance Endorsement details.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Certificate Of Origin</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Insurance</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Endorsement</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Endorsement</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+<!-- ===== Element Declarations ===== -->
+<!-- ===== Type Definitions ===== -->
+<!-- ===== Basic Business Information Entity Type Definitions ===== -->
+</xsd:schema>
+<!-- ===== Copyright Notice ===== -->
+<!--
+  OASIS takes no position regarding the validity or scope of any 
+  intellectual property or other rights that might be claimed to pertain 
+  to the implementation or use of the technology described in this 
+  document or the extent to which any license under such rights 
+  might or might not be available; neither does it represent that it has 
+  made any effort to identify any such rights. Information on OASIS's 
+  procedures with respect to rights in OASIS specifications can be 
+  found at the OASIS website. Copies of claims of rights made 
+  available for publication and any assurances of licenses to be made 
+  available, or the result of an attempt made to obtain a general 
+  license or permission for the use of such proprietary rights by 
+  implementors or users of this specification, can be obtained from 
+  the OASIS Executive Director.
+
+  OASIS invites any interested party to bring to its attention any 
+  copyrights, patents or patent applications, or other proprietary 
+  rights which may cover technology that may be required to 
+  implement this specification. Please address the information to the 
+  OASIS Executive Director.
+  
+  Copyright (C) OASIS Open 2001-2006. All Rights Reserved.
+
+  This document and translations of it may be copied and furnished to 
+  others, and derivative works that comment on or otherwise explain 
+  it or assist in its implementation may be prepared, copied, 
+  published and distributed, in whole or in part, without restriction of 
+  any kind, provided that the above copyright notice and this 
+  paragraph are included on all such copies and derivative works. 
+  However, this document itself may not be modified in any way, 
+  such as by removing the copyright notice or references to OASIS, 
+  except as needed for the purpose of developing OASIS 
+  specifications, in which case the procedures for copyrights defined 
+  in the OASIS Intellectual Property Rights document must be 
+  followed, or as required to translate it into languages other than 
+  English. 
+
+  The limited permissions granted above are perpetual and will not be 
+  revoked by OASIS or its successors or assigns. 
+
+  This document and the information contained herein is provided on 
+  an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, 
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+  WARRANTY THAT THE USE OF THE INFORMATION HEREIN 
+  WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED 
+  WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+  PARTICULAR PURPOSE.
+-->
