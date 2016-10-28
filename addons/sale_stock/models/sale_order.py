@@ -137,14 +137,21 @@ class SaleOrderLine(models.Model):
             return {}
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            product = self.product_id.with_context(warehouse=self.order_id.warehouse_id.id)
             product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
-            if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
+            if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
+                    message =  _('You plan to sell %s %s but you only have %s %s available in %s warehouse.') % \
+                            (self.product_uom_qty, self.product_uom.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
+                    # We check if some products are available in other warehouses.
+                    if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
+                        message += _('\nThere are %s %s available accross all warehouses.') % \
+                                (self.product_id.virtual_available, product.uom_id.name)
+
                     warning_mess = {
                         'title': _('Not enough inventory!'),
-                        'message' : _('You plan to sell %s %s but you only have %s %s available!\nThe stock on hand is %s %s.') % \
-                            (self.product_uom_qty, self.product_uom.name, self.product_id.virtual_available, self.product_id.uom_id.name, self.product_id.qty_available, self.product_id.uom_id.name)
+                        'message' : message
                     }
                     return {'warning': warning_mess}
         return {}
