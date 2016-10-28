@@ -1343,8 +1343,8 @@ class calendar_event(osv.Model):
             data['rrule_type'] = 'weekly'
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if r._bynweekday:
-            data['week_list'] = day_list[r._bynweekday[0][0]].upper()
-            data['byday'] = str(r._bynweekday[0][1])
+            data['week_list'] = day_list[list(r._bynweekday)[0][0]].upper()
+            data['byday'] = str(list(r._bynweekday)[0][1])
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
