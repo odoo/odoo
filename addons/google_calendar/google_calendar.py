@@ -513,7 +513,7 @@ class google_calendar(osv.AbstractModel):
             'name': single_event_dict.get('summary', 'Event'),
             'description': single_event_dict.get('description', False),
             'location': single_event_dict.get('location', False),
-            'class': single_event_dict.get('visibility', 'public'),
+            'privacy': single_event_dict.get('visibility', 'public'),
             'oe_update_date': update_date,
         })
 
