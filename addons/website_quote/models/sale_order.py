@@ -77,6 +77,11 @@ class SaleOrder(models.Model):
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
 
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        super(SaleOrder, self).onchange_partner_id()
+        self.note = self.template_id.note or self.note
+
     @api.onchange('template_id')
     def onchange_template_id(self):
         if not self.template_id:
