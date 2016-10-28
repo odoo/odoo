@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-06 07:28+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"PO-Revision-Date: 2016-09-11 05:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hindi (http://www.transifex.com/odoo/odoo-9/language/hi/)\n"
 "MIME-Version: 1.0\n"
@@ -172,7 +172,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_needaction
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "कार्रवाई की जरूरत है"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
@@ -209,7 +209,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Apply"
-msgstr ""
+msgstr "लागू करें"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -599,7 +599,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_uid
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "निर्माण कर्ता"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_date
@@ -618,7 +618,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_create_date
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_create_date
 msgid "Created on"
-msgstr ""
+msgstr "निर्माण तिथि"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle_account_id
@@ -630,7 +630,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production_message_last_post
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "आखिरी अंकित संदेश की तारीख़।"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -697,7 +697,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "नाम दिखाएँ"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
@@ -761,14 +761,14 @@ msgstr "फ़ॉलोअर्स"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_channel_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "अनुयायी (चैनल)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "अनुयायी (सहयोगी)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -818,7 +818,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "वर्गीकरण का आधार"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
@@ -855,7 +855,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load_id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_id
 msgid "ID"
-msgstr ""
+msgstr "पहचान"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_id
@@ -922,6 +922,12 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -934,7 +940,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_message_last_post
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_line_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "अंतिम संदेश की तारीख"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
@@ -957,7 +963,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_report_workcenter_load___last_update
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "अन्तिम संशोधन कब"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_uid
@@ -976,7 +982,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_uid
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "अंतिम सुधारकर्ता"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_date
@@ -995,7 +1001,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_write_date
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "अंतिम सुधार की तिथि"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1052,7 +1058,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr ""
+msgstr "प्रबंधक"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:15 code:addons/mrp/stock.py:224
@@ -2293,6 +2299,14 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number"
+" %s"
 msgstr ""
 
 #. module: mrp

@@ -89,7 +89,7 @@ class account_invoice(osv.osv):
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
                     },
 
                     {
@@ -101,7 +101,7 @@ class account_invoice(osv.osv):
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
                     },
                 ]
         return []
@@ -234,6 +234,13 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
+        if move.company_id.anglo_saxon_accounting and move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'customer':
+            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
+            ctx = context.copy()
+            ctx['force_company'] = move.company_id.id
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
+            self._create_account_move_line(cr, uid, quants, move, acc_src, acc_dest, journal_id, context=ctx)
+
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
         quant_obj = self.pool.get('stock.quant')
         quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
@@ -325,7 +332,10 @@ class stock_quant(osv.osv):
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         #check that all data is correct
         if move.company_id.currency_id.is_zero(valuation_amount):
-            raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
+            if move.product_id.cost_method == 'standard':
+                raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (move.product_id.name,))
+            else:
+                return []
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -362,12 +372,13 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            date = context.get('force_period_date', fields.date.context_today(self, cr, uid, context=context))
-            new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
-                                      'line_ids': move_lines,
-                                      'date': date,
-                                      'ref': move.picking_id.name}, context=context)
-            move_obj.post(cr, uid, [new_move], context=context)
+            if move_lines:
+                date = context.get('force_period_date', fields.date.context_today(self, cr, uid, context=context))
+                new_move = move_obj.create(cr, uid, {'journal_id': journal_id,
+                                          'line_ids': move_lines,
+                                          'date': date,
+                                          'ref': move.picking_id.name}, context=context)
+                move_obj.post(cr, uid, [new_move], context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)

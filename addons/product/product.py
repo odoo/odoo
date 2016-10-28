@@ -447,7 +447,7 @@ class product_template(osv.osv):
             names = [names]
         res = {id: {} for id in ids}
         templates = self.browse(cr, uid, ids, context=context)
-        unique_templates = [template.id for template in templates if template.product_variant_count == 1]
+        unique_templates = [template.id for template in templates if len(template.product_variant_ids) == 1]
         for template in templates:
             for name in names:
                 res[template.id][name] = getattr(template.product_variant_ids[0], name) if template.id in unique_templates else 0.0
@@ -456,7 +456,7 @@ class product_template(osv.osv):
     def _set_product_template_field(self, cr, uid, product_tmpl_id, name, value, args, context=None):
         ''' Set the standard price modification on the variant if there is only one variant '''
         template = self.pool['product.template'].browse(cr, uid, product_tmpl_id, context=context)
-        if template.product_variant_count == 1:
+        if len(template.product_variant_ids) == 1:
             variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
             return variant.write({name: value})
         return {}
@@ -1077,8 +1077,7 @@ class product_product(osv.osv):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                if variant:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
                 if not sellers:
                     sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
             if sellers:

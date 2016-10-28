@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-06-03 04:50+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hindi (http://www.transifex.com/odoo/odoo-9/language/hi/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr ""
+msgstr "खाते का विश्लेषणात्मक चार्ट"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
@@ -35,13 +35,19 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_needaction
 msgid "Action Needed"
+msgstr "कार्रवाई की जरूरत है"
+
+#. module: analytic
+#: selection:account.analytic.account,account_type:0
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Active"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr ""
+msgstr "रकम"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -51,7 +57,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
-msgstr ""
+msgstr "विश्लेषणात्मक खाता"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -104,7 +110,7 @@ msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
-msgid "Analytic View"
+msgid "Archived"
 msgstr ""
 
 #. module: analytic
@@ -168,7 +174,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "निर्माण कर्ता"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
@@ -176,7 +182,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
-msgstr ""
+msgstr "निर्माण तिथि"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
@@ -186,7 +192,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "मुद्रा"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
@@ -201,7 +207,7 @@ msgstr "तिथि"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "आखिरी अंकित संदेश की तारीख़।"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
@@ -219,7 +225,7 @@ msgstr "विवरण"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "नाम दिखाएँ"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_follower_ids
@@ -229,12 +235,12 @@ msgstr "फ़ॉलोअर्स"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "अनुयायी (चैनल)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "अनुयायी (सहयोगी)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_from_date
@@ -253,7 +259,7 @@ msgstr "द्वारा वर्गीकृत करें"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
 msgid "ID"
-msgstr ""
+msgstr "पहचान"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account_message_unread
@@ -282,7 +288,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "अंतिम संदेश की तारीख"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -290,7 +296,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "अन्तिम संशोधन कब"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
@@ -298,7 +304,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "अंतिम सुधारकर्ता"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
@@ -306,17 +312,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "अंतिम सुधार की तिथि"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_message_ids
 msgid "Messages"
 msgstr "संदेश"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_message_ids
-msgid "Messages and communication history"
-msgstr "संदेश और संचार इतिहास"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -382,6 +383,11 @@ msgstr ""
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
 msgid "Select the Period for Analysis"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
+msgid "State"
 msgstr ""
 
 #. module: analytic

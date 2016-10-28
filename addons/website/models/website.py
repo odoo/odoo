@@ -656,6 +656,9 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
+        google_maps_api_key = self.pool['ir.config_parameter'].get_param(cr, openerp.SUPERUSER_ID, 'google_maps_api_key', context=context)
+        if google_maps_api_key:
+            params['key'] = google_maps_api_key
         return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
     def google_map_link(self, cr, uid, ids, zoom=10, context=None):

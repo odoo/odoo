@@ -103,10 +103,11 @@ _Entry = collections.namedtuple('_Entry', ['mimetype', 'signatures', 'discrimina
 _mime_mappings = (
     # pdf
     _Entry('application/pdf', ['%PDF'], []),
-    # jpg, jpeg, png, gif
+    # jpg, jpeg, png, gif, bmp
     _Entry('image/jpeg', ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'], []),
     _Entry('image/png', ['\x89PNG\r\n\x1A\n'], []),
     _Entry('image/gif', ['GIF87a', 'GIF89a'], []),
+    _Entry('image/bmp', ['BM'], []),
     # OLECF files in general (Word, Excel, PPT, default to word because why not?)
     _Entry('application/msword', ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'], [
         _check_olecf
@@ -114,7 +115,7 @@ _mime_mappings = (
     # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
     _Entry('application/zip', ['PK\x03\x04'], [_check_ooxml, _check_open_container_format]),
 )
-def guess_mimetype(bin_data):
+def guess_mimetype(bin_data, default='application/octet-stream'):
     """ Attempts to guess the mime type of the provided binary data, similar
     to but significantly more limited than libmagic
 
@@ -140,7 +141,7 @@ def guess_mimetype(bin_data):
                 # if no discriminant or no discriminant matches, return
                 # primary mime type
                 return entry.mimetype
-    return 'application/octet-stream'
+    return default
 
 
 try:
@@ -152,9 +153,9 @@ else:
 
     # magic from pypi https://pypi.python.org/pypi/python-magic/
     if hasattr(magic,'from_buffer'):
-        guess_mimetype = lambda bin_data: magic.from_buffer(bin_data, mime=True)
+        guess_mimetype = lambda bin_data, default=None: magic.from_buffer(bin_data, mime=True)
     # magic from file(1) https://packages.debian.org/squeeze/python-magic
     elif hasattr(magic,'open'):
         ms = magic.open(magic.MAGIC_MIME_TYPE)
         ms.load()
-        guess_mimetype = ms.buffer
+        guess_mimetype = lambda bin_data, default=None: ms.buffer(bin_data)

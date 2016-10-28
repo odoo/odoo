@@ -358,7 +358,10 @@ class task(osv.osv):
         """ Gives default stage_id """
         if context is None:
             context = {}
-        return self.stage_find(cr, uid, [], context.get('default_project_id'), [('fold', '=', False)], context=context)
+        default_project_id = context.get('default_project_id')
+        if not default_project_id:
+            return False
+        return self.stage_find(cr, uid, [], default_project_id, [('fold', '=', False)], context=context)
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         if context is None:
@@ -396,11 +399,16 @@ class task(osv.osv):
 
     @api.cr_uid_ids_context
     def onchange_project(self, cr, uid, id, project_id, context=None):
+        values = {}
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
-                return {'value': {'partner_id': project.partner_id.id}}
-        return {}
+                    values['partner_id'] = project.partner_id.id
+            values['stage_id'] = self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
+        else:
+            values['stage_id'] = False
+            values['partner_id'] = False
+        return {'value': values}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
         vals = {}

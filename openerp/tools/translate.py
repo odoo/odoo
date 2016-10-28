@@ -305,12 +305,16 @@ def html_translate(callback, value):
     if not value:
         return value
 
-    parser = etree.HTMLParser(encoding='utf-8')
-    trans = XMLTranslator(callback, 'html', parser)
-    wrapped = "<div>%s</div>" % encode(value)
-    root = etree.fromstring(wrapped, parser)
-    trans.process(root[0][0])               # html > body > div
-    return trans.get_done()[5:-6]           # remove tags <div> and </div>
+    try:
+        parser = etree.HTMLParser(encoding='utf-8')
+        trans = XMLTranslator(callback, 'html', parser)
+        wrapped = "<div>%s</div>" % encode(value)
+        root = etree.fromstring(wrapped, parser)
+        trans.process(root[0][0])               # html > body > div
+        value = trans.get_done()[5:-6]           # remove tags <div> and </div>
+    except ValueError:
+        _logger.exception("Cannot translate malformed HTML, using source value instead")
+    return value
 
 
 #

@@ -6,15 +6,15 @@
 # ANDRES FELIPE NEGRETE GOMEZ <psi@nubark.com>, 2016
 # Denis Ledoux <dle@odoo.com>, 2016
 # Esteban Echeverry <tebanep@nubark.com>, 2016
-# Felipe Palomino <omega@nubark.com>, 2016
-# Mateo Tibaquirá <nestormateo@gmail.com>, 2015
+# Andrés Felipe Casas <omega@nubark.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-21 09:18+0000\n"
-"PO-Revision-Date: 2016-03-04 16:38+0000\n"
-"Last-Translator: Felipe Palomino <omega@nubark.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,13 +24,8 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Date:</strong>"
-msgstr "<strong>Fecha:</strong>"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Description:</strong>"
-msgstr "<strong>Descripción:</strong>"
+msgid "<strong>Currency:</strong>"
+msgstr "<strong>Moneda:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
@@ -39,13 +34,18 @@ msgstr "<strong>Empleado:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Total</strong>"
-msgstr "<strong>Total</strong>"
+msgid "<strong>Manager:</strong>"
+msgstr "<strong>Director:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense
-msgid "<strong>Validated By:</strong>"
-msgstr "<strong>Validado Por:</strong>"
+msgid "<strong>Status:</strong>"
+msgstr "<strong>Estado:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.report_expense
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_needaction
@@ -350,8 +350,8 @@ msgstr "Desde aquí el contador podrá aprobar y denegar los gastos que son veri
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_entry_action_server
-msgid "Generate Single Accounting Entry"
-msgstr "Generar Entrada Única de Contabilidad"
+msgid "Generate Accounting Entries"
+msgstr "Generar Movimientos Contables"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -444,11 +444,6 @@ msgstr "Última Actualización el"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_message_ids
 msgid "Messages"
 msgstr "Mensajes"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_message_ids
-msgid "Messages and communication history"
-msgstr "Historial de mensajes y de comunicación"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
@@ -765,12 +760,12 @@ msgstr "Esperando Pago"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_website_message_ids
 msgid "Website Messages"
-msgstr "Mensajes del Sitio Web"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicación del sitio web"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_state
@@ -817,3 +812,8 @@ msgstr "ej. Almuerzo de negocios con X"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
 msgstr "o"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_report_hr_expense_report_expense
+msgid "report.hr_expense.report_expense"
+msgstr ""

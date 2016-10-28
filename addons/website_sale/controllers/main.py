@@ -134,7 +134,8 @@ class website_sale(http.Controller):
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
-        return 'website_published desc,%s' % post.get('order', 'website_sequence desc')
+        # id is added to be sure that order is a unique sort key
+        return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
@@ -643,9 +644,6 @@ class website_sale(http.Controller):
         if checkout.get('shipping_id'):
             order.write({'partner_shipping_id': checkout['shipping_id']})
 
-        order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
-        order.order_line._compute_tax_id()
-
         order_info = {
             'message_partner_ids': [(4, partner_id), (3, request.website.partner_id.id)],
         }
@@ -687,6 +685,9 @@ class website_sale(http.Controller):
 
         if not int(post.get('shipping_id', 0)):
             order.partner_shipping_id = order.partner_invoice_id
+
+        order.onchange_partner_shipping_id()
+        order.order_line._compute_tax_id()
 
         request.session['sale_last_order_id'] = order.id
 

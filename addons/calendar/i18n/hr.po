@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Bole <bole@dajmi5.com>, 2016
+# Bole <bole@dajmi5.com>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
 # Matija Pildek <matija.pildek@storm.hr>, 2016
@@ -11,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-20 13:58+0000\n"
-"PO-Revision-Date: 2016-05-06 12:30+0000\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2016-09-29 11:46+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -44,11 +45,11 @@ msgid ""
 "                        <table>\n"
 "                            <tr>\n"
 "                                <td>\n"
-"                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
+"                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
 "                                    <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
+"                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "                                    </div>\n"
-"                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
+"                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
 "                                    <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                </td>\n"
 "                                <td>\n"
@@ -131,7 +132,7 @@ msgid ""
 "                </div>\n"
 "                \n"
 "                "
-msgstr "\n                <style>\n                    span.oe_mail_footer_access {\n                        display:block;    \n                        text-align:center;\n                        color:grey;                                \n                    }\n                </style>\n                <div style=\"border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;\">\n                    <div style=\"height:auto;text-align: center;font-size : 30px;color: #8A89BA;\">\n                        <strong>${object.event_id.name}</strong>                                \n                    </div>\n                    <div style=\"height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px\">\n                        <strong style=\"margin-left:12px\">Poštovani  ${object.cn}</strong> ,<br/>\n                        <p style=\"margin-left:12px\">Ovo je podsjetnik na događaj : </p>\n                    </div>\n                    <div style=\"height: auto;margin-left:12px;margin-top:30px;\">\n                        <table>\n                            <tr>\n                                <td>\n                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n                                    <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n                                    </div>\n                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n                                    <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n                                </td>\n                                <td>\n                                    <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin-top: 15px; margin-left: 10px;font-size: 16px;\">\n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if object.event_id.location:\n                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            Gdje\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td  style=\"vertical-align:top;\">\n                                                    % if object.event_id.location:\n                                                        <div style = \"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px\" >\n                                                            : ${object.event_id.location}\n                                                            <span style= \"color:#A9A9A9; \">(<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">Pogledaj kartu</a>)\n                                                                </span>\n                                                        </div>\n                                                    % endif\n                                                </td>                                                        \n                                            </tr> \n                                                                                        \n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if object.event_id.description :\n                                                        <div style=\"width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            Što\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td style=\"vertical-align:text-top;\">\n                                                    % if object.event_id.description :\n                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            : ${object.event_id.description}\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                            </tr>\n                                                                                        \n                                            <tr>\n                                                <td style=\"vertical-align:top;\">\n                                                    % if not object.event_id.allday and object.event_id.duration:\n                                                        <div style=\"height:auto; width: 120px; background : #CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            Trajanje\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                                <td colspan=\"3\" style=\"vertical-align:text-top;\">\n                                                    % if not object.event_id.allday and object.event_id.duration:\n                                                        <div style=\"font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                            : ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}\n                                                        </div>\n                                                    % endif\n                                                </td>\n                                            </tr>                                                \n                                        <tr style=\" height: 30px;\">\n                                            <td style=\"height: 25px;width: 120px; background : # CCCCCC; font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;\">\n                                                <div>\n                                                   Prisustvuju\n                                                </div>\n                                            </td>\n                                            <td colspan=\"3\">\n                                               : \n                                                % for attendee in object.event_id.attendee_ids:\n                                                    <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};\"></div>\n                                                    % if attendee.cn != object.cn:\n                                                        <span style=\"margin-left:5px\">${attendee.cn}</span>\n                                                    % else:\n                                                        <span style=\"margin-left:5px\">You</span>\n                                                    % endif\n                                                % endfor\n                                            </td>\n                                        </tr>\n                                    </table>\n                                </td>\n                            </tr>\n                        </table>\n                    </div>            \n                </div>\n                \n                "
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -155,11 +156,11 @@ msgid ""
 "                        <table>\n"
 "                            <tr>\n"
 "                                <td>\n"
-"                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
+"                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
 "                                    <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
+"                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "                                    </div>\n"
-"                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
+"                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
 "                                    <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                </td>\n"
 "                                <td>\n"
@@ -273,11 +274,11 @@ msgid ""
 "                        <table>\n"
 "                            <tr>                                        \n"
 "                                <td>\n"
-"                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz)}</div>\n"
+"                                    <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;\">${object.event_id.get_interval(object.event_id.start, 'dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
 "                                    <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;\">\n"
-"                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz)}\n"
+"                                      ${object.event_id.get_interval(object.event_id.start,'day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "                                    </div>\n"
-"                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz)}</div>\n"
+"                                    <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month', tz=object.partner_id.tz if not object.event_id.allday else None)}</div>\n"
 "                                    <div style=\"border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;\">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>\n"
 "                                </td>\n"
 "                                <td>\n"
@@ -543,12 +544,12 @@ msgstr "Kalendar podsjetnik"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:43
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Pozivnica kalendara"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "Kliknite ovdje za ažuriranje samo ove instance a ne svih pojavljivanja."
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -860,7 +861,7 @@ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
+msgstr "Ako polje aktivno isključite, to vam omogućuje da sakrijete alarm događaja bez brisanja istog."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1355,7 +1356,7 @@ msgstr "Treći"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "Ovaj događaj je vezan za ponavljanja...<br/>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_th
@@ -1418,14 +1419,14 @@ msgstr "Do"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Ažuriraj samo ovu instancu"
 
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.subtype_invitation
 msgid ""
 "Warning, a mandatory field has been modified since the creation of this "
 "event"
-msgstr ""
+msgstr "Upozorenje, obavezno polje je izmijenjeno nakon kreiranja ovog događaja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_website_message_ids

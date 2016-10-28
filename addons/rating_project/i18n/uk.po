@@ -3,12 +3,14 @@
 # * rating_project
 # 
 # Translators:
+# Bohdan Lisnenko, 2016
+# Yaroslav Molochko <onorua@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-04-29 16:19+0000\n"
+"PO-Revision-Date: 2016-09-03 13:39+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -56,23 +58,23 @@ msgid ""
 "</body>\n"
 "                \n"
 "            "
-msgstr ""
+msgstr "\n<body>\n    <div style=\"max-width:600px; height:auto; margin-left:30px;\">\n        <div style=\"margin-left:30px;align=center;\">\n            Шановний/-а/, ${object.partner_id.name},\n        </div><br>\n        <div style=\"margin-left:30px;align=center;\" width=\"60%\">\n            Ми сподіваємось, що наші послуги задовольнили ваші потреби.\n            <br>Якщо у вас виникли додаткові запитання чи зауваження &ndash можете сміливо відповідати на цей лист.\n            <br><br>Будь ласка, допоможіть нам покращити якість послуг, оцінивши нашу роботу.\n        </div><br>\n        <table style=\"margin-left:50px;\" width=\"70%\">\n            <tr>\n                <td>\n                    <a href=\"/rating/${object.access_token}/10\">\n                        <img alt=\"Чудово\" src=\"rating/static/src/img/rating_10.png\" title=\"Це було чудово\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/5\">\n                        <img alt=\"Задовільно\" src=\"rating/static/src/img/rating_5.png\" title=\"Це було задовільно\"/>\n                    </a>\n                </td>\n                <td>\n                    <a href=\"/rating/${object.access_token}/0\">\n                        <img alt=\"Погано\" src=\"rating/static/src/img/rating_0.png\" title=\"Це було погано\"/>\n                    </a>\n                </td>\n            </tr>\n        </table><br>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">Дякуємо, </h4>\n        <h4 style=\"margin-left:30px;font-weight:normal;\">${object.rated_partner_id.name or ''} </h4>\n    </div>\n</body>\n                \n            "
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.res_name}"
-msgstr ""
+msgstr "${object.res_name}"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "% Happy"
-msgstr "% Щасливий"
+msgstr "% Задоволених"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Auto Kanban state validation"
-msgstr ""
+msgstr "Автоматично змінювати стан завдання"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -80,29 +82,29 @@ msgid ""
 "Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
 " * A great feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
-msgstr ""
+msgstr "Автоматично змінювати стан завдання, коли клієнт відповість на лист оцінки задоволення потреб для цієї стадії.\n* Позитивний відгук клієнта змінить стан на \"Готовий до наступної стадії\" (зелена кнопка).\n* Нейтральний або негативний відгук змінить стан завдання на \"Заблокований\" (червона кнопка).\n"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_is_visible_happy_customer
 msgid "Customer Satisfaction"
-msgstr ""
+msgstr "Задоволення потреб клієнтів"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_is_visible_happy_customer
 msgid ""
 "Display informations about rating of the project on kanban and form view. "
 "This buttons will only be displayed if at least a rating exists."
-msgstr ""
+msgstr "Відображати інформацію про оцінку проекту на карточці канбан та на формі. Ця інформація буде відображатись, якщо є хоча б один відгук."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "On tasks"
-msgstr ""
+msgstr "По завданням"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Percentage of happy people about this project"
-msgstr ""
+msgstr "Відсоток людей, що задоволені проектом"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -118,14 +120,14 @@ msgstr "Оцінка"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Шаблон листа оцінки"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
 msgid ""
 "Select an email template. An email will be sent to the customer when the "
 "task reach this step."
-msgstr ""
+msgstr "Оберіть шаблон листа. Цей лист буде відправлено клієнту, коли завдання досягне цієї стадії."
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

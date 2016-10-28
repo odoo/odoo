@@ -898,6 +898,8 @@ class AccountMoveLine(models.Model):
             vals['date'] = self._context.get('date_p') or time.strftime('%Y-%m-%d')
         if 'name' not in vals:
             vals['name'] = self._context.get('comment') or _('Write-Off')
+        if 'analytic_account_id' not in vals:
+            vals['analytic_account_id'] = self.env.context.get('analytic_id', False)
         #compute the writeoff amount if not given
         if 'credit' not in vals and 'debit' not in vals:
             amount = sum([r.amount_residual for r in self])
@@ -914,8 +916,8 @@ class AccountMoveLine(models.Model):
         # Writeoff line in the account of self
         first_line_dict = vals.copy()
         first_line_dict['account_id'] = self[0].account_id.id
-        if 'analytic_account_id' in vals:
-            del vals['analytic_account_id']
+        if 'analytic_account_id' in first_line_dict:
+            del first_line_dict['analytic_account_id']
 
         # Writeoff line in specified writeoff account
         second_line_dict = vals.copy()
@@ -945,6 +947,8 @@ class AccountMoveLine(models.Model):
         total_amount_currency = 0
         currency = False
         aml_to_balance_currency = self.env['account.move.line']
+        aml_id = False
+        partial_rec_id = False
         maxdate = None
         for aml in self:
             if aml.amount_residual_currency:
@@ -959,6 +963,7 @@ class AccountMoveLine(models.Model):
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             partial_rec = aml.credit and aml.matched_debit_ids[0] or aml.matched_credit_ids[0]
             aml_id, partial_rec_id = partial_rec.with_context(skip_full_reconcile_check=True).create_exchange_rate_entry(aml_to_balance_currency, 0.0, total_amount_currency, currency, maxdate)
+        return aml_id, partial_rec_id
 
     @api.multi
     def remove_move_reconcile(self):
@@ -1064,7 +1069,7 @@ class AccountMoveLine(models.Model):
             taxes = self.env['account.tax'].browse(tax_ids)
             currency = self.env['res.currency'].browse(vals.get('currency_id'))
             partner = self.env['res.partner'].browse(vals.get('partner_id'))
-            res = taxes.compute_all(amount,
+            res = taxes.with_context(round=True).compute_all(amount,
                 currency, 1, vals.get('product_id'), partner)
             # Adjust line amount if any tax is price_include
             if abs(res['total_excluded']) < abs(amount):

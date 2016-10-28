@@ -45,7 +45,7 @@ class AccountInvoiceReport(models.Model):
     user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
-    currency_rate = fields.Float(string='Currency Rate', readonly=True)
+    currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg")
     nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
@@ -115,11 +115,17 @@ class AccountInvoiceReport(models.Model):
                             THEN (- ail.quantity) / u.factor * u2.factor
                             ELSE ail.quantity / u.factor * u2.factor
                         END) AS product_qty,
-                    SUM(ABS(ail.price_subtotal_signed) * CASE
-                        WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN -1
-                            ELSE 1
-                        END
+                    SUM(ABS(ail.price_subtotal_signed)
+                        * CASE
+                            WHEN ail.price_subtotal < 0
+                                THEN -1
+                                ELSE 1
+                            END
+                        * CASE
+                            WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                                THEN -1
+                                ELSE 1
+                            END
                     ) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                         WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric

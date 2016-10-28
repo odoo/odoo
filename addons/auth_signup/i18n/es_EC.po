@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-06 07:13+0000\n"
-"PO-Revision-Date: 2016-02-19 21:50+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-10-03 05:30+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/language/es_EC/)\n"
 "MIME-Version: 1.0\n"
@@ -179,6 +179,11 @@ msgid "Password reset"
 msgstr "Restablecer contraseña"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
+msgid "Private Profile"
+msgstr "Perfil privado"
+
+#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
 msgstr "Restablecer contraseña"
@@ -246,6 +251,11 @@ msgid "Template user for new users created through signup"
 msgstr "Plantilla de usuario para los nuevos usuarios creados a través del ingreso"
 
 #. module: auth_signup
+#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr "La dirección URL completa para acceder al documento a través de la página web."
+
+#. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr "Esto permite a los usuarios lanzar un restablecimiento de la contraseña desde la página de inicio de sesión."
@@ -254,6 +264,41 @@ msgstr "Esto permite a los usuarios lanzar un restablecimiento de la contraseña
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
 msgstr "Usuarios"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
+msgid "Visible in Website"
+msgstr "Visible en el sitio web"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
+msgid "Website Partner Full Description"
+msgstr "Descripción completa del Contacto web"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
+msgid "Website Partner Short Description"
+msgstr "Descripción corta del Contacto web"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
+msgid "Website URL"
+msgstr "URL del sitio web"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
+msgid "Website meta description"
+msgstr "Meta descripción del sitio web"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Palabras claves del sitio web"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
+msgid "Website meta title"
+msgstr "Meta título del sitio web"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -275,3 +320,8 @@ msgstr "base.config.settings"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "Por ejemplo, John Smith"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
+msgid "unknown"
+msgstr "desconocido"

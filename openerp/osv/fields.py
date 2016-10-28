@@ -815,6 +815,7 @@ class one2many(_column):
         context.update(self._context)
         if not values:
             return
+        original_obj = obj
         obj = obj.pool[self._obj]
         rec = obj.browse(cr, user, [], context=context)
         with rec.env.norecompute():
@@ -846,7 +847,8 @@ class one2many(_column):
                     inverse_field = obj._fields.get(self._fields_id)
                     assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                     # if the o2m has a static domain we must respect it when unlinking
-                    domain = self._domain(obj) if callable(self._domain) else self._domain
+                    domain = (self._domain(original_obj)
+                              if callable(self._domain) else self._domain)
                     extra_domain = domain or []
                     ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                     # If the model has cascade deletion, we delete the rows because it is the intended behavior,
@@ -861,7 +863,11 @@ class one2many(_column):
                     ids2 = act[2] or [0]
                     cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
                     ids3 = map(lambda x:x[0], cr.fetchall())
-                    obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
+                    inverse_field = obj._fields.get(self._fields_id)
+                    if getattr(inverse_field, "ondelete", None) == "cascade":
+                        obj.unlink(cr, user, ids3, context=context)
+                    else:
+                        obj.write(cr, user, ids3, {self._fields_id: False}, context=context or {})
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):

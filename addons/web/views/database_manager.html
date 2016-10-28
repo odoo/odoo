@@ -32,7 +32,9 @@
           var modal  = $(this).parentsUntil('body', '.modal');
           if (modal.hasClass('o_database_backup')) {
             $(modal).modal('hide');
-            $('.list-group').before("<div class='alert alert-info'>The backup may take some time before being ready</div>");
+            if (!$('.alert-backup-long').length) {
+              $('.list-group').before("<div class='alert alert-info alert-backup-long'>The backup may take some time before being ready</div>");              
+            }
           }
       });
   });
@@ -67,7 +69,7 @@
     <div class="row">
       <div class="col-md-12">
         <label for="login" class="control-label">Email</label>
-        <input id="login" type="text" name="login" class="form-control" autocomplete="off"/>
+        <input id="login" type="text" name="login" class="form-control" required="required" autocomplete="off"/>
       </div>
     </div>
   </div>

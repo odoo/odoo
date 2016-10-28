@@ -1040,6 +1040,8 @@ class BaseModel(object):
         :param dict context:
         :returns: {ids: list(int)|False, messages: [Message]}
         """
+        if context is None:
+            context = {}
         cr.execute('SAVEPOINT model_load')
         messages = []
 
@@ -1094,6 +1096,10 @@ class BaseModel(object):
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
+
+        if ids and context.get('defer_parent_store_computation'):
+            self._parent_store_compute(cr)
+
         return {'ids': ids, 'messages': messages}
 
     def _add_fake_fields(self, cr, uid, fields, context=None):
@@ -1386,7 +1392,7 @@ class BaseModel(object):
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
-        of the current model except the m2m and o2m ones.
+        of the current model.
 
         :param cr: database cursor
         :param int user: user id
@@ -1397,7 +1403,7 @@ class BaseModel(object):
         view = etree.Element('form', string=self._description)
         group = etree.SubElement(view, 'group', col="4")
         for fname, field in self._fields.iteritems():
-            if field.automatic or field.type in ('one2many', 'many2many'):
+            if field.automatic:
                 continue
 
             etree.SubElement(group, 'field', name=fname)
@@ -1893,7 +1899,7 @@ class BaseModel(object):
         for order_part in orderby.split(','):
             order_split = order_part.split()
             order_field = order_split[0]
-            if order_field in groupby_fields:
+            if order_field == 'id' or order_field in groupby_fields:
 
                 if self._fields[order_field.split(':')[0]].type == 'many2one':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
@@ -3801,8 +3807,7 @@ class BaseModel(object):
           ``(6, _, ids)``
               replaces all existing records in the set by the ``ids`` list,
               equivalent to using the command ``5`` followed by a command
-              ``4`` for each ``id`` in ``ids``. Can not be used on
-              :class:`~openerp.fields.One2many`.
+              ``4`` for each ``id`` in ``ids``.
 
           .. note:: Values marked as ``_`` in the list above are ignored and
                     can be anything, generally ``0`` or ``False``.

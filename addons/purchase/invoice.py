@@ -30,6 +30,34 @@ class AccountInvoice(models.Model):
             ]}
         return result
 
+    def _prepare_invoice_line_from_po_line(self, line):
+        if line.product_id.purchase_method == 'purchase':
+            qty = line.product_qty - line.qty_invoiced
+        else:
+            qty = line.qty_received - line.qty_invoiced
+        if float_compare(qty, 0.0, precision_rounding=line.product_uom.rounding) <= 0:
+            qty = 0.0
+        taxes = line.taxes_id
+        invoice_line_tax_ids = self.purchase_id.fiscal_position_id.map_tax(taxes)
+        invoice_line = self.env['account.invoice.line']
+        data = {
+            'purchase_line_id': line.id,
+            'name': line.name,
+            'origin': self.purchase_id.origin,
+            'uom_id': line.product_uom.id,
+            'product_id': line.product_id.id,
+            'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
+            'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id, round=False),
+            'quantity': qty,
+            'discount': 0.0,
+            'account_analytic_id': line.account_analytic_id.id,
+            'invoice_line_tax_ids': invoice_line_tax_ids.ids
+        }
+        account = invoice_line.get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
+        if account:
+            data['account_id'] = account.id
+        return data
+
     # Load all unsold PO lines
     @api.onchange('purchase_id')
     def purchase_order_change(self):
@@ -43,30 +71,7 @@ class AccountInvoice(models.Model):
             # Load a PO line only once
             if line in self.invoice_line_ids.mapped('purchase_line_id'):
                 continue
-            if line.product_id.purchase_method == 'purchase':
-                qty = line.product_qty - line.qty_invoiced
-            else:
-                qty = line.qty_received - line.qty_invoiced
-            if float_compare(qty, 0.0, precision_rounding=line.product_uom.rounding) <= 0:
-                qty = 0.0
-            taxes = line.taxes_id
-            invoice_line_tax_ids = self.purchase_id.fiscal_position_id.map_tax(taxes)
-            data = {
-                'purchase_line_id': line.id,
-                'name': line.name,
-                'origin': self.purchase_id.origin,
-                'uom_id': line.product_uom.id,
-                'product_id': line.product_id.id,
-                'account_id': self.env['account.invoice.line'].with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-                'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id, round=False),
-                'quantity': qty,
-                'discount': 0.0,
-                'account_analytic_id': line.account_analytic_id.id,
-                'invoice_line_tax_ids': invoice_line_tax_ids.ids
-            }
-            account = new_lines.get_invoice_line_account('in_invoice', line.product_id, self.purchase_id.fiscal_position_id, self.env.user.company_id)
-            if account:
-                data['account_id'] = account.id
+            data = self._prepare_invoice_line_from_po_line(line)
             new_line = new_lines.new(data)
             new_line._set_additional_fields(self)
             new_lines += new_line
@@ -163,13 +168,14 @@ class AccountInvoice(models.Model):
                                 #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
                                 taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
                                 price_unit = taxes.with_context(round=False).compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
+                            price_before = line.get('price', 0.0)
                             line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
                             diff_res.append({
                                 'type': 'src',
                                 'name': i_line.name[:64],
                                 'price_unit': round(price_unit - valuation_price_unit, product_prec),
                                 'quantity': line['quantity'],
-                                'price': round((price_unit - valuation_price_unit) * line['quantity'], account_prec),
+                                'price': round(price_before - line.get('price', 0.0), account_prec),
                                 'account_id': acc,
                                 'product_id': line['product_id'],
                                 'uom_id': line['uom_id'],

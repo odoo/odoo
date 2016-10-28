@@ -66,7 +66,7 @@ var KanbanView = View.extend({
         this.qweb.default_dict = _.clone(QWeb.default_dict);
 
         this.model = this.dataset.model;
-        this.limit = options.limit || 40;
+        this.limit = options.limit;
         this.grouped = undefined;
         this.group_by_field = undefined;
         this.default_group_by = undefined;
@@ -84,6 +84,10 @@ var KanbanView = View.extend({
     },
 
     view_loading: function(fvg) {
+        if (!this.limit) {
+            this.limit = parseInt(fvg.arch.attrs.limit, 10) || 40;
+        }
+
         this.$el.addClass(fvg.arch.attrs.class);
         this.fields_view = fvg;
         this.default_group_by = fvg.arch.attrs.default_group_by;
@@ -528,9 +532,7 @@ var KanbanView = View.extend({
             active_ids: [event.target.id],
             active_model: this.dataset.model,
         });
-        this.do_execute_action(event.data, this.dataset, event.target.id).then(function () {
-            self.reload_record(event.target);
-        });
+        this.do_execute_action(event.data, this.dataset, event.target.id, _.bind(self.reload_record, this, event.target));
     },
 
     /*

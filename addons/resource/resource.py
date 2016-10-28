@@ -643,7 +643,7 @@ class resource_calendar_attendance(osv.osv):
         'date_to': fields.date('End Date'),
         'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
         'hour_to' : fields.float("Work to", required=True),
-        'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
+        'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True, ondelete='cascade'),
     }
 
     _order = 'dayofweek, hour_from'

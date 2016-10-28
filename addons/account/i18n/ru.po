@@ -3,11 +3,13 @@
 # * account
 # 
 # Translators:
-# Andrey Skabelin <andrey.skabelin@gmail.com>, 2015
+# Andrey Skabelin, 2015
 # Artur Komishenko <Archi1792@gmail.com>, 2016
 # Gennady Marchenko <gennadym@gmail.com>, 2015
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Mekan Bash <tmbashimov@gmail.com>, 2016
+# Roman lol <lyasko.roman@gmail.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015-2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2015
@@ -16,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-17 14:09+0000\n"
-"PO-Revision-Date: 2016-06-27 16:06+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-10-08 17:22+0000\n"
+"Last-Translator: Mekan Bash <tmbashimov@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,8 +112,8 @@ msgstr "кол-во цифр"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
-msgid "# of Invoices"
-msgstr "кол-во счетов"
+msgid "# of Lines"
+msgstr "лінія"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -120,25 +122,25 @@ msgstr "# транзакции"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
-msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name|safe} Счёт (Ref ${object.number or 'n/a'})"
+msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
+msgstr "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:320
+#: code:addons/account/models/account_bank_statement.py:321
 #, python-format
 msgid "%d transactions were automatically reconciled."
 msgstr "Автоматически синхронизировано %d транзакций."
 
 #. module: account
-#: code:addons/account/models/account.py:528
+#: code:addons/account/models/account.py:558
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (Копия)"
 
 #. module: account
 #: code:addons/account/models/account.py:152
-#: code:addons/account/models/account.py:295
-#: code:addons/account/models/account.py:296
+#: code:addons/account/models/account.py:309
+#: code:addons/account/models/account.py:310
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -154,7 +156,17 @@ msgid ", if accounting or purchase is installed"
 msgstr ", если установлен модуль \"Бухгалтерский учёт\" или \"Закупки\""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:321
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "-> Reconcile"
+msgstr "-> Сверка"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "-> View reconciled entries"
+msgstr "-> Просмотр сверенных проводок  "
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:322
 #, python-format
 msgid "1 transaction was automatically reconciled."
 msgstr "Автоматически синхронизирована 1 транзакция."
@@ -318,8 +330,8 @@ msgstr "<span class=\"panel-title\">\n<strong>Записать ваши счет
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Balance in Odoo\">Balance in Odoo</span>"
-msgstr "<span title=\"Balance in Odoo\">Баланс в Odoo</span>"
+msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
+msgstr "<span title=\"Balance in Odoo\">Баланс по гроссбуху</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1697,7 +1709,14 @@ msgid "Automatic formatting"
 msgstr "Автоматическое форматирование"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:326
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Automatic reconciliation"
+msgstr "Автоматически сверять"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:469
 #, python-format
 msgid "Automatically reconciled items"
 msgstr "Автоматически сверенные позиции"
@@ -1897,6 +1916,12 @@ msgid "Bank statements are fully reconciled."
 msgstr "Банковские выписки полностью сверены."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Base"
+msgstr "Базовый"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Before continuing, you must install the Chart of Account related to your "
@@ -1932,8 +1957,8 @@ msgstr "Биллинг"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Bills &amp; Refunds"
-msgstr "Счета и возвраты"
+msgid "Bills"
+msgstr "Счета"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2196,14 +2221,14 @@ msgid "CashBox Line"
 msgstr "Строка кассы"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_cashbox_lines_ids
-msgid "Cashbox Lines"
-msgstr "Строка Кассы"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
 msgid "Cashbox"
 msgstr "Денежный ящик"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_cashbox_lines_ids
+msgid "Cashbox Lines"
+msgstr "Строка Кассы"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
@@ -2278,6 +2303,11 @@ msgstr "id Шаблона плана счетов"
 #: model:ir.actions.act_window,name:account.action_view_account_bnk_stmt_check
 msgid "Check Closing Balance"
 msgstr "Проверьте Итоговый Баланс"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_is_difference_zero
+msgid "Check if difference is zero."
+msgstr "Проверять если разница нулевая."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_reconcile
@@ -2689,7 +2719,14 @@ msgid "Control-Access"
 msgstr "Контроль Доступа"
 
 #. module: account
+#: model:account.account.type,name:account.data_account_type_direct_costs
+msgid "Cost of Revenue"
+msgstr "Себестоимость Дохода"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:388
 #: model:ir.model.fields,field_description:account.field_account_move_line_counterpart
+#, python-format
 msgid "Counterpart"
 msgstr "Корреспондирующая сторона"
 
@@ -2913,6 +2950,7 @@ msgstr "Id Движения кредита"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_journal_currency_id
@@ -3085,6 +3123,11 @@ msgstr "Дата:"
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Dates"
 msgstr "Даты"
+
+#. module: account
+#: selection:account.payment.term.line,option:0
+msgid "Day(s) after the end of the invoice month (Net EOM)"
+msgstr "дней с начала следующего за указанным в счёте месяца"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -3266,12 +3309,6 @@ msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
 msgstr "Разница между вычисленным конечным балансом и  определенным конечным балансом."
-
-#. module: account
-#: model:account.account.type,name:account.data_account_type_direct_costs
-#: model:ir.ui.view,arch_db:account.view_account_form
-msgid "Direct Costs"
-msgstr "Прямые Затраты"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3875,11 +3912,6 @@ msgid ""
 "Fixed amount will count as a debit if it is negative, as a credit if it is "
 "positive."
 msgstr "Фиксированная сумма будет считаться дебету если она отрицательная, как кредит, если она положительная."
-
-#. module: account
-#: selection:account.payment.term.line,option:0
-msgid "Fixed day of the following month"
-msgstr "Фиксированный день следующего месяца"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_follower_ids
@@ -4671,6 +4703,7 @@ msgstr "Счет выставлен"
 #: model:ir.model.fields,field_description:account.field_account_payment_invoice_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_invoice_ids
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
@@ -4719,11 +4752,6 @@ msgid "Invoices to validate"
 msgstr "Счета на утверждение"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_finance
-msgid "Invoicing"
-msgstr "Выставление счета"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Invoicing & Payments"
 msgstr "Выставление счетов и Платежи"
@@ -4733,6 +4761,11 @@ msgstr "Выставление счетов и Платежи"
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_is_follower
 msgid "Is Follower"
 msgstr "Подписчик"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
+msgid "Is zero"
+msgstr "Равна нулю "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5220,9 +5253,19 @@ msgid "Legal Name"
 msgstr "Юридическое Название"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_account_position_form
+msgid "Legal Notes..."
+msgstr "Юридические примечания"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_note
+msgid "Legal mentions that have to be printed on the invoices."
+msgstr "Юридическая заметка, которая должна отображаться на счет-фактуре. "
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
-msgid "Less Cost of Sales"
-msgstr "Минус Себестоимость Продаж"
+msgid "Less Cost of Revenue"
+msgstr "Минус Себестоимость Дохода"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5245,10 +5288,17 @@ msgid "Less Payable Accounts"
 msgstr "Минус Кредиторская задолженность"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:138
+#: code:addons/account/models/account_invoice.py:145
 #, python-format
 msgid "Less Payment"
 msgstr "Минус Платеж"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:15
+#, python-format
+msgid "Let odoo try to reconcile entries for the user"
+msgstr "Пусть odoo попытается сверить данные пользователей. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -5937,6 +5987,16 @@ msgstr "Открытие Номеров Единиц "
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "Operation Templates"
 msgstr "Шаблоны Операции"
+
+#. module: account
+#: code:addons/account/wizard/account_reconcile.py:66
+#: code:addons/account/wizard/account_reconcile.py:125
+#, python-format
+msgid ""
+"Operation not allowed. You can only reconcile entries that share the same "
+"secondary currency or that don't have one. Edit your journal items or make "
+"another selection before proceeding any further."
+msgstr "Операция запрещена. Вы можете только сверить проводки, которые разделяют или не имеют ту же дополнительную валюту. Редактируйте элементы вашего журнала или сделайте другой выбор прежде чем продолжить работу."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -6664,15 +6724,7 @@ msgid "Proforma"
 msgstr "Проформа"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:554
-#, python-format
-msgid ""
-"Programmation error : domain_maker_move_line_amount requires comparator '=' "
-"or '<'"
-msgstr "Программная ошибка: domain_maker_move_line_amount требует компаратора '=' или '<'"
-
-#. module: account
-#: code:addons/account/models/account_payment.py:117
+#: code:addons/account/models/account_payment.py:123
 #, python-format
 msgid ""
 "Programmation error: the expected model for this action is "
@@ -6680,7 +6732,7 @@ msgid ""
 msgstr "Программная ошибка: ожидаемая модель для этого действия 'account.invoice'. Предоставленная '%d'."
 
 #. module: account
-#: code:addons/account/models/account_payment.py:115
+#: code:addons/account/models/account_payment.py:121
 #, python-format
 msgid ""
 "Programmation error: wizard action executed without active_model or "
@@ -6967,6 +7019,7 @@ msgid ""
 msgstr "Основа возмещения на этом типе. Вы не можете Изменить и Отменить, если счет-фактура уже выверена"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Refunds"
 msgstr "Возвраты"
@@ -7181,11 +7234,6 @@ msgstr "Продажи"
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_rate
 msgid "Sales Tax(%)"
 msgstr "Налог с Продаж(%)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
-msgid "Sales Team"
-msgstr "Отдел продаж"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_sale_tax_rate
@@ -7920,7 +7968,7 @@ msgid ""
 msgstr "Сумма выражена в валюте связанного счета, если не равна валюте компании."
 
 #. module: account
-#: code:addons/account/models/account_move.py:387
+#: code:addons/account/models/account_move.py:432
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
@@ -7928,7 +7976,7 @@ msgid ""
 msgstr "Сумма, выраженная во вторичной валюте, должна быть положительной, когда счет дебетуется и отрицательной, когда счет кредитуется."
 
 #. module: account
-#: code:addons/account/models/account.py:524
+#: code:addons/account/models/account.py:554
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -7936,17 +7984,11 @@ msgid ""
 msgstr "Область применения налогов в группе должна быть либо такой же, как в группе или \"Отсутствует\"."
 
 #. module: account
-#: code:addons/account/models/account.py:268
+#: code:addons/account/models/account.py:278
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
 msgstr "Банковский счет в банковском журнале, должен принадлежать той же компании (%s)."
-
-#. module: account
-#: code:addons/account/models/account_bank_statement.py:786
-#, python-format
-msgid "The bank statement line was already reconciled."
-msgstr "Строка банковской выписки уже сверена."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_statement_id
@@ -8675,6 +8717,12 @@ msgid "Unit of Measure"
 msgstr "Единица Измерения"
 
 #. module: account
+#: code:addons/account/report/account_aged_partner_balance.py:264
+#, python-format
+msgid "Unknown Partner"
+msgstr "Неизвестный партнер"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Unless you are starting a new business, you probably have a list of "
@@ -8843,6 +8891,7 @@ msgid ""
 msgstr "Используется для регистрации прибыли, когда конечный баланс  кассового аппарата отличается от того, что вычисляет система"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_analytic_line_company_currency_id
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_journal_currency_id
 #: model:ir.model.fields,help:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_company_currency_id
@@ -8967,13 +9016,18 @@ msgid "View"
 msgstr "Вид"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_move_form
+msgid "View reconciled entries"
+msgstr "Просмотр сверенных проводок  "
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "View supported banks"
 msgstr "Просмотреть поддерживаемые банки"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1096
-#: code:addons/account/models/account_invoice.py:1161
+#: code:addons/account/models/account_invoice.py:1197
+#: code:addons/account/models/account_invoice.py:1258
 #, python-format
 msgid "Warning!"
 msgstr "Предупреждение!"
@@ -9153,7 +9207,14 @@ msgid ""
 msgstr "Здесь вы можете установить формат в котором эта запись будет отображаться. Если оставить автоматическое форматирование, оно будет вычисляться на основе иерархии финансовых отчетов  (автоматически вычисляемое поле 'уровень')."
 
 #. module: account
-#: code:addons/account/models/account_move.py:175
+#: code:addons/account/models/account_move.py:181
+#, python-format
+msgid ""
+"You cannot add/modify entries prior to and inclusive of the lock date %s"
+msgstr "Нельзя добавлять/изменять записи до и включительно даты блокировки %s"
+
+#. module: account
+#: code:addons/account/models/account_move.py:183
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
@@ -9161,7 +9222,7 @@ msgid ""
 msgstr "Вы не можете добавлять/изменять записи до и включительно даты блокировки %s. Проверьте настройки компании или попросите кого-нибудь с ролью 'Консультант'"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:789
+#: code:addons/account/models/account_invoice.py:866
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -9177,13 +9238,7 @@ msgid ""
 msgstr "Вы не можете изменить компанию владельца счета, который уже содержит пункты журнала."
 
 #. module: account
-#: code:addons/account/models/account_move.py:997
-#, python-format
-msgid "You cannot change the tax, you should remove and recreate lines."
-msgstr "Вы не можете изменить налог, вы должны удалить и создать позиции заново."
-
-#. module: account
-#: code:addons/account/models/account_move.py:379
+#: code:addons/account/models/account_move.py:424
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -9191,7 +9246,7 @@ msgid ""
 msgstr "Вы не можете создать журнал номенклатуры со вторичной валютой, не заполняя  поле \"валюта\" и \"сумма в валюте\"."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:406
+#: code:addons/account/models/account_invoice.py:438
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -9200,7 +9255,7 @@ msgid ""
 msgstr "Вы не можете удалить счет после утверждения (и получения номера). Вы можете установить его в состояние \"Черновик\" и изменять его содержимое, а затем вновь подтвердить его."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:404
+#: code:addons/account/models/account_invoice.py:436
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "

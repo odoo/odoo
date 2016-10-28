@@ -331,9 +331,15 @@
                     <h4>Where</h4>
                 </div>
                 <div class="panel-body">
-                    <a t-att-href="event.google_map_link()" target="_BLANK">
-                        <img t-att-src="event.google_map_img()" width="100%%"/>
-                    </a>
+                    <!-- FORWARD-PORT UP TO SAAS-12 -->
+                    <t t-if="'key=' in event.google_map_img()">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">
+                           <img class="thumbnail img-responsive" t-att-src="event.google_map_img()" />
+                        </a>
+                    </t>
+                    <t t-if="'key=' not in event.google_map_img()">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+                    </t>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
                         "widget": "contact",
                         "fields": ["address", "phone", "mobile", "fax", "email"]
@@ -451,8 +457,7 @@
                                     <strong>
                                         Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
                                         <t t-if="ticket['price'] > 0">
-                                            <t t-esc="ticket['price']"/>
-                                            <t t-esc="website.pricelist_id.currency_id.symbol"/>
+                                            <t t-esc="ticket['price']" t-esc-options='{"widget": "monetary", "display_currency": "website.pricelist_id.currency_id"}'/>
                                         </t>
                                         <t t-if="ticket['price'] == 0">Free</t>)
                                     </strong>
