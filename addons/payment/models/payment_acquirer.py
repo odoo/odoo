@@ -460,7 +460,7 @@ class PaymentTransaction(models.Model):
                 'partner_zip': partner and partner.zip or False,
                 'partner_address': _partner_format_address(partner and partner.street or '', partner and partner.street2 or ''),
                 'partner_city': partner and partner.city or False,
-                'partner_country_id': partner and partner.country_id.id or self._default_partner_country_id(),
+                'partner_country_id': partner and partner.country_id.id or self._get_default_partner_country_id(),
                 'partner_phone': partner and partner.phone or False,
             }}
         return {}
