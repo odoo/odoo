@@ -10,7 +10,7 @@ from openerp.exceptions import UserError
 class PosInvoiceReport(osv.AbstractModel):
     _name = 'report.point_of_sale.report_invoice'
 
-    def render_html(self, cr, uid, ids, data=None, context=None):
+    def render_html(self, cr, uid, ids, data={}, context=None):
         if not isinstance(data, dict):
             data = {}
         report_obj = self.pool['report']
