@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-08-23 18:23+0000\n"
+"PO-Revision-Date: 2016-10-29 19:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -627,7 +627,7 @@ msgstr "Рахунок"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr ""
+msgstr "Звіт сальдо розрахунків по періодам"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -693,7 +693,7 @@ msgstr "Загальний звіт аккаунта журнал"
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr ""
+msgstr "Звіт про партнера"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -1069,7 +1069,7 @@ msgstr "Звітний Період"
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "Звіт бухобліку"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
@@ -1079,7 +1079,7 @@ msgstr "Звіти по бухобліку"
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "Налаштування пов’язані з бухобліком вказуються на"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -1102,13 +1102,13 @@ msgstr "Дозволені рахунки (порожнє — без контр�
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr ""
+msgstr "Схема оподаткування для рахунків"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
 #: view:account.fiscal.position.template:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr ""
+msgstr "Співставлення рахунків"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -1159,7 +1159,7 @@ msgstr "Додаткова інформація"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Additional notes..."
-msgstr ""
+msgstr "Додаткові примітки..."
 
 #. module: account
 #: field:account.account,adjusted_balance:0
@@ -1614,7 +1614,7 @@ msgstr ""
 #. module: account
 #: help:account.fiscal.position,vat_required:0
 msgid "Apply only if partner has a VAT number."
-msgstr ""
+msgstr "Застосовувати, якщо у партнера вказано ІПН"
 
 #. module: account
 #: help:account.fiscal.position,country_group_id:0
@@ -7435,7 +7435,7 @@ msgstr ""
 #: field:account.aged.trial.balance,period_length:0
 #: view:website:account.report_agedpartnerbalance
 msgid "Period Length (days)"
-msgstr ""
+msgstr "Тривалість періоду (днів)"
 
 #. module: account
 #: field:account.period,name:0
@@ -8614,7 +8614,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_widgets.js:975
 #, python-format
 msgid "Select Partner"
-msgstr ""
+msgstr "Оберіть партнера"
 
 #. module: account
 #: view:account.analytic.balance:account.account_analytic_balance_view
@@ -9699,7 +9699,7 @@ msgstr ""
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "Схема оподаткування визначає податки та рахунки проведень для партнера."
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -9790,12 +9790,12 @@ msgstr ""
 #. module: account
 #: help:account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr ""
+msgstr "Рахунок розрахунків з партером для цього рахунку-фактури."
 
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr ""
+msgstr "Референс на документ партнера."
 
 #. module: account
 #: code:addons/account/account_invoice.py:513
@@ -10046,14 +10046,14 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
+msgstr "Цей рахунок буде використовуватися як типовий рахунок кредитора."
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "Цей рахунок буде використовуватися як типовий рахунок дебітора."
 
 #. module: account
 #: help:account.config.settings,module_account_budget:0
@@ -10169,7 +10169,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "Це поле служить для запису назви партнера під час імпорту банківської виписки, коли партнера ще не створено в базі даних."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10679,7 +10679,7 @@ msgstr "Одиниця виміру"
 #: code:addons/account/report/account_partner_balance.py:125
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
+msgstr "Невідомий партнер"
 
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
@@ -11510,7 +11510,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr ""
+msgstr "Ви повинні вказати довжину періоду більшу ніж 0."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
