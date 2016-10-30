@@ -9,13 +9,14 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Marko Happonen <marko.happonen@sprintit.fi>, 2016\n"
+"Last-Translator: Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -48,6 +49,7 @@ msgstr "Salli lähetyskulujen lisäys"
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
 msgstr ""
+"Salli valmistustilausten asetusten asettaminen tilausriviltä (edistynyt)"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
@@ -64,7 +66,7 @@ msgstr "Salli ominaisuuksien merkintä myyntitilausriveille."
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "Choose specific routes on sales order lines (advanced)"
-msgstr ""
+msgstr "Valitse tuotteen reitti tilausrivillä (edistynyt)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -79,7 +81,7 @@ msgstr "Päivämäärä"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr ""
+msgstr "Lähetyssääntöjen oletus"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -105,6 +107,7 @@ msgstr "Toimitustilaukset"
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
 msgstr ""
+"Älä salli valmistustilauksen asetusten asettamista (helpompi, suositeltava)"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -124,6 +127,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Incotermit ovat joukko myyntitermejä. Niiden tarkoitus on jakaa "
+"toimituskustannukset ja vastuut ostajan ja myyjän kesken sekä vastata "
+"nykyaikaisia kuljetuskäytäntö."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -169,12 +175,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr ""
+msgstr "Ei tilauskohtaisia reittejä kuten erikoisvalmistus tai suoratoimitus"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr ""
+msgstr "Ei toimituskuluja myyntitilauksilla"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
@@ -185,13 +191,13 @@ msgstr "Ei tarpeeksi varastosaldoa!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order Routing"
-msgstr ""
+msgstr "Tilauksen reititys"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:156
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Tilattu määrä väheni!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -226,7 +232,7 @@ msgstr "Tuotemalli"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
-msgstr ""
+msgstr "Valmistuksen asetuksia tilausriveillä"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
@@ -266,7 +272,7 @@ msgstr "Myyntitilausten tilastot"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Myynnin varmuuspäivät"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
@@ -356,6 +362,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
+"Olet vähentämässä tilattua määrää! Muista päivittää toimitustilaus jos on "
+"tarvis."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:146

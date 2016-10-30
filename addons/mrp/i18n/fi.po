@@ -13,13 +13,15 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Kimmo Lehtonen <leban@netzionale.com>, 2016
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
+# Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:42+0000\n"
 "PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Kimmo Lehtonen <leban@netzionale.com>, 2016\n"
+"Last-Translator: Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,7 +164,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Viivakoodi</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -258,6 +260,8 @@ msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
+"Valmistustilaus perustuu osaluetteloon, kuluttaa raaka-aineita ja tuottaa "
+"valmiita tuotteita."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
@@ -362,11 +366,13 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Keskimääräinen viive päivissä tämän tuotteen tuottamiseen. Monitasoisen "
+"osaluettelon tapauksessa komponenttien viiveet summataan kokonaisviiveeseen."
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
 msgid "BOM Cost"
-msgstr ""
+msgstr "Osaluettelon kustannukset"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
@@ -376,7 +382,7 @@ msgstr "Osaluettelon nimi"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "Osaluettelon tuotevariantit tämän rivin muodostamiseen"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
@@ -638,7 +644,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid "Click to start a new manufacturing order."
-msgstr ""
+msgstr "Klikkaa luodaksesi uuden valmistustilauksen."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -1017,7 +1023,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Extra Features"
-msgstr ""
+msgstr "Lisäominaisuudet"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1421,7 +1427,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "Hallinnoi työtilauksen operaatioita"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_plm:0
@@ -1568,6 +1574,9 @@ msgid ""
 "                on customer requirements or automated rules like the minimum\n"
 "                stock rule."
 msgstr ""
+"Valmistustilausten luonnoksia luodaan yleensä automaattisesti asiakkaiden "
+"vaatimusten tai automatisoitujen sääntöjen kuten minimivarastosäännön "
+"perusteella."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1689,7 +1698,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr ""
+msgstr "Ei sivutuotteitta osaluetteloissa (A + B --> C)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -1796,6 +1805,8 @@ msgid ""
 "Odoo uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs."
 msgstr ""
+"Odoo käyttää näitä osaluetteloita luodakseen automaattisesti "
+"valmistustilausluonnoksia hankintatarpeiden perusteella."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee
@@ -2413,6 +2424,9 @@ msgid ""
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
 msgstr ""
+"Reititykset mahdollistavat valmistustapahtumien hallinnan. Näitä reitityksiä"
+" seurataan työpisteillä, kun tuotetta valmistetaan. Reititykset liitetään "
+"osaluetteloihin, jotka määrittävät tarvittavat raakamateriaalit."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
@@ -2550,7 +2564,7 @@ msgstr "Asetukset"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Ship this product as a set of components (kit)"
-msgstr ""
+msgstr "Toimita tämä tuote osina (tuotesetti)"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:89
@@ -2902,7 +2916,7 @@ msgstr "Kokonaiskustannukset"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Total Cost of Raw Materials"
-msgstr ""
+msgstr "Raaka-aineiden kokonaiskustannus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_late_count
@@ -2965,7 +2979,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Unit Cost"
-msgstr ""
+msgstr "Yksikkökustannus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unit_factor
@@ -3197,6 +3211,9 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
+"Työpisteiden avulla voit luoda ja hallinnoida valmistusyksiköitä. Ne "
+"koostuvat työntekijöistä ja/tai koneista, joita käsitellään toimeksiantojen,"
+" kapasiteetin ja ennustamisen hallinnan yksiköinä."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3220,6 +3237,9 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"Työtilausoperaatiot mahdollistavat valmistustapahtumien hallinnan. Näitä "
+"operaatioita seurataan työpisteillä, kun tuotetta valmistetaan. Operaatiot "
+"liitetään osaluetteloihin, jotka määrittävät tarvittavat raaka-aineet."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
@@ -3292,6 +3312,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Tuotevariaatiot sallivat sinun määritellä samalle tuotteelle eri "
+"variaatioita mikä helpottaa esimerkiksi verkkokaupan toimintaa"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3485,12 +3507,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "minutes"
-msgstr ""
+msgstr "minuutit"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "mrp.bom.line"
-msgstr ""
+msgstr "mrp.bom.line"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
@@ -3500,7 +3522,7 @@ msgstr "mrp.config.settings"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
 msgid "report.mrp.report_mrpbomstructure"
-msgstr ""
+msgstr "report.mrp.report_mrpbomstructure"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_bom_cost

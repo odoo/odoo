@@ -16,13 +16,14 @@
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Kontor Consulting <p.becker@kontor.consulting>, 2016
+# Niki Waibel <niki.waibel@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Kontor Consulting <p.becker@kontor.consulting>, 2016\n"
+"Last-Translator: Niki Waibel <niki.waibel@gmail.com>, 2016\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,12 +85,12 @@ msgstr "<strong>Druckdatum:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr ""
+msgstr "<strong>Zu reparierendes Produkt:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>Lieferadresse:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -130,7 +131,7 @@ msgstr "Vor Reparatur"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "Kann nur Reparaturentwürfe bestätigen."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -159,7 +160,7 @@ msgstr "Abgebrochen"
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Abgeschlossene Reparaturen können nicht storniert werden. "
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -169,7 +170,7 @@ msgstr "Auswahl des Partners, an den abgerechnet und geliefert wird."
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid "Click to create a reparation order."
-msgstr ""
+msgstr "Drücken um einen Reparaturauftrag zu Erstellen."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
@@ -621,7 +622,7 @@ msgstr "Reparaturauftrag"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Order #:"
-msgstr ""
+msgstr "Reparatur Auftrags #:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
@@ -638,7 +639,7 @@ msgstr "Reparaturaufträge"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "Reparatur Kostenvoranschlags #:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
@@ -650,30 +651,32 @@ msgstr "Reparaturreferenz"
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr ""
+"Reparatur muss storniert werden um auf Entwurf zurückgesetzt zu werden."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:343
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "Reparaturen müssen vor Beginn der Reparatur bestätigt werden."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:373
 #, python-format
 msgid "Repair must be invoiced in order to finalize it."
 msgstr ""
+"Reparaturen müssen in Rechnung gestellt werden, um sie zu finalisieren."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
 #, python-format
 msgid "Repair must be repaired in order to finalize it."
-msgstr ""
+msgstr "Reparaturen müssen repariert sein, um sie zu finalisieren."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:354
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "Reparaturen müssen in Reperatur sein, um diese zu beenden."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:223
@@ -701,7 +704,7 @@ msgstr "Reparierte Serie"
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repairs"
-msgstr ""
+msgstr "Reparaturen"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -712,7 +715,7 @@ msgstr "Reparaturauftrag"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Suche Reparatur Auftragsnummern"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
