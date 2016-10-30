@@ -7,6 +7,7 @@
 # (Marcos Organizador de Negocios SRL..)
 # Odoo 7.0 author: Jose Ernesto Mendez <tecnologia@obsdr.com>
 # (Open Business Solutions SRL.)
+
 # Copyright (c) 2016 - Present | Novum Ingenieria, SRL. - http://iterativo.do
 # All rights reserved.
 
@@ -27,7 +28,7 @@ de la Dirección General de Impuestos Internos (**DGII**).
 
 - Catálogo de Cuentas Estándar (alineado a DGII y NIIF)
 - Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados
-        - ITBIS** para compras y ventas
+        - ITBIS para compras y ventas
         - Retenciones de ITBIS
         - Retenciones de ISR
         - Grupos de Impuestos y Retenciones:
@@ -35,11 +36,12 @@ de la Dirección General de Impuestos Internos (**DGII**).
                 - Proveedores de Materiales de Construcción
                 - Personas Físicas Proveedoras de Servicios
         - Otros impuestos
-- Diarios Preconfigurados para manejo de la mayoría de los NCF
+- Secuencias Preconfiguradas para manejo de todos los NCF
         - Facturas con Valor Fiscal (para Ventas)
         - Facturas para Consumidores Finales
         - Notas de Débito y Crédito
         - Registro de Proveedores Informales
+        - Registro de Ingreso Único
         - Registro de Gastos Menores
         - Gubernamentales
 - Posiciones Fiscales para automatización de impuestos y retenciones
@@ -48,10 +50,9 @@ de la Dirección General de Impuestos Internos (**DGII**).
         - Entre otros
 
 **Nota:**
-Este módulo no soporta NCF con Valor Fiscal para compras, ya que los
-mismos poseen un comportamiento diferente debido a que deben
-ser introducidos de forma manual, por lo que no han sido configurados a través
-de los diarios.
+Esta localización, aunque posee las secuencias para NCF, las mismas no pueden
+ser utilizadas sin la instalación de módulos de terceros o desarrollo
+adicional.
 
 Estructura de Codificación del Catálogo de Cuentas:
 ===================================================
@@ -75,8 +76,8 @@ Estructura de Codificación del Catálogo de Cuentas:
 110101 - Caja
 210101 - Proveedores locales
 
-**Ocho dígitos** son para las cuentas de tercer orden \
-(las visualizadas en Odoo):
+**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas
+en Odoo):
 1101- Efectivo y Equivalentes
 110101- Caja
 11010101 Caja General
@@ -85,8 +86,6 @@ Estructura de Codificación del Catálogo de Cuentas:
     'website': 'http://iterativo.do',
     'depends': ['account', 'purchase', 'sale', 'base_iban'],
     'data': [
-        # Journal Model
-        'data/ir_model_data.xml',
         # Basic accounting data
         'data/coa_template.xml',
         'data/account.account.template.csv',
@@ -98,9 +97,8 @@ Estructura de Codificación del Catálogo de Cuentas:
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
         'data/account_chart_template.yml',
-        # Journals and their sequences
+        # Regulatory sequences for NCF (Número de Comprobante Fiscal)
         'data/ir_sequence.xml',
-        'data/account_journal.xml',
         ],
     'test': [],
     'demo': [],
