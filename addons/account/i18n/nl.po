@@ -1009,7 +1009,7 @@ msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
 msgstr ""
-"<strong>Valideer de factuur</strong><br/> na het coderen van de producten en"
+"<strong>Bevestig de factuur</strong><br/> na het coderen van de producten en"
 " belastingen."
 
 #. module: account
@@ -2592,7 +2592,7 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
-"Kan geen accountkaart vinden voor dit bedrijf. U dient dit in te stellen. \n"
+"Kan geen grootboekschema vinden voor dit bedrijf. U dient dit in te stellen. \n"
 "Ga alsjeblieft naar de instellingen."
 
 #. module: account
@@ -5595,6 +5595,9 @@ msgid ""
 "since it would create a gap in the numbering. You should create the journal "
 "entry again and cancel it thanks to a regular revert."
 msgstr ""
+"Het is niet toegestaan een betaling te verwijderen waarvoor reeds een "
+"boeking is gemaakt. Dit zou een gat in de nummering veroorzaken. U kunt de "
+"boeking opnieuw maken en het annuleren door een reguliere handeling."
 
 #. module: account
 #. openerp-web
@@ -6832,6 +6835,8 @@ msgstr ""
 msgid ""
 "Once this module is installed, you have to configure Tax Cash Basis Journal."
 msgstr ""
+"Wanneer deze module is geïnstalleerd moet u het  BTW kas basis dagboek "
+"configureren. "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6944,6 +6949,10 @@ msgid ""
 "would make a gap in the numbering. You should book an entry and make a "
 "regular revert of it in case you want to cancel it."
 msgstr ""
+"Operatie niet toegelaten. Aangezien u bankafschriftregel reeds een nummer "
+"heeft gekregen, kunt u het niet compleet afletteren tegen bestaande "
+"boekingen anders ontstaat er een gat in de nummering. U kan de boeking maken"
+" en terugzetten wanneer u deze wil annuleren."
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:66
@@ -7458,6 +7467,7 @@ msgstr "Percentage van balans"
 #, python-format
 msgid "Percentages for Payment Terms Line must be between 0 and 100."
 msgstr ""
+"Het percentage voor de betalingsconditie regel moet liggen tussen 0 en 100."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8517,6 +8527,9 @@ msgid ""
 "Set this field to true if this tax can be used in the tax adjustment wizard,"
 " used to manually fill some data in the tax declaration"
 msgstr ""
+"Set dit veld of WAAR als de BTW gebruikt kan worden in de handmatige BTW "
+"aanpassingen wizard, gebruikt om handmatig sommige data te vullen in de BTW "
+"aangifte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_visible
@@ -8979,6 +8992,10 @@ msgid ""
 " set when the statement line is reconciled then stored to set the same "
 "number again if the line is cancelled, set to draft and re-processed again."
 msgstr ""
+"Technisch veld welke het nummer geeft aan de boeking, automatisch ingesteld "
+"wanneer de bankafschriftregel is afgeletterd en dan opgeslagen zodat het "
+"zelfde nummer kan worden gebruikt wanneer de boeking geannuleerd en daarna "
+"weer geboekt wordt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_refund_only
@@ -9028,6 +9045,11 @@ msgid ""
 "items are directly exigible, but with the module account_tax_cash_basis, "
 "some will become exigible only when the payment is recorded."
 msgstr ""
+"Technisch veld gebruikt om de BTW regel toepasbaar te maken in de BTW "
+"aangifte (alleen toepasbare velden worden weergegeven). Standaard op alle "
+"nieuwe boekingen toepasbaar. Wanneer de module account_tax_cash_basis is "
+"geïnstalleerd, wordt het op sommige boekingen alleen toepasbaar wanneer een "
+"betaling geregistreerd is."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
@@ -9566,6 +9588,8 @@ msgid ""
 "This allows you to manage the revenue recognition on selling products. It keeps track of the installments occurred on those revenue recognitions, and creates account moves for those installment lines\n"
 "-This installs the module account_deferred_revenue."
 msgstr ""
+"Hierdoor kunt u de herkenning van omzet beheren op de verkoop van producten. Het houdt bij welke termijnen hebben plaatsgevonden op deze inkomsten herkenningen, en creëert boekingen voor deze termijnen.\n"
+"-Dit Installeert de module account_deferred_revenue."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
@@ -9799,7 +9823,7 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
-"Deze wizard valideert alle geselecteerde boekingen. Na de validatie kunnen "
+"Deze wizard bevestigd alle geselecteerde boekingen. Na de validatie kunnen "
 "de boekingen niet meer gewijzigd worden."
 
 #. module: account
@@ -9816,9 +9840,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:21
 #, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
-msgstr ""
-"Tip: Druk op CTRL-Enter om alle regels met gebalanceerde lijnen af te "
-"letteren."
+msgstr "Tip: Druk op CTRL-Enter om alle regels die matchen af te letteren."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -10229,6 +10251,9 @@ msgid ""
 "Used to hold the reference of the external mean that created this statement "
 "(name of imported file, reference of online synchronization...)"
 msgstr ""
+"Wordt gebruikt om de referentie van de externe herkenning van dit "
+"bankafschrift op te slaan (naam van geïmporteerd bestand, referentie van "
+"online synchronisatie ...)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
@@ -10277,17 +10302,17 @@ msgstr "BTW verplicht"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr "Valideer"
+msgstr "Bevestig"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "Valideer rekeningmutatie"
+msgstr "Bevestig rekeningmutatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Validate purchase orders and control vendor bills by departments."
-msgstr "Valideer inkooporder en beheer leverancierfacturen per afdeling."
+msgstr "Bevestig inkooporders en beheer leverancier facturen per afdeling."
 
 #. module: account
 #: selection:account.bank.statement,state:0

@@ -145,11 +145,14 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Preț public -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost-  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Altă listă  de prețuri  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Produse</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -169,7 +172,7 @@ msgstr "<strong>Descriere:</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Nume listă prețuri</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -205,6 +208,8 @@ msgid ""
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"O descriere a produsului, accesibilă clienţilor. Această descriere va fi "
+"copiată în fiecare comandă de vânzare sau factură emisă"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -214,6 +219,8 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
 msgstr ""
+"O descriere a produsului, accesibilă furnizorilor. Această descriere va fi "
+"copiată în fiecare comandă de achiziţie sau factură primită"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -227,7 +234,7 @@ msgstr ""
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "O descriere a produsului, folosită doar pentru scopuri interne"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -363,7 +370,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
 msgid "Attribute Prices"
-msgstr ""
+msgstr "Prețuri atribute"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
@@ -421,13 +428,13 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
 msgid "Based on"
-msgstr ""
+msgstr "Bazat pe"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_03
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Basic Computer"
-msgstr ""
+msgstr "Basic Computer"
 
 #. module: product
 #: model:product.product,name:product.membership_2
@@ -450,7 +457,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Imagine de dimensiune mare"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
@@ -570,7 +577,7 @@ msgstr "Caracteristici"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Charges iPod/iPhone"
-msgstr ""
+msgstr "Charges iPod/iPhone"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -836,7 +843,7 @@ msgstr "Custom computer shipped in kit."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Ref client"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -847,7 +854,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
 msgid "Date"
-msgstr "Data"
+msgstr "Dată"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -858,7 +865,7 @@ msgstr "Zi (zile)"
 #: model:ir.model.fields,help:product.field_product_product_uom_id
 #: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+msgstr "Unitatea de masură implicită folosită în toate operațiunile stocului."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_po_id
@@ -867,11 +874,13 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"Unitate de măsură implicită pentru comenzile de achiziție. Trebuie să facă "
+"parte din aceeași categorie ca și unitatea de măsură implicită."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Timpul total de livrare"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -896,7 +905,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Determină ordinea de afişare"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_display_name
@@ -951,7 +960,7 @@ msgstr "Efficient, high-quality audio"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_end
 msgid "End Date"
-msgstr "Data de sfarsit"
+msgstr "Dată de sfârșit"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
@@ -1301,6 +1310,7 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
+"Dacă ramâne nebifat, vă permite să ascundeți produsul fără a-l șterge."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_image
@@ -1314,20 +1324,22 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"Imaginea variantei de produs (mare). Va fi redimensionată automat la "
+"1024x1024px, păstrându-se aspectul"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Imaginea variantei de produs (medie)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Imaginea variantei de produs (mică)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1751,7 +1763,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_price_extra
 msgid "Price Extra"
-msgstr ""
+msgstr "Extra Preț"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value_price_extra
@@ -1815,12 +1827,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Elemente ale listei de prețuri"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
 msgid "Pricelist Name"
-msgstr ""
+msgstr "Nume Listă prețuri"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -1830,7 +1842,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "Id-urile elementelor listei de prețuri"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -2006,6 +2018,8 @@ msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
 msgstr ""
+"Produsele pot avea câteva atribute, ce definesc variantele (Exemplu: mărime,"
+" culoare,...)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2191,7 +2205,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_categ_id
 #: model:ir.model.fields,help:product.field_product_template_categ_id
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Selectați categoria pentru produsul curent"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
@@ -2315,6 +2329,8 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
 msgstr ""
+"Specificați dacă produsul poate fi selectat într-o linie a comenzii de "
+"vânzare."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_surcharge
@@ -2337,7 +2353,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_start
 msgid "Start Date"
-msgstr "Data de inceput"
+msgstr "Dată de început"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
@@ -2352,7 +2368,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
-msgstr "Produs care poate fi stocat"
+msgstr "Produs stocabil"
 
 #. module: product
 #: model:product.product,name:product.product_product_2
@@ -2581,7 +2597,7 @@ msgstr "Volumul in metri cubi"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Masa în kilograme fără ambalaj"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2791,7 +2807,7 @@ msgstr "Valori"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr ""
+msgstr "Imagine variantă"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2833,12 +2849,12 @@ msgstr "Furnizor"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Informații furnizor"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr ""
+msgstr "Liste de prețuri furnizor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3033,7 +3049,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
