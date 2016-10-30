@@ -3,6 +3,7 @@
 # * stock
 # 
 # Translators:
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
@@ -14,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-09-19 07:57+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"PO-Revision-Date: 2016-10-28 20:06+0000\n"
+"Last-Translator: Atte Isopuro <atte.isopuro@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgstr ""
 #: code:addons/stock/stock.py:1847
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr "(%s varattu)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1850
@@ -106,7 +107,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "#Products"
-msgstr ""
+msgstr "Tuotemäärä"
 
 #. module: stock
 #: code:addons/stock/stock.py:2739
@@ -118,13 +119,13 @@ msgstr "%s %s %s on <b>siirretty</b> romutettavaksi."
 #: code:addons/stock/stock.py:3299
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: Hanki lisää tuotetta paikasta %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:25
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: Siirtymäpaikka"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
@@ -155,7 +156,7 @@ msgid ""
 "                       \n"
 "* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations\n"
 "                      "
-msgstr ""
+msgstr "* Toimittajan paikka: Virtuaalinen paikka joka kuvastaa toimittajiltasi tulevien tuotteiden lähdepaikkaa\n\n* Näkymäpaikka: Virtuaalinen paikka jota käytetään lapsipaikkojen kokoamiseen hierarkiassa ; näkymäpäikka ei voi itsessään sisältää varastosaldoa\n\n* Sisäinen paikka: Fyysinen paikka omassa varastojärjestelmässäsi\n\n* Asiakkaan paikka: Virtuaalinen paikka joka edustaa sitä paikkaa jonne asiakkaalle lähetetyt tuotteet päätyvät\n\n* Varastohävikki: Virtuaalinen paikka joka toimii vastakohtana inventoinneista johtuvissa tuotesaldojen korjauksissa (Fyysiset inventaariot)\n\n* Hankinta: Virtuaalinen paikka joka toimii väliaikaisena vastakohtana hankinta-operaatioille kun lähde (toimittaja tai tuotanto) ei vielä ole tiedossa. Tämän paikan tulisi olla tyhjä kun hankinnan suunnittelu on päättynyt.\n\n* Valmistus: Virtuaalinen vastakohta tuotannon toiminnoille: tämä paikka kuluttaa raaka-aineita ja tuottaa tuotettuja tuotteita\n\n* Siirtymäpaikka: Vastakohta-paikka jota tulisi käyttää omien yhtiöiden tai varastojen välisissä siirroissa "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -172,21 +173,21 @@ msgstr "Odoo tiimi"
 msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">'Available'</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">'Saatavilla'</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Click on <span "
 "class=\"fa fa-truck\"/> Delivery</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Paina <span class=\"fa fa-truck\"/> Toimitus</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Click on <span "
 "class=\"fa fa-truck\"/> Shipment</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Paina <span class=\"fa fa-truck\"/> Lähetys</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -200,21 +201,21 @@ msgstr ""
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Confirm "
 "Sale</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Vahvista myynti</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Find Incoming "
 "Shipments</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Etsi vastaanotettavat lähetykset</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Process the "
 "products</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Käsittele tuotteet</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -228,7 +229,7 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">Vahvista toi
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
-msgstr ""
+msgstr "<span class=\"label label-default text-center odoo_purple\">Vahvista vastaanottotilaus</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -317,28 +318,28 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span><strong>Contact Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Yhteyshenkilön osoite:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Asiakkaan osoite:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Toimitusosoite:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Toimittajan osoite:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Varaston osoite:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -355,7 +356,7 @@ msgstr "<span>Katso</span>"
 msgid ""
 "<span>You need to install the Accounting or Purchases app to manage "
 "vendors.</span>"
-msgstr ""
+msgstr "<span>Asenna Kirjanpito- tai Ostomoduuli hallinoidaksesi toimittajia.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -398,14 +399,14 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Viivakoodi</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase"
 " Order"
-msgstr ""
+msgstr "<strong>Osta:</strong> tuotetta ostetaan toimittajalta ostotilauksen avulla"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -2614,7 +2615,7 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr ""
+msgstr "Incotermit ovat joukko myyntitermejä. Niiden tarkoitus on jakaa toimituskustannukset ja vastuut ostajan ja myyjän kesken sekä vastata nykyaikaisia kuljetuskäytäntö."
 
 #. module: stock
 #: code:addons/stock/stock.py:2161
@@ -2689,7 +2690,7 @@ msgstr "Sisäiset siirrot"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr ""
+msgstr "Sisäinen siirtymäpaikka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
@@ -2795,12 +2796,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
-msgstr "Varastopaikka"
+msgstr "Inventaariopaikka"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Varastopaikat"
+msgstr "Inventaariopaikat"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -3586,7 +3587,7 @@ msgstr "Ei varastonsiirtoa"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "No Tracking"
-msgstr ""
+msgstr "Ei seurantaa"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
@@ -4037,12 +4038,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_pack_stock_loc_id
 msgid "Packing Location"
-msgstr "Pakkauksen sijainti"
+msgstr "Pakkaamissijainti"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr "Pakkaustoiminnot"
+msgstr "Pakkaustoiminto"
 
 #. module: stock
 #: code:addons/stock/stock.py:3758
@@ -4070,7 +4071,7 @@ msgstr "Ylempi paikka"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_parent_id
 msgid "Parent Package"
-msgstr "Edeltävä pakkaus"
+msgstr "Sisältävä pakkaus"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -4352,7 +4353,7 @@ msgstr "Hankinnan poikkeamat"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_group_id
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Procurement Group"
-msgstr ""
+msgstr "Hankintaryhmä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_order_location_id
@@ -4731,30 +4732,30 @@ msgstr "Todellinen määrä"
 #: model:ir.model.fields,field_description:stock.field_product_product_reception_count
 #: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
 msgid "Receipt"
-msgstr "Kuitti"
+msgstr "Vastaanotto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
 msgid "Receipt Route"
-msgstr ""
+msgstr "Vastaanoton reitti"
 
 #. module: stock
 #: code:addons/stock/stock.py:3803
 #, python-format
 msgid "Receipt in 1 step"
-msgstr ""
+msgstr "Vastaanotto yhdessä vaiheessa"
 
 #. module: stock
 #: code:addons/stock/stock.py:3804
 #, python-format
 msgid "Receipt in 2 steps"
-msgstr ""
+msgstr "Vastaanotto kahdessa vaiheessa"
 
 #. module: stock
 #: code:addons/stock/stock.py:3805
 #, python-format
 msgid "Receipt in 3 steps"
-msgstr ""
+msgstr "Vastaanotto kolmessa vaiheessa"
 
 #. module: stock
 #: code:addons/stock/stock.py:3656
@@ -5497,7 +5498,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
 msgid "Supplied Warehouse"
-msgstr "Toimittajan varasto"
+msgstr "Varasto jota täydennetään"
 
 #. module: stock
 #: selection:stock.picking,picking_type_code:0
@@ -6132,7 +6133,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Transit Locations"
-msgstr ""
+msgstr "Siirtymäpaikat"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_recompute_pack_op
@@ -6144,7 +6145,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_code
 msgid "Type of Operation"
-msgstr "Operaation tyyppi"
+msgstr "Toiminnon tyyppi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_packaging_type_id
@@ -6175,7 +6176,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
 msgid "Unit Cost"
-msgstr ""
+msgstr "Yksikkökustannus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -6399,7 +6400,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_view_location_id
 msgid "View Location"
-msgstr ""
+msgstr "Näkymäpaikka"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -6626,7 +6627,7 @@ msgstr "Ohjattu toiminto tarkistaa kaikki minimivarastosäännöt ja luo hankint
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "Tuotevariaatiot sallivat sinun määritellä samalle tuotteelle eri variaatioita mikä helpottaa esimerkiksi verkkokaupan toimintaa"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
