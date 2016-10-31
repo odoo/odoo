@@ -4921,6 +4921,15 @@ class stock_picking_type(osv.osv):
     def _get_name(self, cr, uid, ids, field_names, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
+        picks = self.search(domain + args, limit=limit)
+        return picks.name_get()
+
     def name_get(self, cr, uid, ids, context=None):
         """Overides orm name_get method to display 'Warehouse_name: PickingType_name' """
         if context is None:
