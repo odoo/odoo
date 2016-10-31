@@ -11,7 +11,6 @@ var Registry = require('web.Registry');
 var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
-var Model = require('web.Model');
 
 var QWeb = core.qweb;
 var _t = core._t;
