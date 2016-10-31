@@ -23,6 +23,7 @@ import traceback
 import urllib2
 import urlparse
 import warnings
+from urllib import urlencode
 from os.path import join as opj
 from zlib import adler32
 
@@ -1427,11 +1428,27 @@ class Root(object):
 
         return response
 
+    def _override_content_type(self, environ):
+        """
+        Force the request CONTENT_TYPE from the force_content_type parameter
+        of the query_string.
+
+        Chrome, as of version 54.0.2840.71, loses the Content-Type header
+        during a 307 redirect, so `force_content_type` can be added to the
+        query string of the redirected url to compensate.
+        """
+        query_dict = urlparse.parse_qs(environ['QUERY_STRING'])
+        force_content_type = query_dict.pop('force_content_type', None)
+        if force_content_type:
+            environ['CONTENT_TYPE'] = force_content_type.pop()
+            environ['QUERY_STRING'] = urlencode(query_dict, doseq=True)
+
     def dispatch(self, environ, start_response):
         """
         Performs the actual WSGI dispatching for the application.
         """
         try:
+            self._override_content_type(environ)
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
