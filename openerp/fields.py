@@ -343,6 +343,8 @@ class Field(object):
     }
 
     def __init__(self, string=None, **kwargs):
+        attrs = {}
+        self.set_all_attrs(attrs)
         kwargs['string'] = string
         args = {key: val for key, val in kwargs.iteritems() if val is not None}
         self.args = args or EMPTY_DICT
