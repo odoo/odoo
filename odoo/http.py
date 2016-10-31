@@ -290,7 +290,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -573,7 +573,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
