@@ -631,9 +631,38 @@ class JsonRequest(WebRequest):
             mime = 'application/json'
             body = json.dumps(response)
 
-        return Response(
-                    body, headers=[('Content-Type', mime),
-                                   ('Content-Length', len(body))])
+        headers = [
+            ('Content-Type', mime),
+            ('Content-Length', len(body))
+        ]
+        allowed_origin = self._get_allowed_origin()
+        if allowed_origin:
+            headers.append(('Access-Control-Allow-Origin', allowed_origin))
+        return Response(body, headers=headers)
+
+    _scheme_port_defaults = {'http': 80, 'https': 443}
+
+    def _get_allowed_origin(self):
+        """
+        Allow connections to the longpolling_port to browsers coming from the
+        xmlrpc_port if xmlrpc_port is defined
+        """
+        host_url = urlparse.urlsplit(self.httprequest.host_url)
+        netloc = host_url.netloc
+        host = netloc.rsplit(':', 1)[0]
+        try:
+            port = int(host_url.port)
+        except TypeError:
+            # default port, get port from scheme
+            port = self._scheme_port_defaults[host_url.scheme]
+        longpolling_port = odoo.tools.config['longpolling_port']
+        xmlrpc_port = odoo.tools.config['xmlrpc_port']
+        if xmlrpc_port and port == longpolling_port:
+            allowed_netloc = '{h}:{p}'.format(h=host, p=xmlrpc_port)
+            allowed_origin = urlparse.urlunsplit(
+                (host_url.scheme, allowed_netloc, '', '', '')
+            )
+            return allowed_origin
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
