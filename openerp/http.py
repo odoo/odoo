@@ -1538,6 +1538,8 @@ class Root(object):
                           'web_diagram', 'web_editor', 'web_kanban', 'web_kanban_gauge', 'web_planner',
                           'web_settings_dashboard', 'web_tip', 'web_view_editor'}
 
+    _db_setup = False
+
     @property
     def installed_modules(self):
         return self._installed_modules
@@ -1577,7 +1579,7 @@ class Root(object):
 
         for addons_path in openerp.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
-                if module not in addons_module:
+                if module not in addons_module or not addons_module[module]:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                     path_static = os.path.join(addons_path, module, 'static')
                     if os.path.isfile(manifest_path) and os.path.isdir(path_static):
@@ -1628,17 +1630,19 @@ class Root(object):
         self.load_addons()
 
     def setup_db(self, httprequest):
-        db = httprequest.session.db
-        # Check if session.db is legit
-        if db:
-            self.load_db_spec_modules(db)
-            if db not in db_filter([db], httprequest=httprequest):
-                _logger.warn("Logged into database '%s', but dbfilter "
-                             "rejects it; logging session out.", db)
-                httprequest.session.logout()
-                db = None
-        if not db:
-            httprequest.session.db = db_monodb(httprequest)
+        if not self._db_setup:
+            db = httprequest.session.db
+            # Check if session.db is legit
+            if db:
+                self.load_db_spec_modules(db)
+                if db not in db_filter([db], httprequest=httprequest):
+                    _logger.warn("Logged into database '%s', but dbfilter "
+                                 "rejects it; logging session out.", db)
+                    httprequest.session.logout()
+                    db = None
+            if not db:
+                httprequest.session.db = db_monodb(httprequest)
+        self._db_setup = True
 
     def setup_lang(self, httprequest):
         if not "lang" in httprequest.session.context:
@@ -1707,7 +1711,8 @@ class Root(object):
             httprequest.app = self
 
             explicit_session = self.setup_session(httprequest)
-            self.setup_db(httprequest)
+            if not self._db_setup:
+                self.setup_db(httprequest)
             self.setup_lang(httprequest)
 
             request = self.get_request(httprequest)
