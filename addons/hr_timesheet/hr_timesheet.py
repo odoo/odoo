@@ -9,7 +9,7 @@ class AccountAnalyticLine(models.Model):
 
     task_id = fields.Many2one('project.task', 'Task')
     project_id = fields.Many2one('project.project', 'Project')
-    department_id = fields.Many2one('hr.department', "Department", related='user_id.employee_ids.department_id', store=True)
+    department_id = fields.Many2one('hr.department', "Department", related='user_id.employee_ids.department_id', store=True, readonly=True)
 
     @api.onchange('project_id')
     def onchange_project_id(self):
