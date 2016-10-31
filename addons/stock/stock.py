@@ -4926,6 +4926,15 @@ class stock_picking_type(osv.osv):
             res.append((record.id, name))
         return res
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
+        picks = self.search(domain + args, limit=limit)
+        return picks.name_get()
+
     def _default_warehouse(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
