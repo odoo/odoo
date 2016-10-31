@@ -606,6 +606,10 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
+        # don't try to process pre-made responses
+        if isinstance(result, werkzeug.wrappers.BaseResponse):
+            return result
+
         response = {
             'jsonrpc': '2.0',
             'id': self.jsonrequest.get('id')
