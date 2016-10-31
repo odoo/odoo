@@ -1538,7 +1538,7 @@ class Root(object):
                           'web_diagram', 'web_editor', 'web_kanban', 'web_kanban_gauge', 'web_planner',
                           'web_settings_dashboard', 'web_tip', 'web_view_editor'}
 
-    _db_setup = False
+    _db_setup_modules = False
 
     @property
     def installed_modules(self):
@@ -1630,11 +1630,12 @@ class Root(object):
         self.load_addons()
 
     def setup_db(self, httprequest):
-        if not self._db_setup:
             db = httprequest.session.db
             # Check if session.db is legit
             if db:
-                self.load_db_spec_modules(db)
+                if not self._db_setup_modules:
+                    self.load_db_spec_modules(db)
+                    self._db_setup_modules = True
                 if db not in db_filter([db], httprequest=httprequest):
                     _logger.warn("Logged into database '%s', but dbfilter "
                                  "rejects it; logging session out.", db)
@@ -1642,7 +1643,6 @@ class Root(object):
                     db = None
             if not db:
                 httprequest.session.db = db_monodb(httprequest)
-        self._db_setup = True
 
     def setup_lang(self, httprequest):
         if not "lang" in httprequest.session.context:
@@ -1711,7 +1711,7 @@ class Root(object):
             httprequest.app = self
 
             explicit_session = self.setup_session(httprequest)
-            if not self._db_setup:
+            if not self._db_setup_modules:
                 self.setup_db(httprequest)
             self.setup_lang(httprequest)
 
