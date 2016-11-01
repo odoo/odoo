@@ -1813,15 +1813,10 @@ var PaymentScreenWidget = ScreenWidget.extend({
             self.$('.next').removeClass('highlight');
         }
     },
-    // Check if the order is paid, then sends it to the backend,
-    // and complete the sale process
-    validate_order: function(force_validation) {
-        var self = this;
-
-        var order = this.pos.get_order();
-
+    validation_checks: function(order, force_validation) {
         // FIXME: this check is there because the backend is unable to
         // process empty orders. This is not the right place to fix it.
+        force_validation = force_validation || {};
         if (order.get_orderlines().length === 0) {
             this.gui.show_popup('error',{
                 'title': _t('Empty Order'),
@@ -1861,7 +1856,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         // if the change is too large, it's probably an input error, make the user confirm.
-        if (!force_validation && order.get_total_with_tax() > 0 && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
+        if (!force_validation.change_too_high && order.get_total_with_tax() > 0 && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
             this.gui.show_popup('confirm',{
                 title: _t('Please Confirm Large Amount'),
                 body:  _t('Are you sure that the customer wants to  pay') + 
@@ -1874,18 +1869,33 @@ var PaymentScreenWidget = ScreenWidget.extend({
                        ' ' +
                        _t('? Clicking "Confirm" will validate the payment.'),
                 confirm: function() {
-                    self.validate_order('confirm');
+                    force_validation.change_too_high = true;
+                    this.validation_checks(order, force_validation);
                 },
             });
             return;
         }
-
+        return true;
+    },
+    finalize_validation: function(order) {
         if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
-
                 this.pos.proxy.open_cashbox();
         }
+        order.validate_order();
+    },
+    // Check if the order is paid, then sends it to the backend,
+    // and complete the sale process
+    validate_order: function(force_validation) {
+        force_validation = force_validation || {};
+        var self = this;
 
-        order.initialize_validation_date();
+        var order = this.pos.get_order();
+
+        if (!this.validation_checks(order, force_validation)) {
+            return;
+        }
+
+        this.finalize_validation(order);
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
