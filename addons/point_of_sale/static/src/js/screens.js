@@ -1885,13 +1885,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
     },
     // Check if the order is paid, then sends it to the backend,
     // and complete the sale process
-    validate_order: function(force_validation) {
-        force_validation = force_validation || {};
+    validate_order: function() {
         var self = this;
 
         var order = this.pos.get_order();
 
-        if (!this.validation_checks(order, force_validation)) {
+        if (!this.validation_checks(order)) {
             return;
         }
 
