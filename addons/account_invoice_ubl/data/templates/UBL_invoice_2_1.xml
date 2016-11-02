@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice 
+  xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" 
+  xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" 
+  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+  xmlns:cct="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"
+  xmlns:cec="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+  xmlns:udt="urn:oasis:names:specification:ubl:schema:xsd:UnqualifiedDataTypes-2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 xsd-2.1/maindoc/UBL-Invoice-2.1.xsd">
+  {% if False %}
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  {% endif %}
+  <cbc:ID>{{ item.ubl_id }}</cbc:ID>
+  <cbc:IssueDate>{{ item.ubl_issue_date }}</cbc:IssueDate>
+  {% if item.ubl_type_code %}
+  <cbc:InvoiceTypeCode>{{ item.ubl_type_code }}</cbc:InvoiceTypeCode>
+  {% endif %}
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      {% if item.ubl_com_supplier.website %}
+      <cbc:WebsiteURI>{{ item.ubl_com_supplier.website }}</cbc:WebsiteURI>
+      {% endif %}
+      <cac:PartyName>
+        <cbc:Name>{{ item.ubl_com_supplier.name }}</cbc:Name>
+      </cac:PartyName>
+      {% if item.ubl_supplier.lang %}
+      <cac:Language>
+        {% if False %}
+        <cbc:ID></cbc:ID>
+        {% endif %}
+        {% if False %}
+        <cbc:Name></cbc:Name>
+        {% endif %}
+        <cbc:LocaleCode>{{ item.ubl_supplier.lang }}</cbc:LocaleCode>
+      </cac:Language>
+      {% endif %}
+      <cac:PostalAddress>
+        {% if item.ubl_com_supplier.street1 %}
+        <cbc:StreetName>{{ item.ubl_com_supplier.street1 }}</cbc:StreetName>
+        {% endif %}
+        {% if item.ubl_com_supplier.street2 %}
+        <cbc:AdditionalStreetName>{{ item.ubl_com_supplier.street3 }}</cbc:AdditionalStreetName>
+        {% endif %}
+        {% if item.ubl_com_supplier.street3 %}
+        <cbc:BlockName>{{ item.ubl_com_supplier.street3 }}</cbc:BlockName>
+        {% endif %}
+        {% if item.ubl_com_supplier.city %}
+        <cbc:CityName>{{ item.ubl_com_supplier.city }}</cbc:CityName>
+        {% endif %}
+        {% if item.ubl_com_supplier.zip %}
+        <cbc:PostalZone>{{ item.ubl_com_supplier.zip }}</cbc:PostalZone>
+        {% endif %}
+        {% if item.ubl_com_supplier.state_id %}
+        <cbc:CountrySubentity>{{ item.ubl_com_supplier.state_id.name }}</cbc:CountrySubentity>
+        <cbc:CountrySubentityCode>{{ item.ubl_com_supplier.state_id.code }}</cbc:CountrySubentityCode>
+        {% endif %}
+        {% if item.ubl_com_supplier.country_id %}
+        <cac:Country>
+          <cbc:IdentificationCode>{{ item.ubl_com_supplier.country_id.code }}</cbc:IdentificationCode>
+          <cbc:Name>{{ item.ubl_com_supplier.country_id.name }}</cbc:Name>
+        </cac:Country>
+        {% endif %}
+      </cac:PostalAddress>
+      {% if item.ubl_com_supplier.vat %}
+      <cac:PartyTaxScheme>
+        <cbc:RegistrationName>{{ item.ubl_com_supplier.name }}</cbc:RegistrationName>
+        <cbc:CompanyID>{{ item.ubl_com_supplier.sanitized_vat }}</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID schemeID='UN/ECE 5153' schemeAgencyID='6'>VAT</cbc:ID>
+        </cac:TaxScheme>        
+      </cac:PartyTaxScheme>
+      {% endif %}      
+      <cac:Contact>
+        <cbc:Name>{{ item.ubl_supplier.name }}</cbc:Name>
+        {% if item.ubl_supplier_phone %}
+        <cbc:Telephone>{{ item.ubl_supplier_phone }}</cbc:Telephone>
+        {% endif %}
+        {% if item.ubl_supplier_fax %}
+        <cbc:Telefax>{{ item.ubl_supplier_fax }}</cbc:Telefax>
+        {% endif %}
+        {% if item.ubl_supplier_email %}
+        <cbc:ElectronicMail>{{ item.ubl_supplier_email }}</cbc:ElectronicMail>
+        {% endif %}
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      {% if item.ubl_com_customer.website %}
+      <cbc:WebsiteURI>{{ item.ubl_com_customer.website }}</cbc:WebsiteURI>
+      {% endif %}
+      <cac:PartyName>
+        <cbc:Name>{{ item.ubl_com_customer.name }}</cbc:Name>
+      </cac:PartyName>
+      {% if item.ubl_customer.lang %}
+      <cac:Language>
+        {% if False %}
+        <cbc:ID></cbc:ID>
+        {% endif %}
+        {% if False %}
+        <cbc:Name></cbc:Name>
+        {% endif %}
+        <cbc:LocaleCode>{{ item.ubl_customer.lang }}</cbc:LocaleCode>
+      </cac:Language>
+      {% endif %}
+      <cac:PostalAddress>
+        {% if item.ubl_com_customer.street1 %}
+        <cbc:StreetName>{{ item.ubl_com_customer.street1 }}</cbc:StreetName>
+        {% endif %}
+        {% if item.ubl_com_customer.street2 %}
+        <cbc:AdditionalStreetName>{{ item.ubl_com_customer.street3 }}</cbc:AdditionalStreetName>
+        {% endif %}
+        {% if item.ubl_com_customer.street3 %}
+        <cbc:BlockName>{{ item.ubl_com_customer.street3 }}</cbc:BlockName>
+        {% endif %}
+        {% if item.ubl_com_customer.city %}
+        <cbc:CityName>{{ item.ubl_com_customer.city }}</cbc:CityName>
+        {% endif %}
+        {% if item.ubl_com_customer.zip %}
+        <cbc:PostalZone>{{ item.ubl_com_customer.zip }}</cbc:PostalZone>
+        {% endif %}
+        {% if item.ubl_com_customer.state_id %}
+        <cbc:CountrySubentity>{{ item.ubl_com_customer.state_id.name }}</cbc:CountrySubentity>
+        <cbc:CountrySubentityCode>{{ item.ubl_com_customer.state_id.code }}</cbc:CountrySubentityCode>
+        {% endif %}
+        {% if item.ubl_com_customer.country_id %}
+        <cac:Country>
+          <cbc:IdentificationCode>{{ item.ubl_com_customer.country_id.code }}</cbc:IdentificationCode>
+          <cbc:Name>{{ item.ubl_com_customer.country_id.name }}</cbc:Name>
+        </cac:Country>
+        {% endif %}
+      </cac:PostalAddress>
+      {% if item.ubl_com_customer.vat %}
+      <cac:PartyTaxScheme>
+        <cbc:RegistrationName>{{ item.ubl_com_customer.name }}</cbc:RegistrationName>
+        <cbc:CompanyID>{{ item.ubl_com_customer.sanitized_vat }}</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID schemeID='UN/ECE 5153' schemeAgencyID='6'>VAT</cbc:ID>
+        </cac:TaxScheme>        
+      </cac:PartyTaxScheme>
+      {% endif %}      
+      <cac:Contact>
+        <cbc:Name>{{ item.ubl_customer.name }}</cbc:Name>
+        {% if item.ubl_customer_phone %}
+        <cbc:Telephone>{{ item.ubl_customer_phone }}</cbc:Telephone>
+        {% endif %}
+        {% if item.ubl_customer_fax %}
+        <cbc:Telefax>{{ item.ubl_customer_fax }}</cbc:Telefax>
+        {% endif %}
+        {% if item.ubl_customer_email %}
+        <cbc:ElectronicMail>{{ item.ubl_customer_email }}</cbc:ElectronicMail>
+        {% endif %}
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  {% if False %}
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ item.amount_tax }}</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      {% for tax_line_id in item.tax_line_ids %}
+        <cbc:TaxableAmount currencyID="{{ item.currency_id.name }}">{{ tax_line_id.base }}</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ tax_line_id.amount }}</cbc:TaxAmount>
+        <cbc:Percent>{{ tax_line_id.ubl_tax_percent }}</cbc:Percent>
+          <cac:TaxCategory>
+          <cbc:ID schemeID='UN/ECE 5305' schemeAgencyID='6'>((tax.unece_categ_code))</cbc:ID>
+          <cbc:Name>{{ item_tax.name }}</cbc:Name>
+          <cac:TaxScheme>
+            <cbc:ID schemeID='UN/ECE 5305' schemeAgencyID='6'>((tax.unece_type_code))</cbc:ID>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      {% endfor %}
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  {% endif %}
+  <cac:LegalMonetaryTotal>
+      <cbc:LineExtensionAmount currencyID="{{ item.currency_id.name }}">{{ item.ubl_amount_untaxed_format }}</cbc:LineExtensionAmount>
+      <cbc:TaxExclusiveAmount currencyID="{{ item.currency_id.name }}">{{ item.ubl_amount_untaxed_format }}</cbc:TaxExclusiveAmount>
+      <cbc:TaxInclusiveAmount currencyID="{{ item.currency_id.name }}">{{ item.ubl_amount_total_format }}</cbc:TaxInclusiveAmount>
+      <cbc:PrepaidAmount currencyID="{{ item.currency_id.name }}">{{ item.ubl_amount_prepaid_format }}</cbc:PrepaidAmount>
+      <cbc:PayableAmount currencyID="{{ item.currency_id.name }}">{{ item.ubl_residual_format }}</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  {% set i = 0 %}
+  {% for invoice_line_id in item.invoice_line_ids %}
+  {% set i = i + 1 %}
+  <cac:InvoiceLine>
+      <cbc:ID>{{ i }}</cbc:ID>
+      <cbc:InvoicedQuantity {% if False %} unitCode="((uom_unece_code))"{% endif %}>{{ invoice_line_id.quantity }}</cbc:InvoicedQuantity>
+      <cbc:LineExtensionAmount currencyID="{{ item.currency_id.name }}">{{ invoice_line_id.ubl_price_subtotal }}</cbc:LineExtensionAmount>
+      <cac:TaxTotal>
+          <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ invoice_line_id.ubl_total_tax }}</cbc:TaxAmount>
+          {% for ubl_tax_dic in invoice_line_id.ubl_taxes_dics %}
+          {% set ubl_tax = ubl_tax_dic['ubl_tax'] %}
+          <cac:TaxSubtotal>
+              <cbc:TaxAmount currencyID="{{ item.currency_id.name }}">{{ ubl_tax.amount }}</cbc:TaxAmount>
+              <cbc:Percent>{{ ubl_tax.ubl_tax_percent }}</cbc:Percent>
+              <cac:TaxCategory>
+                  <cbc:ID schemeID="{{ ubl_tax.unece_code_type_category.unece_type }}" schemeAgencyID="6">ubl_tax.unece_code_type_category.unece_code</cbc:ID>
+                  <cbc:Name>ubl_tax.name</cbc:Name>
+                  <cac:TaxScheme>
+                      <cbc:ID schemeID="{{ ubl_tax.unece_code_type_category.unece_type }}" schemeAgencyID="6">ubl_tax.unece_code_type_category.unece_code</cbc:ID>
+                  </cac:TaxScheme>
+              </cac:TaxCategory>
+          </cac:TaxSubtotal>
+          {% endfor %}
+      </cac:TaxTotal>
+      <cac:Item>
+          <cbc:Description>{{ invoice_line_id.name }}</cbc:Description>
+          <cbc:Name>{{ invoice_line_id.product_id.name }}</cbc:Name>
+          {% if invoice_line_id.ubl_seller_code %}
+          <cac:SellersItemIdentification>
+              <cbc:ID>{{ invoice_line_id.ubl_seller_code }}</cbc:ID>
+          </cac:SellersItemIdentification>
+          {% endif %}
+          {% if invoice_line_id.product_id.ean13 %}
+          <cac:StandardItemIdentification>
+              <cbc:ID schemeAgencyID="6" schemeID="GTIN">{{ line.product_id.ean13 }}</cbc:ID>
+          </cac:StandardItemIdentification>
+          {% endif %}
+          {% for attribute_value in invoice_line_id.product_id.attribute_value_ids %}
+          <cac:AdditionalItemProperty>
+              <cbc:Name>{{ attribute_value.attribute_id.name }}</cbc:Name>
+              <cbc:Value>{{ attribute_value.name }}</cbc:Value>
+          </cac:AdditionalItemProperty>
+          {% endfor %}
+      </cac:Item>
+      <cac:Price>
+          <cbc:PriceAmount currencyID="{{ item.currency_id.name }}">{{ invoice_line_id.ubl_tax_excluded }}</cbc:PriceAmount>
+          {% if False %}
+          <cbc:BaseQuantity unitCode="((uom_unece_code))">{{ line.quantity }}</cbc:BaseQuantity>
+          {% endif %}
+      </cac:Price>
+  </cac:InvoiceLine>
+  {% endfor %}
+</Invoice>

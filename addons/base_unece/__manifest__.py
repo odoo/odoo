@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "base_edi",
+    'name': "base_unece",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -21,9 +21,4 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
-
-    # always loaded
-    'data': [
-        'views/res_partner_view.xml'
-    ],
 }

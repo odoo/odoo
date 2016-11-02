@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "base_edi",
+    'name': "account_invoice_ubl",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -18,12 +18,8 @@
     # for the full list
     'category': 'Uncategorized',
     'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
-
-    # always loaded
+    'depends': ['base_ubl', 'account_invoice_edi', 'account_tax_unece'],
     'data': [
-        'views/res_partner_view.xml'
+        'data/templates.xml',
     ],
 }

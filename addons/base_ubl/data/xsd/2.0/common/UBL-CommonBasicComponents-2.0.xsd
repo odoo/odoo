@@ -1,0 +1,2922 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Document Type:     CommonBasicComponents
+  Generated On:      Tue Oct 03 2:26:38 P3 2006
+
+-->
+<!-- ===== xsd:schema Element With Namespaces Declarations ===== -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+    xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+    xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    version="2.0">
+<!-- ===== Imports ===== -->
+  <xsd:import namespace="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" schemaLocation="UnqualifiedDataTypeSchemaModule-2.0.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" schemaLocation="UBL-QualifiedDatatypes-2.0.xsd"/>
+<!-- ===== Element Declarations ===== -->
+  <xsd:element name="AcceptedIndicator" type="AcceptedIndicatorType"/>
+  <xsd:element name="AccountID" type="AccountIDType"/>
+  <xsd:element name="AccountingCost" type="AccountingCostType"/>
+  <xsd:element name="AccountingCostCode" type="AccountingCostCodeType"/>
+  <xsd:element name="AccountNumberID" type="AccountNumberIDType"/>
+  <xsd:element name="AccountTypeCode" type="AccountTypeCodeType"/>
+  <xsd:element name="ActionCode" type="ActionCodeType"/>
+  <xsd:element name="ActualDeliveryDate" type="ActualDeliveryDateType"/>
+  <xsd:element name="ActualDeliveryTime" type="ActualDeliveryTimeType"/>
+  <xsd:element name="ActualDespatchDate" type="ActualDespatchDateType"/>
+  <xsd:element name="ActualDespatchTime" type="ActualDespatchTimeType"/>
+  <xsd:element name="AdditionalAccountID" type="AdditionalAccountIDType"/>
+  <xsd:element name="AdditionalInformation" type="AdditionalInformationType"/>
+  <xsd:element name="AdditionalStreetName" type="AdditionalStreetNameType"/>
+  <xsd:element name="AddressFormatCode" type="AddressFormatCodeType"/>
+  <xsd:element name="AddressTypeCode" type="AddressTypeCodeType"/>
+  <xsd:element name="AdValoremIndicator" type="AdValoremIndicatorType"/>
+  <xsd:element name="AgencyID" type="AgencyIDType"/>
+  <xsd:element name="AgencyName" type="AgencyNameType"/>
+  <xsd:element name="AircraftID" type="AircraftIDType"/>
+  <xsd:element name="AllowanceChargeReason" type="AllowanceChargeReasonType"/>
+  <xsd:element name="AllowanceChargeReasonCode" type="AllowanceChargeReasonCodeType"/>
+  <xsd:element name="AllowanceTotalAmount" type="AllowanceTotalAmountType"/>
+  <xsd:element name="Amount" type="AmountType"/>
+  <xsd:element name="ApplicationID" type="ApplicationIDType"/>
+  <xsd:element name="ApplicationStatusCode" type="ApplicationStatusCodeType"/>
+  <xsd:element name="ApprovalStatus" type="ApprovalStatusType"/>
+  <xsd:element name="AttributeID" type="AttributeIDType"/>
+  <xsd:element name="BackOrderAllowedIndicator" type="BackOrderAllowedIndicatorType"/>
+  <xsd:element name="BackorderQuantity" type="BackorderQuantityType"/>
+  <xsd:element name="BackorderReason" type="BackorderReasonType"/>
+  <xsd:element name="BalanceAmount" type="BalanceAmountType"/>
+  <xsd:element name="BalanceBroughtForwardIndicator" type="BalanceBroughtForwardIndicatorType"/>
+  <xsd:element name="BaseAmount" type="BaseAmountType"/>
+  <xsd:element name="BaseQuantity" type="BaseQuantityType"/>
+  <xsd:element name="BaseUnitMeasure" type="BaseUnitMeasureType"/>
+  <xsd:element name="BatchQuantity" type="BatchQuantityType"/>
+  <xsd:element name="BlockName" type="BlockNameType"/>
+  <xsd:element name="BrandName" type="BrandNameType"/>
+  <xsd:element name="BuildingName" type="BuildingNameType"/>
+  <xsd:element name="BuildingNumber" type="BuildingNumberType"/>
+  <xsd:element name="CalculationRate" type="CalculationRateType"/>
+  <xsd:element name="CalculationSequenceNumeric" type="CalculationSequenceNumericType"/>
+  <xsd:element name="CancellationNote" type="CancellationNoteType"/>
+  <xsd:element name="CanonicalizationMethod" type="CanonicalizationMethodType"/>
+  <xsd:element name="CardChipCode" type="CardChipCodeType"/>
+  <xsd:element name="CardTypeCode" type="CardTypeCodeType"/>
+  <xsd:element name="CargoTypeCode" type="CargoTypeCodeType"/>
+  <xsd:element name="CarrierAssignedID" type="CarrierAssignedIDType"/>
+  <xsd:element name="CatalogueIndicator" type="CatalogueIndicatorType"/>
+  <xsd:element name="CategoryName" type="CategoryNameType"/>
+  <xsd:element name="CertificateType" type="CertificateTypeType"/>
+  <xsd:element name="Channel" type="ChannelType"/>
+  <xsd:element name="ChannelCode" type="ChannelCodeType"/>
+  <xsd:element name="ChargeableWeightMeasure" type="ChargeableWeightMeasureType"/>
+  <xsd:element name="ChargeIndicator" type="ChargeIndicatorType"/>
+  <xsd:element name="ChargeTotalAmount" type="ChargeTotalAmountType"/>
+  <xsd:element name="ChipApplicationID" type="ChipApplicationIDType"/>
+  <xsd:element name="CityName" type="CityNameType"/>
+  <xsd:element name="CitySubdivisionName" type="CitySubdivisionNameType"/>
+  <xsd:element name="ClassifiedIndicator" type="ClassifiedIndicatorType"/>
+  <xsd:element name="CodeValue" type="CodeValueType"/>
+  <xsd:element name="CommodityCode" type="CommodityCodeType"/>
+  <xsd:element name="CompanyID" type="CompanyIDType"/>
+  <xsd:element name="CompletionIndicator" type="CompletionIndicatorType"/>
+  <xsd:element name="Condition" type="ConditionType"/>
+  <xsd:element name="ConditionCode" type="ConditionCodeType"/>
+  <xsd:element name="Conditions" type="ConditionsType"/>
+  <xsd:element name="ConsumerUnitQuantity" type="ConsumerUnitQuantityType"/>
+  <xsd:element name="ContentUnitQuantity" type="ContentUnitQuantityType"/>
+  <xsd:element name="ContractSubdivision" type="ContractSubdivisionType"/>
+  <xsd:element name="ContractType" type="ContractTypeType"/>
+  <xsd:element name="ContractTypeCode" type="ContractTypeCodeType"/>
+  <xsd:element name="CoordinateSystemCode" type="CoordinateSystemCodeType"/>
+  <xsd:element name="CopiesNumeric" type="CopiesNumericType"/>
+  <xsd:element name="CopyIndicator" type="CopyIndicatorType"/>
+  <xsd:element name="CorporateRegistrationTypeCode" type="CorporateRegistrationTypeCodeType"/>
+  <xsd:element name="CountrySubentity" type="CountrySubentityType"/>
+  <xsd:element name="CountrySubentityCode" type="CountrySubentityCodeType"/>
+  <xsd:element name="CreditAmount" type="CreditAmountType"/>
+  <xsd:element name="CreditedQuantity" type="CreditedQuantityType"/>
+  <xsd:element name="CreditLineAmount" type="CreditLineAmountType"/>
+  <xsd:element name="CurrencyBaseRate" type="CurrencyBaseRateType"/>
+  <xsd:element name="CurrencyCode" type="CurrencyCodeType"/>
+  <xsd:element name="CustomerAssignedAccountID" type="CustomerAssignedAccountIDType"/>
+  <xsd:element name="CustomerReference" type="CustomerReferenceType"/>
+  <xsd:element name="CustomizationID" type="CustomizationIDType"/>
+  <xsd:element name="CustomsID" type="CustomsIDType"/>
+  <xsd:element name="CustomsImportClassifiedIndicator" type="CustomsImportClassifiedIndicatorType"/>
+  <xsd:element name="CustomsStatusCode" type="CustomsStatusCodeType"/>
+  <xsd:element name="CustomsTariffQuantity" type="CustomsTariffQuantityType"/>
+  <xsd:element name="CV2ID" type="CV2IDType"/>
+  <xsd:element name="DamageRemarks" type="DamageRemarksType"/>
+  <xsd:element name="DataSendingCapability" type="DataSendingCapabilityType"/>
+  <xsd:element name="Date" type="DateType"/>
+  <xsd:element name="DebitAmount" type="DebitAmountType"/>
+  <xsd:element name="DebitedQuantity" type="DebitedQuantityType"/>
+  <xsd:element name="DebitLineAmount" type="DebitLineAmountType"/>
+  <xsd:element name="DeclaredCarriageValueAmount" type="DeclaredCarriageValueAmountType"/>
+  <xsd:element name="DeclaredCustomsValueAmount" type="DeclaredCustomsValueAmountType"/>
+  <xsd:element name="DeclaredForCarriageValueAmount" type="DeclaredForCarriageValueAmountType"/>
+  <xsd:element name="DeclaredStatisticsValueAmount" type="DeclaredStatisticsValueAmountType"/>
+  <xsd:element name="DegreesMeasure" type="DegreesMeasureType"/>
+  <xsd:element name="DeliveredQuantity" type="DeliveredQuantityType"/>
+  <xsd:element name="DeliveryDate" type="DeliveryDateType"/>
+  <xsd:element name="DeliveryInstructions" type="DeliveryInstructionsType"/>
+  <xsd:element name="DeliveryTime" type="DeliveryTimeType"/>
+  <xsd:element name="Department" type="DepartmentType"/>
+  <xsd:element name="Description" type="DescriptionType"/>
+  <xsd:element name="DescriptionCode" type="DescriptionCodeType"/>
+  <xsd:element name="DespatchAdviceTypeCode" type="DespatchAdviceTypeCodeType"/>
+  <xsd:element name="DespatchDate" type="DespatchDateType"/>
+  <xsd:element name="DespatchTime" type="DespatchTimeType"/>
+  <xsd:element name="DirectionCode" type="DirectionCodeType"/>
+  <xsd:element name="DiscountPercent" type="DiscountPercentType"/>
+  <xsd:element name="DispositionCode" type="DispositionCodeType"/>
+  <xsd:element name="District" type="DistrictType"/>
+  <xsd:element name="DocumentBinaryObject" type="DocumentBinaryObjectType"/>
+  <xsd:element name="DocumentCurrencyCode" type="DocumentCurrencyCodeType"/>
+  <xsd:element name="DocumentHash" type="DocumentHashType"/>
+  <xsd:element name="DocumentID" type="DocumentIDType"/>
+  <xsd:element name="DocumentStatusCode" type="DocumentStatusCodeType"/>
+  <xsd:element name="DocumentType" type="DocumentTypeType"/>
+  <xsd:element name="DocumentTypeCode" type="DocumentTypeCodeType"/>
+  <xsd:element name="DurationMeasure" type="DurationMeasureType"/>
+  <xsd:element name="ElectronicMail" type="ElectronicMailType"/>
+  <xsd:element name="EmbeddedDocumentBinaryObject" type="EmbeddedDocumentBinaryObjectType"/>
+  <xsd:element name="EmergencyProceduresCode" type="EmergencyProceduresCodeType"/>
+  <xsd:element name="EndDate" type="EndDateType"/>
+  <xsd:element name="EndpointID" type="EndpointIDType"/>
+  <xsd:element name="EndTime" type="EndTimeType"/>
+  <xsd:element name="EstimatedDespatchDate" type="EstimatedDespatchDateType"/>
+  <xsd:element name="EstimatedDespatchTime" type="EstimatedDespatchTimeType"/>
+  <xsd:element name="EventCode" type="EventCodeType"/>
+  <xsd:element name="ExchangeMarketID" type="ExchangeMarketIDType"/>
+  <xsd:element name="ExemptionReason" type="ExemptionReasonType"/>
+  <xsd:element name="ExemptionReasonCode" type="ExemptionReasonCodeType"/>
+  <xsd:element name="ExpiryDate" type="ExpiryDateType"/>
+  <xsd:element name="ExpiryTime" type="ExpiryTimeType"/>
+  <xsd:element name="ExtendedID" type="ExtendedIDType"/>
+  <xsd:element name="Extension" type="ExtensionType"/>
+  <xsd:element name="FactorNumeric" type="FactorNumericType"/>
+  <xsd:element name="FamilyName" type="FamilyNameType"/>
+  <xsd:element name="FirstName" type="FirstNameType"/>
+  <xsd:element name="Floor" type="FloorType"/>
+  <xsd:element name="FreeOfChargeIndicator" type="FreeOfChargeIndicatorType"/>
+  <xsd:element name="FreeOnBoardValueAmount" type="FreeOnBoardValueAmountType"/>
+  <xsd:element name="FreightRateClassCode" type="FreightRateClassCodeType"/>
+  <xsd:element name="FullnessIndicationCode" type="FullnessIndicationCodeType"/>
+  <xsd:element name="GoodsItemQuantity" type="GoodsItemQuantityType"/>
+  <xsd:element name="GrossVolumeMeasure" type="GrossVolumeMeasureType"/>
+  <xsd:element name="GrossWeightMeasure" type="GrossWeightMeasureType"/>
+  <xsd:element name="HandlingCode" type="HandlingCodeType"/>
+  <xsd:element name="HandlingInstructions" type="HandlingInstructionsType"/>
+  <xsd:element name="HazardClassID" type="HazardClassIDType"/>
+  <xsd:element name="HazardousCategoryCode" type="HazardousCategoryCodeType"/>
+  <xsd:element name="HazardousRegulationCode" type="HazardousRegulationCodeType"/>
+  <xsd:element name="HazardousRiskIndicator" type="HazardousRiskIndicatorType"/>
+  <xsd:element name="HolderName" type="HolderNameType"/>
+  <xsd:element name="ID" type="IDType"/>
+  <xsd:element name="IdentificationCode" type="IdentificationCodeType"/>
+  <xsd:element name="IdentificationID" type="IdentificationIDType"/>
+  <xsd:element name="IndicationIndicator" type="IndicationIndicatorType"/>
+  <xsd:element name="Indicator" type="IndicatorType"/>
+  <xsd:element name="Information" type="InformationType"/>
+  <xsd:element name="InhalationToxicityZoneCode" type="InhalationToxicityZoneCodeType"/>
+  <xsd:element name="InhouseMail" type="InhouseMailType"/>
+  <xsd:element name="InspectionMethodCode" type="InspectionMethodCodeType"/>
+  <xsd:element name="Instruction" type="InstructionType"/>
+  <xsd:element name="InstructionID" type="InstructionIDType"/>
+  <xsd:element name="InstructionNote" type="InstructionNoteType"/>
+  <xsd:element name="Instructions" type="InstructionsType"/>
+  <xsd:element name="InsurancePremiumAmount" type="InsurancePremiumAmountType"/>
+  <xsd:element name="InsuranceValueAmount" type="InsuranceValueAmountType"/>
+  <xsd:element name="InvoiceAmount" type="InvoiceAmountType"/>
+  <xsd:element name="InvoicedQuantity" type="InvoicedQuantityType"/>
+  <xsd:element name="InvoiceTypeCode" type="InvoiceTypeCodeType"/>
+  <xsd:element name="InvoicingPartyReference" type="InvoicingPartyReferenceType"/>
+  <xsd:element name="IssueDate" type="IssueDateType"/>
+  <xsd:element name="IssueNumberID" type="IssueNumberIDType"/>
+  <xsd:element name="IssuerID" type="IssuerIDType"/>
+  <xsd:element name="IssueTime" type="IssueTimeType"/>
+  <xsd:element name="ItemClassificationCode" type="ItemClassificationCodeType"/>
+  <xsd:element name="ItemUpdateRequestIndicator" type="ItemUpdateRequestIndicatorType"/>
+  <xsd:element name="JobID" type="JobIDType"/>
+  <xsd:element name="JobTitle" type="JobTitleType"/>
+  <xsd:element name="JourneyID" type="JourneyIDType"/>
+  <xsd:element name="Keyword" type="KeywordType"/>
+  <xsd:element name="LanguageID" type="LanguageIDType"/>
+  <xsd:element name="LastRevisionDate" type="LastRevisionDateType"/>
+  <xsd:element name="LastRevisionTime" type="LastRevisionTimeType"/>
+  <xsd:element name="LatestDeliveryDate" type="LatestDeliveryDateType"/>
+  <xsd:element name="LatestDeliveryTime" type="LatestDeliveryTimeType"/>
+  <xsd:element name="LatitudeDegreesMeasure" type="LatitudeDegreesMeasureType"/>
+  <xsd:element name="LatitudeDirectionCode" type="LatitudeDirectionCodeType"/>
+  <xsd:element name="LatitudeMinutesMeasure" type="LatitudeMinutesMeasureType"/>
+  <xsd:element name="LeadTimeMeasure" type="LeadTimeMeasureType"/>
+  <xsd:element name="LegalStatusIndicator" type="LegalStatusIndicatorType"/>
+  <xsd:element name="LengthMeasure" type="LengthMeasureType"/>
+  <xsd:element name="LicensePlateID" type="LicensePlateIDType"/>
+  <xsd:element name="LifeCycleStatusCode" type="LifeCycleStatusCodeType"/>
+  <xsd:element name="Line" type="LineType"/>
+  <xsd:element name="LineAmount" type="LineAmountType"/>
+  <xsd:element name="LineCountNumeric" type="LineCountNumericType"/>
+  <xsd:element name="LineExtensionAmount" type="LineExtensionAmountType"/>
+  <xsd:element name="LineID" type="LineIDType"/>
+  <xsd:element name="LineStatusCode" type="LineStatusCodeType"/>
+  <xsd:element name="LoadingLengthMeasure" type="LoadingLengthMeasureType"/>
+  <xsd:element name="LocaleCode" type="LocaleCodeType"/>
+  <xsd:element name="Location" type="LocationType"/>
+  <xsd:element name="LocationID" type="LocationIDType"/>
+  <xsd:element name="LogoReferenceID" type="LogoReferenceIDType"/>
+  <xsd:element name="LongitudeDegreesMeasure" type="LongitudeDegreesMeasureType"/>
+  <xsd:element name="LongitudeDirectionCode" type="LongitudeDirectionCodeType"/>
+  <xsd:element name="LongitudeMinutesMeasure" type="LongitudeMinutesMeasureType"/>
+  <xsd:element name="LossRisk" type="LossRiskType"/>
+  <xsd:element name="LossRiskResponsibilityCode" type="LossRiskResponsibilityCodeType"/>
+  <xsd:element name="LotNumberID" type="LotNumberIDType"/>
+  <xsd:element name="LowerOrangeHazardPlacardID" type="LowerOrangeHazardPlacardIDType"/>
+  <xsd:element name="Mail" type="MailType"/>
+  <xsd:element name="ManufactureDate" type="ManufactureDateType"/>
+  <xsd:element name="ManufactureTime" type="ManufactureTimeType"/>
+  <xsd:element name="MarkAttention" type="MarkAttentionType"/>
+  <xsd:element name="MarkAttentionIndicator" type="MarkAttentionIndicatorType"/>
+  <xsd:element name="MarkCare" type="MarkCareType"/>
+  <xsd:element name="MarkCareIndicator" type="MarkCareIndicatorType"/>
+  <xsd:element name="MarkingID" type="MarkingIDType"/>
+  <xsd:element name="Marks" type="MarksType"/>
+  <xsd:element name="MathematicOperatorCode" type="MathematicOperatorCodeType"/>
+  <xsd:element name="MaximumBackorderQuantity" type="MaximumBackorderQuantityType"/>
+  <xsd:element name="MaximumCopiesNumeric" type="MaximumCopiesNumericType"/>
+  <xsd:element name="MaximumMeasure" type="MaximumMeasureType"/>
+  <xsd:element name="MaximumOrderQuantity" type="MaximumOrderQuantityType"/>
+  <xsd:element name="MaximumQuantity" type="MaximumQuantityType"/>
+  <xsd:element name="Measure" type="MeasureType"/>
+  <xsd:element name="MedicalFirstAidGuideCode" type="MedicalFirstAidGuideCodeType"/>
+  <xsd:element name="MiddleName" type="MiddleNameType"/>
+  <xsd:element name="MinimumBackorderQuantity" type="MinimumBackorderQuantityType"/>
+  <xsd:element name="MinimumMeasure" type="MinimumMeasureType"/>
+  <xsd:element name="MinimumOrderQuantity" type="MinimumOrderQuantityType"/>
+  <xsd:element name="MinimumQuantity" type="MinimumQuantityType"/>
+  <xsd:element name="MinutesMeasure" type="MinutesMeasureType"/>
+  <xsd:element name="ModelName" type="ModelNameType"/>
+  <xsd:element name="MultiplierFactorNumeric" type="MultiplierFactorNumericType"/>
+  <xsd:element name="Name" type="NameType"/>
+  <xsd:element name="NameSuffix" type="NameSuffixType"/>
+  <xsd:element name="Nationality" type="NationalityType"/>
+  <xsd:element name="NationalityID" type="NationalityIDType"/>
+  <xsd:element name="NatureCode" type="NatureCodeType"/>
+  <xsd:element name="NetNetWeightMeasure" type="NetNetWeightMeasureType"/>
+  <xsd:element name="NetVolumeMeasure" type="NetVolumeMeasureType"/>
+  <xsd:element name="NetWeightMeasure" type="NetWeightMeasureType"/>
+  <xsd:element name="NetworkID" type="NetworkIDType"/>
+  <xsd:element name="Note" type="NoteType"/>
+  <xsd:element name="NumberID" type="NumberIDType"/>
+  <xsd:element name="OccurrenceDate" type="OccurrenceDateType"/>
+  <xsd:element name="OccurrenceTime" type="OccurrenceTimeType"/>
+  <xsd:element name="OnCarriageIndicator" type="OnCarriageIndicatorType"/>
+  <xsd:element name="OrangeHazardPlacardID" type="OrangeHazardPlacardIDType"/>
+  <xsd:element name="OrderableIndicator" type="OrderableIndicatorType"/>
+  <xsd:element name="OrderableUnit" type="OrderableUnitType"/>
+  <xsd:element name="OrderableUnitFactorRate" type="OrderableUnitFactorRateType"/>
+  <xsd:element name="OrderID" type="OrderIDType"/>
+  <xsd:element name="OrderQuantity" type="OrderQuantityType"/>
+  <xsd:element name="OrderQuantityIncrementNumeric" type="OrderQuantityIncrementNumericType"/>
+  <xsd:element name="OrganizationDepartment" type="OrganizationDepartmentType"/>
+  <xsd:element name="OriginalJobID" type="OriginalJobIDType"/>
+  <xsd:element name="OtherInstruction" type="OtherInstructionType"/>
+  <xsd:element name="OutstandingQuantity" type="OutstandingQuantityType"/>
+  <xsd:element name="OutstandingReason" type="OutstandingReasonType"/>
+  <xsd:element name="OversupplyQuantity" type="OversupplyQuantityType"/>
+  <xsd:element name="OwnerTypeCode" type="OwnerTypeCodeType"/>
+  <xsd:element name="PackageLevelCode" type="PackageLevelCodeType"/>
+  <xsd:element name="PackageQuantity" type="PackageQuantityType"/>
+  <xsd:element name="PackagesQuantity" type="PackagesQuantityType"/>
+  <xsd:element name="PackagingTypeCode" type="PackagingTypeCodeType"/>
+  <xsd:element name="PackingCriteriaCode" type="PackingCriteriaCodeType"/>
+  <xsd:element name="PackingMaterial" type="PackingMaterialType"/>
+  <xsd:element name="PackLevelCode" type="PackLevelCodeType"/>
+  <xsd:element name="PackQuantity" type="PackQuantityType"/>
+  <xsd:element name="PackSizeNumeric" type="PackSizeNumericType"/>
+  <xsd:element name="PaidAmount" type="PaidAmountType"/>
+  <xsd:element name="PaidDate" type="PaidDateType"/>
+  <xsd:element name="PaidTime" type="PaidTimeType"/>
+  <xsd:element name="ParentDocumentID" type="ParentDocumentIDType"/>
+  <xsd:element name="ParentDocumentTypeCode" type="ParentDocumentTypeCodeType"/>
+  <xsd:element name="PartialDeliveryIndicator" type="PartialDeliveryIndicatorType"/>
+  <xsd:element name="PayableAmount" type="PayableAmountType"/>
+  <xsd:element name="PayableRoundingAmount" type="PayableRoundingAmountType"/>
+  <xsd:element name="PayerReference" type="PayerReferenceType"/>
+  <xsd:element name="PaymentAlternativeCurrencyCode" type="PaymentAlternativeCurrencyCodeType"/>
+  <xsd:element name="PaymentAmount" type="PaymentAmountType"/>
+  <xsd:element name="PaymentChannelCode" type="PaymentChannelCodeType"/>
+  <xsd:element name="PaymentCurrencyCode" type="PaymentCurrencyCodeType"/>
+  <xsd:element name="PaymentDueDate" type="PaymentDueDateType"/>
+  <xsd:element name="PaymentID" type="PaymentIDType"/>
+  <xsd:element name="PaymentMeansCode" type="PaymentMeansCodeType"/>
+  <xsd:element name="PaymentMeansID" type="PaymentMeansIDType"/>
+  <xsd:element name="PaymentNote" type="PaymentNoteType"/>
+  <xsd:element name="PaymentOrderReference" type="PaymentOrderReferenceType"/>
+  <xsd:element name="PenaltySurchargePercent" type="PenaltySurchargePercentType"/>
+  <xsd:element name="Percent" type="PercentType"/>
+  <xsd:element name="PerUnitAmount" type="PerUnitAmountType"/>
+  <xsd:element name="PlacardEndorsement" type="PlacardEndorsementType"/>
+  <xsd:element name="PlacardNotation" type="PlacardNotationType"/>
+  <xsd:element name="PlotIdentification" type="PlotIdentificationType"/>
+  <xsd:element name="PositionCode" type="PositionCodeType"/>
+  <xsd:element name="PostalZone" type="PostalZoneType"/>
+  <xsd:element name="Postbox" type="PostboxType"/>
+  <xsd:element name="PreCarriageIndicator" type="PreCarriageIndicatorType"/>
+  <xsd:element name="PreferenceCriterionCode" type="PreferenceCriterionCodeType"/>
+  <xsd:element name="PrepaidAmount" type="PrepaidAmountType"/>
+  <xsd:element name="PrepaidIndicator" type="PrepaidIndicatorType"/>
+  <xsd:element name="PrepaidPaymentReferenceID" type="PrepaidPaymentReferenceIDType"/>
+  <xsd:element name="PreviousJobID" type="PreviousJobIDType"/>
+  <xsd:element name="PreviousVersionID" type="PreviousVersionIDType"/>
+  <xsd:element name="PriceAmount" type="PriceAmountType"/>
+  <xsd:element name="PriceChangeReason" type="PriceChangeReasonType"/>
+  <xsd:element name="PriceType" type="PriceTypeType"/>
+  <xsd:element name="PriceTypeCode" type="PriceTypeCodeType"/>
+  <xsd:element name="PricingCurrencyCode" type="PricingCurrencyCodeType"/>
+  <xsd:element name="PricingUpdateRequestIndicator" type="PricingUpdateRequestIndicatorType"/>
+  <xsd:element name="PrimaryAccountNumberID" type="PrimaryAccountNumberIDType"/>
+  <xsd:element name="PrintQualifier" type="PrintQualifierType"/>
+  <xsd:element name="Priority" type="PriorityType"/>
+  <xsd:element name="ProductTraceID" type="ProductTraceIDType"/>
+  <xsd:element name="ProfileID" type="ProfileIDType"/>
+  <xsd:element name="ProviderTypeCode" type="ProviderTypeCodeType"/>
+  <xsd:element name="Qualifier" type="QualifierType"/>
+  <xsd:element name="Quantity" type="QuantityType"/>
+  <xsd:element name="RailCarID" type="RailCarIDType"/>
+  <xsd:element name="Reason" type="ReasonType"/>
+  <xsd:element name="ReceivedDate" type="ReceivedDateType"/>
+  <xsd:element name="ReceivedQuantity" type="ReceivedQuantityType"/>
+  <xsd:element name="Reference" type="ReferenceType"/>
+  <xsd:element name="ReferenceDate" type="ReferenceDateType"/>
+  <xsd:element name="ReferenceEventCode" type="ReferenceEventCodeType"/>
+  <xsd:element name="ReferenceID" type="ReferenceIDType"/>
+  <xsd:element name="ReferenceTime" type="ReferenceTimeType"/>
+  <xsd:element name="RefrigerationOnIndicator" type="RefrigerationOnIndicatorType"/>
+  <xsd:element name="Region" type="RegionType"/>
+  <xsd:element name="RegistrationID" type="RegistrationIDType"/>
+  <xsd:element name="RegistrationName" type="RegistrationNameType"/>
+  <xsd:element name="RegistrationNationality" type="RegistrationNationalityType"/>
+  <xsd:element name="RegistrationNationalityID" type="RegistrationNationalityIDType"/>
+  <xsd:element name="RejectActionCode" type="RejectActionCodeType"/>
+  <xsd:element name="RejectedQuantity" type="RejectedQuantityType"/>
+  <xsd:element name="RejectionNote" type="RejectionNoteType"/>
+  <xsd:element name="RejectReason" type="RejectReasonType"/>
+  <xsd:element name="RejectReasonCode" type="RejectReasonCodeType"/>
+  <xsd:element name="Remarks" type="RemarksType"/>
+  <xsd:element name="ReminderSequenceNumeric" type="ReminderSequenceNumericType"/>
+  <xsd:element name="ReminderTypeCode" type="ReminderTypeCodeType"/>
+  <xsd:element name="RequestedDespatchDate" type="RequestedDespatchDateType"/>
+  <xsd:element name="RequestedDespatchTime" type="RequestedDespatchTimeType"/>
+  <xsd:element name="RequestedInvoiceCurrencyCode" type="RequestedInvoiceCurrencyCodeType"/>
+  <xsd:element name="RequiredCustomsID" type="RequiredCustomsIDType"/>
+  <xsd:element name="ResponseCode" type="ResponseCodeType"/>
+  <xsd:element name="ResponseDate" type="ResponseDateType"/>
+  <xsd:element name="ResponseTime" type="ResponseTimeType"/>
+  <xsd:element name="ReturnabilityIndicator" type="ReturnabilityIndicatorType"/>
+  <xsd:element name="ReturnableMaterialIndicator" type="ReturnableMaterialIndicatorType"/>
+  <xsd:element name="RevisionDate" type="RevisionDateType"/>
+  <xsd:element name="RevisionTime" type="RevisionTimeType"/>
+  <xsd:element name="RoleCode" type="RoleCodeType"/>
+  <xsd:element name="Room" type="RoomType"/>
+  <xsd:element name="RoundingAmount" type="RoundingAmountType"/>
+  <xsd:element name="SalesOrderID" type="SalesOrderIDType"/>
+  <xsd:element name="SalesOrderLineID" type="SalesOrderLineIDType"/>
+  <xsd:element name="SchemeURI" type="SchemeURIType"/>
+  <xsd:element name="SealingPartyType" type="SealingPartyTypeType"/>
+  <xsd:element name="SealIssuerTypeCode" type="SealIssuerTypeCodeType"/>
+  <xsd:element name="SealStatusCode" type="SealStatusCodeType"/>
+  <xsd:element name="SequenceID" type="SequenceIDType"/>
+  <xsd:element name="SequenceNumberID" type="SequenceNumberIDType"/>
+  <xsd:element name="SequenceNumeric" type="SequenceNumericType"/>
+  <xsd:element name="SerialID" type="SerialIDType"/>
+  <xsd:element name="SettlementDiscountPercent" type="SettlementDiscountPercentType"/>
+  <xsd:element name="ShippingMarks" type="ShippingMarksType"/>
+  <xsd:element name="ShippingOrderID" type="ShippingOrderIDType"/>
+  <xsd:element name="ShippingPriorityLevelCode" type="ShippingPriorityLevelCodeType"/>
+  <xsd:element name="ShortageActionCode" type="ShortageActionCodeType"/>
+  <xsd:element name="ShortQuantity" type="ShortQuantityType"/>
+  <xsd:element name="SignatureMethod" type="SignatureMethodType"/>
+  <xsd:element name="SizeTypeCode" type="SizeTypeCodeType"/>
+  <xsd:element name="SourceCurrencyBaseRate" type="SourceCurrencyBaseRateType"/>
+  <xsd:element name="SourceCurrencyCode" type="SourceCurrencyCodeType"/>
+  <xsd:element name="SpecialInstructions" type="SpecialInstructionsType"/>
+  <xsd:element name="SpecialTerms" type="SpecialTermsType"/>
+  <xsd:element name="SplitConsignmentIndicator" type="SplitConsignmentIndicatorType"/>
+  <xsd:element name="StartDate" type="StartDateType"/>
+  <xsd:element name="StartTime" type="StartTimeType"/>
+  <xsd:element name="StatusCode" type="StatusCodeType"/>
+  <xsd:element name="StatusReason" type="StatusReasonType"/>
+  <xsd:element name="StatusReasonCode" type="StatusReasonCodeType"/>
+  <xsd:element name="StreetName" type="StreetNameType"/>
+  <xsd:element name="SubstitutionStatusCode" type="SubstitutionStatusCodeType"/>
+  <xsd:element name="SummaryDescription" type="SummaryDescriptionType"/>
+  <xsd:element name="SupplierAssignedAccountID" type="SupplierAssignedAccountIDType"/>
+  <xsd:element name="SurchargePercent" type="SurchargePercentType"/>
+  <xsd:element name="TargetCurrencyBaseRate" type="TargetCurrencyBaseRateType"/>
+  <xsd:element name="TargetCurrencyCode" type="TargetCurrencyCodeType"/>
+  <xsd:element name="TariffClassCode" type="TariffClassCodeType"/>
+  <xsd:element name="TariffCode" type="TariffCodeType"/>
+  <xsd:element name="TariffDescription" type="TariffDescriptionType"/>
+  <xsd:element name="TaxableAmount" type="TaxableAmountType"/>
+  <xsd:element name="TaxAmount" type="TaxAmountType"/>
+  <xsd:element name="TaxCurrencyCode" type="TaxCurrencyCodeType"/>
+  <xsd:element name="TaxEvidenceIndicator" type="TaxEvidenceIndicatorType"/>
+  <xsd:element name="TaxExclusiveAmount" type="TaxExclusiveAmountType"/>
+  <xsd:element name="TaxExemptionReason" type="TaxExemptionReasonType"/>
+  <xsd:element name="TaxExemptionReasonCode" type="TaxExemptionReasonCodeType"/>
+  <xsd:element name="TaxInclusiveAmount" type="TaxInclusiveAmountType"/>
+  <xsd:element name="TaxLevelCode" type="TaxLevelCodeType"/>
+  <xsd:element name="TaxPointDate" type="TaxPointDateType"/>
+  <xsd:element name="TaxTypeCode" type="TaxTypeCodeType"/>
+  <xsd:element name="TechnicalName" type="TechnicalNameType"/>
+  <xsd:element name="Telefax" type="TelefaxType"/>
+  <xsd:element name="Telephone" type="TelephoneType"/>
+  <xsd:element name="Terms" type="TermsType"/>
+  <xsd:element name="Text" type="TextType"/>
+  <xsd:element name="TierRange" type="TierRangeType"/>
+  <xsd:element name="TierRatePercent" type="TierRatePercentType"/>
+  <xsd:element name="Time" type="TimeType"/>
+  <xsd:element name="TimezoneOffset" type="TimezoneOffsetType"/>
+  <xsd:element name="TimingComplaint" type="TimingComplaintType"/>
+  <xsd:element name="TimingComplaintCode" type="TimingComplaintCodeType"/>
+  <xsd:element name="Title" type="TitleType"/>
+  <xsd:element name="ToOrderIndicator" type="ToOrderIndicatorType"/>
+  <xsd:element name="TotalBalanceAmount" type="TotalBalanceAmountType"/>
+  <xsd:element name="TotalCreditAmount" type="TotalCreditAmountType"/>
+  <xsd:element name="TotalDebitAmount" type="TotalDebitAmountType"/>
+  <xsd:element name="TotalGoodsItemQuantity" type="TotalGoodsItemQuantityType"/>
+  <xsd:element name="TotalInvoiceAmount" type="TotalInvoiceAmountType"/>
+  <xsd:element name="TotalPackageQuantity" type="TotalPackageQuantityType"/>
+  <xsd:element name="TotalPackagesQuantity" type="TotalPackagesQuantityType"/>
+  <xsd:element name="TotalPaymentAmount" type="TotalPaymentAmountType"/>
+  <xsd:element name="TotalTaxAmount" type="TotalTaxAmountType"/>
+  <xsd:element name="TotalTransportHandlingUnitQuantity" type="TotalTransportHandlingUnitQuantityType"/>
+  <xsd:element name="TrackingID" type="TrackingIDType"/>
+  <xsd:element name="TradingRestrictions" type="TradingRestrictionsType"/>
+  <xsd:element name="TrainID" type="TrainIDType"/>
+  <xsd:element name="TransactionCurrencyTaxAmount" type="TransactionCurrencyTaxAmountType"/>
+  <xsd:element name="TransitDirectionCode" type="TransitDirectionCodeType"/>
+  <xsd:element name="TransportAuthorizationCode" type="TransportAuthorizationCodeType"/>
+  <xsd:element name="TransportEmergencyCardCode" type="TransportEmergencyCardCodeType"/>
+  <xsd:element name="TransportEquipmentTypeCode" type="TransportEquipmentTypeCodeType"/>
+  <xsd:element name="TransportEventTypeCode" type="TransportEventTypeCodeType"/>
+  <xsd:element name="TransportHandlingUnitQuantity" type="TransportHandlingUnitQuantityType"/>
+  <xsd:element name="TransportHandlingUnitTypeCode" type="TransportHandlingUnitTypeCodeType"/>
+  <xsd:element name="TransportMeansTypeCode" type="TransportMeansTypeCodeType"/>
+  <xsd:element name="TransportModeCode" type="TransportModeCodeType"/>
+  <xsd:element name="TransportServiceCode" type="TransportServiceCodeType"/>
+  <xsd:element name="UBLVersionID" type="UBLVersionIDType"/>
+  <xsd:element name="UNDGCode" type="UNDGCodeType"/>
+  <xsd:element name="Unit" type="UnitType"/>
+  <xsd:element name="UnitQuantity" type="UnitQuantityType"/>
+  <xsd:element name="UpperOrangeHazardPlacardID" type="UpperOrangeHazardPlacardIDType"/>
+  <xsd:element name="URI" type="URIType"/>
+  <xsd:element name="UUID" type="UUIDType"/>
+  <xsd:element name="ValidationDate" type="ValidationDateType"/>
+  <xsd:element name="ValidationTime" type="ValidationTimeType"/>
+  <xsd:element name="ValidatorID" type="ValidatorIDType"/>
+  <xsd:element name="ValidityStartDate" type="ValidityStartDateType"/>
+  <xsd:element name="Value" type="ValueType"/>
+  <xsd:element name="ValueAmount" type="ValueAmountType"/>
+  <xsd:element name="VersionID" type="VersionIDType"/>
+  <xsd:element name="VesselID" type="VesselIDType"/>
+  <xsd:element name="VesselName" type="VesselNameType"/>
+  <xsd:element name="VolumeMeasure" type="VolumeMeasureType"/>
+  <xsd:element name="WarrantyInformation" type="WarrantyInformationType"/>
+  <xsd:element name="WebsiteURI" type="WebsiteURIType"/>
+  <xsd:element name="WeightMeasure" type="WeightMeasureType"/>
+  <xsd:element name="XPath" type="XPathType"/>
+  <xsd:element name="Zone" type="ZoneType"/>
+<!-- ===== Type Definitions ===== -->
+<!-- ===== Basic Business Information Entity Type Definitions ===== -->
+  <xsd:complexType name="AcceptedIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccountIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccountingCostType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccountingCostCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccountNumberIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccountTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ActionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ActualDeliveryDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ActualDeliveryTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ActualDespatchDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ActualDespatchTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AdditionalAccountIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AdditionalInformationType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AdditionalStreetNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AddressFormatCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AddressTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AdValoremIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AgencyIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AgencyNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AircraftIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AllowanceChargeReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AllowanceChargeReasonCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:AllowanceChargeReasonCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AllowanceTotalAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ApplicationIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ApplicationStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ApprovalStatusType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="AttributeIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BackOrderAllowedIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BackorderQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BackorderReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BalanceAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BalanceBroughtForwardIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BaseUnitMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BatchQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BlockNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BrandNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BuildingNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BuildingNumberType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CalculationRateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:RateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CalculationSequenceNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CancellationNoteType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CanonicalizationMethodType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CardChipCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:ChipCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CardTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CargoTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CarrierAssignedIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CatalogueIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CategoryNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CertificateTypeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ChannelType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ChannelCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:ChannelCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ChargeableWeightMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ChargeIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ChargeTotalAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ChipApplicationIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CityNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CitySubdivisionNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ClassifiedIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CodeValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CommodityCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CompanyIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CompletionIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ConditionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ConditionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:TransportationStatusCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ConditionsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ConsumerUnitQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ContentUnitQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ContractSubdivisionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ContractTypeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ContractTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CoordinateSystemCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CopiesNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CopyIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CorporateRegistrationTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CountrySubentityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CountrySubentityCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CreditAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CreditedQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CreditLineAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CurrencyBaseRateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:RateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerAssignedAccountIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerReferenceType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomizationIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomsIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomsImportClassifiedIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomsStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomsTariffQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="CV2IDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DamageRemarksType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DataSendingCapabilityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DebitAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DebitedQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DebitLineAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeclaredCarriageValueAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeclaredCustomsValueAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeclaredForCarriageValueAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeclaredStatisticsValueAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DegreesMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeliveredQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeliveryDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeliveryInstructionsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DeliveryTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DepartmentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DescriptionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DescriptionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DespatchAdviceTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DespatchDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DespatchTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DirectionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DiscountPercentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:PercentType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DispositionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DistrictType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentBinaryObjectType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:BinaryObjectType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentHashType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:DocumentStatusCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentTypeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DurationMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ElectronicMailType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EmbeddedDocumentBinaryObjectType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:BinaryObjectType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EmergencyProceduresCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EndDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EndpointIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EndTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EstimatedDespatchDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EstimatedDespatchTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="EventCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExchangeMarketIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExemptionReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExemptionReasonCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExpiryDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExpiryTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtendedIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExtensionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FactorNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FamilyNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FirstNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FloorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FreeOfChargeIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FreeOnBoardValueAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FreightRateClassCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FullnessIndicationCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="GoodsItemQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="GrossVolumeMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="GrossWeightMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HandlingCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HandlingInstructionsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HazardClassIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HazardousCategoryCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HazardousRegulationCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HazardousRiskIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="HolderNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IdentificationCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CountryIdentificationCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IdentificationIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IndicationIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InformationType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InhalationToxicityZoneCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InhouseMailType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InspectionMethodCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InstructionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InstructionIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InstructionNoteType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InstructionsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InsurancePremiumAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InsuranceValueAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InvoiceAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InvoicedQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InvoiceTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="InvoicingPartyReferenceType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IssueDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IssueNumberIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IssuerIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IssueTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ItemClassificationCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ItemUpdateRequestIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="JobIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="JobTitleType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="JourneyIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="KeywordType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LanguageIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LastRevisionDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LastRevisionTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LatestDeliveryDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LatestDeliveryTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LatitudeDegreesMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LatitudeDirectionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:LatitudeDirectionCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LatitudeMinutesMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LeadTimeMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LegalStatusIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LengthMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LicensePlateIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LifeCycleStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LineType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LineAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LineCountNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LineExtensionAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LineIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LineStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:LineStatusCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LoadingLengthMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LocaleCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LocationType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LocationIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LogoReferenceIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LongitudeDegreesMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LongitudeDirectionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:LongitudeDirectionCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LongitudeMinutesMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LossRiskType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LossRiskResponsibilityCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LotNumberIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="LowerOrangeHazardPlacardIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MailType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ManufactureDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ManufactureTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MarkAttentionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MarkAttentionIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MarkCareType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MarkCareIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MarkingIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MarksType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MathematicOperatorCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:OperatorCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MaximumBackorderQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MaximumCopiesNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MaximumMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MaximumOrderQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MaximumQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MedicalFirstAidGuideCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MiddleNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MinimumBackorderQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MinimumMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MinimumOrderQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MinimumQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MinutesMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ModelNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MultiplierFactorNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NameSuffixType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NationalityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NationalityIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NatureCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NetNetWeightMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NetVolumeMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NetWeightMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NetworkIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NoteType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="NumberIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OccurrenceDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OccurrenceTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OnCarriageIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrangeHazardPlacardIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrderableIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrderableUnitType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrderableUnitFactorRateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:RateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrderIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrderQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrderQuantityIncrementNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OrganizationDepartmentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OriginalJobIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OtherInstructionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OutstandingQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OutstandingReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OversupplyQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="OwnerTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackageLevelCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackageQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackagesQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackagingTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:PackagingTypeCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackingCriteriaCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackingMaterialType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackLevelCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PackSizeNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaidAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaidDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaidTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ParentDocumentIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ParentDocumentTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PartialDeliveryIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PayableAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PayableRoundingAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PayerReferenceType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentAlternativeCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentChannelCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentDueDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentMeansCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:PaymentMeansCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentMeansIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentNoteType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PaymentOrderReferenceType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PenaltySurchargePercentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:PercentType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PercentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:PercentType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PerUnitAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PlacardEndorsementType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PlacardNotationType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PlotIdentificationType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PositionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PostalZoneType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PostboxType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PreCarriageIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PreferenceCriterionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PrepaidAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PrepaidIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PrepaidPaymentReferenceIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PreviousJobIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PreviousVersionIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PriceAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PriceChangeReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PriceTypeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PriceTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PricingCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PricingUpdateRequestIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PrimaryAccountNumberIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PrintQualifierType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="PriorityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ProductTraceIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ProfileIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ProviderTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="QualifierType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="QuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RailCarIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReceivedDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReceivedQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceEventCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RefrigerationOnIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RegionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RegistrationIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RegistrationNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RegistrationNationalityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RegistrationNationalityIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RejectActionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RejectedQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RejectionNoteType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RejectReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RejectReasonCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RemarksType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReminderSequenceNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReminderTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RequestedDespatchDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RequestedDespatchTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RequestedInvoiceCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RequiredCustomsIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ResponseCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ResponseDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ResponseTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReturnabilityIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ReturnableMaterialIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RevisionDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RevisionTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RoleCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RoomType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="RoundingAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SalesOrderIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SalesOrderLineIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SchemeURIType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SealingPartyTypeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SealIssuerTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SealStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SequenceIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SequenceNumberIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SequenceNumericType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NumericType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SerialIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SettlementDiscountPercentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:PercentType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ShippingMarksType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ShippingOrderIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ShippingPriorityLevelCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ShortageActionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ShortQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SignatureMethodType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SizeTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SourceCurrencyBaseRateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:RateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SourceCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SpecialInstructionsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SpecialTermsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SplitConsignmentIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="StartDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="StartTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="StatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="StatusReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="StatusReasonCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="StreetNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SubstitutionStatusCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:SubstitutionStatusCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SummaryDescriptionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SupplierAssignedAccountIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SurchargePercentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:PercentType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TargetCurrencyBaseRateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:RateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TargetCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TariffClassCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TariffCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TariffDescriptionType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxableAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxCurrencyCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:CurrencyCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxEvidenceIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxExclusiveAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxExemptionReasonType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxExemptionReasonCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxInclusiveAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxLevelCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxPointDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TaxTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TechnicalNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TelefaxType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TelephoneType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TermsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TextType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TierRangeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TierRatePercentType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:PercentType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TimezoneOffsetType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TimingComplaintType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TimingComplaintCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TitleType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ToOrderIndicatorType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IndicatorType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalBalanceAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalCreditAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalDebitAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalGoodsItemQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalInvoiceAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalPackageQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalPackagesQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalPaymentAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalTaxAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TotalTransportHandlingUnitQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TrackingIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TradingRestrictionsType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TrainIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransactionCurrencyTaxAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransitDirectionCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportAuthorizationCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportEmergencyCardCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportEquipmentTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:TransportEquipmentTypeCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportEventTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportHandlingUnitQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportHandlingUnitTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportMeansTypeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportModeCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="qdt:TransportModeCodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TransportServiceCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="UBLVersionIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="UNDGCodeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:CodeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="UnitType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="UnitQuantityType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:QuantityType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="UpperOrangeHazardPlacardIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="URIType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="UUIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ValidationDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ValidationTimeType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TimeType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ValidatorIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ValidityStartDateType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:DateType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ValueAmountType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:AmountType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="VersionIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="VesselIDType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="VesselNameType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:NameType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="VolumeMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="WarrantyInformationType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="WebsiteURIType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:IdentifierType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="WeightMeasureType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:MeasureType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="XPathType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ZoneType">
+    <xsd:simpleContent>
+      <xsd:extension base="udt:TextType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+</xsd:schema>
+<!-- ===== Copyright Notice ===== -->
+<!--
+  OASIS takes no position regarding the validity or scope of any 
+  intellectual property or other rights that might be claimed to pertain 
+  to the implementation or use of the technology described in this 
+  document or the extent to which any license under such rights 
+  might or might not be available; neither does it represent that it has 
+  made any effort to identify any such rights. Information on OASIS's 
+  procedures with respect to rights in OASIS specifications can be 
+  found at the OASIS website. Copies of claims of rights made 
+  available for publication and any assurances of licenses to be made 
+  available, or the result of an attempt made to obtain a general 
+  license or permission for the use of such proprietary rights by 
+  implementors or users of this specification, can be obtained from 
+  the OASIS Executive Director.
+
+  OASIS invites any interested party to bring to its attention any 
+  copyrights, patents or patent applications, or other proprietary 
+  rights which may cover technology that may be required to 
+  implement this specification. Please address the information to the 
+  OASIS Executive Director.
+  
+  Copyright (C) OASIS Open 2001-2006. All Rights Reserved.
+
+  This document and translations of it may be copied and furnished to 
+  others, and derivative works that comment on or otherwise explain 
+  it or assist in its implementation may be prepared, copied, 
+  published and distributed, in whole or in part, without restriction of 
+  any kind, provided that the above copyright notice and this 
+  paragraph are included on all such copies and derivative works. 
+  However, this document itself may not be modified in any way, 
+  such as by removing the copyright notice or references to OASIS, 
+  except as needed for the purpose of developing OASIS 
+  specifications, in which case the procedures for copyrights defined 
+  in the OASIS Intellectual Property Rights document must be 
+  followed, or as required to translate it into languages other than 
+  English. 
+
+  The limited permissions granted above are perpetual and will not be 
+  revoked by OASIS or its successors or assigns. 
+
+  This document and the information contained herein is provided on 
+  an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, 
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+  WARRANTY THAT THE USE OF THE INFORMATION HEREIN 
+  WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED 
+  WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+  PARTICULAR PURPOSE.
+-->

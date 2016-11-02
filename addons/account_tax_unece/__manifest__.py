@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "base_edi",
+    'name': "account_tax_unece",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -20,10 +20,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base_unece', 'account'],
 
     # always loaded
     'data': [
-        'views/res_partner_view.xml'
+        'data/unece_code_taxes.xml',
+        'data/unece_code_categories.xml',
+        'views/account_tax_view.xml',
     ],
 }

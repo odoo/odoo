@@ -23,8 +23,8 @@ class BaseEdi(models.Model):
         xml_schema = etree.XMLSchema(xml_schema_doc)
         xml_doc_str = business_document.encode('utf-8')
         xml_doc = etree.fromstring(xml_doc_str)
-        # if not xml_schema.validate(xml_doc):
-        #     raise ValidationError('The generate file is unvalid')
+        if not xml_schema.validate(xml_doc):
+            raise ValidationError('The generate file is unvalid')
 
     def _create_template_values(self):
         return {
