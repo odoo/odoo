@@ -280,7 +280,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
             return self.pos.proxy.scale_read().then(function(weight){
                 self.set_weight(weight.weight);
             });
-        },{duration:50, repeat: true});
+        },{duration:150, repeat: true});
 
     },
     get_product: function(){
