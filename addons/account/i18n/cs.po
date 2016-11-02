@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Marek Stopka <marek.stopka@perlur.cz>, 2015
+# Ondřej Skuhravý <ondra.sk@volny.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-10-15 10:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-10-26 19:47+0000\n"
+"Last-Translator: Ondřej Skuhravý <ondra.sk@volny.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -677,7 +678,7 @@ msgstr "Ústřední kniha účtů"
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account Code and Name"
-msgstr ""
+msgstr "Název a číslo účtu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -702,7 +703,7 @@ msgstr "Obecný výkaz účtu"
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "Měna účtu"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -782,7 +783,7 @@ msgstr "Účet závazků"
 #. module: account
 #: view:account.period:account.view_account_period_form
 msgid "Account Period"
-msgstr ""
+msgstr "Perioda účtu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_journal
@@ -793,7 +794,7 @@ msgstr "Tisk účetního deníku"
 #. module: account
 #: view:product.category:account.view_category_property_form
 msgid "Account Properties"
-msgstr ""
+msgstr "Vlastnosti účtu"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -812,7 +813,7 @@ msgstr "Vyrovnání účtu"
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "Výpis z účtu"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
@@ -824,7 +825,7 @@ msgstr "Výkazy účtů"
 #: view:account.financial.report:account.view_account_report_tree_hierarchy
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "Uspořádání výpisů z účtu"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -904,7 +905,7 @@ msgstr "Šablony účtů"
 #. module: account
 #: view:website:account.report_agedpartnerbalance
 msgid "Account Total"
-msgstr ""
+msgstr "Celkový stav účtu"
 
 #. module: account
 #: view:account.account:account.view_account_search
@@ -957,7 +958,7 @@ msgstr ""
 #. module: account
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "Účet a účetní období musí náležet stejné firmě"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
@@ -987,7 +988,7 @@ msgstr ""
 #. module: account
 #: view:account.account:account.view_account_form
 msgid "Account name"
-msgstr ""
+msgstr "Název účtu"
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -1002,7 +1003,7 @@ msgstr "Období účtu"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_vat
 msgid "Account tax"
-msgstr ""
+msgstr "Daň "
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
@@ -1063,7 +1064,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Accounting Period"
-msgstr ""
+msgstr "Účetní období"
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
@@ -1158,7 +1159,7 @@ msgstr "Další informace"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Additional notes..."
-msgstr ""
+msgstr "Další poznámky ..."
 
 #. module: account
 #: field:account.account,adjusted_balance:0
@@ -1267,12 +1268,12 @@ msgstr "Všechny zaúčtované položky"
 #. module: account
 #: view:website:account.report_trialbalance
 msgid "All accounts"
-msgstr ""
+msgstr "Všechny účty"
 
 #. module: account
 #: view:website:account.report_generalledger
 msgid "All accounts'"
-msgstr ""
+msgstr "Všech účtů"
 
 #. module: account
 #: field:account.bank.statement,all_lines_reconciled:0
@@ -1728,7 +1729,7 @@ msgstr "Automatické vyrovnání"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Automatic formatting"
-msgstr ""
+msgstr "Automatické formátování"
 
 #. module: account
 #: field:account.journal,entry_posted:0
@@ -1738,7 +1739,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 msgid "Available Coins"
-msgstr ""
+msgstr "Mince k dispozici"
 
 #. module: account
 #: field:account.invoice.report,price_average:0
@@ -1770,13 +1771,13 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1324
 #, python-format
 msgid "Bad Account!"
-msgstr ""
+msgstr "Špatný účet!"
 
 #. module: account
 #: code:addons/account/account_invoice.py:819
 #, python-format
 msgid "Bad Total!"
-msgstr ""
+msgstr "Špatný součet!"
 
 #. module: account
 #: field:account.account,balance:0
@@ -3697,7 +3698,7 @@ msgstr "Popis"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Description:"
-msgstr ""
+msgstr "Popis"
 
 #. module: account
 #: selection:account.account.type,close_method:0
