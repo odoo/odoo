@@ -122,7 +122,7 @@ var WebClient = Widget.extend({
         window.onerror = function (message, file, line, col, error) {
             var traceback = error ? error.stack : '';
             crash_manager.show_error({
-                type: _t("Client Error"),
+                type: _t("Odoo Client Error"),
                 message: message,
                 data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback}
             });
