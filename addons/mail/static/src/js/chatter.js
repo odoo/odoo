@@ -6,7 +6,7 @@ var composer = require('mail.composer');
 var ChatThread = require('mail.ChatThread');
 var utils = require('mail.utils');
 
-var ActivityLog = require('mail.ActivityLog');
+var activity_log = require('mail.ActivityLog');
 var config = require('web.config');
 var core = require('web.core');
 var form_common = require('web.form_common');
@@ -283,9 +283,9 @@ var Chatter = form_common.AbstractField.extend({
     events: {
         "click .o_chatter_button_new_message": "on_open_composer_new_message",
         "click .o_chatter_button_log_note": "on_open_composer_log_note",
-        "click .o_edit_activity": "on_open_schedule_activity",
-        "click .o_remove_activity": "on_remove_activity",
-        "click .o_mark_as_done": "on_mark_as_done",
+        "click .o_add_activity": function(ev){
+            this.activity.on_open_schedule_activity(ev);
+        },
     },
 
     init: function () {
@@ -322,8 +322,8 @@ var Chatter = form_common.AbstractField.extend({
         }
 
         if(!this.options.no_activity) {
-            self.activity = new ActivityLog(self.view.datarecord.id, self.view.model);
-            self.activity.replace(self.$('.o_mail_activity'));
+            this.activity = new activity_log.ActivityLogList(this, this.view.datarecord.id, this.view.model);
+            this.activity.appendTo(this.$('.o_mail_activity'));
         }
 
         this.thread = new ChatThread(this, {
@@ -349,46 +349,6 @@ var Chatter = form_common.AbstractField.extend({
             chat_manager.bus.on('update_message', self, self.on_update_message);
             self.ready.resolve();
         });
-    },
-
-    on_open_schedule_activity: function(event) {
-        event.preventDefault();
-        var self = this,
-            activity_id = this.$(event.currentTarget).data('activity-id') || false,
-            action = this.activity.add_activity_action(activity_id);
-        this.do_action(action, {
-            on_close: function() {
-                self.activity.fetch_and_render_activity_log();
-                self.refresh_followers();
-                chat_manager.get_messages({model: self.view.model, res_id: self.view.datarecord.id});
-            },
-        });
-    },
-
-    on_remove_activity: function (event) {
-        event.preventDefault();
-        var self = this,
-            activity_id =  this.$(event.currentTarget).data('activity-id') || false;
-        this.activity.remove_activity_log(activity_id)
-            .then(function (res) {
-                self.activity.fetch_and_render_activity_log();
-            })
-    },
-    on_mark_as_done: function (event) {
-        event.preventDefault();
-        var self = this,
-            activity_id =  this.$(event.currentTarget).data('activity-id') || false;
-        this.activity.mark_as_done(activity_id)
-            .then(function (msg_id) {
-                self.activity.fetch_and_render_activity_log();
-                self.msg_ids.unshift(msg_id);
-                // to stop scrollbar flickering add min hedight of the thread and remove after
-                // render. on render thread it will remove and add all it's element which cause flickering
-                self.thread.$el.css('min-height', self.thread.$el.height());
-                self.fetch_and_render_thread(self.msg_ids).then(function(){
-                    self.thread.$el.css('min-height', '');
-                });
-            });
     },
 
     check_visibility: function () {
