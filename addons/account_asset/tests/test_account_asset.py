@@ -61,7 +61,7 @@ class TestAccountAsset(common.TransactionCase):
         asset_modify_number_0.with_context({'active_id': account_asset_asset_office0.id}).modify()
 
         # I check the proper depreciation lines created.
-        self.assertEqual(account_asset_asset_office0.method_number, len(account_asset_asset_office0.depreciation_line_ids) - 1)
+        self.assertEqual(account_asset_asset_office0.method_number, len(account_asset_asset_office0.depreciation_line_ids))
         # I compute a asset on period.
 
         context = {
