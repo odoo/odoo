@@ -143,13 +143,6 @@
             res_model="account.move.line"
             context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
             src_model="res.partner"/>
-        <act_window
-            id="act_account_partner_ledger_payable_no_partner"
-            name="Unknown Partner Ledger"
-            res_model="account.move.line"
-            context="{'search_default_unreconciled':1, 'search_default_payable':1}"
-            domain="[('partner_id', '=', False)]"
-            src_model="res.partner"/>
 
         <act_window
             id="act_account_partner_ledger_receivable"
@@ -157,14 +150,6 @@
             res_model="account.move.line"
             context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
             src_model="res.partner"/>
-        <act_window
-            id="act_account_partner_ledger_receivable_no_partner"
-            name="Unknown Partner Ledger"
-            res_model="account.move.line"
-            context="{'search_default_unreconciled':1, 'search_default_receivable':1}"
-            domain="[('partner_id', '=', False)]"
-            src_model="res.partner"/>
-
 
         <act_window
             id="act_account_acount_move_line_open_unreconciled"
