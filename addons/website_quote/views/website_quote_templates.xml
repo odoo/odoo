@@ -692,7 +692,12 @@
           <t t-foreach="quotations" t-as="quotation">
               <tr>
                   <td>
-                      <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+                      <t t-if="quotation.sudo().partner_id.commercial_partner_id != request.env.user.partner_id.commercial_partner_id and request.env.user.share">
+                          <a t-attf-href="/quote/#{quotation.id}/#{quotation.access_token}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+                      </t>
+                      <t t-if="not (quotation.sudo().partner_id.commercial_partner_id != request.env.user.partner_id.commercial_partner_id and request.env.user.share)">
+                          <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+                      </t>
                   </td>
                   <td><span t-field="quotation.validity_date"/></td>
                       <td>
