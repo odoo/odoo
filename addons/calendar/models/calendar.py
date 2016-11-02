@@ -1128,8 +1128,8 @@ class Meeting(models.Model):
             data['rrule_type'] = 'weekly'
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if rule._bynweekday:
-            data['week_list'] = day_list[rule._bynweekday[0][0]].upper()
-            data['byday'] = str(rule._bynweekday[0][1])
+            data['week_list'] = day_list[list(rule._bynweekday)[0][0]].upper()
+            data['byday'] = str(list(rule._bynweekday)[0][1])
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 

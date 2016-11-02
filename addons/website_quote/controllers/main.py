@@ -30,6 +30,7 @@ class sale_quote(http.Controller):
 
         if not Order:
             return request.render('website.404')
+        request.session['sale_order_id'] = Order.id
 
         days = 0
         if Order.validity_date:

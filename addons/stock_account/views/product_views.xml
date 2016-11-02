@@ -33,8 +33,8 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="list_price" position="after">
-                        <field name="valuation" invisible="1"/>
-                        <field name="cost_method" invisible="1"/>
+                        <field name="valuation" invisible="1" readonly="1"/>
+                        <field name="cost_method" invisible="1" readonly="1"/>
                         <field name="property_cost_method" groups="stock_account.group_inventory_valuation" invisible="1"/>
                     </field>
                     <field name="standard_price" position="replace">

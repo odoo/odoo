@@ -5,7 +5,7 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class PurchaseReport(models.Model):
@@ -50,8 +50,9 @@ class PurchaseReport(models.Model):
 
     @api.model_cr
     def init(self):
+        tools.drop_view_if_exists(self._cr, 'purchase_report')
         self._cr.execute("""
-            create or replace view purchase_report as (
+            create view purchase_report as (
                 WITH currency_rate as (%s)
                 select
                     min(l.id) as id,
