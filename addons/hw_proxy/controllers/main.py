@@ -11,6 +11,8 @@ import subprocess
 import simplejson
 import werkzeug
 import werkzeug.wrappers
+from threading import Lock
+
 _logger = logging.getLogger(__name__)
 
 
@@ -29,6 +31,11 @@ BANNED_DEVICES = set([
 # drivers modules must add to drivers an object with a get_status() method 
 # so that 'status' can return the status of all active drivers
 drivers = {}
+
+# keep a list of RS-232 devices that have been recognized by a driver,
+# so other drivers can skip them during probes
+rs232_devices = {}  # {'/path/to/device': 'driver'}
+rs232_lock = Lock() # must be held to update `rs232_devices`
 
 class Proxy(http.Controller):
 
