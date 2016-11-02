@@ -5,6 +5,8 @@ import logging
 
 from odoo import api, models
 
+from psycopg2 import IntegrityError
+
 _logger = logging.getLogger(__name__)
 
 
@@ -17,7 +19,11 @@ class AutoVacuum(models.AbstractModel):
         for mname in self.env:
             model = self.env[mname]
             if model.is_transient():
-                model._transient_vacuum(force=True)
+                try:
+                    with self.env.cr.savepoint():
+                        model._transient_vacuum(force=True)
+                except IntegrityError:
+                    _logger.warning("Unable to vacuum %s due to internal constraints", model._table)
 
     @api.model
     def _gc_user_logs(self):
