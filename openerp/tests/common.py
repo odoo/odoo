@@ -82,10 +82,12 @@ def post_install(flag):
 class BaseCase(unittest.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
-    
+
     This class is abstract and expects self.registry, self.cr and self.uid to be
     initialized by subclasses.
     """
+
+    longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
 
     def cursor(self):
         return self.registry.cursor()
