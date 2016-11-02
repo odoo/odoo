@@ -42,11 +42,12 @@ odoo.define('payment_stripe.stripe', function(require) {
             $(this).attr('disabled','disabled');
 
         var $form = $(e.currentTarget).parents('form');
-        var acquirer_id = $(e.currentTarget).parents('div.oe_sale_acquirer_button').first().data('id');
+        var acquirer_id = $(e.currentTarget).closest('div.oe_sale_acquirer_button,div.oe_quote_acquirer_button').data('id');
         if (! acquirer_id) {
             return false;
         }
 
+        e.preventDefault();
         ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
             $form.html(data);
             handler.open({
@@ -55,7 +56,6 @@ odoo.define('payment_stripe.stripe', function(require) {
                 currency: $("input[name='currency']").val(),
                 amount: $("input[name='amount']").val()*100
             });
-            e.preventDefault();
         });
 
     });
