@@ -108,6 +108,15 @@ class PickingType(models.Model):
             res.append((picking_type.id, name))
         return res
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
+        picks = self.search(domain + args, limit=limit)
+        return picks.name_get()
+
     @api.onchange('code')
     def onchange_picking_code(self):
         if self.code == 'incoming':

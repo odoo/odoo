@@ -141,6 +141,7 @@
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/peche-image.jpg"/>
+          <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
         </record>
 
         <record id="raisins_noir" model="product.product">
