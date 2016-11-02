@@ -19,21 +19,30 @@
         <span class="o_icon fa fa-3x fa-exclamation"/>
     </t>
 </t>
-<t t-name="CrashManager.warning">
-    <div class="o_dialog_warning">
-        <t t-js="d">
-            var message = d.message ? d.message : d.error.data.message;
-            d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
-        </t>
-        <t t-raw="html_error"/>
+
+<div t-name="CrashManager.warning" class="o_dialog_warning">
+    <t t-js="d">
+        var message = d.message ? d.message : d.error.data.message;
+        d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
+    </t>
+    <t t-raw="html_error"/>
+</div>
+<div t-name="CrashManager.error" class="o_dialog_error">
+    <div class="alert alert-warning clearfix" role="alert">
+        <button class="btn btn-sm btn-primary pull-right ml8 o_clipboard_button">
+            <i class="fa fa-clipboard mr8"/>Copy the full error to clipboard
+        </button>
+        <p><b>An error occurred</b></p>
+        <p>Please use the copy button to report the error to your support service.</p>
     </div>
-</t>
-<t t-name="CrashManager.error">
-    <div class="o_error_detail">
+
+    <t t-set="errUID" t-value="_.uniqueId()"/>
+    <button class="btn btn-sm btn-link" t-att-data-target="'#o_error_detail' + errUID" data-toggle="collapse">See details</button>
+    <div t-att-id="'o_error_detail' + errUID" class="collapse alert alert-danger o_error_detail">
         <pre><t t-esc="error.message"/></pre>
         <pre><t t-esc="error.data.debug"/></pre>
     </div>
-</t>
+</div>
 
 <form t-name="ChangePassword" name="change_password_form" method="POST">
     <div class="o_form_view">
