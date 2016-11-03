@@ -314,52 +314,71 @@ animation.registry.slider = animation.Class.extend({
 
 animation.registry.parallax = animation.Class.extend({
     selector: ".parallax",
-
     start: function () {
-        _.defer((function () { this.set_values(); }).bind(this));
-        $(window).on("scroll.animation_parallax", _.throttle(this.on_scroll.bind(this), 10))
-                 .on("resize.animation_parallax", _.debounce(this.set_values.bind(this), 500));
-
-        return this._super.apply(this, arguments);
+        this._super.apply(this, arguments);
+        this._rebuild();
+        $(window).on("resize.animation_parallax", _.debounce(this._rebuild.bind(this), 500));
     },
     stop: function () {
+        this._super.apply(this, arguments);
         $(window).off(".animation_parallax");
     },
+    _rebuild: function () {
+        // Add/find bg DOM element to hold the parallax bg (support old v10.0 parallax)
+        if (!this.$bg || !this.$bg.length) {
+            this.$bg = this.$("> .s_parallax_bg");
+            if (!this.$bg.length) {
+                this.$bg = $("<span/>", {"class": "s_parallax_bg"}).prependTo(this.$target);
+            }
+        }
+        var urlTarget = this.$target.css("background-image");
+        if (urlTarget !== "none") {
+            this.$bg.css("background-image", urlTarget);
+        }
+        this.$target.css("background-image", "none");
 
-    set_values: function () {
-        var self = this;
-        this.speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
-        this.offset = 0;
+        // Get parallax speed
+        this.speed = parseFloat(this.$target.attr("data-scroll-background-ratio") || 0);
 
-        if (this.speed === 1 || this.$target.css("background-image") === "none") {
-            this.$target.css("background-attachment", "fixed").css("background-position", "0px 0px");
+        // Reset offset if parallax effect will not be performed and leave
+        this.$target.toggleClass("s_parallax_is_fixed", this.speed === 1);
+        if (this.speed === 0 || this.speed === 1) {
+            this.$bg.css({
+                transform: "",
+                top: "",
+                bottom: ""
+            });
             return;
         }
 
-        this.$target.css("background-attachment", "scroll");
+        // Initialize parallax data according to snippet and viewport dimensions
+        this.viewport = document.body.clientHeight - $('#wrapwrap').position().top;
+        this.visible_area = [this.$target.offset().top];
+        this.visible_area.push(this.visible_area[0] + this.$target.innerHeight() + this.viewport);
+        this.ratio = this.speed * (this.viewport / 10);
 
-        var img = new Image();
-        img.onload = function () {
-            var offset = 0;
-            var padding =  parseInt($(document.body).css("padding-top"));
-            if (self.speed > 1) {
-                var inner_offset = - self.$target.outerHeight() + this.height / this.width * document.body.clientWidth;
-                var outer_offset = self.$target.offset().top - (document.body.clientHeight - self.$target.outerHeight()) - padding;
-                offset = - outer_offset * self.speed + inner_offset;
-            } else {
-                offset = - self.$target.offset().top * self.speed;
-            }
-            self.offset = offset > 0 ? 0 : offset;
-            self.on_scroll();
-        };
-        img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+        // Provide a "safe-area" to limit parallax
+        this.$bg.css({
+            top: -this.ratio,
+            bottom: -this.ratio
+        });
     },
+    on_scroll: function (scrollOffset) {
+        if (this.speed === 0 || this.speed === 1) return;
 
-    on_scroll: function () {
-        if (this.speed === 1) return;
-        var top = this.offset + window.scrollY * this.speed;
-        this.$target.css("background-position", "0px " + top + "px");
-    },
+        // Perform translate if the element is visible only
+        var vpEndOffset = scrollOffset + this.viewport;
+        if (vpEndOffset >= this.visible_area[0] && vpEndOffset <= this.visible_area[1]) {
+            this.$bg.css("transform", "translateY(" + _getNormalizedPosition.call(this, vpEndOffset) + "px)");
+        }
+
+        function _getNormalizedPosition(pos) {
+            // Normalize scroll in a 1 to 0 range
+            var r = (pos - this.visible_area[1]) / (this.visible_area[0] - this.visible_area[1]);
+            // Normalize accordingly to current options
+            return Math.round(this.ratio * (2 * r - 1));
+        }
+    }
 });
 
 animation.registry.share = animation.Class.extend({
