@@ -231,6 +231,10 @@ class PosSession(models.Model):
                 session.action_pos_session_close()
 
     @api.multi
+    def action_pos_session_validate(self):
+        self.action_pos_session_close()
+
+    @api.multi
     def action_pos_session_close(self):
         # Close CashBox
         for session in self:
