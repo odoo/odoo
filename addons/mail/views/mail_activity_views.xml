@@ -70,10 +70,10 @@
                     </group>
                     <field name="note" placeholder="Log a note..."/>
                     <footer>
-                        <button string="Done" invisible="not context.get('mark_done')"
-                            name="mark_as_done" type="object" class="btn-default"/>
-                        <button string="To Do"
+                        <button string="Save &amp; Keep Open"
                             name="action_close_dialog" invisible="not context.get('mark_done')" type="object" class="btn-primary"/>
+                        <button string="Save &amp; Done" invisible="not context.get('mark_done')"
+                            name="mark_as_done" type="object" class="btn-primary"/>
                         <button string="Save"
                             name="action_close_dialog" invisible="context.get('mark_done')" type="object" class="btn-primary"/>
                         <button string="Discard" class="btn-default" special="cancel" />
