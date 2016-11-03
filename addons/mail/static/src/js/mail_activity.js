@@ -32,6 +32,7 @@ var AbstractActivityLog = {
         return this.ActivityLogModel.call("mark_as_done", [activity_id]);
     },
     get_create_activity_action : function(activity_id){
+        var context = activity_id ? {'mark_done': true} : {}
         return {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity.log',
@@ -44,7 +45,7 @@ var AbstractActivityLog = {
             context: _.extend({
                 default_res_id: this.res_id,
                 default_model: this.res_model,
-            }, this.context),
+            }, context, this.context),
             res_id: activity_id,
         };
     },
