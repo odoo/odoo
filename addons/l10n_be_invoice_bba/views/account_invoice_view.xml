@@ -7,8 +7,7 @@
       <field name="inherit_id" ref="account.invoice_form"/>
       <field name="arch" type="xml">
         <field name="date_due" position="after">
-              <field name="reference_type" nolabel="1"  attrs="{'readonly':[('state','!=','draft')]}"
-                 on_change="generate_bbacomm(type,reference_type, partner_id,reference)"/>
+              <field name="reference_type" nolabel="1"  attrs="{'readonly':[('state','!=','draft')]}"/>
               <field name="reference" nolabel="1"  attrs="{'readonly':[('state','!=','draft')]}"/>
         </field>
       </field>
