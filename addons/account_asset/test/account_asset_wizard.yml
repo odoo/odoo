@@ -13,7 +13,7 @@
   I check the proper depreciation lines created.
 -
   !assert {model: account.asset.asset, id: account_asset.account_asset_asset_office0}:
-    - method_number == len(depreciation_line_ids) -1
+    - method_number == len(depreciation_line_ids)
 -
   I create a period to compute a asset on period.
 -
