@@ -173,7 +173,6 @@ var KanbanActivity = AbstractField.extend(AbstractActivityLog, {
         });
     },
     on_mark_as_done: function (event) {
-        event.preventDefault();
         event.stopPropagation();
         var self = this,
             activity_id =  this.$(event.currentTarget).data('activity-id') || false;
