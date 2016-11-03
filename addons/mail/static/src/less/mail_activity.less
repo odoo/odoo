@@ -44,13 +44,17 @@
                 }
 
                 &.o_schedule_activity {
-                    padding: 8px 5px 8px 15px;
+                    padding: 8px 10px 8px 0px;
+                    vertical-align: middle;
                     &:hover {
                         background-color: @gray-lighter;
+                        .o_activity_link_kanban {
+                            display: block;
+                        }
                     }
 
                     .o_activity_title {
-                        width: 80%;
+                        width: 85%;
                         padding: 0px 5px 0px 10px;
                         white-space: nowrap;
                         overflow: hidden;
@@ -88,4 +92,7 @@
     &:hover {
         color: @brand-success;
     }
+}
+.o_activity_link_kanban {
+    display: none;
 }
