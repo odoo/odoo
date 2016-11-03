@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "account_payment_unece",
+    'name': "base_unedifact",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -20,11 +20,9 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base_unece'],
+    'depends': ['base'],
 
-    # always loaded
     'data': [
-        'data/unece_type.xml',
-        'data/unece_code_payment_means.xml',
+        'data/unedifact_agencies.xml',
     ],
 }

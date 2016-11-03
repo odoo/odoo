@@ -106,11 +106,6 @@ class AccountInvoice(models.Model):
             record.ubl_amount_prepaid_format = \
                 '%0.*f' % (precision_digits, amount_prepaid)
 
-    def get_account_tax(self, tax_line):
-        AccountTax = item.env['account.tax']
-        taxes = AccountTax.search([('base_code_id', '=', item_line.base_code_id.id)])[0]
-        return taxes[0]
-
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
@@ -123,6 +118,7 @@ class AccountInvoiceLine(models.Model):
     ubl_total_excluded = fields.Float() # computed inside _compute_taxes_informations
     ubl_seller_code = fields.Char(compute='_compute_ubl_seller_code')
     ubl_product_name = fields.Char(compute='_compute_ubl_product_name')
+    ubl_inline_name = fields.Char(compute='_compute_ubl_inline_name')
 
     @api.multi
     @api.depends('price_subtotal')
@@ -159,11 +155,6 @@ class AccountInvoiceLine(models.Model):
             record.ubl_total_tax = \
                 record.ubl_total_included - record.ubl_total_excluded
             record.ubl_base_tax = res_taxes['base']
-            # Not elegant way to do that but it's complicated 
-            # to add all informations related to taxes by the ORM
-            for res_tax_dic in res_taxes['taxes']:
-                res_tax_dic['ubl_tax'] = self.env['account.tax'].browse(res_tax_dic['id'])
-            record.ubl_taxes_dics = res_taxes['taxes']
 
     @api.multi
     @api.depends('product_id')
@@ -181,14 +172,30 @@ class AccountInvoiceLine(models.Model):
             else:
                 record.ubl_product_name = record.product_id.name
 
+    @api.multi
+    @api.depends('name')
+    def _compute_ubl_inline_name(self):
+        for record in self:
+            lines = map(lambda line: line.strip(), record.name.split('\n'))
+            record.ubl_inline_name = ', '.join(lines)
+
     class AccountInvoiceTax(models.Model):
         _inherit = 'account.invoice.tax'
 
         ubl_tax_percent = fields.Float(compute='_compute_ubl_tax_percent')
+        # ubl_account_tax = fields.Many2one(compute='_compute_ubl_account_tax')
 
         @api.multi
-        @api.depends('base')
+        @api.depends('amount')
         def _compute_ubl_tax_percent(self):
             for record in self:
                 record.ubl_tax_percent = \
-                    float_round(record.amount * 100, precision_digits=2)
+                    tools.float_round((record.amount / record.base) * 100, precision_digits=2)
+
+        @api.multi
+        @api.depends('base_code_id')
+        def _compute_ubl_account_tax(self):
+            for record in self:
+                taxes = self.env['account.tax'].search([
+                ('base_code_id', '=', record.base_code_id.id)])
+                record.ubl_account_tax = taxes[0]

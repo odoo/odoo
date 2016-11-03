@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Source : http://www.unece.org/trade/untdid/d97a/uncl/uncl5305.htm  -->
+
+        <record id="code_type_category_a" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">A</field>
+            <field name="name">Mixed tax rate</field>
+            <field name="description">Self explanatory.</field>
+        </record>
+
+        <record id="code_type_category_aa" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">AA</field>
+            <field name="name">Lower rate</field>
+            <field name="description">Tax rate is lower than standard rate.</field>
+        </record>
+
+        <record id="code_type_category_ab" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">AB</field>
+            <field name="name">Exempt for resale</field>
+            <field name="description">A tax category code indicating the item is tax exempt when the item is bought for future resale.</field>
+        </record>
+
+        <record id="code_type_category_ac" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">AC</field>
+            <field name="name">Value Added Tax (VAT) not now due for payment</field>
+            <field name="description">A code to indicate that the Value Added Tax (VAT) amount which is due on the current invoice is to be paid on receipt of a separate VAT payment request.</field>
+        </record>
+
+        <record id="code_type_category_ad" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">AD</field>
+            <field name="name">Value Added Tax (VAT) due from a previous invoice</field>
+            <field name="description">A code to indicate that the Value Added Tax (VAT) amount of a previous invoice is to be paid.</field>
+        </record>
+
+        <record id="code_type_category_b" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">B</field>
+            <field name="name">Transferred (VAT)</field>
+            <field name="description">VAT not to be paid to the issuer of the invoice but directly to relevant tax authority.</field>
+        </record>
+
+        <record id="code_type_category_c" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">C</field>
+            <field name="name">Duty paid by supplier</field>
+            <field name="description">Duty associated with shipment of goods is paid by the supplier; customer receives goods with duty paid.</field>
+        </record>
+
+        <record id="code_type_category_e" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">E</field>
+            <field name="name">Exempt from tax</field>
+            <field name="description">Self explanatory.</field>
+        </record>
+
+        <record id="code_type_category_g" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">G</field>
+            <field name="name">Free export item, tax not charged</field>
+            <field name="description">Self explanatory.</field>
+        </record>
+
+        <record id="code_type_category_h" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">H</field>
+            <field name="name">Higher rate</field>
+            <field name="description">Self explanatory.</field>
+        </record>
+
+        <record id="code_type_category_o" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">O</field>
+            <field name="name">Services outside scope of tax</field>
+            <field name="description">Self explanatory.</field>
+        </record>
+
+        <record id="code_type_category_s" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">S</field>
+            <field name="name">Standard rate</field>
+            <field name="description">Self explanatory.</field>
+        </record>
+
+        <record id="code_type_category_z" model="unece.code">
+            <field name="type_id" ref="unece_type_5305"/>
+            <field name="code">Z</field>
+            <field name="name">Zero rated goods</field>
+            <field name="description">Self explanatory.</field>
+        </record>
+    </data>
+</odoo>

@@ -24,8 +24,6 @@
 
     # always loaded
     'data': [
-        'data/unece_code_taxes.xml',
-        'data/unece_code_categories.xml',
         'views/account_tax_view.xml',
     ],
 }

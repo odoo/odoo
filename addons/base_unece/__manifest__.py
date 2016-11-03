@@ -21,4 +21,11 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
+
+    'data': [
+        'data/unece_agencies.xml',
+        'data/unece_code_types.xml',
+        'data/unece_code_taxes.xml',
+        'data/unece_code_categories.xml',
+    ],
 }
