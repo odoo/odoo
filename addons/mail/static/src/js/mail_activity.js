@@ -26,7 +26,7 @@ var AbstractActivityLog = {
             .call("fetch_activity_logs", [this.res_id, this.res_model, this.limit || false]);
     },
     remove_activity_log: function (activity_id) {
-        return this.ActivityLogModel.call("remove_activity_log", [activity_id]);
+        return this.ActivityLogModel.call("unlink", [activity_id]);
     },
     mark_as_done: function (activity_id) {
         return this.ActivityLogModel.call("mark_as_done", [activity_id]);

@@ -109,10 +109,6 @@ class MailActivityLog(models.Model):
         return msg_id
 
     @api.multi
-    def remove_activity_log(self):
-        return self.unlink()
-
-    @api.multi
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
