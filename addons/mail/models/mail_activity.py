@@ -130,15 +130,3 @@ class MailActivityLog(models.Model):
                 day = _("Today")
             log.update({'day': day})
         return activity_logs
-
-    @api.multi
-    def action_open_related_document(self):
-        self.ensure_one()
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': self.model,
-            'type': 'ir.actions.act_window',
-            'res_id': self.res_id,
-            'context': self.env.context,
-        }
