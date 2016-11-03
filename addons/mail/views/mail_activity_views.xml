@@ -56,13 +56,6 @@
         <field name="arch" type="xml">
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
-                    <div class="oe_button_box" name="button_box" invisible="not context.get('state_btn')">
-                        <button name="action_open_related_document" type="object" string="Document" class="oe_stat_button" icon="fa-file-text-o" />
-                    </div>
-                    <div class="oe_title" invisible="not context.get('state_btn')">
-                        <label for="res_name" class="oe_edit_only"/>
-                        <h1><field name="res_name" readonly="1"/></h1>
-                    </div>
                     <group>
                         <field name="res_id" invisible="1"/>
                         <field name="model" invisible="1"/>
@@ -76,7 +69,7 @@
                         </group>
                     </group>
                     <field name="note" placeholder="Log a note..."/>
-                    <footer invisible="context.get('state_btn')">
+                    <footer>
                         <button string="Save"
                             name="action_close_dialog" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel" />
