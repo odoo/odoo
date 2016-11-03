@@ -13,6 +13,14 @@ file_exists() {
     [[ -f $1 ]];
 }
 
+require_command () {
+    type "$1" &> /dev/null || { echo "Command $1 is missing. Install it e.g. with 'apt-get install $1'. Aborting." >&2; exit 1; }
+}
+
+require_command kpartx
+require_command qemu-system-arm
+require_command zerofree
+
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
