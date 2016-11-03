@@ -23,6 +23,7 @@ class Event(models.Model):
 
     event_ticket_ids = fields.One2many('event.event.ticket', 'event_id', string='Event Ticket',
         default=lambda self: self._default_tickets(), copy=True)
+    event_ticket_type = fields.Char(string='Ticket Type', related='event_ticket_ids.name', store=True)
 
 
 class EventTicket(models.Model):

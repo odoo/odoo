@@ -517,7 +517,17 @@
 <template id="registration_complete" name="Registration Completed">
     <t t-call="website.layout">
         <div class="container">
-            <h3>We are glad to confirm your registration to our event</h3>
+            <div class="row">
+                <div class="col-md-10 mt16">
+                    <h3>We are glad to confirm your registration to our event</h3>
+                </div>
+                <div class="col-md-2 mt16 pull-right">
+                    <a t-attf-href="/event" class="btn btn-default">
+                        <span class="fa fa-long-arrow-left"></span>
+                        <span>Our Events</span>
+                    </a>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-3 mt16">
                     <h4>Event Details</h4>

@@ -95,6 +95,9 @@ class EventEvent(models.Model):
     seats_used = fields.Integer(
         oldname='register_attended', string='Number of Participants',
         store=True, readonly=True, compute='_compute_seats')
+    seats_cancelled = fields.Integer(
+        string='Cancelled Seats',
+        readonly=True, compute='_compute_seats', store=True)
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
         readonly=True, compute='_compute_seats')
@@ -112,10 +115,11 @@ class EventEvent(models.Model):
                 'draft': 'seats_unconfirmed',
                 'open': 'seats_reserved',
                 'done': 'seats_used',
+                'cancel': 'seats_cancelled',
             }
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
-                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
+                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done','cancel')
                         GROUP BY event_id, state
                     """
             self._cr.execute(query, (tuple(self.ids),))
@@ -272,6 +276,25 @@ class EventEvent(models.Model):
         for attendee in self.registration_ids.filtered(filter_func):
             self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
+    @api.multi
+    def action_mail_send_attendees(self):
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        partner_ids = self.mapped('registration_ids.partner_id').ids
+        ctx = dict(
+            default_model='event.event',
+            default_partner_ids=partner_ids,
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
 
 class EventRegistration(models.Model):
     _name = 'event.registration'

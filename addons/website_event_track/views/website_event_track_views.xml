@@ -6,11 +6,12 @@
             <field name="name">event.track.kanban</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state">
+                <kanban default_group_by="stage_id">
                     <templates>
                         <field name="color"/>
-                        <field name="speaker_ids"/>
+                        <field name="speaker_id"/>
                         <field name="website_url"/>
+                        <field name="stage_id"/>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
@@ -35,11 +36,8 @@
                                         <field name="priority" widget="priority"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <t t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
-                                            <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-member_id="speaker" width="30px" height="30px"/>
-                                        </t>
-                                        <t t-if="record.speaker_ids.raw_value.length > 11 ">
-                                            <a name="open_track_speakers_list" type="object"><t t-esc="record.speaker_ids.raw_value.length - 11"> More</t></a>
+                                        <t t-if="record.speaker_id.raw_value">
+                                            <img t-att-src="kanban_image('res.partner', 'image_small', record.speaker_id.raw_value)" t-att-data-member_id="record.speaker_id.id" width="30px" height="30px"/>
                                         </t>
                                     </div>
                                     <div class="oe_clear"/>
@@ -71,14 +69,13 @@
                     <field name="name"/>
                     <field name="event_id"/>
                     <field name="location_id"/>
-                    <field name="state"/>
-                    <field name="speaker_ids"/>
+                    <field name="stage_id"/>
+                    <field name="speaker_id"/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
-                        <filter string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Status" context="{'group_by':'stage_id'}"/>
                         <filter string="Date" context="{'group_by':'date'}"/>
                         <filter string="Event" context="{'group_by':'event_id'}"/>
                     </group>
@@ -92,7 +89,7 @@
             <field name="arch" type="xml">
                 <form string="Event Track">
                     <header>
-                        <field name="state" widget="statusbar" clickable="True"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Track">
                         <div class="oe_button_box" name="button_box">
@@ -117,14 +114,12 @@
                         </div>
                         <group>
                             <group>
-                                <field name="user_id"/>
-                                <field name="partner_id"/>
-                                <field name="partner_name"/>
-                                <field name="partner_email"/>
-                                <field name="partner_phone"/>
+                                <field name="speaker_id"/>
+                                <field name="speaker_name"/>
+                                <field name="speaker_email"/>
+                                <field name="speaker_phone"/>
                             </group>
                             <group>
-                                <field name="speaker_ids" widget="many2many_tags"/>
                                 <field name="date"/>
                                 <label for="duration"/>
                                 <div>
@@ -184,7 +179,7 @@
             <field name="name">Event Tracks</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'state'}</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                 Click to add a track.
@@ -339,5 +334,69 @@
             id="menu_event_track_tag"
             action="action_event_track_tag"
             parent="event.menu_event_configuration"/>
+
+        <!-- EVENTS TRACK STAGES-->
+        <record id="event_track_stage_view_search" model="ir.ui.view">
+            <field name="name">event.track.stage.search</field>
+            <field name="model">event.track.stage</field>
+            <field name="arch" type="xml">
+                <search string="Track Stage">
+                   <field name="name" string="Track Stages"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="event_track_stage_view_form" model="ir.ui.view">
+            <field name="name">event.track.stage.form</field>
+            <field name="model">event.track.stage</field>
+            <field name="arch" type="xml">
+                <form string="Track Stage">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="mail_template_id"/>
+                                <field name="is_cancel"/>
+
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                                <field name="event_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="event_track_stage_view_tree" model="ir.ui.view">
+            <field name="name">event.track.stage.tree</field>
+            <field name="model">event.track.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Track Stage">
+                    <field name="sequence" widget="handle" groups="base.group_no_one"/>
+                    <field name="name"/>
+                    <field name="fold"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="event_track_stage_action" model="ir.actions.act_window">
+            <field name="name">Track Stages</field>
+            <field name="res_model">event.track.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="event_track_stage_view_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a stage in the task pipeline.
+              </p><p>
+                Define the steps that will be used in the event from the
+                creation of the track, up to the closing of the track.
+                You will use these stages in order to track the progress in
+                solving an event track.
+              </p>
+            </field>
+        </record>
+        <menuitem action="event_track_stage_action" id="event_track_stage_menu" name="Track Stages" parent="event.menu_event_configuration"/>
 
 </odoo>

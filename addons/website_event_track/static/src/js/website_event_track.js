@@ -9,8 +9,9 @@ $(document).ready(function() {
 
         $("#search_summary").removeClass('invisible');
         if (change_text) {
-            $("#search_number").text($(".event_track:Contains("+change_text+")").length);
-            $(".event_track:not(:Contains("+change_text+"))").addClass('invisible');
+            var filtered_tracks = $(".event_track").filter(function() { return ( this.textContent || this.innerText || $(this).text() ).toUpperCase().indexOf( change_text.toUpperCase() ) <= -1; });
+            $("#search_number").text(filtered_tracks.length);
+            filtered_tracks.addClass('invisible');
         } else {
             $("#search_number").text(30);
         }

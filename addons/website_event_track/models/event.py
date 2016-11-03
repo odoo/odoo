@@ -16,6 +16,7 @@ class Event(models.Model):
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
     tracks_tag_ids = fields.Many2many('event.track.tag', relation='event_track_tags_rel', string='Track Tags', compute='_get_tracks_tag_ids', store=True)
     count_sponsor = fields.Integer('# Sponsors', compute='_count_sponsor')
+    stage_ids = fields.Many2many('event.track.stage', 'event_track_stage_rel', 'event_id', 'stage_id', string='Event Stages')
 
     @api.multi
     def _get_new_menu_pages(self):
@@ -40,12 +41,11 @@ class Event(models.Model):
 
     @api.multi
     def _count_tracks(self):
-        track_data = self.env['event.track'].read_group([('state', '!=', 'cancel')], ['event_id', 'state'], ['event_id'])
+        track_data = self.env['event.track'].read_group([('stage_id.is_cancel', '=', False)], ['event_id', 'stage_id'], ['event_id'])
         result = dict((data['event_id'][0], data['event_id_count']) for data in track_data)
         for event in self:
             event.count_tracks = result.get(event.id, 0)
 
-    @api.multi
     @api.depends('track_ids.tag_ids')
     def _get_tracks_tag_ids(self):
         for event in self:
@@ -55,3 +55,23 @@ class Event(models.Model):
     def _count_sponsor(self):
         for event in self:
             event.count_sponsor = len(event.sponsor_ids)
+
+    @api.multi
+    def action_mail_send_speakers(self):
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        speaker_ids = self.mapped('track_ids.speaker_id').ids
+        ctx = dict(
+            default_model='event.event',
+            default_partner_ids=speaker_ids,
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }

@@ -93,9 +93,13 @@
                 </t><t t-if="not dt[2]">
                     <t t-set="track" t-value="dt[1][False][0]"/>
                     <td t-att-colspan="len(locations)-1" t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
-                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                        <t t-if="not track.website_published">
+                            <span t-esc="track.name"/>
+                        </t>
+                        <a t-if="track.website_published" t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
                             <span t-esc="track.name"/>
                         </a>
+
                         <div class="text-muted">
                             <small t-esc="speakers[track.id]"/>
                         </div>
@@ -129,8 +133,8 @@
                         <small t-if="not track.website_published" class="label label-danger">unpublished</small>
                     </h3>
                     <ul class="list-inline mb0">
-                        <li t-if="track.speaker_ids" class="text-muted fa fa-user">
-                            <t t-esc="', '.join([speaker.name for speaker in track.speaker_ids])"></t>
+                        <li t-if="track.speaker_id" class="text-muted fa fa-user">
+                            <t t-esc="track.speaker_id.sudo().name"></t>
                         </li>
                         <li t-if="track.date" class="text-muted fa fa-calendar"> <span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
                         <li class="text-muted fa fa-map-marker" t-if="track.location_id">
@@ -212,19 +216,20 @@
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <h2 t-field="track.name"/>
-                                    <small>Proposed by <span t-field="track.partner_name"/></small>
+                                    <small>Proposed by <span t-field="track.speaker_name"/></small>
                                 </div>
                                 <div class="col-md-12">
                                     <p t-field="track.description"/>
                                 </div>
                                 <div class="col-md-12">
                                     <h3>About The Author</h3>
-                                    <p t-field="track.partner_biography"/>
+                                    <p t-field="track.speaker_biography"/>
                                 </div>
                             </div>
                         </div>
                     </section>
-                    <div t-foreach="track.speaker_ids" t-as="speaker" class="well mt32">
+                    <div t-if="track.speaker_id" class="well mt32">
+                        <t t-set="speaker" t-value="track.speaker_id"/>
                         <div class="row">
                             <div class="col-sm-2">
                                 <span t-field="speaker.sudo().image_medium"
@@ -336,9 +341,9 @@
                         <form class="form-horizontal mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="form-group">
-                                <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Name</label>
+                                <label class="col-md-3 col-sm-4 control-label" for="speaker_name">Your Name</label>
                                 <div class="col-md-7 col-sm-8">
-                                    <input type="text" class="form-control" name="partner_name" required="True" />
+                                    <input type="text" class="form-control" name="speaker_name" required="True" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -450,13 +455,31 @@
 <template id="event_track_template_new">
     <h3>New track proposal</h3>
     <ul>
-        <li><b>Proposed By</b>: <t t-esc="object.partner_id.name or object.partner_name or object.partner_email"/></li>
-        <li><b>Mail</b>: <a t-attf-href="mailto:#{object.partner_email}"><t t-esc="object.partner_email"/></a></li>
-        <li><b>Phone</b>: <t t-esc="object.partner_phone"/></li>
+        <li><b>Proposed By</b>: <t t-esc="object.speaker_name or object.speaker_email"/></li>
+        <li><b>Mail</b>: <a t-attf-href="mailto:#{object.speaker_email}"><t t-esc="object.speaker_email"/></a></li>
+        <li><b>Phone</b>: <t t-esc="object.speaker_phone"/></li>
         <li><b>Title</b>: <t t-esc="object.name"/></li>
-        <li><b>Speakers Biography</b>: <t t-esc="object.partner_biography"/></li>
+        <li><b>Speakers Biography</b>: <t t-esc="object.speaker_biography"/></li>
         <li><b>Talk Introduction</b>: <t t-esc="object.description"/></li>
     </ul>
+</template>
+
+<template id="event_track_template_proposal_accept">
+    <p>
+        Dear <t t-esc="object.speaker_name"/>
+    </p><p>
+        We are pleased to inform you that your proposal has been accepted for the event.
+    </p><p>
+        You will be informed via an email if it is confirmed by our team.
+    </p><p>
+        You will find more details here:
+        <div style="margin-top: 16px;">
+            <a t-attf-href="/event/#{ slug(object.event_id) }/" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View Event
+            </a>
+        </div>
+    </p>
+    <br/>
+   Sincerely,
 </template>
 
 </odoo>
