@@ -771,7 +771,7 @@ class WebsiteSale(http.Controller):
             return request.redirect("/shop/payment?error=no_token_or_missmatch_tx")
 
     @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, tx_type='form', token=None):
+    def payment_transaction(self, acquirer_id, tx_type='form', token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -781,7 +781,16 @@ class WebsiteSale(http.Controller):
                                 user is redirected to the checkout page
         """
         Transaction = request.env['payment.transaction'].sudo()
-        order = request.website.sale_get_order()
+
+        # In case the route is called directly from the JS (as done in Stripe payment method)
+        so_id = kwargs.get('so_id')
+        so_token = kwargs.get('so_token')
+        if so_id and so_token:
+            order = request.env['sale.order'].sudo().search([('id', '=', so_id), ('access_token', '=', so_token)])
+        elif so_id:
+            order = request.env['sale.order'].search([('id', '=', so_id)])
+        else:
+            order = request.website.sale_get_order()
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout")
 
