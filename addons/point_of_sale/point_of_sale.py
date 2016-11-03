@@ -957,9 +957,10 @@ class pos_order(osv.osv):
         picking_obj.force_assign(cr, uid, [picking_id], context=context)
         # Mark pack operations as done
         pick = picking_obj.browse(cr, uid, picking_id, context=context)
-        for pack in pick.pack_operation_ids.filtered(lambda pack: pack.product_id.tracking == 'none'):
+        for pack in pick.pack_operation_ids.filtered(lambda x: x.product_id.tracking == 'none'):
             self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
-        picking_obj.action_done(cr, uid, [picking_id], context=context)
+        if not any([(x.product_id.tracking != 'none') for x in pick.pack_operation_ids]):
+            picking_obj.action_done(cr, uid, [picking_id], context=context)
 
     def create_picking(self, cr, uid, ids, context=None):
         """Create a picking for each order and validate it."""
@@ -1040,7 +1041,9 @@ class pos_order(osv.osv):
             if move_list and not return_picking_id and not order_picking_id:
                 move_obj.action_confirm(cr, uid, move_list, context=context)
                 move_obj.force_assign(cr, uid, move_list, context=context)
-                move_obj.action_done(cr, uid, move_list, context=context)
+                active_move_list = [x.id for x in move_obj.browse(cr, uid, move_list, context=context) if x.product_id.tracking == 'none']
+                if active_move_list:
+                    move_obj.action_done(cr, uid, active_move_list, context=context)
 
         return True
 
