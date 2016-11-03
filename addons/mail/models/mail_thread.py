@@ -579,15 +579,20 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _notification_link_helper(self, link_type, **kwargs):
+        local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
         if kwargs.get('message_id'):
             base_params = {
-                'message_id': kwargs.pop('message_id')
+                'message_id': kwargs['message_id']
             }
         else:
             base_params = {
                 'model': kwargs.get('model', self._name),
                 'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
             }
+
+        local_kwargs.pop('message_id', None)
+        local_kwargs.pop('model', None)
+        local_kwargs.pop('res_id', None)
 
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
@@ -596,8 +601,8 @@ class MailThread(models.AbstractModel):
             params = dict(base_params, action_id=kwargs.get('action_id', ''))
             base_link = '/mail/new'
         elif link_type == 'controller':
-            controller = kwargs.pop('controller')
-            params = dict(base_params)
+            controller = local_kwargs.pop('controller')
+            params = dict(base_params, **local_kwargs)
             params.pop('model')
             base_link = '%s' % controller
         else:
