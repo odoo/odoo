@@ -1557,9 +1557,7 @@ class BaseModel(object):
         error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
-            # We don't pass around the context here: validation code
-            # must always yield the same results.
-            if not fun(self, cr, uid, ids):
+            if not fun(self, cr, uid, ids, context):
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
                 if hasattr(msg, '__call__'):
