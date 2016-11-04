@@ -417,6 +417,11 @@ var BasicComposer = Widget.extend({
         return this._super();
     },
 
+    destroy: function () {
+        $(window).off(this.fileupload_id);
+        return this._super.apply(this, arguments);
+    },
+
     toggle: function(state) {
         this.$el.toggle(state);
     },

@@ -918,6 +918,8 @@ class AccountMoveLine(models.Model):
         first_line_dict['account_id'] = self[0].account_id.id
         if 'analytic_account_id' in first_line_dict:
             del first_line_dict['analytic_account_id']
+        if 'tax_ids' in first_line_dict:
+            del first_line_dict['tax_ids']
 
         # Writeoff line in specified writeoff account
         second_line_dict = vals.copy()

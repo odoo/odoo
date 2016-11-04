@@ -27,6 +27,10 @@ var OdooSupport = Widget.extend({
         // bind event
         $(window).on("odoo_support_ready_to_bind", this, _.bind(this.bind_actions, this));
     },
+    destroy: function () {
+        $(window).off("odoo_support_ready_to_bind");
+        return this._super.apply(this, arguments);
+    },
     bind_actions: function(event, button){
         if (button === 'usermenu'){
             $('.oe_user_menu_placeholder .odoo_support_contact').on('click', this, _.bind(this.click_action, this));
