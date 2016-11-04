@@ -244,7 +244,7 @@ class TestReconciliation(AccountingTestCase):
         self.check_results(bank_stmt.move_line_ids, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
             self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': -41.97, 'currency_id': self.currency_usd_id, 'currency_diff': 0, 'amount_currency_diff': -8.03},
-            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': 0, 'currency_id': False},
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': -9.37, 'currency_id': self.currency_usd_id},
         })
 
         # The invoice should be paid, as the payments totally cover its total
