@@ -218,14 +218,20 @@
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
         <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
             <t t-set="website_sale_sortable" t-value="[
-                ('Price &lt;i class=\'fa fa-arrow-up\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price desc'),
-                ('Price &lt;i class=\'fa fa-arrow-down\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price asc'),
-                ('Name', 'name asc')
+                ('Price &lt;i class=\'fa fa-caret-up\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price desc'),
+                ('Price &lt;i class=\'fa fa-caret-down\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price asc'),
+                ('Name  &lt;i class=\'fa fa-caret-down\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'name asc')
             ]"/>
+            <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[1]==request.params.get('order', '')]"/>
             <div class="dropdown btn-group dropdown_sorty_by">
                 <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
-                    <span>Sort by</span>
-                    <span class="caret"></span>
+                    <t t-if='len(website_sale_sortable_current)'>
+                        <span>Sorting by : <t t-raw='website_sale_sortable_current[0][0]'/></span>
+                    </t>
+                    <t t-else='1'>
+                        <span>Sort by</span>
+                        <span class="caret"></span>
+                    </t>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li t-foreach="website_sale_sortable" t-as="sortby">
@@ -716,7 +722,7 @@
     </template>
 
     <template id="wizard_checkout" name="Wizard Checkout">
-        <ul class="wizard pull-right">
+        <ul class="wizard pull-right hidden-xs">
             <li t-att-class="step==10 and 'text-primary' or 'text-muted'" id="step10">
                 <t t-if="step&gt;10 and step&lt;50">
                     <a href="/shop/cart" class="text-success">
@@ -864,7 +870,7 @@
                                     <span><t t-esc="name_line"/></span><br/>
                                 </t>
                             </div>
-                            <a href='#' class='js_delete_product no-decoration'> <small><i class='fa fa-trash-o'></i> Remove</small></a>
+                            <a href='#' class='js_delete_product hidden-xs no-decoration'> <small><i class='fa fa-trash-o'></i> Remove</small></a>
                         </td>
                         <td class="text-center" id="td-qty">
                             <div class="input-group oe_website_spinner">
@@ -890,7 +896,7 @@
         </table>
         <div class="js_cart_lines row">
             <t t-call="website_sale.total">
-                <t t-set='extra_class' t-value='"col-sm-4 col-sm-offset-8 col-xs-12"'/>
+                <t t-set='extra_class' t-value='"col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
             </t>
         </div>
     </template>
@@ -1533,7 +1539,6 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <strong>Payment Method:</strong>
                                                 <t t-esc="order.payment_acquirer_id.name" />
                                             </td>
                                             <td class="text-right" width="100">
@@ -1598,19 +1603,19 @@
         <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order">
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
-                <span class="col-xs-6 text-left text-muted">
+                <span class="col-xs-6 text-left-not-xs text-right-xs text-muted">
                     <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total_taxes">
                 <span class="col-xs-6 text-right text-muted" title="Taxes may be updated after providing shipping address"> Taxes:</span>
-                <span class="col-xs-6 text-left text-muted">
+                <span class="col-xs-6 text-left-not-xs text-right-xs text-muted">
                     <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total">
                 <span class="col-xs-6 text-right h4">Total:</span>
-                <span class="col-xs-6 text-left h4" style="white-space: nowrap;">
+                <span class="col-xs-6 text-left-not-xs text-right-xs h4" style="white-space: nowrap;">
                     <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
