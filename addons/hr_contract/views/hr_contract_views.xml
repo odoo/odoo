@@ -108,11 +108,12 @@
                                 <group name="duration_group" string="Duration">
                                     <label for="trial_date_start" string="Trial Period Duration"/>
                                     <div>
-                                        <field name="trial_date_start" class="oe_inline"/> - <field name="trial_date_end" class="oe_inline"/>
+                                        <field name="trial_date_start" class="oe_inline"/>
+                                        <span attrs="{'invisible': ['|', ('trial_date_start', '=', False), ('trial_date_end', '=', False)]}"> - </span><field name="trial_date_end" class="oe_inline"/>
                                     </div>
                                     <label for="date_start" string="Duration"/>
                                     <div>
-                                        <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
+                                        <field name="date_start" class="oe_inline"/><span attrs="{'invisible': ['|', ('date_start', '=', False), ('date_end', '=', False)]}"> - </span><field name="date_end" class="oe_inline"/>
                                     </div>
                                     <field name="working_hours"/>
                                 </group>

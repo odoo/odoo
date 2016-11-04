@@ -59,9 +59,9 @@
                                         <field name="address_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="mobile_phone"/>
                                         <field name="work_location"/>
                                         <field name="work_email" widget="email"/>
+                                        <field name="mobile_phone"/>
                                         <field name="work_phone"/>
                                     </group>
                                     <group string="Position">
@@ -98,7 +98,7 @@
                             </page>
                             <page string="HR Settings" groups="hr.group_hr_user">
                                 <group>
-                                    <group string='Status' name="active_group">
+                                    <group string='Attendance' name="active_group">
                                         <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="user_id" string="Related User"/>
                                     </group>
