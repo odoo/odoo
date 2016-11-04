@@ -1780,9 +1780,11 @@ exports.Order = Backbone.Model.extend({
             return 0;
         }
     },
-
     initialize_validation_date: function () {
         this.validation_date = new Date();
+    },
+    validate_order: function() {
+        this.initialize_validation_date();
     },
 
     set_tip: function(tip) {
