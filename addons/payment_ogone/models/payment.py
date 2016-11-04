@@ -304,8 +304,7 @@ class PaymentTxOgone(models.Model):
                 })
                 vals.update(payment_token_id=pm.id)
             self.write(vals)
-            if self.callback_eval:
-                safe_eval(self.callback_eval, {'self': self})
+            self.execute_callback()
             return True
         elif status in self._ogone_cancel_tx_status:
             self.write({
@@ -410,8 +409,7 @@ class PaymentTxOgone(models.Model):
                     'name': tree.get('CARDNO'),
                 })
                 self.write({'payment_token_id': pm.id})
-            if self.callback_eval:
-                safe_eval(self.callback_eval, {'self': self})
+            self.execute_callback()
             return True
         elif status in self._ogone_cancel_tx_status:
             self.write({

@@ -1,8 +1,10 @@
 # coding: utf-8
+import hashlib
+import hmac
 import logging
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import float_round, image_resize_images
+from odoo.tools import consteq, float_round, image_resize_images, ustr
 from odoo.addons.base.module import module
 from odoo.exceptions import ValidationError
 
@@ -442,9 +444,11 @@ class PaymentTransaction(models.Model):
     partner_phone = fields.Char('Phone')
     html_3ds = fields.Char('3D Secure HTML')
 
-    callback_eval = fields.Char('S2S Callback', help="""\
-        Will be safe_eval with `self` being the current transaction. i.e.:
-            self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval", groups="base.group_system")
+    callback_model_id = fields.Many2one('ir.model', 'Callback Document Model', groups="base.group_system")
+    callback_res_id = fields.Integer('Callback Document ID', groups="base.group_system")
+    callback_method = fields.Char('Callback Method', groups="base.group_system")
+    callback_hash = fields.Char('Callback Hash', groups="base.group_system")
+
     payment_token_id = fields.Many2one('payment.token', 'Payment Token', domain="[('acquirer_id', '=', acquirer_id)]")
 
     @api.onchange('partner_id')
@@ -501,6 +505,11 @@ class PaymentTransaction(models.Model):
         tx = super(PaymentTransaction, self).create(values)
         if not values.get('reference'):
             tx.write({'reference': str(tx.id)})
+
+        # Generate callback hash if it is configured on the tx; avoid generating unnecessary stuff
+        if tx.callback_model_id and tx.callback_res_id and tx.callback_method:
+            tx.write({'callback_hash': tx._generate_callback_hash()})
+
         return tx
 
     @api.multi
@@ -534,6 +543,12 @@ class PaymentTransaction(models.Model):
             reference = init_ref + '-' + str(ref_suffix)
             ref_suffix += 1
         return reference
+
+    def _generate_callback_hash(self):
+        self.ensure_one()
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        token = '%s%s%s' % (self.callback_model_id.model, self.callback_res_id, self.callback_method)
+        return hmac.new(str(secret), token, hashlib.sha256).hexdigest()
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -616,6 +631,22 @@ class PaymentTransaction(models.Model):
         if hasattr(self, invalid_param_method_name):
             return getattr(self, invalid_param_method_name)()
         return True
+
+    @api.multi
+    def execute_callback(self):
+        res = None
+        for transaction in self.filtered(lambda tx: tx.callback_model_id and tx.callback_res_id and tx.callback_method):
+            valid_token = transaction._generate_callback_hash()
+            if not consteq(ustr(valid_token), transaction.callback_hash):
+                _logger.warning("Invalid callback signature for transaction %d" % (transaction.id))
+                continue
+
+            record = self.env[transaction.callback_model_id.model].browse(transaction.callback_res_id).exists()
+            if record:
+                res = getattr(record, transaction.callback_method)(transaction)
+            else:
+                _logger.warning("Did not found record %s.%s for callback of transaction %d" % (transaction.callback_model_id.model, transaction.callback_res_id, transaction.id))
+        return res
 
     @api.multi
     def action_capture(self):

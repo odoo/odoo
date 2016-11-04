@@ -189,7 +189,9 @@ class sale_quote(http.Controller):
                 'partner_id': Order.partner_id.id,
                 'reference': PaymentTransaction.get_next_reference(Order.name),
                 'sale_order_id': Order.id,
-                'callback_eval': "self.sale_order_id._confirm_online_quote(self)"
+                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', Order._name)], limit=1).id,
+                'callback_res_id': Order.id,
+                'callback_method': '_confirm_online_quote',
             })
             request.session['quote_%s_transaction_id' % Order.id] = Transaction.id
 
