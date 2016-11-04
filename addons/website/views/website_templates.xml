@@ -180,7 +180,7 @@
             <main>
                 <t t-raw="0"/>
             </main>
-            <footer>
+            <footer >
                 <div id="footer">
                 </div>
             </footer>
@@ -241,7 +241,7 @@
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div class="oe_structure" id="footer">
+        <div class="oe_structure" id="footer" t-if='not no_footer'>
             <section>
                 <div class="container">
                     <div class="row">
@@ -293,8 +293,8 @@
 </template>
 
 <template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
-    <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="container hidden-print">
+    <xpath expr="//div[@id='footer']" position="replace" >
+        <div id="footer" class="container hidden-print" t-if='not no_footer'>
             <div class="row">
                 <div class="col-md-4 col-lg-3">
                     <h4>Our Products &amp; Services</h4>
