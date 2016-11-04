@@ -598,13 +598,13 @@ class QuantPackage(models.Model):
         'product.packaging', 'Package Type', index=True,
         help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.")
     location_id = fields.Many2one(
-        'stock.location', 'Location', compute='_compute_package_info',
+        'stock.location', 'Location', compute='_compute_package_info', search='_search_location',
         index=True, readonly=True)
     company_id = fields.Many2one(
-        'res.company', 'Company', compute='_compute_package_info',
+        'res.company', 'Company', compute='_compute_package_info', search='_search_company',
         index=True, readonly=True)
     owner_id = fields.Many2one(
-        'res.partner', 'Owner', compute='_compute_package_info',
+        'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True)
 
     @api.one
@@ -645,6 +645,36 @@ class QuantPackage(models.Model):
                 current = current.parent_id
             res[package.id] = name
         return res
+
+    def _search_location(self, operator, value):
+        if value:
+            packs = self.search([('quant_ids.location_id', operator, value)])
+        else:
+            packs = self.search([('quant_ids', operator, value)])
+        if packs:
+            return [('id', 'parent_of', packs.ids)]
+        else:
+            return [('id', '=', False)]
+
+    def _search_company(self, operator, value):
+        if value:
+            packs = self.search([('quant_ids.company_id', operator, value)])
+        else:
+            packs = self.search([('quant_ids', operator, value)])
+        if packs:
+            return [('id', 'parent_of', packs.ids)]
+        else:
+            return [('id', '=', False)]
+
+    def _search_owner(self, operator, value):
+        if value:
+            packs = self.search([('quant_ids.owner_id', operator, value)])
+        else:
+            packs = self.search([('quant_ids', operator, value)])
+        if packs:
+            return [('id', 'parent_of', packs.ids)]
+        else:
+            return [('id', '=', False)]
 
     def _check_location_constraint(self):
         '''checks that all quants in a package are stored in the same location. This function cannot be used
