@@ -566,9 +566,7 @@ class Task(models.Model):
             take_action = self._notification_link_helper('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
-            new_action_id = self.env.ref('project.action_view_task').id
-            new_action = self._notification_link_helper('new', action_id=new_action_id)
-            project_actions = [{'url': new_action, 'title': _('New Task')}]
+            project_actions = []
 
         new_group = (
             'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {

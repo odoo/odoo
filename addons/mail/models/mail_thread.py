@@ -597,9 +597,6 @@ class MailThread(models.AbstractModel):
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
             base_link = '/mail/%s' % link_type
-        elif link_type == 'new':
-            params = dict(base_params, action_id=kwargs.get('action_id', ''))
-            base_link = '/mail/new'
         elif link_type == 'controller':
             controller = local_kwargs.pop('controller')
             params = dict(base_params, **local_kwargs)
@@ -608,7 +605,7 @@ class MailThread(models.AbstractModel):
         else:
             return ''
 
-        if link_type not in ['view', 'new']:
+        if link_type not in ['view']:
             token = self._generate_notification_token(base_link, params)
             params['token'] = token
 
