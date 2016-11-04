@@ -580,7 +580,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Object} results results of evaluating domain and process for a search
      */
     do_search: function (domain, context, group_by) {
-        this.page = 0;
+        // comapare domain with previous domain
+        // reset pagination if search domain has changed
+        // a bit hacky
+        if(JSON.stringify(this._prev_search_domain) != JSON.stringify(domain))
+            this.page = 0;
+        this._prev_search_domain = domain;
         this.groups.datagroup = new DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;

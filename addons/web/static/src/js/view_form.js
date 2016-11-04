@@ -425,7 +425,22 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (hide_index) {
             $(".oe_form_pager_state", this.$pager).html("");
         } else {
-            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+            var page = 0;
+            var limit = 0;
+            try {
+                var controller = this.ViewManager.views['list'] && this.ViewManager.views['list'].controller;
+                page = controller && controller.page || 0;
+                limit = controller && controller.limit() || 0;
+            }
+            catch(err){
+                page = 0;
+                limit = 0;
+            }
+            var off = page * limit;
+            var total = this.dataset.size();
+
+            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"),
+            off + this.dataset.index + 1, total));
         }
     },
     parse_on_change: function (on_change, widget) {
