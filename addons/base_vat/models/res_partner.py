@@ -96,7 +96,7 @@ class ResPartner(models.Model):
             # country code or empty VAT number), so we fall back to the simple check.
             return self.simple_vat_check(country_code, vat_number)
 
-    @api.constrains('vat', 'country_id', 'commercial_partner_id.country_id')
+    @api.constrains('vat', 'commercial_partner_country_id')
     def check_vat(self):
         if self.env.user.company_id.vat_check_vies:
             # force full VIES online check
