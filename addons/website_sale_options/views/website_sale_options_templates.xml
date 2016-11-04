@@ -10,13 +10,13 @@
 </template>
 
 <template id="optional_products" inherit_id="website_sale.cart_lines" name="Optional products">
-  <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']/div" position="attributes">
+  <xpath expr="//table[@id='cart_products']/tbody//td[contains(@class, 'td-qty')]/div" position="attributes">
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
     <attribute name="t-att-class">'optional_product info' if line.linked_line_id else None</attribute>
   </xpath>
-  <xpath expr="//table[@id='cart_products']/tbody//td[@id='td-qty']" position="inside">
+  <xpath expr="//table[@id='cart_products']/tbody//td[contains(@class, 'td-qty')]" position="inside">
     <t t-if="line.linked_line_id">
       <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
     </t>
@@ -38,7 +38,7 @@
                   <th colspan="2">Product</th>
                   <th style="min-width: 140px;"> </th>
                   <th width="100">Price</th>
-                  <th width="120">Quantity</th>
+                  <th class='td-qty'>Quantity</th>
               </tr>
           </thead>
           <tbody>
@@ -70,12 +70,12 @@
                    }'/>
                 </td>
                 <td>
-                  <div class="input-group oe_website_spinner">
-                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
+                  <div class="css_quantity input-group oe_website_spinner">
+                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs">
                           <i class="fa fa-minus"></i>
                       </a>
                       <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
-                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
+                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs">
                           <i class="fa fa-plus"></i>
                       </a>
                   </div>
@@ -83,10 +83,9 @@
               </tr>
 
               <tr t-if="product.optional_product_ids"><td colspan="5"><h4>Select Your Options:</h4></td></tr>
-              <t t-set="option_inc" t-value="0"/>
               <tr class="js_product" t-foreach="product.optional_product_ids" t-as="product">
                 <td width="100">
-                  <input type="hidden" class="product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'"/>
+                  <input type="hidden" class="product_id" t-attf-name="optional-product-#{product_index}" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'"/>
                   <span t-field="product.image_small" t-options='{"widget": "image"}'/>
                 </td>
                 <td>
@@ -117,14 +116,13 @@
                   <p class="css_not_available_msg bg-danger" style="position:absolute; padding: 15px;">Product not available</p>
                 </td>
                 <td>
-                  <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{option_inc}" value="0"/>
+                  <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product_index}" value="0"/>
                   <a href="#" class="js_add"><strong>Add to Cart</strong></a>
                   <span class="js_remove hidden">
                     <span class="js_item">1 Item</span><span class="js_items hidden">5 Items</span><br/>
                     <a href="#" class="js_remove"><small>Remove from cart</small></a>
                   </span>
                 </td>
-                <t t-set="option_inc" t-value="option_inc+1"/>
               </tr>
 
             </tbody>
