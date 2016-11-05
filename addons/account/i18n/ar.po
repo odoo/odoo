@@ -28,8 +28,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-10-18 17:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-11-02 13:37+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +93,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>مرحباً ${object.partner_id.name},</p>\n    <p>نحيط سيادتكم علماً بصدور فاتورة جديدة لكم:</p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>البيانات</strong><br />\n       &nbsp;&nbsp;رقم الفاتورة: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;إجمالي الفاتورة: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;تاريخ الفاتورة: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;رقم الإشارة: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;مسئول الاتصال: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>يمكنك سداد الفاتورة مباشرة عبر خدمة PayPal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>إذا كان لدى سيادتكم أي استفسارات أخرى، فنرجو ألا تترددوا في التواصل معنا.</p>\n    <p>شكراً لاختياركم ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                الهاتف:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                الموقع :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -132,7 +132,7 @@ msgstr "عدد الحركات"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} فاتورة (رقم الإشارة ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -340,7 +340,7 @@ msgstr "<span class=\"panel-title\">\n                                        <s
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"الرصيد في أودو\">الرصيد الدفتري</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -487,7 +487,7 @@ msgstr "إنشاء فاتورة العميل"
 msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
-msgstr ""
+msgstr "<strong>إنشاء أمر إيداع</strong><br/>\nيسمح لك أمر الإيداع بتسجيل مدفوعاتك المختلفة والتي تشكل إيداعاتك البنكية. (قد تحتاج إلى"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -518,7 +518,7 @@ msgstr "<strong>الى تاريخ:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Deposit Tickets</strong>"
-msgstr ""
+msgstr "<strong>أوامر الإيداع</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -618,7 +618,7 @@ msgstr "</strong>تسوية البيان البنكي<strong>"
 msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
-msgstr ""
+msgstr "<strong>التسوية مع المعاملات المسجلة</strong><br/>\n                                        في هذه الحالة، سيقوم أودو آلياً بمطابقة بنود كشف الحساب البنكي مع معاملاتك البنكية والشيكات المسجلة لديه."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -630,7 +630,7 @@ msgstr "</strong>تسوية البيان البنكي الخاص بك<strong>"
 msgid ""
 "<strong>Record Bank Statement (or import file)</strong><br/>\n"
 "                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day."
-msgstr ""
+msgstr "<strong>إنشاء كشف الحساب (أو استيراد ملف)</strong><br/>\n                                        وفقاً لحجم معاملاتك، يمكنك تسجيل كشف الحساب مرة في أسبوع، أو عدة مرات في اليوم."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -642,14 +642,14 @@ msgstr "</strong>تسجيل البيان البنكي<strong>"
 msgid ""
 "<strong>Record a payment by check on the Invoice</strong><br/>\n"
 "                                        Simply click on the 'Pay' button."
-msgstr ""
+msgstr "<strong>تسجيل مدفوعات على فاتورة باستخدام شيكات</strong><br/>\n                                        ببساطة، انقر زر 'سداد'."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Reduced data entry:</strong> no need to manually create invoices, "
 "register bank statements, and send payment follow-ups."
-msgstr ""
+msgstr "<strong>تقليل إدخال البيانات:</strong> لا داعي لإنشاء الفواتير، تسجيل كشوفات الحسابات البنكية ومتابعة التحصيلات يدوياً."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -659,7 +659,7 @@ msgstr "<strong>المرجع:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Revenue Recognition</strong>"
-msgstr ""
+msgstr "<strong>إثبات الإيراد</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -704,7 +704,7 @@ msgstr "<strong>الحركات المستهدفة: </strong>"
 msgid ""
 "<strong>Test the following three scenarios in order to assist you in "
 "familiarizing yourself with Odoo:</strong>"
-msgstr ""
+msgstr "<strong>جرب متابعة السيناريوهات الثلاث التالية لتساعدك على الإلمام بأودو:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -715,7 +715,7 @@ msgstr "<strong>هناك ثلاثة مستويات مختلفة لحقوق ال�
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>There is nothing due with this customer.</strong>"
-msgstr ""
+msgstr "<strong>لا شيء مستحق على هذا العميل.</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -727,7 +727,7 @@ msgstr "<strong>الإجمالي</strong>"
 msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
-msgstr ""
+msgstr "<strong>قم باعتماد الفاتورة</strong><br/> بعد إدراج المنتجات والضرائب فيها."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -743,19 +743,19 @@ msgstr "يسمح لك السجل النقدي بإدارة السجلات الن
 #: code:addons/account/models/account_invoice.py:1206
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
-msgstr ""
+msgstr "يجب أن تتضمن شروط السداد عنصراً أخيراً من نوع 'الرصيد'."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1209
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
-msgstr ""
+msgstr "يجب أن تتضمن شروط السداد بنداً وحيداً من نوع 'الرصيد'."
 
 #. module: account
 #: code:addons/account/models/account.py:469
 #, python-format
 msgid "A bank account can anly belong to one journal."
-msgstr ""
+msgstr "يمكن ربط الحساب البنكي بدفتر يومية واحد فقط."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -763,12 +763,12 @@ msgid ""
 "A bank statement is a summary of all financial transactions\n"
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
-msgstr ""
+msgstr "كشف الحساب البنكي هو ملخص بحركات المعاملات التي\nتمت على الحساب البنكي خلال فترة زمنية معينة. عادة ما\nتحصل على كشف الحساب بشكل دوري من البنك الخاص بك."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account."
-msgstr ""
+msgstr "بند كشف الحساب هو معاملة تمت على الحساب البنكي."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -2730,7 +2730,7 @@ msgstr "ضبط الوصول"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "تكاليف الدخل"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:388
@@ -4011,7 +4011,7 @@ msgstr "مستقبل"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "GROSS PROFIT"
-msgstr ""
+msgstr "إجمالي الأرباح"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_income_currency_exchange_account_id
@@ -4521,7 +4521,7 @@ msgstr "الحساب الوارد على القالب المنتج"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1787
 #, python-format
 msgid "Incorrect Operation"
-msgstr ""
+msgstr "عملية خاطئة"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -5550,7 +5550,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-caret-down\"/> أخرى"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5601,12 +5601,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "NET ASSETS"
-msgstr ""
+msgstr "صافي الأصول"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "NET PROFIT"
-msgstr ""
+msgstr "صافي الأرباح"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_name
@@ -5631,7 +5631,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.act_account_tax_net
 #: model:ir.actions.act_window,name:account.act_account_tax_net_posted
 msgid "Net Tax Lines"
-msgstr ""
+msgstr "صافي بنود الضرائب"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -5782,7 +5782,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_number
 #: model:ir.model.fields,field_description:account.field_account_move_name
 msgid "Number"
-msgstr ""
+msgstr "الرقم"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5827,7 +5827,7 @@ msgstr "عدد الرسائل غير المقروءة"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:192
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "موافق"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6044,7 +6044,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
 msgid "Other Income"
-msgstr ""
+msgstr "دخل آخر"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -6402,7 +6402,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payments"
-msgstr ""
+msgstr "المدفوعات"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6551,7 +6551,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Fixed Assets"
-msgstr ""
+msgstr "زائد الأصول الثابتة"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6587,7 +6587,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "ترحيل قيود اليومية"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -6595,7 +6595,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr ""
+msgstr "مُرحلة"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -6627,7 +6627,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr ""
+msgstr "الدفعات المسبقة"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -7052,7 +7052,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
 msgid "Register payments on multiple invoices"
-msgstr ""
+msgstr "تسجيل المدفوعات على عدة فواتير"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7140,7 +7140,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:149
 #, python-format
 msgid "Residual"
-msgstr ""
+msgstr "المتبقي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual
@@ -7697,7 +7697,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.act_account_tax_tax_posted
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_line_ids
 msgid "Tax Lines"
-msgstr ""
+msgstr "بنود الضريبة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_ids
@@ -8248,7 +8248,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "This Year"
-msgstr ""
+msgstr "هذه السنة"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_template_property_account_expense_id
@@ -9499,7 +9499,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
