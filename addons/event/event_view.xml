@@ -327,6 +327,31 @@
            </field>
         </record>
 
+        <record id="action_for_event_form_view1" model="ir.actions.act_window.view">
+            <field name="sequence"  eval="0" />
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_event_kanban"/>
+            <field name="act_window_id" ref="action_event_view"/>
+        </record>
+        <record id="action_for_event_form_view2" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1" />
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_event_calendar"/>
+            <field name="act_window_id" ref="action_event_view"/>
+        </record>
+        <record id="action_for_event_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_event_tree"/>
+            <field name="act_window_id" ref="action_event_view"/>
+        </record>
+        <record id="action_for_event_form_view3" model="ir.actions.act_window.view">
+            <field name="sequence"  eval="3" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_event_form"/>
+            <field name="act_window_id" ref="action_event_view"/>
+        </record>
+
         <act_window
             id="act_register_event_partner"
             name="Subscribe"
