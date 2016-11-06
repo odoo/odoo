@@ -3,23 +3,23 @@
 # * account_asset
 # 
 # Translators:
-# dr&mx <dronmax@gmail.com>, 2016
+# Максим Дронь <dronmax@gmail.com>, 2016
 # KingOPl Slav <87slava13@gmail.com>, 2016
 # Masha Koc <mariya.kos.ua@gmail.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Denis Trepalin <zekarious@gmail.com>, 2016
+# Алексей Кулагин <alekseik120988.kulagin@yandex.ru>, 2016
 # Max Belyanin <maxbelyanin@gmail.com>, 2016
 # Андрей Гусев <gaussgss@gmail.com>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Alex Puchkov <ap@alteco.co>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Alex Puchkov <ap@alteco.co>, 2016\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: code:addons/account_asset/models/account_asset.py:376
 #, python-format
 msgid " (copy)"
-msgstr " (копия)"
+msgstr "(копия)"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:511
@@ -68,6 +68,7 @@ msgstr "Проводка по счету"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
+"Аккаунт используется в записях амортизации, для уменьшения стоимости активов"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -75,18 +76,22 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Учетная запись, используемая в периодических записей, чтобы записать часть "
+"актива в качестве расхода."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
 msgstr ""
+"Учетная запись, используемая для записи покупки актива в его первоначальной "
+"цены"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_active
 msgid "Active"
-msgstr "Актив"
+msgstr "Активно"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -226,7 +231,7 @@ msgstr "Анализ активов"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Активы Амортизация Линии"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -256,7 +261,7 @@ msgstr "Активы в рабочем состоянии"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Авто-подтверждение актива"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -289,6 +294,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Отметьте, если хотите сгруппировать сформированные данные по категориям"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -488,12 +494,12 @@ msgstr "Дата амортизации"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
-msgstr ""
+msgstr "Амортизация записей: счет актива"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid "Depreciation Entries: Expense Account"
-msgstr ""
+msgstr "Износ записей: расходный счет"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
@@ -632,18 +638,18 @@ msgstr "Валовая стоимость актива"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Group By..."
-msgstr "Объединять по..."
+msgstr "Группировать…"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Группа записей журнала"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -746,7 +752,7 @@ msgstr "Линейный"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "связанный"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -807,7 +813,7 @@ msgstr "Количество месяцев в периоде"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Одна запись Каждый"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -897,7 +903,7 @@ msgstr "Причина"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Счет Признание"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form

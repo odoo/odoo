@@ -5,13 +5,14 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +23,17 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_invoiced
 msgid "# Invoiced"
-msgstr ""
+msgstr "# Facturat"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_paid
 msgid "# Paid"
-msgstr ""
+msgstr "# Platit"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_waiting
 msgid "# Waiting"
-msgstr ""
+msgstr "# In asteptare"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
@@ -44,7 +45,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
 msgid "Account Invoice line"
-msgstr ""
+msgstr "Linie Factura Cont"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -54,17 +55,17 @@ msgstr "Adaugă o descriere..."
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "All Members"
-msgstr ""
+msgstr "Toti membrii"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "All non Members"
-msgstr ""
+msgstr "Toti non-membrii"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_member_price
 msgid "Amount for the membership"
-msgstr ""
+msgstr "Taxa cotizatie de membru"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_associate_member_id
@@ -81,7 +82,7 @@ msgstr "Partener asociat"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
-msgstr ""
+msgstr "Cumpara Calitatea de Membru"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
@@ -96,14 +97,14 @@ msgstr "Data de incetare a calității de membru"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
 msgid "Cancel date"
-msgstr ""
+msgstr "Data anularii"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
-msgstr ""
+msgstr "Membru anulat"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -153,7 +154,7 @@ msgstr "Creat în"
 #: model:ir.model.fields,field_description:membership.field_report_membership_membership_state
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Current Membership State"
-msgstr ""
+msgstr "Starea actuala a calitatii de membru"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
@@ -174,7 +175,7 @@ msgstr "Data de când calitatea de membru devine activă."
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_date
 msgid "Date on which member has joined the membership"
-msgstr ""
+msgstr "Data aderarii membrului"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
@@ -192,12 +193,12 @@ msgstr "Data până când ramane activă calitatea de membru."
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership_display_name
 msgid "Display Name"
-msgstr "Afiseaza nume"
+msgstr "Nume afișat"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
 msgid "Earned Amount"
-msgstr ""
+msgstr "Suma castigata"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_date_to
@@ -207,17 +208,17 @@ msgstr "Data de sfarsit"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Membership Date"
-msgstr ""
+msgstr "Data de incetare a calitatii de membru"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Month"
-msgstr ""
+msgstr "Sfârșitul lunii"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership_date_to
 msgid "End membership date"
-msgstr ""
+msgstr "Data de incheiere a calitătii de membru"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -228,17 +229,18 @@ msgstr ""
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr ""
+"Eroare ! Data de sfarsit nu poate fi setata inaintea Datei de inceput."
 
 #. module: membership
 #: code:addons/membership/models/partner.py:159
 #, python-format
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Forecast"
-msgstr ""
+msgstr "Estimare"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_free_member
@@ -246,7 +248,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr ""
+msgstr "Membru necotizant"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_from
@@ -296,19 +298,19 @@ msgstr "Linie factura"
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr ""
+msgstr "Factura membru"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Invoiced Member"
-msgstr ""
+msgstr "Membru Facturat"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "Facturat/Platit/Gratuit"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_state
@@ -337,7 +339,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
 msgid "Join Date"
-msgstr ""
+msgstr "Data aderarii"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice___last_update
@@ -361,12 +363,12 @@ msgstr "Ultima actualizare în"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_partner_id
 msgid "Member"
-msgstr ""
+msgstr "Membru"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_member_price
 msgid "Member Price"
-msgstr ""
+msgstr "Pret membru"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -379,7 +381,7 @@ msgstr "Membri"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 msgid "Members Analysis"
-msgstr ""
+msgstr "Analiza Membrilor"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_product_id
@@ -396,17 +398,17 @@ msgstr "Calitate de membru"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Suma de Membru"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "Analiza aderarii ca membru"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr ""
+msgstr "Durata Calitatii de Membru"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_to
@@ -419,31 +421,31 @@ msgstr "Data de sfârșit a calității de membru"
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 #: model:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership Fee"
-msgstr ""
+msgstr "Taxa de Membru"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr ""
+msgstr "Factura de apartenenta"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
-msgstr ""
+msgstr "Parteneri membri"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_membership_id
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership Product"
-msgstr ""
+msgstr "Produs de membru"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
-msgstr ""
+msgstr "Produse de membru"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_from
@@ -454,23 +456,23 @@ msgstr "Data de început a calității de membru"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership State"
-msgstr ""
+msgstr "Starea calitatii de membru"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_state
 msgid "Membership Status"
-msgstr ""
+msgstr "Starea Calitatii de Membru"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 #: model:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership products"
-msgstr ""
+msgstr "Produse de membru"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
-msgstr ""
+msgstr "Apartenente ca membru"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -482,12 +484,12 @@ msgstr "Luna"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Non Member"
-msgstr ""
+msgstr "Non-membri"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "None/Canceled/Old/Waiting"
-msgstr ""
+msgstr "Niciunul/Anulat/Vechi/In asteptare"
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -501,14 +503,14 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr ""
+msgstr "Membru vechi"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
-msgstr ""
+msgstr "Membru cotizant"
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -520,18 +522,18 @@ msgstr "Partener"
 #: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Partenerul nu are o adresa pentru a face factura."
 
 #. module: membership
 #: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "Partenerul este Membru necotizant."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_pending
 msgid "Pending Amount"
-msgstr ""
+msgstr "Suma in asteptare"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
@@ -551,7 +553,7 @@ msgstr "Rapoarte"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr ""
+msgstr "Venituri efectuate"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_user_id
@@ -573,7 +575,7 @@ msgstr "Data de inceput"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Start Month"
-msgstr ""
+msgstr "Lună de start"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -588,22 +590,22 @@ msgstr "Taxe"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount
 msgid "The price negotiated by the partner"
-msgstr "Pretul negociat de către partener"
+msgstr "Prețul negociat de către partener"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Aceasta nota va fi afisata la oferte..."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr ""
+msgstr "Acesta va afisa coloanele platit, vechi si total castigat"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
+msgstr "Acesta va afisa coloanele in asteptare, facturate si total in curs"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
@@ -620,7 +622,7 @@ msgstr "Furnizori"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr ""
+msgstr "Membru in asteptare"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line

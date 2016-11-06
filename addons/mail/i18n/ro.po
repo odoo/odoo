@@ -5,13 +5,14 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,6 +308,8 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
+"<div><p>Bună ziua,</p><p>%s te-a invitat să urmărești un nou "
+"document.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -392,6 +395,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Un dictionar Python care va fi evaluat pentru a furniza valorile implicite "
+"atunci cand creati inregistrari noi pentru acest alias."
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -472,7 +477,7 @@ msgstr "Intervenție necesară"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_default
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "Activat implicit la abonare."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -483,7 +488,7 @@ msgstr "Activ(a)"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_active_domain
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_active_domain
 msgid "Active domain"
-msgstr ""
+msgstr "Domeniu Activ"
 
 #. module: mail
 #. openerp-web
@@ -563,7 +568,7 @@ msgstr "Alias"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_contact
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Alias Contact Security"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_alias_domain
@@ -589,13 +594,13 @@ msgstr "Alias domain"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Model de Alias"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
 #: model:ir.ui.menu,name:mail.mail_alias_menu
 msgid "Aliases"
-msgstr ""
+msgstr "Alias-uri"
 
 #. module: mail
 #. openerp-web
@@ -685,7 +690,7 @@ msgstr "Autor"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr ""
+msgstr "Semnătura Autor"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_id
@@ -696,6 +701,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
+"Autorul mesajului. Dacă nu este selectat, email_from (expeditor_email) poate"
+" să conțină o adresa de email care nu s-a potrivit cu nici un partener."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_avatar
@@ -720,17 +727,17 @@ msgstr "Șterge automat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_ids
 msgid "Auto Subscription"
-msgstr ""
+msgstr "Abonare automată"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "Abonare automată"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Available for mass mailing"
-msgstr ""
+msgstr "Disponibil pentru corespondență în masă"
 
 #. module: mail
 #. openerp-web
@@ -752,7 +759,7 @@ msgstr "Conținut"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users_message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Salt"
 
 #. module: mail
 #: selection:mail.notification,email_status:0
@@ -792,13 +799,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_email_cc
 msgid "Carbon copy message recipients"
-msgstr ""
+msgstr "Destinatari mesaj copie carbon (Cc)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_cc
 #: model:ir.model.fields,help:mail.field_mail_template_email_cc
 msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr ""
+msgstr "Destinatari cc (copie carbon) (aici puteti folosi inlocuitori)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_cc
@@ -882,12 +889,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_child_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_child_ids
 msgid "Child Messages"
-msgstr ""
+msgstr "Mesaje secundare"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template to display its values."
-msgstr ""
+msgstr "Alegeți un șablon pentru a afișa valorile sale."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -933,6 +940,8 @@ msgstr ""
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
+"Id-uri despartite prin virgule ale partenerilor destinatari (aici pot fi "
+"folositi substituenti)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -945,6 +954,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr ""
+"Adrese destinatari despartite prin virgula (aici pot fi folositi "
+"inlocuitori)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1069,6 +1080,8 @@ msgstr "Luna crearii"
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_starred
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
+"Utilizatorul actual are o notificare marcată cu asterisc atașată acestui "
+"mesaj"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:19
@@ -1230,6 +1243,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
+"Descriere care va fi adăugată în mesajul postat pentru acest subtip. Dacă "
+"este necompletat, va fi adăugat numele."
 
 #. module: mail
 #. openerp-web
@@ -1281,6 +1296,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
+"Afiseaza o optiune in documentele asociate pentru a deschide un wizard de "
+"compoziite cu acest sablon"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete_message
@@ -1305,14 +1322,14 @@ msgstr ""
 #: code:addons/mail/static/src/js/followers.js:114
 #, python-format
 msgid "Edit Subscription of "
-msgstr ""
+msgstr "Editare abonament pentru"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/followers.xml:50
 #, python-format
 msgid "Edit subscription"
-msgstr ""
+msgstr "Editare abonament"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1331,12 +1348,12 @@ msgstr "Email Alias"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "Alias-uri Email"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr ""
+msgstr "Configurare e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_notify_email
@@ -1367,7 +1384,7 @@ msgstr "Șablon email"
 #. module: mail
 #: model:ir.model,name:mail.model_email_template_preview
 msgid "Email Template Preview"
-msgstr ""
+msgstr "Previzualizare Sablon email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template
@@ -1377,7 +1394,7 @@ msgstr "Șabloane e-mail"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Fir E-mail"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_alias_id
@@ -1385,6 +1402,8 @@ msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
 msgstr ""
+"Adresa de email asociată intern cu acest utilizator. Email-urile primite vor"
+" apare în înștiințările utilizatorului."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_email_from
@@ -1399,7 +1418,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "Adrese email de redirecționat răspunsurile..."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -1423,7 +1442,7 @@ msgstr "Email-uri"
 #: code:addons/mail/models/update.py:101
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr ""
+msgstr "Eroare în timpul comunicării cu serverul garanției editorului."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:252
@@ -1524,6 +1543,9 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
+"Câmp utilizat pentru a lega modelul asociat de modelul subtip atunci când se"
+" folosește abonarea automată pe un document corelat. Acest câmp este "
+"utilizat pentru a calcula getattr(related_document.relation_field)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_copyvalue
@@ -1745,7 +1767,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr ""
+msgstr "Persoane interesate de la"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1853,7 +1875,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_followers_res_id
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_res_id
 msgid "Id of the followed resource"
-msgstr ""
+msgstr "Id-ul resursei urmărite"
 
 #. module: mail
 #. openerp-web
@@ -2004,6 +2026,8 @@ msgid ""
 "If checked, the user's signature will be appended to the text version of the"
 " message"
 msgstr ""
+"Daca bifati, semnatura utilizatorului va fi adaugata la versiunea text a "
+"mesajului"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_opt_out
@@ -2057,7 +2081,7 @@ msgstr "Casuța poștală"
 #: model:ir.model.fields,help:mail.field_mail_message_parent_id
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_parent_id
 msgid "Initial thread message."
-msgstr ""
+msgstr "Conținutul mesajului inițial."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
@@ -2071,6 +2095,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
+"Expresie nevalidă, trebuie să fie o definiție literală din dicționarul "
+"python, de exemplu   \"{'camp': 'valoare'}\""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1776
@@ -2091,7 +2117,7 @@ msgstr "Invitație"
 #: code:addons/mail/wizard/invite.py:54
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Invitație de a urmări %s: %s"
 
 #. module: mail
 #. openerp-web
@@ -2126,7 +2152,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Asistent invitație"
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -2520,6 +2546,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Fotografie de dimensiune medie a grupului. Este redimensionată automat ca o "
+"imagine de 128x128px, cu formatul imaginii păstrat. Utilizați acest câmp în "
+"vizualizările formularului sau în unele vizualizări kanban."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -2532,6 +2561,9 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
+"Membrii acelor grupuri vor fi adaugați automat ca persoane interesate. "
+"Observați că ei vor putea să își gestioneze manual abonamentul dacă este "
+"nevoie."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -2558,7 +2590,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_record_name
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_record_name
 msgid "Message Record Name"
-msgstr ""
+msgstr "Numele Înregistrării Mesajului"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_name
@@ -2573,7 +2605,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_references
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
+msgstr "Referințe mesaj, cum ar fi identificatorii mesajelor precedente"
 
 #. module: mail
 #. openerp-web
@@ -2591,11 +2623,16 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
+"Subtipul de mesaj oferă un tip mai exact al mesajului, mai ales pentru "
+"înștiințările de sistem. De exemplu, poate fi o înștiințare asociată unei "
+"înregistrări noi (Nou), sau unei modificări a etapelor într-un proces "
+"(Modificare Etapă). Subtipurile de mesaje permit reglarea înștiințărilor pe "
+"care utilizatorul dorește să le primească."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
 msgid "Message subtypes"
-msgstr ""
+msgstr "Subtipuri de Mesaje"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_subtype_ids
@@ -2603,6 +2640,8 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
+"Au urmat subtipurile de mesaje, ceea ce înseamnă subtipuri trimise "
+"utilizatorului."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_type
@@ -2613,6 +2652,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Tipul de mesaj: email pentru mesaj email, notificare pentru mesajul sistem, "
+"comentariu pentru alte mesaje, cum ar fi răspunsurile utilizatorului"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_id
@@ -2620,7 +2661,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_message_message_id
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_message_id
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Identificator unic mesaj"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_id
@@ -2628,7 +2669,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_message_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_message_id
 msgid "Message-Id"
-msgstr ""
+msgstr "Id-Mesaj"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -2700,7 +2741,7 @@ msgstr "Mesaje"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
-msgstr ""
+msgstr "Căutare Mesaje"
 
 #. module: mail
 #. openerp-web
@@ -2727,13 +2768,15 @@ msgstr "Model"
 #: model:ir.model.fields,help:mail.field_mail_followers_res_model
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_res_model
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "Modelul resursei urmate"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
+"Modelul căruia i se aplică subtipul. Dacă este setat pe Fals, acest subtip "
+"se aplică tuturor modelelor."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -2755,7 +2798,7 @@ msgstr "Nume"
 #: model:ir.model.fields,help:mail.field_mail_message_record_name
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_record_name
 msgid "Name get of the related document."
-msgstr ""
+msgstr "Obține numele documentului asociat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_report_name
@@ -2764,6 +2807,8 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
+"Numele care va fi folosit pentru fisierul raportului generat (poate sa contina inlocuitori)\n"
+"Extensia poate sa fie omisa, iar atunci va reiesi din tipul raportului."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction
@@ -3199,7 +3244,7 @@ msgstr "Deschide document"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
-msgstr ""
+msgstr "Deschide documentul părinte"
 
 #. module: mail
 #. openerp-web
@@ -3219,7 +3264,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
 #: model:ir.model.fields,field_description:mail.field_res_users_opt_out
 msgid "Opt-Out"
-msgstr ""
+msgstr "Nu participati"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
@@ -3230,6 +3275,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Id-ul optional al unei înregistrări la care vor fi atașate toate mesajele "
+"primite, chiar dacă nu i-au răspuns. Dacă este setat, acesta va dezactiva "
+"complet crearea de înregistrări noi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_mail_server_id
@@ -3238,12 +3286,14 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
+"Server optional preferat pentru trimiterea e-mail-urilor. Daca nu este "
+"setat, va fi folosit cel cu prioritatea cea mai mare."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_template
 #: model:ir.model.fields,field_description:mail.field_mail_template_report_template
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Raport optional care va fi printat si atasat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_lang
@@ -3260,6 +3310,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
 msgstr ""
+"Valoarea optionala care va fi folosita in cazul in care campul tinta este "
+"gol"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3275,7 +3327,7 @@ msgstr "Outgoing Mail Server"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Email-uri Expediate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_mail_server_id
@@ -3308,7 +3360,7 @@ msgstr "Părinte"
 #: model:ir.model.fields,field_description:mail.field_mail_message_parent_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_parent_id
 msgid "Parent Message"
-msgstr ""
+msgstr "Mesaj principal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_model_id
@@ -3356,7 +3408,7 @@ msgstr ""
 #: code:addons/mail/models/res_partner.py:39
 #, python-format
 msgid "Partner Profile"
-msgstr ""
+msgstr "Profil Partener"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
@@ -3377,6 +3429,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_auto_delete
 msgid "Permanently delete this email after sending it, to save space"
 msgstr ""
+"Șterge definitiv acest mesaj după ce il trimite, pentru a economisi spațiu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image
@@ -3387,21 +3440,21 @@ msgstr "Poză"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template_copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Expresie Substituenta"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chatter.js:186
 #, python-format
 msgid "Please complete partner's informations"
-msgstr ""
+msgstr "Vă rugăm să completați informațiile partenerului"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/many2many_tags_email.js:68
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "Vă rugăm să completați informațiile despre partener și Email-ul sau"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -3413,7 +3466,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/composer.js:640
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "Va rugam sa asteptati pana cand se incarca acest fisier."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_contact
@@ -3450,7 +3503,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_email_template_preview_reply_to
 #: model:ir.model.fields,help:mail.field_mail_template_reply_to
 msgid "Preferred response address (placeholders may be used here)"
-msgstr ""
+msgstr "Adresa de raspuns preferata (aici pot fi folositi inlocuitori)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -3518,7 +3571,7 @@ msgstr "Destinatari"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ID Înregistrare Fir"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_references
@@ -3545,7 +3598,7 @@ msgstr "ID Document Asociat"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_model
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Modelul Documentului Asociat"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -3566,13 +3619,15 @@ msgstr "Câmp relație"
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
+"Scoateți acțiunea contextuală pentru a utiliza acest șablon de pe "
+"documentele conexe."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/followers.xml:52
 #, python-format
 msgid "Remove this follower"
-msgstr ""
+msgstr "Șterge această urmărire"
 
 #. module: mail
 #. openerp-web
@@ -3606,7 +3661,7 @@ msgstr "Răspunde la"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_report_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_report_name
 msgid "Report Filename"
-msgstr ""
+msgstr "Raport nume fisier"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -3617,12 +3672,12 @@ msgstr "Reîncearcă"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_body_html
 msgid "Rich-text Contents"
-msgstr ""
+msgstr "Conținut Rich-text"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_body_html
 msgid "Rich-text/HTML message"
-msgstr ""
+msgstr "Rich-text/Mesaj HTML"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:820
@@ -3672,12 +3727,12 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Search Alias"
-msgstr ""
+msgstr "Caută Alias"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_search
 msgid "Search Groups"
-msgstr ""
+msgstr "Caută grupuri"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_object_field
@@ -3686,6 +3741,8 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
+"Selectati campul tinta din modelul documentului asociat.\n"
+"Daca este un camp de relatie, veti putea sa selectati un camp tinta la destinatia relatiei."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -3709,7 +3766,7 @@ msgstr "Trimite email"
 #: code:addons/mail/models/mail_template.py:247
 #, python-format
 msgid "Send Mail (%s)"
-msgstr ""
+msgstr "Trimite email (%s)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -3782,7 +3839,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_source
 msgid "Shortcut"
-msgstr ""
+msgstr "Shortcut (Comanda rapida)"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:633
@@ -3794,13 +3851,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
 #: model:ir.model.fields,field_description:mail.field_mail_template_ref_ir_value
 msgid "Sidebar Button"
-msgstr ""
+msgstr "Buton Bara laterala"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_act_window
 #: model:ir.model.fields,field_description:mail.field_mail_template_ref_ir_act_window
 msgid "Sidebar action"
-msgstr ""
+msgstr "Actiune bara laterala"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_act_window
@@ -3809,12 +3866,14 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Bara laterala de actiune pentru a face ca acest sablon sa fie disponibil in "
+"inregistrarile modelului documentului asociat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_value
 #: model:ir.model.fields,help:mail.field_mail_template_ref_ir_value
 msgid "Sidebar button to open the sidebar action"
-msgstr ""
+msgstr "Buton bara laterala pentru a deschide actiunea barei laterale"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_avatar
@@ -3833,7 +3892,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small
 msgid "Small-sized photo"
-msgstr ""
+msgstr "Fotografie de dimensiuni mici"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image_small
@@ -3842,6 +3901,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Fotografie de dimensiuni mici a grupului. Este redimensionata automat ca o "
+"imagine de 64x64px, cu formatul imaginii pastrat. Utilizati acest camp "
+"oriunde este necesara o imagine mica."
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -3871,13 +3933,13 @@ msgstr "Stare"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_model_object_field
 msgid "Sub-field"
-msgstr ""
+msgstr "Sub-câmp"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_object
 msgid "Sub-model"
-msgstr ""
+msgstr "Submodel"
 
 #. module: mail
 #. openerp-web
@@ -3899,7 +3961,7 @@ msgstr "Subiect"
 #: model:ir.model.fields,help:mail.field_mail_template_subject
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Subject (placeholders may be used here)"
-msgstr ""
+msgstr "Subiect (aici puteti folosi inlocuitori)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -3944,7 +4006,7 @@ msgstr "Sistem de înștiințare"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.wizard_email_template_preview
 msgid "Template Preview"
-msgstr ""
+msgstr "Previzualizare Sablon"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -3966,6 +4028,8 @@ msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
 msgstr ""
+"Adresa de email asociată cu acest grup. Email-urile noi primite vor crea "
+"automat subiecte noi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
@@ -4016,6 +4080,9 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
+"Operatiunea solicitata nu poate fi finalizata din cauza restrictiilor de securitate. Va rugam sa contactati administratorul de sistem.\n"
+"\n"
+"(Tip de document: %s, Operatiune: %s)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
@@ -4046,6 +4113,8 @@ msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
 msgstr ""
+"Acest câmp conține imaginea utilizată ca fotografie a grupului, limitata la "
+"1024x1024 pixeli."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_public
@@ -4110,7 +4179,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Topics discussed in this group..."
-msgstr ""
+msgstr "Subiecte discutate în acest grup..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_tracking_value_ids
@@ -4137,7 +4206,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr ""
+msgstr "Valori urmărite"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
@@ -4145,7 +4214,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Valori urmărite"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_message_type
@@ -4187,6 +4256,7 @@ msgstr "Nu urmați"
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
 msgstr ""
+"Din nefericire, acest alias de email este deja folosit, alegeți unul unic"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_unread
@@ -4361,13 +4431,13 @@ msgstr "Se încarcă"
 #: code:addons/mail/static/src/js/composer.js:640
 #, python-format
 msgid "Uploading error"
-msgstr ""
+msgstr "Eroare încărcare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_use_active_domain
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "Folosește domeniul activ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_template_id
@@ -4422,6 +4492,9 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"Atunci cand un camp de relatie este selectat drept primul camp, acest camp "
+"va permite sa selectati campul tinta din cadrul modelului documentului "
+"destinatie (sub-model)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -4430,6 +4503,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Atunci cand un camp de relatie este selectat ca prim camp, acest camp arata "
+"modelul documentului la care se refera relatia."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log

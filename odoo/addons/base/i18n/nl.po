@@ -365,7 +365,7 @@ msgid ""
 msgstr ""
 "\n"
 "    * Multi-taal ondersteuning voor rekeningschema's, BTW, BTW-codes, journalen,\n"
-"      boekhoudsjablonen, analytische rekeningschema's en journalen.\n"
+"      boekhoudsjablonen, kostenplaatsen en journalen.\n"
 "    * Installatiewizard veranderingen\n"
 "      - Kopieer vertalingen voor COA, BTW, BTW-codes en fiscale posities van\n"
 "      sjablonen naar doelobjecten.\n"
@@ -415,6 +415,8 @@ msgid ""
 "    Module linking the attendance module to the timesheet app.\n"
 "    "
 msgstr ""
+"\n"
+"Module om de aanwezigheids module te linken aan de urenstaat app."
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -441,7 +443,7 @@ msgid ""
 "European Union."
 msgstr ""
 "\n"
-"Voegt intrastat rapporten toe\n"
+"Voegt intrastat rapportages toe\n"
 "===========================\n"
 "\n"
 "Deze module geeft de details weer van goederen die zijn verhandeld \n"
@@ -1710,6 +1712,16 @@ msgid ""
 "Belgian cash register. It allows the communication on with a certified Fiscal\n"
 "Data Module but will not modify the behaviour of the Point of Sale.\n"
 msgstr ""
+"\n"
+"Fiscale gegevens module hardware driver\n"
+"================================== \n"
+"\n"
+"Met deze module kan een kassa-client communiceren met een\n"
+"aangesloten Belgische fiscale gegevens module.\n"
+"\n"
+"Deze module de kassa module  ** niet ** om in een gecertificeerde\n"
+"Belgische kassa. Het laat de communicatie toe met een gecertificeerde fiscale\n"
+"gegevens module maar zal het gedrag van de kassa niet wijzigen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -2135,17 +2147,17 @@ msgstr ""
 "Beheer uitgaven door werknemers\n"
 "============================\n"
 "\n"
-"Deze applicatie staat u toe om werknemers hun dagelijkse uitgaven te beheren. Het geeft u toegang tot uw werknemers hun kosten opmerkingen en geeft u het recht om deze aan te vullen en te valideren of de opmerkingen te weigeren. Na validatie wordt een factuur aangemaakt voor de werknemer.\n"
-"De werknemer kan zijn eigen uitgaven coderen en de validatie flow plaatst het automatisch in de boekhouding na validatie door de managers.\n"
+"Deze applicatie staat u toe om werknemers hun dagelijkse uitgaven te beheren. Het geeft u toegang tot uw werknemers hun kosten opmerkingen en geeft u het recht om deze aan te vullen en te bevestigen of de opmerkingen te weigeren. Na bevestigen wordt een factuur aangemaakt voor de werknemer.\n"
+"De werknemer kan zijn eigen uitgaven coderen en de validatie flow plaatst het automatisch in de boekhouding na bevestigen door de managers.\n"
 "\n"
 "\n"
 "De volledige flow is geïmplementeerd als:\n"
 "---------------------------------\n"
 "* Concept uitgave\n"
 "* Ingediend door de werknemer naar zijn manager\n"
-"* Validatie door de boekhouder en boekhouding regel creatie\n"
+"* Bevestiging door de boekhouder en boekhouding regel creatie\n"
 "\n"
-"Deze module gebruikt ook analytische boekhouding en is compatibel met de factuur op de urenstaat module zodat u automatisch uw klanten hun uitgaven kan her-factureren als u werkt met een project."
+"Deze module gebruikt ook kostenplaatsen en is compatibel met de factuur op de urenstaat module zodat u automatisch uw klanten hun uitgaven kan her-factureren als u werkt met een project."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase
@@ -2177,7 +2189,7 @@ msgstr ""
 "\n"
 "De regels in Odoo's aanvullingsbeheer staan het systeem toe om automatisch concept inkooporders aan te maken, of u kan ze zodanig configureren dat er een lean proces wordt uitgevoerd wanneer de huidige productie daarom vraagt.\n"
 "\n"
-"Dashboard / Rapporten voor inkoopbeheer bevatten:\n"
+"Dashboard / Rapportages voor inkoopbeheer bevatten:\n"
 "---------------------------------------------------------\n"
 "* Offerteaanvragen\n"
 "* Inkooporders wachtend op goedkeuring\n"
@@ -2231,9 +2243,9 @@ msgstr ""
 "\n"
 "Deze applicatie beheerd de vakantieschema's van uw bedrijf. Het staat werknemers toe om verlofaanvragen te doen. Vervolgens kunnen managers vakantieaanvragen controleren en ze vervolgens goedkeuren of afwijzen. Op deze manier kan u de algemene vakanties plannen voor uw bedrijf of afdeling.\n"
 "\n"
-"U kan verschillende soorten aanvragen configureren (ziekte, betaalde dagen, ...) en u kan vakantie snel toewijzen aan een werknemer of afdeling door vakantie toewijzingen. Een werknemer kan ook een aanvraag doen voor meer vakantie toewijzingen. Het verhoogt het aantal beschikbare dagen voor dat type vakantie (als het verzoek is goedgekeuerd).\n"
+"U kan verschillende soorten aanvragen configureren (ziekte, betaalde dagen, ...) en u kan vakantie snel toewijzen aan een werknemer of afdeling door vakantie toewijzingen. Een werknemer kan ook een aanvraag doen voor meer vakantie toewijzingen. Het verhoogt het aantal beschikbare dagen voor dat type vakantie (als het verzoek is goedgekeurd).\n"
 "\n"
-"U kan vakanties opvolgen op verschillende manieren door de rapporten te volgen:\n"
+"U kan vakanties opvolgen op verschillende manieren volgen:\n"
 "\n"
 "* Vakantiesamenvattingen\n"
 "* Vakantie op afdeling\n"
@@ -2288,7 +2300,7 @@ msgstr ""
 "* Snelle detectie van fouten door dubbelen boekingsystemen\n"
 "* Traceerbaarheid (Serienummers, verpakkingen, ...)\n"
 "\n"
-"Dashboard / Rapporten voor voorraadbeheer bevat:\n"
+"Dashboard / Rapportages voor voorraadbeheer bevat:\n"
 "----------------------------------------------------------\n"
 "* Inkomende producten (Grafiek)\n"
 "* Uitgaande producten (Grafiek)\n"
@@ -2352,7 +2364,7 @@ msgstr ""
 "\n"
 "* *Op aanvraag*: Facturen worden handmatig gemaakt vanuit verkooporders wanneer nodig\n"
 "* *Bij pakbon*: Facturen worden gegenereerd bij de levering\n"
-"* *Vooruitbetaling*: Een proeffactuur wordt gemaakt die betaald moet worden voorafgaand aan de levering\n"
+"* Aanbetaling*: Een proeffactuur wordt gemaakt die betaald moet worden voorafgaand aan de levering\n"
 "\n"
 "Het dashboard voor de Sales Manager bevat:\n"
 "* Mijn Offertes \n"
@@ -2396,7 +2408,7 @@ msgstr ""
 "\n"
 "* *Op aanvraag*: Facturen worden handmatig gemaakt vanuit verkooporders wanneer nodig\n"
 "* *Bij pakbon*: Facturen worden gegenereerd bij de levering\n"
-"* *Vooruitbetaling*: Een proeffactuur wordt gemaakt die betaald moet worden voorafgaand aan de levering\n"
+"* *Aanbetaling*: Een proeffactuur wordt gemaakt die betaald moet worden voorafgaand aan de levering\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -2443,7 +2455,7 @@ msgstr ""
 "* Periodieke planner berekening\n"
 "* Staat navigeren door materiaallijsten in een complete structuur die kinderen en fantoom materiaallijsten toestaat\n"
 "\n"
-"Dashboard / Rapporten voor MRP bevatten:\n"
+"Dashboard / Rapportages voor MRP bevatten:\n"
 "-----------------------------------------\n"
 "* Verwervingen in uitzondering (Grafiek)\n"
 "* Vooraadwaarde variaties (Grafiek)\n"
@@ -3186,7 +3198,7 @@ msgstr ""
 "Noteer en beheer gemakkelijk urenstaten en aanwezigen\n"
 "=====================================================\n"
 "\n"
-"Deze applicatie voorziet een nieuw scherm dat u toestaat om beide aanwezigen (Inschrijven/Uitschrijven) en uw werk codering (urenstaten) te beheren op periode. Urenstaat regels worden elke dag aangemaakt door werknemers. Aan het einde van de gedefinieerde periode valideren werknemers hun urenstaten en de manager moet zijn team hun urenstaten goedkeuren. Perioden zijn gedefinieerd op het bedrijfsformulier en u kan ze instellen om wekelijks of maandelijks uit te voeren.\n"
+"Deze applicatie voorziet een nieuw scherm dat u toestaat om beide aanwezigen (Inschrijven/Uitschrijven) en uw werk codering (urenstaten) te beheren op periode. Urenstaat regels worden elke dag aangemaakt door werknemers. Aan het einde van de gedefinieerde periode bevestigen werknemers hun urenstaten en de manager moet zijn team hun urenstaten goedkeuren. Perioden zijn gedefinieerd op het bedrijfsformulier en u kan ze instellen om wekelijks of maandelijks uit te voeren.\n"
 "\n"
 "Het volledige urenstaat validatie proces is:\n"
 "---------------------------------------------\n"
@@ -3255,7 +3267,7 @@ msgstr ""
 "\n"
 "This can be used to easily create email-based workflows for many email-enabled OpenERP documents, such as:\n"
 "----------------------------------------------------------------------------------------------------------\n"
-"    * CRM Leads/Opportunities\n"
+"    * CRM Leads/Prospects\n"
 "    * CRM Claims\n"
 "    * Project Issues\n"
 "    * Project Tasks\n"
@@ -3299,10 +3311,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Stel standaard waardes in voor analytische accounts.\n"
+"Stel standaard waardes in voor kostenplaatsen.\n"
 "==============================================\n"
 "\n"
-"Staat toe om automatisch analytische accounts the selecteren gebaseerd op de criteria:\n"
+"Staat toe om automatisch kostenplaatsen the selecteren gebaseerd op de criteria:\n"
 "---------------------------------------------------------------------\n"
 "    * Product\n"
 "    * Partner\n"
@@ -3603,7 +3615,7 @@ msgstr ""
 "Het generieke Odoo klantenrelatie beheer\n"
 "====================================================\n"
 "\n"
-"Deze applicatie staat een groep van mensen toe om intelligent en efficiënt leads, opportuniteiten, meetings en activiteten te beheren.\n"
+"Deze applicatie staat een groep van mensen toe om intelligent en efficiënt leads, prospects, meetings en activiteiten te beheren.\n"
 "\n"
 "Het beheert sleuteltaken zoals communicatie, identificatie, prioritisatie, toewijzing, oplossen en notificaties.\n"
 "\n"
@@ -3616,7 +3628,7 @@ msgstr ""
 "Dashboard voor CRM bevat:\n"
 "-------------------------------\n"
 "* Geplande winst per fase en gebruiker (Grafiek)\n"
-"* Opportuniteiten per fase (Grafiek)\n"
+"* Prospects per fase (Grafiek)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -4493,26 +4505,26 @@ msgid ""
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
 msgstr ""
 "\n"
-"Deze module staat boekhouders toe om analytische en 'crossovered' budgetten te beheren.\n"
+"Deze module staat boekhouders toe om kostenplaats en 'crossovered' budgetten te beheren.\n"
 "==========================================================================\n"
 "\n"
-"Eenmaal de budgetten zijn gedefinieerd (in Facturatie/Budgetten/Budgetten) kunnen de projectbeheerders het geplande aantal kunnen instellen op elke analytische rekening.\n"
+"Eenmaal de budgetten zijn gedefinieerd (in Facturatie/Budgetten/Budgetten) kunnen de projectbeheerders het geplande aantal kunnen instellen op elke kostenplaats.\n"
 "\n"
 "De boekhouder heeft de mogelijkheid om het totaal aantal gepland voor elk\n"
 "budget bekijken om te verzekeren dat het geplande total niet groter/kleiner is dan wat er\n"
 "gepland is voor het budget. Elke lijst van records kan ook getoond worden in een grafische\n"
 "weergave.\n"
 "\n"
-"Er zijn drie rapporten beschikbaar:\n"
+"Er zijn drie rapportages beschikbaar:\n"
 "----------------------------\n"
 "1. Het eerste is beschikbaar van een lijst van budgetten. Het geeft de spreiding, voor\n"
-"deze budgetten, van de analytische rekeningen.\n"
+"deze budgetten, van de kostenplaatsen.\n"
 "\n"
 "2. Het tweede is een samenvatting van het vorige, het geeft enkel de spreiding,\n"
-"voor het geselecteerde budget, van de analytische rekeningen.\n"
+"voor het geselecteerde budget, van de kostenplaatsen.\n"
 "\n"
-"3. De laatste is beschikbaar vanuit het analytische grootboekschema. Het geeft\n"
-"de spreiding voor de geselecteerde analytische rekeningen of budgetten.\n"
+"3. De laatste is beschikbaar vanuit het kostenplaatsschema. Het geeft\n"
+"de spreiding voor de geselecteerde kostenplaatsen of budgetten.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -4737,8 +4749,8 @@ msgstr ""
 "Deze module implementeert een urenstaten systeem.\n"
 "==========================================\n"
 "Elke werknemer kan zijn verwerjte tijd invoeren en opvolgen op verschillende projecten.\n"
-"Een project is een analytische rekening en de gespendeerde tijd op een project genereert kosten op\n"
-"de analytische rekening.\n"
+"Een project is een kostenplaats en de gespendeerde tijd op een project genereert kosten op\n"
+"de kostenplaats.\n"
 "\n"
 "Er is veel rapportering op tijd en werknemer opvolging mogelijk.\n"
 "\n"
@@ -4902,7 +4914,7 @@ msgstr ""
 "De campagnes zijn dynamisch en multi-kanaal. Het proces is als volgt:\n"
 "------------------------------------------------------------------------\n"
 "* Ontwerp marketing campagnes zoals werk flows, inclusief e-mailsjablonen om\n"
-"te verzenden, rapporten om te printen en te verzenden via e-mail, aangepaste acties\n"
+"te verzenden, rapportages om te printen en te verzenden via e-mail, aangepaste acties\n"
 "* Definieer input segmenten die de items selecteren die u wilt ingeven in de\n"
 "campagne (bijv leads van bepaalde landen.)\n"
 "* Voer uw campagne uit in simulatiemodus om het real-time te testen of te accelereren,\n"
@@ -4988,6 +5000,8 @@ msgid ""
 "\n"
 "This widget allows to display gauges using d3 library.\n"
 msgstr ""
+"\n"
+"Deze widget voegt de mogelijkheid toe om metertellers weer te geven met behulp van de d3 bibliotheek. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue
@@ -5064,7 +5078,7 @@ msgstr ""
 "\n"
 "Gantt diagrammen geven u een grafische voorstelling van uw projectplannen en ook van de beschikbare middelen en werklading.\n"
 "\n"
-"Dashboard / Rapporten voor projectbeheer bevatten:\n"
+"Dashboard / Rapportages voor projectbeheer bevatten:\n"
 "--------------------------------------------------------\n"
 "* Mijn taken\n"
 "* Open taken\n"
@@ -5672,6 +5686,10 @@ msgid ""
 "                                                env[\"res.partner\"].create({\"name\": partner_name})\n"
 "                                            </code>"
 msgstr ""
+"<code>\n"
+"partner_name = obj.name + '_code'\n"
+"env[\"res.partner\"].create({\"name\": partner_name})\n"
+"</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -5745,7 +5763,7 @@ msgstr "<strong>Naam</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports :</strong>"
-msgstr "<strong>Rapporten:</strong>"
+msgstr "<strong>Rapportages:</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6056,6 +6074,24 @@ msgid ""
 "\n"
 "Note: total digits configured by default are 6.\n"
 msgstr ""
+"Nederlands Grootboekschema\n"
+"================================ \n"
+"\n"
+"Deze module is speciaal gemaakt om de boekhoudkundig \n"
+"functionaliteit te beheren volgens de Nederlandse best practice.\n"
+"\n"
+"Deze module bevat het Nederlands grootboek en btw schema.\n"
+"Dit schema is gemaakt voor de meest voorkomende bedrijven en daarom bruikbaar voor bijna elk bedrijf.\n"
+"\n"
+"De btw-rekeningen worden onmiddellijk gekoppeld om de vereiste rapportages te genereren. Voorbeeld \n"
+"van deze rapportages is de intracommunautaire transacties.\n"
+"\n"
+"Na de installatie van deze module zal de configuratie worden geactiveerd.\n"
+"Selecteer het rekeningschema met de naam \"Nederland - Grootboekschema\".\n"
+"\n"
+"Voer hierna de naam van het vennootschap, het aantal cijfers van de grootboeken, bankrekeningnummer en het standaard valuta in.\n"
+"\n"
+"Let op: het aantal cijfers van de grootboeken staat standaard op 6\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_act_window_id
@@ -8926,7 +8962,7 @@ msgstr "Definieer belastingen als Python code"
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Defined Reports"
-msgstr "Gedefineerde rapporten"
+msgstr "Gedefineerde rapportages"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_definition
@@ -9509,7 +9545,7 @@ msgstr "Meer info over fout:"
 #: code:addons/models.py:1062
 #, python-format
 msgid "Error while validating constraint"
-msgstr "Fout bij valideren beperking"
+msgstr "Fout bij bevestigen beperking"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_menu.py:88
@@ -10107,7 +10143,7 @@ msgstr "Beschikbare lettertypen"
 #: model:ir.model.fields,help:base.field_res_company_rml_footer
 #: model:ir.model.fields,help:base.field_res_company_rml_footer_readonly
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "Voettekst, weergegeven aan de onderzijde van alle rapporten."
+msgstr "Voettekst, weergegeven aan de onderzijde van alle rapportages."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_name
@@ -10116,9 +10152,9 @@ msgid ""
 "'render_html' of the model 'report.template_name' will be called (if any) to"
 " give the html. For RML reports, this is the LocalService name."
 msgstr ""
-"Voor QWeb rapporten, naam van het sjabloon in de weergave. De methode "
+"Voor QWeb rapportages, naam van het sjabloon in de weergave. De methode "
 "'render_html' van het model 'report.template_name' wordt aangesproken "
-"(indien HTML aanwezig is.) Voor RML rapporten is dit de LocalService naam."
+"(indien HTML aanwezig is.) Voor RML rapportages is dit de LocalService naam."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_key2
@@ -13759,6 +13795,8 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                                <code>self.env</code>, etc."
 msgstr ""
+"Andere functies zijn toegankelijk via <code>self</code>, zoals\n"
+"<code>self.env</code>, etc."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -13766,6 +13804,8 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                    <code>self.env</code>, etc."
 msgstr ""
+"Andere functies zijn toegankelijk via <code>self</code>, zoals\n"
+"<code>self.env</code>, etc."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -14586,7 +14626,7 @@ msgstr "RML interne kopregels"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header3
 msgid "RML Internal Header for Landscape Reports"
-msgstr "RML interne kop voor liggende rapporten"
+msgstr "RML interne kop voor liggende rapportages"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -14716,7 +14756,7 @@ msgstr "Recursiviteit ontdekt."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_reference
 msgid "Reference"
-msgstr ""
+msgstr "Referentie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_ref_object
@@ -15515,7 +15555,7 @@ msgid ""
 "RML reports of the user company"
 msgstr ""
 "Stel het lettertype in voor de rapportage kop. Het wordt gebruikt als "
-"standaard lettertype in de RML rapporten van het bedrijf van de gebruiker."
+"standaard lettertype in de RML rapportages van het bedrijf van de gebruiker."
 
 #. module: base
 #: code:addons/base/res/res_users.py:524
@@ -15861,7 +15901,7 @@ msgstr "Start configuratie"
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Status"
+msgstr "Staat / Provincie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_code
@@ -16662,8 +16702,8 @@ msgid ""
 "time values: your computer's timezone."
 msgstr ""
 "De tijdzone van de relatie, die wordt gebruikt om de juiste datum en tijd "
-"weer te geven in afgedrukte rapporten. Het is belangrijk om een waarde voor "
-"dit veld in te stellen. U moet gebruik maken van dezelfde tijdzone die "
+"weer te geven in afgedrukte rapportages. Het is belangrijk om een waarde "
+"voor dit veld in te stellen. U moet gebruik maken van dezelfde tijdzone die "
 "anders wordt gebruikt op uw computer."
 
 #. module: base
@@ -18709,7 +18749,7 @@ msgstr "Bijv. Global Business Solutions"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. Mr."
-msgstr "bijv. Mr."
+msgstr "bijv. Dhr."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form

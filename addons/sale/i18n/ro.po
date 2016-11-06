@@ -5,13 +5,14 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:42+0000\n"
 "PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,12 +127,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "# of Qty"
-msgstr ""
+msgstr "# a cantitătii"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# Comenzii de Vânzare"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -139,6 +140,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -506,7 +509,7 @@ msgstr "Etichetă analitic"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Contabilitate analitica pentru vanzari"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -592,7 +595,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a team target"
-msgstr ""
+msgstr "Click pentru a defini ținta echipei "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -717,7 +720,7 @@ msgstr "Dată comandă"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Date Ordered:"
-msgstr ""
+msgstr "Data Comenzii"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_create_date
@@ -855,7 +858,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
 msgid "Display Name"
-msgstr "Afiseaza nume"
+msgstr "Nume afișat"
 
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
@@ -876,33 +879,33 @@ msgstr "Nu personaliza rapoartele de comenzi de vânzare și facturi"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:85
 #, python-format
 msgid "Down Payment"
-msgstr "Plată"
+msgstr "Avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr "Suma plătită pe loc"
+msgstr "Valoare avans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr "Produs cu plata pe loc"
+msgstr "Produs cu plata în avans"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr "Plata pe loc (sumă fixă)"
+msgstr "Plată în avans (valoare fixă)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr "Plata pe loc (procent)"
+msgstr "Plată în avans (procent)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:82
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Plata pe loc a %s%%"
+msgstr "Plată în avans a %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1087,7 +1090,7 @@ msgstr "Linii facturabile"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "Poziții facturabile (plata pe loc dedusă)"
+msgstr "Linii facturabile (plată în avans determinată)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -1601,7 +1604,7 @@ msgstr "Liste de prețuri"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Pricing"
-msgstr ""
+msgstr "Prețuri"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1685,7 +1688,7 @@ msgstr "Produsele au o singură unitate de măsură (mai ușor)"
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Proprietati in linii"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -1799,6 +1802,7 @@ msgstr "Refacturare cheltuieli"
 #: model:ir.model.fields,help:sale.field_sale_order_origin
 msgid "Reference of the document that generated this sales order request."
 msgstr ""
+"Referinta documentului care a generat aceasta cerere a comenzii de vanzare."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_configuration_action
@@ -1879,7 +1883,7 @@ msgstr "Vânzare efectuată"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "Pâlnie vanzari"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1924,7 +1928,7 @@ msgstr "Liniile din comenzile de vânzare pregătite să fie facturate"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "Liniile Comenzii de vanzare asociate unei Comenzi de vanzare de-a mea"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -2020,6 +2024,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Daca selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un "
+"mesaj, Selectand \"Mesaj de blocare\" veti trimite o exceptie cu mesajul si "
+"va bloca fluxul. Mesajul trebuie scris în campul urmator."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
@@ -2228,8 +2235,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"Produsul folosit pentru a factura o \"plată pe loc\" trebuie să fie de tip "
-"Serviciu. Vă rugăm alegeți alt produs sau modificați proprietățile celui "
+"Produsul folosit pentru a factura o \"plată în avans\" trebuie să fie de tip"
+" Serviciu. Vă rugăm alegeți alt produs sau modificați proprietățile celui "
 "ales."
 
 #. module: sale
@@ -2240,12 +2247,15 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"Produsul folosit pentru facturare în avans trebuie să aibă politica de "
+"facturare stabilită la ”Cantitate comandată”. Vă rugăm actualizați produsul "
+"stocat pentru a putea crea factura."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:79
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "Valoarea sumei platite \"pe loc\" trebuie s[ fie pozitiv["
+msgstr "Valoarea avansului trebuie să fie pozitivă"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:75

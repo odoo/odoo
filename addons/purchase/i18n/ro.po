@@ -5,13 +5,14 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 13:59+0000\n"
 "PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,27 @@ msgid ""
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
+"\n"
+"<p>Dragă\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Aici este ${object.state in ('draft', 'sent') and 'cererea de ofertă' or 'comanda de achiziție confirmată'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    cu referința: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"în valoare <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"de la ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Dacă aveți orice întrebare, nu ezitați să ne contactați</p>\n"
+"<p>Cu bine,</p>\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -232,6 +254,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
 msgid "Allows you to compute product cost price based on average cost."
 msgstr ""
+"Va permite sa calculati pretul de cost al produsului pe baza costului mediu."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_uom
@@ -274,7 +297,7 @@ msgstr "Cont analitic"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Contabilitate Analitica pentru Achizitii"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
@@ -284,7 +307,7 @@ msgstr "Etichetă analitic"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_config_settings_group_analytic_account_for_purchases
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "Contabilitate analitica pentru achizitii"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -397,7 +420,7 @@ msgstr ""
 #: code:addons/purchase/models/stock.py:84
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Nu se poate găsi o rută de achiziţionare generică"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -545,7 +568,7 @@ msgstr "Dată aprobare"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report_date_order
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Data la care acest document a fost creat"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_delay_pass
@@ -555,7 +578,7 @@ msgstr "Zile până la livrare"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_delay
 msgid "Days to Validate"
-msgstr ""
+msgstr "Zile pana la validare"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_type_id
@@ -596,7 +619,7 @@ msgstr "Tip locație destinație"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
 msgid "Display Name"
-msgstr "Afiseaza nume"
+msgstr "Nume afișat"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -720,6 +743,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Termenii Comerciali Internationali sunt o serie de termeni comerciali "
+"predefiniti folositi in tranzactiile internationale."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
@@ -825,7 +850,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Mesaj pentru Comanda de achiziție"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
@@ -935,7 +960,7 @@ msgstr "Statusul comenzii"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order of Day"
-msgstr ""
+msgstr "Ordinea de zi"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:769
@@ -951,7 +976,7 @@ msgstr "Comenzi"
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Email-uri Expediate"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
@@ -1218,7 +1243,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that include lines not invoiced."
-msgstr ""
+msgstr "Comenzi de achizitie care includ linii nefacturate."
 
 #. module: purchase
 #: selection:purchase.config.settings,module_purchase_requisition:0
@@ -1229,12 +1254,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "Achiziţie pentru aprovizionarea magaziei"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Pretul Standard de achizitie"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -1306,7 +1331,7 @@ msgstr "Cotații și Achiziții"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "Retrimitere CdC prin Email"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1323,7 +1348,7 @@ msgstr "Cantitatea primită"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
 msgid "Receptions"
-msgstr ""
+msgstr "Primiri"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1334,7 +1359,7 @@ msgstr "Referință"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Unitatea de măsură de referință"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_origin
@@ -1407,6 +1432,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Daca selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un "
+"mesaj, Selectand \"Mesaj de blocare\" veti trimite o exceptie cu mesajul si "
+"va bloca fluxul. Mesajul trebuie scris în campul urmator."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1560,6 +1588,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
+"Acest cont va fi folosit pentru a evalua diferentele de pret dintre pretul "
+"de achizitie si pretul de cost."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1641,7 +1671,7 @@ msgstr "Total valoare fără taxe"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Total amount"
-msgstr "Suma totală"
+msgstr "Valoare totală"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
@@ -1823,17 +1853,18 @@ msgstr "Avertizare pentru %s"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on the Purchase Order"
-msgstr ""
+msgstr "Avertizare pe Comanda de Achiziție"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr ""
+msgstr "Avertizare la achizitia acestui produs"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
 msgstr ""
+"Când produsele sunt achiziţionate, se pot trimite către această magazie"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_product_variant

@@ -1,22 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_mercury
-#
+# 
 # Translators:
 # Manuela Silva <inactive+alfalb@transifex.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
+# Ricardo Correia <rcorreiavv@gmail.com>, 2016
+# Manuela Silva <manuela.silva@sky.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-05-19 11:22+0000\n"
-"Last-Translator: Manuela Silva <inactive+alfalb@transifex.com>\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
-"pt/)\n"
-"Language: pt\n"
+"POT-Creation-Date: 2016-09-07 08:55+0000\n"
+"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2016\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_mercury
@@ -37,14 +41,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Mercury Configurations</i> define what Mercury account will be used when\n"
-"                                processing credit card transactions in the "
-"Point Of Sale. Setting up a Mercury\n"
-"                                configuration will enable you to allow "
-"payments with various credit cards\n"
-"                                (eg. Visa, MasterCard, Discovery, American "
-"Express, ...). After setting up this\n"
-"                                configuration you should associate it with a "
-"Point Of Sale payment method."
+"                                processing credit card transactions in the Point Of Sale. Setting up a Mercury\n"
+"                                configuration will enable you to allow payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
+"                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 
 #. module: pos_mercury
@@ -118,7 +118,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Click to configure your card reader."
-msgstr ""
+msgstr "Clique para configurar o seu leitor de cartão."
 
 #. module: pos_mercury
 #. openerp-web
@@ -161,7 +161,7 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:17
+#: code:addons/pos_mercury/models/pos_mercury.py:15
 #, python-format
 msgid "Credit Card"
 msgstr "Cartão de Crédito"
@@ -177,7 +177,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_display_name
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_display_name
 msgid "Display Name"
-msgstr "Nome a Mostrar"
+msgstr "Nome a Exibir"
 
 #. module: pos_mercury
 #. openerp-web
@@ -217,10 +217,8 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"For quickly handling orders: just swiping a credit card when on the payment "
-"screen\n"
-"                                (without having pressed anything else) will "
-"charge the full amount of the order to\n"
+"For quickly handling orders: just swiping a credit card when on the payment screen\n"
+"                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
 
@@ -270,7 +268,7 @@ msgstr "A efetuar a transação..."
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_id
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_id
 msgid "ID"
-msgstr "ID"
+msgstr "Id."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_id
@@ -282,8 +280,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Mercury account, contact Mercury at +1 (800) "
-"846-4472\n"
+"If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
 
@@ -539,13 +536,13 @@ msgstr "Última Modificação em"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualização por"
+msgstr "Última Atualização por"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_date
 msgid "Last Updated on"
-msgstr "Última Actualização em"
+msgstr "Última Atualização em"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
@@ -823,7 +820,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "A configuração de Mercury utilizada para este diário"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_number
@@ -904,10 +901,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Mercury integration in the Point Of Sale is easy: just press the\n"
-"                                associated payment method. After that the "
-"amount can be adjusted (eg. for cashback)\n"
-"                                just like on any other payment line. "
-"Whenever the payment line is set up, a card\n"
+"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
 
@@ -928,10 +923,8 @@ msgstr "A AGUARDAR PASSAGEM DO CARTÃO"
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"We currently support the MagTek Dynamag card reader device. It can be "
-"connected\n"
-"                                directly to the Point Of Sale device or it "
-"can be connected to the POSBox."
+"We currently support the MagTek Dynamag card reader device. It can be connected\n"
+"                                directly to the Point Of Sale device or it can be connected to the POSBox."
 msgstr ""
 
 #. module: pos_mercury
@@ -959,6 +952,11 @@ msgstr "X______________________________"
 #: model:ir.model,name:pos_mercury.model_barcode_rule
 msgid "barcode.rule"
 msgstr "barcode.rule"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
