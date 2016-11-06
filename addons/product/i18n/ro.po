@@ -5,13 +5,14 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 14:00+0000\n"
 "PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,6 +200,9 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
+"O categorie de tip vizualizare este o categorie virtuala care poate fi "
+"utilizata ca parinte al unei alte categorii pentru a crea o structura "
+"ierarhica."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_sale
@@ -365,7 +369,7 @@ msgstr "Nume atribut"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "Prețul extra al atributului"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
@@ -424,6 +428,8 @@ msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
 msgstr ""
+"Pretul de baza pentru calcularea pretului clientului. Uneori este numit "
+"pretul de catalog."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
@@ -462,12 +468,12 @@ msgstr "Imagine de dimensiune mare"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "Raport mărire"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr ""
+msgstr "Mai mare decat Unitatea de Masura de referinta"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -519,6 +525,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr ""
+"Calculează Pretul produsului per unitate pe baza versiunii listei de "
+"preturi."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
@@ -595,7 +603,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
 msgid "Child Categories"
-msgstr ""
+msgstr "Categorii secundare"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -713,6 +721,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Conversia intre Unitatile de Masura pot avea loc numai daca ele apartin "
+"aceleiasi categorii. Conversia va fi facuta pe baza proportiilor."
 
 #. module: product
 #: code:addons/product/models/product_uom.py:89
@@ -721,6 +731,8 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"Conversia din UdM a Produsului %s in UdM Implicita %s nu este posibila "
+"pentru ca cele doua apartin unor Categorii diferite!."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -849,7 +861,7 @@ msgstr "Ref client"
 #: model:product.product,name:product.product_delivery_02
 #: model:product.template,name:product.product_delivery_02_product_template
 msgid "Datacard"
-msgstr ""
+msgstr "Card de date"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
@@ -891,7 +903,7 @@ msgstr "Descriere"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Quotations"
-msgstr ""
+msgstr "Descriere pentru Oferte"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -925,7 +937,7 @@ msgstr "Determină ordinea de afişare"
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr "Afiseaza nume"
+msgstr "Nume afișat"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -996,7 +1008,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:419
 #, python-format
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "Eroare! Limita minima ar trebui sa fie mai mica decat limita maxima."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:413
@@ -1005,6 +1017,8 @@ msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Eroare! Nu puteti sa atribuiti Lista Principala de Preturi drept O Alta "
+"Lista de Preturi in Elementul Listei de Preturi!"
 
 #. module: product
 #: code:addons/product/models/product_template.py:252
@@ -1013,6 +1027,8 @@ msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
 msgstr ""
+"Eroare: Unitatea de masura implicita si Unitatea de masura pentru achizitie "
+"trebuie sa fie in aceeasi categorie."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1079,7 +1095,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price
 msgid "Explicit rule name for this pricelist line."
-msgstr ""
+msgstr "Numele regulii explicite pentru aceasta linie a listei de preturi."
 
 #. module: product
 #: model:product.product,name:product.service_cost_01
@@ -1160,6 +1176,9 @@ msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+"Prezinta modurile diferite de ambalare ale aceluiasi produs. Aceasta nu are "
+"nici un impact asupra comenzii de ridicare si este folosit in principal daca"
+" folositi modulul EDI."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
@@ -1168,6 +1187,9 @@ msgid ""
 " gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
+"Prezinta ordinea in care va fi bifat obiectul listei de preturi. Evaluarea "
+"acorda o mai mare prioritate secventei mai mici si se opreste de indata ce "
+"gaseste un obiect care se potriveste."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
@@ -1303,6 +1325,8 @@ msgstr ""
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
+"Daca nu selectati, va va permite sa ascundeti lista de preturi fara sa o "
+"stergeti."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_active
@@ -1475,6 +1499,9 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"Timpul, în zile, dintre confirmarea comenzii de achiziţie şi recepţia "
+"produselor in magazie. Folosită de scheduler pentru calculul automat al "
+"comenzii de achiziţie"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1521,7 +1548,7 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr ""
+msgstr "Gestionați Ambalarea Produsului"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -1531,7 +1558,7 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
 msgid "Manage Properties of Product"
-msgstr ""
+msgstr "Gestionati Proprietatile Produsului"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1541,7 +1568,7 @@ msgstr "Marja max."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "Marja Pret Maxim"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_medium
@@ -1556,6 +1583,10 @@ msgid ""
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
 msgstr ""
+"Imagine de dimensiune medie a produsului. Este redimensionata automat ca o "
+"imagine de 128x128px, cu pastrarea aspectului imaginii, numai atunci cand "
+"imaginea depaseste una dintre acele dimensiuni. Folositi acest domeniu in "
+"vizualizarile formularului sau in unele vizualizari kanban."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1753,12 +1784,12 @@ msgstr "Preț"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Price Computation"
-msgstr ""
+msgstr "Calcul pret"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_discount
 msgid "Price Discount"
-msgstr ""
+msgstr "Reduceri de pret"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_price_extra
@@ -1771,6 +1802,8 @@ msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
+"Preţ extra: preţul suplimentar pentru varianta de produs cu acest atribut, "
+"de ex. 200 preţ extra, 1000 + 200 = 1200"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -1784,12 +1817,12 @@ msgstr "Lista de prețuri"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_round
 msgid "Price Rounding"
-msgstr ""
+msgstr "Rotunjure pret"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_surcharge
 msgid "Price Surcharge"
-msgstr ""
+msgstr "Suprataxare pret"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_kanban_view
@@ -1837,7 +1870,7 @@ msgstr "Nume Listă prețuri"
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
-msgstr ""
+msgstr "Element al Listei de preturi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
@@ -1858,13 +1891,13 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Listele de prețuri sunt gestionate în"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr ""
+msgstr "Prețuri"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -1994,7 +2027,7 @@ msgstr "Produse"
 #: model:ir.actions.report.xml,name:product.report_product_label
 #: model:ir.actions.report.xml,name:product.report_product_template_label
 msgid "Products Labels"
-msgstr ""
+msgstr "Etichete Produse"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2005,12 +2038,12 @@ msgstr "Preț produse"
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr ""
+msgstr "Lista de preturi Produse"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr ""
+msgstr "Căutați Prețul Produselor"
 
 #. module: product
 #: selection:base.config.settings,group_product_variant:0
@@ -2089,12 +2122,12 @@ msgstr "RAM SR5"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor
 msgid "Ratio"
-msgstr ""
+msgstr "Raport"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "Unitatea de Masura de Referinta pentru aceasta categorie"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2105,7 +2138,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
 msgid "Right Parent"
-msgstr ""
+msgstr "Părinte dreapta"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2245,6 +2278,9 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
+"Seteaza pretul astfel incat sa fie un multiplu al acestei valori.\n"
+"Rotunjirea se aplica dupa reducere si inainte de majorare.\n"
+"Pentru a avea preturi care se termină in 9.99, setati rotunjirea la 10, iar majorarea la -0.01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
@@ -2284,11 +2320,14 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Imagine de dimensiuni mici a produsului. Este redimensionata automat drept o"
+" imagine de 64x64px, cu pastrarea aspectului imaginii. Folositi acest "
+"domeniu oriunde este necesara o imagine mica."
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr ""
+msgstr "Mai mica decat Unitatea de Masura de referinta"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2309,6 +2348,9 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
+"Specificati o categorie a produsului daca aceasta regula se aplica doar "
+"produselor care apartin acestei categorii sau categoriilor subordonate ei. "
+"In caz contrar lasati necompletat."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
@@ -2316,6 +2358,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"Specificati un produs daca aceasta regula se aplica doar unui produs. In caz"
+" contrar, lasati necompletat."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
@@ -2323,6 +2367,8 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
+"Specificati un sablon daca aceasta regula se aplica doar unui sablon de "
+"produse. In caz contrar lasati necompletat."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
@@ -2338,16 +2384,18 @@ msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Specificati valoarea fixa de adunat sau de scazut(daca este negativa) la "
+"valoarea calculata cu reducere."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "Specificati valoarea maxima a limitei peste pretul de baza."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "Specificati valoarea minima a limitei peste pretul de baza."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
@@ -2447,7 +2495,7 @@ msgstr ""
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "Preţul calculat exprimat pe unitatea de masură implicită a produsului"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
@@ -2455,12 +2503,15 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"Cantitatea calculata va fi un multiplu al acestei valori. Folositi 1.0 "
+"pentru o Unitate de Masura care nu mai poate fi impartita, precum este o "
+"bucata."
 
 #. module: product
 #: code:addons/product/models/product_uom.py:43 sql_constraint:product.uom:0
 #, python-format
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "Raportul conversiei pentru o unitate de masura nu poate fi zero!"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -2632,12 +2683,12 @@ msgstr ""
 #. module: product
 #: sql_constraint:product.attribute.value:0
 msgid "This attribute value already exists !"
-msgstr ""
+msgstr "Această valoare a atributului există deja!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
 msgid "This comes from the product form."
-msgstr ""
+msgstr "Aceasta provine din formularul produsului."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
@@ -2645,6 +2696,8 @@ msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr ""
+"Acest câmp conţine imaginea folosită pentru varianta de produs (limitată la "
+"1024x1024px)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
@@ -2652,11 +2705,13 @@ msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
 msgstr ""
+"Acest camp contine imaginea folosita drept imagine a produsului, limitata la"
+" 1024x1024px."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Suma prețurilor extra pentru toate atributele"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2669,6 +2724,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
+"Aceasta lista de preturi va fi folosita in locul celei implicite pentru "
+"vanzarile catre partenerul curent"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
@@ -2758,7 +2815,7 @@ msgstr "Unități de măsură"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_categ_form_view
 msgid "Units of Measure categories"
-msgstr ""
+msgstr "Categorii Unitati de masura"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -2822,14 +2879,14 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr ""
+msgstr "Prețuri variante"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "Valori ale variantei de produs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
@@ -3044,7 +3101,7 @@ msgstr ""
 #: model:product.product,name:product.product_order_01
 #: model:product.template,name:product.product_order_01_product_template
 msgid "Zed+ Antivirus"
-msgstr ""
+msgstr "Zed+ Antivirus"
 
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
@@ -3084,12 +3141,12 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "de exemplu: 1 * (unitatea de referinta) = raport * (aceasta unitate)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "de exemplu 1 * (aceasta unitate) = raport * (unitatea de referinta)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
@@ -3104,7 +3161,7 @@ msgstr "picior(oare)"
 #. module: product
 #: model:product.uom,name:product.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "gal(s)"
 
 #. module: product
 #: model:product.product,name:product.product_product_8
@@ -3232,7 +3289,7 @@ msgstr "report.product.report_pricelist"
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "the parent company"
-msgstr ""
+msgstr "compania părinte"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view

@@ -5,13 +5,14 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +104,7 @@ msgstr "%d luni în urmă"
 #: code:addons/web/static/src/js/widgets/debug_manager.js:137
 #, python-format
 msgid "%d requests (%d ms) %d queries (%d ms)"
-msgstr ""
+msgstr "%d cereri (%d ms) %d interogări (%d ms)"
 
 #. module: web
 #. openerp-web
@@ -126,6 +127,9 @@ msgid ""
 "                        &lt;body class=\"ie9\"&gt;\n"
 "                    &lt;![endif]--&gt;"
 msgstr ""
+"&lt;!--[if lt IE 10]&gt;\n"
+"                        &lt;body class=\"ie9\"&gt;\n"
+"                    &lt;![endif]--&gt;"
 
 #. module: web
 #. openerp-web
@@ -153,7 +157,7 @@ msgstr "'%s' nu este o dată cu oră corectă"
 #: code:addons/web/static/src/js/framework/formats.js:146
 #, python-format
 msgid "'%s' is not a correct float"
-msgstr ""
+msgstr "'%s' nu este o stabilizare corectă"
 
 #. module: web
 #. openerp-web
@@ -188,7 +192,7 @@ msgstr "(%d înregistrări)"
 #: code:addons/web/static/src/xml/base_common.xml:100
 #, python-format
 msgid "(no string)"
-msgstr ""
+msgstr "(fără clauză)"
 
 #. module: web
 #. openerp-web
@@ -412,7 +416,7 @@ msgstr "Grafic bare"
 #: code:addons/web/static/src/js/views/list_view.js:1843
 #, python-format
 msgid "Binary file"
-msgstr ""
+msgstr "Fișier binar"
 
 #. module: web
 #. openerp-web
@@ -447,7 +451,7 @@ msgstr "Biti,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
 #: code:addons/web/static/src/js/views/list_common.js:134
 #, python-format
 msgid "Can't convert value %s to context"
-msgstr ""
+msgstr "Nu se poate efectua conversia valorii %s la context"
 
 #. module: web
 #. openerp-web
@@ -573,14 +577,14 @@ msgstr "Imaginea selectată nu a putut fi afișată."
 #: code:addons/web/static/src/js/views/list_view.js:1019
 #, python-format
 msgid "Could not find id in dataset"
-msgstr ""
+msgstr "Imposibil de găsit ID-ul în setul de date"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/utils.js:180
 #, python-format
 msgid "Could not serialize XML"
-msgstr ""
+msgstr "Nu s-a putut serializa XML"
 
 #. module: web
 #. openerp-web
@@ -659,7 +663,7 @@ msgstr "Data creării:"
 #: code:addons/web/static/src/xml/base.xml:179
 #, python-format
 msgid "Creation User:"
-msgstr ""
+msgstr "Creare Utilizator:"
 
 #. module: web
 #. openerp-web
@@ -774,7 +778,7 @@ msgstr "Domeniu:"
 #: code:addons/web/static/src/js/framework/misc.js:16
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
-msgstr ""
+msgstr "Nu plecați,<br />încă se încarcă..."
 
 #. module: web
 #. openerp-web
@@ -930,7 +934,7 @@ msgstr "Exportă toate datele"
 #: code:addons/web/static/src/js/view_manager.js:435
 #, python-format
 msgid "Failed to evaluate search criterions"
-msgstr ""
+msgstr "Nu a reușit să evalueze criteriile de căutare"
 
 #. module: web
 #. openerp-web
@@ -959,7 +963,7 @@ msgstr "Câmp:"
 #: code:addons/web/static/src/xml/base.xml:157
 #, python-format
 msgid "Fields View Get"
-msgstr ""
+msgstr "Vizualizare Câmpuri"
 
 #. module: web
 #. openerp-web
@@ -1116,7 +1120,7 @@ msgstr "Imagine"
 #: code:addons/web/static/src/xml/base.xml:1091
 #, python-format
 msgid "Import-Compatible Export"
-msgstr ""
+msgstr "Compatibil Import-Export"
 
 #. module: web
 #. openerp-web
@@ -1138,7 +1142,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/debug_manager.js:185
 #, python-format
 msgid "JS Tests"
-msgstr ""
+msgstr "Teste JS"
 
 #. module: web
 #: code:addons/web/controllers/main.py:731
@@ -1212,6 +1216,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Eroare de evaluare locala\n"
+"%s\n"
+"\n"
+"%s"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
@@ -1238,6 +1246,7 @@ msgstr "Scăzut"
 #, python-format
 msgid "M2O search fields do not currently handle multiple default values"
 msgstr ""
+"Câmpurile de căutare M2O nu se ocupă în prezent de valori implicite multiple"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login_layout
@@ -1464,7 +1473,7 @@ msgstr "Nici o valoare pentru câmpul %s pentru valoarea %s"
 #: code:addons/web/static/src/js/framework/utils.js:144
 #, python-format
 msgid "Node [%s] is not a JSONified XML node"
-msgstr ""
+msgstr "Nodul [%s] nu este un nod JSONified XML"
 
 #. module: web
 #. openerp-web
@@ -1518,7 +1527,7 @@ msgstr "Odoo Enterprise"
 #. module: web
 #: model:ir.ui.view,arch_db:web.qunit_suite
 msgid "Odoo Web Tests"
-msgstr ""
+msgstr "Odoo Teste Web"
 
 #. module: web
 #. openerp-web
@@ -1584,7 +1593,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:115
 #, python-format
 msgid "Open View"
-msgstr ""
+msgstr "Deschide vizualizare"
 
 #. module: web
 #. openerp-web
@@ -1642,7 +1651,7 @@ msgstr "Pivot"
 #: code:addons/web/static/src/js/widgets/data_export.js:168
 #, python-format
 msgid "Please enter save field list name"
-msgstr ""
+msgstr "Introduceți numele listei câmpului de salvat"
 
 #. module: web
 #. openerp-web
@@ -1885,7 +1894,7 @@ msgstr "Înregistrări selectate"
 #: code:addons/web/static/src/js/views/form_widgets.js:458
 #, python-format
 msgid "Select records..."
-msgstr ""
+msgstr "Selectați înregistrări..."
 
 #. module: web
 #. openerp-web
@@ -1927,7 +1936,7 @@ msgstr "Setează valorile implicite"
 #: code:addons/web/static/src/js/views/list_view.js:928
 #, python-format
 msgid "Setting 'id' attribute on existing record %s"
-msgstr ""
+msgstr "Setarea atributului 'identificare' la înregistrarea existentă %s"
 
 #. module: web
 #. openerp-web
@@ -2090,7 +2099,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:1090
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
-msgstr ""
+msgstr "Fisierul selectat depaseste dimensiunea maxima a fisierului de %s."
 
 #. module: web
 #. openerp-web
@@ -2100,6 +2109,8 @@ msgid ""
 "The type of the field '%s' must be a many2many field with a relation to "
 "'ir.attachment' model."
 msgstr ""
+"Tipul campului '%s' trebuie sa fie un camp many2many cu legatura cu modelul "
+"'ir.atasament'."
 
 #. module: web
 #. openerp-web
@@ -2205,7 +2216,7 @@ msgstr "Nedefinit(ă)"
 #: code:addons/web/static/src/xml/base.xml:614
 #, python-format
 msgid "Unhandled widget"
-msgstr ""
+msgstr "Widget netratat"
 
 #. module: web
 #. openerp-web
@@ -2233,14 +2244,14 @@ msgstr "Comanda m2m %s necunoscută"
 #: code:addons/web/static/src/js/framework/pyeval.js:961
 #, python-format
 msgid "Unknown nonliteral type "
-msgstr ""
+msgstr "Tip nonliteral necunoscut "
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/data.js:1068
 #, python-format
 msgid "Unknown operator %s in domain %s"
-msgstr ""
+msgstr "Operator necunoscut %s în domeniul %s"
 
 #. module: web
 #. openerp-web
@@ -2254,7 +2265,7 @@ msgstr "Fără nume"
 #: code:addons/web/static/src/js/framework/data.js:1114
 #, python-format
 msgid "Unsupported operator %s in domain %s"
-msgstr ""
+msgstr "Operator nesusținut %s în domeniul %s"
 
 #. module: web
 #. openerp-web

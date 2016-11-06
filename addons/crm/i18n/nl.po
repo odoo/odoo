@@ -142,6 +142,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Op de prospect <strong>${object.name}</strong>zijn geen activiteiten uitgevoerd voor minimaal 5 dagen.</p>\n"
+"%if object.description:\n"
+"<p>Hier is beschrijving van de prospect: </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Bedankt!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -178,8 +185,6 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
-"<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
-" sales cycle."
 
 #. module: crm
 #. openerp-web
@@ -215,6 +220,9 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
+"<p><b>Stuur berichten</b>naar uw prospect en laat antwoorden automatisch "
+"toegevoegd worden aan deze prospect.</p><p class=\"mb0\">Type <i>'@'</i> om "
+"mensen te vermelden, dit werkt hetzelfde als cc'en in e-mails</p>"
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
@@ -226,6 +234,12 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"<p>Hallo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Op de prospect <strong>${object.name}</strong>zijn geen activiteiten uitgevoerd voor minimaal 5 dagen.</p>\n"
+"%if object.description:\n"
+"<p>Hier is beschrijving van de prospect: </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Bedankt!</p>\n"
 
 #. module: crm
 #. openerp-web
@@ -237,6 +251,10 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
+"<p>U wordt in staat gesteld om de opvolg activiteiten aan te passen. "
+"Voorbeelden:</p><ol><li>introductie email</li><li>bel 10 dagen "
+"na</li><li>tweede telefoonafspraak 3 dagen hierna, ...</li></ol><p "
+"class='mb0'><i>Selecteer een standaard activiteit voor nu.</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -385,7 +403,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-pencil-square-o\"/>\n"
-"                                            <strong> Maak gepersonaliseerde rapporten</strong>\n"
+"                                            <strong> Maak gepersonaliseerde rapportages</strong>\n"
 "                                        </span>"
 
 #. module: crm
@@ -645,7 +663,7 @@ msgid ""
 "                                    After a few month, set the real success rate according to the stages, to have\n"
 "                                    accurate expected revenues by closing date."
 msgstr ""
-"<strong>Toekomstige opbrengsten inschatten</strong><br/>\n"
+"<strong>Toekomstige opbrengsten prognotiseren</strong><br/>\n"
 "                                    U kan de maturiteit van een verkoopteam afmeten aan het vermogen om toekomstige\n"
 "                                    opbrengsten voor de komende maanden en kwartalen in te schatten. Leid het team op\n"
 "                                    om juiste schattingen te maken voor een up-to-date pijplijn.\n"
@@ -855,7 +873,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "A sales manager will mostly use these two reports:"
-msgstr "Een verkoopdirecteur gebruikt meestal de volgende twee rapporten:"
+msgstr "Een verkoopdirecteur gebruikt meestal de volgende twee rapportages:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_contact
@@ -3234,7 +3252,7 @@ msgstr "Prospect fase veranderd"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Opportunity Title"
-msgstr "Titel opportuniteit"
+msgstr "Titel prospect"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_won
@@ -4500,7 +4518,7 @@ msgid ""
 "We can implement custom reports for you based on your Word templates, for "
 "example:"
 msgstr ""
-"Wij kunnen aangepaste rapporten maken gebaseerd op uw Word-documenten, "
+"Wij kunnen aangepaste rapportages maken gebaseerd op uw Word-documenten, "
 "bijvoorbeeld:"
 
 #. module: crm
