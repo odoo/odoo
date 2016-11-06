@@ -88,6 +88,15 @@ class hr_payslip(osv.osv):
         move_pool.unlink(cr, uid, move_ids, context=context)
         return super(hr_payslip, self).cancel_sheet(cr, uid, ids, context=context)
 
+    def _get_date_due(self, cr, uid, partner_id, date, context=None):
+        context = dict(context) or {}
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+
+        pterm_list = self.pool['account.payment.term'].compute(cr, uid, partner.property_supplier_payment_term_id.id, value=1, date_ref=date, context=context)
+        if pterm_list:
+            return max(line[0] for line in pterm_list[0])
+        return date
+
     def process_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
         hr_payslip_line_pool = self.pool['hr.payslip.line']
@@ -110,16 +119,20 @@ class hr_payslip(osv.osv):
                 amt = slip.credit_note and -line.total or line.total
                 if float_is_zero(amt, precision_digits=precision):
                     continue
-                debit_account_id = line.salary_rule_id.account_debit.id
-                credit_account_id = line.salary_rule_id.account_credit.id
+                debit_account = line.salary_rule_id.account_debit
+                credit_account = line.salary_rule_id.account_credit
 
-                if debit_account_id:
+                partner_id = hr_payslip_line_pool._get_partner_id(cr, uid, line, credit_account=False, context=context)
+                date_due = self._get_date_due(cr, uid, partner_id, date, context)
+
+                if debit_account:
                     debit_line = (0, 0, {
                         'name': line.name,
-                    'partner_id': hr_payslip_line_pool._get_partner_id(cr, uid, line, credit_account=False, context=context),
-                        'account_id': debit_account_id,
+                        'partner_id': partner_id if debit_account.reconcile else False,
+                        'account_id': debit_account.id,
                         'journal_id': slip.journal_id.id,
                         'date': date,
+                        'date_maturity': date_due if debit_account.reconcile else date,
                         'debit': amt > 0.0 and amt or 0.0,
                         'credit': amt < 0.0 and -amt or 0.0,
                         'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
@@ -128,13 +141,17 @@ class hr_payslip(osv.osv):
                     line_ids.append(debit_line)
                     debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
 
-                if credit_account_id:
+                partner_id = hr_payslip_line_pool._get_partner_id(cr, uid, line, credit_account=True, context=context)
+                date_due = self._get_date_due(cr, uid, partner_id, date, context)
+
+                if credit_account:
                     credit_line = (0, 0, {
                         'name': line.name,
-                        'partner_id': hr_payslip_line_pool._get_partner_id(cr, uid, line, credit_account=True, context=context),
-                        'account_id': credit_account_id,
+                        'partner_id': partner_id if credit_account.reconcile else False,
+                        'account_id': credit_account.id,
                         'journal_id': slip.journal_id.id,
                         'date': date,
+                        'date_maturity': date_due if credit_account.reconcile else date,
                         'debit': amt < 0.0 and -amt or 0.0,
                         'credit': amt > 0.0 and amt or 0.0,
                         'analytic_account_id': line.salary_rule_id.analytic_account_id and line.salary_rule_id.analytic_account_id.id or False,
