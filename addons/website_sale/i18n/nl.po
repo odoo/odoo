@@ -175,6 +175,8 @@ msgid ""
 "<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
 "                                            <span class=\"sr-only\">Next</span>"
 msgstr ""
+"<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
+"<span class=\"sr-only\">Volgende</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -189,6 +191,8 @@ msgid ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
 "                                You can create different rates based on order amount ranges (e.g. $10 up to a $50 order, then $5 beyond)."
 msgstr ""
+"<span class=\"fa fa-lightbulb-o fa-2x\"/> \n"
+"U kan verschillende tarieven aanmaken gebaseerd op order hoeveelheden, (bijvoorbeeld 10€ voor een order van minder dan 50€, bij meer dan 50€ wordt dit 5€)."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.continue_shopping
@@ -319,6 +323,9 @@ msgid ""
 "                                    <span class=\"small\">Recommended for Starters</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> Paypal</strong>\n"
+"<span class=\"small\">Aanbevolen voor starters</span>\n"
+"</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -335,6 +342,8 @@ msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-lock\"/><strong>Wire "
 "transfer</strong> (slow and inefficient)</span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-"
+"lock\"/><strong>Overschrijving</strong> (traag en niet effiënt)</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -351,6 +360,9 @@ msgid ""
 "                            <span class=\"small\">Advised if both cart content and shipping costs are homogeneous</span>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> Gratis levering</strong><br/>\n"
+"<span class=\"small\">Geadviseerd als zowel inhoud van het winkelmandje en de verzendkosten homogeen zijn</span>\n"
+"</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -390,6 +402,8 @@ msgid ""
 "<strong>Call-to-action</strong> short and clear: Add to Cart, Ask for quote,"
 " etc."
 msgstr ""
+"<strong>Oproep tot actie</strong> kort en helder: Toevoegen aan "
+"winkelmandje, Vraag om offerte, etc."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -600,7 +614,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "A document to provide ?"
-msgstr ""
+msgstr "Een te leveren document?"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -608,11 +622,13 @@ msgid ""
 "A few % discount can bring you twice more customers! Here are a few kinds of"
 " discounts to boost your sales:"
 msgstr ""
+"Een paar % korting kan twee keer zoveel klanten opleveren! Hier zijn een "
+"aantal soorten kortingen om verkoop te stimuleren:"
 
 #. module: website_sale
 #: selection:website.config.settings,sale_pricelist_setting_split_1:0
 msgid "A single sales price per product"
-msgstr ""
+msgstr "Eén enkele verkoopprijs per product"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandonned_orders
@@ -647,7 +663,7 @@ msgstr "Product accessoires"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Activate and set up the payment methods you want to use"
-msgstr ""
+msgstr "Activeer en stel de betalingsopties die u wilt gebruiken"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_portal
@@ -1117,7 +1133,7 @@ msgstr "E-mail"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_config_settings_order_mail_template
 msgid "Email sent to customer at the end of the checkout process"
-msgstr ""
+msgstr "E-mail verstuurt naar de klant aan het eind van het bestel proces."
 
 #. module: website_sale
 #. openerp-web
@@ -1135,6 +1151,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Gelijkmatig: Kosten zullen gelijkmatig verdeeld worden\n"
+"Door Aantal: Kosten zullen worden verdeeld op product hoeveelheid.\n"
+"Door Kostprijs: Kosten zullen worden verdeeld op product kostprijs.\n"
+"Door Gewicht: Kosten zullen worden verdeeld op product gewicht.\n"
+"Door Volume: Kosten zullen worden verdeeld op product volume."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:89
@@ -1337,7 +1358,7 @@ msgstr "Installeer vervoerder connector"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_config_settings_module_website_sale_options
 msgid "Installs *e-Commerce Optional Products*"
-msgstr ""
+msgstr "Installeert \"E-commerce optionele producten\""
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:474
@@ -1412,7 +1433,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery
 msgid "Manage shipping internally"
-msgstr ""
+msgstr "Beheer verzending intern"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
@@ -1438,7 +1459,7 @@ msgstr "Handelaarsconnectoren"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Min. qty or period"
-msgstr ""
+msgstr "Min. hvh of periode"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form
@@ -1448,7 +1469,7 @@ msgstr "Meer info"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_website_multiimage
 msgid "Multi Images"
-msgstr ""
+msgstr "Meerdere afbeeldingen"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1498,7 +1519,7 @@ msgstr "Geen product gedefinieerd"
 #. module: website_sale
 #: selection:website.config.settings,sale_delivery_settings:0
 msgid "No shipping management on website"
-msgstr ""
+msgstr "Geen verzendkostenbeheer op website"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -1522,7 +1543,7 @@ msgstr "OK"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:52
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr ""
+msgstr "Wanneer u klikt op <b>Opslaan</b> is het product bijgewerkt."
 
 #. module: website_sale
 #: selection:website.config.settings,group_website_multiimage:0
@@ -1532,7 +1553,7 @@ msgstr "één afbeelding per product"
 #. module: website_sale
 #: selection:website.config.settings,module_website_sale_options:0
 msgid "One-step \"add to cart\""
-msgstr ""
+msgstr "1 stap \"voeg toe aan winkelmandje\""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1552,7 +1573,7 @@ msgstr "Optionele producten"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Options: warranty, software"
-msgstr ""
+msgstr "Opties: garantie, software"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -1657,7 +1678,7 @@ msgstr "Betalingstransactie mislukt (%s)"
 #: code:addons/website_sale/controllers/main.py:759
 #, python-format
 msgid "Payment transaction failed (Contact Administrator)"
-msgstr ""
+msgstr "Betaaltransactie mislukt (Neem contact op met de administrator)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -1894,6 +1915,7 @@ msgstr "Beoordeling waarde: 0 = Ontevreden, 10 = Blij"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Read the documentation about delivery methods and shipping connectors"
 msgstr ""
+"Lees de handleidingen over verzendmethodes en koppelingen met vervoerders"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner

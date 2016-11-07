@@ -72,6 +72,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Do ${object.partner_id.name}\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and 'Akceptuj i zapłać %s ' % doc_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object.get_signup_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Oto twoje ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(z odnośnikiem: ${object.origin} )\n"
+"% endif\n"
+"wyrażone w <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"od ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(lub podejżyj załączony PDF)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>Możesz odpowiedzieć na tego maila, jeśli masz pytania.</p>\n"
+"<p>Dziękujemy,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -297,6 +336,7 @@ msgstr "Pojedyncza obniżka na produkt"
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
+"Ostrzeżenie może być ustawione na produkcie lub kliencie (w sprzedaży)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -555,7 +595,7 @@ msgstr "Utwórz oferte cenową, jako pierwszy krok w nowej sprzedaży."
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Create a task and track hours"
-msgstr ""
+msgstr "Utwórz zadanie i śledź godziny"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -650,7 +690,7 @@ msgstr "Domyślne warunki i zapisy *"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Default product used for payment advances"
-msgstr ""
+msgstr "Domyślny produkt stosowany do przedpłat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
@@ -1121,12 +1161,12 @@ msgstr "Spójrzmy na oferty tego zespołu sprzedaży."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Zablokuj"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Zablokowane"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -1227,12 +1267,12 @@ msgstr "Brak informacji"
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
-msgstr ""
+msgstr "Bez upustów na pozycjach zamówienia. Tylko upust globalny."
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr ""
+msgstr "Bez incoterms na raportach"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
@@ -1691,7 +1731,7 @@ msgstr "Oferty i zamówienia"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Refakturuj wydatki"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -1777,7 +1817,7 @@ msgstr "Sprzedaż zakończona"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
 msgid "Sales Funnel"
-msgstr ""
+msgstr "Lejek sprzedaży"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1870,7 +1910,7 @@ msgstr "Sprzedaż do fakturowania"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr ""
+msgstr "Sprzedawcy nie muszą widzieć marży w Ofertach"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -1964,7 +2004,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "Ustaw na ofertę"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1974,19 +2014,19 @@ msgstr "Ustaw domyślne warunki i zapisy w ustawieniach twojej firmy."
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sales orders and invoices"
-msgstr ""
+msgstr "Pokaż incoterms na Zamówieniach sprzedaży i fakturach"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr ""
+msgstr "Pokaż wartości pozycji z podatkami (B2C)"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_subtotal
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals without taxes (B2B)"
-msgstr ""
+msgstr "Pokaż wartości w pozycjach bez podatków (B2B)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
@@ -2001,17 +2041,17 @@ msgstr "Pokazuj cenniki dla klientów"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "Pokaż klientowi cenę katalogową i upust"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
 msgid "Show subtotal"
-msgstr ""
+msgstr "Pokaż wartości w pozycjach"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_total
 msgid "Show total"
-msgstr ""
+msgstr "Pokaż sumę"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
@@ -2140,7 +2180,7 @@ msgid ""
 msgstr ""
 "Produkt użyty do fakturowania zaliczek musi mieć ustawioną zasadę "
 "fakturowania jako 'Zamówione ilości'. Proszę poprawić obecnie zdefiniowany "
-"produkt aby utworzyć fakturę zaliczkową."
+"produkt, aby utworzyć fakturę zaliczkową."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:79
