@@ -848,7 +848,10 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
-        vals['name'] = product.description_sale or product.name
+        name = product.name_get()[0][1]
+        if product.description_sale:
+            name += '\n' + product.description_sale
+        vals['name'] = name
 
         self._compute_tax_id()
 
