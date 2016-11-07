@@ -19,7 +19,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
     },
 
     on_change_value_check : function () {
-        this.values = _.uniq(this.values);
+        this.values = _.uniq(this.values.concat(this.get('value')));
 
         // filter for removed values
         var values_removed = _.difference(this.values, this.get('value'));
