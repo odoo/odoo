@@ -2,88 +2,12 @@
 <odoo>
 
         <!-- Example employee -->
-
-        <record id="timesheet_group1" model="work.calendar">
-            <field name="name">40 Hours/Week</field>
-        </record>
-
-        <record model="work.calendar.attendance" id="calendar_attendance_mon1">
-            <field name="name">Monday morning</field>
-            <field name="dayofweek">0</field>
-            <field name="hour_from">08</field>
-            <field name="hour_to">12</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_mon2">
-            <field name="name">Monday evening</field>
-            <field name="dayofweek">0</field>
-            <field name="hour_from">13</field>
-            <field name="hour_to">17</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_tue1">
-            <field name="name">Tuesday morning</field>
-            <field name="dayofweek">1</field>
-            <field name="hour_from">08</field>
-            <field name="hour_to">12</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_tue2">
-            <field name="name">Tuesday evening</field>
-            <field name="dayofweek">1</field>
-            <field name="hour_from">13</field>
-            <field name="hour_to">17</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_wed1">
-            <field name="name">Wednesday morning</field>
-            <field name="dayofweek">2</field>
-            <field name="hour_from">08</field>
-            <field name="hour_to">12</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_wed2">
-            <field name="name">Wednesday evening</field>
-            <field name="dayofweek">2</field>
-            <field name="hour_from">13</field>
-            <field name="hour_to">17</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_thu1">
-            <field name="name">Thursday morning</field>
-            <field name="dayofweek">3</field>
-            <field name="hour_from">08</field>
-            <field name="hour_to">12</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_thu2">
-            <field name="name">Thursday evening</field>
-            <field name="hour_from">13</field>
-            <field name="hour_to">17</field>
-            <field name="dayofweek">3</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_fri1">
-            <field name="name">Friday morning</field>
-            <field name="dayofweek">4</field>
-            <field name="hour_from">08</field>
-            <field name="hour_to">12</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-        <record model="work.calendar.attendance" id="calendar_attendance_fri2">
-            <field name="name">Friday evening</field>
-            <field name="dayofweek">4</field>
-            <field name="hour_from">13</field>
-            <field name="hour_to">17</field>
-            <field name="calendar_id" ref="timesheet_group1"/>
-        </record>
-
         <record id="resource_analyst" model="work.resource">
             <field eval="100" name="time_efficiency"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="name">Analyst</field>
             <field eval="1" name="active"/>
-            <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="calendar_id" ref="resource_calendar_std"/>
             <field name="resource_type">user</field>
         </record>
 
@@ -92,7 +16,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="name">Designer</field>
             <field eval="1" name="active"/>
-            <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="calendar_id" ref="resource_calendar_std"/>
             <field name="resource_type">user</field>
         </record>
 
@@ -101,7 +25,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="name">Developer</field>
             <field eval="1" name="active"/>
-            <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="calendar_id" ref="resource_calendar_std"/>
             <field name="resource_type">user</field>
         </record>
 
@@ -110,7 +34,7 @@
             <field name="resource_id" ref="resource_analyst"/>
             <field name="date_from" eval="time.strftime('%Y-%m-%d 08:00:00')"/>
             <field name="date_to" eval="time.strftime('%Y-%m-%d 11:00:00')"/>
-            <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="calendar_id" ref="resource_calendar_std"/>
         </record>
         
         <record id="resource_dummyleave" model="work.calendar.leave">

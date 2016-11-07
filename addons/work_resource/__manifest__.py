@@ -15,6 +15,7 @@ associated to every resource. It also manages the leaves of every resource.
     """,
     'depends': ['base'],
     'data': [
+        'data/work_resource_data.xml',
         'security/ir.model.access.csv',
         'security/work_resource_security.xml',
         'views/work_resource_views.xml',
