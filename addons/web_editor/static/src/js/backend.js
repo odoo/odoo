@@ -113,11 +113,16 @@ var FieldTextHtmlSimple = widget.extend({
     },
     text_to_html: function (text) {
         var value = text || "";
-        if (value.match(/^\s*$/)) {
-            value = '<p><br/></p>';
-        } else {
-            value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
-            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+        try {
+            $(text)[0].innerHTML;
+            return text;
+        } catch (e) {
+            if (value.match(/^\s*$/)) {
+                value = '<p><br/></p>';
+            } else {
+                value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
+                value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+            }
         }
         return value;
     },
