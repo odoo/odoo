@@ -157,7 +157,6 @@ class sale_order(osv.osv):
                 clause += 'AND inv.state != \'cancel\' AND sale.state != \'cancel\'  AND inv.state <> \'paid\'  AND rel.order_id = sale.id '
                 sale_clause = ',  sale_order AS sale '
                 no_invoiced = True
-
         cursor.execute('SELECT rel.order_id ' \
                 'FROM sale_order_invoice_rel AS rel, account_invoice AS inv '+ sale_clause + \
                 'WHERE rel.invoice_id = inv.id ' + clause)
@@ -892,8 +891,8 @@ class sale_order_line(osv.osv):
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
-            if product_obj.description_sale:
-                result['name'] += '\n'+product_obj.description_sale
+            description = product_obj.description_sale or product_obj.description
+            result['name'] += '\n'+description
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
