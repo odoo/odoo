@@ -640,7 +640,8 @@ class Partner(models.Model, FormatAddress):
                          FROM res_partner
                       {where} ({email} {operator} {percent}
                            OR {display_name} {operator} {percent}
-                           OR {reference} {operator} {percent})
+                           OR {reference} {operator} {percent}
+                           OR {vat} {operator} {percent})
                            -- don't panic, trust postgres bitmap
                      ORDER BY {display_name} {operator} {percent} desc,
                               {display_name}
@@ -649,9 +650,10 @@ class Partner(models.Model, FormatAddress):
                                email=unaccent('email'),
                                display_name=unaccent('display_name'),
                                reference=unaccent('ref'),
-                               percent=unaccent('%s'))
+                               percent=unaccent('%s'),
+                               vat=unaccent('vat'),)
 
-            where_clause_params += [search_name]*4
+            where_clause_params += [search_name]*5
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
