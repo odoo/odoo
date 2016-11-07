@@ -58,8 +58,7 @@
                 <tbody>
                     <tr t-foreach="o.order_line" t-as="line">
                         <td>
-                            <span t-field="line.product_id"/><br/>
-                            <span t-if="line.name != line.product_id.display_name" t-field="line.name"/>
+                            <span t-field="line.name"/>
                         </td>
                         <td>
                             <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>

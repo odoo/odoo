@@ -86,7 +86,7 @@ class SaleOrder(models.Model):
         product_context.setdefault('lang', order.partner_id.lang)
         product = self.env['product.product'].with_context(product_context).browse(product_id)
 
-        name = product.description_sale or product.display_name
+        name = product.display_name
 
         # add untracked attributes in the name
         untracked_attributes = []
@@ -97,6 +97,9 @@ class SaleOrder(models.Model):
                 untracked_attributes.append(attribute_value.name)
         if untracked_attributes:
             name += '\n%s' % (', '.join(untracked_attributes))
+
+        if product.description_sale:
+            name += '\n%s' % (product.description_sale)
 
         return name
 

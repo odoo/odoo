@@ -41,8 +41,7 @@
                         <t t-foreach="layout_category['lines']" t-as="line">
                             <tr>
                               <td>
-                                  <span t-field="line.product_id"/><br/>
-                                  <span t-if="line.name != line.product_id.name" t-field="line.name"/>
+                                  <span t-field="line.name"/>
                               </td>
                               <td>
                                   <div id="quote_qty">

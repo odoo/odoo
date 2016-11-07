@@ -859,8 +859,8 @@
                                     <strong t-esc="line.product_id.with_context(display_default_code=False).display_name" />
                                 </a>
                             </div>
-                            <div t-if="line.name != line.product_id.name" t-attf-class="text-muted">
-                                <t t-foreach="line.name.splitlines()" t-as="name_line">
+                            <div class="text-muted">
+                                <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
                                     <span><t t-esc="name_line"/></span><br/>
                                 </t>
                             </div>
@@ -1318,8 +1318,8 @@
                                             <div>
                                                 <strong t-field="line.product_id.with_context(display_default_code=False).display_name" />
                                             </div>
-                                            <div t-if="line.name != line.product_id.name" t-attf-class="text-muted">
-                                                <t t-foreach="line.name.splitlines()" t-as="name_line">
+                                            <div class="text-muted">
+                                                <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
                                                     <span><t t-esc="name_line"/></span><br/>
                                                 </t>
                                             </div>
@@ -1474,8 +1474,8 @@
                                                       <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
                                                   </a>
                                               </div>
-                                              <div t-if="line.name != line.product_id.name" t-attf-class="text-muted">
-                                                  <t t-foreach="line.name.splitlines()" t-as="name_line">
+                                              <div class="text-muted">
+                                                  <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
                                                       <span><t t-esc="name_line"/></span><br/>
                                                   </t>
                                               </div>
@@ -1760,12 +1760,10 @@
     <template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
         <xpath expr="//div[@id='product_name']/*" position="replace">
             <a t-if="ol.product_id.website_published" t-att-href="ol.product_id.website_url">
-                <span t-field="ol.product_id"/>
-                <span t-if="ol.name != ol.product_id.name" t-esc="ol.name"/>
+                <span t-esc="ol.name" />
             </a>
             <t t-if="not ol.product_id.website_published">
-                <span t-field="ol.product_id"/>
-                <span t-if="ol.name != ol.product_id.name" t-esc="ol.name"/>
+                <span t-esc="ol.name" />
             </t>
         </xpath>
     </template>
