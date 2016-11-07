@@ -148,7 +148,7 @@
             <field name="employee_id" ref="hr_employee_payroll"/>
             <field name="notes">Default contract for marketing executives</field>
             <field eval="4000.0" name="wage"/>
-            <field name="working_hours" ref="resource.timesheet_group1"/>
+            <field name="working_hours" ref="resource.resource_calendar_std"/>
         </record>
 
         <record id="hr_contract_gilles_gravie" model="hr.contract">
@@ -160,7 +160,7 @@
             <field name="employee_id" ref="hr.employee_qdp"/>
             <field name="notes">This is Gilles Gravie's contract</field>
             <field eval="5000.0" name="wage"/>
-            <field name="working_hours" ref="resource.timesheet_group1"/>
+            <field name="working_hours" ref="resource.resource_calendar_std"/>
         </record>
 
 </odoo>
