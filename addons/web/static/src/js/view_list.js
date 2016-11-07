@@ -696,7 +696,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             return;
         }
 
-        var c = new instance.web.CompoundContext();
+        var self = this,
+            c = new instance.web.CompoundContext();
         c.set_eval_context(_.extend({
             active_id: id,
             active_ids: [id],
@@ -707,7 +708,16 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
         action.context = c;
         this.do_execute_action(
-            action, this.dataset, id, _.bind(callback, null, id));
+            action, this.dataset, id,
+            function(reason)
+            {
+                callback.apply(self, [id]);
+                if(!_.isObject(reason) && self.dataset.parent_view)
+                {
+                    self.dataset.parent_view.recursive_reload();
+                }
+            }
+        )
     },
     /**
      * Handles the activation of a record (clicking on it)
