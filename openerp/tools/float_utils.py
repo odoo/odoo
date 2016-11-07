@@ -42,9 +42,9 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
            2-digit precision).
-       :param rounding_method: the rounding method used: 'HALF-UP' or 'UP', the first
+       :param rounding_method: the rounding method used: 'HALF-UP', 'UP' or 'DOWN', the first
            one rounding up to the closest number with the rule that number>=0.5 is 
-           rounded up to 1, and the latest one always rounding up.
+           rounded up to 1, the second one always rounding up, and the latest always rounds FLOOR
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
@@ -86,6 +86,11 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         sign = cmp(normalized_value, 0)
         normalized_value -= sign*epsilon
         rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+
+    elif rounding_method == 'DOWN':
+        sign = cmp(normalized_value, 0)
+        normalized_value += sign*epsilon
+        rounded_value = math.floor(abs(normalized_value))*sign # ceil to integer
 
     result = rounded_value * rounding_factor # de-normalize
     return result
