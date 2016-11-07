@@ -355,7 +355,8 @@ class TestWorkDays(TestResourceCommon):
     def test_no_calendar(self):
         """ If a resource has no resource calendar, they don't work """
         r = self.env['resource.resource'].create({
-            'name': "NoCalendar"
+            'name': "NoCalendar",
+            'calendar_id': False,
         })
 
         self.assertEqual(

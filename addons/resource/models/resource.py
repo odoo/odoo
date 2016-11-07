@@ -28,15 +28,40 @@ class ResourceCalendar(models.Model):
     _name = "resource.calendar"
     _description = "Resource Calendar"
 
+    @api.model
+    def default_get(self, fields):
+        res = super(ResourceCalendar, self).default_get(fields)
+        if not res.get('name') and res.get('company_id'):
+            res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
+        return res
+
+    def _get_default_attendance_ids(self):
+        return [
+            (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': _('Monday Evening'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': _('Tuesday Evening'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': _('Wednesday Evening'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': _('Thursday Evening'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': _('Friday Evening'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
+        ]
+
     name = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company',
+    company_id = fields.Many2one(
+        'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get())
     attendance_ids = fields.One2many(
-        'resource.calendar.attendance', 'calendar_id', string='Working Time',
-        copy=True)
-    manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid)
+        'resource.calendar.attendance', 'calendar_id', 'Working Time',
+        copy=True, default=_get_default_attendance_ids)
     leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', string='Leaves')
+        'resource.calendar.leaves', 'calendar_id', 'Leaves')
+    global_leave_ids = fields.One2many(
+        'resource.calendar.leaves', 'calendar_id', 'Global Leaves',
+        domain=[('resource_id', '=', False)]
+        )
 
     # --------------------------------------------------
     # Utility methods
@@ -669,9 +694,18 @@ class ResourceResource(models.Model):
     _name = "resource.resource"
     _description = "Resource Detail"
 
+    @api.model
+    def default_get(self, fields):
+        res = super(ResourceResource, self).default_get(fields)
+        if not fields or 'calendar_id' in fields and not res.get('calendar_id') and res.get('company_id'):
+            company = self.env['res.company'].browse(res['company_id'])
+            res['calendar_id'] = company.resource_calendar_id.id
+        return res
+
     name = fields.Char(required=True)
     code = fields.Char(copy=False)
-    active = fields.Boolean(track_visibility='onchange', default=True,
+    active = fields.Boolean(
+        'Active', default=True, track_visibility='onchange',
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env['res.company']._company_default_get())
     resource_type = fields.Selection([
@@ -679,7 +713,8 @@ class ResourceResource(models.Model):
         ('material', 'Material')
         ], string='Resource Type', required=True, default='user')
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
-    time_efficiency = fields.Float(string='Efficiency Factor', required=True, default=100,
+    time_efficiency = fields.Float(
+        'Efficiency Factor', default=100, required=True,
         help="This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
     calendar_id = fields.Many2one("resource.calendar", string='Working Time', help="Define the schedule of resource")
 
@@ -723,16 +758,20 @@ class ResourceResource(models.Model):
             if intervals and intervals[0]:
                 yield dt.date()
 
+
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
     _description = "Leave Detail"
 
-    name = fields.Char()
-    company_id = fields.Many2one('res.company', related='calendar_id.company_id', string="Company", store=True, readonly=True)
-    calendar_id = fields.Many2one('resource.calendar', string='Working Time')
-    date_from = fields.Datetime(string='Start Date', required=True)
-    date_to = fields.Datetime(string='End Date', required=True)
-    resource_id = fields.Many2one("resource.resource", string='Resource',
+    name = fields.Char('Reason')
+    company_id = fields.Many2one(
+        'res.company', related='calendar_id.company_id', string="Company",
+        readonly=True, store=True)
+    calendar_id = fields.Many2one('resource.calendar', 'Working Hours')
+    date_from = fields.Datetime('Start Date', required=True)
+    date_to = fields.Datetime('End Date', required=True)
+    resource_id = fields.Many2one(
+        "resource.resource", 'Resource',
         help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource")
 
     @api.constrains('date_from', 'date_to')
@@ -742,7 +781,8 @@ class ResourceCalendarLeaves(models.Model):
 
     @api.onchange('resource_id')
     def onchange_resource(self):
-        self.calendar_id = self.resource_id.calendar_id
+        if self.resource_id:
+            self.calendar_id = self.resource_id.calendar_id
 
 def seconds(td):
     assert isinstance(td, timedelta)

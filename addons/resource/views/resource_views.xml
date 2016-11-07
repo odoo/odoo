@@ -9,9 +9,10 @@
             <search string="Search Resource">
                <field name="name" string="Resource"/>
                <field name="resource_type"/>
-               <filter string="Inactive" domain="[('active','=',False)]"/>
-               <field name="user_id" string="User"/>
+               <field name="user_id"/>
+               <field name="calendar_id"/>
                <field name="company_id" groups="base.group_multi_company"/>
+               <filter string="Inactive" domain="[('active','=',False)]"/>
                <group expand="0" string="Group By">
                     <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Type" domain="[]" context="{'group_by':'resource_type'}"/>
@@ -68,16 +69,27 @@
         <field name="help">Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours.</field>
     </record>
 
+    <record id="resource_resource_action_from_calendar" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">resource.resource</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'default_calendar_id': active_id,
+            'search_default_calendar_id': active_id}</field>
+        <field name="search_view_id" ref="view_resource_resource_search"/>
+        <field name="help">Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours.</field>
+    </record>
+
     <!-- RESOURCE.CALENDAR.LEAVES -->
     <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
         <field name="name">resource.calendar.leaves.search</field>
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
             <search string="Search Working Period Leaves">
-                <field name="name" string="Reason"/>
-                <field name="resource_id" string="Resource"/>
-                <field name="company_id" string="Company" groups="base.group_multi_company"/>
-                <field name="calendar_id" string="Working Period"/>
+                <field name="name"/>
+                <field name="resource_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="calendar_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Resource" domain="[]" context="{'group_by':'resource_id'}"/>
                     <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -137,6 +149,16 @@
         <field name="name">Resource Leaves</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">tree,form,calendar</field>
+        <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
+    </record>
+
+    <record id="resource_calendar_leaves_action_from_calendar" model="ir.actions.act_window">
+        <field name="name">Resource Leaves</field>
+        <field name="res_model">resource.calendar.leaves</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{
+            'default_calendar_id': active_id,
+            'search_default_calendar_id': active_id}</field>
         <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
     </record>
 
@@ -201,7 +223,6 @@
         <field name="arch" type="xml">
             <search string="Search Working Time">
                <field name="name" string="Working Time"/>
-               <field name="manager"/>
                <field name="company_id" groups="base.group_multi_company"/>
            </search>
         </field>
@@ -213,17 +234,36 @@
         <field name="arch" type="xml">
             <form string="Working Time">
                 <sheet string="Working Time">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
+                                string="Leaves" icon="fa-calendar-times-o"
+                                class="oe_stat_button"
+                                groups="base.group_user"/>
+                        <button name="%(resource_resource_action_from_calendar)d" type="action"
+                                string="Work Resources" icon="fa-cogs"
+                                class="oe_stat_button"
+                                groups="base.group_user"/>
+                    </div>
                     <group>
-                        <group>
+                        <h1>
                             <field name="name"/>
-                        </group>
-                        <group>
-                            <field name="manager"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                        <field name="attendance_ids"/>
-                        <field name="leave_ids" context="{'default_calendar_id': id}"/>
+                        </h1>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
+                    <notebook>
+                        <page string="Working Hours">
+                            <field name="attendance_ids"/>
+                        </page>
+                        <page string="Global Leaves">
+                            <field name="global_leave_ids">
+                                <tree editable="top">
+                                    <field name="name"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -235,7 +275,6 @@
         <field name="arch" type="xml">
             <tree string="Working Time">
                 <field name="name"/>
-                <field name="manager"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
