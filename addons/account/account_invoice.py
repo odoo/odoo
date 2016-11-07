@@ -20,6 +20,7 @@
 ##############################################################################
 
 import itertools
+import math
 from lxml import etree
 
 from openerp import models, fields, api, _
@@ -843,6 +844,9 @@ class account_invoice(models.Model):
                 if (total_fixed + total_percent) > 100:
                     raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
 
+            # Force recomputation of tax_amount, since the rate potentially changed between creation
+            # and validation of the invoice
+            inv._recompute_tax_amount()
             # one move line per tax line
             iml += account_invoice_tax.move_line_get(inv.id)
 
@@ -1225,6 +1229,18 @@ class account_invoice(models.Model):
         return account_invoice.pay_and_reconcile(recs, pay_amount, pay_account_id, period_id, pay_journal_id,
                     writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=name)
 
+    @api.multi
+    def _recompute_tax_amount(self):
+        for invoice in self:
+            if invoice.currency_id != invoice.company_id.currency_id:
+                for line in invoice.tax_line:
+                    tax_amount = line.amount_change(
+                        line.amount, currency_id=invoice.currency_id.id, company_id=invoice.company_id.id,
+                        date_invoice=invoice.date_invoice
+                    )['value']['tax_amount']
+                    line.write({'tax_amount': tax_amount})
+
+
 class account_invoice_line(models.Model):
     _name = "account.invoice.line"
     _description = "Invoice Line"
@@ -1551,7 +1567,7 @@ class account_invoice_tax(models.Model):
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount, company.currency_id, round=False)
-        tax_sign = (self.tax_amount / self.amount) if self.amount else 1
+        tax_sign = math.copysign(1, (self.tax_amount * self.amount))
         return {'value': {'tax_amount': amount * tax_sign}}
 
     @api.v8
