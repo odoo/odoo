@@ -28,15 +28,33 @@ class ResourceCalendar(models.Model):
     _name = "work.calendar"
     _description = "Resource Calendar"
 
+    def _get_default_attendance_ids(self):
+        return [
+            (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': 'Monday Evening', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': 'Tuesday Evening', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': 'Wednesday Evening', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': 'Thursday Evening', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
+            (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
+            (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
+        ]
+
     name = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company',
+    company_id = fields.Many2one(
+        'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get())
     attendance_ids = fields.One2many(
-        'work.calendar.attendance', 'calendar_id', string='Working Time',
-        copy=True)
-    manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid)
+        'work.calendar.attendance', 'calendar_id', 'Working Time',
+        copy=True, default=_get_default_attendance_ids)
     leave_ids = fields.One2many(
-        'work.calendar.leave', 'calendar_id', string='Leaves')
+        'work.calendar.leave', 'calendar_id', 'Leaves')
+    global_leave_ids = fields.One2many(
+        'work.calendar.leave', 'calendar_id', 'Global Leaves',
+        domain=[('resource_id', '=', False)]
+        )
 
     # --------------------------------------------------
     # Utility methods
@@ -668,6 +686,13 @@ def hours_time_string(hours):
 class ResourceResource(models.Model):
     _name = "work.resource"
     _description = "Resource Detail"
+
+    def default_get(self, fields):
+        res = super(ResourceResource, self).default_get(fields)
+        if not fields or 'calendar_id' in fields and not res.get('calendar_id') and res.get('company_id'):
+            company = self.env['res.company'].browse(res['company_id'])
+            res['calendar_id'] = company.resource_calendar_id.id
+        return res
 
     name = fields.Char(required=True)
     code = fields.Char(copy=False)

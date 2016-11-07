@@ -19,6 +19,7 @@ associated to every resource. It also manages the leaves of every resource.
         'security/ir.model.access.csv',
         'security/work_resource_security.xml',
         'views/work_resource_views.xml',
+        'views/res_company_views.xml',
     ],
     'demo': ['data/work_resource_demo.xml'],
 }
