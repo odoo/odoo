@@ -327,6 +327,12 @@ class Registry(Mapping):
             models[0].recompute()
         cr.commit()
 
+        # make sure all tables are present
+        for model in env.itervalues():
+            if not model._abstract and not model._table_exist():
+                msg = "Model %r: table %r not found" % (model._name, model._table)
+                raise odoo.exceptions.ValidationError(msg)
+
     def clear_caches(self):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
