@@ -54,7 +54,7 @@ class procurement_order(osv.osv):
 
     def _get_project(self, cr, uid, procurement, context=None):
         project_project = self.pool.get('project.project')
-        project = procurement.product_id.project_id
+        project = procurement.product_id.with_context(force_company=procurement.company_id.id).project_id
         if not project and procurement.sale_line_id:
             # find the project corresponding to the analytic account of the sales order
             account = procurement.sale_line_id.order_id.project_id
