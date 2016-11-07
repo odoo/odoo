@@ -104,6 +104,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Fout,</i> Er is een fout opgetreden tijdens de transactie. De order"
+" is bevestigd maar niet betaald. Aarzel niet om met ons contact op te nemen "
+"indien u vragen heeft over de status van uw order.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -133,7 +136,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
 msgid "Account journal used for automatic payment reconciliation."
-msgstr ""
+msgstr "Dagboek gebruikt voor automatische betaling aflettering."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -193,6 +196,8 @@ msgstr "Bedrag"
 msgid ""
 "Authorize & capture the amount and confirm the SO on acquirer confirmation"
 msgstr ""
+"Autoriseren en vastleggen van het bedrag en bevestig de verkooporder bij "
+"betalingsverwerker bevestiging"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
@@ -200,6 +205,8 @@ msgid ""
 "Authorize & capture the amount, confirm the SO and auto-validate the invoice"
 " on acquirer confirmation"
 msgstr ""
+"Autoriseren en vastleggen van het bedrag, bevestig de verkooporder en "
+"valideer automatisch de factuur bij betalingsverwerker bevestiging"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
@@ -207,6 +214,8 @@ msgid ""
 "Authorize the amount and confirm the SO on acquirer confirmation (capture "
 "manually)"
 msgstr ""
+"Autoriseer het bedrag en bevestig de verkooporder bij betalingsverwerker "
+"bevestiging (handmatige vastlegging)"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -238,7 +247,7 @@ msgstr "Geannuleerd"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Afvangen transactie"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -349,6 +358,11 @@ msgid ""
 "customer decide', ecommerce customers will have a checkbox displayed on the "
 "payment page."
 msgstr ""
+"Bepaal of kaartgegevens automatisch zijn opgeslagen als een token of niet. "
+"Betaling tokens staan uw klanten toe om hun kaarten te hergebruiken in het "
+"e-commerce platform of laten u toe om facturen direct te belasten op een "
+"credit card. Wanneer ingesteld op 'laat de klant beslissen', kunnen "
+"e-commerce klanten aanvinken of gegevens mogen worden opgeslagen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -411,7 +425,7 @@ msgstr "Vergoedingen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Vergoedingen berekening ondersteund"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -450,7 +464,7 @@ msgstr "Van knop sjabloon"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "Formulier met tokens"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -636,6 +650,9 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Let op dat tokens van verwerkers ingesteld op alleen geautoriseerde "
+"transacties (in plaats van het vastleggen van het bedrag) niet beschikbaar "
+"zijn."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -938,6 +955,7 @@ msgstr "Overschrijving"
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompt with Stripe Payment page for payment information."
 msgstr ""
+"U wordt gevraagd op de Stripe betalingspagina voor betalingsinformatie."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -971,6 +989,8 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"U wordt doorgestuurd naar de Ingenico website nadat u klikt op de betaal "
+"knop."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu

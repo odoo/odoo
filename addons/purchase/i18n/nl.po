@@ -48,6 +48,27 @@ msgid ""
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
+"\n"
+"<p>Beste\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Hier is een ${object.state in ('draft', 'sent') en 'offerteaanvraag' or 'inkooporder bevestiging'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"met een bedrag van <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"van ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Als u nog vragen hebben, aarzel dan niet om contact met ons op te nemen.</p>\n"
+"<p>Met vriendelijke groet,</p>\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -81,6 +102,9 @@ msgid ""
 "Creates the dropship Route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
+"\n"
+"Maakt de dropship route aan en voegt meer complexe testen toe.\n"
+"- Dit installeert de module stock_dropshipping."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:87
@@ -1624,6 +1648,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
 msgstr ""
+"Dit wijzigt de geplande datum van alle orderregels naar de ingevoerde datum"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1646,6 +1671,8 @@ msgid ""
 "This purchase order has been created from: <a href=# data-oe-"
 "model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Deze inkooporder is aangemaakt door: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:986
@@ -1654,6 +1681,8 @@ msgid ""
 "This purchase order has been modified from: <a href=# data-oe-"
 "model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Deze inkooporder is aangepast door: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:184
@@ -1964,6 +1993,8 @@ msgstr "U dient een leverancierslocatie in te stellen voor deze partner %s"
 msgid ""
 "You need purchase manager access rights to validate an order above %.2f %s."
 msgstr ""
+"U heeft inkoopmanager rechten nodig om een inkooporder boven de %.2f %s te "
+"bevestigen."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
