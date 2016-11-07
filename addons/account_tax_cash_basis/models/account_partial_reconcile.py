@@ -81,10 +81,10 @@ class AccountPartialReconcileCashBasis(models.Model):
                                 'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                             })
             if newly_created_move:
-                if move_date > self.company_id.period_lock_date and newly_created_move.date > move_date:
+                if move_date > self.company_id.period_lock_date and newly_created_move.date != move_date:
                     # The move date should be the maximum date between payment and invoice (in case
                     # of payment in advance). However, we should make sure the move date is not
-                    # recorded after the period lock date as the tax statement for this period is
+                    # recorded before the period lock date as the tax statement for this period is
                     # probably already sent to the estate.
                     newly_created_move.write({'date': move_date})
                 # post move
@@ -98,7 +98,7 @@ class AccountPartialReconcileCashBasis(models.Model):
                             (self.company_id.name))
         move_vals = {
             'journal_id': self.company_id.tax_cash_basis_journal_id.id,
-            'tax_cash_basis_rec_id': self.id
+            'tax_cash_basis_rec_id': self.id,
         }
         return self.env['account.move'].create(move_vals)
 
