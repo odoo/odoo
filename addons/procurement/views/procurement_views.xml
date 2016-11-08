@@ -252,6 +252,7 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Procurement Rules">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="action"/>
@@ -280,7 +281,7 @@
                             <field name="action"/>
                         </group>
                         <group>
-                            <field name="sequence"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">

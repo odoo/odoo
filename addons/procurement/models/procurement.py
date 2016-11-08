@@ -53,7 +53,7 @@ class ProcurementRule(models.Model):
     ''' A rule describe what a procurement should do; produce, buy, move, ... '''
     _name = 'procurement.rule'
     _description = "Procurement Rule"
-    _order = "name"
+    _order = "sequence, name"
 
     name = fields.Char(
         'Name', required=True, translate=True,
