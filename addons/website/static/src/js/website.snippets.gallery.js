@@ -360,7 +360,16 @@ options.registry.gallery_img = options.Class.extend({
             this.buildingBlock.make_active($parent);
             $parent.data('snippet-editor').styles.gallery.reapply();
         }).bind(this));
-    }
+    },
+    on_focus: function () {
+        this._super.apply(this, arguments);
+        if (this._current_src && this._current_src !== this.$target.attr("src")) {
+            _.defer((function () {
+                snippet_editor.globalSelector.closest(this.$target.parent()).data('snippet-editor').styles.gallery.reapply();
+            }).bind(this));
+        }
+        this._current_src = this.$target.attr("src");
+    },
 });
 
 

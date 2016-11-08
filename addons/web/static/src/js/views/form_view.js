@@ -88,6 +88,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
         });
     },
     start: function() {
+        if (this.$pager) {
+            this.$pager.off();
+        }
         var self = this;
 
         this.rendering_engine.set_fields_registry(this.fields_registry);
