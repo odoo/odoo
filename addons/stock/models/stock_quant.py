@@ -615,21 +615,17 @@ class QuantPackage(models.Model):
     @api.one
     @api.depends('parent_id', 'children_ids', 'quant_ids.package_id')
     def _compute_children_quant_ids(self):
-        res = dict.fromkeys(self.ids, self.env['stock.quant'])
-        children_quants = self.env['stock.quant'].search(['package_id', 'child_of', self.ids])
-        for quant in children_quants:
-            res[quant.package_id.id] |= quant
         for package in self:
-            package.children_quant_ids = res[package.id].ids
+            package.children_quant_ids = self.env['stock.quant'].search([('package_id', 'child_of', package.id)]).ids
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'ancestor_ids')
     def _compute_package_info(self):
-        res = {}
-        quants = self.env['stock.quant'].search([('package_id', 'in', self.ids)])  # TDE FIXME: was child_od
-        for quant in quants:
-            res[quant.package_id.id] = {'location_id': quant.location_id.id, 'owner_id': quant.owner_id.id, 'company_id': quant.company_id.id}
         for package in self:
-            values = res.get(package.id, {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False})
+            quants = package.children_quant_ids
+            if quants:
+                values = quants[0]
+            else:
+                values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']
