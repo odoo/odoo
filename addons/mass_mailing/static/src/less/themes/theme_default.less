@@ -141,6 +141,9 @@
             display: inline-block;
         }
     }
+    td {
+        vertical-align: middle;
+    }
 }
 
 .o_mail_block_header_text_social {
@@ -187,6 +190,18 @@
         height: 1px;
         background-color: darken(@o_mm_def_color_alpha, 15%);
     }
+    table table {
+        td, th {
+            vertical-align: middle;
+        }
+        td {
+            padding: 10px 20px;
+            * {
+                margin: 0;
+                line-height: 1.3;
+            }
+        }
+    }
 }
 
 .o_mail_block_discount2 {
@@ -202,6 +217,7 @@
     .o_mail_table_styles {
         border-top: 2px solid @o_mm_def_color_alpha;
         padding-top: 20px;
+        padding-bottom: 20px;
     }
 
     .o_mail_footer_links {
@@ -240,6 +256,9 @@
                 font-size: 12px;
             }
         }
+    }
+    td {
+        vertical-align: middle;
     }
 }
 
