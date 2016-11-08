@@ -29,13 +29,13 @@ class ProjectTaskType(models.Model):
         string='Priority Management Explanation', translate=True,
         help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
     legend_blocked = fields.Char(
-        string='Kanban Blocked Explanation', translate=True,
+        'Red Kanban Label', default='Blocked', translate=True,
         help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.')
     legend_done = fields.Char(
-        string='Kanban Valid Explanation', translate=True,
+        'Green Kanban Label', default='Ready for Next Stage', translate=True,
         help='Override the default value displayed for the done state for kanban selection, when the task or issue is in that stage.')
     legend_normal = fields.Char(
-        string='Kanban Ongoing Explanation', translate=True,
+        'Grey Kanban Label', default='In Progress', translate=True,
         help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.')
     mail_template_id = fields.Many2one(
         'mail.template',
@@ -335,17 +335,14 @@ class Task(models.Model):
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
     kanban_state = fields.Selection([
-            ('normal', 'In Progress'),
-            ('done', 'Ready for next stage'),
-            ('blocked', 'Blocked')
-        ], string='Kanban State',
-        default='normal',
-        track_visibility='onchange',
-        required=True, copy=False,
+        ('normal', 'Grey'),
+        ('done', 'Green'),
+        ('blocked', 'Red')], string='Kanban State',
+        copy=False, default='normal', required=True, track_visibility='onchange',
         help="A task's kanban state indicates special situations affecting it:\n"
-             " * Normal is the default situation\n"
-             " * Blocked indicates something is preventing the progress of this task\n"
-             " * Ready for next stage indicates the task is ready to be pulled to the next stage")
+             " * Grey is the default situation\n"
+             " * Red indicates something is preventing the progress of this task\n"
+             " * Green indicates the task is ready to be pulled to the next stage")
     create_date = fields.Datetime(index=True)
     write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
     date_start = fields.Datetime(string='Starting Date',
