@@ -54,7 +54,7 @@ class WorkflowService(object):
 
         wkf_ids = WorkflowService.CACHE[self.cr.dbname].get(self.record.model, None)
 
-        if not wkf_ids:
+        if wkf_ids is None:
             self.cr.execute('select id from wkf where osv=%s and on_create=True', (self.record.model,))
             wkf_ids = self.cr.fetchall()
             WorkflowService.CACHE[self.cr.dbname][self.record.model] = wkf_ids
