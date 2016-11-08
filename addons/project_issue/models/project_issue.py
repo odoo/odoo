@@ -32,7 +32,7 @@ class ProjectIssue(models.Model):
         ('normal', 'Grey'),
         ('blocked', 'Red'),
         ('done', 'Green')], string='Kanban State',
-        default='normal', required=True, track_visibility='onchange',
+        copy=False, default='normal', required=True, track_visibility='onchange',
         help="An Issue's kanban state indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this issue\n"
