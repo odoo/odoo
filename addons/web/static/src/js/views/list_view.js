@@ -759,7 +759,16 @@ var ListView = View.extend({
         });
 
         var aggregates = {};
-        _(columns).each(function (column) {
+        _.each(_.filter(columns, function (column) {
+            if (column.currency_field === 'currency_id' && records && records[0].values['currency_id']) {
+                var currency_ids = _.map(records, function(record) {return record.values['currency_id'][0]});
+                if (_.every(currency_ids, function (currency_id){return currency_id === currency_ids[0]})) {
+                    return column;
+                }
+            } else {
+                return column;
+            }
+        }), function (column) {
             var field = column.id;
             switch (column['function']) {
                 case 'avg':
