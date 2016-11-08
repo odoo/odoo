@@ -367,7 +367,16 @@ options.registry.gallery_img = options.Class.extend({
             var gallery = $parent.data('snippet-editor').styles.gallery;
             gallery.reapply();
         }, 0);
-    }
+    },
+    on_focus: function () {
+        this._super.apply(this, arguments);
+        if (this._current_src && this._current_src !== this.$target.attr("src")) {
+            _.defer((function () {
+                snippet_editor.globalSelector.closest(this.$target.parent()).data('snippet-editor').styles.gallery.reapply();
+            }).bind(this));
+        }
+        this._current_src = this.$target.attr("src");
+    },
 });
 
 
