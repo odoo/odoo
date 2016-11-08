@@ -36,4 +36,4 @@ class Rating(http.Controller):
         # redirect to the form view if logged person
         if request.session.uid:
             return werkzeug.utils.redirect('/web#model=%s&id=%s&view_type=form' % (record_sudo._name, record_sudo.id))
-        return request.render('rating.rating_external_page_view')
+        return request.render('rating.rating_external_page_view', {'rating': rating})
