@@ -215,7 +215,7 @@ class PosOrder(models.Model):
             if move is None:
                 # Create an entry for the sale
                 journal_id = self.env['ir.config_parameter'].sudo().get_param(
-                    'pos.closing.journal_id', default=order.sale_journal.id)
+                    'pos.closing.journal_id_%s' % current_company.id, default=order.sale_journal.id)
                 move = self._create_account_move(
                     order.session_id.start_at, order.name, int(journal_id), order.company_id.id)
 
@@ -609,7 +609,7 @@ class PosOrder(models.Model):
             if moves and not return_picking and not order_picking:
                 moves.action_confirm()
                 moves.force_assign()
-                moves.action_done()
+                moves.filtered(lambda m: m.product_id.tracking == 'none').action_done()
 
         return True
 
@@ -619,7 +619,8 @@ class PosOrder(models.Model):
         picking.action_confirm()
         picking.force_assign()
         self.set_pack_operation_lot(picking)
-        picking.action_done()
+        if not any([(x.product_id.tracking != 'none') for x in picking.pack_operation_ids]):
+            picking.action_done()
 
     def set_pack_operation_lot(self, picking=None):
         """Set Serial/Lot number in pack operations to mark the pack operation done."""

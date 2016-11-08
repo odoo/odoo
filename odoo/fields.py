@@ -1243,6 +1243,13 @@ class Monetary(Field):
                 return float_precision(value, currency.decimal_places)
         return float(value or 0.0)
 
+    def convert_to_read(self, value, record, use_name_get=True):
+        # float_precision values are not supported in pure XMLRPC
+        return float(value)
+
+    def convert_to_write(self, value, record):
+        return value
+
 
 class _String(Field):
     """ Abstract class for string fields. """

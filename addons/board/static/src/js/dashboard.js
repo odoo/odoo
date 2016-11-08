@@ -348,6 +348,9 @@ core.form_tag_registry
 FavoriteMenu.include({
     start: function () {
         var self = this;
+        if(this.action_id === undefined) {
+            return this._super();
+        }
         var am = this.findAncestor(function (a) {
             return a instanceof ActionManager;
         });
