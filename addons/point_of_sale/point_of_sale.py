@@ -611,7 +611,7 @@ class pos_session(osv.osv):
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
             # FORWARD-PORT UP TO SAAS-12
-            journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id', default=session.config_id.journal_id.id, context=context)
+            journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id_%s' % (company_id), default=session.config_id.journal_id.id, context=context)
             move_id = pos_order_obj._create_account_move(cr, uid, session.start_at, session.name, int(journal_id), company_id, context=context)
 
             pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=local_context)
@@ -1293,7 +1293,7 @@ class pos_order(osv.osv):
             if move_id is None:
                 # Create an entry for the sale
                 # FORWARD-PORT UP TO SAAS-12
-                journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id', default=order.sale_journal.id, context=context)
+                journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id_%s' % (current_company.id), default=order.sale_journal.id, context=context)
                 move_id = self._create_account_move(cr, uid, order.session_id.start_at, order.name, int(journal_id), order.company_id.id, context=context)
 
             move = account_move_obj.browse(cr, SUPERUSER_ID, move_id, context=context)

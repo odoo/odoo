@@ -393,7 +393,7 @@ class AccountAssetAsset(models.Model):
             'res_model': 'account.move',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'context': dict(self.env.context or {}, search_default_asset_id=self.id, default_asset_id=self.id),
+            'context': dict(search_default_asset_id=self.id, default_asset_id=self.id),
         }
 
 

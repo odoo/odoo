@@ -351,7 +351,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, sequence"
+    _order = "statement_id desc, sequence, id desc"
     _inherit = ['ir.needaction_mixin']
 
     name = fields.Char(string='Memo', required=True)
