@@ -118,17 +118,30 @@ var PivotView = View.extend({
     },
     start: function () {
         this.$el.toggleClass('o_enable_linking', this.enable_linking);
-        var context = {
-            fields: _.chain(this.groupable_fields).pairs().sortBy(function(f) {
-                return f[1].string;
-            }).value(),
-        };
         this.$field_selection = this.$('.o_field_selection');
-        this.$field_selection.html(QWeb.render('PivotView.FieldSelection', context));
         core.bus.on('click', this, function () {
-            this.$field_selection.find('ul').first().hide();
+            this.$field_selection.empty();
         });
         return this._super();
+    },
+    render_field_selection: function (top, left) {
+        var grouped_fields = this.main_row.groupbys
+            .concat(this.main_col.groupbys)
+            .map(function(f) { return f.split(':')[0];});
+
+        var fields = _.chain(this.groupable_fields)
+            .pairs()
+            .sortBy(function(f) { return f[1].string; })
+            .map(function (f) { return [f[0], f[1], _.contains(grouped_fields, f[0])]; })
+            .value();
+
+        this.$field_selection.html(QWeb.render('PivotView.FieldSelection', {
+            fields: fields
+        }));
+
+        this.$field_selection.find('ul').first()
+            .css({top: top, left: left})
+            .show();
     },
     /**
      * Render the buttons according to the PivotView.buttons template and
@@ -242,23 +255,21 @@ var PivotView = View.extend({
         this.display_table();
     },
     on_closed_header_click: function (event) {
-        var id = $(event.target).data('id'),
-            header = this.headers[id],
-            groupbys = header.root.groupbys;
+        var $target = $(event.target);
+        var id = $target.data('id');
+        var header = this.headers[id];
+        var groupbys = header.root.groupbys;
+
         if (header.path.length - 1 < groupbys.length) {
             this.expand_header(header, groupbys[header.path.length - 1])
                 .then(this.proxy('display_table'));
         } else {
             this.last_header_selected = id;
-            var $test = $(event.target);
-            var $menu = this.$field_selection.find('ul').first();
-            var position = $test.position();
-            $menu.css({
-                top: position.top + $test.height(),
-                left: position.left + event.offsetX,
-            });
-            $menu.show();
-            event.stopPropagation();            
+            var position = $target.position();
+            var top = position.top + $target.height();
+            var left = position.left + event.offsetX;
+            this.render_field_selection(top, left);
+            event.stopPropagation();
         }
     },
     on_cell_click: function (event) {
@@ -320,8 +331,13 @@ var PivotView = View.extend({
     },
     on_field_menu_selection: function (event) {
         event.preventDefault();
-        var field = $(event.target).parent().data('field'),
-            interval = $(event.target).data('interval'),
+        var $target = $(event.target);
+        if ($target.parent().hasClass('disabled')) {
+            event.stopPropagation();
+            return;
+        }
+        var field = $target.parent().data('field'),
+            interval = $target.data('interval'),
             header = this.headers[this.last_header_selected];
         if (interval) field = field + ':' + interval;
         this.expand_header(header, field)

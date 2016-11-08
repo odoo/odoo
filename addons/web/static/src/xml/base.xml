@@ -582,7 +582,7 @@
     <ul class="dropdown-menu o_pivot_field_menu" role="menu">
         <t t-foreach="fields" t-as="field">
             <t t-if="(field[1].type === 'date') || (field[1].type === 'datetime')">
-                <li class="o_inline_dropdown" t-att-data-field="field[0]">
+                <li t-att-data-field="field[0]" t-attf-class="o_inline_dropdown#{field[2] ? ' disabled' : ''}">
                     <a href="#" class="o_pivot_field_selection">
                         <t t-esc="field[1].string"/>
                     </a>
@@ -595,8 +595,10 @@
                     </ul>
                 </li>
             </t>
-            <t t-if="(field[1].type !== 'date') &amp;&amp; (field[1].type !== 'datetime')">
-                <li t-att-data-field="field[0]"><a href="#"><t t-esc="field[1].string"/></a></li>
+            <t t-else="">
+                <li t-att-data-field="field[0]" t-att-class="(field[2] ? 'disabled' : '')">
+                    <a href="#"><t t-esc="field[1].string"/></a>
+                </li>
             </t>
         </t>
     </ul>
