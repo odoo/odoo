@@ -1134,7 +1134,7 @@
     tabindex="-1"> <!-- tabindex make the div focusable -->
     <span t-if="field.children &amp;&amp; (field.id).split('/').length != 3"
           class="o_expand_parent fa fa-plus"/>
-    <span class="o_tree_column"><t t-esc="field.string"/></span>
+    <span class="o_tree_column" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
 </div>
 <t t-name="Export.SaveList">
     <label>Save as:</label> <input type="text"/><button type="button" class="btn btn-sm btn-default">Ok</button>
