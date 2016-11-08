@@ -28,12 +28,15 @@ class ProjectIssue(models.Model):
     partner_id = fields.Many2one('res.partner', string='Contact', index=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     description = fields.Text('Private Note')
-    kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], string='Kanban State',
-                                    track_visibility='onchange', required=True, default='normal',
-                                    help="""An Issue's kanban state indicates special situations affecting it:\n
-                                           * Normal is the default situation\n
-                                           * Blocked indicates something is preventing the progress of this issue\n
-                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage""")
+    kanban_state = fields.Selection([
+        ('normal', 'Grey'),
+        ('blocked', 'Red'),
+        ('done', 'Green')], string='Kanban State',
+        default='normal', required=True, track_visibility='onchange',
+        help="An Issue's kanban state indicates special situations affecting it:\n"
+             " * Grey is the default situation\n"
+             " * Red indicates something is preventing the progress of this issue\n"
+             " * Green indicates the issue is ready to be pulled to the next stage")
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
     email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
         and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
