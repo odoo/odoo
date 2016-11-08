@@ -369,11 +369,11 @@ var DataExport = Dialog.extend({
                 .find('.o_expand_parent')
                 .toggleClass('fa-plus fa-minus')
                 .next()
-                .after(QWeb.render('Export.TreeItems', {'fields': records}));
+                .after(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.session.debug}));
         } else {
             this.$('.o_left_field_panel').empty().append(
                 $("<div/>").addClass('o_field_tree_structure')
-                           .append(QWeb.render('Export.TreeItems', {'fields': records}))
+                           .append(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.session.debug}))
             );
         }
 
