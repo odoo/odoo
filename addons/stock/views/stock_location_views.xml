@@ -158,6 +158,7 @@
             <field name="model">stock.location.path</field>
             <field name="arch" type="xml">
                 <tree string="Location Paths">
+                    <field name="sequence" widget="handle"/>
                     <field name="location_from_id" />
                     <field name="location_dest_id" />
                     <field name="name" />
@@ -182,7 +183,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="sequence"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <group>
