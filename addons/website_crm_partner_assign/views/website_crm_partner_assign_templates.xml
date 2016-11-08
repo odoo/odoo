@@ -266,7 +266,7 @@
                     </thead>
                     <tbody>
                         <tr t-foreach="leads" t-as="lead">
-                            <td><span t-field="lead.create_date" t-field-options='{"widget": "date"}' /></td>
+                            <td><span t-field="lead.create_date" t-options='{"widget": "date"}' /></td>
                             <td>
                                 <a t-attf-href="/my/lead/#{lead.id}"><span t-field="lead.name"/></a>
                             </td>
@@ -317,6 +317,7 @@
                 <table t-if="opportunities" class="table table-hover">
                     <thead>
                         <tr class="active">
+                            <th class="col-xs-2">Date</th>
                             <th class="col-md-5">Name</th>
                             <th class="col-md-3">Expected Revenue</th>
                             <th>Contact Name</th>
@@ -325,6 +326,7 @@
                     </thead>
                     <tbody>
                         <tr t-foreach="opportunities" t-as="opp">
+                            <td><span t-field="opp.create_date" t-options='{"widget": "date"}' /></td>
                             <td>
                                 <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
                             </td>
@@ -493,8 +495,12 @@
                                                 <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="customer_contacted">Do you have contacted the customer?</label>
-                                                <input type="checkbox" name="customer_contacted" id="customer_contacted" class="contacted_desinterested"/>
+                                                <label class="control-label" for="contacted_desinterested">Do you have contacted the customer?</label>
+                                                <input type="checkbox" name="contacted_desinterested" id="contacted_desinterested" class="contacted_desinterested"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label" for="customer_mark_spam">This lead is a spam</label>
+                                                <input type="checkbox" name="customer_mark_spam" id="customer_mark_spam" class="customer_mark_spam"/>
                                             </div>
                                             <div>
                                                 <span class="text-danger error_partner_assign_desinterested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
@@ -727,16 +733,16 @@
                                                                   <label>Priority: </label>
                                                                   <div class="input-group">
                                                                     <label class="radio-inline">
-                                                                      <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']"/><i class="fa fa-star"></i>
+                                                                      <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']"/><i class="fa fa-star-o"></i>
                                                                     </label>
                                                                     <label class="radio-inline">
-                                                                      <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'"/><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                                      <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'"/><i class="fa fa-star"></i>
                                                                     </label>
                                                                     <label class="radio-inline">
-                                                                      <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                                      <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'"/><i class="fa fa-star"></i><i class="fa fa-star"></i>
                                                                     </label>
                                                                     <label class="radio-inline">
-                                                                      <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                                      <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'"/><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
                                                                     </label>
                                                                   </div>
                                                                 </div>

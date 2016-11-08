@@ -419,6 +419,13 @@ class HrExpenseSheet(models.Model):
         return res
 
     @api.multi
+    def unlink(self):
+        for expense in self:
+            if expense.state == "post":
+                raise UserError(_("You cannot delete a posted expense."))
+        super(HrExpenseSheet, self).unlink()
+
+    @api.multi
     def set_to_paid(self):
         self.write({'state': 'done'})
 

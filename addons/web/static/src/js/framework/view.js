@@ -196,6 +196,12 @@ var View = Widget.extend({
     get_context: function () {
         return {};
     },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.off();
+        }
+        return this._super.apply(this, arguments);
+    },
     set_scrollTop: function(scrollTop) {
         this.scrollTop = scrollTop;
     },
