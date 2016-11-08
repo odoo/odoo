@@ -118,9 +118,7 @@ var View = Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args).then(handler).then(function () {
-                core.bus.trigger('do_reload_needaction');
-            });
+            return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type === "action") {
             return data_manager.load_action(action_data.name, _.extend(pyeval.eval('context', context), {
                 active_model: dataset.model,

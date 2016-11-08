@@ -284,8 +284,8 @@ class AccountBankStatement(models.Model):
         # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation process on it later on,
         # this is why we filter out statements lines where account_id is set
 
-        sql_query = """SELECT stl.id 
-                        FROM account_bank_statement_line stl  
+        sql_query = """SELECT stl.id
+                        FROM account_bank_statement_line stl
                         WHERE account_id IS NULL AND not exists (select 1 from account_move m where m.statement_line_id = stl.id)
                             AND company_id = %s
                 """
@@ -305,11 +305,11 @@ class AccountBankStatement(models.Model):
                             FROM account_move_line aml
                                 JOIN account_account acc ON acc.id = aml.account_id
                                 JOIN account_bank_statement_line stl ON aml.ref = stl.name
-                            WHERE (aml.company_id = %s 
-                                AND aml.partner_id IS NOT NULL) 
+                            WHERE (aml.company_id = %s
+                                AND aml.partner_id IS NOT NULL)
                                 AND (
-                                    (aml.statement_id IS NULL AND aml.account_id IN %s) 
-                                    OR 
+                                    (aml.statement_id IS NULL AND aml.account_id IN %s)
+                                    OR
                                     (acc.internal_type IN ('payable', 'receivable') AND aml.reconciled = false)
                                     )
                                 AND aml.ref IN %s
@@ -342,8 +342,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, sequence, id desc"
-    _inherit = ['ir.needaction_mixin']
+    _order = "statement_id desc, sequence"
 
     name = fields.Char(string='Label', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
@@ -407,10 +406,6 @@ class AccountBankStatementLine(models.Model):
             if line.move_name:
                 raise UserError(_('It is not allowed to delete a bank statement line that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(AccountBankStatementLine, self).unlink()
-
-    @api.model
-    def _needaction_domain_get(self):
-        return [('journal_entry_ids', '=', False), ('account_id', '=', False)]
 
     @api.multi
     def button_cancel_reconciliation(self):
@@ -598,10 +593,10 @@ class AccountBankStatementLine(models.Model):
         acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"
         select_clause = "SELECT aml.id "
         from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
-        where_clause = """WHERE aml.company_id = %(company_id)s  
+        where_clause = """WHERE aml.company_id = %(company_id)s
                                 AND (
-                                        (aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s) 
-                                    OR 
+                                        (aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s)
+                                    OR
                                         ("""+acc_type+""" AND aml.reconciled = false)
                                     )"""
         where_clause = where_clause + ' AND aml.partner_id = %(partner_id)s' if self.partner_id else where_clause

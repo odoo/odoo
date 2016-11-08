@@ -29,7 +29,7 @@ class EventEvent(models.Model):
     """Event"""
     _name = 'event.event'
     _description = 'Event'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = 'date_begin'
 
     name = fields.Char(
@@ -280,7 +280,7 @@ class EventEvent(models.Model):
 class EventRegistration(models.Model):
     _name = 'event.registration'
     _description = 'Attendee'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = 'name, create_date desc'
 
     origin = fields.Char(
