@@ -89,12 +89,11 @@ class HrTimesheetSheet(models.Model):
 
     @api.multi
     @api.onchange('employee_id')
-    def onchange_employee_id(self, employee_id):
-        employee = self.env['hr.employee'].browse(employee_id)
+    def onchange_employee_id(self):
         for sheet in self:
-            if employee_id:
-                sheet.department_id = employee.department_id
-                sheet.user_id = employee.user_id
+            if sheet.employee_id:
+                sheet.department_id = sheet.employee_id.department_id
+                sheet.user_id = sheet.employee_id.user_id
 
     def copy(self, *args, **argv):
         raise UserError(_('You cannot duplicate a timesheet.'))
