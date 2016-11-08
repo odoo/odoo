@@ -32,7 +32,9 @@ class PurchaseOrder(models.Model):
     @api.multi
     def _inverse_date_planned(self):
         for order in self:
-            order.order_line.write({'date_planned': self.date_planned})
+            for line in order.order_line:
+                if line.date_planned and self.date_planned > line.date_planned:
+                    line.write({'date_planned': self.date_planned})
 
     @api.depends('order_line.date_planned')
     def _compute_date_planned(self):
