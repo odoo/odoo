@@ -8,11 +8,13 @@ from odoo.workflow.instance import WorkflowInstance
 
 
 class WorkflowService(object):
+    WKF_CACHE = {}
     CACHE = {}
 
     @classmethod
     def clear_cache(cls, dbname):
         cls.CACHE[dbname] = {}
+        cls.WKF_CACHE[dbname] = None
 
     @classmethod
     def new(cls, cr, uid, model_name, record_id):
@@ -28,11 +30,18 @@ class WorkflowService(object):
         self.cr = self.session.cr
 
     def write(self):
-        self.cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s',
-            (self.record.id or None, self.record.model or None, 'active')
-        )
-        for (instance_id,) in self.cr.fetchall():
-            WorkflowInstance(self.session, self.record, {'id': instance_id}).update()
+        if self.cr.dbname not in WorkflowService.WKF_CACHE:
+            self.cr.execute('select osv from wkf')
+            cache = {}
+            for (wkf, wkf_id,) in self.cr.fetchall():
+                cache[wkf] = wkf_id
+            WorkflowService.WKF_CACHE[self.cr.dbname] = cache
+        if self.record.model in WorkflowService.WKF_CACHE[self.cr.dbname]:
+            self.cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s',
+                (self.record.id or None, self.record.model or None, 'active')
+            )
+            for (instance_id,) in self.cr.fetchall():
+                WorkflowInstance(self.session, self.record, {'id': instance_id}).update()
 
     def trigger(self):
         self.cr.execute('select instance_id from wkf_triggers where res_id=%s and model=%s', (self.record.id, self.record.model))
