@@ -24,12 +24,14 @@ EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
 
+
 class SpecialValue(object):
     """ Encapsulates a value in the cache in place of a normal value. """
     def __init__(self, value):
         self.value = value
     def get(self):
         return self.value
+
 
 class FailedValue(SpecialValue):
     """ Special value that encapsulates an exception instead of a value. """
@@ -38,9 +40,11 @@ class FailedValue(SpecialValue):
     def get(self):
         raise self.exception
 
+
 def _check_value(value):
     """ Return ``value``, or call its getter if ``value`` is a :class:`SpecialValue`. """
     return value.get() if isinstance(value, SpecialValue) else value
+
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
@@ -75,6 +79,7 @@ def default_new_to_new(field, value):
     """ Convert the new-API default ``value`` to a callable. """
     return value if callable(value) else lambda model: value
 
+
 def default_new_to_old(field, value):
     """ Convert the new-API default ``value`` to the old API. """
     if callable(value):
@@ -82,6 +87,7 @@ def default_new_to_old(field, value):
         return api.model(lambda model: field.convert_to_write(value(model)))
     else:
         return value
+
 
 def default_old_to_new(field, value):
     """ Convert the old-API default ``value`` to the new API. """
@@ -92,6 +98,7 @@ def default_old_to_new(field, value):
         )
     else:
         return lambda model: field.convert_to_cache(value, model, validate=False)
+
 
 def default_old_to_old(field, value):
     """ Convert the old-API default ``value`` to the old API. """
@@ -343,6 +350,7 @@ class Field(object):
     }
 
     def __init__(self, string=None, **kwargs):
+        self.set_all_attrs({})
         kwargs['string'] = string
         args = {key: val for key, val in kwargs.iteritems() if val is not None}
         self.args = args or EMPTY_DICT
@@ -386,10 +394,14 @@ class Field(object):
             raise AttributeError(name)
 
     def __str__(self):
-        return "%s.%s" % (self.model_name, self.name)
+        if self.model_name and self.name:
+            return "%s.%s" % (self.model_name, self.name)
+        return super(Field, self).__str__()
 
     def __repr__(self):
-        return "%s.%s" % (self.model_name, self.name)
+        if self.model_name and self.name:
+            return "%s.%s" % (self.model_name, self.name)
+        return super(Field, self).__repr__()
 
     ############################################################################
     #
@@ -1258,6 +1270,7 @@ class Char(_String):
             return False
         return ustr(value)[:self.size]
 
+
 class Text(_String):
     """ Very similar to :class:`~.Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
@@ -1274,6 +1287,7 @@ class Text(_String):
         if value is None or value is False:
             return False
         return ustr(value)
+
 
 class Html(_String):
     type = 'html'
@@ -1727,6 +1741,7 @@ class Many2one(_Relational):
         if not value.id:
             return False
         return super(Many2one, self).convert_to_onchange(value, fnames)
+
 
 class UnionUpdate(SpecialValue):
     """ Placeholder for a value update; when this value is taken from the cache,
