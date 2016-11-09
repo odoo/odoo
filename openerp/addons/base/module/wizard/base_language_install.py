@@ -20,11 +20,10 @@ class BaseLanguageInstall(models.TransientModel):
 
     @api.multi
     def lang_install(self):
-        this = self[0]
-        this = this.with_context(overwrite=this.overwrite)
+        self.ensure_one()
         mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
-        mods.update_translations(this.lang)
-        this.state = 'done'
+        mods.with_context(overwrite=self.overwrite).update_translations(self.lang)
+        self.state = 'done'
         return {
             'name': _('Language Pack'),
             'view_type': 'form',
@@ -35,5 +34,5 @@ class BaseLanguageInstall(models.TransientModel):
             'context': dict(self._context, active_ids=self.ids),
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'res_id': this.id,
+            'res_id': self.id,
         }
