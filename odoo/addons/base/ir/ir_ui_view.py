@@ -131,7 +131,7 @@ TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 
 class View(models.Model):
     _name = 'ir.ui.view'
-    _order = "priority,name"
+    _order = "priority,name,id"
 
     # Holds the RNG schema
     _relaxng_validator = None
