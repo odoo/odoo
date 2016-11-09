@@ -969,6 +969,13 @@
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
                 <ul class="list-inline pull-right mb0">
+                    <li t-if="question.post_type == 'question' and not (len(answer.website_message_ids))">
+                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
+                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
+                            t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
+                        </a>
+                    </li>
                     <li>
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
@@ -1027,7 +1034,7 @@
                     <t t-set="answer" t-value="child_answer"/>
                 </t>
             </div>
-            <div class="clearfix">
+            <div class="clearfix" t-if="len(answer.website_message_ids)">
                 <div class="col-sm-offset-2 col-sm-2">
                     <ul class="list-inline mb0">
                         <li t-if="question.post_type == 'question'">
