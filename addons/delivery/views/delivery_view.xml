@@ -181,7 +181,7 @@
                             <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
-                        <field name="carrier_price"/>
+                        <field name="carrier_price" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </group>
                     <group>
                         <label for="weight" string="Weight"/>
@@ -283,7 +283,7 @@
                           <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}"/>
                           <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                       </div>
-                      <field name="carrier_price"/>
+                      <field name="carrier_price" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </group>
                 </xpath>
             </field>
