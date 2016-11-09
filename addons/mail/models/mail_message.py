@@ -404,7 +404,7 @@ class Message(models.Model):
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
-            'channel_ids', 'partner_ids',  # recipients
+            'partner_ids',  # recipients. channel_ids is not mentionned since you may not seeing all channels
             'needaction_partner_ids',  # list of partner ids for whom the message is a needaction
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ])

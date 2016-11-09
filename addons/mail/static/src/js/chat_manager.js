@@ -80,6 +80,9 @@ function add_message (data, options) {
 
     if (!msg) {
         msg = chat_manager.make_message(data);
+        if ('channel_id' in options){
+            add_channel_to_message(msg, options.channel_id);
+        }
         // Keep the array ordered by id when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
         _.each(msg.channel_ids, function (channel_id) {
@@ -112,8 +115,13 @@ function add_message (data, options) {
         if (!options.silent) {
             chat_manager.bus.trigger('new_message', msg);
         }
-    } else if (options.domain && options.domain !== []) {
-        add_to_cache(msg, options.domain);
+    } else {
+        if (options.domain && options.domain !== []) {
+            add_to_cache(msg, options.domain);
+        }
+        if ('channel_id' in options){
+            add_channel_to_message(msg, options.channel_id);
+        }
     }
     return msg;
 }
@@ -137,7 +145,7 @@ function make_message (data) {
         customer_email_data: data.customer_email_data,
         record_name: data.record_name,
         tracking_value_ids: data.tracking_value_ids,
-        channel_ids: data.channel_ids,
+        channel_ids: data.channel_ids || [],
         model: data.model,
         res_id: data.res_id,
         url: session.url("/mail/view?message_id=" + data.id),
@@ -452,23 +460,26 @@ function on_notification (notifications) {
     });
     if (unsubscribed_notif) {
         notifications = _.reject(notifications, function (notif) {
-            return notif[0][1] === "mail.channel" && notif[0][2] === unsubscribed_notif[1].id;
+            return _.isArray(notif[0]) && notif[0][1] === "mail.channel" && notif[0][2] === unsubscribed_notif[1].id;
         });
     }
     _.each(notifications, function (notification) {
-        var model = notification[0][1];
-        if (model === 'ir.needaction') {
-            // new message in the inbox
-            on_needaction_notification(notification[1]);
-        } else if (model === 'mail.channel') {
-            // new message in a channel
-            on_channel_notification(notification[1]);
-        } else if (model === 'res.partner') {
-            // channel joined/left, message marked as read/(un)starred, chat open/closed
-            on_partner_notification(notification[1]);
-        } else if (model === 'bus.presence') {
-            // update presence of users
-            on_presence_notification(notification[1]);
+        // we only process the bus channel that are tuple, but don't crash if it's a uuid.
+        if (_.isArray(notification[0])){
+            var model = notification[0][1];
+            if (model === 'ir.needaction') {
+                // new message in the inbox
+                on_needaction_notification(notification[1]);
+            } else if (model === 'mail.channel') {
+                // new message in a channel
+                on_channel_notification(notification[0][2], notification[1]);
+            } else if (model === 'res.partner') {
+                // channel joined/left, message marked as read/(un)starred, chat open/closed
+                on_partner_notification(notification[1]);
+            } else if (model === 'bus.presence') {
+                // update presence of users
+                on_presence_notification(notification[1]);
+            }
         }
     });
 }
@@ -492,18 +503,13 @@ function on_needaction_notification (message) {
     chat_manager.bus.trigger('update_needaction', needaction_counter);
 }
 
-function on_channel_notification (message) {
+function on_channel_notification (channel_id, message) {
     var def;
     var channel_already_in_cache = true;
-    if (message.channel_ids.length === 1) {
-        channel_already_in_cache = !!chat_manager.get_channel(message.channel_ids[0]);
-        def = chat_manager.join_channel(message.channel_ids[0], {autoswitch: false});
-    } else {
-        def = $.when();
-    }
-    def.then(function () {
+    channel_already_in_cache = !!chat_manager.get_channel(channel_id);
+    chat_manager.join_channel(channel_id, {autoswitch: false}).then(function () {
         // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
-        add_message(message, { show_notification: true, increment_unread: channel_already_in_cache });
+        add_message(message, {channel_id: channel_id, show_notification: true, increment_unread: channel_already_in_cache });
         invalidate_caches(message.channel_ids);
     });
 }
