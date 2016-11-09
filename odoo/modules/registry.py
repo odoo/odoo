@@ -328,10 +328,22 @@ class Registry(Mapping):
         cr.commit()
 
         # make sure all tables are present
-        for model in env.itervalues():
-            if not model._abstract and not model._table_exist():
-                msg = "Model %r: table %r not found" % (model._name, model._table)
-                raise odoo.exceptions.ValidationError(msg)
+        missing = [name
+                   for name, model in env.items()
+                   if not model._abstract and not model._table_exist()]
+        if missing:
+            _logger.warning("Models have no table: %s.", ", ".join(missing))
+            # recreate missing tables following model dependencies
+            deps = {name: model._depends for name, model in env.items()}
+            for name in topological_sort(deps):
+                if name in missing:
+                    _logger.info("Recreate table of model %s.", name)
+                    env[name].init()
+                    cr.commit()
+            # check again, and log errors if tables are still missing
+            for name, model in env.items():
+                if not model._abstract and not model._table_exist():
+                    _logger.error("Model %s has no table.", name)
 
     def clear_caches(self):
         """ Clear the caches associated to methods decorated with
