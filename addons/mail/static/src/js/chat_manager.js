@@ -129,7 +129,7 @@ function make_message (data) {
         is_author: data.author_id && data.author_id[0] === session.partner_id,
         is_note: data.is_note,
         is_system_notification: (data.message_type === 'notification' && data.model === 'mail.channel')
-            || data.info === 'transient_message',
+            || data._type === 'mail_transient_message',
         attachment_ids: data.attachment_ids || [],
         subject: data.subject,
         email_from: data.email_from,
@@ -448,7 +448,7 @@ function on_notification (notifications) {
     // rejoin the channel that we just left.  The next few lines remove the
     // extra notification to prevent that situation to occur.
     var unsubscribed_notif = _.find(notifications, function (notif) {
-        return notif[1].info === "unsubscribe";
+        return notif[1]._type === "mail_channel_unsubscribe";
     });
     if (unsubscribed_notif) {
         notifications = _.reject(notifications, function (notif) {
@@ -509,7 +509,7 @@ function on_channel_notification (message) {
 }
 
 function on_partner_notification (data) {
-    if (data.info === "unsubscribe") {
+    if (data._type === "mail_channel_unsubscribe") {
         var channel = chat_manager.get_channel(data.id);
         if (channel) {
             var msg;
@@ -522,17 +522,17 @@ function on_partner_notification (data) {
             chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
             web_client.do_notify(_("Unsubscribed"), msg);
         }
-    } else if (data.type === 'toggle_star') {
+    } else if (data._type === 'mail_toggle_star') {
         on_toggle_star_notification(data);
-    } else if (data.type === 'mark_as_read') {
+    } else if (data._type === 'mail_mark_as_read') {
         on_mark_as_read_notification(data);
-    } else if (data.type === 'mark_as_unread') {
+    } else if (data._type === 'mail_mark_as_unread') {
         on_mark_as_unread_notification(data);
-    } else if (data.info === 'channel_seen') {
+    } else if (data._type === 'mail_channel_seen') {
         on_channel_seen_notification(data);
-    } else if (data.info === 'transient_message') {
+    } else if (data._type === 'mail_transient_message') {
         on_transient_message_notification(data);
-    } else {
+    } else if(data._type === 'mail_channel' || data._type === 'mail_channel_creation') {
         on_chat_session_notification(data);
     }
 }
@@ -619,7 +619,7 @@ function on_chat_session_notification (chat_session) {
     var channel;
     if ((chat_session.channel_type === "channel") && (chat_session.state === "open")) {
         add_channel(chat_session, {autoswitch: false});
-        if (!chat_session.is_minimized && chat_session.info !== 'creation') {
+        if (!chat_session.is_minimized && chat_session._type !== 'mail_channel_creation') {
             web_client.do_notify(_t("Invitation"), _t("You have been invited to: ") + chat_session.name);
         }
     }

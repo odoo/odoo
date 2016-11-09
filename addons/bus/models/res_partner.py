@@ -61,3 +61,19 @@ class ResPartner(models.Model):
             return self.env.cr.dictfetchall()
         else:
             return {}
+
+    @api.multi
+    def _notify_transient_message(self, message_type, message_value):
+        """ Send transient message (not stored in database) to current partners
+            :param message_type : string containing the type of the message. This aims to ease
+                the message process by the webclient. The 'type' should be prefixed by module name
+                to avoid collision (e.i.: 'mail_channel' will contain channel header data).
+            :param message_value : dict with the message payload.
+        """
+        # add message type
+        message_value['_type'] = message_type
+        # make notifications and send them
+        notifications = []
+        for partner in self:
+            notifications.append([(self._cr.dbname, 'res.partner', partner.id), message_value])
+        self.env['bus.bus'].sendmany(notifications)

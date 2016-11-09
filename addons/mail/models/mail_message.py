@@ -179,9 +179,8 @@ class Message(models.Model):
                 notifications.write({'is_read': True})
             ids = unread_messages.mapped('id')
 
-        notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
-
+        notification = {'message_ids': ids, 'channel_ids': channel_ids}
+        self.env.user.partner_id._notify_transient_message('mail_mark_as_read', notification)
         return ids
 
     @api.multi
@@ -192,8 +191,8 @@ class Message(models.Model):
             message.write({'needaction_partner_ids': [(4, partner_id)]})
 
         ids = [m.id for m in self]
-        notification = {'type': 'mark_as_unread', 'message_ids': ids, 'channel_ids': channel_ids}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+        notification = {'message_ids': ids, 'channel_ids': channel_ids}
+        self.env.user.partner_id._notify_transient_message('mail_mark_as_unread', notification)
 
     @api.multi
     def set_message_done(self):
@@ -233,8 +232,8 @@ class Message(models.Model):
             notifications.write({'is_read': True})
 
         for (msg_ids, channel_ids) in groups:
-            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id.id), notification)
+            notification = {'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
+            partner_id._notify_transient_message('mail_mark_as_read', notification)
 
     @api.model
     def unstar_all(self):
@@ -245,8 +244,8 @@ class Message(models.Model):
         starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
 
         ids = [m.id for m in starred_messages]
-        notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+        notification = {'message_ids': ids, 'starred': False}
+        self.env.user.partner_id._notify_transient_message('mail_toggle_star', notification)
 
     @api.multi
     def toggle_message_starred(self):
@@ -261,8 +260,8 @@ class Message(models.Model):
         else:
             self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
 
-        notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+        notification = {'message_ids': [self.id], 'starred': starred}
+        self.env.user.partner_id._notify_transient_message('mail_toggle_star', notification)
 
     #------------------------------------------------------
     # Message loading for web interface
@@ -348,7 +347,7 @@ class Message(models.Model):
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'customer_email_status': (all(d[2] == 'sent' for d in customer_email_data) and 'sent') or
-                                        (any(d[2] == 'exception' for d in customer_email_data) and 'exception') or 
+                                        (any(d[2] == 'exception' for d in customer_email_data) and 'exception') or
                                         (any(d[2] == 'bounce' for d in customer_email_data) and 'bounce') or 'ready',
                 'customer_email_data': customer_email_data,
                 'attachment_ids': attachment_ids,
