@@ -97,7 +97,10 @@ class AccountAnalyticLine(models.Model):
         self._update_values(values)
         for line in self:
             values = line._get_timesheet_cost(vals=values)
+            so_line = line.so_line
             super(AccountAnalyticLine, line).write(values)
+            if values.get('task_id', False) and so_line:
+                so_line.sudo()._compute_analytic()
         return True
 
     @api.model
