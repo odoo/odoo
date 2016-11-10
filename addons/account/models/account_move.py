@@ -233,6 +233,13 @@ class AccountMove(models.Model):
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
 
+class account_analytic_line(models.Model):
+    _inherit = "account.analytic.line"
+
+    @api.multi
+    def _get_so_line(self):
+        return []
+
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
@@ -1244,11 +1251,15 @@ class AccountMoveLine(models.Model):
             method first remove any existing analytic item related to the line before creating any new one.
         """
         for obj_line in self:
+            so_line = False
             if obj_line.analytic_line_ids:
+                so_line = obj_line.analytic_line_ids._get_so_line()
                 obj_line.analytic_line_ids.unlink()
             if obj_line.analytic_account_id:
                 vals_line = obj_line._prepare_analytic_line()[0]
-                self.env['account.analytic.line'].create(vals_line)
+                if so_line:
+                    vals_line.update(so_line=so_line)
+                self.env['account.analytic.line'].with_context(from_post=True).create(vals_line)
 
     @api.one
     def _prepare_analytic_line(self):

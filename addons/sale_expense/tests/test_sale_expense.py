@@ -48,7 +48,7 @@ class TestSaleExpense(TestSale):
         # expense should now be in sales order
         self.assertTrue(prod_exp_1 in map(lambda so: so.product_id, so.order_line), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_1.id)
-        self.assertEqual((sol.price_unit, sol.qty_delivered), (621.54, 0.0), 'Sale Expense: error when invoicing an expense at cost')
+        self.assertEqual((sol.price_unit, sol.qty_delivered), (621.54, 1.0), 'Sale Expense: error when invoicing an expense at cost')
         self.assertEqual(so.amount_total, init_price, 'Sale Expense: price of so not updated after adding expense')
 
         # create some expense and validate it (expense at sales price)
