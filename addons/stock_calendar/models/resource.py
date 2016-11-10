@@ -22,8 +22,8 @@ class ResourceCalendar(models.Model):
 
     # Keep as it takes into account times
     @api.multi
-    def get_leave_intervals(self, resource_id=None,
-                            start_datetime=None, end_datetime=None):
+    def _get_leave_intervals(self, resource_id=None,
+                             start_datetime=None, end_datetime=None):
         """Get the leaves of the calendar. Leaves can be filtered on the resource,
         the start datetime or the end datetime.
 
@@ -60,7 +60,7 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def interval_remove_leaves(self, interval, leave_intervals):
+    def _interval_remove_leaves(self, interval, leave_intervals):
         """ Utility method that remove leave intervals from a base interval:
 
          - clean the leave intervals, to have an ordered list of not-overlapping
@@ -92,7 +92,7 @@ class ResourceCalendar(models.Model):
         if leave_intervals is None:
             leave_intervals = []
         intervals = []
-        #leave_intervals = self.interval_clean(leave_intervals) NOT NECESSARY TO CLEAN HERE AS IT WOULD REMOVE GROUP INFO
+        #leave_intervals = self._interval_clean(leave_intervals) NOT NECESSARY TO CLEAN HERE AS IT WOULD REMOVE GROUP INFO
         current_interval = list(interval)
         for leave in leave_intervals:
             if len(leave) > 2:
