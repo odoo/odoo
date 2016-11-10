@@ -215,10 +215,14 @@ class procurement_order(osv.osv):
                             cr.rollback()
                             type, value, traceback = exc_info()
                             self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                            if issubclass(type, osv.except_osv):
+                                message = _('Cannot run procurement: %s\n%s') \
+                                    % (value.name, value.value)
+                            else:
+                                message = _('Cannot run procurement: %s') \
+                                    % (value.message,)
                             self.message_post(cr, uid, [procurement.id],
-                                body=(_('Cannot run procurement: %s\n%s')
-                                    % (value.name, value.value)),
-                                context=context)
+                                              body=message, context=context)
                         except:
                             # only interfere in batch mode
                             if not autocommit:
