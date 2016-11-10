@@ -434,7 +434,8 @@ class IrModelFields(models.Model):
         for record in self:
             model = self.env[record.model]
             field = model._fields[record.name]
-            if field.type == 'many2one' and model._field_inverses.get(field):
+            if field.type == 'many2one' and model._field_inverses.get(field) and \
+                    not self._context.get(MODULE_UNINSTALL_FLAG):
                 msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
                 raise UserError(msg % (field, model._field_inverses[field][0]))
 
