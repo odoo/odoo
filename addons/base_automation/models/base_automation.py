@@ -299,11 +299,11 @@ class BaseAutomation(models.Model):
     @api.model
     def _check_delay(self, action, record, record_dt):
         if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
-            return action.trg_date_calendar_id.schedule_days_get_date(
+            return action.trg_date_calendar_id.plan_days(
                 action.trg_date_range,
                 day_date=fields.Datetime.from_string(record_dt),
                 compute_leaves=True,
-            )[0]
+            )
         else:
             delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](action.trg_date_range)
             return fields.Datetime.from_string(record_dt) + delay
