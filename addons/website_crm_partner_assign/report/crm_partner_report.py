@@ -23,6 +23,13 @@ class CrmPartnerReportAssign(models.Model):
     turnover = fields.Float('Turnover', readonly=True)
     date = fields.Date('Invoice Account Date', readonly=True)
 
+    _depends = {
+        'account.invoice.report': ['date', 'partner_id', 'price_total', 'state', 'type'],
+        'crm.lead': ['partner_assigned_id'],
+        'res.partner': ['activation', 'country_id', 'date_partnership', 'date_review',
+                        'grade_id', 'parent_id', 'team_id', 'user_id'],
+    }
+
     @api.model_cr
     def init(self):
         """
@@ -50,13 +57,3 @@ class CrmPartnerReportAssign(models.Model):
                     left join account_invoice_report i
                         on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
-
-class AccountInvoiceReport(models.Model):
-    _inherit = 'account.invoice.report'
-
-    @api.model_cr
-    def init(self):
-        # ensure we re-create the crm_partner_report_assign view whenever
-        # the underlying account_invoice_report view is changed
-        super(AccountInvoiceReport, self).init()
-        self.env['crm.partner.report.assign'].init()
