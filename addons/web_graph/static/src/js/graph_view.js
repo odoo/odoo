@@ -75,39 +75,42 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
-        if (this.ignore_do_search) {
-            this.ignore_do_search = false;
-            return;
-        }
         var self = this,
             groupbys = this.get_groupbys_from_searchview(),
             col_group_by = groupbys.col_group_by,
             measures = groupbys.measures;
 
         if (!this.graph_widget) {
-            this.widget_config.context = _.clone(context);
-            this.widget_config.context.group_by_no_leaf = true;
-            if (group_by.length) {
-                this.widget_config.row_groupby = group_by;
-            }
-            if (col_group_by.length) {
-                this.widget_config.col_groupby = col_group_by;
-            }
-            if (measures.length) {
-                this.widget_config.measures = measures;
-            }
-            this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
-            this.graph_widget.appendTo(this.$el);
-            this.ViewManager.on('switch_mode', this, function (e) {
-                if (e === 'graph') {
-                    var group_bys = self.get_groupbys_from_searchview();
-                    this.graph_widget.set(domain, group_bys.group_by, group_bys.col_group_by, group_bys.measures);
-                }
-            });
+            this.create_graph_widget(domain, group_by, context);
             return;
         }
 
         this.graph_widget.set(domain, group_by, col_group_by, measures);
+    },
+
+    create_graph_widget: function(domain, group_by, context) {
+        var groupbys = this.get_groupbys_from_searchview(),
+            col_group_by = groupbys.col_group_by,
+            measures = groupbys.measures;
+        this.widget_config.context = _.clone(context);
+        this.widget_config.context.group_by_no_leaf = true;
+        if (group_by.length) {
+            this.widget_config.row_groupby = group_by;
+        }
+        if (col_group_by.length) {
+            this.widget_config.col_groupby = col_group_by;
+        }
+        if (measures.length) {
+            this.widget_config.measures = measures;
+        }
+        this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
+        this.graph_widget.appendTo(this.$el);
+        this.ViewManager.on('switch_mode', this, function (e) {
+            if (e === 'graph') {
+                var group_bys = this.get_groupbys_from_searchview();
+                this.graph_widget.set(domain, group_bys.group_by, group_bys.col_group_by, group_bys.measures);
+            }
+        });
     },
 
     get_groupbys_from_searchview: function () {
@@ -141,7 +144,20 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_show: function () {
         this.do_push_state({});
-        return this._super();
+        var result = this._super();
+        if(this.ViewManager.ActionManager.inner_action
+           .flags.auto_search !== undefined &&
+           !this.ViewManager.ActionManager.inner_action.flags.auto_search &&
+           !this.graph_widget)
+        {
+            var self = this;
+            this.search_view.ready.then(function() {
+                self.create_graph_widget(
+                    [], [], self.search_view.dataset.context
+                );
+            });
+        }
+        return result;
     },
 
     // ----------------------------------------------------------------------
@@ -168,13 +184,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         row_groupby = row_groupby.slice(custom_groups.groupby.length);
         col_groupby = col_groupby.slice(custom_groups.col_groupby.length);
 
-        if (row_gb_changed && col_gb_changed) {
-            // when two changes to the search view will be done, the method do_search
-            // will be called twice, once with the correct groupby and incorrect col_groupby,
-            // and once with correct informations. This flag is necessary to prevent the 
-            // incorrect informations to propagate and trigger useless queries
-            this.ignore_do_search = true;
-        }
 
         if (row_gb_changed) {
             // add row groupbys
@@ -182,10 +191,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 row_search_facet = query.findWhere({category:'GroupBy'});
 
             if (row_search_facet) {
-                row_search_facet.values.reset(row_facet.values, {focus_input:false});
+                row_search_facet.values.reset(row_facet.values, {focus_input:false, silent: true});
             } else {
                 if (row_groupby.length) {
-                    query.add(row_facet);
+                    query.add(row_facet, {silent: true});
                 }
             }
         }
@@ -196,12 +205,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 col_search_facet = query.findWhere({category:'ColGroupBy'});
 
             if (col_search_facet) {
-                col_search_facet.values.reset(col_facet.values, {focus_input:false});
+                col_search_facet.values.reset(col_facet.values, {focus_input:false, silent: true});
             } else {
                 if (col_groupby.length) {
-                    query.add(col_facet);
+                    query.add(col_facet, {silent: true});
                 }
             }
+        }
+
+        if (row_gb_changed || col_gb_changed)
+        {
+            query.trigger('add');
         }
     },
 
