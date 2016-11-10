@@ -924,7 +924,7 @@ class Picking(models.Model):
                     vals = self._prepare_values_extra_move(pack_operation, product, remaining_qty)
                     moves |= moves.create(vals)
         if moves:
-            moves.action_confirm()
+            moves.with_context(skip_check=True).action_confirm()
         return moves
 
     @api.model
