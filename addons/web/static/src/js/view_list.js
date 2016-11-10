@@ -285,7 +285,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // Pager
         if (!this.$pager) {
             this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
-            if (this.options.$buttons) {
+            if (this.options.$pager) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
                 this.$el.find('.oe_list_pager').replaceWith(this.$pager);
@@ -503,7 +503,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {$.Deferred} promise to content reloading
      */
     reload_content: synchronized(function () {
-        var self = this;
+        var self = this,
+            max_page = Math.floor(self.dataset.size() / self.limit());
+            
+        if (self.page > max_page){
+            self.page = 0;
+        }
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
