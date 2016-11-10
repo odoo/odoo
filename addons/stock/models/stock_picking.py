@@ -967,6 +967,7 @@ class Picking(models.Model):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """
         # TDE note: o2o conversion, todo multi
+        backorders = self.env['stock.picking']
         for picking in self:
             backorder_moves = backorder_moves or picking.move_lines
             if self._context.get('do_only_split'):
@@ -987,7 +988,8 @@ class Picking(models.Model):
                 picking.write({'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
             backorder_picking.action_confirm()
             backorder_picking.action_assign()
-        return True
+            backorders |= backorder_picking
+        return backorders
 
     @api.multi
     def put_in_pack(self):
