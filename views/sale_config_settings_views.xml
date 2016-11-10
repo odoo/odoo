@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="sale_config_settings_view_form" model="ir.ui.view">
-        <field name="name">sale settings</field>
+
+    <record id="sale_config_settings_view_form_inherit_sale_coupon" model="ir.ui.view">
+        <field name="name">sale.config.settings.inherit.sale.coupon</field>
         <field name="model">sale.config.settings</field>
-        <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
+        <field name="inherit_id" ref="sale.sale_config_settings_view_form_inherit_sale"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='quotations_sales']" position="inside">
-                <label for="id" string="Coupons"/>
+            <xpath expr="//div[@id='sale_coupon']" position="replace">
+                <div class="mt16">
+                    <button name="%(sale_coupon.sale_coupon_program_action_promo_program)d" icon="fa-arrow-right" type="action" string="Promotion Programs" class="btn-link"/>
+                </div>
                 <div>
-                    <field name="module_sale_coupon" class="oe_inline" widget="upgrade_boolean"/>
-                    <label for="module_sale_coupon"/>
-                    <a href="https://www.odoo.com/fr_FR/" target="_blank"> More Info</a>
+                    <button name="%(sale_coupon.sale_coupon_program_action_coupon_program)d" icon="fa-arrow-right" type="action" string="Coupon Programs" class="btn-link"/>
                 </div>
             </xpath>
         </field>
     </record>
+
 </odoo>
