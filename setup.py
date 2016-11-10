@@ -116,7 +116,6 @@ setup(
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'openerp'},
     include_package_data=True,
-    dependency_links=['http://download.gna.org/pychart/'],
     install_requires=[
         'babel',
         'docutils',
@@ -126,10 +125,10 @@ setup(
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'mako',
         'mock',
-        'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+        'Pillow', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycopg2 >= 2.2',
-        'pychart',  # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
+        'Python-Chart',
         'pydot',
         'python-dateutil < 2',
         'python-ldap',  # optional
@@ -141,7 +140,7 @@ setup(
         'simplejson',
         'unittest2',
         'vatnumber',
-        'vobject',
+        'vobject < 0.8.2',  # more recent versions require dateutil 2.4
         'werkzeug',
         'xlwt',
     ],
