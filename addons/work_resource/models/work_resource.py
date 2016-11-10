@@ -14,6 +14,11 @@ from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare
 
 
+def seconds(td):
+    assert isinstance(td, timedelta)
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6
+
+
 class ResourceCalendar(models.Model):
     """ Calendar model for a resource. It has
 
@@ -60,7 +65,7 @@ class ResourceCalendar(models.Model):
     # Utility methods
     # --------------------------------------------------
 
-    def interval_clean(self, intervals):
+    def _interval_clean(self, intervals):
         """ Utility method that sorts and removes overlapping inside datetime
         intervals. The intervals are sorted based on increasing starting datetime.
         Overlapping intervals are merged into a single one.
@@ -85,7 +90,7 @@ class ResourceCalendar(models.Model):
         return cleaned
 
     @api.model
-    def interval_remove_leaves(self, interval, leave_intervals):
+    def _interval_remove_leaves(self, interval, leave_intervals):
         """ Utility method that remove leave intervals from a base interval:
 
          - clean the leave intervals, to have an ordered list of not-overlapping
@@ -114,7 +119,7 @@ class ResourceCalendar(models.Model):
         if leave_intervals is None:
             leave_intervals = []
         intervals = []
-        leave_intervals = self.interval_clean(leave_intervals)
+        leave_intervals = self._interval_clean(leave_intervals)
         current_interval = [interval[0], interval[1]]
         for leave in leave_intervals:
             if leave[1] <= current_interval[0]:
@@ -131,7 +136,8 @@ class ResourceCalendar(models.Model):
             intervals.append((current_interval[0], current_interval[1]))
         return intervals
 
-    def interval_schedule_hours(self, intervals, hour, remove_at_end=True):
+    @api.model
+    def _interval_schedule_hours(self, intervals, hour, remove_at_end=True):
         """ Schedule hours in intervals. The last matching interval is truncated
         to match the specified hours.
 
@@ -169,7 +175,7 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
 
     @api.multi
-    def get_attendances_for_weekday(self, day_dt):
+    def _get_day_attendances(self, day_dt):
         """ Given a day datetime, return matching attendances """
         self.ensure_one()
         weekday = day_dt.weekday()
@@ -184,7 +190,7 @@ class ResourceCalendar(models.Model):
         return attendances
 
     @api.multi
-    def get_weekdays(self, default_weekdays=None):
+    def _get_weekdays(self, default_weekdays=None):
         """ Return the list of weekdays that contain at least one working interval.
         If no id is given (no calendar), return default weekdays. """
         if not self:
@@ -194,7 +200,7 @@ class ResourceCalendar(models.Model):
         return list(weekdays)
 
     @api.multi
-    def get_next_day(self, day_date):
+    def _get_next_work_day(self, day_date):
         """ Get following date of day_date, based on work.calendar. If no
         calendar is provided, just return the next day.
 
@@ -204,7 +210,7 @@ class ResourceCalendar(models.Model):
         if not self:
             return day_date + relativedelta(days=1)
         self.ensure_one()
-        weekdays = self.get_weekdays()
+        weekdays = self._get_weekdays()
 
         base_index = -1
         for weekday in weekdays:
@@ -220,7 +226,7 @@ class ResourceCalendar(models.Model):
         return day_date + relativedelta(days=days)
 
     @api.multi
-    def get_previous_day(self, day_date):
+    def _get_previous_work_day(self, day_date):
         """ Get previous date of day_date, based on work.calendar. If no
         calendar is provided, just return the previous day.
 
@@ -230,7 +236,7 @@ class ResourceCalendar(models.Model):
         if not self:
             return day_date + relativedelta(days=-1)
         self.ensure_one()
-        weekdays = self.get_weekdays()
+        weekdays = self._get_weekdays()
         weekdays.reverse()
 
         base_index = -1
@@ -279,7 +285,7 @@ class ResourceCalendar(models.Model):
         return leaves
 
     @api.multi
-    def get_working_intervals_of_day(self, start_dt=None, end_dt=None,
+    def _get_day_work_intervals(self, start_dt=None, end_dt=None,
                                      leaves=None, compute_leaves=False, resource_id=None,
                                      default_interval=None):
         """ Get the working intervals of the day based on calendar. This method
@@ -327,7 +333,7 @@ class ResourceCalendar(models.Model):
             end_dt = start_dt.replace(hour=23, minute=59, second=59)
         else:
             work_limits.append((end_dt, end_dt.replace(hour=23, minute=59, second=59)))
-        assert start_dt.date() == end_dt.date(), 'get_working_intervals_of_day is restricted to one day'
+        assert start_dt.date() == end_dt.date(), '_get_day_work_intervals is restricted to one day'
 
         intervals = []
         work_dt = start_dt.replace(hour=0, minute=0, second=0)
@@ -338,12 +344,12 @@ class ResourceCalendar(models.Model):
             if default_interval:
                 working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0),
                                     start_dt.replace(hour=default_interval[1], minute=0, second=0))
-            intervals = self.interval_remove_leaves(working_interval, work_limits)
+            intervals = self._interval_remove_leaves(working_interval, work_limits)
             return intervals
 
         working_intervals = []
         tz_info = fields.Datetime.context_timestamp(self, work_dt).tzinfo
-        for calendar_working_day in self.get_attendances_for_weekday(start_dt):
+        for calendar_working_day in self._get_day_attendances(start_dt):
             dt_f = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_from * 3600))
             dt_t = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_to * 3600))
 
@@ -353,7 +359,7 @@ class ResourceCalendar(models.Model):
                 dt_t.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
                 calendar_working_day.id
             )
-            working_intervals += self.interval_remove_leaves(working_interval, work_limits)
+            working_intervals += self._interval_remove_leaves(working_interval, work_limits)
 
         # find leave intervals
         if leaves is None and compute_leaves:
@@ -361,48 +367,13 @@ class ResourceCalendar(models.Model):
 
         # filter according to leaves
         for interval in working_intervals:
-            work_intervals = self.interval_remove_leaves(interval, leaves)
+            work_intervals = self._interval_remove_leaves(interval, leaves)
             intervals += work_intervals
 
         return intervals
 
-    @api.multi
-    def get_working_hours_of_date(self, start_dt=None, end_dt=None,
-                                  leaves=None, compute_leaves=False, resource_id=None,
-                                  default_interval=None):
-        """ Get the working hours of the day based on calendar. This method uses
-        get_working_intervals_of_day to have the work intervals of the day. It
-        then calculates the number of hours contained in those intervals. """
-        res = timedelta()
-        intervals = self.get_working_intervals_of_day(
-            start_dt, end_dt, leaves,
-            compute_leaves, resource_id,
-            default_interval)
-        for interval in intervals:
-            res += interval[1] - interval[0]
-        return seconds(res) / 3600.0
-
-    @api.multi
-    def get_working_hours(self, start_dt, end_dt, compute_leaves=False,
-                          resource_id=None, default_interval=None):
-        hours = 0.0
-        for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=(end_dt + timedelta(days=1)).replace(hour=0, minute=0, second=0),
-                               byweekday=self.get_weekdays()):
-            day_start_dt = day.replace(hour=0, minute=0, second=0)
-            if start_dt and day.date() == start_dt.date():
-                day_start_dt = start_dt
-            day_end_dt = day.replace(hour=23, minute=59, second=59)
-            if end_dt and day.date() == end_dt.date():
-                day_end_dt = end_dt
-            hours += self.get_working_hours_of_date(
-                start_dt=day_start_dt, end_dt=day_end_dt,
-                compute_leaves=compute_leaves, resource_id=resource_id,
-                default_interval=default_interval)
-        return hours
-
     # --------------------------------------------------
-    # Hours scheduling
+    # Hours computing
     # --------------------------------------------------
 
     @api.multi
@@ -456,14 +427,14 @@ class ResourceCalendar(models.Model):
             else:
                 call_args['start_dt'] = current_datetime
 
-            working_intervals = self.get_working_intervals_of_day(**call_args)
+            working_intervals = self._get_day_work_intervals(**call_args)
 
             if not self and not working_intervals:  # no calendar -> consider working 8 hours
                 remaining_hours -= 8.0
             elif working_intervals:
                 if backwards:
                     working_intervals.reverse()
-                new_working_intervals = self.interval_schedule_hours(working_intervals, remaining_hours, not backwards)
+                new_working_intervals = self._interval_schedule_hours(working_intervals, remaining_hours, not backwards)
                 if backwards:
                     new_working_intervals.reverse()
 
@@ -477,33 +448,48 @@ class ResourceCalendar(models.Model):
                     intervals = intervals + new_working_intervals
             # get next day
             if backwards:
-                current_datetime = datetime.datetime.combine(self.get_previous_day(current_datetime), datetime.time(23, 59, 59))
+                current_datetime = datetime.datetime.combine(self._get_previous_work_day(current_datetime), datetime.time(23, 59, 59))
             else:
-                current_datetime = datetime.datetime.combine(self.get_next_day(current_datetime), datetime.time())
+                current_datetime = datetime.datetime.combine(self._get_next_work_day(current_datetime), datetime.time())
             # avoid infinite loops
             iterations += 1
 
         return intervals
 
     @api.multi
-    def schedule_hours_get_date(self, hours, day_dt=None,
-                                compute_leaves=False, resource_id=None,
-                                default_interval=None):
-        """ Wrapper on _schedule_hours: return the beginning/ending datetime of
-        an hours scheduling. """
+    def plan_hours(self, hours, day_dt=None,
+                   compute_leaves=False, resource_id=None,
+                   default_interval=None):
+        """ Return datetime after having planned hours """
         res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, default_interval)
         return res and res[0][0] or False
 
     @api.multi
-    def schedule_hours(self, hours, day_dt=None,
-                       compute_leaves=False, resource_id=None,
-                       default_interval=None):
-        """ Wrapper on _schedule_hours: return the working intervals of an hours
-        scheduling. """
-        return self._schedule_hours(hours, day_dt, compute_leaves, resource_id, default_interval)
+    def get_work_hours_count(self, start_dt, end_dt, compute_leaves=False,
+                             resource_id=None, default_interval=None):
+        if not end_dt:
+            end_dt = start_dt.replace(hour=23, minute=59, second=59)
+        res = timedelta()
+        for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
+                               until=(end_dt + timedelta(days=1)).replace(hour=0, minute=0, second=0),
+                               byweekday=self._get_weekdays()):
+            day_start_dt = day.replace(hour=0, minute=0, second=0)
+            if start_dt and day.date() == start_dt.date():
+                day_start_dt = start_dt
+            day_end_dt = day.replace(hour=23, minute=59, second=59)
+            if end_dt and day.date() == end_dt.date():
+                day_end_dt = end_dt
+            intervals = self._get_day_work_intervals(
+                start_dt=day_start_dt, end_dt=day_end_dt,
+                compute_leaves=compute_leaves, resource_id=resource_id,
+                default_interval=default_interval)
+            for interval in intervals:
+                res += interval[1] - interval[0]
+
+        return seconds(res) / 3600.0
 
     # --------------------------------------------------
-    # Days scheduling
+    # Days computing
     # --------------------------------------------------
 
     @api.multi
@@ -549,7 +535,7 @@ class ResourceCalendar(models.Model):
         current_datetime = day_date.replace(hour=0, minute=0, second=0)
 
         while planned_days < days and iterations < 100:
-            working_intervals = self.get_working_intervals_of_day(
+            working_intervals = self._get_day_work_intervals(
                 current_datetime,
                 compute_leaves=compute_leaves, resource_id=resource_id,
                 default_interval=default_interval)
@@ -558,101 +544,20 @@ class ResourceCalendar(models.Model):
                 intervals += working_intervals
             # get next day
             if backwards:
-                current_datetime = self.get_previous_day(current_datetime)
+                current_datetime = self._get_previous_work_day(current_datetime)
             else:
-                current_datetime = self.get_next_day(current_datetime)
+                current_datetime = self._get_next_work_day(current_datetime)
             # avoid infinite loops
             iterations += 1
 
         return intervals
 
     @api.multi
-    def schedule_days_get_date(self, days, day_date=None, compute_leaves=False,
-                               resource_id=None, default_interval=None):
-        """ Wrapper on _schedule_days: return the beginning/ending datetime of
-        a days scheduling. """
+    def plan_days(self, days, day_date=None, compute_leaves=False,
+                  resource_id=None, default_interval=None):
+        """ Returns the datetime of a days scheduling. """
         res = self._schedule_days(days, day_date, compute_leaves, resource_id, default_interval)
         return res and res[-1][1] or False
-
-    @api.multi
-    def schedule_days(self, days, day_date=None, compute_leaves=False,
-                      resource_id=None, default_interval=None):
-        """ Wrapper on _schedule_days: return the working intervals of a days
-        scheduling. """
-        return self._schedule_days(days, day_date, compute_leaves, resource_id, default_interval)
-
-    # --------------------------------------------------
-    # Compatibility / to clean / to remove
-    # --------------------------------------------------
-
-    @api.multi
-    def working_hours_on_day(self, day):
-        """ Used in hr_payroll/hr_payroll.py
-
-        :deprecated: Odoo saas-3. Use get_working_hours_of_date instead. Note:
-        since saas-3, take hour/minutes into account, not just the whole day."""
-        if isinstance(day, datetime.datetime):
-            day = day.replace(hour=0, minute=0)
-        return self.get_working_hours_of_date(start_dt=day)
-
-    @api.multi
-    def interval_min_get(self, dt_from, hours, resource=False):
-        """ Schedule hours backwards. Used in mrp_operations/mrp_operations.py.
-
-        :deprecated: Odoo saas-3. Use schedule_hours instead. Note: since
-        saas-3, counts leave hours instead of all-day leaves."""
-        return self.schedule_hours(
-            hours * -1.0,
-            day_dt=dt_from.replace(minute=0, second=0),
-            compute_leaves=True, resource_id=resource,
-            default_interval=(8, 16)
-        )
-
-    @api.model
-    def interval_get_multi(self, date_and_hours_by_cal, resource=False, byday=True):
-        """ Used in mrp_operations/mrp_operations.py (default parameters) and in
-        interval_get()
-
-        :deprecated: Odoo saas-3. Use schedule_hours instead. Note:
-        Byday was not used. Since saas-3, counts Leave hours instead of all-day leaves."""
-        res = {}
-        for dt_str, hours, calendar_id in date_and_hours_by_cal:
-            result = self.browse(calendar_id).schedule_hours(
-                hours,
-                day_dt=fields.Datetime.from_string(dt_str).replace(second=0),
-                compute_leaves=True, resource_id=resource,
-                default_interval=(8, 16)
-            )
-            res[(dt_str, hours, calendar_id)] = result
-        return res
-
-    @api.multi
-    def interval_get(self, dt_from, hours, resource=False, byday=True):
-        """ Unifier of interval_get_multi. Used in: mrp_operations/mrp_operations.py,
-        crm/crm_lead.py (res given).
-
-        :deprecated: Odoo saas-3. Use get_working_hours instead."""
-        self.ensure_one()
-        res = self.interval_get_multi(
-            [(fields.Datetime.to_string(dt_from), hours, self.id)], resource, byday)[(fields.Datetime.to_string(dt_from), hours, self.id)]
-        return res
-
-    @api.multi
-    def interval_hours_get(self, dt_from, dt_to, resource=False):
-        """ Unused wrapper.
-
-        :deprecated: Odoo saas-3. Use get_working_hours instead."""
-        return self._interval_hours_get(dt_from, dt_to, resource_id=resource)
-
-    @api.multi
-    def _interval_hours_get(self, dt_from, dt_to, resource_id=False, timezone_from_uid=None, exclude_leaves=True):
-        """ Computes working hours between two dates, taking always same hour/minuts.
-        :deprecated: Odoo saas-3. Use get_working_hours instead. Note: since saas-3,
-        now resets hour/minuts. Now counts leave hours instead of all-day leaves."""
-        return self.get_working_hours(
-            dt_from, dt_to,
-            compute_leaves=(not exclude_leaves), resource_id=resource_id,
-            default_interval=(8, 16))
 
 
 class ResourceCalendarAttendance(models.Model):
@@ -675,12 +580,6 @@ class ResourceCalendarAttendance(models.Model):
     hour_from = fields.Float(string='Work from', required=True, index=True, help="Start and End time of working.")
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("work.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
-
-
-def hours_time_string(hours):
-    """ convert a number of hours (float) into a string with format '%H:%M' """
-    minutes = int(round(hours * 60))
-    return "%02d:%02d" % divmod(minutes, 60)
 
 
 class ResourceResource(models.Model):
@@ -738,7 +637,7 @@ class ResourceResource(models.Model):
                                       days (inclusive)
         :rtype: list(datetime.date)
         """
-        working_intervals = self.calendar_id.get_working_intervals_of_day
+        working_intervals = self.calendar_id._get_day_work_intervals
         # rrule coerces date inputs to datetimes (with time=0) and yields
         # datetimes (with time=0 if freq >= daily)
         for dt in rrule.rrule(rrule.DAILY, dtstart=from_date, until=to_date):
@@ -768,8 +667,3 @@ class ResourceCalendarLeaves(models.Model):
     @api.onchange('resource_id')
     def onchange_resource(self):
         self.calendar_id = self.resource_id.calendar_id
-
-def seconds(td):
-    assert isinstance(td, timedelta)
-
-    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6

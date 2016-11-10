@@ -91,13 +91,13 @@ class ProjectIssue(models.Model):
             if issue.date_open:
                 dt_date_open = fields.Datetime.from_string(issue.date_open)
                 issue.day_open = (dt_date_open - dt_create_date).total_seconds() / (24.0 * 3600)
-                issue.working_hours_open = calendar.get_working_hours(dt_create_date, dt_date_open,
+                issue.working_hours_open = calendar.get_work_hours_count(dt_create_date, dt_date_open,
                     compute_leaves=True, resource_id=False, default_interval=(8, 16))
 
             if issue.date_closed:
                 dt_date_closed = fields.Datetime.from_string(issue.date_closed)
                 issue.day_close = (dt_date_closed - dt_create_date).total_seconds() / (24.0 * 3600)
-                issue.working_hours_close = calendar.get_working_hours(dt_create_date, dt_date_closed,
+                issue.working_hours_close = calendar.get_work_hours_count(dt_create_date, dt_date_closed,
                     compute_leaves=True, resource_id=False, default_interval=(8, 16))
 
     @api.multi
