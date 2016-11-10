@@ -112,3 +112,8 @@ class LivechatController(http.Controller):
         if channel:
             channel._send_history_message(pid, page_history)
         return True
+
+    @http.route('/im_livechat/notify_typing', type="json", auth='public')
+    def notify_typing(self, uuid, status, **kwargs):
+        channel = request.env['mail.channel'].search([('uuid', '=', uuid)], limit=1)
+        channel.with_context(livechat_anonymous_name=channel.anonymous_name).notify_typing(status)

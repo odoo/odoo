@@ -291,10 +291,38 @@ class Channel(models.Model):
         message_values = message.message_format()[0]
         notifications = []
         for channel in self:
-            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values)])
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_values, _type='message')])
             # add uuid to allow anonymous to listen
             if channel.public == 'public':
-                notifications.append([channel.uuid, dict(message_values)])
+                notifications.append([channel.uuid, dict(message_values, _type='message')])
+        return notifications
+
+    @api.multi
+    def notify_typing(self, typing_status):
+        """ Broadcast the typing notification to channel members
+            :param status : the typing status to sent
+        """
+        notifications = self._channel_typing_notifications(typing_status)
+        self.env['bus.bus'].sendmany(notifications)
+
+    @api.multi
+    def _channel_typing_notifications(self, status):
+        """ Generate the bus notifications for the given typing status
+            :param status : the typing status to sent
+            :returns list of bus notifications (tuple (bus_channe, message_content))
+        """
+        notification_values = {
+            '_type': 'typing',
+            'typing_status': status,
+            'partner_id': self.env.user.partner_id.id,
+            'name': self.env.user.partner_id.name,
+        }
+        notifications = []
+        for channel in self.filtered(lambda channel: not channel.email_send):  # do not broadcast to mailing lists
+            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(notification_values)])
+            # add uuid to allow anonymous to listen
+            if channel.public == 'public':
+                notifications.append([channel.uuid, dict(notification_values)])
         return notifications
 
     @api.multi

@@ -200,7 +200,7 @@ function make_message (data) {
     } else {
         msg.displayed_author = (msg.author_id === ODOOBOT_ID) && "OdooBot" ||
                                msg.author_id && msg.author_id[1] ||
-                               msg.email_from || _t('Anonymous');
+                               msg.email_from || _t('Visitor');
     }
 
     // Don't redirect on author clicked of self-posted or OdooBot messages
@@ -504,14 +504,20 @@ function on_needaction_notification (message) {
 }
 
 function on_channel_notification (channel_id, message) {
-    var def;
-    var channel_already_in_cache = true;
-    channel_already_in_cache = !!chat_manager.get_channel(channel_id);
-    chat_manager.join_channel(channel_id, {autoswitch: false}).then(function () {
-        // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
-        add_message(message, {channel_id: channel_id, show_notification: true, increment_unread: channel_already_in_cache });
-        invalidate_caches(message.channel_ids);
-    });
+    if (message._type === 'message'){
+        var channel_already_in_cache = true;
+        channel_already_in_cache = !!chat_manager.get_channel(channel_id);
+        chat_manager.join_channel(channel_id, {autoswitch: false}).then(function () {
+            // don't increment unread if channel wasn't in cache yet as its unread counter has just been fetched
+            add_message(message, {channel_id: channel_id, show_notification: true, increment_unread: channel_already_in_cache });
+            invalidate_caches(message.channel_ids);
+        });
+    }
+    if (message._type === 'typing'){
+        if(message.partner_id !== session.partner_id){ // don't process its own typing notifications
+            chat_manager.bus.trigger('typing_received', channel_id, message);
+        }
+    }
 }
 
 function on_partner_notification (data) {
@@ -931,6 +937,10 @@ var chat_manager = {
             args.state = folded ? 'folded' : 'open';
         }
         return ChannelModel.call("channel_fold", [], args, {shadow: true});
+    },
+    // Typing notifications
+    typing_notify: function(channel_id, status){
+        return ChannelModel.call("notify_typing", [channel_id, status]);
     },
     /**
      * Special redirection handling for given model and id

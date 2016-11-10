@@ -88,6 +88,12 @@ function open_chat (session, options) {
                 session.window.toggle_fold(false);
             }
         });
+        chat_session.window.on("notify_typing", null, function(status, channel_id) {
+            var channel = chat_manager.get_channel(channel_id);
+            if (!channel.mass_mailing){
+                chat_manager.typing_notify(channel_id, status);
+            }
+        });
 
         var remove_new_chat = false;
         if (options.passively) {
@@ -394,6 +400,17 @@ core.bus.on('web_client_ready', null, function () {
     });
 
     core.bus.on('resize', null, _.debounce(reposition_windows, 100));
+
+    chat_manager.bus.on('typing_received', null, function(channel_id, notif){
+        var chat_session = _.findWhere(chat_sessions, {id: channel_id});
+        if(chat_session){
+            var is_at_bottom = chat_session.window.thread.is_at_bottom();
+            chat_session.window.typing_notifier.apply_typing(notif);
+            if(is_at_bottom){
+                chat_session.window.thread.scroll_to();
+            }
+        }
+    });
 });
 
 });
