@@ -1245,7 +1245,7 @@ class AccountMoveLine(models.Model):
         """
         for obj_line in self:
             if obj_line.analytic_line_ids:
-                obj_line.analytic_line_ids.unlink()
+                obj_line.analytic_line_ids.with_context(from_post=True).unlink()
             if obj_line.analytic_account_id:
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
