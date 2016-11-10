@@ -18,6 +18,11 @@ class SaleOrderLine(models.Model):
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
         )
+        # If the unlinked analytic line was the last one on the SO line, the qty was not updated.
+        force_so_lines = self.env.context.get("force_so_lines")
+        if force_so_lines:
+            for line in force_so_lines:
+                lines.setdefault(line, 0.0)
         for d in data:
             if not d['product_uom_id']:
                 continue
@@ -38,6 +43,13 @@ class SaleOrderLine(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
     so_line = fields.Many2one('sale.order.line', string='Sale Order Line')
+
+    @api.multi
+    def _get_so_line(self):
+        res = super(AccountAnalyticLine, self)._get_so_line()
+        for line in self:
+            if line.so_line:
+                return line.so_line.id
 
     def _get_invoice_price(self, order):
         if self.product_id.expense_policy == 'sales_price':
@@ -116,5 +128,13 @@ class AccountAnalyticLine(models.Model):
         line = super(AccountAnalyticLine, self).create(values)
         res = line.sudo()._get_sale_order_line(vals=values)
         line.with_context(create=True).write(res)
-        line.mapped('so_line').sudo()._compute_analytic()
+        domain = (self.env.context.get('from_post') and [('so_line', 'in', line.mapped('so_line').ids)]) or None
+        line.mapped('so_line').sudo()._compute_analytic(domain)
         return line
+
+    @api.multi
+    def unlink(self):
+        so_lines = self.mapped('so_line')
+        res = super(AccountAnalyticLine, self).unlink()
+        so_lines.with_context(force_so_lines=so_lines).sudo()._compute_analytic()
+        return res
