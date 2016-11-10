@@ -285,7 +285,7 @@ class Holidays(models.Model):
             employee = self.env['hr.employee'].browse(employee_id)
             resource = employee.resource_id
             if resource and resource.calendar_id:
-                hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
+                hours = resource.calendar_id.get_work_hours_count(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
                 uom_hour = resource.calendar_id.uom_id
                 uom_day = self.env.ref('product.product_uom_day')
                 if uom_hour and uom_day:
